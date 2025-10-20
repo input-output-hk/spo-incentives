@@ -125,12 +125,12 @@ success in securing the network, while simultaneously creating significant socio
 for its operator community.
 
 \begin{itemize}
-    \item \textbf{A Secure and Performant Network:} The core goals of incentivizing participation and 
+    \item \textbf{A secure and performant network:} The core goals of incentivizing participation and 
     performance have been unequivocally met. The network is robustly decentralized and secure, supported by 741 
     "Healthy" pools and 246 "Viable" pools, and consistently achieves over 98\% of its theoretical maximum block 
     production.
     
-    \item \textbf{Flawless Protocol Mechanics:} The automated rewards distribution system has functioned 
+    \item \textbf{Flawless protocol mechanics:} The automated rewards distribution system has functioned 
     flawlessly since inception, validating its design. Furthermore, the pledge mechanism is proven to be a 
     highly effective Sybil deterrent, creating a powerful economic incentive to consolidate capital, just as it 
     was designed to do.
@@ -141,12 +141,12 @@ for its operator community.
     as 0.07 ADA), a finding echoed by frustrated SPOs. This creates a competitive imbalance that primarily 
     benefits well-capitalized actors.
     
-    \item \textbf{The "Viability Gap":} The system has not converged on the theoretical $k=500$ pools, but 
+    \item \textbf{The "Viability gap":} The system has not converged on the theoretical $k=500$ pools, but 
     has instead found a stable, stratified equilibrium of 1,614 active pools. A direct consequence is the 
     "viability gap": 873 active operators (54\% of the total) remain below the 3M ADA threshold required for 
     consistent block production.
     
-    \item \textbf{A Capital-Constrained Environment:} The viability gap is cemented by two real-world factors 
+    \item \textbf{A Capital-constrained environment:} The viability gap is cemented by two real-world factors 
     not accounted for in a simplified rational-actor model. First, approximately 16B ADA remains outside the 
     consensus mechanism, creating a capital-constrained, zero-sum environment. Second, delegator behavior is 
     complex, dominated by inertia ("sticky stake") rather than pure yield optimization.
@@ -157,11 +157,11 @@ for its operator community.
 The report identifies two primary risks to the network:
 
 \begin{enumerate}
-    \item \textbf{High Social Risk:} The most immediate threat is operator disillusionment. The "viability gap" 
+    \item \textbf{High social risk:} The most immediate threat is operator disillusionment. The "viability gap" 
     and the pledge paradox have created a large, disenfranchised segment of the operator community that feels the 
     system is inequitable.
     
-    \item \textbf{Long-Term Economic Risk:} The network's sustainability model is contingent on a successful 
+    \item \textbf{Long-term economic risk:} The network's sustainability model is contingent on a successful 
     transition from the current reward system, which is overwhelmingly subsidized by the depleting ADA reserves,
     to one funded by transaction fees. This places immense importance on the Leios upgrade and the ecosystem's 
     ability to generate "killer apps" that drive sustainable on-chain activity.
@@ -174,13 +174,13 @@ The findings indicate that the system requires \textbf{fine-tuning and targeted 
 The report proposes a multi-pronged approach for consideration by governance and protocol developers:
 
 \begin{itemize}
-    \item \textbf{Address the Viability Gap:} Explore new on-chain mechanisms, such as "pool alliances" or "virtual pools," to allow the 873 struggling operators to combine resources and compete effectively.
+    \item \textbf{Address the viability gap:} Explore new on-chain mechanisms, such as "pool alliances" or "virtual pools," to allow the 873 struggling operators to combine resources and compete effectively.
     
-    \item \textbf{Re-evaluate Parameters:} Formally analyze and debate adjustments to economic parameters, including a minimum margin and a reduction of the fixed cost, to address operator frustrations.
-    
-    \item \textbf{Prune Inactive Pools:} Initiate a formal research effort to define an on-chain mechanism for pruning the 1,305 "Inactive" pools, addressing the "stale stake" problem.
-    
-    \item \textbf{Activate Latent Stake:} Launch a formal research initiative to understand the barriers preventing 16 billion ADA from participating in consensus.
+    \item \textbf{Re-evaluate parameters:} Formally analyze and debate adjustments to economic parameters, including a minimum margin and a reduction of the fixed cost, to address operator frustrations.
+
+    \item \textbf{Prune inactive pools:} Initiate a formal research effort to define an on-chain mechanism for pruning the 1,305 "Inactive" pools, addressing the "stale stake" problem.
+
+    \item \textbf{Activate latent stake:} Launch a formal research initiative to understand the barriers preventing 16 billion ADA from participating in consensus.
 \end{itemize}
 
 % === EXECUTIVE SUMMARY END ===
@@ -573,7 +573,7 @@ broken down into three sub-categories.
 	      the majority of the network's stake (21.14 billion ADA) and are responsible for most of its security and
 	      block production. The existence of a large and diverse set of healthy operators is an indicator of the
 	      incentive scheme's success.
-	\item \textbf{Viable but Small (246 Pools):} This is a group of operators who have not yet reached the 3M
+	\item \textbf{Viable but small (246 Pools):} This is a group of operators who have not yet reached the 3M
 	      ADA stake threshold but have demonstrated strong performance by earning enough rewards to cover their
 	      costs. They control approximately 368 million ADA\@. These pools represent a combination of operational
 	      skill, community support, and statistical luck.
@@ -764,20 +764,20 @@ in the industry.
 	\label{fig:pos_comparison}
 \end{figure}
 
-\subsubsection*{A Thought Experiment: Impact of Full Stake Delegation}
+\subsubsection*{A thought experiment: Impact of full stake delegation}
 
 To understand the impact of this capital constraint, it is useful to
 conduct a thought experiment and consider what would happen if the 16B
 undelegated ADA were suddenly to enter the system.
 
 \begin{enumerate}
-	\item \textbf{Initial Shock and Saturation Cascade:} The influx of stake would rapidly flow to the most desirable pools,
+	\item \textbf{Initial shock and saturation cascade:} The influx of stake would rapidly flow to the most desirable pools,
 	      quickly saturating and then oversaturating the largest operators.
 	\item \textbf{The $k$ parameter at play:} As the top pools become oversaturated, their ROA would begin to decline
 	      for all members. The saturation parameter ($z_0$), which is currently a soft ceiling for most, would become a hard economic wall.
-	\item \textbf{Capital Flows Downhill:} Rational delegators from these oversaturated pools would be financially incentivized to
+	\item \textbf{Capital flows downhill:} Rational delegators from these oversaturated pools would be financially incentivized to
 	      move their stake to the next-best-performing unsaturated pools. This would create a cascade of delegation flowing down the ranks.
-	\item \textbf{The ``Long Tail'' Shrinks:} Many pools in the lower tiers would find themselves suddenly viable as they attract
+	\item \textbf{The ``Long Tail'' shrinks:} Many pools in the lower tiers would find themselves suddenly viable as they attract
 	      new and re-delegated stake, rapidly growing towards mid-level sizes.
 \end{enumerate}
 
@@ -848,7 +848,7 @@ market into two main tiers:
 	      attract delegation.
 \end{enumerate}
 
-\subsubsection{Pool Margin}
+\subsubsection{Pool margin}
 
 The pool margin, the percentage of rewards taken by the operator, is a key strategic
 choice for pool operators. The plot reveals two fundamentally different groups of
@@ -859,12 +859,12 @@ pools: a large, competitive market of public pools and relatively small set of p
 	\includegraphics[width=\textwidth]{img/pool_margin_vs_size.png}
 \end{figure}
 
-\paragraph{The Public Market (0-10\% Margin)}
+\paragraph{The public market (0-10\% Margin)}
 Within the competitive public market, the most significant finding is that
 \textbf{pool size does not dictate margin strategy}. Operators of all sizes
 can be found at every major strategic fee point.
 
-\paragraph{The 0\% Margin Strategy}
+\paragraph{The 0\% margin strategy}
 A dense cluster of pools is visible at the 0\% margin line. Crucially,
 these pools span \textbf{every size category}, from the smallest pools to some of the largest,
 fully saturated pools on the network. This demonstrates that 0\% margin is not merely a
@@ -879,7 +879,7 @@ sustainable fee. Operators here, whether large or small, are competing on
 factors beyond just the margin, such as reputation, performance, and
 community engagement.
 
-\paragraph{The Uncompetitive High-Margin Zone (5-10\%)}
+\paragraph{The uncompetitive high-margin zone (5-10\%)}
 The area \textit{between} 5\% and 10\% is almost entirely empty. This
 strongly suggests that margins in this range are uncompetitive and
 fail to attract significant delegation, regardless of pool size. The
@@ -974,8 +974,8 @@ pot to the high-pledge pools.
 
 To empirically validate the simulation's findings, we analyzed on-chain
 performance data from all active pools over a 36-epoch period. The methodology
-for this analysis, detailed in Appendix C, was designed to isolate the economic
-impact of pledge from other variables. For each epoch, we grouped pools of
+for this analysis, detailed in \href{https://github.com/input-output-hk/spo-incentives/blob/main/spo_incentives/appendixC.txt}{Appendix C}, 
+was designed to isolate the economic impact of pledge from other variables. For each epoch, we grouped pools of
 similar size into performance-matched cohorts that had produced the
 \textbf{exact same number of blocks}, allowing for a direct comparison of how
 pledge affects the rewards of otherwise equally performing pools.
@@ -1140,7 +1140,7 @@ approaching 80 by epoch 584.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{img/consensus-nakamoto_coefficient-chart.png}
-	\caption{Nakamoto Coefficient.. The steady increase demonstrates a consistent
+	\caption{Nakamoto Coefficient. The steady increase demonstrates a consistent
 		improvement in the network's decentralization and security against collusion.}
 	\label{fig:nakamoto}
 \end{figure}
@@ -1175,14 +1175,14 @@ explicitly sought to avoid. The mechanism's flawless execution in the live
 environment serves as direct empirical validation of this core design
 principle.
 
-\subsection{Network Sustainability Trends}
+\subsection{Network sustainability trends}
 
 The chart below illustrates key trends related to the sustainability of Cardano's staking reward mechanism, plotting historical data from epoch 208 to 583 and projecting future trends.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{img/sustainability_trends_with_projection_208-583.png}
-	\caption{Cardano Reward Funding Sources and Reserve Projection}
+	\caption{Cardano reward funding sources and Reserves projection}
 	\label{fig:sustainability_trends}
 \end{figure}
 
@@ -1278,18 +1278,18 @@ The incentive mechanism has been a resounding success in achieving its core
 \textbf{divergences between a simplified economic model and the complex, human-driven reality}
 of a live ecosystem.
 
-\subsubsection{Observed Successes}
+\subsubsection{Observed successes}
 
 \begin{itemize}
-	\item \textbf{A Highly Performant and Secure Network:} The goal of incentivizing performance
+	\item \textbf{A highly performant and secure network:} The goal of incentivizing performance
 	      and participation has been unequivocally met. The network is reliably secured by 741``Healthy''
 	      246``Viable'' stake pools,and 627 pools that are struggling but are ready to produce blocks when called upon.
 	      The system consistently achieves an efficiency of over 98\% of block production. The high Nakamoto Coefficient and decreasing concentration ratio further confirm the network is robustly decentralized.
-	\item \textbf{Flawless Automatic Rewards:} The goal of an automatic and efficient rewards system is fully
+	\item \textbf{Flawless automatic rewards:} The goal of an automatic and efficient rewards system is fully
 	      realized. The protocol has functioned flawlessly since inception, distributing rewards every epoch
 	      without manual intervention or the negative network effects (like UTXO bloat or transaction bursts) the
 	      design specification sought to avoid.
-	\item \textbf{Effective Sybil Resistance:} The pledge mechanism, as the primary tool for Sybil resistance,
+	\item \textbf{Effective Sybil resistance:} The pledge mechanism, as the primary tool for Sybil resistance,
 	      works exactly as designed in its primary function. Both simulation and on-chain case studies prove
 	      it creates a powerful, non-linear economic incentive to consolidate capital, making the creation
 	      of many low-quality pools uneconomical.
@@ -1298,12 +1298,12 @@ of a live ecosystem.
 \subsubsection{Divergences Between Model and Reality}
 
 \begin{itemize}
-	\item \textbf{The Paradox of Pledge:} While an effective Sybil deterrent, the pledge mechanism
+	\item \textbf{The paradox of pledge:} While an effective Sybil deterrent, the pledge mechanism
 	      \textbf{fails as a meaningful ``skin-in-the-game'' signal} for the vast majority of operators. As shown
 	      in the analysis, the reward bonus is ``functionally irrelevant'' fo`r pledges under 10M ADA (e.g., deltas
 	      as low as 0.07 ADA) , a finding echoed by frustrated SPOs. This creates a severe competitive imbalance,
 	      where the mechanism only benefits well-capitalized actors, directly contributing to the ``viability gap''.
-	\item \textbf{Equilibrium Reality vs. The $k$ Expectation:} The expectation of the ecosystem converging
+	\item \textbf{Equilibrium reality vs. The $k$ expectation:} The expectation of the ecosystem converging
 	      on $k$ desirable pools (currently 500) was a theoretical outcome based on a model of perfectly rational
 	      economic actors. This is not a design failure, but a clear illustration of the gap between a simplified
 	      model and a human-driven ecosystem. The on-chain reality is a more complex, stratified system with 1,614
@@ -1313,7 +1313,7 @@ of a live ecosystem.
 	      873 active operators remain below the 3M ADA viability line.
 	      \textbf{16B ADA remaining outside the consensus mechanism} is a major real-world factor creating a
 	      capital-constrained environment that cements this viability gap.
-	\item \textbf{The Complexity of Actor Behavior:} The assumption of a purely ``rational delegator'' is a
+	\item \textbf{The Complexity of actor behavior:} The assumption of a purely ``rational delegator'' is a
 	      necessary simplification used in game theory to allow for formal reasoning about a model. It is not a
 	      prediction of individual behavior, as reality is always far more complex. The empirical analysis highlights
 	      these complexities.
@@ -1323,19 +1323,19 @@ of a live ecosystem.
 \label{sec:need-for-changes}
 
 The findings indicate that the system requires \textbf{fine-tuning and targeted revisions,
-	not a complete overhaul}. The fundamental game-theoretic model is sound for its primary purpose:
+not a complete overhaul}. The fundamental game-theoretic model is sound for its primary purpose:
 securing the network.
 
 However, the system is not optimal. The significant divergences—particularly the ineffectiveness
-of pledge for most operators and the persistent ``viability gap''—necessitate adjustments. The operator
+of pledge for most operators and the persistent ``viability gap'', necessitate adjustments. The operator
 frustration with the slow pace of change on these known issues underscores this need.
 
 The analysis points toward two avenues for improvement:
 \begin{enumerate}
-	\item \textbf{Parameter Adjustment:} The pledge mechanism fails to provide a meaningful signal
+	\item \textbf{Parameter adjustment:} The pledge mechanism fails to provide a meaningful signal
 	      for most operators , and fee structures are a point of contention. This suggests a re-evaluation
 	      of these parameters is warranted.
-	\item \textbf{New On-Chain Mechanisms:} The ``viability gap'' affecting 873 active but struggling
+	\item \textbf{New on-chain mechanisms:} The ``viability gap'' affecting 873 active but struggling
 	      operators points to a structural problem that parameter-tuning alone may not solve. This suggests
 	      a need to explore new protocol-level mechanisms, such as the ``virtual pool'' or pool alliance concept,
 	      to allow smaller operators to combine resources and compete effectively.
@@ -1347,17 +1347,17 @@ We conclude that the \textbf{most significant \textit{immediate} risk to the net
 	not technical}, while a significant \textit{long-term} risk is economic.
 
 \begin{itemize}
-	\item \textbf{Technical Risk is Low:} The network is robustly decentralized and secure. The existence
+	\item \textbf{Technical risk is low:} The network is robustly decentralized and secure. The existence
 	      of 741 ``Healthy'' pools far exceeds original design requirements. The analysis of MPOs shows their stake
 	      is stable and does not pose a systemic threat to consensus.
-	\item \textbf{Social Risk is High:} The primary immediate risk is \textbf{operator disillusionment}.
+	\item \textbf{Social risk is high:} The primary immediate risk is \textbf{operator disillusionment}.
 	      This is a direct consequence of the divergences identified above. The large number of active but unprofitable
 	      operators (873 pools below the 3M ADA viability line) has created a disenfranchised segment of the community.
 	      These operators feel the system is inequitable, citing the pledge paradox (which only benefits whales), the
 	      high barrier to consistent rewards, and the struggle against delegator inertia. This social friction is
 	      fundamentally rooted in the network's underlying wealth distribution: a small number of wallets control a
 	      majority of the delegated stake, and a substantial portion (16B ADA) remains unstaked.
-	\item \textbf{Long-Term Economic Risk:} Beyond the social risk, the analysis confirms a critical
+	\item \textbf{Long-Term economic risk:} Beyond the social risk, the analysis confirms a critical
 	      long-term \textbf{economic risk: network sustainability}. As detailed in Section 3.8, the current reward
 	      model is overwhelmingly subsidized by the ADA reserves, which are on a finite depletion schedule. The
 	      network's long-term survival is contingent on a successful transition to a fee-market model, where transaction
@@ -1371,7 +1371,7 @@ transaction volume.
 
 This reality suggests a strategic imperative for the community. Ecosystem funds, particularly
 the \textbf{Treasury and Project Catalyst}, should consider prioritizing and directing resources
-toward identifying and nurturing ``killer apps''—applications with the potential for mass adoption that
+toward identifying and nurturing ``killer apps'' with the potential for mass adoption that
 can drive significant on-chain activity in the Leios era. To accelerate this growth, projects should
 also be encouraged to seek traditional \textbf{VC funding} and not rely solely on community-governed treasuries.
 
@@ -1391,7 +1391,7 @@ actions are recommended:
 	\item \textbf{For governance consideration:}
 	      \begin{itemize}
 		      \item \textbf{On the $k$ parameter:} This report demonstrates that the network is securely decentralized
-		            with its current number of healthy pools. Determining the \textit{optimal} number of pools, and therefore
+		            with its current number of healthy pools. Determining the \textit{desired} number of pools, and therefore
 		            whether $k$ should be adjusted, is a policy decision that transcends technical analysis. These findings
 		            should serve as a key input for a formal, on-chain debate on this matter.
 		      \item \textbf{On fee parameters:} There is broad operator consensus for introducing a minimum margin
@@ -1416,7 +1416,7 @@ actions are recommended:
 		            active value should then be set by a subsequent on-chain governance action. This separates technical
 		            upgrades from economic policy decisions.
 		      \item \textbf{Formalize the pruning of inactive pools:}  The 1,305 Inactive pools identified in this report are empirical
-		            evidence of the 'stale stake' problem. This problem was anticipated but deferred in the Shelley-era
+		            evidence of the `stale stake' problem. This problem was anticipated but deferred in the Shelley-era
 		            Delegation and Incentives Design Specification (SL-D1).This report moves beyond confirmation by proposing a more nuanced approach to
 		            identifying these pools. Given that the problem predicted in the SL-D1 document is now materialized, we
 		            recommend initiating a formal research effort to determine the optimal on-chain mechanism for identifying and
