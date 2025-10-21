@@ -178,7 +178,9 @@ The report proposes a multi-pronged approach for consideration by governance and
     
     \item \textbf{Re-evaluate parameters:} Formally analyze and debate adjustments to economic parameters, including a minimum margin and a reduction of the fixed cost, to address operator frustrations.
 
-    \item \textbf{Prune inactive pools:} Initiate a formal research effort to define an on-chain mechanism for pruning the 1,305 "Inactive" pools, addressing the "stale stake" problem.
+    \item \textbf{Consider minPoolMargin:} This proposal seems to have the support from pools of all sizes. Should be paired with a reduction of minPoolCost to 0. Researchers think minPoolCost favors Sybil attacks.
+
+	\item \textbf{Prune inactive pools:} Initiate a formal research effort to define an on-chain mechanism for pruning the 1,305 "Inactive" pools, addressing the "stale stake" problem.
 
     \item \textbf{Activate latent stake:} Launch a formal research initiative to understand the barriers preventing 16 billion ADA from participating in consensus.
 \end{itemize}
@@ -848,6 +850,10 @@ market into two main tiers:
 	      attract delegation.
 \end{enumerate}
 
+IO Research team believe that Min Pool Cost favors Sybil attacks and should be lowered to 0 or removed. 
+Which could be paired with the introduction of Min Margin as a new protocol parameter to prevent a 
+race to the bottom on fees. 
+
 \subsubsection{Pool margin}
 
 The pool margin, the percentage of rewards taken by the operator, is a key strategic
@@ -906,6 +912,7 @@ adopt one of a few distinct fee strategies, creating clusters of behavior.
 	\item \textbf{The private pool (100\% Margin):} Pool cost is irrelevant for private pools, they will
 	      collect all rewards from the pool anyway.
 \end{itemize}
+
 
 Outside of these three strategies, the chart is sparse, indicating that operators see little incentive to
 deviate from these established fee packages.
@@ -1242,7 +1249,7 @@ challenges:
 	      rewards unless the amount is exceptionally large, failing to function as the intended ``skin in the game''
 	      mechanism for most operators.
 	\item \textbf{Minimum pool fee:} This is a point of contention. While smaller pools rely on the fixed fee
-	      to cover costs, it can also deter delegators who see their rewards consumed.
+	      to cover costs, it can also deter delegators who see their rewards consumed. 
 	\item \textbf{Slow pace of protocol changes:} Operators expressed frustration with the slow progress on
 	      implementing improvements to incentive parameters that have been discussed within the community for years.
 \end{itemize}
