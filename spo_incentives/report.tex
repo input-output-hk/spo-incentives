@@ -117,7 +117,7 @@ invaluable insights and detailed feedback were instrumental to this work:
 \textbf{Samuel Leathers, Alejandro Garcia, Arturo Mora, Evangelos Markakis, Ryan Wiley, 
 Matthew Capps, and Rich Manderino}.
 
-Special thanks are extended to \textbf{Kevin Hammond, Neil Davis, Alexander Moser, Markus Gufler, 
+Special thanks are extended to \textbf{Kevin Hammond, Neil Davies, Alexander Moser, Markus Gufler, 
 Vijayanath Bhuvanagiri and Adam Rusch} from the Intersect Protocol Parameters Sub-Committee for 
 their support and technical discussions; and to \textbf{Taichi Yokoyama}, who played a critical role in
 facilitating and translating workshops with the Japanese SPO community.
@@ -149,7 +149,12 @@ launch in the Shelley era. The primary objective is to evaluate the system's rea
 against its original game-theoretic design goals, assessing its overall health, identifying systemic 
 risks, and determining the need for protocol adjustments. The methodology compares the theoretical goals 
 codified in the design specification (Section 2) with a deep empirical analysis of on-chain data and 
-qualitative findings from Stake Pool Operator (SPO) focus groups (Section 3).
+qualitative findings from Stake Pool Operator (SPO) focus groups (Section 3). 
+
+This document aims to inform the community and governance bodies about the current state of the incentive mechanism 
+it's successes and challenges, and to be a conversation starter for potential refinements and improvements to the system. 
+We encourage the community to review this report, provide feedback, and engage in discussions about the future of Cardano's incentives
+and sustainability.
 
 \subsection*{Key Findings}
 
@@ -170,9 +175,8 @@ for its operator community.
     
     \item \textbf{The "Paradox of Pledge":} While an effective Sybil deterrent, the pledge mechanism 
     fails as a meaningful "skin-in-the-game" signal for the vast majority of operators. On-chain analysis 
-    confirms the reward bonus is "functionally irrelevant" for pledges under 10M ADA (e.g., deltas as low 
-    as 0.07 ADA), a finding echoed by frustrated SPOs. This creates a competitive imbalance that primarily 
-    benefits well-capitalized actors.
+    confirms the reward bonus is "functionally irrelevant" for pledges under 10M ADA a finding echoed by SPOs. 
+	This creates a competitive imbalance that primarily benefits well-capitalized actors.
     
     \item \textbf{The "Viability gap":} The system has not converged on the theoretical $k=500$ pools, but 
     has instead found a stable, stratified equilibrium of 1,614 active pools. A direct consequence is the 
@@ -183,6 +187,13 @@ for its operator community.
     not accounted for in a simplified rational-actor model. First, approximately 16B ADA remains outside the 
     consensus mechanism, creating a capital-constrained, zero-sum environment. Second, delegator behavior is 
     complex, dominated by inertia ("sticky stake") rather than pure yield optimization.
+
+	\item \textbf{Current delegated stake can only saturate 289 pools:} With 21.7B ADA currently delegated, 
+	only 289 pools can reach the saturation point of 75M ADA. This means that even in an ideal scenario where 
+	all stake is perfectly distributed, only 289 pools can be fully saturated, leaving the remaining pools 
+	undersaturated and less competitive. The stake distribution is highly uneven. At the time of writing this 
+	report there are only 77 saturated pools.
+
 \end{itemize}
 
 \subsection*{Risks and Conclusions}
@@ -200,22 +211,43 @@ The report identifies two primary risks to the network:
     ability to generate "killer apps" that drive sustainable on-chain activity.
 \end{enumerate}
 
-The findings indicate that the system requires \textbf{fine-tuning and targeted revisions, not a complete overhaul}. The fundamental game-theoretic model is sound for its primary purpose of securing the network.
+The findings indicate that the system requires \textbf{fine-tuning and targeted revisions, not a complete overhaul}. The fundamental 
+game-theoretic model is sound for its primary purpose of securing the network. The system is decentralized enough to be resiliant 
+and sensorship-resistant. 
 
 \subsection*{Recommendations}
 
 The report proposes a multi-pronged approach for consideration by governance and protocol developers:
 
 \begin{itemize}
-    \item \textbf{Address the viability gap:} Explore new on-chain mechanisms, such as "pool alliances" or "virtual pools," to allow the 873 struggling operators to combine resources and compete effectively.
+    \item \textbf{Address the viability gap:} Explore new on-chain mechanisms, such as "pool alliances" or "virtual pools," to allow the 873 struggling 
+	operators to combine resources and compete effectively without compromising decentralization.
     
-    \item \textbf{Re-evaluate parameters:} Formally analyze and debate adjustments to economic parameters, including a minimum margin and a reduction of the fixed cost, to address operator frustrations.
+    \item \textbf{Re-evaluate parameters:} Formally analyze and debate adjustments to economic parameters, including a Minimum Pool Margin a (minPoolCost) and a reduction 
+	and potentially to eliminate minPoolCost.
 
-    \item \textbf{Consider minPoolMargin:} This proposal seems to have the support from pools of all sizes. Should be paired with a reduction of minPoolCost to 0. Researchers think minPoolCost favors Sybil attacks.
+    \item \textbf{Consider minPoolMargin:} This proposal seems to have the support from pools of all sizes. Should be paired with a reduction of minPoolCost 
+	to 0. Researchers think minPoolCost favors Sybil attacks.
 
-	\item \textbf{Prune inactive pools:} Initiate a formal research effort to define an on-chain mechanism for pruning the 1,305 "Inactive" pools, addressing the "stale stake" problem.
+	\item \textbf{Prune inactive pools:} Initiate a formal research effort to define an on-chain mechanism for pruning "Inactive" pools, addressing the 
+	"stale stake" problem foreseen in the original design.
 
     \item \textbf{Activate latent stake:} Launch a formal research initiative to understand the barriers preventing 16 billion ADA from participating in consensus.
+
+	\item \textbf{Focus on enabling a healthy economic transition:} Prioritize protocol enhancements and ecosystem development that ensure a smooth transition to 
+	a fee-based reward system.
+    \begin{itemize}
+        \item \textbf{At the protocol level:} This requires two parallel tracks. The first is growing network capacity via Leios to handle higher 
+		transaction volumes. The second is enhancing economic competitivity. This involves moving beyond the current, single-price fee model to implement 
+		a more sophisticated, dynamic fee market. A tiered pricing mechanism, for example, would allow the network to better manage resources, improve user 
+		experience by offering differentiated service levels, and compete more effectively. The academic paper \emph{Tiered Mechanisms for Blockchain Transaction Fees}
+		\footnote{Kiayias, A., Koutsoupias, E., Lazos, P., \& Panagiotakos, G. (2023). \emph{Tiered Mechanisms for Blockchain Transaction Fees}. Available at: https://arxiv.org/pdf/2304.06014.pdf} should 
+		serve as the logical starting point for this conversation.
+
+        \item \textbf{At the ecosystem level:} These protocol upgrades must be met by a focused effort to foster high-value applications. The long-term sustainability 
+		of the network will be secured by "killer apps" that drive the meaningful on-chain transaction volume required to fund rewards through fees.
+    \end{itemize}
+
 \end{itemize}
 
 % === EXECUTIVE SUMMARY END ===
@@ -625,8 +657,15 @@ operator community facing challenges with scale.
 This suggests the potential benefit of an on-chain mechanism that would allow
 them to form alliances. Such a mechanism could enable thesegroups to combine
 resources and operational duties, creating a larger, more reliable, and
-cost-efficient `virtual stake pool'. This capability is, of course, very common
-in the traditional markets, companies form consortia, joint ventures, and
+cost-efficient `virtual stake pool'\footnote{The term 'virtual stake pool' and core insight
+from the telecommunications industry were provided by Dr. Neil Davies of the Intersect Parameters sub-committee.
+In a conversation with the author on October 2, 2025, Dr. Davies described how practices like network
+sharing agreements and Mobile Virtual Network Operators (MVNOs) allow smaller operators to 
+compete in an industry dominated by larger incumbents. In discussing this parallelism, we noted
+an important distinction: whereas MVNOs typically lease network capacity from a larger provider, 
+virtual stake pools would instead pool their collective resources to form a new, larger entity,
+sharing both operational responsibilities and rewards among its members.} This capability is, of 
+course, very common in the traditional markets, companies form consortia, joint ventures, and
 strategic alliances to pool resources and share risks. We think this is an
 interesting avenue for future research for Cardano.
 
@@ -1223,7 +1262,7 @@ The chart below illustrates key trends related to the sustainability of Cardano'
 	\centering
 	\includegraphics[width=\textwidth]{img/sustainability_trends_with_projection_208-583.png}
 	\caption{Cardano reward funding sources and Reserves projection}
-	\label{fig:sustainability_trends}
+	\label{fig:reserves_projection}
 \end{figure}
 
 The top panel clearly shows that the vast majority of staking rewards distributed are currently funded
@@ -1231,16 +1270,45 @@ by monetary expansion drawn from the ADA reserves (parameter $\rho$). Transactio
 minor fraction to the total rewards paid. The bottom panel depicts the historical decline of the ADA reserves
 due to this monetary expansion and projects its depletion, estimating reserves will run out around epoch 3500.
 
-These trends highlight a critical need for a new sustainability model. The current heavy reliance
-on reserves to fund rewards was designed to bootstrap the network and incentivize
-participation during its growth phase. However, as reserves deplete, the network must shift
-towards funding rewards primarily through transaction fees. The charts indicate current transaction volume
-is insufficient for this. If transaction levels remain at present levels, significant pressure on the reward
-system may emerge between epochs 1000 and 1500, well before the projected depletion date. This underscores
-the criticality of the upcoming Leios upgrade, which aims to  vastly increase network capacity. While Leios
-provides the necessary infrastructure for higher throughput, long-term sustainability hinges on the growth
-of the Cardano ecosystem, requiring new applications and use cases to drive the transaction volume
-needed to adequately fund staking rewards through fees alone.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{img/rewards_fees_tx_count_last_73_epochs.png}
+	\caption{}
+	\label{fig:sustainability_trends}
+\end{figure}
+
+An analysis of the last 73 epochs (1 year) shows that Cardano processed an average of 233,909 transactions per epoch. At an average 
+fee of 0.32 ADA, these transactions generated 76,902 ADA in fees per epoch.
+
+This revenue contrasts with the approximately 7.7 million ADA per epoch in rewards paid out to stake pools and their delegators during 
+the same period. Consequently, current transaction fees cover only 0.9\% of distributed rewards. As rewards from reserves diminish, the gap 
+between fee revenue and rewards paid will continue to grow.
+
+To understand the path to a fully fee-driven model, it is crucial to differentiate between the network's theoretical and realistic capacity. 
+While the 90,112-byte block size allows for an absolute theoretical maximum of 22.5 TPS (based on a minimal 200-byte transaction), the current 
+average transaction size of 1,436 bytes defines a more realistic throughput. At this average size, a block can fit 62 transactions, capping 
+realistic network throughput at 3.1 TPS. This realistic throughput equates to a maximum of 1,339,200 transactions per epoch, yielding a potential 
+fee revenue of approximately 428,000 ADA per epoch—a figure still far from the current rewards level.
+
+This analysis highlights two distinct needs. First, increased utilization is required, as the current yearly average of 233,909 transactions 
+represents only 13\% of the network's realistic capacity. Second, and more importantly, a substantial increase in raw network capacity is 
+essential. To cover current rewards solely through fees, the network would need to process approximately 12-16 times more transactions than its 
+current realistic maximum allows.
+
+The heavy reliance on reserves to fund rewards was designed to bootstrap the network and incentivize participation during its growth phase. The network 
+must now mature toward a fee-driven model as reserves deplete.
+
+If transaction levels remain at present levels, significant pressure on the reward system may emerge between epochs 1000 and 1200, roughly 
+to the point when the reserves decline to 2 billion ADA. This underscores the criticality of the upcoming Leios upgrade, which aims to substantially
+increase network capacity. While Leios provides the necessary infrastructure for higher throughput, long-term sustainability hinges on the growth of 
+the Cardano ecosystem, requiring new applications and use cases to drive the transaction volume needed to adequately fund staking rewards through fees alone.
+
+In addition to network capacity and utilization, other strategies to enhance fee revenue and Cardano competitiveness should be explored. These include
+Tiered Pricing Models like the one proposed in \emph{Tiered Mechanisms for Blockchain Transaction Fees} \footnote{Kiayias, A., Koutsoupias, E., Lazos, P., 
+\& Panagiotakos, G. (2023). \emph{Tiered Mechanisms for Blockchain Transaction Fees}. Available at: https://arxiv.org/pdf/2304.06014.pdf}. This research 
+proposes a mechanism that separates available space in each block into a maximum of k different tiers. Each tier has its own delay and price parameters, 
+with delays increasing and prices decreasing in successive tiers. The delay of the first tier is always set to 1, i.e., it is minimal, while all other 
+delays and prices change dynamically.
 
 \subsection{SPO focus group findings}
 
@@ -1301,7 +1369,9 @@ challenges:
 	      success.
 \end{itemize}
 
+
 \section{Synthesis and evaluation}
+
 \label{sec:synthesis}
 
 This section synthesizes the findings from the preceding analysis to evaluate the
@@ -1370,7 +1440,7 @@ However, the system is not optimal. The significant divergences—particularly t
 of pledge for most operators and the persistent ``viability gap'', necessitate adjustments. The operator
 frustration with the slow pace of change on these known issues underscores this need.
 
-The analysis points toward two avenues for improvement:
+The analysis points toward three avenues for improvement:
 \begin{enumerate}
 	\item \textbf{Parameter adjustment:} The pledge mechanism fails to provide a meaningful signal
 	      for most operators , and fee structures are a point of contention. This suggests a re-evaluation
@@ -1379,6 +1449,12 @@ The analysis points toward two avenues for improvement:
 	      operators points to a structural problem that parameter-tuning alone may not solve. This suggests
 	      a need to explore new protocol-level mechanisms, such as the ``virtual pool'' or pool alliance concept,
 	      to allow smaller operators to combine resources and compete effectively.
+	\item \textbf{Discuss minPoolMargin}: The widespread support among operators for a minimum margin
+	      parameter indicates that this change could address some economic viability concerns. Given that
+	      a formal proposal already exists, it is recommended that this proposal be formally analyzed and
+	      validated against the findings in this report and the changes to be included in the upcoming Dijkstra
+		  era hardfork.
+
 \end{enumerate}
 
 \section{Conclusions and recommendations}
@@ -1437,13 +1513,13 @@ actions are recommended:
 		      \item \textbf{On fee parameters:} There is broad operator consensus for introducing a minimum margin
 		            protocol parameter. Given that a formal proposal already exists for this, it is recommended that this
 		            proposal be formally analyzed and validated against the findings in this report. This exploration should
-		            also consider a corresponding reduction of the minimum fixed cost and be brought forward for debate
+		            also consider a corresponding reduction or elimination of the minimum fixed cost and be brought forward for debate
 		            through the governance framework.
 	      \end{itemize}
 
 	\item \textbf{For protocol development:}
 	      \begin{itemize}
-		      \item \textbf{Introduce a mechanism for pool alliances:} NEED POLISH To directly address the viability gap faced by
+		      \item \textbf{Introduce a mechanism for pool alliances:} To directly address the viability gap faced by
 		            smaller operators, it is recommended that a research and development track be initiated to create an
 		            on-chain mechanism for ``joint ventures'' or ``virtual pools''. This would allow smaller pools to combine
 		            their resources to compete more effectively. Such a mechanism could enable these groups to combine resources
@@ -1467,7 +1543,7 @@ actions are recommended:
 
 	\item \textbf{For future research:}
 	      \begin{itemize}
-		      \item \textbf{Investigate unstaked ada:} A formal research initiative should be launched to understand
+		      \item \textbf{Investigate unstaked ada:} A market research initiative should be launched to understand
 		            the factors driving the \textasciitilde16 billion ada that remains unstaked. Understanding this cohort
 		            is critical to improving network participation.
 		      \item \textbf{Analyze the impact of custodial stake:} A study should be conducted to quantify the impact
