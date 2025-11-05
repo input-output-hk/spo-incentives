@@ -165,28 +165,28 @@ for its operator community.
 \begin{itemize}
     \item \textbf{A secure and performant network:} The core goals of incentivizing participation and 
     performance have been unequivocally met. The network is robustly decentralized and secure, supported by 741 
-    "Healthy" pools and 246 "Viable" pools, and consistently achieves over 98\% of its theoretical maximum block 
+    ``Healthy'' pools and 246 ``Viable'' pools, and consistently achieves over 98\% of its theoretical maximum block 
     production.
     
     \item \textbf{Flawless protocol mechanics:} The automated rewards distribution system has functioned 
     flawlessly since inception, validating its design. Furthermore, the pledge mechanism is proven to be a 
     highly effective Sybil deterrent, creating a powerful economic incentive to consolidate capital, just as it 
     was designed to do.
-    
-    \item \textbf{The "Paradox of Pledge":} While an effective Sybil deterrent, the pledge mechanism 
-    fails as a meaningful "skin-in-the-game" signal for the vast majority of operators. On-chain analysis 
-    confirms the reward bonus is "functionally irrelevant" for pledges under 10M ADA a finding echoed by SPOs. 
+
+    \item \textbf{The ``Paradox of Pledge'':} While an effective Sybil deterrent, the pledge mechanism 
+    fails as a meaningful ``skin-in-the-gam'' signal for the vast majority of operators. On-chain analysis 
+    confirms the reward bonus is ``functionally irrelevan'' for pledges under 10M ADA a finding echoed by SPOs. 
 	This creates a competitive imbalance that primarily benefits well-capitalized actors.
-    
-    \item \textbf{The "Viability gap":} The system has not converged on the theoretical $k=500$ pools, but 
+
+    \item \textbf{The ``Viability gap'':} The system has not converged on the theoretical $k=500$ pools, but 
     has instead found a stable, stratified equilibrium of 1,614 active pools. A direct consequence is the 
-    "viability gap": 873 active operators (54\% of the total) remain below the 3M ADA threshold required for 
+    ``viability gap'': 873 active operators (54\% of the total) remain below the 3M ADA threshold required for 
     consistent block production.
     
     \item \textbf{A Capital-constrained environment:} The viability gap is cemented by two real-world factors 
-    not accounted for in a simplified rational-actor model. First, approximately 16B ADA remains outside the 
+    not accounted for in a simplified rational-actor model. First, approximately 16B ADA (42\%) remains outside the 
     consensus mechanism, creating a capital-constrained, zero-sum environment. Second, delegator behavior is 
-    complex, dominated by inertia ("sticky stake") rather than pure yield optimization.
+    complex, dominated by inertia (``sticky stake'') rather than pure yield optimization.
 
 	\item \textbf{Current delegated stake can only saturate 289 pools:} With 21.7B ADA currently delegated, 
 	only 289 pools can reach the saturation point of 75M ADA. This means that even in an ideal scenario where 
@@ -201,26 +201,29 @@ for its operator community.
 The report identifies two primary risks to the network:
 
 \begin{enumerate}
-    \item \textbf{High social risk:} The most immediate threat is operator disillusionment. The "viability gap" 
-    and the pledge paradox have created a large, disenfranchised segment of the operator community that feels the 
+    \item \textbf{High social risk:} The most immediate threat is operator disillusionment. The ``viability gap'' 
+    and the pledge paradox have created a large segment of the operator community that feels the 
     system is inequitable.
     
     \item \textbf{Long-term economic risk:} The network's sustainability model is contingent on a successful 
-    transition from the current reward system, which is overwhelmingly subsidized by the depleting ADA reserves,
-    to one funded by transaction fees. This places immense importance on the Leios upgrade and the ecosystem's 
-    ability to generate "killer apps" that drive sustainable on-chain activity.
+    transition from the current reward system, which is overwhelmingly subsidized by the ADA reserves,
+    to one funded by transaction fees. This places immense importance on the system's ability to increase fee revenue
+	for which Leios update is critical, as the current system would not be able to support the required 
+	transaction volume, not even at it's current maximum capacity. Obviously, this hinges on the ecosystem's 
+	ability to generate projects and utility that drive sustainable on-chain activity.
+
 \end{enumerate}
 
 The findings indicate that the system requires \textbf{fine-tuning and targeted revisions, not a complete overhaul}. The fundamental 
-game-theoretic model is sound for its primary purpose of securing the network. The system is decentralized enough to be resiliant 
-and sensorship-resistant. 
+game-theoretic model is sound for its primary purpose of securing the network. The system is decentralized enough to be resilient 
+and censorship-resistant. 
 
 \subsection*{Recommendations}
 
 The report proposes a multi-pronged approach for consideration by governance and protocol developers:
 
 \begin{itemize}
-    \item \textbf{Address the viability gap:} Explore new on-chain mechanisms, such as "pool alliances" or "virtual pools," to allow the 873 struggling 
+    \item \textbf{Address the viability gap:} Explore new on-chain mechanisms, such as ``pool alliances'' or ``virtual pools,'' to allow the 873 struggling 
 	operators to combine resources and compete effectively without compromising decentralization.
     
     \item \textbf{Re-evaluate parameters:} Formally analyze and debate adjustments to economic parameters, including a Minimum Pool Margin a (minPoolCost) and a reduction 
@@ -229,8 +232,8 @@ The report proposes a multi-pronged approach for consideration by governance and
     \item \textbf{Consider minPoolMargin:} This proposal seems to have the support from pools of all sizes. Should be paired with a reduction of minPoolCost 
 	to 0. Researchers think minPoolCost favors Sybil attacks.
 
-	\item \textbf{Prune inactive pools:} Initiate a formal research effort to define an on-chain mechanism for pruning "Inactive" pools, addressing the 
-	"stale stake" problem foreseen in the original design.
+	\item \textbf{Prune inactive pools:} Initiate a formal research effort to define an on-chain mechanism for pruning ``Inactive'' pools, addressing the 
+	``stale stake'' problem foreseen in the original design.
 
     \item \textbf{Activate latent stake:} Launch a formal research initiative to understand the barriers preventing 16 billion ADA from participating in consensus.
 
@@ -245,7 +248,7 @@ The report proposes a multi-pronged approach for consideration by governance and
 		serve as the logical starting point for this conversation.
 
         \item \textbf{At the ecosystem level:} These protocol upgrades must be met by a focused effort to foster high-value applications. The long-term sustainability 
-		of the network will be secured by "killer apps" that drive the meaningful on-chain transaction volume required to fund rewards through fees.
+		of the network will be secured by ``killer apps'' that drive the meaningful on-chain transaction volume required to fund rewards through fees.
     \end{itemize}
 
 \end{itemize}
@@ -322,7 +325,7 @@ to evaluate the system's performance, followed by final conclusions and recommen
 The design of the Cardano incentives scheme intends to align the financial
 self-interest of individual actors with the overall health, security, and
 decentralization of the network. An analysis of the \textit{Shelley-era
-	Delegation and Incentives Design Specification} reveals a set of core goals and
+Delegation and Incentives Design Specification} reveals a set of core goals and
 behavioral predictions that form the theoretical foundation of the economic
 model.
 
@@ -375,7 +378,8 @@ align incentives around decentralization, reliability, and operator commitment.
 		      \item Calculate the final reward pot (R):
 		            \[ R = (1 - \tau) \cdot (\text{fees} + \rho \cdot \text{reserves}) \]
 	      \end{enumerate}
-	      This value $R$ is the total ADA available to be shared among all stake pools in a given epoch.
+	      This value $R$ is the total ADA available to be shared among all stake pools in a given epoch, $\tau$ is the treasury cut 
+		  and $\rho$ is the monetary expansion rate.
 
 	\item \textbf{A pool's optimal reward is calculated.} The protocol calculates the maximum potential reward
 	      a pool is entitled to, assuming perfect performance. The formula is:
@@ -623,9 +627,9 @@ to one of the four viability tiers.
 	\label{tab:viability-summary}
 \end{table}
 
-\paragraph{The inactive layer:} The largest group, comprising 1,305 pools, is
+\paragraph{The inactive layer:} The largest group, comprising 1,305 pools (44\%), is
 classified as \texttt{Inactive}. These operators have failed to meet viability thresholds and show multiple
-signs of abandonment. While this is a large number of pools, their economic
+signs of inactivity or abandonment While this is a large number of pools, their economic
 impact is negligible. Together, they control only \textasciitilde47 million
 ADA, less than 0.22\% of the delegated stake. This ``long tail'' of inactive
 pools does not pose a systemic risk to the network's security.
@@ -635,16 +639,16 @@ pools does not pose a systemic risk to the network's security.
 and competing for delegation. This active group is not monolithic and can be
 broken down into three sub-categories.
 \begin{itemize}
-	\item \textbf{Healthy (741 Pools):} This is the core of the Cardano network. These operators have surpassed
+	\item \textbf{Healthy - 741 Pools (\textasciitilde26\%):} This is the core of the Cardano network. These operators have surpassed
 	      the 3M ADA viability line, ensuring consistent block production and financial sustainability. They control
 	      the majority of the network's stake (21.14 billion ADA) and are responsible for most of its security and
 	      block production. The existence of a large and diverse set of healthy operators is an indicator of the
 	      incentive scheme's success.
-	\item \textbf{Viable but small (246 Pools):} This is a group of operators who have not yet reached the 3M
+	\item \textbf{Viable but small - 246 Pools (\textasciitilde8\%):} This is a group of operators who have not yet reached the 3M
 	      ADA stake threshold but have demonstrated strong performance by earning enough rewards to cover their
 	      costs. They control approximately 368 million ADA\@. These pools represent a combination of operational
 	      skill, community support, and statistical luck.
-	\item \textbf{Struggling (627 Pools):} This large group of operators is actively participating but failing
+	\item \textbf{Struggling - 627 Pools (\textasciitilde22\%):} This large group of operators is actively participating but failing
 	      to achieve financial viability. They have neither the stake for consistent block production nor the cumulative
 	      rewards over the analysis period to cover their costs. Collectively control about 191 million ADA\@. Their long-term
 	      sustainability is uncertain.
@@ -1299,11 +1303,12 @@ The heavy reliance on reserves to fund rewards was designed to bootstrap the net
 must now mature toward a fee-driven model as reserves deplete.
 
 If transaction levels remain at present levels, significant pressure on the reward system may emerge between epochs 1000 and 1200, roughly 
-to the point when the reserves decline to 2 billion ADA. This underscores the criticality of the upcoming Leios upgrade, which aims to substantially
-increase network capacity. While Leios provides the necessary infrastructure for higher throughput, long-term sustainability hinges on the growth of 
-the Cardano ecosystem, requiring new applications and use cases to drive the transaction volume needed to adequately fund staking rewards through fees alone.
+to the point when the reserves decline to 2 billion ADA. This underscores the criticality of increasing fee revenue for the system. The upcoming Leios upgrade, 
+which aims to substantially increase network capacity, is very important to achieve a fee-driven model, but that is only half of the equation: Leios 
+provides the necessary infrastructure for higher throughput, long-term sustainability hinges on the growth of the Cardano ecosystem to create the 
+applications and utility to drive the transaction volume needed to adequately fund staking rewards through fees alone. 
 
-In addition to network capacity and utilization, other strategies to enhance fee revenue and Cardano competitiveness should be explored. These include
+In addition to network capacity and increasing utilization, other strategies to enhance fee revenue and Cardano competitiveness should be explored. These include
 Tiered Pricing Models like the one proposed in \emph{Tiered Mechanisms for Blockchain Transaction Fees} \footnote{Kiayias, A., Koutsoupias, E., Lazos, P., 
 \& Panagiotakos, G. (2023). \emph{Tiered Mechanisms for Blockchain Transaction Fees}. Available at: https://arxiv.org/pdf/2304.06014.pdf}. This research 
 proposes a mechanism that separates available space in each block into a maximum of k different tiers. Each tier has its own delay and price parameters, 
@@ -1485,7 +1490,7 @@ necessary network capacity for high throughput, it only creates the ``highway'' 
 The primary long-term risk is a failure to generate the ecosystem growth required to produce sustainable
 transaction volume.
 
-This reality suggests a strategic imperative for the community. Ecosystem funds, particularly
+This suggests a strategic imperative for the community. Ecosystem funds, particularly
 the \textbf{Treasury and Project Catalyst}, should consider prioritizing and directing resources
 toward identifying and nurturing ``killer apps'' with the potential for mass adoption that
 can drive significant on-chain activity in the Leios era. To accelerate this growth, projects should
