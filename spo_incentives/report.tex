@@ -9,6 +9,10 @@
 \usepackage{float}
 \usepackage[margin=1in]{geometry}
 \usepackage{subcaption}
+\usepackage{tabularx}  % For the 'X' column type
+\usepackage{booktabs}  % For \toprule, \midrule, \bottomrule
+\usepackage{float}     % For the [H] placement specifier
+\usepackage{enumitem}  % For the compact list options
 
 % --- Font & Typography ---
 \usepackage{lmodern}         
@@ -66,7 +70,7 @@
     \texttt{carlos.lopezdelara@iohk.io}
 }
 
-\date{October 20, 2025}
+\date{Last update: November 6, 2025}
 
 % === Start new sections in new pages ===
 \usepackage{titlesec}
@@ -97,12 +101,39 @@
     
     \vfill
     
-    {\large October 20, 2025}
+    {\large Last update: \today}
     
     \vfill 
 \end{titlepage}
 
 \thispagestyle{empty} 
+
+% --- DOCUMENT HISTORY SECTION (NEW) ---
+\section*{Document History}
+\label{sec:doc_history}
+
+\begin{table}[H]
+    \centering
+	\small
+    \renewcommand{\arraystretch}{1.3} 
+    \begin{tabularx}{\textwidth}{@{} l l X @{}}
+        \toprule
+        \textbf{Version} & \textbf{Date} & \textbf{Description of Change} \\
+        \midrule
+        1.0 & 2025--10--20 & Initial draft \\
+        \addlinespace
+        1.1 & 2025--11--05 & Address comments from reviewers \\
+        \addlinespace
+        1.2 & 2025--11--06 & Rewording in paragraph discussing reserves depletion. ``As rewards from reserves diminish, the need 
+        for increased fee revenue becomes critical. For the system to continue distributing rewards at the current level, transaction fee revenue must 
+        expand sufficiently to replace the diminishing reserves contribution'' \\      
+        \addlinespace 
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\clearpage 
+% --- END DOCUMENT HISTORY ---
 
 \tableofcontents
 \newpage
@@ -175,7 +206,7 @@ for its operator community.
 
     \item \textbf{The ``Paradox of Pledge'':} While an effective Sybil deterrent, the pledge mechanism 
     fails as a meaningful ``skin-in-the-gam'' signal for the vast majority of operators. On-chain analysis 
-    confirms the reward bonus is ``functionally irrelevan'' for pledges under 10M ADA a finding echoed by SPOs. 
+    confirms the reward bonus is ``functionally irrelevant'' for pledges under 10M ADA a finding echoed by SPOs. 
 	This creates a competitive imbalance that primarily benefits well-capitalized actors.
 
     \item \textbf{The ``Viability gap'':} The system has not converged on the theoretical $k=500$ pools, but 
@@ -1285,8 +1316,9 @@ An analysis of the last 73 epochs (1 year) shows that Cardano processed an avera
 fee of 0.32 ADA, these transactions generated 76,902 ADA in fees per epoch.
 
 This revenue contrasts with the approximately 7.7 million ADA per epoch in rewards paid out to stake pools and their delegators during 
-the same period. Consequently, current transaction fees cover only 0.9\% of distributed rewards. As rewards from reserves diminish, the gap 
-between fee revenue and rewards paid will continue to grow.
+the same period. Consequently, current transaction fees cover only 0.9\% of distributed rewards. As rewards from reserves diminish, the need 
+for increased fee revenue becomes critical. For the system to continue distributing rewards at the current level, transaction fee revenue must 
+expand sufficiently to replace the diminishing reserves contribution.
 
 To understand the path to a fully fee-driven model, it is crucial to differentiate between the network's theoretical and realistic capacity. 
 While the 90,112-byte block size allows for an absolute theoretical maximum of 22.5 TPS (based on a minimal 200-byte transaction), the current 
