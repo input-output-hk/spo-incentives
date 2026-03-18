@@ -3,3 +3,8 @@ spo_incentives/report.out
 spo_incentives/report.toc
 spo_incentives/report.aux
 
+# Large local Koios exports; keep them out of Git history.
+report/mainnet/pools-distribution/data/koios_pool_history_mainnet.csv
+report/mainnet/pools-distribution/data/koios_pool_owner_history_mainnet.csv
+scenarii-evaluation-legacy/data/koios_pool_history_mainnet.csv
+scenarii-evaluation-legacy/data/koios_pool_owner_history_mainnet.csv

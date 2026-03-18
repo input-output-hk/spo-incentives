@@ -1,0 +1,2 @@
+Scenario,Pools,Operators,Nakamoto,Pledge fraction,Rounds,Step 1 pools,Max pools/op,Mean margin,Median margin,Output folder
+Status Quo,506,451,198,0.732,18,5158,19,0.0276,0.0000,24-mainnet-entity-owner-capital-status-quo

@@ -1,0 +1,523 @@
+{
+  "metadata": {
+    "baseline_k": 500,
+    "high_k": 1000,
+    "baseline_a0": 0.3,
+    "scope_note": "First-pass canonical matrix limited to current K vs K=1000. K=750 is intentionally excluded from this matrix.",
+    "source_docs": [
+      "scenarii-evaluation/docs/formulas-status-quo-and-cips-ddd.md",
+      "scenarii-evaluation/docs/core-decision-model-v2.md",
+      "Context/governance-cip-recommendation-package.md"
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "baseline__baseline__k500",
+      "fee_rule": "baseline",
+      "stake_cap_rule": "baseline",
+      "k_variant": "k500",
+      "label": "Baseline fee rule + Baseline stake cap / K current",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Status quo fee split. No extra min-margin or min-rate floor beyond the current baseline assumptions.",
+        "stake_cap_rule": "Single global saturation threshold shared by all pools.",
+        "k_variant": "Hold the current target-pool count."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 170,
+        "min_pool_margin": 0.0,
+        "min_pool_rate": 0.0,
+        "cip0050_L": null,
+        "cip0037_saturation_floor": null,
+        "cip0037_pledge_reference_ada": null,
+        "k_target_pools": 500
+      },
+      "simulator_support": {
+        "status": "supported",
+        "reason": "Direct status-quo mapping.",
+        "engine_args": {
+          "reward_scheme": 0,
+          "k": 500,
+          "a0": 0.3
+        }
+      }
+    },
+    {
+      "id": "baseline__baseline__k1000",
+      "fee_rule": "baseline",
+      "stake_cap_rule": "baseline",
+      "k_variant": "k1000",
+      "label": "Baseline fee rule + Baseline stake cap / K 1000",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Status quo fee split. No extra min-margin or min-rate floor beyond the current baseline assumptions.",
+        "stake_cap_rule": "Single global saturation threshold shared by all pools.",
+        "k_variant": "Increase the target-pool count to 1000."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 170,
+        "min_pool_margin": 0.0,
+        "min_pool_rate": 0.0,
+        "cip0050_L": null,
+        "cip0037_saturation_floor": null,
+        "cip0037_pledge_reference_ada": null,
+        "k_target_pools": 1000
+      },
+      "simulator_support": {
+        "status": "supported",
+        "reason": "Direct status-quo mapping.",
+        "engine_args": {
+          "reward_scheme": 0,
+          "k": 1000,
+          "a0": 0.3
+        }
+      }
+    },
+    {
+      "id": "baseline__cip0050__k500",
+      "fee_rule": "baseline",
+      "stake_cap_rule": "cip0050",
+      "k_variant": "k500",
+      "label": "Baseline fee rule + CIP-0050 / K current",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Status quo fee split. No extra min-margin or min-rate floor beyond the current baseline assumptions.",
+        "stake_cap_rule": "Cap reward-eligible stake by both global saturation and pledge leverage.",
+        "k_variant": "Hold the current target-pool count."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 170,
+        "min_pool_margin": 0.0,
+        "min_pool_rate": 0.0,
+        "cip0050_L": 100,
+        "cip0037_saturation_floor": null,
+        "cip0037_pledge_reference_ada": null,
+        "k_target_pools": 500
+      },
+      "simulator_support": {
+        "status": "supported",
+        "reason": "Mapped to CIP50RSS in the current rewards-sharing engine.",
+        "engine_args": {
+          "reward_scheme": 4,
+          "k": 500,
+          "a0": 0.3,
+          "L": 100
+        }
+      }
+    },
+    {
+      "id": "baseline__cip0050__k1000",
+      "fee_rule": "baseline",
+      "stake_cap_rule": "cip0050",
+      "k_variant": "k1000",
+      "label": "Baseline fee rule + CIP-0050 / K 1000",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Status quo fee split. No extra min-margin or min-rate floor beyond the current baseline assumptions.",
+        "stake_cap_rule": "Cap reward-eligible stake by both global saturation and pledge leverage.",
+        "k_variant": "Increase the target-pool count to 1000."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 170,
+        "min_pool_margin": 0.0,
+        "min_pool_rate": 0.0,
+        "cip0050_L": 100,
+        "cip0037_saturation_floor": null,
+        "cip0037_pledge_reference_ada": null,
+        "k_target_pools": 1000
+      },
+      "simulator_support": {
+        "status": "supported",
+        "reason": "Mapped to CIP50RSS in the current rewards-sharing engine.",
+        "engine_args": {
+          "reward_scheme": 4,
+          "k": 1000,
+          "a0": 0.3,
+          "L": 100
+        }
+      }
+    },
+    {
+      "id": "baseline__cip0037__k500",
+      "fee_rule": "baseline",
+      "stake_cap_rule": "cip0037",
+      "k_variant": "k500",
+      "label": "Baseline fee rule + CIP-0037 / K current",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Status quo fee split. No extra min-margin or min-rate floor beyond the current baseline assumptions.",
+        "stake_cap_rule": "Make saturation pledge-dependent with a 10% lower-limit floor and a 500k ADA pledge reference.",
+        "k_variant": "Hold the current target-pool count."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 170,
+        "min_pool_margin": 0.0,
+        "min_pool_rate": 0.0,
+        "cip0050_L": null,
+        "cip0037_saturation_floor": 0.1,
+        "cip0037_pledge_reference_ada": 500000,
+        "k_target_pools": 500
+      },
+      "simulator_support": {
+        "status": "unsupported",
+        "reason": "Dynamic pledge-linked saturation is not implemented in the current rewards-sharing engine."
+      }
+    },
+    {
+      "id": "baseline__cip0037__k1000",
+      "fee_rule": "baseline",
+      "stake_cap_rule": "cip0037",
+      "k_variant": "k1000",
+      "label": "Baseline fee rule + CIP-0037 / K 1000",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Status quo fee split. No extra min-margin or min-rate floor beyond the current baseline assumptions.",
+        "stake_cap_rule": "Make saturation pledge-dependent with a 10% lower-limit floor and a 500k ADA pledge reference.",
+        "k_variant": "Increase the target-pool count to 1000."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 170,
+        "min_pool_margin": 0.0,
+        "min_pool_rate": 0.0,
+        "cip0050_L": null,
+        "cip0037_saturation_floor": 0.1,
+        "cip0037_pledge_reference_ada": 500000,
+        "k_target_pools": 1000
+      },
+      "simulator_support": {
+        "status": "unsupported",
+        "reason": "Dynamic pledge-linked saturation is not implemented in the current rewards-sharing engine."
+      }
+    },
+    {
+      "id": "cip0023__baseline__k500",
+      "fee_rule": "cip0023",
+      "stake_cap_rule": "baseline",
+      "k_variant": "k500",
+      "label": "CIP-0023 + Baseline stake cap / K current",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Introduce minPoolMargin while keeping minPoolCost in place.",
+        "stake_cap_rule": "Single global saturation threshold shared by all pools.",
+        "k_variant": "Hold the current target-pool count."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 170,
+        "min_pool_margin": 0.05,
+        "min_pool_rate": 0.0,
+        "cip0050_L": null,
+        "cip0037_saturation_floor": null,
+        "cip0037_pledge_reference_ada": null,
+        "k_target_pools": 500
+      },
+      "simulator_support": {
+        "status": "unsupported",
+        "reason": "The current rewards-sharing engine does not model the Cardano ledger fee-layer changes behind minPoolMargin/minPoolRate/minPoolCost."
+      }
+    },
+    {
+      "id": "cip0023__baseline__k1000",
+      "fee_rule": "cip0023",
+      "stake_cap_rule": "baseline",
+      "k_variant": "k1000",
+      "label": "CIP-0023 + Baseline stake cap / K 1000",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Introduce minPoolMargin while keeping minPoolCost in place.",
+        "stake_cap_rule": "Single global saturation threshold shared by all pools.",
+        "k_variant": "Increase the target-pool count to 1000."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 170,
+        "min_pool_margin": 0.05,
+        "min_pool_rate": 0.0,
+        "cip0050_L": null,
+        "cip0037_saturation_floor": null,
+        "cip0037_pledge_reference_ada": null,
+        "k_target_pools": 1000
+      },
+      "simulator_support": {
+        "status": "unsupported",
+        "reason": "The current rewards-sharing engine does not model the Cardano ledger fee-layer changes behind minPoolMargin/minPoolRate/minPoolCost."
+      }
+    },
+    {
+      "id": "cip0023__cip0050__k500",
+      "fee_rule": "cip0023",
+      "stake_cap_rule": "cip0050",
+      "k_variant": "k500",
+      "label": "CIP-0023 + CIP-0050 / K current",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Introduce minPoolMargin while keeping minPoolCost in place.",
+        "stake_cap_rule": "Cap reward-eligible stake by both global saturation and pledge leverage.",
+        "k_variant": "Hold the current target-pool count."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 170,
+        "min_pool_margin": 0.05,
+        "min_pool_rate": 0.0,
+        "cip0050_L": 100,
+        "cip0037_saturation_floor": null,
+        "cip0037_pledge_reference_ada": null,
+        "k_target_pools": 500
+      },
+      "simulator_support": {
+        "status": "unsupported",
+        "reason": "The current rewards-sharing engine does not model the Cardano ledger fee-layer changes behind minPoolMargin/minPoolRate/minPoolCost."
+      }
+    },
+    {
+      "id": "cip0023__cip0050__k1000",
+      "fee_rule": "cip0023",
+      "stake_cap_rule": "cip0050",
+      "k_variant": "k1000",
+      "label": "CIP-0023 + CIP-0050 / K 1000",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Introduce minPoolMargin while keeping minPoolCost in place.",
+        "stake_cap_rule": "Cap reward-eligible stake by both global saturation and pledge leverage.",
+        "k_variant": "Increase the target-pool count to 1000."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 170,
+        "min_pool_margin": 0.05,
+        "min_pool_rate": 0.0,
+        "cip0050_L": 100,
+        "cip0037_saturation_floor": null,
+        "cip0037_pledge_reference_ada": null,
+        "k_target_pools": 1000
+      },
+      "simulator_support": {
+        "status": "unsupported",
+        "reason": "The current rewards-sharing engine does not model the Cardano ledger fee-layer changes behind minPoolMargin/minPoolRate/minPoolCost."
+      }
+    },
+    {
+      "id": "cip0023__cip0037__k500",
+      "fee_rule": "cip0023",
+      "stake_cap_rule": "cip0037",
+      "k_variant": "k500",
+      "label": "CIP-0023 + CIP-0037 / K current",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Introduce minPoolMargin while keeping minPoolCost in place.",
+        "stake_cap_rule": "Make saturation pledge-dependent with a 10% lower-limit floor and a 500k ADA pledge reference.",
+        "k_variant": "Hold the current target-pool count."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 170,
+        "min_pool_margin": 0.05,
+        "min_pool_rate": 0.0,
+        "cip0050_L": null,
+        "cip0037_saturation_floor": 0.1,
+        "cip0037_pledge_reference_ada": 500000,
+        "k_target_pools": 500
+      },
+      "simulator_support": {
+        "status": "unsupported",
+        "reason": "The current rewards-sharing engine does not model the Cardano ledger fee-layer changes behind minPoolMargin/minPoolRate/minPoolCost."
+      }
+    },
+    {
+      "id": "cip0023__cip0037__k1000",
+      "fee_rule": "cip0023",
+      "stake_cap_rule": "cip0037",
+      "k_variant": "k1000",
+      "label": "CIP-0023 + CIP-0037 / K 1000",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Introduce minPoolMargin while keeping minPoolCost in place.",
+        "stake_cap_rule": "Make saturation pledge-dependent with a 10% lower-limit floor and a 500k ADA pledge reference.",
+        "k_variant": "Increase the target-pool count to 1000."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 170,
+        "min_pool_margin": 0.05,
+        "min_pool_rate": 0.0,
+        "cip0050_L": null,
+        "cip0037_saturation_floor": 0.1,
+        "cip0037_pledge_reference_ada": 500000,
+        "k_target_pools": 1000
+      },
+      "simulator_support": {
+        "status": "unsupported",
+        "reason": "The current rewards-sharing engine does not model the Cardano ledger fee-layer changes behind minPoolMargin/minPoolRate/minPoolCost."
+      }
+    },
+    {
+      "id": "cip0082__baseline__k500",
+      "fee_rule": "cip0082",
+      "stake_cap_rule": "baseline",
+      "k_variant": "k500",
+      "label": "CIP-0082 Stage 2 fee rule + Baseline stake cap / K current",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Remove minPoolCost and clamp operator rate with minPoolRate = 3%. When paired with K=1000 this acts as Stage 2 plus the Stage 4 K target.",
+        "stake_cap_rule": "Single global saturation threshold shared by all pools.",
+        "k_variant": "Hold the current target-pool count."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 0,
+        "min_pool_margin": 0.0,
+        "min_pool_rate": 0.03,
+        "cip0050_L": null,
+        "cip0037_saturation_floor": null,
+        "cip0037_pledge_reference_ada": null,
+        "k_target_pools": 500
+      },
+      "simulator_support": {
+        "status": "unsupported",
+        "reason": "The current rewards-sharing engine does not model the Cardano ledger fee-layer changes behind minPoolMargin/minPoolRate/minPoolCost."
+      }
+    },
+    {
+      "id": "cip0082__baseline__k1000",
+      "fee_rule": "cip0082",
+      "stake_cap_rule": "baseline",
+      "k_variant": "k1000",
+      "label": "CIP-0082 Stage 2 fee rule + Baseline stake cap / K 1000",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Remove minPoolCost and clamp operator rate with minPoolRate = 3%. When paired with K=1000 this acts as Stage 2 plus the Stage 4 K target.",
+        "stake_cap_rule": "Single global saturation threshold shared by all pools.",
+        "k_variant": "Increase the target-pool count to 1000."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 0,
+        "min_pool_margin": 0.0,
+        "min_pool_rate": 0.03,
+        "cip0050_L": null,
+        "cip0037_saturation_floor": null,
+        "cip0037_pledge_reference_ada": null,
+        "k_target_pools": 1000
+      },
+      "simulator_support": {
+        "status": "unsupported",
+        "reason": "The current rewards-sharing engine does not model the Cardano ledger fee-layer changes behind minPoolMargin/minPoolRate/minPoolCost."
+      }
+    },
+    {
+      "id": "cip0082__cip0050__k500",
+      "fee_rule": "cip0082",
+      "stake_cap_rule": "cip0050",
+      "k_variant": "k500",
+      "label": "CIP-0082 Stage 2 fee rule + CIP-0050 / K current",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Remove minPoolCost and clamp operator rate with minPoolRate = 3%. When paired with K=1000 this acts as Stage 2 plus the Stage 4 K target.",
+        "stake_cap_rule": "Cap reward-eligible stake by both global saturation and pledge leverage.",
+        "k_variant": "Hold the current target-pool count."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 0,
+        "min_pool_margin": 0.0,
+        "min_pool_rate": 0.03,
+        "cip0050_L": 100,
+        "cip0037_saturation_floor": null,
+        "cip0037_pledge_reference_ada": null,
+        "k_target_pools": 500
+      },
+      "simulator_support": {
+        "status": "unsupported",
+        "reason": "The current rewards-sharing engine does not model the Cardano ledger fee-layer changes behind minPoolMargin/minPoolRate/minPoolCost."
+      }
+    },
+    {
+      "id": "cip0082__cip0050__k1000",
+      "fee_rule": "cip0082",
+      "stake_cap_rule": "cip0050",
+      "k_variant": "k1000",
+      "label": "CIP-0082 Stage 2 fee rule + CIP-0050 / K 1000",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Remove minPoolCost and clamp operator rate with minPoolRate = 3%. When paired with K=1000 this acts as Stage 2 plus the Stage 4 K target.",
+        "stake_cap_rule": "Cap reward-eligible stake by both global saturation and pledge leverage.",
+        "k_variant": "Increase the target-pool count to 1000."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 0,
+        "min_pool_margin": 0.0,
+        "min_pool_rate": 0.03,
+        "cip0050_L": 100,
+        "cip0037_saturation_floor": null,
+        "cip0037_pledge_reference_ada": null,
+        "k_target_pools": 1000
+      },
+      "simulator_support": {
+        "status": "unsupported",
+        "reason": "The current rewards-sharing engine does not model the Cardano ledger fee-layer changes behind minPoolMargin/minPoolRate/minPoolCost."
+      }
+    },
+    {
+      "id": "cip0082__cip0037__k500",
+      "fee_rule": "cip0082",
+      "stake_cap_rule": "cip0037",
+      "k_variant": "k500",
+      "label": "CIP-0082 Stage 2 fee rule + CIP-0037 / K current",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Remove minPoolCost and clamp operator rate with minPoolRate = 3%. When paired with K=1000 this acts as Stage 2 plus the Stage 4 K target.",
+        "stake_cap_rule": "Make saturation pledge-dependent with a 10% lower-limit floor and a 500k ADA pledge reference.",
+        "k_variant": "Hold the current target-pool count."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 0,
+        "min_pool_margin": 0.0,
+        "min_pool_rate": 0.03,
+        "cip0050_L": null,
+        "cip0037_saturation_floor": 0.1,
+        "cip0037_pledge_reference_ada": 500000,
+        "k_target_pools": 500
+      },
+      "simulator_support": {
+        "status": "unsupported",
+        "reason": "The current rewards-sharing engine does not model the Cardano ledger fee-layer changes behind minPoolMargin/minPoolRate/minPoolCost."
+      }
+    },
+    {
+      "id": "cip0082__cip0037__k1000",
+      "fee_rule": "cip0082",
+      "stake_cap_rule": "cip0037",
+      "k_variant": "k1000",
+      "label": "CIP-0082 Stage 2 fee rule + CIP-0037 / K 1000",
+      "canonical": true,
+      "descriptions": {
+        "fee_rule": "Remove minPoolCost and clamp operator rate with minPoolRate = 3%. When paired with K=1000 this acts as Stage 2 plus the Stage 4 K target.",
+        "stake_cap_rule": "Make saturation pledge-dependent with a 10% lower-limit floor and a 500k ADA pledge reference.",
+        "k_variant": "Increase the target-pool count to 1000."
+      },
+      "assumptions": {
+        "a0": 0.3,
+        "min_pool_cost_ada": 0,
+        "min_pool_margin": 0.0,
+        "min_pool_rate": 0.03,
+        "cip0050_L": null,
+        "cip0037_saturation_floor": 0.1,
+        "cip0037_pledge_reference_ada": 500000,
+        "k_target_pools": 1000
+      },
+      "simulator_support": {
+        "status": "unsupported",
+        "reason": "The current rewards-sharing engine does not model the Cardano ledger fee-layer changes behind minPoolMargin/minPoolRate/minPoolCost."
+      }
+    }
+  ]
+}

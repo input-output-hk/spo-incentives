@@ -1,0 +1,16 @@
+{
+  "positive_registered_pools": 2718,
+  "mapped_entity_pools": 396,
+  "entity_group_count": 26,
+  "reward_grouped_pools": 44,
+  "operator_group_count": 2302,
+  "owner_snapshot_pool_count": 2643,
+  "delegator_cohort_count": 626,
+  "delegator_cohort_size_ada": 30000000.0,
+  "operator_capital_ada": 2971210581.063599,
+  "public_delegation_ada": 18776654024.306206,
+  "active_stake_ada": 21747864605.369804,
+  "agent_count": 2928,
+  "output_path": "/Users/nhenin/dev/ARC/stream-SPO/Rewards-Sharing-Simulation-Engine/synthetic-stake-distribution-2928-agents.csv",
+  "operator_csv_path": "/Users/nhenin/dev/ARC/stream-SPO/spo-incentives/scenarii-evaluation/outputs/mainnet_entity_owner_capital_operator_groups.csv"
+}

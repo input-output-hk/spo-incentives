@@ -1,0 +1,6 @@
+Scenario,Status,Step 1 pools,Pools,Operators,Nakamoto,Pledge fraction,Rounds,Max pools/op,Mean margin,Median margin,Output folder,Notes
+Status Quo,completed,3270,501,329,124,0.7734,48,3,0.0442,0.0447,15-mainnet-like-status-quo,
+CIP-0023,completed,9764,500,328,123,0.7706,23,3,0.0652,0.0561,18-mainnet-like-cip23-minmargin5,
+CIP-0037,completed,5643,502,329,124,0.7729,37,3,0.0441,0.0454,16-mainnet-like-cip37-currentref,
+CIP-0050,completed,2545,500,328,124,0.7696,40,3,0.0395,0.0389,17-mainnet-like-cip50-L100,
+CIP-0082,completed,9486,501,329,123,0.7729,23,3,0.0574,0.0554,20-mainnet-like-cip82-minrate3,
