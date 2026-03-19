@@ -37,6 +37,7 @@ All counts and amounts use the latest available pool snapshot (**epoch 618**) an
       - 4.2.3 [Incentive stance: reclassifying by pledge-bonus capture](#423-incentive-stance-reclassifying-by-pledge-bonus-capture)
    - 4.3 [Within-staked inefficiency: the cost of non-compliance](#43-within-staked-inefficiency-the-cost-of-non-compliance)
    - 4.4 [MPO pool taxonomy by incentive stance](#44-mpo-pool-taxonomy-by-incentive-stance)
+   - 4.5 [Conclusion](#45-conclusion)
 5. [Pool taxonomy by incentive stance](#5-pool-taxonomy-by-incentive-stance)
    - 5.1 [Stance recap](#51-stance-recap)
    - 5.2 [The full landscape](#52-the-full-landscape)
@@ -559,6 +560,14 @@ The entity-level breakdown below shows exactly who sits where — each sub-bar i
 
 ![MPO Tier × Stance × Entity](figures/mpo_tier_stance_entity_mainnet.png)
 
+A third view isolates the aggregate non-compliant entities and recolours the bars by **pool-size tier** rather than by stance. The left panel shows fleet composition; the right panel shows where the stake actually sits:
+
+![Non-compliant MPO entities by pool-size tier](figures/mpo_non_compliant_entity_tier_distribution_mainnet.png)
+
+This filtered view makes the internal shape of the non-compliant population much easier to read. It is **not concentrated in a single size bucket**: across the 19 non-compliant entities, live stake is split between **Healthy (2.85B ADA)**, **Large healthy (2.51B)**, and **Near-saturation (2.40B)**, with another **1.05B ADA** already sitting in Saturated or Oversaturated pools. In other words, non-compliance persists all the way from mid-scale fleets to pools already operating at or above $z_0$.
+
+The entity profiles are distinct. **Coinbase / bison.run** is the clearest near-saturation fleet: 22 of its 44 live pools sit in Near-saturation, carrying most of its 2.45B ADA. **Upbit** and **YUTA** are almost pure Healthy-tier operators, while **Binance** is visibly bimodal — a healthy core plus a long Dormant/Sub-production tail. **Kiln**, **Blockdaemon**, **eToro**, and **Everstake** skew upward into Large healthy, Saturated, or Oversaturated tiers, showing that the pledge signal is still ignored even once pools are already at scale.
+
 The 396 live MPO pools carry 11.08B ADA (51.0% of staked supply) across the full tier spectrum. The stance decomposition shows:
 
 **Non-compliant red dominates every viable-and-above tier.** From Healthy through Oversaturated, non-compliant MPO pools account for 81% of MPO viable stake. The pattern holds across all size classes — it is not concentrated in a single tier.
@@ -568,6 +577,26 @@ The 396 live MPO pools carry 11.08B ADA (51.0% of staked supply) across the full
 **Compliant pools (teal) are visible in Near-saturation and Healthy.** Wave, Bloom, and CHUCK BUX pools appear here — operators who pledge 30–80% of their pool stake, capturing significant bonus.
 
 **The marginal class is nearly empty among MPOs.** Unlike the all-pool analysis (§5), where 637 pools sit in the marginal band, MPO entities almost never land between 2% and 30% pledge. This confirms the bimodal behaviour observed in §4.2.3: MPO operators either fully ignore the pledge signal or commit substantially.
+
+### 4.5 Conclusion
+
+The MPO landscape reveals a striking and somewhat counterintuitive outcome.
+A significant subset of MPOs possess sufficient capital to fully optimize their position within the Reward Sharing Scheme, notably by saturating additional pools and leveraging pledge to capture increased rewards. However, empirical observations show that many of them deliberately do not pursue this strategy to its theoretical optimum.
+
+This behavior implies a measurable opportunity cost.
+By not fully saturating their pool portfolio or not optimizing pledge allocation, these operators forgo an estimated X ADA per epoch, corresponding to approximately X ADA annually across the observed population.
+
+This is not an anomaly, nor is it irrational.
+
+Instead, it is a clear manifestation of multi-game optimization: these actors are not solely maximizing within the RSS framework, but are instead optimizing across a broader strategic landscape that includes branding, reputation, delegation stickiness, operational complexity, governance positioning, and potentially external revenue streams. As introduced in previous sections, the RSS must therefore be understood as a sub-game embedded within a larger system of incentives.
+
+The implication is critical:
+
+A substantial portion of the network, approximately 40% of MPOs, can be classified as non-compliant with the pure RSS equilibrium assumptions.
+
+This is not a marginal effect. It fundamentally challenges the predictive power of models that assume single-game rationality.
+
+In the next section, “Pool Landscape without Non-Compliant MPOs”, we isolate and analyze the subset of actors that behave in closer alignment with RSS incentives. This allows us to better understand the underlying equilibrium dynamics of the system when abstracting away from cross-game interference.
 
 ---
 
