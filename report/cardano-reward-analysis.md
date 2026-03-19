@@ -123,8 +123,7 @@ Same logic, with self-documenting names. The epoch pot aggregates **three inputs
 
 $$
 Pot^{\text{epoch}}
-=
-Fee^{\text{epoch}}_{\text{tx}}
+= Fee^{\text{epoch}}_{\text{tx}}
 +
 Deposit^{\text{epoch}}_{\text{nonRefundable}}
 +
@@ -151,8 +150,7 @@ Substituting the current mainnet protocol parameters ($\rho = 0.3\%$, $\tau = 20
 
 $$
 Pot^{\text{epoch}}
-=
-Fee^{\text{epoch}}_{\text{tx}}
+= Fee^{\text{epoch}}_{\text{tx}}
 +
 Deposit^{\text{epoch}}_{\text{nonRefundable}}
 +
@@ -175,8 +173,7 @@ Conservation — the split is exhaustive, nothing is lost:
 
 $$
 PoolsPot^{\text{epoch}} + TreasuryPot^{\text{epoch}}
-=
-Pot^{\text{epoch}}
+= Pot^{\text{epoch}}
 $$
 
 ##### 1.1.2.4 Concept glossary
@@ -307,8 +304,7 @@ The original SL-D1 pool-distribution rules are:
 
 $$
 f(s,\sigma)
-=
-\frac{R}{1+a_0}
+= \frac{R}{1+a_0}
 \left(
 \sigma' + s'a_0\cdot\frac{\sigma' - s'\left(\frac{z_0-\sigma'}{z_0}\right)}{z_0}
 \right)
@@ -432,8 +428,7 @@ Substituting these identities into the non-saturated SL-D1 formula gives:
 
 $$
 f(\pi z_0,\nu z_0)
-=
-z_0R
+= z_0R
 \left(
 \frac{1}{1+a_0}\nu
 + 
@@ -491,8 +486,7 @@ The reward function is then:
 
 $$
 f'(\pi,\nu)
-=
-P_{\max}
+= P_{\max}
 \left(
 \lambda_{\min}\nu
 +
@@ -565,8 +559,7 @@ The normalized optimal reward function therefore becomes:
 
 $$
 f'(\pi,\nu)
-=
-P_{max}
+= P_{max}
 \left(
 76.923\%\,\nu
 + 
@@ -578,8 +571,7 @@ Applying apparent performance gives the actual pool allocation in normalized for
 
 $$
 \hat f'(\pi,\nu,\bar p)
-=
-\bar p
+= \bar p
 \cdot
 P_{max}
 \left(
@@ -837,14 +829,12 @@ The split then becomes
 
 $$
 r_{\text{operator}}(\hat f,c,m,\rho_{\text{operator}})
-=
-c + \mu(\hat f,c,m) + \psi(\hat f,c,m)\,\rho_{\text{operator}}
+= c + \mu(\hat f,c,m) + \psi(\hat f,c,m)\,\rho_{\text{operator}}
 $$
 
 $$
 r_{\text{member}}(\hat f,c,m,\rho_{\text{member}})
-=
-\psi(\hat f,c,m)\,\rho_{\text{member}}
+= \psi(\hat f,c,m)\,\rho_{\text{member}}
 $$
 
 This makes the three-layer structure explicit: fixed cost first, operator margin second, proportional sharing of the remainder third.
@@ -1144,8 +1134,7 @@ $$
 
 $$
 f^{(50)}(s,\sigma)
-=
-\frac{R}{1+a_0}
+= \frac{R}{1+a_0}
 \left(
 \sigma'_L + s'a_0\cdot\frac{\sigma'_L - s'\left(\frac{z_0-\sigma'_L}{z_0}\right)}{z_0}
 \right)
@@ -1155,8 +1144,7 @@ $$
 
 $$
 {PoolPot^{\text{optimal}}_{i}}^{(50)}
-=
-\frac{PoolsPot^{\text{epoch}}}{1+\alpha^{\text{protocol}}_{\text{skinInTheGame}}}
+= \frac{PoolsPot^{\text{epoch}}}{1+\alpha^{\text{protocol}}_{\text{skinInTheGame}}}
 \left(
 {\sigma^{\text{totalStaked}}_{\text{capped}}}^{(L)}
 +
@@ -1203,8 +1191,7 @@ $$
 
 $$
 \phi^{\text{protocol}}_{\text{saturationScale}}(\pi^{\text{pledged}})
-=
-\max\left(
+= \max\left(
 \epsilon^{\text{protocol}}_{\text{saturationFloor}},
 \min\left(1,\frac{\pi^{\text{pledged}}}{\sigma^{\text{owner}}_{\text{pledgeRef}}}\right)
 \right)
@@ -1232,8 +1219,7 @@ $$
 
 $$
 f^{(37)}(s,\sigma)
-=
-\frac{R}{1+a_0}
+= \frac{R}{1+a_0}
 \left(
 \sigma'_{37} + s'a_0\cdot\frac{\sigma'_{37} - s'\left(\frac{z_0-\sigma'_{37}}{z_0}\right)}{z_0}
 \right)
@@ -1243,8 +1229,7 @@ $$
 
 $$
 {PoolPot^{\text{optimal}}_{i}}^{(37)}
-=
-\frac{PoolsPot^{\text{epoch}}}{1+\alpha^{\text{protocol}}_{\text{skinInTheGame}}}
+= \frac{PoolsPot^{\text{epoch}}}{1+\alpha^{\text{protocol}}_{\text{skinInTheGame}}}
 \left(
 {\sigma^{\text{totalStaked}}_{\text{capped}}}^{(37)}
 +
@@ -1283,8 +1268,7 @@ They first build the gross pot from fees, non-refundable deposits, and reserve-s
 
 $$
 Pot^{\text{epoch}}
-=
-Fee^{\text{epoch}}_{\text{tx}}
+= Fee^{\text{epoch}}_{\text{tx}}
 +
 Deposit^{\text{epoch}}_{\text{nonRefundable}}
 +
@@ -1305,16 +1289,14 @@ $$
 
 $$
 PoolsPot^{\text{epoch}} + TreasuryPot^{\text{epoch}}
-=
-Pot^{\text{epoch}}
+= Pot^{\text{epoch}}
 $$
 
 ##### 4.1.1.2 Mainnet Reader-Friendly
 
 $$
 Pot^{\text{epoch}}
-=
-Fee^{\text{epoch}}_{\text{tx}}
+= Fee^{\text{epoch}}_{\text{tx}}
 +
 Deposit^{\text{epoch}}_{\text{nonRefundable}}
 +
@@ -1335,8 +1317,7 @@ $$
 
 $$
 PoolsPot^{\text{epoch}} + TreasuryPot^{\text{epoch}}
-=
-Pot^{\text{epoch}}
+= Pot^{\text{epoch}}
 $$
 
 ##### 4.1.1.3 Concept glossary
@@ -1391,8 +1372,7 @@ For each pool $i$, they first compute the theoretical pool entitlement from stak
 
 $$
 PoolPot^{\text{optimal}}_{i}\left(\pi^{\text{pledged}}_{i},\sigma^{\text{totalStaked}}_{i}\right)
-=
-\frac{PoolsPot^{\text{epoch}}}{1+\alpha^{\text{protocol}}_{\text{skinInTheGame}}}
+= \frac{PoolsPot^{\text{epoch}}}{1+\alpha^{\text{protocol}}_{\text{skinInTheGame}}}
 \left(
 \sigma^{\text{totalStaked}}_{\text{capped},i}
 +
@@ -1432,8 +1412,7 @@ $$
 
 $$
 PoolPot^{\text{optimal}}_{i}\left(\pi^{\text{pledged}}_{i},\sigma^{\text{totalStaked}}_{i}\right)
-=
-\frac{PoolsPot^{\text{epoch}}}{1+30\%}
+= \frac{PoolsPot^{\text{epoch}}}{1+30\%}
 \left(
 \sigma^{\text{totalStaked}}_{\text{capped},i}
 +
@@ -1497,8 +1476,7 @@ Cost^{\text{operator}}_{\text{fixed}},
 \pi^{\text{pledged}}_{i},
 \sigma^{\text{totalStaked}}_{i}
 \right)
-=
-\begin{cases}
+= \begin{cases}
 PoolPot^{\text{actual}}_{i}, & PoolPot^{\text{actual}}_{i} \le Cost^{\text{operator}}_{\text{fixed}} \\
 Cost^{\text{operator}}_{\text{fixed}}
 +
@@ -1522,8 +1500,7 @@ Cost^{\text{operator}}_{\text{fixed}},
 \sigma^{\text{poolMember}}_{\text{delegated},i},
 \sigma^{\text{totalStaked}}_{i}
 \right)
-=
-\begin{cases}
+= \begin{cases}
 0, & PoolPot^{\text{actual}}_{i} \le Cost^{\text{operator}}_{\text{fixed}} \\
 \left(PoolPot^{\text{actual}}_{i}-Cost^{\text{operator}}_{\text{fixed}}\right)\left(1-\mu^{\text{operator}}\right)\frac{\sigma^{\text{poolMember}}_{\text{delegated},i}}{\sigma^{\text{totalStaked}}_{i}},
 & PoolPot^{\text{actual}}_{i} > Cost^{\text{operator}}_{\text{fixed}}
@@ -1622,8 +1599,7 @@ Use $Cost^{\text{operator}}_{\text{fixed}}=0$ and $\mu^{\text{operator}}_{\text{
 
 $$
 {Reward^{\text{operator}}}^{(82,\text{Stage 2})}
-=
-Reward^{\text{operator}}
+= Reward^{\text{operator}}
 \left(
 PoolPot^{\text{actual}}_{i},
 0,
@@ -1635,8 +1611,7 @@ $$
 
 $$
 {Reward^{\text{member}}}^{(82,\text{Stage 2})}
-=
-Reward^{\text{member}}
+= Reward^{\text{member}}
 \left(
 PoolPot^{\text{actual}}_{i},
 0,
@@ -1690,8 +1665,7 @@ Replace $\sigma^{\text{totalStaked}}_{\text{capped}}$ by ${\sigma^{\text{totalSt
 
 $$
 {PoolPot^{\text{optimal}}_{i}}^{(50)}
-=
-\frac{PoolsPot^{\text{epoch}}}{1+\alpha^{\text{protocol}}_{\text{skinInTheGame}}}
+= \frac{PoolsPot^{\text{epoch}}}{1+\alpha^{\text{protocol}}_{\text{skinInTheGame}}}
 \left(
 {\sigma^{\text{totalStaked}}_{\text{capped}}}^{(L)}
 +
@@ -1742,8 +1716,7 @@ $$
 
 $$
 \phi^{\text{protocol}}_{\text{saturationScale}}(\pi^{\text{pledged}})
-=
-\max\left(
+= \max\left(
 \epsilon^{\text{protocol}}_{\text{saturationFloor}},
 \min\left(1,\frac{\pi^{\text{pledged}}}{\sigma^{\text{owner}}_{\text{pledgeRef}}}\right)
 \right)
@@ -1761,8 +1734,7 @@ Replace $\sigma^{\text{totalStaked}}_{\text{capped}}$ by ${\sigma^{\text{totalSt
 
 $$
 {PoolPot^{\text{optimal}}_{i}}^{(37)}
-=
-\frac{PoolsPot^{\text{epoch}}}{1+\alpha^{\text{protocol}}_{\text{skinInTheGame}}}
+= \frac{PoolsPot^{\text{epoch}}}{1+\alpha^{\text{protocol}}_{\text{skinInTheGame}}}
 \left(
 {\sigma^{\text{totalStaked}}_{\text{capped}}}^{(37)}
 +

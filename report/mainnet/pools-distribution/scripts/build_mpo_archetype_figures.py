@@ -37,6 +37,14 @@ DATA_DIR     = REPORT_DIR / "data"
 FIGURES_DIR  = REPORT_DIR / "figures"
 
 # ---------------------------------------------------------------------------
+# Supply constants (epoch 618)
+# ---------------------------------------------------------------------------
+import json as _json
+_snap = _json.load((DATA_DIR / "pool_distribution_snapshot.json").open())
+STAKED_SUPPLY_ADA = float(_snap.get("total_active_stake_ada", 0))  # ~21.75B
+CIRCULATING_SUPPLY_ADA = float(_snap.get("supply_ada", 0))        # ~38.49B
+
+# ---------------------------------------------------------------------------
 # IOG brand palette – archetype colour assignments
 # ---------------------------------------------------------------------------
 ARCHETYPE_COLORS: Dict[str, str] = {
@@ -66,6 +74,46 @@ ARCHETYPE_ORDER: List[str] = [
     "independent_mpo",
     "opaque",
 ]
+
+# ---------------------------------------------------------------------------
+# Incentive-stance classification (pledge-bonus capture)
+# ---------------------------------------------------------------------------
+# Thresholds on effective pledge ratio (= min(pledge, stake) / stake).
+# Grounded in the pledge-bonus function: for a half-saturated pool,
+# 30% pledged ≈ 50% of bonus captured (the median capture point).
+
+STANCE_THRESHOLDS = [
+    (0.80, "exemplary"),       # ≥80%: captures the vast majority of the bonus (80/20)
+    (0.30, "compliant"),       # 30–80%: incentive-compatible strategy
+    (0.02, "marginal"),        # 2–30%: at the margin, target of adjustments
+    (0.00, "non_compliant"),   # <2%: does not play the induced strategy
+]
+
+STANCE_LABELS: Dict[str, str] = {
+    "exemplary":      "Exemplary",
+    "compliant":      "Compliant",
+    "marginal":       "Marginal",
+    "non_compliant":  "Non-compliant",
+}
+
+STANCE_COLORS: Dict[str, str] = {
+    "exemplary":      "#06FF89",  # Acid Green  – best-in-class
+    "compliant":      "#16E9D8",  # Electric Blue – solid
+    "marginal":       "#FFBA36",  # Solar Amber – room to improve
+    "non_compliant":  "#E52321",  # Infared – forfeiting bonus
+}
+
+STANCE_ORDER: List[str] = ["exemplary", "compliant", "marginal", "non_compliant"]
+
+
+def classify_stance(pct_pledged: float) -> str:
+    """Classify an entity or pool by pledge-bonus capture stance."""
+    ratio = pct_pledged / 100.0
+    for threshold, label in STANCE_THRESHOLDS:
+        if ratio >= threshold:
+            return label
+    return "non_compliant"
+
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -113,16 +161,19 @@ def build_pool_to_archetype(
 
 def scan_pool_history(
     pool_to_archetype: Dict[str, str],
-) -> Tuple[Dict[int, Dict[str, float]], Dict[int, float]]:
+    pool_to_entity: Dict[str, str],
+) -> Tuple[Dict[int, Dict[str, float]], Dict[int, float], Dict[int, Dict[str, float]]]:
     """
     Single-pass scan of koios_pool_history_mainnet.csv.
 
     Returns:
         archetype_by_epoch  – {epoch: {archetype: total_active_stake_ada}}
         total_by_epoch      – {epoch: sum_all_active_stake_ada}
+        entity_by_epoch     – {epoch: {entity_id: total_active_stake_ada}}
     """
     history_path = DATA_DIR / "koios_pool_history_mainnet.csv"
     archetype_by_epoch: Dict[int, Dict[str, float]] = defaultdict(lambda: defaultdict(float))
+    entity_by_epoch: Dict[int, Dict[str, float]] = defaultdict(lambda: defaultdict(float))
     total_by_epoch: Dict[int, float] = defaultdict(float)
 
     with history_path.open(newline="", encoding="utf-8") as f:
@@ -139,16 +190,83 @@ def scan_pool_history(
 
             total_by_epoch[epoch] += stake
 
-            archetype = pool_to_archetype.get(row["pool_id_bech32"])
+            pool_id = row["pool_id_bech32"]
+            archetype = pool_to_archetype.get(pool_id)
             if archetype:
                 archetype_by_epoch[epoch][archetype] += stake
 
-    return archetype_by_epoch, total_by_epoch
+            entity = pool_to_entity.get(pool_id)
+            if entity:
+                entity_by_epoch[epoch][entity] += stake
+
+    return archetype_by_epoch, total_by_epoch, entity_by_epoch
 
 
 # ---------------------------------------------------------------------------
 # Figure 1: Current entity distribution grouped by archetype
 # ---------------------------------------------------------------------------
+
+def _load_entity_pool_metrics() -> Dict[str, Dict[str, float]]:
+    """Compute per-entity aggregate metrics from pool-level health data.
+
+    Returns {entity_id: {pct_pledged, pct_delegated, avg_margin,
+                         n_live_pools, n_dormant_pools}}.
+
+    "Live" = registered with active_stake > 100 ADA (excludes zero-stake
+    ghost pools and near-zero residual pools).
+    "Dormant" = registered with active_stake ≤ 100 ADA (zero-stake +
+    near-zero residual).
+    Metrics (pledge ratio, margin) are computed only over live pools.
+    """
+    pool_rows = load_csv(DATA_DIR / "mpo_entity_pool_health_mainnet.csv")
+    from collections import defaultdict as _dd
+
+    LIVE_THRESHOLD = 100.0  # ADA – below this the pool is dormant
+
+    entity_live: Dict[str, List[Dict[str, str]]] = _dd(list)
+    entity_dormant_count: Dict[str, int] = _dd(int)
+
+    for r in pool_rows:
+        if r.get("pool_status") != "registered":
+            continue
+        stake = float(r.get("current_active_stake_ada", 0) or 0)
+        eid = r["entity_id"]
+        if stake > LIVE_THRESHOLD:
+            entity_live[eid].append(r)
+        else:
+            entity_dormant_count[eid] += 1
+
+    result: Dict[str, Dict[str, float]] = {}
+    all_entity_ids = set(entity_live) | set(entity_dormant_count)
+    for eid in all_entity_ids:
+        pools = entity_live.get(eid, [])
+        n_dormant = entity_dormant_count.get(eid, 0)
+        if not pools:
+            result[eid] = {
+                "pct_pledged": 0.0, "pct_delegated": 100.0,
+                "avg_margin": 0.0, "n_live_pools": 0,
+                "n_dormant_pools": n_dormant,
+            }
+            continue
+        total_stake = sum(float(p["current_active_stake_ada"]) for p in pools)
+        # Per-pool: cap effective_pledge at pool active_stake so that
+        # near-retired pools with declared_pledge >> active_stake don't
+        # produce >100% ratios.
+        effective_pledge = sum(
+            min(float(p["declared_pledge_ada"]), float(p["current_active_stake_ada"]))
+            for p in pools
+        )
+        avg_margin = sum(float(p["margin_pct"]) for p in pools) / len(pools)
+        pct_pledged = effective_pledge / total_stake * 100 if total_stake > 0 else 0
+        result[eid] = {
+            "pct_pledged": pct_pledged,
+            "pct_delegated": 100.0 - pct_pledged,
+            "avg_margin": avg_margin,
+            "n_live_pools": len(pools),
+            "n_dormant_pools": n_dormant,
+        }
+    return result
+
 
 def figure_current_distribution(
     entity_stats: List[Dict[str, str]],
@@ -156,17 +274,15 @@ def figure_current_distribution(
 ) -> None:
     out_path = FIGURES_DIR / "mpo_entity_current_distribution_mainnet.png"
 
+    # Load per-entity pool-level metrics (pledge, delegation, margin)
+    entity_pool_metrics = _load_entity_pool_metrics()
+
     # Build entity → archetype and current % supply
     entity_rows: List[Dict] = []
     for row in entity_stats:
         entity_id = row.get("display_name", "")  # health overview uses display_name as key
-        # Try to resolve entity_id from display_name via the archetype CSV
-        # (archetypes CSV uses entity_id; health overview uses display_name)
-        # Build a lookup by display_name from archetypes CSV
         pct = float(row.get("current_pct_supply", 0) or 0)
         # Drop entities with negligible / inactive stake (< 0.01% of supply).
-        # These are registered but essentially dormant pools (e.g. RAID: 0.0011%)
-        # and would display as "0.00%" bars, which is misleading.
         if pct < 0.01:
             continue
         entity_rows.append({
@@ -174,16 +290,31 @@ def figure_current_distribution(
             "pct_supply": pct,
         })
 
-    # Load archetypes by display_name
+    # Load archetypes by display_name and entity_id
     archetype_rows = load_csv(DATA_DIR / "mpo_entity_archetypes.csv")
     name_to_archetype: Dict[str, str] = {r["display_name"]: r["archetype"] for r in archetype_rows}
+    name_to_entity_id: Dict[str, str] = {r["display_name"]: r["entity_id"] for r in archetype_rows}
 
     for r in entity_rows:
         r["archetype"] = name_to_archetype.get(r["display_name"], "opaque")
+        eid = name_to_entity_id.get(r["display_name"], "")
+        metrics = entity_pool_metrics.get(eid, {})
+        r["pct_pledged"] = metrics.get("pct_pledged", 0.0)
+        r["pct_delegated"] = metrics.get("pct_delegated", 100.0)
+        r["avg_margin"] = metrics.get("avg_margin", 0.0)
+        r["n_live_pools"] = int(metrics.get("n_live_pools", 0))
+        r["n_dormant_pools"] = int(metrics.get("n_dormant_pools", 0))
+        r["stance"] = classify_stance(r["pct_pledged"])
+        # Compute % of staked supply (active delegated stake)
+        stake_ada = float(
+            next((s.get("current_stake_ada", 0) for s in entity_stats
+                  if s["display_name"] == r["display_name"]), 0) or 0
+        )
+        r["pct_staked"] = stake_ada / STAKED_SUPPLY_ADA * 100 if STAKED_SUPPLY_ADA > 0 else 0.0
 
     # Sort: archetype order first, then stake descending within group
     archetype_rank = {a: i for i, a in enumerate(ARCHETYPE_ORDER)}
-    entity_rows.sort(key=lambda r: (archetype_rank.get(r["archetype"], 99), -r["pct_supply"]))
+    entity_rows.sort(key=lambda r: (archetype_rank.get(r["archetype"], 99), -r["pct_staked"]))
 
     # Gather y-positions with gaps between archetype groups
     labels, values, colors = [], [], []
@@ -236,29 +367,65 @@ def figure_current_distribution(
         mid_pos = (positions[start_i] + positions[end_i]) / 2
         group_bands.append((mid_pos, arch))
 
-    # ---- Plot ----
-    fig_height = max(8.0, len(entity_rows) * 0.52 + len(group_info) * 0.3 + 1.5)
-    fig, ax = plt.subplots(figsize=(13, fig_height))
+    # ---- Compute archetype-level aggregates for the metrics table ----
+    archetype_agg: Dict[str, Dict[str, float]] = {}
+    for arch in ARCHETYPE_ORDER:
+        arch_entities = [r for r in entity_rows if r["archetype"] == arch]
+        if not arch_entities:
+            continue
+        # Weighted averages by pct_supply (proxy for stake weight)
+        total_w = sum(r["pct_supply"] for r in arch_entities)
+        if total_w > 0:
+            w_pledged = sum(r["pct_pledged"] * r["pct_supply"] for r in arch_entities) / total_w
+            w_delegated = sum(r["pct_delegated"] * r["pct_supply"] for r in arch_entities) / total_w
+            w_margin = sum(r["avg_margin"] * r["pct_supply"] for r in arch_entities) / total_w
+        else:
+            w_pledged = w_delegated = w_margin = 0.0
+        total_staked_w = sum(r["pct_staked"] for r in arch_entities)
+        archetype_agg[arch] = {
+            "pct_pledged": w_pledged,
+            "pct_delegated": w_delegated,
+            "avg_margin": w_margin,
+            "n_entities": len(arch_entities),
+            "total_pct_supply": total_w,
+            "total_pct_staked": total_staked_w,
+        }
+
+    # ---- Plot: two-panel figure (bar chart top, metrics table bottom) ----
+    bar_height_chart = max(8.0, len(entity_rows) * 0.52 + len(group_info) * 0.3 + 1.5)
+    # Table: entity rows + archetype summary rows + header
+    n_arch_present = len(archetype_agg)
+    table_row_count = len(entity_rows) + n_arch_present + 1  # +1 for header
+    table_height = max(3.5, table_row_count * 0.28 + 1.0)
+    fig_height = bar_height_chart + table_height + 1.5
+
+    fig = plt.figure(figsize=(14, fig_height))
     fig.patch.set_facecolor("#FAFAFA")
+
+    # GridSpec: bar chart on top (larger), table on bottom
+    gs = fig.add_gridspec(2, 1, height_ratios=[bar_height_chart, table_height], hspace=0.25)
+    ax = fig.add_subplot(gs[0])
+    ax_table = fig.add_subplot(gs[1])
     ax.set_facecolor("#FAFAFA")
+    ax_table.set_facecolor("#FAFAFA")
 
     bar_height = 0.75
 
     for i, r in enumerate(entity_rows):
         arch = r["archetype"]
         color = ARCHETYPE_COLORS[arch]
-        pct = r["pct_supply"]
+        pct = r["pct_staked"]
         yp = positions[i]
 
         ax.barh(yp, pct, height=bar_height, color=color, alpha=0.88, zorder=3)
 
         # Value label
         label_text = f"{pct:.2f}%"
-        if pct >= 1.2:
-            ax.text(pct - 0.08, yp, label_text, va="center", ha="right",
+        if pct >= 2.0:
+            ax.text(pct - 0.12, yp, label_text, va="center", ha="right",
                     fontsize=8.5, color="white", fontweight="bold", zorder=4)
         else:
-            ax.text(pct + 0.06, yp, label_text, va="center", ha="left",
+            ax.text(pct + 0.08, yp, label_text, va="center", ha="left",
                     fontsize=8.5, color="#1a1a1a", zorder=4)
 
     # Entity name labels on y-axis
@@ -273,9 +440,8 @@ def figure_current_distribution(
         ax.axhspan(y_bot, y_top, xmin=0, xmax=1, color=ARCHETYPE_COLORS[arch], alpha=0.06, zorder=1)
         # Archetype label on the right outside the plot
         y_mid = (y_top + y_bot) / 2
-        total_pct = sum(entity_rows[j]["pct_supply"] for j in range(start_i, end_i + 1))
-        label = f"{ARCHETYPE_LABELS[arch]}\n{total_pct:.2f}% total"
-        # get_yaxis_transform() = blended(transAxes, transData): x in [0,1] axes, y in data coords
+        total_pct = sum(entity_rows[j]["pct_staked"] for j in range(start_i, end_i + 1))
+        label = f"{ARCHETYPE_LABELS[arch]}\n{total_pct:.2f}% staked"
         ax.annotate(
             label,
             xy=(1.01, y_mid),
@@ -288,8 +454,8 @@ def figure_current_distribution(
             annotation_clip=False,
         )
 
-    ax.set_xlabel("Share of circulating supply (%)", fontsize=11, labelpad=8)
-    ax.set_xlim(0, max(r["pct_supply"] for r in entity_rows) * 1.12)
+    ax.set_xlabel("Share of staked supply (%)", fontsize=11, labelpad=8)
+    ax.set_xlim(0, max(r["pct_staked"] for r in entity_rows) * 1.12)
     ax.set_ylim(min(positions) - 0.7, max(positions) + 0.7)
     ax.xaxis.grid(True, linestyle="--", alpha=0.4, zorder=0)
     ax.set_axisbelow(True)
@@ -297,18 +463,142 @@ def figure_current_distribution(
         ax.spines[spine].set_visible(False)
 
     ax.set_title(
-        "MPO entities by archetype — share of circulating supply (epoch 618)",
+        "MPO entities by archetype — share of staked supply (epoch 618)",
         fontsize=12, fontweight="bold", pad=14,
     )
 
-    fig.text(
-        0.01, 0.01,
-        "Entities with ≥2 registered pools and ≥0.01% of circulating supply. "
-        "Dormant/negligible-stake entities excluded. Archetype classification: data/mpo_entity_archetypes.csv.",
-        ha="left", va="bottom", fontsize=8, color="#555555",
+    # ---- Metrics table ----
+    ax_table.axis("off")
+    ax_table.set_title(
+        "Per-entity and per-archetype metrics: pledge coverage, delegation, margin",
+        fontsize=10.5, fontweight="bold", pad=10, loc="left",
     )
 
-    fig.tight_layout(rect=(0, 0.03, 0.84, 1.0))
+    # Total dormant pools across all entities
+    total_dormant = sum(r["n_dormant_pools"] for r in entity_rows)
+
+    # Build table data: entity rows grouped by archetype, with archetype summary rows
+    # No Stance column here — the concept is introduced later in §4.2.3.
+    col_labels = ["Entity", "Archetype", "Live", "Dormant", "% Staked",
+                   "% Supply", "% Pledged", "% Delegated", "Avg Margin"]
+    n_cols = len(col_labels)
+    cell_text = []
+    cell_colors = []
+    WHITE = "#FFFFFF"
+    LIGHT_GREY = "#F0F0F0"
+
+    current_arch_for_table = None
+    for r in entity_rows:
+        arch = r["archetype"]
+        # Insert archetype summary row before first entity of a new group
+        if arch != current_arch_for_table:
+            if arch in archetype_agg:
+                a = archetype_agg[arch]
+                n_live = sum(er["n_live_pools"] for er in entity_rows if er["archetype"] == arch)
+                n_dorm = sum(er["n_dormant_pools"] for er in entity_rows if er["archetype"] == arch)
+                cell_text.append([
+                    f"  {ARCHETYPE_LABELS[arch]}",
+                    f"{a['n_entities']} ent.",
+                    str(n_live),
+                    str(n_dorm),
+                    f"{a['total_pct_staked']:.2f}%",
+                    f"{a['total_pct_supply']:.2f}%",
+                    f"{a['pct_pledged']:.2f}%",
+                    f"{a['pct_delegated']:.2f}%",
+                    f"{a['avg_margin']:.1f}%",
+                ])
+                cell_colors.append(["summary_" + arch] * n_cols)
+            current_arch_for_table = arch
+
+        cell_text.append([
+            f"    {r['display_name']}",
+            ARCHETYPE_LABELS.get(arch, arch),
+            str(r["n_live_pools"]),
+            str(r["n_dormant_pools"]),
+            f"{r['pct_staked']:.2f}%",
+            f"{r['pct_supply']:.2f}%",
+            f"{r['pct_pledged']:.2f}%",
+            f"{r['pct_delegated']:.2f}%",
+            f"{r['avg_margin']:.1f}%",
+        ])
+        cell_colors.append([WHITE] * n_cols)
+
+    table = ax_table.table(
+        cellText=cell_text,
+        colLabels=col_labels,
+        cellLoc="center",
+        loc="upper center",
+        colWidths=[0.16, 0.15, 0.05, 0.06, 0.08, 0.08, 0.09, 0.09, 0.09],
+    )
+    table.auto_set_font_size(False)
+    table.set_fontsize(7.5)
+    table.scale(1.0, 1.25)
+
+    # Style header
+    for j in range(n_cols):
+        cell = table[0, j]
+        cell.set_facecolor("#2a2a2a")
+        cell.set_text_props(color="white", fontweight="bold", fontsize=8)
+
+    # Column indices for conditional formatting
+    COL_PLEDGED = col_labels.index("% Pledged")
+    COL_DELEGATED = col_labels.index("% Delegated")
+    WARN_RED_BG = "#FDECEC"       # very light red background
+    WARN_RED_TEXT = "#B71C1C"      # dark red text
+
+    # Style body cells
+    for i in range(len(cell_text)):
+        for j in range(n_cols):
+            cell = table[i + 1, j]
+            tag = cell_colors[i][0]
+            if tag.startswith("summary_"):
+                # Archetype summary row
+                arch_key = tag.split("_", 1)[1]
+                cell.set_facecolor(ARCHETYPE_COLORS.get(arch_key, "#cccccc"))
+                cell.set_alpha(0.12)
+                cell.set_text_props(fontweight="bold", fontsize=7.5)
+            else:
+                base_bg = WHITE if i % 2 == 0 else LIGHT_GREY
+                # Highlight cells that signal poor pledge discipline:
+                # % Pledged < 2% or % Delegated > 98% → red tint
+                cell_val = cell_text[i][j]
+                is_warn = False
+                if j == COL_PLEDGED:
+                    try:
+                        v = float(cell_val.replace("%", ""))
+                        if v < 2.0:
+                            is_warn = True
+                    except ValueError:
+                        pass
+                elif j == COL_DELEGATED:
+                    try:
+                        v = float(cell_val.replace("%", ""))
+                        if v > 98.0:
+                            is_warn = True
+                    except ValueError:
+                        pass
+
+                if is_warn:
+                    cell.set_facecolor(WARN_RED_BG)
+                    cell.set_text_props(color=WARN_RED_TEXT, fontweight="bold")
+                else:
+                    cell.set_facecolor(base_bg)
+            # Left-align entity names
+            if j == 0:
+                cell.set_text_props(ha="left")
+
+    fig.text(
+        0.01, 0.005,
+        "Entities with ≥2 registered pools and ≥0.01% of circulating supply. "
+        "Live = registered pools with >100 ₳ active stake. "
+        "Dormant = registered pools with ≤100 ₳ (zero-stake + near-zero residual). "
+        f"Total dormant across all entities: {total_dormant}. "
+        "% Pledged = min(pledge, stake) / stake. Avg Margin = unweighted mean across live pools. "
+        "Archetype rows = stake-weighted averages.",
+        ha="left", va="bottom", fontsize=6.5, color="#555555",
+    )
+
+    fig.subplots_adjust(left=0.14, right=0.84, top=0.97, bottom=0.03, hspace=0.22)
     fig.savefig(out_path, dpi=200, bbox_inches="tight", facecolor=fig.get_facecolor())
     plt.close(fig)
     print(f"✓  {out_path.name}")
@@ -449,6 +739,321 @@ def figure_archetype_progression(
 
 
 # ---------------------------------------------------------------------------
+# Figure 3: Per-entity stacked area (same style as legacy pool-landscape)
+# ---------------------------------------------------------------------------
+
+def figure_entity_progression(
+    entity_by_epoch: Dict[int, Dict[str, float]],
+    total_by_epoch: Dict[int, float],
+    entity_to_archetype: Dict[str, str],
+) -> None:
+    out_path = FIGURES_DIR / "mpo_entity_progression_stacked_by_entity_mainnet.png"
+
+    # Load display names from archetype CSV
+    archetype_rows = load_csv(DATA_DIR / "mpo_entity_archetypes.csv")
+    entity_id_to_display: Dict[str, str] = {r["entity_id"]: r["display_name"] for r in archetype_rows}
+
+    # Focus on Shelley era
+    all_epochs = sorted(set(entity_by_epoch) & set(total_by_epoch))
+    epochs = [e for e in all_epochs if e >= 208]
+    if not epochs:
+        print("  No epoch data found for entity progression chart")
+        return
+
+    # Build per-entity series as % of circulating supply
+    entity_series: Dict[str, np.ndarray] = {}
+    for entity_id in entity_to_archetype:
+        vals = []
+        for e in epochs:
+            total = total_by_epoch.get(e, 0.0)
+            entity_stake = entity_by_epoch.get(e, {}).get(entity_id, 0.0)
+            vals.append(entity_stake / total * 100.0 if total > 0 else 0.0)
+        entity_series[entity_id] = np.array(vals, dtype=float)
+
+    # Order: by archetype group, then by current stake descending (largest at bottom)
+    archetype_rank = {a: i for i, a in enumerate(ARCHETYPE_ORDER)}
+
+    def sort_key(eid: str):
+        arch = entity_to_archetype.get(eid, "opaque")
+        return (archetype_rank.get(arch, 99), -entity_series[eid][-1])
+
+    entity_order = sorted(entity_series, key=sort_key)
+
+    # Build stacked series and labels
+    stack_data: List[np.ndarray] = []
+    stack_labels: List[str] = []
+    stack_colors: List[str] = []
+
+    # Use tab20 + tab20b + tab20c for 60 distinct colours (matching legacy)
+    palette = (
+        list(plt.get_cmap("tab20").colors)
+        + list(plt.get_cmap("tab20b").colors)
+        + list(plt.get_cmap("tab20c").colors)
+    )
+
+    for i, eid in enumerate(entity_order):
+        stack_data.append(entity_series[eid])
+        stack_labels.append(entity_id_to_display.get(eid, eid))
+        stack_colors.append(palette[i % len(palette)])
+
+    total_pct = np.sum(stack_data, axis=0) if stack_data else np.zeros(len(epochs))
+
+    # ---- Plot ----
+    plt.style.use("seaborn-v0_8-whitegrid")
+    fig, ax = plt.subplots(figsize=(16, 10))
+
+    ax.stackplot(
+        epochs,
+        stack_data,
+        labels=stack_labels,
+        colors=stack_colors,
+        alpha=0.95,
+        linewidth=0.0,
+    )
+    # Total outline
+    ax.plot(epochs, total_pct, color="#1f2937", linewidth=1.2, alpha=0.85)
+
+    # ---- Annotations ----
+    # Epoch 400 reallocation window
+    ax.axvspan(400, 410, color="#dbeafe", alpha=0.4, linewidth=0)
+    ax.text(401.5, total_pct.max() - 1.3, "Shift around epoch 400",
+            color="#355c7d", fontsize=10)
+
+    # Live total annotation
+    if epochs:
+        ax.annotate(
+            f"Live total {total_pct[-1]:.1f}%",
+            xy=(epochs[-1], total_pct[-1]),
+            xytext=(epochs[-1] - 48, total_pct[-1] + 2.0),
+            arrowprops=dict(arrowstyle="-", color="#1f2937"),
+            color="#1f2937", fontsize=10,
+        )
+
+    ax.set_xlabel("Epoch", fontsize=11)
+    ax.set_ylabel("Share of circulating supply", fontsize=11)
+    ax.yaxis.set_major_formatter(PercentFormatter(xmax=100))
+    ax.set_xlim(min(epochs), max(epochs) + 4)
+    ax.set_ylim(0, max(total_pct) + 3.0)
+
+    # Legend below the chart (matching legacy style)
+    ax.legend(
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.12),
+        ncol=5,
+        frameon=True,
+        fontsize=8.5,
+        title="Entities",
+        title_fontsize=9,
+    )
+
+    fig.text(
+        0.01, 0.015,
+        "Stacked areas show attributed entities with ≥2 registered pools. "
+        "Historical values from local Koios pool history export.",
+        ha="left", va="bottom", fontsize=9, color="#555555",
+    )
+
+    fig.tight_layout(rect=(0, 0.08, 1, 1))
+    fig.savefig(out_path, dpi=220, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+    print(f"✓  {out_path.name}")
+
+
+# ---------------------------------------------------------------------------
+# Figure 4: Incentive-stance distribution (same entities, grouped by stance)
+# ---------------------------------------------------------------------------
+
+def figure_stance_distribution(
+    entity_stats: List[Dict[str, str]],
+    entity_to_archetype: Dict[str, str],
+) -> None:
+    """Compact stance summary: two stacked horizontal bars (archetype vs stance)
+    showing the same attributed stake decomposed two ways, plus key stats."""
+    out_path = FIGURES_DIR / "mpo_entity_stance_distribution_mainnet.png"
+
+    entity_pool_metrics = _load_entity_pool_metrics()
+
+    archetype_rows_csv = load_csv(DATA_DIR / "mpo_entity_archetypes.csv")
+    name_to_archetype = {r["display_name"]: r["archetype"] for r in archetype_rows_csv}
+    name_to_entity_id = {r["display_name"]: r["entity_id"] for r in archetype_rows_csv}
+
+    entity_rows: List[Dict] = []
+    for row in entity_stats:
+        pct = float(row.get("current_pct_supply", 0) or 0)
+        if pct < 0.01:
+            continue
+        eid = name_to_entity_id.get(row["display_name"], "")
+        metrics = entity_pool_metrics.get(eid, {})
+        pct_pledged = metrics.get("pct_pledged", 0.0)
+        stake_ada = float(row.get("current_stake_ada", 0) or 0)
+        pct_staked = stake_ada / STAKED_SUPPLY_ADA * 100 if STAKED_SUPPLY_ADA > 0 else 0.0
+        entity_rows.append({
+            "display_name": row["display_name"],
+            "pct_supply": pct,
+            "pct_staked": pct_staked,
+            "archetype": name_to_archetype.get(row["display_name"], "opaque"),
+            "stance": classify_stance(pct_pledged),
+            "pct_pledged": pct_pledged,
+            "n_live_pools": int(metrics.get("n_live_pools", 0)),
+        })
+
+    # ---- Aggregate by archetype and by stance ----
+    arch_totals: Dict[str, float] = defaultdict(float)
+    stance_totals: Dict[str, float] = defaultdict(float)
+    stance_entities: Dict[str, List[str]] = defaultdict(list)
+    stance_pools: Dict[str, int] = defaultdict(int)
+
+    for r in entity_rows:
+        arch_totals[r["archetype"]] += r["pct_staked"]
+        stance_totals[r["stance"]] += r["pct_staked"]
+        stance_entities[r["stance"]].append(r["display_name"])
+        stance_pools[r["stance"]] += r["n_live_pools"]
+
+    # ---- Plot: compact figure with two stacked bars + annotations ----
+    fig, axes = plt.subplots(2, 1, figsize=(16, 6), gridspec_kw={"height_ratios": [1, 1], "hspace": 0.35})
+    fig.patch.set_facecolor("#FAFAFA")
+
+    bar_height = 0.55
+
+    # --- Row 0: by archetype ---
+    ax0 = axes[0]
+    ax0.set_facecolor("#FAFAFA")
+    # Minimum segment width (% of staked supply) for inline labels
+    INLINE_THRESHOLD = 5.0
+
+    # First pass: draw bars and collect segment positions
+    segments: List[Tuple[float, float, str, str, float]] = []  # (left, w, arch, label, pct)
+    left = 0.0
+    for arch in ARCHETYPE_ORDER:
+        w = arch_totals.get(arch, 0.0)
+        if w <= 0:
+            continue
+        ax0.barh(0, w, left=left, height=bar_height,
+                 color=ARCHETYPE_COLORS[arch], alpha=0.88, zorder=3)
+        segments.append((left, w, arch, ARCHETYPE_LABELS[arch], w))
+        left += w
+    total_width = left
+
+    # Second pass: labels — inline for wide segments, above for narrow ones
+    callout_y = 0.55   # y position for callout labels (above bar)
+
+    # Collect callout labels that need collision avoidance
+    callouts: List[Tuple[float, str, str, float]] = []  # (center_x, label, arch, pct)
+    for seg_left, w, arch, label_txt, pct in segments:
+        center_x = seg_left + w / 2
+        if w >= INLINE_THRESHOLD:
+            # Wide segment: label inside
+            ax0.text(center_x, 0, f"{label_txt}\n{pct:.1f}%",
+                     ha="center", va="center", fontsize=8, color="white",
+                     fontweight="bold", zorder=4, linespacing=1.3)
+        else:
+            callouts.append((center_x, label_txt, arch, pct))
+
+    # Spread callout x-positions to avoid overlap (min gap in data units)
+    if callouts:
+        min_gap = total_width * 0.10  # ~10% of bar width per label
+        adjusted_x = [callouts[0][0]]
+        for i in range(1, len(callouts)):
+            desired = callouts[i][0]
+            prev = adjusted_x[-1]
+            adjusted_x.append(max(desired, prev + min_gap))
+
+        for i, (orig_x, label_txt, arch, pct) in enumerate(callouts):
+            ax0.annotate(
+                f"{label_txt}\n{pct:.1f}%",
+                xy=(orig_x, bar_height / 2),
+                xytext=(adjusted_x[i], callout_y + 0.15),
+                ha="center", va="bottom",
+                fontsize=7, fontweight="bold",
+                color=ARCHETYPE_COLORS[arch],
+                linespacing=1.3,
+                arrowprops=dict(
+                    arrowstyle="-",
+                    color=ARCHETYPE_COLORS[arch],
+                    lw=0.8,
+                    shrinkA=0, shrinkB=2,
+                ),
+                zorder=5,
+            )
+
+    ax0.set_xlim(0, total_width * 1.02)
+    ax0.set_yticks([0])
+    ax0.set_yticklabels(["By archetype"], fontsize=10, fontweight="bold")
+    ax0.set_ylim(-0.5, 1.4)  # extra headroom for callout labels
+    for spine in ax0.spines.values():
+        spine.set_visible(False)
+    ax0.tick_params(left=False, bottom=False)
+    ax0.set_xticklabels([])
+
+    # --- Row 1: by stance ---
+    ax1 = axes[1]
+    ax1.set_facecolor("#FAFAFA")
+    stance_segs: List[Tuple[float, float, str, str, int]] = []
+    left = 0.0
+    for stance in reversed(STANCE_ORDER):  # incentive_deaf first (largest)
+        w = stance_totals.get(stance, 0.0)
+        if w <= 0:
+            continue
+        n = len(stance_entities.get(stance, []))
+        ax1.barh(0, w, left=left, height=bar_height,
+                 color=STANCE_COLORS[stance], alpha=0.85, zorder=3)
+        stance_segs.append((left, w, stance, STANCE_LABELS[stance], n))
+        left += w
+    total_stance_width = left
+
+    for seg_left, w, stance, label_txt, n_ent in stance_segs:
+        center_x = seg_left + w / 2
+        if w >= INLINE_THRESHOLD:
+            ax1.text(center_x, 0,
+                     f"{label_txt}\n{w:.1f}% · {n_ent} ent.",
+                     ha="center", va="center", fontsize=8, color="white",
+                     fontweight="bold", zorder=4, linespacing=1.3)
+        else:
+            ax1.annotate(
+                f"{label_txt}\n{w:.1f}% · {n_ent} ent.",
+                xy=(center_x, bar_height / 2),
+                xytext=(center_x, callout_y + 0.15),
+                ha="center", va="bottom",
+                fontsize=7, fontweight="bold",
+                color=STANCE_COLORS[stance],
+                linespacing=1.3,
+                arrowprops=dict(
+                    arrowstyle="-",
+                    color=STANCE_COLORS[stance],
+                    lw=0.8,
+                    shrinkA=0, shrinkB=2,
+                ),
+                zorder=5,
+            )
+
+    ax1.set_xlim(0, total_stance_width * 1.02)
+    ax1.set_yticks([0])
+    ax1.set_yticklabels(["By stance"], fontsize=10, fontweight="bold")
+    ax1.set_ylim(-0.5, 1.4)
+    ax1.set_xlabel("Share of staked supply (%)", fontsize=9, labelpad=6)
+    for spine in ax1.spines.values():
+        spine.set_visible(False)
+    ax1.tick_params(left=False)
+
+    fig.suptitle(
+        "MPO attributed stake — archetype vs incentive stance · share of staked supply (epoch 618)",
+        fontsize=11.5, fontweight="bold", y=0.98,
+    )
+
+    fig.text(
+        0.01, 0.01,
+        "Same 26 entities decomposed two ways. Top = identity (who). Bottom = behaviour (pledge-bonus capture). "
+        "Non-compliant <2% | Marginal 2–30% | Compliant 30–80% | Exemplary ≥80%.",
+        ha="left", va="bottom", fontsize=7, color="#555555",
+    )
+
+    fig.tight_layout(rect=(0, 0.06, 1, 0.95))
+    fig.savefig(out_path, dpi=200, bbox_inches="tight", facecolor=fig.get_facecolor())
+    plt.close(fig)
+    print(f"✓  {out_path.name}")
+
+
+# ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 
@@ -462,17 +1067,25 @@ def main() -> None:
     print("Figure 1: current distribution by archetype…")
     figure_current_distribution(entity_stats, entity_to_archetype)
 
-    print("Building pool → archetype map…")
+    print("Building pool → archetype / entity maps…")
     pool_to_entity   = load_pool_to_entity()
     pool_to_archetype = build_pool_to_archetype(pool_to_entity, entity_to_archetype)
     print(f"  {len(pool_to_archetype):,} pools mapped to an archetype")
 
     print("Scanning pool history (this may take a moment for the 218 MB file)…")
-    archetype_by_epoch, total_by_epoch = scan_pool_history(pool_to_archetype)
+    archetype_by_epoch, total_by_epoch, entity_by_epoch = scan_pool_history(
+        pool_to_archetype, pool_to_entity,
+    )
     print(f"  {len(total_by_epoch):,} epochs found in pool history")
+
+    print("Figure 4: incentive-stance distribution…")
+    figure_stance_distribution(entity_stats, entity_to_archetype)
 
     print("Figure 2: archetype progression stacked area…")
     figure_archetype_progression(archetype_by_epoch, total_by_epoch)
+
+    print("Figure 3: per-entity progression lines…")
+    figure_entity_progression(entity_by_epoch, total_by_epoch, entity_to_archetype)
 
     print("Done.")
 
