@@ -27,6 +27,10 @@ import numpy as np
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "shared"))
+from cardano_events import add_event_markers
+
 
 @dataclass
 class EpochRow:
@@ -105,6 +109,15 @@ def main() -> None:
     eta_raw = np.array([np.nan if row.eta_raw is None else row.eta_raw for row in rows], dtype=float)
     eta_capped = np.array([np.nan if row.eta_capped is None else row.eta_capped for row in rows], dtype=float)
 
+    # Filter out incomplete/current epoch (last epoch may have partial data)
+    if len(epochs) > 0 and epochs[-1] > 616:
+        # Only keep up to the last complete epoch with reward data
+        mask_complete_data = epochs <= 616
+        epochs = epochs[mask_complete_data]
+        eta_raw = eta_raw[mask_complete_data]
+        eta_capped = eta_capped[mask_complete_data]
+        rows = [row for i, row in enumerate(rows) if i < len(rows) and rows[i].epoch_no <= 616]
+
     current_epoch = int(epochs[-1])
     complete_mask = epochs < current_epoch
     current_mask = epochs == current_epoch
@@ -163,7 +176,7 @@ def main() -> None:
         complete_eta_raw,
         color=ELECTRIC_BLUE,
         linewidth=2.0,
-        label=r"Raw $\eta = B_{\mathrm{produced}}/B_{\mathrm{expected}}$",
+        label="Raw η",
         alpha=0.95,
     )
     ax1.plot(
@@ -172,7 +185,7 @@ def main() -> None:
         color=ACID_GREEN,
         linewidth=1.5,
         linestyle="--",
-        label=r"Capped $\min(\eta,1)$ in reward formula",
+        label="Capped η (used in formula)",
         alpha=0.85,
     )
     ax1.axhline(1.0, color=GRID_COLOR, linestyle=":", linewidth=1.2, alpha=0.6)
@@ -270,6 +283,7 @@ def main() -> None:
         ax.tick_params(colors=TEXT_DIM, labelsize=8)
         ax.xaxis.label.set_color(TEXT_WHITE)
         ax.yaxis.label.set_color(TEXT_WHITE)
+        add_event_markers(ax, compact=True, y_frac=0.85, alpha=0.4)
 
     # X-axis labels
     tick_count = min(11, len(complete_epochs))

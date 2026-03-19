@@ -28,6 +28,10 @@ import numpy as np
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "shared"))
+from cardano_events import add_event_markers
+
 
 @dataclass
 class EpochRow:
@@ -104,6 +108,7 @@ def main() -> None:
         and row.deposit_drep_ada is not None
         and row.deposit_proposal_ada is not None
         and row.start_time_utc is not None
+        and row.epoch_no <= 616  # Filter out incomplete epochs
     ]
     if not valid_rows:
         raise RuntimeError("No obligation-pot deposit rows found in the dataset.")
@@ -246,6 +251,10 @@ def main() -> None:
     ax2.spines['top'].set_visible(False)
     ax2.spines['right'].set_visible(False)
     ax2.grid(True, color=GRID_COLOR, alpha=0.3, linestyle="-", linewidth=0.5)
+
+    # Add event markers to both axes
+    add_event_markers(ax1, compact=True, y_frac=0.85, alpha=0.3)
+    add_event_markers(ax2, compact=True, y_frac=0.95, alpha=0.3)
 
     tick_count = min(11, len(valid_rows))
     tick_idx = np.unique(np.linspace(0, len(valid_rows) - 1, num=tick_count, dtype=int))

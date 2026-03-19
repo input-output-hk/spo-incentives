@@ -1,6 +1,6 @@
 # Fee^epoch_tx History (Mainnet)
 
-- Coverage: epochs **208..618**.
+- Coverage: epochs **208..616**.
 - Latest complete epoch: **616** ending on **2026-03-05**.
 - Last 30-day average window uses complete epochs **611..616** from **2026-02-08** through **2026-03-05**.
 - Last 30-day average `Fee^epoch_tx`: **44,021.88 ADA per epoch**.

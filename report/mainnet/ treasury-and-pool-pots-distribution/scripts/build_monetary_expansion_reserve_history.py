@@ -28,6 +28,10 @@ import numpy as np
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "shared"))
+from cardano_events import add_event_markers
+
 
 @dataclass
 class EpochRow:
@@ -105,6 +109,18 @@ def main() -> None:
     eta = np.array([np.nan if row.eta_capped is None else row.eta_capped for row in rows], dtype=float)
     d = np.array([np.nan if row.d is None else row.d for row in rows], dtype=float)
 
+    # Filter out incomplete/current epoch (last epoch may have partial data)
+    if len(epochs) > 0 and epochs[-1] > 616:
+        # Only keep up to the last complete epoch with reward data
+        mask_complete = epochs <= 616
+        epochs = epochs[mask_complete]
+        reserve = reserve[mask_complete]
+        rho = rho[mask_complete]
+        tau = tau[mask_complete]
+        eta = eta[mask_complete]
+        d = d[mask_complete]
+        rows = [row for i, row in enumerate(rows) if i < len(rows) and rows[i].epoch_no <= 616]
+
     gate = np.where(np.isnan(d), np.nan, np.where(d >= 1.0, 0.0, 1.0))
     nominal = rho * reserve
     eta_adjusted = eta * nominal
@@ -165,15 +181,15 @@ def main() -> None:
         writer.writeheader()
         writer.writerows(out_rows)
 
-    # IOG dark brand palette
-    DARK_BG = "#FFFFFF"
-    TEXT_WHITE = "#1A1A1A"
-    TEXT_DIM = "#CCCCCC"
+    # IOG light brand palette
+    LIGHT_BG = "#FAFAFA"
+    TEXT_DARK = "#1A1A1A"
+    TEXT_DIM = "#666666"
     GRID_COLOR = "#E0E0E0"
     INFARED = "#E52321"
     DAWN = "#EC641D"
-    ACID_GREEN = "#00B35F"
-    ELECTRIC_BLUE = "#0DBFB0"
+    ACID_GREEN = "#06FF89"
+    ELECTRIC_BLUE = "#16E9D8"
     ULTRAVIOLET = "#A700FF"
     SOLAR_AMBER = "#FFBA36"
     COBALT_PULSE = "#2C4FFA"
@@ -184,17 +200,17 @@ def main() -> None:
         figsize=(16, 12),
         sharex=True,
         gridspec_kw={"height_ratios": [1.1, 1.0, 1.0]},
-        facecolor=DARK_BG,
+        facecolor=LIGHT_BG,
     )
 
     # Panel 1: Reserve stock depletion in ELECTRIC_BLUE
-    ax1.set_facecolor(DARK_BG)
-    ax1.plot(epochs, to_billion(reserve), color=ELECTRIC_BLUE, linewidth=2.2, label=r"Reserve stock $(T_{\infty}-T)$")
+    ax1.set_facecolor(LIGHT_BG)
+    ax1.plot(epochs, to_billion(reserve), color=ELECTRIC_BLUE, linewidth=2.2, label="Reserve stock")
     ax1.fill_between(epochs, to_billion(reserve), alpha=0.15, color=ELECTRIC_BLUE)
-    ax1.set_ylabel("Billion ADA", color=TEXT_WHITE, fontsize=11, fontweight="500")
+    ax1.set_ylabel("Billion ADA", color=TEXT_DARK, fontsize=11, fontweight="500")
     ax1.set_title(f"Reserve has halved — from {reserve_start/1e9:.1f}B to {reserve_end/1e9:.1f}B ADA since Shelley",
-                  color=TEXT_WHITE, fontsize=14, fontweight="600", pad=16)
-    ax1.legend(loc="upper right", framealpha=0.95, facecolor=DARK_BG, edgecolor=TEXT_DIM, labelcolor=TEXT_WHITE)
+                  color=TEXT_DARK, fontsize=14, fontweight="600", pad=16)
+    ax1.legend(loc="upper right", framealpha=0.95, facecolor=LIGHT_BG, edgecolor=GRID_COLOR, labelcolor=TEXT_DARK, fontsize=9)
     ax1.grid(True, color=GRID_COLOR, linewidth=0.5, alpha=0.6)
     ax1.tick_params(axis="y", labelcolor=TEXT_DIM, labelsize=9)
     ax1.tick_params(axis="x", labelcolor=TEXT_DIM, labelsize=9)
@@ -208,41 +224,42 @@ def main() -> None:
         f"Complete window: epochs {rows[first_complete_idx].epoch_no}–{rows[last_complete_idx].epoch_no} | "
         f"Depletion: {reserve_pct_change:.1f}%",
         transform=ax1.transAxes,
-        fontsize=9,
+        fontsize=8,
         va="bottom",
         ha="left",
-        color=TEXT_WHITE,
-        bbox=dict(boxstyle="round,pad=0.4", facecolor=DARK_BG, edgecolor=SOLAR_AMBER, alpha=0.9, linewidth=1.2),
+        color=TEXT_DIM,
     )
+    add_event_markers(ax1, compact=True, y_frac=0.85)
 
     # Panel 2: Nominal vs performance-adjusted expansion
-    ax2.set_facecolor(DARK_BG)
-    ax2.plot(epochs, to_million(nominal), color=INFARED, linewidth=1.9, label=r"Nominal $\rho \cdot Reserve$")
+    ax2.set_facecolor(LIGHT_BG)
+    ax2.plot(epochs, to_million(nominal), color=INFARED, linewidth=1.9, label="Nominal expansion")
     ax2.plot(
         epochs,
         to_million(eta_adjusted),
         color=DAWN,
         linewidth=1.6,
         linestyle="--",
-        label=r"Performance-adjusted $\min(\eta,1)\rho \cdot Reserve$",
+        label="Performance-adjusted expansion",
     )
-    ax2.set_ylabel("Million ADA / epoch", color=TEXT_WHITE, fontsize=11, fontweight="500")
-    ax2.legend(loc="upper right", framealpha=0.95, facecolor=DARK_BG, edgecolor=TEXT_DIM, labelcolor=TEXT_WHITE)
+    ax2.set_ylabel("Million ADA / epoch", color=TEXT_DARK, fontsize=11, fontweight="500")
+    ax2.legend(loc="upper right", framealpha=0.95, facecolor=LIGHT_BG, edgecolor=GRID_COLOR, labelcolor=TEXT_DARK, fontsize=9)
     ax2.grid(True, color=GRID_COLOR, linewidth=0.5, alpha=0.6)
     ax2.tick_params(axis="y", labelcolor=TEXT_DIM, labelsize=9)
     ax2.tick_params(axis="x", labelcolor=TEXT_DIM, labelsize=9)
     for spine in ax2.spines.values():
         spine.set_edgecolor(GRID_COLOR)
         spine.set_linewidth(0.5)
+    add_event_markers(ax2, compact=True, y_frac=0.85)
 
     # Panel 3: Pool-side reserve term in ACID_GREEN
-    ax3.set_facecolor(DARK_BG)
+    ax3.set_facecolor(LIGHT_BG)
     ax3.plot(
         epochs,
         to_million(pool_side),
         color=ACID_GREEN,
         linewidth=1.9,
-        label=r"Pool-side reserve term $(1-\tau)\,g(d)\,\min(\eta,1)\rho \cdot Reserve$",
+        label="Pool-side expansion",
     )
     ax3.scatter(
         [rows[low_pool_idx].epoch_no, rows[high_pool_idx].epoch_no],
@@ -250,7 +267,7 @@ def main() -> None:
         color=[SOLAR_AMBER, COBALT_PULSE],
         s=48,
         zorder=5,
-        edgecolor=TEXT_WHITE,
+        edgecolor=TEXT_DARK,
         linewidth=1.0,
     )
     ax3.annotate(
@@ -261,8 +278,7 @@ def main() -> None:
         ha="left",
         va="top",
         fontsize=8,
-        color=TEXT_WHITE,
-        bbox=dict(boxstyle="round,pad=0.3", facecolor=DARK_BG, edgecolor=SOLAR_AMBER, alpha=0.85, linewidth=0.8),
+        color=SOLAR_AMBER,
     )
     ax3.annotate(
         f"high\nepoch {rows[high_pool_idx].epoch_no}\n{pool_side[high_pool_idx]/1e6:.2f}M",
@@ -272,32 +288,26 @@ def main() -> None:
         ha="left",
         va="bottom",
         fontsize=8,
-        color=TEXT_WHITE,
-        bbox=dict(boxstyle="round,pad=0.3", facecolor=DARK_BG, edgecolor=COBALT_PULSE, alpha=0.85, linewidth=0.8),
+        color=COBALT_PULSE,
     )
-    ax3.set_ylabel("Million ADA / epoch", color=TEXT_WHITE, fontsize=11, fontweight="500")
-    ax3.set_xlabel("Epoch", color=TEXT_WHITE, fontsize=11, fontweight="500")
-    ax3.legend(loc="upper right", framealpha=0.95, facecolor=DARK_BG, edgecolor=TEXT_DIM, labelcolor=TEXT_WHITE)
+    ax3.set_ylabel("Million ADA / epoch", color=TEXT_DARK, fontsize=11, fontweight="500")
+    ax3.set_xlabel("Epoch", color=TEXT_DARK, fontsize=11, fontweight="500")
+    ax3.legend(loc="upper right", framealpha=0.95, facecolor=LIGHT_BG, edgecolor=GRID_COLOR, labelcolor=TEXT_DARK, fontsize=9)
     ax3.grid(True, color=GRID_COLOR, linewidth=0.5, alpha=0.6)
     ax3.tick_params(axis="y", labelcolor=TEXT_DIM, labelsize=9)
     ax3.tick_params(axis="x", labelcolor=TEXT_DIM, labelsize=9)
     for spine in ax3.spines.values():
         spine.set_edgecolor(GRID_COLOR)
         spine.set_linewidth(0.5)
+    add_event_markers(ax3, compact=True, y_frac=0.95)
 
     tick_count = min(11, len(rows))
     tick_idx = np.unique(np.linspace(0, len(rows) - 1, num=tick_count, dtype=int))
     ax3.set_xticks(epochs[tick_idx])
     ax3.set_xticklabels([f"{epochs[i]}\n{format_date(rows[i].start_time_utc)}" for i in tick_idx], color=TEXT_DIM, fontsize=9)
 
-    # Add insight bar at bottom
-    fig.text(0.5, 0.01,
-             "IO Research • Reserve depletion analysis • Cardano mainnet since Shelley (epoch 208)",
-             ha="center", va="bottom", fontsize=9, color=SOLAR_AMBER, style="italic",
-             bbox=dict(boxstyle="round,pad=0.5", facecolor=DARK_BG, edgecolor=SOLAR_AMBER, alpha=0.7, linewidth=1.0))
-
-    fig.tight_layout(rect=[0, 0.03, 1, 1])
-    fig.savefig(fig_path, dpi=180, facecolor=DARK_BG, edgecolor="none")
+    fig.tight_layout(rect=[0, 0, 1, 1])
+    fig.savefig(fig_path, dpi=180, facecolor=LIGHT_BG, edgecolor="none")
     plt.close(fig)
 
     notes_lines = [

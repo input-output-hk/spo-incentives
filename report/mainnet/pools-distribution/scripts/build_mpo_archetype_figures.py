@@ -29,6 +29,10 @@ import matplotlib.patches as mpatches
 import numpy as np
 from matplotlib.ticker import PercentFormatter
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "shared"))
+from cardano_events import add_event_markers
+
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------

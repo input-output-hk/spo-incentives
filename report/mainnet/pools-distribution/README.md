@@ -36,32 +36,38 @@ All counts and amounts use the latest available pool snapshot (**epoch 618**) an
       - 4.2.2 [Institutional Validator (IVaaS)](#422-institutional-validator-ivaas)
       - 4.2.3 [Incentive stance: reclassifying by pledge-bonus capture](#423-incentive-stance-reclassifying-by-pledge-bonus-capture)
    - 4.3 [Within-staked inefficiency: the cost of non-compliance](#43-within-staked-inefficiency-the-cost-of-non-compliance)
-   - 4.4 [MPO distribution by tier](#44-mpo-distribution-by-tier)
-5. [Reward formula anatomy](#5-reward-formula-anatomy)
-   - 5.1 [The full formula](#51-the-full-formula)
-   - 5.2 [Factor 1 — Performance ($\bar{p}$)](#52-factor-1--performance-barp)
-   - 5.3 [Factor 2 — The ceiling ($P_{\max}$)](#53-factor-2--the-ceiling-p_max)
-   - 5.4 [The playing field](#54-the-playing-field)
+   - 4.4 [MPO pool taxonomy by incentive stance](#44-mpo-pool-taxonomy-by-incentive-stance)
+5. [Pool taxonomy by incentive stance](#5-pool-taxonomy-by-incentive-stance)
+   - 5.1 [Stance recap](#51-stance-recap)
+   - 5.2 [The full landscape](#52-the-full-landscape)
+   - 5.3 [Distribution by stance (all pools)](#53-distribution-by-stance-all-pools)
+6. [Reward formula anatomy](#6-reward-formula-anatomy)
+   - 6.1 [The full formula](#61-the-full-formula)
+   - 6.2 [Factor 1 — Performance ($\bar{p}$)](#62-factor-1--performance-barp)
+   - 6.3 [Factor 2 — The ceiling ($P_{\max}$)](#63-factor-2--the-ceiling-p_max)
+   - 6.4 [The playing field](#64-the-playing-field)
       - [Three reward tiers](#three-reward-tiers)
       - [The bonus at every scale](#the-bonus-at-every-scale)
       - [What this means](#what-this-means)
-   - 5.5 [Factor 3 — The proportioning envelope ($E$)](#55-factor-3--the-proportioning-envelope-e)
-      - 5.5.1 [The base: what size alone buys](#551-the-base-what-size-alone-buys)
-      - 5.5.2 [The pledge bonus: what commitment adds](#552-the-pledge-bonus-what-commitment-adds)
-      - 5.5.3 [Envelope on mainnet](#553-envelope-on-mainnet)
-   - 5.6 [Reward efficiency decomposition](#56-reward-efficiency-decomposition)
+   - 6.5 [Factor 3 — The proportioning envelope ($E$)](#65-factor-3--the-proportioning-envelope-e)
+      - 6.5.1 [The base: what size alone buys](#651-the-base-what-size-alone-buys)
+      - 6.5.2 [The pledge bonus: what commitment adds](#652-the-pledge-bonus-what-commitment-adds)
+      - 6.5.3 [Envelope on mainnet](#653-envelope-on-mainnet)
+   - 6.6 [Reward efficiency decomposition](#66-reward-efficiency-decomposition)
       - [The base is distribution-neutral](#the-base-is-distribution-neutral)
       - [The bonus is distribution-sensitive](#the-bonus-is-distribution-sensitive)
       - [Decomposition by formula factor](#decomposition-by-formula-factor)
       - [Where the waste lives](#where-the-waste-lives)
       - [Relationship to §2 waste decomposition](#relationship-to-2-waste-decomposition)
-6. [Pool landscape](#6-pool-landscape)
-   - 6.1 [Current snapshot](#61-current-snapshot)
-   - 6.2 [Reward concentration](#62-reward-concentration)
-   - 6.3 [Entity and MPO concentration](#63-entity-and-mpo-concentration)
-7. [Protocol parameters](#7-protocol-parameters)
-8. [Forward-looking](#8-forward-looking)
-9. [Reproduction](#9-reproduction)
+7. [Pool landscape](#7-pool-landscape)
+   - 7.1 [Current snapshot](#71-current-snapshot)
+   - 7.2 [Reward concentration](#72-reward-concentration)
+   - 7.3 [Entity and MPO concentration](#73-entity-and-mpo-concentration)
+8. [Protocol parameters](#8-protocol-parameters)
+9. [Forward-looking](#9-forward-looking)
+10. [Reproduction](#10-reproduction)
+   - 10.1 [Full rebuild](#101-full-rebuild)
+   - 10.2 [Refreshing MPO data](#102-refreshing-mpo-data)
    - 9.1 [Full rebuild](#91-full-rebuild)
    - 9.2 [Refreshing MPO data](#92-refreshing-mpo-data)
 
@@ -543,13 +549,77 @@ Coinbase alone accounts for **35% of all MPO pledge waste** (68K/epoch). The top
 >
 > **Why this matters for mechanism design.** If a parameter change (e.g., increasing $a_0$) aims to reduce within-staked inefficiency, its impact on the 19 non-compliant MPOs would be *to increase the penalty they already ignore*. The waste would grow in absolute terms, but the entities would not change behaviour — they *cannot* pledge (CEX/IVaaS) or *choose* not to (independent MPOs). The reform would effectively transfer more ADA from these entities to the reserve, which may or may not be the intended outcome.
 
+### 4.4 MPO pool taxonomy by incentive stance
+
+Crossing the incentive-stance classification with the pool-size taxonomy (§3) reveals where MPO pledge compliance sits in the stake landscape.
+
+![MPO Pool Taxonomy by Incentive Stance](figures/mpo_taxonomy_by_stance_mainnet.png)
+
+The entity-level breakdown below shows exactly who sits where — each sub-bar is one entity's pools within a tier+stance group:
+
+![MPO Tier × Stance × Entity](figures/mpo_tier_stance_entity_mainnet.png)
+
+The 396 live MPO pools carry 11.08B ADA (51.0% of staked supply) across the full tier spectrum. The stance decomposition shows:
+
+**Non-compliant red dominates every viable-and-above tier.** From Healthy through Oversaturated, non-compliant MPO pools account for 81% of MPO viable stake. The pattern holds across all size classes — it is not concentrated in a single tier.
+
+**Exemplary green appears only in Saturated and Near-saturation.** These are the self-staked CF and Adalite pools operating at or near z₀. Exemplary compliance at scale requires large capital commitment — at z₀ = 77M ADA, an exemplary pool needs ≥62M ADA of self-pledge.
+
+**Compliant pools (teal) are visible in Near-saturation and Healthy.** Wave, Bloom, and CHUCK BUX pools appear here — operators who pledge 30–80% of their pool stake, capturing significant bonus.
+
+**The marginal class is nearly empty among MPOs.** Unlike the all-pool analysis (§5), where 637 pools sit in the marginal band, MPO entities almost never land between 2% and 30% pledge. This confirms the bimodal behaviour observed in §4.2.3: MPO operators either fully ignore the pledge signal or commit substantially.
+
 ---
 
-## 5. Reward formula anatomy
+## 5. Pool taxonomy by incentive stance
+
+§3 classified pools by *size* — where they sit relative to the production, viability, and saturation thresholds. §4 introduced *incentive stance* — whether an entity captures the pledge bonus (compliant/exemplary) or forfeits it (non-compliant). This section overlays the two dimensions to answer: **where in the pool landscape does pledge-bonus compliance actually live?**
+
+### 5.1 Stance recap
+
+The incentive-stance classification developed in §4.2.3 applies the same thresholds to all ~2,700 active pools, not just the 26 attributed MPO entities. Each pool's effective pledge ratio ($= \min(\text{declared\_pledge}, \text{active\_stake}) / \text{active\_stake}$) determines its stance:
+
+| Stance | Pledge ratio | Mechanism-design interpretation |
+| --- | --- | --- |
+| **Exemplary** | ≥ 80% | Captures the vast majority of the pledge bonus. Strategy is incentive-compatible by construction. |
+| **Compliant** | 30–80% | Captures significant bonus share. Incentive-compatible; would respond to parameter changes. |
+| **Marginal** | 2–30% | Partial capture. The *marginal* population — behaviour shifts with small parameter adjustments. |
+| **Non-compliant** | < 2% | Forfeits the bonus. Strategy is not incentive-compatible; insensitive to marginal changes. |
+
+### 5.2 The full landscape
+
+![Pool Taxonomy by Incentive Stance](figures/taxonomy_by_stance_mainnet.png)
+
+The butterfly chart above uses the same tier structure as §3 but colours the right-side stake bars by incentive stance. The picture is unambiguous:
+
+**Non-compliant pools dominate the viable-and-above tiers.** Across Healthy, Large healthy, Near-saturation, Saturated, and Oversaturated, non-compliant pools hold 84% of the stake. This is not a marginal phenomenon — it is the *default operating mode* of the Cardano staking landscape.
+
+**The marginal class fills in below viability.** Unlike the MPO-level analysis (§4.2.3) where the marginal class was empty, at pool level it contains 637 pools holding 1.6B ADA (7.4% of staked supply). These are predominantly small pools (Healthy and Sub-viable tiers) where the operator has pledged a meaningful fraction of their modest stake. This is the population that would respond to parameter changes — and it sits in the part of the landscape with the least economic weight.
+
+**Exemplary pools concentrate in Near-saturation.** The green segments are almost entirely near-saturation pools — these are self-staked operators (like CF pools, Adalite, and high-pledge community operators) running at or near z₀ with >80% pledge coverage. They already capture the bonus and would be the *least* affected by any reform.
+
+### 5.3 Distribution by stance (all pools)
+
+| Stance | Pools | Stake (B ₳) | % staked supply | Dominant tiers |
+| --- | ---: | ---: | ---: | --- |
+| **Non-compliant** | 1,629 | 18.07 | 83.1% | Healthy through Oversaturated |
+| **Marginal** | 637 | 1.60 | 7.4% | Healthy + Sub-viable |
+| **Compliant** | 288 | 0.51 | 2.3% | Dormant + Sub-production (small self-staked) |
+| **Exemplary** | 394 | 1.56 | 7.2% | Near-saturation + Dormant |
+
+> [!WARNING]
+> **83% of staked supply is non-compliant.** This is not a problem that parameter adjustment alone can solve. The non-compliant population includes not only CEX and IVaaS entities (structurally unable to pledge) but also the majority of healthy-and-above pools operated by community SPOs who have chosen — rationally, given $a_0 = 0.3$ — not to pledge. The current pledge bonus is a ~23% discount on maximum reward, and most operators treat it as an acceptable cost of doing business.
+
+> [!NOTE]
+> **The marginal class is the policy lever.** At 637 pools and 1.6B ADA, the marginal population is small but non-trivial. These operators have demonstrated willingness to pledge (2–30% of stake) and sit at the decision boundary. A well-calibrated increase in $a_0$ or a reshaped pledge function that increases the penalty for low pledge could push marginal operators toward compliant — but would not affect the 83% that is already non-compliant.
+
+---
+
+## 6. Reward formula anatomy
 
 The pool reward curve is the single expression that governs how the pools pot is distributed. Every pool's reward — and every ADA that returns to the reserve — is determined by this formula. This section reads it left to right, factor by factor, to show exactly where value is captured and where it leaks.
 
-### 5.1 The full formula
+### 6.1 The full formula
 
 $$\hat{f}'(\pi, \nu, \bar{p}) = \underbrace{\bar{p}}_{\text{performance}} \;\cdot\; \underbrace{P_{\max}}_{\text{ceiling}} \;\cdot\; \underbrace{\left( \lambda_{\min}\;\nu \;+\; \lambda_{\max}\;A(\pi, \nu) \right)}_{\text{proportioning envelope } E(\pi,\nu)}$$
 
@@ -563,7 +633,7 @@ Three multiplicative factors. Each ranges from 0 to 1 (effectively). When all th
 
 The actual reward = $\bar{p} \times P_{\max} \times E(\pi,\nu)$. The ratio of actual to $P_{\max}$ is the pool's **reward efficiency**: $\eta_i = \bar{p}_i \times E_i$.
 
-### 5.2 Factor 1 — Performance ($\bar{p}$)
+### 6.2 Factor 1 — Performance ($\bar{p}$)
 
 The pool's actual block production relative to its VRF-assigned expectation:
 
@@ -577,7 +647,7 @@ For a saturated pool (σ ≈ 0.2%), expected blocks ≈ 43/epoch. The Poisson co
 
 $\bar{p}$ is the only factor the operator directly controls through infrastructure quality. The remaining two factors are structural — determined by the pool's stake and pledge relative to protocol parameters.
 
-### 5.3 Factor 2 — The ceiling ($P_{\max}$)
+### 6.3 Factor 2 — The ceiling ($P_{\max}$)
 
 $$P_{\max} = \frac{1}{k} \cdot R = \frac{1}{500} \times 15.53\text{M} \approx 31{,}060\text{ ADA/epoch}$$
 
@@ -589,7 +659,7 @@ $P_{\max}$ is **not a parameter** — it is an emergent ceiling. It is the rewar
 
 In the ideal design, $k = 500$ pools each earn $P_{\max}$, and the full pot is distributed: $500 \times P_{\max} = R$. On mainnet, the sum of all pool rewards is **6.79M ADA** — only **43.7%** of the 15.53M pot. The gap is the subject of §5.5.
 
-### 5.4 The playing field
+### 6.4 The playing field
 
 Before analysing the envelope's mechanics, it is worth framing the **rules of the game** concretely: what can a pool earn, what does each level cost in capital, and what does the pledge bonus actually buy?
 
@@ -629,7 +699,7 @@ Reward: **9,316 ADA/epoch**. The pledge adds **3.6 ADA/epoch** — less than the
 
 The protocol allocates 23.1% of $P_{\max}$ — equivalent to **3.4M ADA/epoch across all pools** — to incentivise pledge. But the incentive's structure makes it economically irrational to respond to: at every pool size below full saturation, the yield on pledged capital is a fraction of what passive delegation earns. The "game" for operators is overwhelmingly about **size** (ν), not **commitment** (π). The bonus exists in the formula but not in the economics.
 
-### 5.5 Factor 3 — The proportioning envelope ($E$)
+### 6.5 Factor 3 — The proportioning envelope ($E$)
 
 $$E(\pi, \nu) = \underbrace{\lambda_{\min} \cdot \nu}_{\text{base}} + \underbrace{\lambda_{\max} \cdot A(\pi, \nu)}_{\text{pledge bonus}}$$
 
@@ -643,7 +713,7 @@ The envelope $E$ determines what fraction of $P_{\max}$ the pool can capture. It
 | **Pledge bonus** | $\lambda_{\max} \cdot A(\pi,\nu) = 23.077\% \cdot A$ | Size + pledge | 0 → 23.077% |
 | **Envelope total** | $E(\pi,\nu)$ | | 0 → 100% |
 
-#### 5.5.1 The base: what size alone buys
+#### 6.5.1 The base: what size alone buys
 
 A pool with **zero pledge** (π = 0) has $A(0, \nu) = 0$. Its envelope collapses to:
 
@@ -653,7 +723,7 @@ This is the reward floor — purely proportional to saturation level, independen
 
 At half saturation (ν = 0.5): $E(0, 0.5) = 38.46\%$. At typical healthy-pool sizes (ν = 0.05 to 0.5): $E$ ranges from 3.8% to 38.5% of $P_{\max}$.
 
-#### 5.5.2 The pledge bonus: what commitment adds
+#### 6.5.2 The pledge bonus: what commitment adds
 
 The activation function $A(\pi, \nu) = \pi\nu - \pi^2(1-\nu)$ controls access to the remaining 23.077% of $P_{\max}$. Its behaviour:
 
@@ -677,7 +747,7 @@ $$\text{Max relative uplift at } \nu = \frac{\lambda_{\max} \cdot \nu^3}{\lambda
 
 The 30% headline bonus requires ν = 1 (77M ADA fully pledged). At typical mainnet sizes (ν = 0.05 to 0.5), even a fully self-funded pool gets between 0.08% and 7.5% relative uplift. The pledge bonus is **structurally suppressed by undersaturation**.
 
-#### 5.5.3 Envelope on mainnet
+#### 6.5.3 Envelope on mainnet
 
 ![Pledge Bonus Activation](figures/pledge_bonus_activation_mainnet.png)
 
@@ -719,7 +789,7 @@ The a0 curve is effectively a **step function**: near-zero for pools below ~10M 
 
 83% of pools with stake pledge below 100K ADA. The median pledge-to-stake ratio for healthy pools is **0.14%**. The bonus mechanism was designed for a world where operators commit meaningful capital; the actual landscape is one where it is functionally invisible.
 
-### 5.6 Reward efficiency decomposition
+### 6.6 Reward efficiency decomposition
 
 The three factors combine multiplicatively. For each pool $i$:
 
@@ -785,9 +855,9 @@ Both views confirm the same conclusion: the dominant loss is participation, the 
 
 ---
 
-## 6. Pool landscape
+## 7. Pool landscape
 
-### 6.1 Current snapshot
+### 7.1 Current snapshot
 
 ![Pool Landscape by Size](figures/pool_landscape_by_size_mainnet.png)
 
@@ -813,7 +883,7 @@ Historical reference (canonical landscape report):
 
 The trend is slow contraction: fewer pools, more stake concentration in the surviving healthy core.
 
-### 6.2 Reward concentration
+### 7.2 Reward concentration
 
 Recent-window data (epochs 593+) from the canonical reward distribution report:
 
@@ -835,7 +905,7 @@ Recent-window data (epochs 593+) from the canonical reward distribution report:
 
 Reward share tracks block share closely — the reward curve does not dramatically amplify or compress differences in pool scale. The dominant factor in reward allocation is stake size, not pledge or performance.
 
-### 6.3 Entity and MPO concentration
+### 7.3 Entity and MPO concentration
 
 The attributed MPO entity set covers **451 registered pools** across **26 entities**, representing **51.15% of staked ADA** (29.03% of supply) and **84.61% of all declared pledge**.
 
@@ -853,7 +923,7 @@ The largest entities by stake (Coinbase, Figment, Binance, Kiln) operate with ne
 
 ---
 
-## 7. Protocol parameters
+## 8. Protocol parameters
 
 Three protocol parameters directly govern pool-level distribution. All have been constant since reaching their current value.
 
@@ -865,7 +935,7 @@ Three protocol parameters directly govern pool-level distribution. All have been
 
 ---
 
-## 8. Forward-looking
+## 9. Forward-looking
 
 **Capital constraint.** If participation remains at ~56.5%, the maximum number of saturable pools is fixed at ~282 regardless of formula changes. Governance incentives, exchange policy changes, and new delegation products could shift this.
 
@@ -877,9 +947,9 @@ Three protocol parameters directly govern pool-level distribution. All have been
 
 ---
 
-## 9. Reproduction
+## 10. Reproduction
 
-### 9.1 Full rebuild
+### 10.1 Full rebuild
 
 All figures and data summaries rebuild from a single entry point:
 
@@ -920,7 +990,7 @@ python3 build_mpo_progression_analysis.py      # reads local history CSV
 - `mpo_unresolved_group_labels_mainnet.csv` — unresolved Koios group labels
 - `mpo_progression_proxy_key_epochs_mainnet.csv` — historical concentration at key epochs
 
-### 9.2 Refreshing MPO data
+### 10.2 Refreshing MPO data
 
 The MPO scripts (`build_mpo_entity_deep_dive.py` and `build_mpo_progression_analysis.py`) fetch live data from the [Koios REST API](https://api.koios.rest) and require an internet connection. They should be re-run whenever a new epoch's pool snapshot is needed.
 

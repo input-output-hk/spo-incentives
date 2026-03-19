@@ -31,6 +31,10 @@ import numpy as np
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "shared"))
+from cardano_events import add_event_markers
+
 
 @dataclass
 class EpochRow:
@@ -110,6 +114,20 @@ def main() -> None:
     d = np.array([np.nan if row.d is None else row.d for row in rows], dtype=float)
     observed_paid = np.array([np.nan if row.observed_paid_ada is None else row.observed_paid_ada for row in rows], dtype=float)
 
+    # Filter out incomplete/current epoch (last epoch may have partial data)
+    if len(epochs) > 0 and epochs[-1] > 616:
+        # Only keep up to the last complete epoch with reward data
+        mask_complete = epochs <= 616
+        epochs = epochs[mask_complete]
+        fee = fee[mask_complete]
+        reserve = reserve[mask_complete]
+        rho = rho[mask_complete]
+        tau = tau[mask_complete]
+        eta = eta[mask_complete]
+        d = d[mask_complete]
+        observed_paid = observed_paid[mask_complete]
+        rows = [row for i, row in enumerate(rows) if i < len(rows) and rows[i].epoch_no <= 616]
+
     gate = np.where(np.isnan(d), np.nan, np.where(d >= 1.0, 0.0, 1.0))
     reserve_term = gate * eta * rho * reserve
     gross_proxy = fee + reserve_term
@@ -148,72 +166,75 @@ def main() -> None:
         figsize=(14, 12),
         sharex=False,
         gridspec_kw={"height_ratios": [1.15, 1.0, 1.1]},
+        facecolor="#FAFAFA",
     )
+    for ax in [ax1, ax2, ax3]:
+        ax.set_facecolor("#FAFAFA")
 
     ax1.stackplot(
         plot_epochs,
         plot_fee / 1_000_000.0,
         plot_reserve_term / 1_000_000.0,
-        colors=["#ff7f0e", "#1f77b4"],
+        colors=["#EC641D", "#16E9D8"],
         alpha=0.78,
-        labels=[r"Fees: $Fee^{epoch}_{tx}$", r"Monetary expansion: $g(d)\min(\eta,1)\rho \cdot Reserve$"],
+        labels=["Transaction fees", "Reserve expansion"],
     )
-    ax1.plot(plot_epochs, plot_gross_proxy / 1_000_000.0, color="#111111", linewidth=1.3, label="Gross reward-pot proxy")
+    ax1.plot(plot_epochs, plot_gross_proxy / 1_000_000.0, color="#111111", linewidth=1.3, label="Epoch pot (computed)")
     ax1.set_ylabel("Million ADA / epoch")
-    ax1.set_title("General Reward Pot Proxy by Source Since Shelley")
-    ax1.legend(loc="upper right")
+    ax1.set_title("Epoch pot composition")
+    ax1.legend(loc="upper right", framealpha=0.9, fontsize=9)
     ax1.text(
         0.01,
-        0.98,
-        f"Current partial epoch {current_epoch} ({format_date(rows[current_idx].start_time_utc)}): "
-        f"fees={fee[current_idx]:,.0f} ADA | reserve term={reserve_term[current_idx]:,.0f} ADA | gross={gross_proxy[current_idx]:,.0f} ADA\n"
-        "Deposit flow is unavailable in the current inputs, so it is omitted from this source decomposition.",
+        0.05,
+        f"Deposit flows unavailable in current inputs.",
         transform=ax1.transAxes,
-        fontsize=9,
-        va="top",
+        fontsize=8,
+        color="#555555",
+        va="bottom",
         ha="left",
-        bbox=dict(boxstyle="round,pad=0.35", facecolor="white", edgecolor="#cccccc", alpha=0.92),
     )
+    add_event_markers(ax1, compact=True, y_frac=0.85)
 
     ax2.stackplot(
         plot_epochs,
         plot_treasury_cut_proxy / 1_000_000.0,
         plot_pool_pot_proxy / 1_000_000.0,
-        colors=["#d62728", "#2ca02c"],
+        colors=["#E52321", "#06FF89"],
         alpha=0.75,
-        labels=["Treasury cut proxy", "Pool-side reward-pot proxy"],
+        labels=["20% (treasury)", "80% (pools)"],
     )
-    ax2.plot(plot_epochs, plot_gross_proxy / 1_000_000.0, color="#111111", linewidth=1.2, label="Gross reward-pot proxy")
+    ax2.plot(plot_epochs, plot_gross_proxy / 1_000_000.0, color="#111111", linewidth=1.2, label="Epoch pot (computed)")
     ax2.set_ylabel("Million ADA / epoch")
-    ax2.set_title("Gross Reward Pot Split Into Treasury and Pool Sides")
-    ax2.legend(loc="upper right")
+    ax2.set_title("Treasury / pools split")
+    ax2.legend(loc="upper right", framealpha=0.9, fontsize=9)
+    add_event_markers(ax2, compact=True, y_frac=0.85)
 
     observed_plot_mask = plot_mask & ~np.isnan(observed_paid)
-    ax3.plot(plot_epochs, plot_pool_pot_proxy / 1_000_000.0, color="#2ca02c", linewidth=1.7, label="Pool-side reward-pot proxy")
-    ax3.plot(epochs[observed_plot_mask], observed_paid[observed_plot_mask] / 1_000_000.0, color="#111111", linewidth=1.5, label="Observed paid pool rewards")
+    ax3.plot(plot_epochs, plot_pool_pot_proxy / 1_000_000.0, color="#06FF89", linewidth=1.7, label="Pools pot (computed)")
+    ax3.plot(epochs[observed_plot_mask], observed_paid[observed_plot_mask] / 1_000_000.0, color="#111111", linewidth=1.5, label="Distributed rewards")
     ax3.fill_between(
         epochs[verification_mask],
         observed_paid[verification_mask] / 1_000_000.0,
         pool_pot_proxy[verification_mask] / 1_000_000.0,
-        color="#9467bd",
+        color="#FFBA36",
         alpha=0.22,
-        label="Gap to observed paid rewards",
+        label="Returned to reserve",
     )
     ax3.set_ylabel("Million ADA / epoch")
     ax3.set_xlabel("Epoch")
-    ax3.set_title("Pool-Side Reward Pot Proxy vs Observed Paid Rewards")
-    ax3.legend(loc="upper right")
+    ax3.set_title("Pools pot vs distributed rewards")
+    ax3.legend(loc="upper right", framealpha=0.9, fontsize=9)
     ax3.text(
         0.01,
-        0.98,
-        f"Comparison window: epochs 211..616\nMedian absolute gap vs observed paid rewards: {median_gap:,.0f} ADA\n"
-        "This gap is expected: inactive stake, performance, pledge misses, caps, timing, and missing deposit flow.",
+        0.05,
+        f"Median gap: {median_gap:,.0f} ADA (expected due to inactive stake, performance factors, and missing deposit flow)",
         transform=ax3.transAxes,
-        fontsize=9,
-        va="top",
+        fontsize=8,
+        color="#555555",
+        va="bottom",
         ha="left",
-        bbox=dict(boxstyle="round,pad=0.35", facecolor="white", edgecolor="#cccccc", alpha=0.92),
     )
+    add_event_markers(ax3, compact=True, y_frac=0.95)
 
     tick_count = min(11, len(plot_epochs))
     tick_idx = np.unique(np.linspace(0, len(plot_epochs) - 1, num=tick_count, dtype=int))
@@ -227,7 +248,7 @@ def main() -> None:
     ax3.set_xticklabels(tick_labels)
 
     fig.tight_layout()
-    fig.savefig(fig_path, dpi=220)
+    fig.savefig(fig_path, dpi=220, facecolor="#FAFAFA")
     plt.close(fig)
 
     notes_lines = [

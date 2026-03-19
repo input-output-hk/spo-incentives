@@ -504,7 +504,7 @@ This reads as a product of two factors: the **ceiling** ($P_{\max}$) and the **p
 
 Two structural properties of the envelope are worth noting:
 
-- The **base term** $\lambda_{\min}\nu$ is **linear in $\nu$** — it depends only on total pool size relative to saturation. The distribution of stake across pools does not affect the aggregate base: $\sum_i \lambda_{\min}\nu_i = \lambda_{\min} \cdot \text{total\_stake}/z_0$ regardless of how many pools share that stake.
+- The **base term** $\lambda_{\min}\nu$ is **linear in $\nu$** — it depends only on total pool size relative to saturation. The distribution of stake across pools does not affect the aggregate base: $\sum_i \lambda_{\min}\nu_i = \lambda_{\min} \cdot \text{totalStake}/z_0$ regardless of how many pools share that stake.
 
 - The **bonus term** $\lambda_{\max}A(\pi,\nu)$ is **non-linear** — it depends on both $\pi$ and $\nu$, and at maximum pledge ($\pi = \nu$) reduces to $\lambda_{\max}\nu^3$. The cubic dependence means the bonus is structurally suppressed at low saturation levels and favours fewer, larger pools.
 
@@ -1123,7 +1123,7 @@ $$
 ##### 3.1.1.2 Reader-Friendly
 
 $$
-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(L)} := \min\left(\sigma^{\text{totalStaked}},k^{\text{protocol}}_{\text{saturation}},L^{\text{protocol}}_{\text{pledgeLeverage}}\cdot\pi^{\text{pledged}}\right)
+\sigma^{\text{totalStaked},(L)}_{\text{capped}} := \min\left(\sigma^{\text{totalStaked}},k^{\text{protocol}}_{\text{saturation}},L^{\text{protocol}}_{\text{pledgeLeverage}}\cdot\pi^{\text{pledged}}\right)
 $$
 
 ### 3.2 CIP-0050 reward curve substitution
@@ -1143,19 +1143,19 @@ $$
 ##### 3.2.1.2 Reader-Friendly
 
 $$
-{PoolPot^{\text{optimal}}_{i}}^{(50)}
+PoolPot^{\text{optimal},(50)}_{i}
 = \frac{PoolsPot^{\text{epoch}}}{1+\alpha^{\text{protocol}}_{\text{skinInTheGame}}}
 \left(
-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(L)}
+\sigma^{\text{totalStaked},(L)}_{\text{capped}}
 +
 \pi^{\text{pledged}}_{\text{capped}}\cdot \alpha^{\text{protocol}}_{\text{skinInTheGame}}
 \cdot
 \frac{
-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(L)}
+\sigma^{\text{totalStaked},(L)}_{\text{capped}}
 -
 \pi^{\text{pledged}}_{\text{capped}}
 \left(
-\frac{k^{\text{protocol}}_{\text{saturation}}-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(L)}}{k^{\text{protocol}}_{\text{saturation}}}
+\frac{k^{\text{protocol}}_{\text{saturation}}-\sigma^{\text{totalStaked},(L)}_{\text{capped}}}{k^{\text{protocol}}_{\text{saturation}}}
 \right)
 }{
 k^{\text{protocol}}_{\text{saturation}}
@@ -1210,7 +1210,7 @@ $$
 ##### 3.4.1.2 Reader-Friendly
 
 $$
-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(37)}
+\sigma^{\text{totalStaked},(37)}_{\text{capped}}
 :=
 \min(\sigma^{\text{totalStaked}},\sigma^{\text{protocol}}_{\text{saturationDynamic}}(\pi^{\text{pledged}}))
 $$
@@ -1228,19 +1228,19 @@ $$
 ##### 3.4.1.4 Reader-Friendly
 
 $$
-{PoolPot^{\text{optimal}}_{i}}^{(37)}
+PoolPot^{\text{optimal},(37)}_{i}
 = \frac{PoolsPot^{\text{epoch}}}{1+\alpha^{\text{protocol}}_{\text{skinInTheGame}}}
 \left(
-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(37)}
+\sigma^{\text{totalStaked},(37)}_{\text{capped}}
 +
 \pi^{\text{pledged}}_{\text{capped}}\cdot \alpha^{\text{protocol}}_{\text{skinInTheGame}}
 \cdot
 \frac{
-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(37)}
+\sigma^{\text{totalStaked},(37)}_{\text{capped}}
 -
 \pi^{\text{pledged}}_{\text{capped}}
 \left(
-\frac{k^{\text{protocol}}_{\text{saturation}}-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(37)}}{k^{\text{protocol}}_{\text{saturation}}}
+\frac{k^{\text{protocol}}_{\text{saturation}}-\sigma^{\text{totalStaked},(37)}_{\text{capped}}}{k^{\text{protocol}}_{\text{saturation}}}
 \right)
 }{
 k^{\text{protocol}}_{\text{saturation}}
@@ -1658,25 +1658,25 @@ Proposal summary:
 Introduce pledge leverage:
 
 $$
-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(L)} := \min\left(\sigma^{\text{totalStaked}},k^{\text{protocol}}_{\text{saturation}},L^{\text{protocol}}_{\text{pledgeLeverage}}\cdot\pi^{\text{pledged}}\right)
+\sigma^{\text{totalStaked},(L)}_{\text{capped}} := \min\left(\sigma^{\text{totalStaked}},k^{\text{protocol}}_{\text{saturation}},L^{\text{protocol}}_{\text{pledgeLeverage}}\cdot\pi^{\text{pledged}}\right)
 $$
 
-Replace $\sigma^{\text{totalStaked}}_{\text{capped}}$ by ${\sigma^{\text{totalStaked}}_{\text{capped}}}^{(L)}$:
+Replace $\sigma^{\text{totalStaked}}_{\text{capped}}$ by $\sigma^{\text{totalStaked},(L)}_{\text{capped}}$:
 
 $$
-{PoolPot^{\text{optimal}}_{i}}^{(50)}
+PoolPot^{\text{optimal},(50)}_{i}
 = \frac{PoolsPot^{\text{epoch}}}{1+\alpha^{\text{protocol}}_{\text{skinInTheGame}}}
 \left(
-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(L)}
+\sigma^{\text{totalStaked},(L)}_{\text{capped}}
 +
 \pi^{\text{pledged}}_{\text{capped}}\cdot \alpha^{\text{protocol}}_{\text{skinInTheGame}}
 \cdot
 \frac{
-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(L)}
+\sigma^{\text{totalStaked},(L)}_{\text{capped}}
 -
 \pi^{\text{pledged}}_{\text{capped}}
 \left(
-\frac{k^{\text{protocol}}_{\text{saturation}}-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(L)}}{k^{\text{protocol}}_{\text{saturation}}}
+\frac{k^{\text{protocol}}_{\text{saturation}}-\sigma^{\text{totalStaked},(L)}_{\text{capped}}}{k^{\text{protocol}}_{\text{saturation}}}
 \right)
 }{
 k^{\text{protocol}}_{\text{saturation}}
@@ -1687,7 +1687,7 @@ $$
 Then:
 
 $$
-{PoolPot^{\text{actual}}_{i}}^{(50)}=\bar p^{\text{pool}}_{\text{apparent},i}\cdot {PoolPot^{\text{optimal}}_{i}}^{(50)}
+PoolPot^{\text{actual},(50)}_{i}=\bar p^{\text{pool}}_{\text{apparent},i}\cdot PoolPot^{\text{optimal},(50)}_{i}
 $$
 
 with the same operator/member split forms.
@@ -1725,27 +1725,27 @@ $$
 Capped pool stake becomes:
 
 $$
-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(37)}
+\sigma^{\text{totalStaked},(37)}_{\text{capped}}
 :=
 \min(\sigma^{\text{totalStaked}},\sigma^{\text{protocol}}_{\text{saturationDynamic}}(\pi^{\text{pledged}}))
 $$
 
-Replace $\sigma^{\text{totalStaked}}_{\text{capped}}$ by ${\sigma^{\text{totalStaked}}_{\text{capped}}}^{(37)}$ in the same baseline reward function:
+Replace $\sigma^{\text{totalStaked}}_{\text{capped}}$ by $\sigma^{\text{totalStaked},(37)}_{\text{capped}}$ in the same baseline reward function:
 
 $$
-{PoolPot^{\text{optimal}}_{i}}^{(37)}
+PoolPot^{\text{optimal},(37)}_{i}
 = \frac{PoolsPot^{\text{epoch}}}{1+\alpha^{\text{protocol}}_{\text{skinInTheGame}}}
 \left(
-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(37)}
+\sigma^{\text{totalStaked},(37)}_{\text{capped}}
 +
 \pi^{\text{pledged}}_{\text{capped}}\cdot \alpha^{\text{protocol}}_{\text{skinInTheGame}}
 \cdot
 \frac{
-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(37)}
+\sigma^{\text{totalStaked},(37)}_{\text{capped}}
 -
 \pi^{\text{pledged}}_{\text{capped}}
 \left(
-\frac{k^{\text{protocol}}_{\text{saturation}}-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(37)}}{k^{\text{protocol}}_{\text{saturation}}}
+\frac{k^{\text{protocol}}_{\text{saturation}}-\sigma^{\text{totalStaked},(37)}_{\text{capped}}}{k^{\text{protocol}}_{\text{saturation}}}
 \right)
 }{
 k^{\text{protocol}}_{\text{saturation}}
@@ -1756,7 +1756,7 @@ $$
 and:
 
 $$
-{PoolPot^{\text{actual}}_{i}}^{(37)}=\bar p^{\text{pool}}_{\text{apparent},i}\cdot {PoolPot^{\text{optimal}}_{i}}^{(37)}
+PoolPot^{\text{actual},(37)}_{i}=\bar p^{\text{pool}}_{\text{apparent},i}\cdot PoolPot^{\text{optimal},(37)}_{i}
 $$
 
 Practical effect:
@@ -1801,7 +1801,7 @@ Because the two layers are independent in the current formulation, one rule from
 The main advanced case is `CIP-0050 + CIP-0037`. If both are applied together, the natural composite capped stake is:
 
 $$
-{\sigma^{\text{totalStaked}}_{\text{capped}}}^{(50+37)}
+\sigma^{\text{totalStaked},(50+37)}_{\text{capped}}
 :=
 \min\left(
 \sigma^{\text{totalStaked}},

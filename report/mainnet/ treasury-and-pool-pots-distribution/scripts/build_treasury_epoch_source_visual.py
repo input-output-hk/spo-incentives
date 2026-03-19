@@ -34,6 +34,10 @@ import numpy as np
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "shared"))
+from cardano_events import add_event_markers
+
 
 @dataclass
 class EpochRow:
@@ -113,6 +117,20 @@ def main() -> None:
     eta = np.array([np.nan if row.eta_capped is None else row.eta_capped for row in rows], dtype=float)
     d = np.array([np.nan if row.d is None else row.d for row in rows], dtype=float)
 
+    # Filter out incomplete/current epoch (last epoch may have partial data)
+    if len(epochs) > 0 and epochs[-1] > 616:
+        # Only keep up to the last complete epoch with reward data
+        mask_complete = epochs <= 616
+        epochs = epochs[mask_complete]
+        fee = fee[mask_complete]
+        reserve = reserve[mask_complete]
+        treasury_stock = treasury_stock[mask_complete]
+        rho = rho[mask_complete]
+        tau = tau[mask_complete]
+        eta = eta[mask_complete]
+        d = d[mask_complete]
+        rows = [row for i, row in enumerate(rows) if i < len(rows) and rows[i].epoch_no <= 616]
+
     gate = np.where(np.isnan(d), np.nan, np.where(d >= 1.0, 0.0, 1.0))
     treasury_from_fee = tau * fee
     treasury_from_reserve = tau * gate * eta * rho * reserve
@@ -156,14 +174,14 @@ def main() -> None:
     plot_treasury_from_reserve = treasury_from_reserve[plot_mask]
     plot_treasury_total_proxy = treasury_total_proxy[plot_mask]
 
-    # IOG dark brand palette
-    BACKGROUND = "#0A0A0A"
+    # IOG light brand palette
+    BACKGROUND = "#FAFAFA"
     GRID_COLOR = "#E0E0E0"
     TEXT_COLOR = "#1A1A1A"
-    DIM_TEXT = "#CCCCCC"
-    ELECTRIC_BLUE = "#0DBFB0"  # Monetary expansion component
+    DIM_TEXT = "#666666"
+    ELECTRIC_BLUE = "#16E9D8"  # Monetary expansion component
     DAWN = "#EC641D"  # Fee component
-    ACID_GREEN = "#00B35F"  # Total
+    ACID_GREEN = "#06FF89"  # Total
     INFARED = "#E52321"  # Negative deltas
     SOLAR_AMBER = "#FFBA36"  # Insight bar
 
@@ -184,30 +202,31 @@ def main() -> None:
         plot_treasury_from_reserve / 1_000_000.0,
         colors=[DAWN, ELECTRIC_BLUE],
         alpha=0.85,
-        labels=[r"Treasury from fees: $\tau \cdot Fee^{epoch}_{tx}$", r"Treasury from monetary expansion: $\tau g(d)\min(\eta,1)\rho \cdot Reserve$"],
+        labels=["Transaction fees", "Reserve expansion"],
     )
     ax1.plot(
         plot_epochs,
         plot_treasury_total_proxy / 1_000_000.0,
         color=ACID_GREEN,
         linewidth=2.0,
-        label="Total treasury inflow proxy",
+        label="Treasury share",
     )
     ax1.set_ylabel("Million ADA / epoch", color=TEXT_COLOR, fontsize=11, fontweight="500")
     ax1.set_title(
-        "Cardano Treasury Inflow Dynamics: Fee and Monetary Expansion Components",
+        "Treasury inflow: Fee and monetary expansion components",
         color=TEXT_COLOR,
         fontsize=13,
         fontweight="600",
         pad=16,
     )
-    ax1.legend(loc="upper right", framealpha=0.92, facecolor=BACKGROUND, edgecolor=GRID_COLOR, labelcolor=TEXT_COLOR)
+    ax1.legend(loc="upper right", framealpha=0.92, facecolor=BACKGROUND, edgecolor=GRID_COLOR, labelcolor=TEXT_COLOR, fontsize=9)
     ax1.grid(True, color=GRID_COLOR, alpha=0.3, linestyle="-", linewidth=0.5)
     ax1.tick_params(colors=DIM_TEXT, labelsize=10)
     ax1.spines["top"].set_color(GRID_COLOR)
     ax1.spines["right"].set_color(GRID_COLOR)
     ax1.spines["left"].set_color(GRID_COLOR)
     ax1.spines["bottom"].set_color(GRID_COLOR)
+    add_event_markers(ax1, compact=True, y_frac=0.85, alpha=0.4)
 
     # Insight bar for current epoch
     ax1.text(
@@ -233,20 +252,21 @@ def main() -> None:
         treasury_from_fee[fee_focus_indices] / 1_000.0,
         color=DAWN,
         linewidth=2.2,
-        label=r"Fee-side treasury cut: $\tau \cdot Fee^{epoch}_{tx}$",
+        label="Fee-side treasury share",
         marker="o",
         markersize=4,
         alpha=0.9,
     )
     ax2.set_ylabel("Thousand ADA / epoch", color=TEXT_COLOR, fontsize=11, fontweight="500")
-    ax2.set_title("Fee-Side Treasury Accumulation (95-Epoch Window)", color=TEXT_COLOR, fontsize=13, fontweight="600", pad=14)
-    ax2.legend(loc="upper right", framealpha=0.92, facecolor=BACKGROUND, edgecolor=GRID_COLOR, labelcolor=TEXT_COLOR)
+    ax2.set_title("Treasury from fees (95-epoch window)", color=TEXT_COLOR, fontsize=13, fontweight="600", pad=14)
+    ax2.legend(loc="upper right", framealpha=0.92, facecolor=BACKGROUND, edgecolor=GRID_COLOR, labelcolor=TEXT_COLOR, fontsize=9)
     ax2.grid(True, color=GRID_COLOR, alpha=0.3, linestyle="-", linewidth=0.5)
     ax2.tick_params(colors=DIM_TEXT, labelsize=10)
     ax2.spines["top"].set_color(GRID_COLOR)
     ax2.spines["right"].set_color(GRID_COLOR)
     ax2.spines["left"].set_color(GRID_COLOR)
     ax2.spines["bottom"].set_color(GRID_COLOR)
+    add_event_markers(ax2, compact=True, y_frac=0.85, alpha=0.4)
 
     # Panel 3: Verification — proxy vs observed treasury stock delta
     positive_mask = ~np.isnan(treasury_delta) & (treasury_delta >= 0.0)
@@ -257,7 +277,7 @@ def main() -> None:
         treasury_delta[positive_mask] / 1_000_000.0,
         color=ELECTRIC_BLUE,
         width=0.9,
-        label="Observed treasury stock delta (positive)",
+        label="Treasury stock delta (positive)",
         alpha=0.8,
     )
     ax3.bar(
@@ -265,7 +285,7 @@ def main() -> None:
         treasury_delta[negative_mask] / 1_000_000.0,
         color=INFARED,
         width=0.9,
-        label="Observed treasury stock delta (negative)",
+        label="Treasury stock delta (negative)",
         alpha=0.85,
     )
     ax3.plot(
@@ -273,19 +293,20 @@ def main() -> None:
         plot_treasury_total_proxy / 1_000_000.0,
         color=ACID_GREEN,
         linewidth=2.0,
-        label="Treasury inflow proxy from available sources",
+        label="Treasury share (computed)",
     )
     ax3.axhline(0.0, color=GRID_COLOR, linewidth=1.2, alpha=0.6)
     ax3.set_ylabel("Million ADA / epoch", color=TEXT_COLOR, fontsize=11, fontweight="500")
     ax3.set_xlabel("Epoch", color=TEXT_COLOR, fontsize=11, fontweight="500")
-    ax3.set_title("Proxy Validation Against Observed Treasury Stock Changes", color=TEXT_COLOR, fontsize=13, fontweight="600", pad=14)
-    ax3.legend(loc="upper right", framealpha=0.92, facecolor=BACKGROUND, edgecolor=GRID_COLOR, labelcolor=TEXT_COLOR)
+    ax3.set_title("Proxy validation vs observed stock changes", color=TEXT_COLOR, fontsize=13, fontweight="600", pad=14)
+    ax3.legend(loc="upper right", framealpha=0.92, facecolor=BACKGROUND, edgecolor=GRID_COLOR, labelcolor=TEXT_COLOR, fontsize=9)
     ax3.grid(True, color=GRID_COLOR, alpha=0.3, linestyle="-", linewidth=0.5)
     ax3.tick_params(colors=DIM_TEXT, labelsize=10)
     ax3.spines["top"].set_color(GRID_COLOR)
     ax3.spines["right"].set_color(GRID_COLOR)
     ax3.spines["left"].set_color(GRID_COLOR)
     ax3.spines["bottom"].set_color(GRID_COLOR)
+    add_event_markers(ax3, compact=True, y_frac=0.95, alpha=0.4)
 
     # Insight bar for verification metrics
     ax3.text(

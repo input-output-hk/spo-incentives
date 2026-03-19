@@ -7,12 +7,12 @@
 - Deposit^{epoch}_{nonRefundable} is missing from current Koios inputs and therefore omitted.
 
 ## Current partial epoch
-- Epoch **618** (2026-03-10):
-  - fees = **24,572.99 ADA**
-  - reserve term = **9,977,982.17 ADA**
-  - gross reward-pot proxy = **10,002,555.16 ADA**
-  - treasury cut proxy = **2,000,511.03 ADA**
-  - pool-side reward-pot proxy = **8,002,044.13 ADA**
+- Epoch **616** (2026-02-28):
+  - fees = **36,977.68 ADA**
+  - reserve term = **19,380,240.41 ADA**
+  - gross reward-pot proxy = **19,417,218.09 ADA**
+  - treasury cut proxy = **3,883,443.62 ADA**
+  - pool-side reward-pot proxy = **15,533,774.47 ADA**
 
 ## Comparison to observed paid rewards
 - The pool-side proxy is expected to sit above observed paid rewards because it is still upstream of several loss / return-to-reserve mechanisms.

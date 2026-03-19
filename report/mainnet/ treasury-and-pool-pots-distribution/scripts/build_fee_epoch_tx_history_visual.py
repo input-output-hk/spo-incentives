@@ -22,6 +22,10 @@ import numpy as np
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "shared"))
+from cardano_events import add_event_markers
+
 
 @dataclass
 class EpochRow:
@@ -90,6 +94,15 @@ def main() -> None:
 
     epochs = np.array([row.epoch_no for row in rows], dtype=int)
     fees = np.array([np.nan if row.fee_epoch_ada is None else row.fee_epoch_ada for row in rows], dtype=float)
+
+    # Filter out incomplete/current epoch (last epoch may have partial data)
+    if len(epochs) > 0 and epochs[-1] > 616:
+        # Only keep up to the last complete epoch with reward data
+        mask_complete_data = epochs <= 616
+        epochs = epochs[mask_complete_data]
+        fees = fees[mask_complete_data]
+        rows = [row for i, row in enumerate(rows) if i < len(rows) and rows[i].epoch_no <= 616]
+
     complete_mask = np.array([row.has_total_rewards and row.fee_epoch_ada is not None for row in rows], dtype=bool)
     partial_mask = np.array([not row.has_total_rewards and row.fee_epoch_ada is not None for row in rows], dtype=bool)
 
@@ -122,20 +135,20 @@ def main() -> None:
     min_complete_idx = int(complete_indices[np.nanargmin(fee_complete)])
     max_complete_idx = int(complete_indices[np.nanargmax(fee_complete)])
 
-    # IOG dark brand colours
-    DARK_BG = "#FFFFFF"
-    WHITE_TEXT = "#FFFFFF"
+    # IOG light brand colours
+    LIGHT_BG = "#FAFAFA"
+    TEXT_DARK = "#1A1A1A"
     DIM_TEXT = "#666666"
     GRID_COLOR = "#E0E0E0"
 
     INFARED = "#E52321"
     DAWN = "#EC641D"
-    ACID_GREEN = "#00B35F"
-    ELECTRIC_BLUE = "#0DBFB0"
+    ACID_GREEN = "#06FF89"
+    ELECTRIC_BLUE = "#16E9D8"
     SOLAR_AMBER = "#FFBA36"
 
-    fig, ax1 = plt.subplots(figsize=(14, 6.5), facecolor=DARK_BG)
-    ax1.set_facecolor(DARK_BG)
+    fig, ax1 = plt.subplots(figsize=(14, 6.5), facecolor=LIGHT_BG)
+    ax1.set_facecolor(LIGHT_BG)
 
     # Theoretical capacity ceiling: 3.1 TPS realistic × 432,000 s/epoch × 0.19 ADA/tx
     REALISTIC_TPS = 3.1
@@ -144,20 +157,7 @@ def main() -> None:
     theo_capacity_fee = REALISTIC_TPS * EPOCH_SECONDS * AVG_FEE_PER_TX  # ~254,448 ADA
 
     # Main line in ELECTRIC_BLUE
-    ax1.plot(epochs[complete_mask], fees[complete_mask] / 1_000.0, color=ELECTRIC_BLUE, linewidth=2.0, label=r"Complete epochs: $Fee^{epoch}_{tx}$", zorder=3)
-
-    if np.any(partial_mask):
-        ax1.plot(
-            epochs[partial_mask],
-            fees[partial_mask] / 1_000.0,
-            color=INFARED,
-            linewidth=1.6,
-            linestyle="--",
-            marker="D",
-            markersize=4,
-            label="Current / incomplete epochs",
-            zorder=2,
-        )
+    ax1.plot(epochs[complete_mask], fees[complete_mask] / 1_000.0, color=ELECTRIC_BLUE, linewidth=2.0, label="Transaction fees", zorder=3)
 
     # Rolling average in SOLAR_AMBER
     ax1.axhline(last_month_avg_fee / 1_000.0, color=SOLAR_AMBER, linewidth=2.0, linestyle="-", label="Last 30-day average", zorder=3)
@@ -168,7 +168,7 @@ def main() -> None:
         color=INFARED,
         linewidth=1.8,
         linestyle="--",
-        label=f"Realistic capacity ceiling (~{theo_capacity_fee/1_000:.0f}K ADA at {REALISTIC_TPS} TPS)",
+        label=f"Capacity ceiling",
         zorder=2,
     )
     ax1.axhspan(
@@ -185,7 +185,7 @@ def main() -> None:
         color=[ACID_GREEN, DAWN],
         s=48,
         zorder=5,
-        edgecolors=WHITE_TEXT,
+        edgecolors=TEXT_DARK,
         linewidths=0.8,
     )
     ax1.annotate(
@@ -209,9 +209,10 @@ def main() -> None:
         color=DAWN,
     )
 
-    ax1.set_ylabel("Thousand ADA / epoch", color=WHITE_TEXT, fontsize=10)
-    ax1.set_title("Transaction fees peaked at 308K ADA — now ~25K per epoch", color=WHITE_TEXT, fontsize=12, fontweight="bold", pad=15)
-    ax1.legend(loc="upper left", facecolor=DARK_BG, edgecolor=GRID_COLOR, framealpha=0.95, fontsize=9)
+    ax1.set_ylabel("Thousand ADA / epoch", color=TEXT_DARK, fontsize=10)
+    ax1.set_xlabel("Epoch", color=TEXT_DARK, fontsize=10)
+    ax1.set_title("Transaction fees peaked at 308K ADA — now ~25K per epoch", color=TEXT_DARK, fontsize=12, fontweight="bold", pad=15)
+    ax1.legend(loc="upper left", facecolor=LIGHT_BG, edgecolor=GRID_COLOR, framealpha=0.95, fontsize=9, labelcolor=TEXT_DARK)
 
     # Compute current reserve expansion term for the gap note
     latest_complete_reserve = None
@@ -238,18 +239,13 @@ def main() -> None:
     ax1.text(
         0.01,
         0.98,
-        f"Latest complete epoch: {latest_complete_row.epoch_no} ({format_date(latest_complete_row.end_time_utc)} end)\n"
-        f"Last 30-day complete window: {format_date(rows[month_window_indices[0]].end_time_utc)} to {format_date(rows[month_window_indices[-1]].end_time_utc)}\n"
-        f"Average over that window: {last_month_avg_fee:,.0f} ADA / epoch{gap_note}",
+        f"Latest complete: epoch {latest_complete_row.epoch_no} | Last 30-day avg: {last_month_avg_fee:,.0f} ADA/epoch",
         transform=ax1.transAxes,
         fontsize=8,
         va="top",
         ha="left",
-        color=WHITE_TEXT,
-        bbox=dict(boxstyle="round,pad=0.5", facecolor=GRID_COLOR, edgecolor=SOLAR_AMBER, alpha=0.85),
+        color=DIM_TEXT,
     )
-
-    ax1.set_xlabel("Epoch", color=WHITE_TEXT, fontsize=10)
 
     # Style axes
     ax1.tick_params(colors=DIM_TEXT, labelsize=9)
@@ -264,11 +260,10 @@ def main() -> None:
     ax1.set_xticks(epochs[tick_idx])
     ax1.set_xticklabels([f"{epochs[i]}\n{format_date(rows[i].start_time_utc)}" for i in tick_idx], fontsize=8, color=DIM_TEXT)
 
-    # Add insight bar at bottom
-    fig.text(0.5, 0.02, "Generated with IOG Research", ha="center", fontsize=7, color=DIM_TEXT, style="italic")
+    add_event_markers(ax1, compact=True, y_frac=0.95)
 
-    fig.tight_layout(rect=[0, 0.04, 1, 1])
-    fig.savefig(fig_path, dpi=180, facecolor=DARK_BG, edgecolor="none")
+    fig.tight_layout(rect=[0, 0, 1, 1])
+    fig.savefig(fig_path, dpi=180, facecolor=LIGHT_BG, edgecolor="none")
     plt.close(fig)
 
     notes_lines = [

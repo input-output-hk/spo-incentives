@@ -6,10 +6,10 @@
 - Treasury from deposits: not directly available because `Deposit^{epoch}_{nonRefundable}` is not present as an epoch flow in the current Koios dataset.
 
 ## Current partial epoch
-- Epoch **618** (2026-03-10):
-  - fee-side treasury cut = **4,914.60 ADA**
-  - reserve-side treasury cut = **1,995,596.43 ADA**
-  - total treasury inflow proxy = **2,000,511.03 ADA**
+- Epoch **616** (2026-02-28):
+  - fee-side treasury cut = **7,395.54 ADA**
+  - reserve-side treasury cut = **3,876,048.08 ADA**
+  - total treasury inflow proxy = **3,883,443.62 ADA**
 
 ## Verification against treasury stock data
 - Observed stock data used for the check: `Treasury_ada` from the timeseries.

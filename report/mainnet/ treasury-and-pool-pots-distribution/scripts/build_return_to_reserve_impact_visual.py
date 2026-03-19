@@ -31,6 +31,10 @@ import numpy as np
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "shared"))
+from cardano_events import add_event_markers
+
 
 @dataclass
 class EpochRow:
@@ -110,6 +114,20 @@ def main() -> None:
     d = np.array([np.nan if row.d is None else row.d for row in rows], dtype=float)
     eta = np.array([np.nan if row.eta_capped is None else row.eta_capped for row in rows], dtype=float)
 
+    # Filter out incomplete/current epoch (last epoch may have partial data)
+    if len(epochs) > 0 and epochs[-1] > 616:
+        # Only keep up to the last complete epoch with reward data
+        mask_complete = epochs <= 616
+        epochs = epochs[mask_complete]
+        observed_paid = observed_paid[mask_complete]
+        fee = fee[mask_complete]
+        reserve = reserve[mask_complete]
+        rho = rho[mask_complete]
+        tau = tau[mask_complete]
+        d = d[mask_complete]
+        eta = eta[mask_complete]
+        rows = [row for i, row in enumerate(rows) if i < len(rows) and rows[i].epoch_no <= 616]
+
     gate = np.where(np.isnan(d), np.nan, np.where(d >= 1.0, 0.0, 1.0))
     gross_proxy = fee + gate * eta * rho * reserve
     pool_side_proxy = (1.0 - tau) * gross_proxy
@@ -149,53 +167,52 @@ def main() -> None:
     max_return_value = float(analysis_return[max_return_idx_local])
     max_return_date = format_date(analysis_rows[max_return_idx_local].start_time_utc)
 
-    # IOG dark brand colours
-    DARK_BG = "#FFFFFF"
-    WHITE_TEXT = "#FFFFFF"
+    # IOG light brand palette
+    LIGHT_BG = "#FAFAFA"
+    TEXT_DARK = "#1A1A1A"
     DIM_TEXT = "#666666"
     GRID_COLOR = "#E0E0E0"
 
     INFARED = "#E52321"
     DAWN = "#EC641D"
-    ACID_GREEN = "#00B35F"
-    ELECTRIC_BLUE = "#0DBFB0"
+    ACID_GREEN = "#06FF89"
+    ELECTRIC_BLUE = "#16E9D8"
     ULTRAVIOLET = "#A700FF"
+    SOLAR_AMBER = "#FFBA36"
 
-    fig = plt.figure(figsize=(14, 12.5), facecolor=DARK_BG)
+    fig = plt.figure(figsize=(14, 12.5), facecolor=LIGHT_BG)
     gs = fig.add_gridspec(3, 1, height_ratios=[1.1, 1.0, 1.1])
     ax1 = fig.add_subplot(gs[0, 0])
     ax2 = fig.add_subplot(gs[1, 0])
     ax3 = fig.add_subplot(gs[2, 0])
 
     for ax in [ax1, ax2, ax3]:
-        ax.set_facecolor(DARK_BG)
+        ax.set_facecolor(LIGHT_BG)
 
-    # Panel 1: pool-side pot (ACID_GREEN) vs observed (ELECTRIC_BLUE) with gap fill (INFARED alpha)
-    ax1.plot(analysis_epochs, analysis_pool_side / 1_000_000.0, color=ACID_GREEN, linewidth=2.0, label="Pool-side pot proxy", zorder=3)
-    ax1.plot(analysis_epochs, analysis_observed / 1_000_000.0, color=ELECTRIC_BLUE, linewidth=1.8, label="Observed paid rewards", zorder=3)
+    # Panel 1: pool-side pot (ACID_GREEN) vs observed (ELECTRIC_BLUE) with gap fill (SOLAR_AMBER alpha)
+    ax1.plot(analysis_epochs, analysis_pool_side / 1_000_000.0, color=ACID_GREEN, linewidth=2.0, label="Pools pot (computed)", zorder=3)
+    ax1.plot(analysis_epochs, analysis_observed / 1_000_000.0, color=ELECTRIC_BLUE, linewidth=1.8, label="Distributed rewards", zorder=3)
     ax1.fill_between(
         analysis_epochs,
         analysis_observed / 1_000_000.0,
         analysis_pool_side / 1_000_000.0,
-        color=INFARED,
+        color=SOLAR_AMBER,
         alpha=0.18,
-        label="Returned-to-reserve proxy",
+        label="Returned to reserve",
         zorder=2,
     )
-    ax1.set_ylabel("Million ADA / epoch", color=WHITE_TEXT, fontsize=10)
-    ax1.set_title("Pool-side pot retention determines reserve replenishment", color=WHITE_TEXT, fontsize=12, fontweight="bold", pad=15)
-    ax1.legend(loc="upper right", facecolor=DARK_BG, edgecolor=GRID_COLOR, framealpha=0.95, fontsize=9)
+    ax1.set_ylabel("Million ADA / epoch", color=TEXT_DARK, fontsize=10)
+    ax1.set_title("Pool-side pot vs distributed rewards", color=TEXT_DARK, fontsize=12, fontweight="bold", pad=15)
+    ax1.legend(loc="upper right", facecolor=LIGHT_BG, edgecolor=GRID_COLOR, framealpha=0.95, fontsize=9, labelcolor=TEXT_DARK)
     ax1.text(
         0.01,
-        0.98,
-        "Returned-to-reserve proxy = max(pool-side pot proxy - observed paid rewards, 0)\n"
-        "Deposit flow is unavailable in current inputs and is omitted from the proxy.",
+        0.05,
+        "Deposit flow unavailable in current inputs.",
         transform=ax1.transAxes,
         fontsize=8,
-        va="top",
+        color=DIM_TEXT,
+        va="bottom",
         ha="left",
-        color=WHITE_TEXT,
-        bbox=dict(boxstyle="round,pad=0.5", facecolor=GRID_COLOR, edgecolor=ELECTRIC_BLUE, alpha=0.85),
     )
 
     # Style ax1
@@ -206,14 +223,14 @@ def main() -> None:
     ax1.spines['right'].set_visible(False)
     ax1.grid(True, color=GRID_COLOR, alpha=0.3, linestyle="-", linewidth=0.5)
 
-    # Panel 2: per-epoch return bars (ULTRAVIOLET) with cumulative line (DAWN)
+    # Panel 2: per-epoch return bars (SOLAR_AMBER) with cumulative line (DAWN)
     ax2.bar(
         analysis_epochs,
         analysis_return / 1_000_000.0,
-        color=ULTRAVIOLET,
+        color=SOLAR_AMBER,
         width=0.9,
         alpha=0.65,
-        label="Returned-to-reserve proxy per epoch",
+        label="Returned to reserve per epoch",
         zorder=2,
     )
     ax2_twin = ax2.twinx()
@@ -222,27 +239,24 @@ def main() -> None:
         cumulative_return / 1_000_000_000.0,
         color=DAWN,
         linewidth=2.2,
-        label="Cumulative returned-to-reserve proxy",
+        label="Cumulative returned",
         zorder=3,
     )
-    ax2.set_ylabel("Million ADA / epoch", color=WHITE_TEXT, fontsize=10)
-    ax2_twin.set_ylabel("Cumulative Billion ADA", color=WHITE_TEXT, fontsize=10)
-    ax2.set_title(f"Cumulative return: {total_return/1_000_000_000:.3f}B ADA by epoch {analysis_epochs[-1]}", color=WHITE_TEXT, fontsize=12, fontweight="bold", pad=15)
+    ax2.set_ylabel("Million ADA / epoch", color=TEXT_DARK, fontsize=10)
+    ax2_twin.set_ylabel("Cumulative Billion ADA", color=TEXT_DARK, fontsize=10)
+    ax2.set_title(f"Cumulative return to reserve: {total_return/1_000_000_000:.3f}B ADA", color=TEXT_DARK, fontsize=12, fontweight="bold", pad=15)
     lines_1, labels_1 = ax2.get_legend_handles_labels()
     lines_2, labels_2 = ax2_twin.get_legend_handles_labels()
-    ax2.legend(lines_1 + lines_2, labels_1 + labels_2, loc="upper left", facecolor=DARK_BG, edgecolor=GRID_COLOR, framealpha=0.95, fontsize=9)
+    ax2.legend(lines_1 + lines_2, labels_1 + labels_2, loc="upper left", facecolor=LIGHT_BG, edgecolor=GRID_COLOR, framealpha=0.95, fontsize=9, labelcolor=TEXT_DARK)
     ax2.text(
         0.01,
-        0.98,
-        f"Median per-epoch return proxy: {median_return:,.0f} ADA\n"
-        f"Cumulative return proxy by epoch {analysis_epochs[-1]}: {total_return/1_000_000_000:.3f}B ADA\n"
-        f"Largest return proxy: epoch {max_return_epoch} ({max_return_date}) = {max_return_value/1_000_000:.2f}M ADA",
+        0.05,
+        f"Median per-epoch: {median_return:,.0f} ADA | Total: {total_return/1_000_000_000:.3f}B",
         transform=ax2.transAxes,
         fontsize=8,
-        va="top",
+        color=DIM_TEXT,
+        va="bottom",
         ha="left",
-        color=WHITE_TEXT,
-        bbox=dict(boxstyle="round,pad=0.5", facecolor=GRID_COLOR, edgecolor=DAWN, alpha=0.85),
     )
 
     # Style ax2
@@ -256,14 +270,14 @@ def main() -> None:
     ax2.grid(True, color=GRID_COLOR, alpha=0.3, linestyle="-", linewidth=0.5)
 
     # Panel 3: actual reserve vs counterfactual
-    ax3.plot(analysis_epochs, analysis_reserve / 1_000_000_000.0, color=ACID_GREEN, linewidth=2.0, label="Actual reserve stock", zorder=3)
+    ax3.plot(analysis_epochs, analysis_reserve / 1_000_000_000.0, color=ACID_GREEN, linewidth=2.0, label="Reserve stock", zorder=3)
     ax3.plot(
         analysis_epochs,
         reserve_no_return_counterfactual / 1_000_000_000.0,
         color=INFARED,
         linewidth=1.8,
         linestyle="--",
-        label="Counterfactual reserve (without returns)",
+        label="Reserve without returns",
         zorder=2,
     )
     ax3.fill_between(
@@ -272,24 +286,22 @@ def main() -> None:
         analysis_reserve / 1_000_000_000.0,
         color=ELECTRIC_BLUE,
         alpha=0.15,
-        label="Reserve supported by returned-to-reserve proxy",
+        label="Impact of returns",
         zorder=1,
     )
-    ax3.set_ylabel("Billion ADA", color=WHITE_TEXT, fontsize=10)
-    ax3.set_xlabel("Epoch", color=WHITE_TEXT, fontsize=10)
-    ax3.set_title("Returns sustained reserve growth—counterfactual shows ~15% reserve impact", color=WHITE_TEXT, fontsize=12, fontweight="bold", pad=15)
-    ax3.legend(loc="upper right", facecolor=DARK_BG, edgecolor=GRID_COLOR, framealpha=0.95, fontsize=9)
+    ax3.set_ylabel("Billion ADA", color=TEXT_DARK, fontsize=10)
+    ax3.set_xlabel("Epoch", color=TEXT_DARK, fontsize=10)
+    ax3.set_title("Reserve impact from returned-to-reserve transfers", color=TEXT_DARK, fontsize=12, fontweight="bold", pad=15)
+    ax3.legend(loc="upper right", facecolor=LIGHT_BG, edgecolor=GRID_COLOR, framealpha=0.95, fontsize=9, labelcolor=TEXT_DARK)
     ax3.text(
         0.01,
-        0.98,
-        f"At epoch {analysis_epochs[-1]} ({format_date(analysis_rows[-1].start_time_utc)}), actual reserve = {last_complete_reserve/1_000_000_000:.3f}B ADA\n"
-        f"Counterfactual without returned-to-reserve proxy = {counterfactual_last_reserve/1_000_000_000:.3f}B ADA",
+        0.05,
+        f"Actual: {last_complete_reserve/1_000_000_000:.3f}B | Without returns: {counterfactual_last_reserve/1_000_000_000:.3f}B",
         transform=ax3.transAxes,
         fontsize=8,
-        va="top",
+        color=DIM_TEXT,
+        va="bottom",
         ha="left",
-        color=WHITE_TEXT,
-        bbox=dict(boxstyle="round,pad=0.5", facecolor=GRID_COLOR, edgecolor=ACID_GREEN, alpha=0.85),
     )
 
     # Style ax3
@@ -299,6 +311,11 @@ def main() -> None:
     ax3.spines['top'].set_visible(False)
     ax3.spines['right'].set_visible(False)
     ax3.grid(True, color=GRID_COLOR, alpha=0.3, linestyle="-", linewidth=0.5)
+
+    # Add event markers to all three axes
+    add_event_markers(ax1, compact=True, y_frac=0.85)
+    add_event_markers(ax2, compact=True, y_frac=0.85)
+    add_event_markers(ax3, compact=True, y_frac=0.95)
 
     tick_count = min(11, len(analysis_epochs))
     tick_idx = np.unique(np.linspace(0, len(analysis_epochs) - 1, num=tick_count, dtype=int))
@@ -311,10 +328,8 @@ def main() -> None:
     ax3.set_xticks(tick_epochs)
     ax3.set_xticklabels(tick_labels, fontsize=8, color=DIM_TEXT)
 
-    fig.text(0.5, 0.005, "Generated with IOG Research", ha="center", fontsize=7, color=DIM_TEXT, style="italic")
-
-    fig.tight_layout(rect=[0, 0.02, 1, 1])
-    fig.savefig(fig_path, dpi=180, facecolor=DARK_BG, edgecolor="none")
+    fig.tight_layout(rect=[0, 0, 1, 1])
+    fig.savefig(fig_path, dpi=180, facecolor=LIGHT_BG, edgecolor="none")
     plt.close(fig)
 
     notes_lines = [
