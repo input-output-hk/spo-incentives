@@ -1,0 +1,9 @@
+tier,pools,stake_b_ada,pct_stake,exemplary_pct,compliant_pct,marginal_pct,non_compliant_pct
+Dormant,1248,0.012,0.2,15.3,19.5,32.6,32.6
+Sub-production,371,0.154,2.8,2.3,11.5,48.2,38.0
+Sub-viable,195,0.352,6.5,0.9,5.5,32.0,61.5
+Healthy,242,2.519,46.3,0.0,0.1,17.4,82.5
+Large healthy,23,1.158,21.3,0.0,3.4,14.6,82.1
+Near-saturation,13,0.868,16.0,0.0,0.0,0.0,100.0
+Saturated,5,0.376,6.9,59.9,0.0,20.4,19.8
+Oversaturated,0,0.000,0.0,0,0,0,0

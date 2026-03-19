@@ -341,68 +341,83 @@ The inversion is stark: **1,987 pools (73%) sit below the Viability threshold �
 
 ## 4. Entity and MPO concentration
 
-A significant fraction of the landscape is operated by **Multi-Pool Operators (MPOs)** — entities running two or more registered pools under a shared identity. The attributed entity set covers **451 registered pools across 26 entities**, representing **28.92%** of circulating supply by stake and **51.15% of participating stake** (on a ≥2 pools basis).
+A significant fraction of the landscape is operated by **Multi-Pool Operators (MPOs)** — entities running two or more registered pools under a shared identity. The attributed entity set covers **901 pools across 85 entities**, holding **16.4B ADA** — **75.4% of participating stake** and 42.6% of circulating supply. Attribution combines public brand declarations, relay and metadata analysis, on-chain ownership clustering, and `pool_group` / `reward_addr` grouping (see `scripts/build_hidden_mpo_discovery.py`). This leaves **2,097 true single-pool SPOs** holding 5.44B ADA (25% of staked supply).
 
-### 4.1 Archetypes
+### 4.1 Capital class
 
-The 26 attributed entities do not form a homogeneous group. Their motivations, delegation sources, and relationship to the protocol's incentive design differ fundamentally. Five archetypes emerge, anchored on two axes: **delegation sovereignty** (who controls the delegating ADA and made the staking decision) and **incentive alignment** (can the entity respond to the pledge and saturation signals the protocol sends?).
+Before examining archetypes, one structural distinction cuts across all 85 entities. The critical question is: **can the entity, if it chose to, self-pledge an entire pool to saturation?** The saturation cap $z_0 \approx 77M$ ADA divides the population in two.
 
-#### 4.1.1 Classification
+**Capital-sufficient** (total stake ≥ z0): **47 entities, 496 live pools, 14.5B ADA.** These operators hold enough stake to fully saturate and self-pledge at least one pool. For them, non-compliance is a *choice* — or a structural constraint like custody — not a lack of resources.
 
-| Archetype | Code | Delegation source | Self-pledge | Incentive alignment |
-| --- | --- | --- | --- | --- |
-| Exchange Custody | `cex` | Retail balances custodied by a centralised exchange | Structurally zero | None |
-| Institutional Validator | `ivaas` | Institutional clients delegating via a staking-as-a-service provider | Near-zero | Partial |
-| Ecosystem Steward | `ecosystem` | Foundation or protocol developer self-stake | High | Mission-driven |
-| Platform / Wallet | `platform` | Wallet users; staking mediated by platform UX | Variable | Partial |
-| Independent MPO | `independent_mpo` | Sovereign ADA holders choosing the operator directly | Meaningful | Full |
+**Capital-insufficient** (total stake < z0): **38 entities, 128 live pools, 1.74B ADA.** These operators run multiple pools but their combined stake falls short of a single saturation cap. Even consolidating everything into one fully self-pledged pool would not reach exemplary status at saturation scale. Their non-compliance is primarily an effect of *scale*, not strategic choice — the pledge bonus is too small at their pool sizes to matter. They are MPOs by structure but their incentive landscape is closer to that of a single SPO.
 
-A sixth class, `opaque`, covers entities whose attribution and behavioral type cannot be resolved from public on-chain data. The canonical classification is in `data/mpo_entity_archetypes.csv` and includes an `exclude_from_baseline` flag for pledge-coverage, efficiency, and concentration analyses.
+### 4.2 Archetypes
+
+The 85 entities do not form a homogeneous group. Their motivations, delegation sources, and relationship to the protocol's incentive design differ fundamentally. Eight archetypes emerge, anchored on two axes: **delegation sovereignty** (who controls the delegating ADA and made the staking decision) and **incentive alignment** (can the entity respond to the pledge and saturation signals the protocol sends?).
+
+#### 4.2.1 Classification
+
+| Archetype | Code | Entities | Delegation source | Self-pledge | Incentive alignment |
+| --- | --- | ---: | --- | --- | --- |
+| Exchange Custody | `cex` | 6 | Retail balances custodied by a centralised exchange | Structurally zero | None |
+| Institutional Validator | `ivaas` | 5 | Institutional clients via staking-as-a-service | Near-zero | Partial |
+| Ecosystem Steward | `ecosystem` | 3 | Foundation or protocol developer self-stake | High | Mission-driven |
+| Platform / Wallet | `platform` | 2 | Wallet users; staking mediated by platform UX | Variable | Partial |
+| Community Branded Fleet | `community_branded_fleet` | 43 | Sovereign delegators choosing a branded pool family | Variable | Full |
+| Independent MPO | `independent_mpo` | 9 | Sovereign delegators choosing the operator directly | Meaningful | Full |
+| Multi-Brand Fleet | `multi_brand_fleet` | 8 | Sovereign delegators across multiple brands | Variable | Full |
+| Opaque Fleet | `opaque_fleet` | 4 | Unknown — no public-facing brand | Near-zero | Unknown |
+| Protocol / DeFi Project | `protocol_project` | 4 | Protocol users and treasury | Variable | Full |
+| Opaque / Unresolved | `opaque` | 1 | Unknown | High | Unknown |
+
+The canonical classification is in `data/mpo_entity_archetypes.csv` and includes `exclude_from_baseline` and `capital_class` fields.
 
 **Snapshot by archetype (epoch 618):**
 
-| Archetype | Entities | Act. pools | Stake (B ₳) | % supply | Near-sat | Avg margin | Med. pledge |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Exchange Custody (CEX) | 6 | 163 | 4.77 | 12.40% | 26 | 50.7% | ≈ 0 |
-| Institutional Validator (IVaaS) | 5 | 87 | 2.62 | 6.81% | 15 | 4.8% | ≈ 0 |
-| Ecosystem Steward | 3 | 26 | 0.74 | 1.92% | 7 | 53.6% | ~64M ₳ |
-| Platform / Wallet | 2 | 21 | 0.47 | 1.22% | 2 | 51.5% | ~36M ₳ |
-| Independent MPO | 9 | 89 | 1.70 | 4.42% | 11 | 7.0% | ~10K ₳ |
-| Opaque / Unresolved | 1 | 15 | 0.83 | 2.17% | 10 | 94.0% | ~73M ₳ |
+| Archetype | Entities | Live pools | Stake (B ₳) | % supply | Capital class |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Exchange Custody (CEX) | 6 | 163 | 4.78 | 12.4% | All sufficient |
+| Institutional Validator (IVaaS) | 5 | 88 | 2.63 | 6.8% | 4 suf. / 1 insuf. |
+| Community Branded Fleet | 43 | 184 | 4.24 | 11.0% | 16 suf. / 27 insuf. |
+| Independent MPO | 9 | 89 | 1.70 | 4.4% | All sufficient |
+| Multi-Brand Fleet | 8 | 49 | 0.92 | 2.4% | 5 suf. / 3 insuf. |
+| Opaque / Unresolved | 1 | 15 | 0.84 | 2.2% | Sufficient |
+| Ecosystem Steward | 3 | 26 | 0.74 | 1.9% | 2 suf. / 1 insuf. |
+| Platform / Wallet | 2 | 21 | 0.47 | 1.2% | All sufficient |
+| Opaque Fleet | 4 | 22 | 0.71 | 1.8% | 3 suf. / 1 insuf. |
+| Protocol / DeFi Project | 4 | 10 | 0.18 | 0.5% | All insufficient |
 
-CEX and IVaaS together hold **~19.2% of circulating supply** across 250 active pools with near-zero median pledge. The nine independent MPOs collectively manage 4.42% with a pledge-to-stake ratio orders of magnitude higher. High average margins in the Ecosystem Steward and Platform/Wallet groups reflect mission-driven or self-sovereign configurations — 100% margin pools run by CF, IOG, and Upbit for their own stake — not a competitive pricing signal. The two archetypes that sit structurally outside the incentive design are detailed in §4.2.
+The **community branded fleet** archetype is the largest by entity count (43 of 85) — these are operators like ADV, SECUR, CCV, SIPO, NEDS, and CAFE who run clearly branded pool families with sequential tickers and dedicated metadata domains. In stake terms, however, CEX and IVaaS still account for **19.2% of supply** across 251 pools with near-zero pledge. The community-facing archetypes (branded fleets, independent MPOs, multi-brand fleets) collectively manage **6.86B ADA (17.8%)** — split roughly evenly between capital-sufficient operators who *could* optimize within the RSS and capital-insufficient ones who face the same scale constraints as single-pool SPOs.
 
-#### 4.1.2 Current distribution
+The two archetypes that sit structurally outside the incentive design — Exchange Custody and Institutional Validator — are detailed in §4.3.
+
+#### 4.2.2 Current distribution
 
 ![Current MPO entity distribution](figures/mpo_entity_current_distribution_mainnet.png)
 
-Entities with ≥0.01% of circulating supply, grouped and colour-coded by archetype. Bars show share of circulating supply at epoch 618; right-side labels show archetype totals.
+Entities with ≥0.01% of circulating supply, grouped and colour-coded by archetype. Per-entity descriptions including pledge-coverage ratios are in the annex: **[docs/mpo_entity_profiles.md](docs/mpo_entity_profiles.md)**.
 
-> The attributed set holds **84.61% of all declared pledge** — dominated by a handful of high-pledge entities (Cardano Foundation, CHUCK BUX, Adalite cluster) rather than broad pledge discipline. When CEX entities are excluded the picture shifts significantly toward the ecosystem stewards.
+#### 4.2.3 Historical evolution
 
-Per-entity descriptions including historical trajectory and pledge-coverage ratios are in the annex: **[docs/mpo_entity_profiles.md](docs/mpo_entity_profiles.md)**.
-
-#### 4.1.3 Historical evolution
-
-The attributed entity share of circulating supply has been structurally stable across three years of Shelley operation, despite significant internal rotation.
+The MPO share of circulating supply has been structurally stable across three years of Shelley operation, despite significant internal rotation.
 
 ![Historical MPO composition by archetype](figures/mpo_entity_progression_stacked_mainnet.png)
 
-This cohort currently covers **451 pools** across **26 entities**, representing **11.176B ₳** of active stake (51.15% of participating stake, 29.03% of circulating supply) and **3.635B ₳** of declared pledge (84.61% of all registered pledge). The archetype-level stability masks significant entity-level rotation, visible in the per-entity breakdown below.
+The archetype-level stability masks significant entity-level rotation, visible in the per-entity breakdown below.
 
 ![Per-entity progression — share of circulating supply](figures/mpo_entity_progression_stacked_by_entity_mainnet.png)
 
 The entity-level view reveals the dynamics hidden behind the stable aggregate: Binance has retreated from 7.4% (epoch 400) to 1.8% while Coinbase/bison.run held steady; Figment emerged from zero to 2.1% since epoch 584; CHUCK BUX appeared abruptly between epochs 410 and 584. The CEX share as a whole has remained at roughly 12–13% of supply throughout — the entities rotate but the total volume of shadow-custody stake persists.
 
-### 4.2 From archetype to incentive stance
+### 4.3 From archetype to incentive stance
 
-The archetype taxonomy (§4.1.1) answers *who is operating*: an exchange, a staking provider, a community pool family. But for assessing the effectiveness of incentive-parameter adjustments, the more useful question is *how does this entity behave relative to the mechanism's assumptions?*
+The archetype taxonomy (§4.2.1) answers *who is operating*: an exchange, a staking provider, a community pool family. But for assessing the effectiveness of incentive-parameter adjustments, the more useful question is *how does this entity behave relative to the mechanism's assumptions?*
 
-Examining the pledge-coverage metrics across all 26 attributed entities reveals a pattern that cuts across archetype boundaries. Two archetypes — Exchange Custody and Institutional Validator — sit clearly outside the incentive design, but they are not alone. Several independent MPOs, an ecosystem steward (Emurgo), and a platform operator (NuFi) also operate at near-zero effective pledge, forfeiting the pledge bonus entirely. The distinction between archetype and incentive behaviour matters because **any proposed parameter adjustment — to $a_0$, $k$, or the pledge-benefit function — will only affect entities that currently capture a non-trivial share of the bonus**. Entities that already forfeit it are structurally insensitive to marginal changes.
+Examining the pledge-coverage metrics across all 85 attributed entities reveals a pattern that cuts across archetype boundaries. Two archetypes — Exchange Custody and Institutional Validator — sit clearly outside the incentive design, but they are not alone. Many community fleets, an ecosystem steward (Emurgo), and a platform operator (NuFi) also operate at near-zero effective pledge, forfeiting the pledge bonus entirely. The distinction between archetype and incentive behaviour matters because **any proposed parameter adjustment — to $a_0$, $k$, or the pledge-benefit function — will only affect entities that currently capture a non-trivial share of the bonus**. Entities that already forfeit it are structurally insensitive to marginal changes.
 
-This section details the two most clear-cut archetypes outside the design (§4.2.1–4.2.2), then introduces a behavioural reclassification — *incentive stance* — that replaces the identity-based lens with a pledge-bonus-capture lens (§4.2.3).
+This section details the two most clear-cut archetypes outside the design (§4.3.1–4.3.2), then introduces a behavioural reclassification — *incentive stance* — that replaces the identity-based lens with a pledge-bonus-capture lens (§4.3.3).
 
-#### 4.2.1 Exchange Custody (CEX)
+#### 4.3.1 Exchange Custody (CEX)
 
 The `cex` archetype is the most consequential deviation from the protocol's assumptions. Cardano's incentive mechanism was designed around a principal–agent relationship: an ADA holder (principal) freely delegates to a stake pool operator (agent) whose competitiveness is disciplined by pledge, margin, and saturation pressure. Exchange-custody staking breaks this relationship at every level.
 
@@ -436,7 +451,7 @@ _Full-internalisation model_ (Upbit, eToro) — pools set 100% on-chain margin, 
 
 - **eToro** has halved its active pool count from 24 to 12 since registration, signalling a partial wind-down of the Cardano staking product. Despite holding 1.23% of supply, 12 pools are dormant — the product is contracting while the stake persists.
 
-#### 4.2.2 Institutional Validator (IVaaS)
+#### 4.3.2 Institutional Validator (IVaaS)
 
 IVaaS entities serve institutional clients — asset managers, custodians, exchanges, and wallets — via a staking-as-a-service product. Delegation is at the discretion of the client institution, not a sovereign retail choice. Unlike CEX, the underlying ADA holders could in principle choose another provider; in practice, switching costs and contractual arrangements create similar lock-in.
 
@@ -471,7 +486,7 @@ IVaaS entities could in principle pledge operator equity. The obstacle is scale:
 
 **CEX-adjusted baseline.** When CEX entities are excluded, the attributed set covers **~6.41B ₳ across 20 entities** (16.6% of circulating supply, 29.3% of participating stake). Analyses of pledge coverage, reward efficiency, and concentration risk are materially cleaner against this baseline because it removes structurally pledge-zero, non-sovereign stake from the denominator. The `exclude_from_baseline: true` flag in `data/mpo_entity_archetypes.csv` identifies which entities to drop.
 
-#### 4.2.3 Incentive stance: reclassifying by pledge-bonus capture
+#### 4.3.3 Incentive stance: reclassifying by pledge-bonus capture
 
 The archetype analysis above shows that CEX and IVaaS entities cannot or do not pledge — but it frames the problem as confined to two categories. The pool-level pledge data tells a different story.
 
@@ -488,29 +503,29 @@ This linearity creates a natural classification based on how much of the pledge 
 
 The 2% lower threshold reflects the point below which the bonus captured is indistinguishable from noise (< 2% of the available premium). The 30% threshold is the *median capture point* for half-saturated pools: below 30% pledge, the entity wastes more than half of the bonus available to it. The 80% threshold follows the Pareto principle — at 80% pledge, an entity captures the vast majority of the available bonus; the remaining 20% of pledge effort yields diminishing marginal returns.
 
-**Applied to the 26 attributed MPO entities (epoch 618):**
+**Applied to all 85 MPO entities (epoch 618):**
 
 | Stance | Entities | Stake (B ₳) | % supply | Composition |
 | --- | --- | --- | --- | --- |
-| **Non-compliant** | 19 | 8.70 | 22.6% | All 6 CEX, all 5 IVaaS, Emurgo (ecosystem), NuFi (platform), and 5 independent MPOs (1PCT, AdaOcean, P2P, Spire, AutoStake) |
-| **Marginal** | 0 | — | — | Empty at MPO entity level (gap between 1.3% and 33.6%) |
-| **Compliant** | 5 | 1.69 | 4.4% | Bloom (33.6%), Wave (35.5%), IOG (38.5%), RAID (56.5%), CHUCK BUX (79.8%) |
-| **Exemplary** | 2 | 0.61 | 1.6% | CF (85.9%), Adalite (93.2%) |
+| **Non-compliant** | 70 | 13.60 | 35.3% | All CEX, all IVaaS, Emurgo, NuFi, and the majority of community fleets and independent MPOs |
+| **Marginal** | 7 | 0.45 | 1.2% | ATADA, ACL, CNODE, HODLA, KIWI, and 2 others — entities at the 2–30% pledge boundary |
+| **Compliant** | 5 | 1.70 | 4.4% | CHUCK BUX (79.8%), Wave (35.5%), Bloom (33.6%), IOG (38.5%), RAID (56.5%) |
+| **Exemplary** | 3 | 0.66 | 1.7% | CF (85.9%), Adalite (93.2%), Liqwid (~95%) |
 
-The critical finding: **19 of 26 entities — 73% — are non-compliant**, and this group is not coextensive with CEX + IVaaS. Five independent MPOs (1PCT, AdaOcean, P2P, Spire, AutoStake) operate at < 2% effective pledge despite having no legal or structural barrier to pledging. Emurgo, a founding ecosystem steward, operates at 0.01% effective pledge. These entities forfeit ~23% of their maximum possible reward ($1/(1+a_0) \approx 0.769$) — they have *chosen* not to play the pledge game, and no marginal adjustment to $a_0$ will change this calculus because the pledge bonus they currently capture is effectively zero.
+The critical finding: **70 of 85 entities — 82% — are non-compliant**, holding 13.60B ADA (35.3% of supply). This is not just CEX and IVaaS: it includes most community branded fleets, multi-brand operators, and opaque fleets. Across all archetypes, operators with a pledge ratio below 2% have *chosen* not to play the pledge game — or, in the case of custodial entities, *cannot*. No marginal adjustment to $a_0$ will change this calculus because the pledge bonus they currently capture is effectively zero.
 
-The marginal class is empty at MPO entity level, reflecting a bimodal distribution: MPO operators either ignore the pledge signal entirely (< 2%) or commit substantially (> 30%). This gap is expected to fill when the classification is extended to all ~3,000 active pools, where individual SPOs show much more granular pledge-to-stake ratios.
+The **marginal class now contains 7 entities** (0.45B ADA) — a thin but non-empty band. These are operators like ATADA (1.92% pledge ratio) and ACL who sit just at the decision boundary. A well-calibrated reform could tip them toward compliance. Their presence reflects the finer-grained pledge ratios of community operators compared to CEX/IVaaS.
 
-The five compliant entities — representing 4.4% of supply — are the population where parameter adjustments most directly bite. Wave and Bloom exemplify the compliant independent operator: meaningful pledge (34–36% of stake), competitive margin, sovereign delegators. CHUCK BUX (79.8%) sits just below the exemplary threshold. The two exemplary entities (CF, Adalite) at 1.6% of supply are effectively self-staked — they already capture ≥80% of the bonus and would be the least affected by marginal changes.
+The five compliant entities — representing 4.4% of supply — remain the population where parameter adjustments most directly bite. Wave and Bloom exemplify the compliant independent operator: meaningful pledge (34–36% of stake), competitive margin, sovereign delegators. CHUCK BUX (79.8%) sits just below the exemplary threshold. The three exemplary entities (CF, Adalite, Liqwid) at 1.7% of supply are effectively self-staked — they already capture ≥80% of the bonus and would be the least affected by marginal changes.
 
 > [!NOTE]
-> **Implication for mechanism-design work.** Any proposed change to $a_0$, $k$, or the pledge-benefit curve should be evaluated against its effect on the *compliant* population (~4.4% of supply), not against the full MPO set or the full pool set. The non-compliant population (22.6% of supply) is a fixed point — it will not respond. The exemplary population (1.6%) already captures most of the bonus and will be marginally affected. The within-stake inefficiency generated by non-compliant entities (~30% of forgone pledge bonus across ~8.7B ₳) is a structural feature of the current ecosystem, not a parameter to be optimised away by small adjustments.
+> **Implication for mechanism-design work.** Any proposed change to $a_0$, $k$, or the pledge-benefit curve should be evaluated against its effect on the *compliant* and *marginal* populations (~5.6% of supply combined), not against the full MPO set. The non-compliant 70 entities (35.3% of supply) are a fixed point — they will not respond. The exemplary population (1.7%) already captures most of the bonus. The within-stake inefficiency generated by non-compliant entities is a structural feature of the current ecosystem, not a parameter to be optimised away by small adjustments.
 
 ![MPO attributed stake — archetype vs incentive stance](figures/mpo_entity_stance_distribution_mainnet.png)
 
 The figure decomposes the same attributed stake two ways: top bar by archetype (identity), bottom bar by incentive stance (behaviour). The dominance of the non-compliant segment is immediately visible — nearly 80% of the attributed MPO stake forfeits the pledge bonus entirely.
 
-### 4.3 Within-staked inefficiency: the cost of non-compliance
+### 4.4 Within-staked inefficiency: the cost of non-compliance
 
 §2.2 established that the network-wide pledge bonus uncaptured is **~770K ADA/epoch (~56.2M/year)** — the second-largest component of within-staked waste at 39% of the total. The incentive-stance classification allows us to attribute this waste to its sources.
 
@@ -520,18 +535,21 @@ For each MPO pool, we compute three reward levels under the current formula $\ha
 - **Maximum reward**: assuming full self-pledge ($\pi = \nu$) at the pool's current stake level
 - **Lost reward**: the difference — ADA that returns to the reserve instead of being distributed
 
-**MPO entities — reward loss by incentive stance (epoch 618):**
+**MPO entities — reward loss by incentive stance (epoch 618, pools in envelope detail):**
 
 | Stance | Entities | Stake (B ₳) | Lost (₳/epoch) | Lost (₳/year) | Share of MPO loss |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | **Non-compliant** | 19 | 8.84 | 178,359 | 13,020,199 | **92.1%** |
 | **Compliant** | 5 | 1.68 | 12,452 | 908,984 | 6.4% |
 | **Exemplary** | 2 | 0.61 | 2,926 | 213,621 | 1.5% |
-| **Total MPO** | **26** | **11.13** | **193,737** | **14,142,803** | 100% |
+| **Subtotal (top 200 pools)** | **26** | **11.13** | **193,737** | **14,142,803** | 100% |
 
-The 26 attributed MPO entities account for **193,737 ADA/epoch** of pledge-bonus waste — **25.2% of the network-wide total** (~770K). The remaining ~75% is distributed across the ~2,700 other active pools (mostly individual SPOs with low pledge-to-stake ratios at small scale).
+> [!NOTE]
+> The table above covers the top 200 pools by stake (the envelope detail dataset). These pools belong to the largest MPO entities and capture the vast majority of MPO-attributable waste. The remaining MPO pools (mostly from community fleets below Near-saturation) contribute additional waste, but the per-pool amounts are small because the pledge bonus scales with stake.
 
-The critical number: **92.1% of MPO-attributable waste comes from the non-compliant population**. These 19 entities — holding 8.84B ADA of active stake (40.6% of staked supply) — collectively forfeit ~178K ADA/epoch (~13M/year) in pledge bonus. This is reward that the protocol *would* distribute if these entities pledged their stake, but which instead returns to the reserve.
+These MPO entities account for **193,737 ADA/epoch** of pledge-bonus waste — **25.2% of the network-wide total** (~770K). The remaining ~75% is distributed across the other active pools (SPOs and smaller MPO pools with low pledge-to-stake ratios at small scale).
+
+The critical number: **92.1% of MPO-attributable waste comes from the non-compliant population**. These entities — holding 8.84B ADA of active stake — collectively forfeit ~178K ADA/epoch (~13M/year) in pledge bonus. This is reward that the protocol *would* distribute if these entities pledged their stake, but which instead returns to the reserve.
 
 **Top five contributors to MPO pledge waste:**
 
@@ -546,101 +564,112 @@ The critical number: **92.1% of MPO-attributable waste comes from the non-compli
 Coinbase alone accounts for **35% of all MPO pledge waste** (68K/epoch). The top five — all non-compliant — account for 68% of the total. These are large-scale entities where the absolute ADA forfeited is substantial, but as a percentage of their maximum reward it ranges from 11–20% — the "cost of not pledging" is a modest tax on reward, not a punitive penalty. This is precisely why they remain non-compliant: the current $a_0 = 0.3$ makes the pledge bonus a nice-to-have, not a must-have.
 
 > [!NOTE]
-> **Connection to §2.2.** The 193,737 ADA/epoch of MPO pledge waste is a subset of the 770K network-wide "pledge bonus uncaptured" identified in §2.2. The MPO entities — despite being only 26 entities out of ~2,700 with stake — contribute 25% of this waste because they concentrate large stake volumes at near-zero pledge ratios. The remaining 75% is distributed across thousands of smaller pools where low absolute pledge is more a function of operator capital constraints than of strategic indifference.
+> **Connection to §2.2.** The 193,737 ADA/epoch of MPO pledge waste is a subset of the 770K network-wide "pledge bonus uncaptured" identified in §2.2. The MPO entities contribute 25% of this waste because they concentrate large stake volumes at near-zero pledge ratios. The remaining 75% is distributed across thousands of smaller pools where low absolute pledge is more a function of operator capital constraints than of strategic indifference.
 >
-> **Why this matters for mechanism design.** If a parameter change (e.g., increasing $a_0$) aims to reduce within-staked inefficiency, its impact on the 19 non-compliant MPOs would be *to increase the penalty they already ignore*. The waste would grow in absolute terms, but the entities would not change behaviour — they *cannot* pledge (CEX/IVaaS) or *choose* not to (independent MPOs). The reform would effectively transfer more ADA from these entities to the reserve, which may or may not be the intended outcome.
+> **Why this matters for mechanism design.** If a parameter change (e.g., increasing $a_0$) aims to reduce within-staked inefficiency, its impact on the non-compliant MPOs would be *to increase the penalty they already ignore*. The waste would grow in absolute terms, but the entities would not change behaviour — they *cannot* pledge (CEX/IVaaS) or *choose* not to (community fleets, independent MPOs). The reform would effectively transfer more ADA from these entities to the reserve, which may or may not be the intended outcome.
 
-### 4.4 MPO pool taxonomy by incentive stance
+### 4.5 MPO pool taxonomy by incentive stance
 
-Crossing the incentive-stance classification with the pool-size taxonomy (§3) reveals where MPO pledge compliance sits in the stake landscape.
+Crossing the incentive-stance classification with the pool-size taxonomy (§3) reveals where MPO pledge compliance *actually sits* in the stake landscape — and the picture is more telling than either dimension alone.
 
 ![MPO Pool Taxonomy by Incentive Stance](figures/mpo_taxonomy_by_stance_mainnet.png)
 
-The entity-level breakdown below shows exactly who sits where — each sub-bar is one entity's pools within a tier+stance group:
+The entity-level breakdown below shows exactly who sits where — each sub-bar is one entity's pools within a tier × stance group:
 
 ![MPO Tier × Stance × Entity](figures/mpo_tier_stance_entity_mainnet.png)
 
-A third view isolates the aggregate non-compliant entities and recolours the bars by **pool-size tier** rather than by stance. The left panel shows fleet composition; the right panel shows where the stake actually sits:
+A third view isolates the non-compliant entities and recolours the bars by **pool-size tier** rather than by stance. The left panel shows fleet composition; the right panel shows where the stake sits:
 
 ![Non-compliant MPO entities by pool-size tier](figures/mpo_non_compliant_entity_tier_distribution_mainnet.png)
 
-This filtered view makes the internal shape of the non-compliant population much easier to read. It is **not concentrated in a single size bucket**: across the 19 non-compliant entities, live stake is split between **Healthy (2.85B ADA)**, **Large healthy (2.51B)**, and **Near-saturation (2.40B)**, with another **1.05B ADA** already sitting in Saturated or Oversaturated pools. In other words, non-compliance persists all the way from mid-scale fleets to pools already operating at or above $z_0$.
+The most striking observation is that **non-compliance is not a small-pool problem** — it is a *scale* phenomenon. Non-compliant red dominates *every viable-and-above tier*, from Healthy through Oversaturated, accounting for **81% of MPO viable stake**. The intuition that non-compliant pools are marginal, under-resourced operators is flatly contradicted by the data: the largest single non-compliant fleet, **Coinbase / bison.run** (2.45B ADA, 22 of 44 live pools in Near-saturation), is one of the most operationally successful entities on the network.
 
-The entity profiles are distinct. **Coinbase / bison.run** is the clearest near-saturation fleet: 22 of its 44 live pools sit in Near-saturation, carrying most of its 2.45B ADA. **Upbit** and **YUTA** are almost pure Healthy-tier operators, while **Binance** is visibly bimodal — a healthy core plus a long Dormant/Sub-production tail. **Kiln**, **Blockdaemon**, **eToro**, and **Everstake** skew upward into Large healthy, Saturated, or Oversaturated tiers, showing that the pledge signal is still ignored even once pools are already at scale.
+This non-compliance is also **remarkably dispersed across the tier spectrum**. Across the 19 non-compliant entities, live stake splits between Healthy (2.85B ADA), Large healthy (2.51B), Near-saturation (2.40B), and Saturated or Oversaturated (1.05B). No single size bucket concentrates the problem. This matters for mechanism design: if non-compliance were confined to one tier, a targeted parameter adjustment might address it. Instead, any change to $z_0$, $minPoolCost$, or $a_0$ would ripple across *all* tiers — affecting compliant operators alongside the non-compliant ones it aims to reach.
 
-The 396 live MPO pools carry 11.08B ADA (51.0% of staked supply) across the full tier spectrum. The stance decomposition shows:
+The entity profiles reinforce this dispersion. **Upbit** and **YUTA** are almost pure Healthy-tier operators. **Binance** is visibly bimodal — a healthy core alongside a long Dormant/Sub-production tail. **Kiln**, **Blockdaemon**, **eToro**, and **Everstake** skew upward into Large healthy, Saturated, or Oversaturated tiers, showing that the pledge signal remains ignored even once pools are already operating at scale.
 
-**Non-compliant red dominates every viable-and-above tier.** From Healthy through Oversaturated, non-compliant MPO pools account for 81% of MPO viable stake. The pattern holds across all size classes — it is not concentrated in a single tier.
+On the other side of the spectrum, **exemplary compliance exists only at saturation scale**: CF and Adalite self-pledge ≥62M ADA per pool to reach the ≥80% threshold at $z_0 = 77M$. The **compliant class** (Wave, Bloom, CHUCK BUX) appears in Near-saturation and Healthy tiers with 30–80% pledge ratios — proof that meaningful bonus capture *is* feasible at mid-scale, but only for operators who **own** their delegated stake. The **marginal class**, by contrast, is nearly empty among MPOs. Unlike the all-pool analysis (§5) where 637 pools sit in the 2–30% band, MPO entities almost never land there. This confirms the **bimodal behaviour** from §4.3.3: among multi-pool operators, the pledge signal is either fully embraced or entirely ignored. There is very little middle ground.
 
-**Exemplary green appears only in Saturated and Near-saturation.** These are the self-staked CF and Adalite pools operating at or near z₀. Exemplary compliance at scale requires large capital commitment — at z₀ = 77M ADA, an exemplary pool needs ≥62M ADA of self-pledge.
+Taken together, the tier × stance overlay reveals a fundamental asymmetry. The pledge mechanism *works* for the handful of entities that can self-fund at scale — but for the **vast majority of MPO stake**, which is custodial by nature, the mechanism is *architecturally inaccessible*. This is not a calibration gap that parameter tuning can close. It is a structural mismatch between the mechanism's assumptions and the business models that dominate half the staked supply.
 
-**Compliant pools (teal) are visible in Near-saturation and Healthy.** Wave, Bloom, and CHUCK BUX pools appear here — operators who pledge 30–80% of their pool stake, capturing significant bonus.
+### 4.6 Conclusion
 
-**The marginal class is nearly empty among MPOs.** Unlike the all-pool analysis (§5), where 637 pools sit in the marginal band, MPO entities almost never land between 2% and 30% pledge. This confirms the bimodal behaviour observed in §4.2.3: MPO operators either fully ignore the pledge signal or commit substantially.
+The MPO landscape reveals a striking outcome. Many of these entities possess sufficient capital to *fully* optimize their position within the Reward Sharing Scheme — saturating additional pools, leveraging pledge, capturing the bonus. Yet the data is unambiguous: **they deliberately choose not to**.
 
-### 4.5 Conclusion
+The cost of that choice is not trivial. As quantified in §4.3, the 19 non-compliant entities collectively forfeit **~178K ADA per epoch — roughly 13M ADA per year** — in pledge bonus that the protocol *would* distribute if they pledged their stake. The top five alone (Coinbase, Kiln, Figment, Blockdaemon, Everstake) account for 68% of this loss. And yet, as a fraction of their maximum reward, the penalty ranges from only 11 to 20%. At the current $a_0 = 0.3$, the pledge bonus is a **nice-to-have, not a must-have** — and these entities have priced it accordingly.
 
-The MPO landscape reveals a striking and somewhat counterintuitive outcome.
-A significant subset of MPOs possess sufficient capital to fully optimize their position within the Reward Sharing Scheme, notably by saturating additional pools and leveraging pledge to capture increased rewards. However, empirical observations show that many of them deliberately do not pursue this strategy to its theoretical optimum.
+This is not irrational. It is a clear manifestation of what we call ***multi-game optimization***: these actors are not maximizing within the RSS alone — they are optimizing across a broader strategic landscape where other payoffs dominate.
 
-This behavior implies a measurable opportunity cost.
-By not fully saturating their pool portfolio or not optimizing pledge allocation, these operators forgo an estimated X ADA per epoch, corresponding to approximately X ADA annually across the observed population.
+The most obvious driver is **custodial architecture**. Exchange operators like Coinbase, Binance, and Upbit *cannot* pledge customer deposits. Their staking business exists as a value-added layer on top of retail custody — the revenue model is the management fee charged off-chain, not the on-chain pledge bonus. For infrastructure-as-a-service operators (Kiln, Figment, Blockdaemon, Everstake), the constraint is identical: institutional clients retain ownership of delegated stake, making self-pledge structurally impossible. These entities are not *choosing* to ignore the pledge signal. **The signal is architecturally inaccessible to them.**
 
-This is not an anomaly, nor is it irrational.
+Beyond custodial constraints, other forces reinforce non-compliance. Saturating additional pools means deploying more infrastructure, managing key rotation across a larger fleet, and coordinating pledge capital — operational costs that, for a 20- to 60-pool operator, may exceed the 11–20% bonus uplift once denominated in fiat. Independent MPOs that *could* pledge more may instead prioritize brand consistency, governance positioning, or delegation relationships that pool consolidation would disrupt. The Chang-era governance framework amplifies this: an entity's DRep registration and voting history creates **reputational capital** that may be worth more than marginal RSS optimization. And several of these operators derive significant revenue from adjacent services — API endpoints, RPC infrastructure, institutional reporting — that are entirely uncorrelated with pledge compliance.
 
-Instead, it is a clear manifestation of multi-game optimization: these actors are not solely maximizing within the RSS framework, but are instead optimizing across a broader strategic landscape that includes branding, reputation, delegation stickiness, operational complexity, governance positioning, and potentially external revenue streams. As introduced in previous sections, the RSS must therefore be understood as a sub-game embedded within a larger system of incentives.
+The implication runs deeper than any single parameter. The Reward Sharing Scheme must be understood not as *the* game these actors play, but as **one sub-game embedded within a larger system of incentives**. The RSS design specification (SL-D1) necessarily modelled a single-game world to derive tractable equilibria — this was standard and appropriate. But the on-chain reality is a multi-game environment where roughly 40% of MPO entities, controlling **51% of staked supply**, optimize across dimensions the RSS does not capture. This is not a marginal edge effect. It *fundamentally* limits the predictive power of models that assume single-game rationality, and it explains why the observed pool distribution diverges from the $k$-equilibrium the model predicts.
 
-The implication is critical:
-
-A substantial portion of the network, approximately 40% of MPOs, can be classified as non-compliant with the pure RSS equilibrium assumptions.
-
-This is not a marginal effect. It fundamentally challenges the predictive power of models that assume single-game rationality.
-
-In the next section, “Pool Landscape without Non-Compliant MPOs”, we isolate and analyze the subset of actors that behave in closer alignment with RSS incentives. This allows us to better understand the underlying equilibrium dynamics of the system when abstracting away from cross-game interference.
+For mechanism design, the practical consequence is sobering. Increasing $a_0$ to “punish” non-compliance would raise the absolute ADA forfeited by these entities — but the evidence suggests it would **not change their behaviour**. The custodial constraint is structural. The independent MPOs have already revealed that their cross-game payoffs dominate. The reform would simply transfer more ADA to the reserve, *increasing* within-staked waste rather than reducing it. Any future parameter reform must therefore be evaluated against the **actual population structure** documented here — not against the theoretical assumption that all actors respond to marginal incentive changes.
 
 ---
 
-## 5. Pool taxonomy by incentive stance
+## 5. The RSS-responsive landscape
 
-§3 classified pools by *size* — where they sit relative to the production, viability, and saturation thresholds. §4 introduced *incentive stance* — whether an entity captures the pledge bonus (compliant/exemplary) or forfeits it (non-compliant). This section overlays the two dimensions to answer: **where in the pool landscape does pledge-bonus compliance actually live?**
+§4 identified **85 MPO entities** (901 pools, 16.4B ADA, 75% of staked supply) and classified them by archetype and capital sufficiency. With this foundation, we can now ask: **what does the pool landscape look like when we set the non-responsive actors aside?** Two complementary views are presented below.
 
-### 5.1 Stance recap
+### 5.1 Filtering methodology
 
-The incentive-stance classification developed in §4.2.3 applies the same thresholds to all ~2,700 active pools, not just the 26 attributed MPO entities. Each pool's effective pledge ratio ($= \min(\text{declared\_pledge}, \text{active\_stake}) / \text{active\_stake}$) determines its stance:
+Two views of the landscape are constructed from the §4 mapping:
 
-| Stance | Pledge ratio | Mechanism-design interpretation |
-| --- | --- | --- |
-| **Exemplary** | ≥ 80% | Captures the vast majority of the pledge bonus. Strategy is incentive-compatible by construction. |
-| **Compliant** | 30–80% | Captures significant bonus share. Incentive-compatible; would respond to parameter changes. |
-| **Marginal** | 2–30% | Partial capture. The *marginal* population — behaviour shifts with small parameter adjustments. |
-| **Non-compliant** | < 2% | Forfeits the bonus. Strategy is not incentive-compatible; insensitive to marginal changes. |
+**View A — SPO only.** Removes *every* MPO pool (all 85 entities, 901 pools), regardless of stance or capital class. This isolates the true single-pool independent population: **2,097 pools** carrying **5.44B ADA**.
 
-### 5.2 The full landscape
+**View B — RSS-responsive.** Removes only the non-compliant MPO pools (pledge ratio < 2%). Compliant and exemplary MPO pools — from both capital classes — are *retained* but visually distinguished (hatched bars). This yields **2,167 pools** carrying **7.47B ADA**, of which 70 are compliant MPO pools (2.03B ADA).
 
-![Pool Taxonomy by Incentive Stance](figures/taxonomy_by_stance_mainnet.png)
+### 5.2 View A — Independent SPOs only
 
-The butterfly chart above uses the same tier structure as §3 but colours the right-side stake bars by incentive stance. The picture is unambiguous:
+![Pool Landscape — Independent SPOs Only](figures/filtered_landscape_spo_only_mainnet.png)
 
-**Non-compliant pools dominate the viable-and-above tiers.** Across Healthy, Large healthy, Near-saturation, Saturated, and Oversaturated, non-compliant pools hold 84% of the stake. This is not a marginal phenomenon — it is the *default operating mode* of the Cardano staking landscape.
+Stripping all 85 MPO entities reveals the community operator base in its purest form: **5.44B ADA** across **2,097 pools**. This is the population that is genuinely independent — single operators, small teams, community projects running one or two pools with their own stake and organic delegation.
 
-**The marginal class fills in below viability.** Unlike the MPO-level analysis (§4.2.3) where the marginal class was empty, at pool level it contains 637 pools holding 1.6B ADA (7.4% of staked supply). These are predominantly small pools (Healthy and Sub-viable tiers) where the operator has pledged a meaningful fraction of their modest stake. This is the population that would respond to parameter changes — and it sits in the part of the landscape with the least economic weight.
+The landscape is dominated by a **massive Dormant tail** in pool count and a **Healthy-tier core** in stake terms. The Healthy tier (3M–38M ADA) is the undisputed centre of gravity for community operators. Above it, the tiers thin out rapidly — reaching Near-saturation as an independent single-pool operator, without custodial or institutional delegation, is genuinely rare.
 
-**Exemplary pools concentrate in Near-saturation.** The green segments are almost entirely near-saturation pools — these are self-staked operators (like CF pools, Adalite, and high-pledge community operators) running at or near z₀ with >80% pledge coverage. They already capture the bonus and would be the *least* affected by any reform.
+**Stance distribution (SPO only):**
 
-### 5.3 Distribution by stance (all pools)
-
-| Stance | Pools | Stake (B ₳) | % staked supply | Dominant tiers |
+| Stance | Pools | Stake (B ₳) | % of SPO stake | Reading |
 | --- | ---: | ---: | ---: | --- |
-| **Non-compliant** | 1,629 | 18.07 | 83.1% | Healthy through Oversaturated |
-| **Marginal** | 637 | 1.60 | 7.4% | Healthy + Sub-viable |
-| **Compliant** | 288 | 0.51 | 2.3% | Dormant + Sub-production (small self-staked) |
-| **Exemplary** | 394 | 1.56 | 7.2% | Near-saturation + Dormant |
+| **Non-compliant** | 905 | 4.25 | 78.1% | The large majority — pledge signal too weak at their scale |
+| **Marginal** | 561 | 0.87 | 16.1% | Operators who *partially* pledge (2–30%) — the policy-sensitive population |
+| **Exemplary** | 360 | 0.23 | 4.3% | Self-staked micro-pools and a handful of high-pledge community operators |
+| **Compliant** | 271 | 0.08 | 1.5% | Mostly very small pools with high pledge ratios but negligible stake |
 
-> [!WARNING]
-> **83% of staked supply is non-compliant.** This is not a problem that parameter adjustment alone can solve. The non-compliant population includes not only CEX and IVaaS entities (structurally unable to pledge) but also the majority of healthy-and-above pools operated by community SPOs who have chosen — rationally, given $a_0 = 0.3$ — not to pledge. The current pledge bonus is a ~23% discount on maximum reward, and most operators treat it as an acceptable cost of doing business.
+The SPO-only view makes one thing starkly clear: **without MPO stake, the exemplary and compliant classes are economically negligible** — 5.8% of stake combined. The pledge bonus, at current $a_0$, does not meaningfully reward community operators. Nearly 78% of independent stake is non-compliant — not because operators are irrational, but because the incentive is *correctly priced as irrelevant* at their scale.
+
+### 5.3 View B — RSS-responsive landscape (SPOs + compliant MPOs)
+
+![Pool Landscape — Excluding Non-Compliant MPOs](figures/filtered_landscape_mainnet.png)
+
+Adding back the 70 compliant MPO pools transforms the upper tiers. The Saturated tier, nearly empty in the SPO-only view, now carries significant stake — almost entirely from compliant MPOs (CF, Adalite, Wave, Bloom, CHUCK BUX). These are the entities that *do* self-pledge at scale. Their presence is the empirical proof that the RSS mechanism works when the actor *can* and *chooses to* respond to the pledge signal.
+
+**Stance distribution (RSS-responsive):**
+
+| Stance | Pools | Stake (B ₳) | % filtered stake | Profile |
+| --- | ---: | ---: | ---: | --- |
+| **Non-compliant** | 905 | 4.25 | 56.9% | Community SPOs — same population as View A |
+| **Marginal** | 591 | 1.20 | 16.0% | Expands with compliant MPO marginal pools |
+| **Exemplary** | 386 | 1.52 | 20.3% | Now substantial — driven by large self-pledged MPO pools |
+| **Compliant** | 285 | 0.51 | 6.8% | Mid-range pledge operators |
+
+The contrast between the two views tells the story. In the SPO-only landscape, the exemplary class holds 0.23B ADA (4.3%). In the RSS-responsive landscape, it holds **1.52B ADA (20.3%)** — a **6.6× increase** almost entirely attributable to compliant MPOs operating at saturation scale. The mechanism's pledge bonus *does* capture significant capital — but only from entities large enough for the bonus to matter in absolute terms.
+
+### 5.4 What the two views reveal together
+
+Reading the two landscapes side by side surfaces three findings that are invisible in the unfiltered data.
+
+First, the **true competitive playing field for community operators** becomes visible. With MPOs accounting for ~75% of staked supply, only 5.44B ADA remains in single-pool hands. The Healthy tier dominates this landscape — and it is here that parameter reform will have its primary effect. The **561 marginal SPOs** (16.1% of SPO stake) sit at the decision boundary: they have already demonstrated willingness to pledge between 2% and 30% of their stake, and a well-calibrated increase in $a_0$ or a reshaped pledge curve could tip them toward compliant. This is where reform has the **highest expected return**.
+
+Second, the **capital-class split clarifies who can respond to what**. The 47 capital-sufficient MPOs (14.5B ADA) could, in theory, optimize within the RSS — but the CEX and IVaaS entities (7.9B ADA combined) are structurally unable to do so, and the capital-sufficient community fleets *choose* not to, as documented in §4.6. On the other side, the 38 capital-insufficient MPOs (1.74B ADA) face the same constraint as most SPOs: the pledge bonus is simply too small at their scale to justify consolidation. Increasing $a_0$ would raise the penalty for capital-sufficient non-compliant operators (who would absorb it as a cost) while having almost no effect on capital-insufficient ones (who are already below the bonus activation threshold).
+
+Third, the **compliant MPOs and independent SPOs occupy different tiers** with minimal overlap. In the RSS-responsive landscape, compliant MPOs concentrate in Saturated and Near-saturation while SPOs dominate Healthy and below. Reforms targeting the Healthy-tier SPO population are unlikely to disrupt compliant MPO operators at the top, and vice versa. This separation means **targeted interventions are feasible**.
 
 > [!NOTE]
-> **The marginal class is the policy lever.** At 637 pools and 1.6B ADA, the marginal population is small but non-trivial. These operators have demonstrated willingness to pledge (2–30% of stake) and sit at the decision boundary. A well-calibrated increase in $a_0$ or a reshaped pledge function that increases the penalty for low pledge could push marginal operators toward compliant — but would not affect the 83% that is already non-compliant.
+> **Why this matters for simulation.** Any RSS parameter change (adjusting $a_0$, reshaping the pledge curve, introducing $minPoolMargin$) should be simulated against the *RSS-responsive* population, not the full landscape, and should model the three segments separately: non-compliant MPOs (fixed background), capital-insufficient MPOs (behave like SPOs), and the 561 marginal SPOs who sit at the tipping point.
 
 ---
 
@@ -936,7 +965,7 @@ Reward share tracks block share closely — the reward curve does not dramatical
 
 ### 7.3 Entity and MPO concentration
 
-The attributed MPO entity set covers **451 registered pools** across **26 entities**, representing **51.15% of staked ADA** (29.03% of supply) and **84.61% of all declared pledge**.
+The MPO entity set (§4) covers **901 pools** across **85 entities**, holding **16.4B ADA** — **75.4% of staked supply** (42.6% of circulating supply). The top 5 entities by stake are:
 
 Top 5 entities by stake:
 

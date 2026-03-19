@@ -52,31 +52,43 @@ CIRCULATING_SUPPLY_ADA = float(_snap.get("supply_ada", 0))        # ~38.49B
 # IOG brand palette – archetype colour assignments
 # ---------------------------------------------------------------------------
 ARCHETYPE_COLORS: Dict[str, str] = {
-    "cex":             "#E52321",  # INFARED   – high-signal red for the deviant archetype
-    "ivaas":           "#2C4FFA",  # COBALT PULSE – institutional blue
-    "ecosystem":       "#FFBA36",  # SOLAR AMBER  – stewardship / warm
-    "platform":        "#16B2A8",  # teal variant of Electric Blue
-    "independent_mpo": "#00875A",  # muted Acid Green – aligned / community
-    "opaque":          "#78909C",  # neutral grey
+    "cex":                      "#E52321",  # INFARED
+    "ivaas":                    "#2C4FFA",  # COBALT PULSE
+    "ecosystem":                "#FFBA36",  # SOLAR AMBER
+    "platform":                 "#16B2A8",  # teal variant
+    "independent_mpo":          "#00875A",  # muted Acid Green
+    "community_branded_fleet":  "#06CC6E",  # lighter Acid Green
+    "multi_brand_fleet":        "#0A9E5A",  # mid Acid Green
+    "opaque_fleet":             "#555555",  # dark grey
+    "protocol_project":         "#A700FF",  # Ultraviolet
+    "opaque":                   "#78909C",  # neutral grey
 }
 
 ARCHETYPE_LABELS: Dict[str, str] = {
-    "cex":             "Exchange Custody (CEX)",
-    "ivaas":           "Institutional Validator (IVaaS)",
-    "ecosystem":       "Ecosystem Steward",
-    "platform":        "Platform / Wallet",
-    "independent_mpo": "Independent MPO",
-    "opaque":          "Opaque / Unresolved",
+    "cex":                      "Exchange Custody (CEX)",
+    "ivaas":                    "Institutional Validator (IVaaS)",
+    "ecosystem":                "Ecosystem Steward",
+    "platform":                 "Platform / Wallet",
+    "independent_mpo":          "Independent MPO",
+    "community_branded_fleet":  "Community Branded Fleet",
+    "multi_brand_fleet":        "Multi-Brand Fleet",
+    "opaque_fleet":             "Opaque Fleet",
+    "protocol_project":         "Protocol / DeFi Project",
+    "opaque":                   "Opaque / Unresolved",
 }
 
 # Display order for groups in the bar chart (largest / most relevant first)
 ARCHETYPE_ORDER: List[str] = [
     "cex",
     "ivaas",
+    "community_branded_fleet",
+    "independent_mpo",
+    "multi_brand_fleet",
+    "opaque",
     "ecosystem",
     "platform",
-    "independent_mpo",
-    "opaque",
+    "opaque_fleet",
+    "protocol_project",
 ]
 
 # ---------------------------------------------------------------------------
@@ -268,6 +280,7 @@ def _load_entity_pool_metrics() -> Dict[str, Dict[str, float]]:
             "avg_margin": avg_margin,
             "n_live_pools": len(pools),
             "n_dormant_pools": n_dormant,
+            "total_pledge_ada": effective_pledge,
         }
     return result
 
@@ -308,12 +321,14 @@ def figure_current_distribution(
         r["avg_margin"] = metrics.get("avg_margin", 0.0)
         r["n_live_pools"] = int(metrics.get("n_live_pools", 0))
         r["n_dormant_pools"] = int(metrics.get("n_dormant_pools", 0))
+        r["total_pledge_ada"] = metrics.get("total_pledge_ada", 0.0)
         r["stance"] = classify_stance(r["pct_pledged"])
         # Compute % of staked supply (active delegated stake)
         stake_ada = float(
             next((s.get("current_stake_ada", 0) for s in entity_stats
                   if s["display_name"] == r["display_name"]), 0) or 0
         )
+        r["stake_ada"] = stake_ada
         r["pct_staked"] = stake_ada / STAKED_SUPPLY_ADA * 100 if STAKED_SUPPLY_ADA > 0 else 0.0
 
     # Sort: archetype order first, then stake descending within group
@@ -483,8 +498,8 @@ def figure_current_distribution(
 
     # Build table data: entity rows grouped by archetype, with archetype summary rows
     # No Stance column here — the concept is introduced later in §4.2.3.
-    col_labels = ["Entity", "Archetype", "Live", "Dormant", "% Staked",
-                   "% Supply", "% Pledged", "% Delegated", "Avg Margin"]
+    col_labels = ["Entity", "Live", "Dormant", "% Staked",
+                   "Stake (B ₳)", "Pledge (M ₳)", "% Pledged", "Avg Margin"]
     n_cols = len(col_labels)
     cell_text = []
     cell_colors = []
@@ -500,29 +515,31 @@ def figure_current_distribution(
                 a = archetype_agg[arch]
                 n_live = sum(er["n_live_pools"] for er in entity_rows if er["archetype"] == arch)
                 n_dorm = sum(er["n_dormant_pools"] for er in entity_rows if er["archetype"] == arch)
+                arch_stake_b = sum(er["stake_ada"] for er in entity_rows if er["archetype"] == arch) / 1e9
+                arch_pledge_m = sum(er["total_pledge_ada"] for er in entity_rows if er["archetype"] == arch) / 1e6
                 cell_text.append([
                     f"  {ARCHETYPE_LABELS[arch]}",
-                    f"{a['n_entities']} ent.",
                     str(n_live),
                     str(n_dorm),
                     f"{a['total_pct_staked']:.2f}%",
-                    f"{a['total_pct_supply']:.2f}%",
+                    f"{arch_stake_b:.2f}",
+                    f"{arch_pledge_m:.0f}",
                     f"{a['pct_pledged']:.2f}%",
-                    f"{a['pct_delegated']:.2f}%",
                     f"{a['avg_margin']:.1f}%",
                 ])
                 cell_colors.append(["summary_" + arch] * n_cols)
             current_arch_for_table = arch
 
+        stake_b = r["stake_ada"] / 1e9
+        pledge_m = r["total_pledge_ada"] / 1e6
         cell_text.append([
             f"    {r['display_name']}",
-            ARCHETYPE_LABELS.get(arch, arch),
             str(r["n_live_pools"]),
             str(r["n_dormant_pools"]),
             f"{r['pct_staked']:.2f}%",
-            f"{r['pct_supply']:.2f}%",
+            f"{stake_b:.2f}",
+            f"{pledge_m:.1f}",
             f"{r['pct_pledged']:.2f}%",
-            f"{r['pct_delegated']:.2f}%",
             f"{r['avg_margin']:.1f}%",
         ])
         cell_colors.append([WHITE] * n_cols)
@@ -532,7 +549,7 @@ def figure_current_distribution(
         colLabels=col_labels,
         cellLoc="center",
         loc="upper center",
-        colWidths=[0.16, 0.15, 0.05, 0.06, 0.08, 0.08, 0.09, 0.09, 0.09],
+        colWidths=[0.22, 0.05, 0.06, 0.09, 0.10, 0.12, 0.09, 0.09],
     )
     table.auto_set_font_size(False)
     table.set_fontsize(7.5)
@@ -546,7 +563,6 @@ def figure_current_distribution(
 
     # Column indices for conditional formatting
     COL_PLEDGED = col_labels.index("% Pledged")
-    COL_DELEGATED = col_labels.index("% Delegated")
     WARN_RED_BG = "#FDECEC"       # very light red background
     WARN_RED_TEXT = "#B71C1C"      # dark red text
 
@@ -564,20 +580,13 @@ def figure_current_distribution(
             else:
                 base_bg = WHITE if i % 2 == 0 else LIGHT_GREY
                 # Highlight cells that signal poor pledge discipline:
-                # % Pledged < 2% or % Delegated > 98% → red tint
+                # % Pledged < 2% → red tint
                 cell_val = cell_text[i][j]
                 is_warn = False
                 if j == COL_PLEDGED:
                     try:
                         v = float(cell_val.replace("%", ""))
                         if v < 2.0:
-                            is_warn = True
-                    except ValueError:
-                        pass
-                elif j == COL_DELEGATED:
-                    try:
-                        v = float(cell_val.replace("%", ""))
-                        if v > 98.0:
                             is_warn = True
                     except ValueError:
                         pass
@@ -662,6 +671,9 @@ def figure_archetype_progression(
     # Total attributed line
     ax.plot(epochs, total_attributed, color="#1a1a1a", linewidth=1.5,
             linestyle="-", alpha=0.7, label="_nolegend_")
+
+    # Add Cardano event markers
+    add_event_markers(ax, compact=False, y_frac=0.85, alpha=0.4)
 
     # ---- Annotations ----
     # Epoch 400 reallocation window
@@ -816,6 +828,9 @@ def figure_entity_progression(
     )
     # Total outline
     ax.plot(epochs, total_pct, color="#1f2937", linewidth=1.2, alpha=0.85)
+
+    # Add Cardano event markers
+    add_event_markers(ax, compact=False, y_frac=0.85, alpha=0.4)
 
     # ---- Annotations ----
     # Epoch 400 reallocation window
