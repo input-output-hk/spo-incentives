@@ -16,8 +16,13 @@ All counts and amounts use the latest available pool snapshot (**epoch 618**) an
 
 1. [Mainnet Observations](#1-mainnet-observations)
 2. [Distribution efficiency](#2-distribution-efficiency)
-   - 2.1 [Waste decomposition](#21-waste-decomposition)
-   - 2.2 [Within-staked inefficiency](#22-within-staked-inefficiency)
+   - 2.1 [The participation gap](#21-the-participation-gap)
+   - 2.2 [Pledge-not-met confiscation](#22-pledge-not-met-confiscation)
+   - 2.3 [The eligible pot](#23-the-eligible-pot)
+      - 2.3.1 [Bonus budget unused](#231-bonus-budget-unused)
+      - 2.3.2 [Performance loss](#232-performance-loss)
+      - 2.3.3 [Oversaturation cap](#233-oversaturation-cap)
+   - 2.4 [Summary](#24-summary)
 3. [Reward formula anatomy](#3-reward-formula-anatomy)
    - 3.1 [The full formula](#31-the-full-formula)
    - 3.2 [Factor 1 — Performance ($\bar{p}$)](#32-factor-1--performance-barp)
@@ -45,18 +50,19 @@ All counts and amounts use the latest available pool snapshot (**epoch 618**) an
    - 4.3 [Tier definitions](#43-tier-definitions)
    - 4.4 [Pool distribution by tier](#44-pool-distribution-by-tier)
 5. [Entity and MPO concentration](#5-entity-and-mpo-concentration)
-   - 5.1 [Archetypes](#51-archetypes)
-      - 5.1.1 [Classification](#511-classification)
-      - 5.1.2 [Current distribution](#512-current-distribution)
-      - 5.1.3 [Historical evolution](#513-historical-evolution)
-   - 5.2 [From archetype to incentive stance](#52-from-archetype-to-incentive-stance)
-      - 5.2.1 [Exchange Custody (CEX)](#521-exchange-custody-cex)
-      - 5.2.2 [Institutional Validator (IVaaS)](#522-institutional-validator-ivaas)
-      - 5.2.3 [Incentive stance: reclassifying by pledge-bonus capture](#523-incentive-stance-reclassifying-by-pledge-bonus-capture)
-   - 5.3 [Within-staked inefficiency: the cost of non-compliance](#53-within-staked-inefficiency-the-cost-of-non-compliance)
-   - 5.4 [MPO pool taxonomy by incentive stance](#54-mpo-pool-taxonomy-by-incentive-stance)
-   - 5.5 [Conclusion](#55-conclusion)
-6. [Revisiting the competitive landscape](#6-revisiting-the-competitive-landscape)
+   - 5.1 [Capital class](#51-capital-class)
+   - 5.2 [Archetypes](#52-archetypes)
+      - 5.2.1 [Classification](#521-classification)
+      - 5.2.2 [Current distribution](#522-current-distribution)
+      - 5.2.3 [Historical evolution](#523-historical-evolution)
+   - 5.3 [From archetype to incentive stance](#53-from-archetype-to-incentive-stance)
+      - 5.3.1 [Exchange Custody (CEX)](#531-exchange-custody-cex)
+      - 5.3.2 [Institutional Validator (IVaaS)](#532-institutional-validator-ivaas)
+      - 5.3.3 [Incentive stance: reclassifying by pledge-bonus capture](#533-incentive-stance-reclassifying-by-pledge-bonus-capture)
+   - 5.4 [Within-staked inefficiency: the cost of non-compliance](#54-within-staked-inefficiency-the-cost-of-non-compliance)
+   - 5.5 [MPO pool taxonomy by incentive stance](#55-mpo-pool-taxonomy-by-incentive-stance)
+   - 5.6 [Conclusion](#56-conclusion)
+6. [Revisiting the competitive landscape after removing non-responsive MPOs](#6-revisiting-the-competitive-landscape-after-removing-non-responsive-mpos)
    - 6.1 [Filtering methodology](#61-filtering-methodology)
    - 6.2 [View A — Independent SPOs only](#62-view-a--independent-spos-only)
    - 6.3 [View B — Current filtered proxy (SPOs + retained MPO pools)](#63-view-b--current-filtered-proxy-spos--retained-mpo-pools)
@@ -124,7 +130,7 @@ This section traces where the pot goes, step by step. Each step removes a slice 
 - The formula splits each pool's maximum reward into a **base component** ($\lambda_{\min} = 76.9\%$) that rewards *pool size*, and a **bonus component** ($\lambda_{\max} = 23.1\%$) that rewards *pledge commitment*.
 - The base is **distribution-neutral**: 100M ADA in one pool earns exactly the same base as 100M split across ten pools of 10M. The bonus is **distribution-sensitive**: the same split loses up to 39% of the pledge bonus due to the $\nu^3$ scaling.
 
-### 2.1 Step 1 — The participation gap
+### 2.1 The participation gap
 
 The pools pot is sized for the full circulating supply. With 43.5% of ADA undelegated, a proportional share of the pot has no pool to claim it.
 
@@ -136,7 +142,7 @@ The pools pot is sized for the full circulating supply. With 43.5% of ADA undele
 
 Because the base is distribution-neutral, this gap depends *only* on how much ADA is staked — not on how it is arranged across pools. No formula change can close it. Only increased staking participation can.
 
-### 2.2 Step 2 — Pledge-not-met confiscation
+### 2.2 Pledge-not-met confiscation
 
 When a pool operator *declares* a pledge in their pool certificate but the owners' stake keys do not actually hold that amount at the epoch boundary, the protocol sets the pool's reward to **zero for the entire epoch**. Not a reduction — a total confiscation.
 
@@ -152,17 +158,23 @@ At epoch 615, **692 pools** failed this check. They produced **1,049 blocks**, a
 
 This happens more often than one might expect. Historically, **2,797 pools** have experienced at least one pledge-unmet epoch, and **833 are chronically in default** (pledge met less than 50% of the time). The typical cause is operational: an operator moves ADA out of their pledge wallet for liquidity or DeFi, or mishandles a key rotation, and doesn't realize the consequence until rewards are already lost.
 
-### 2.3 Step 3 — The eligible pot
+### 2.3 The eligible pot
 
 After removing the participation gap and confiscated rewards, **10.30M ADA/epoch** remains. This is what the formula distributes among the pools that passed the pledge check. Within it, three more causes determine how much actually reaches operators and delegators:
 
-**a) The unused pledge-incentive budget (3.43M, 22.1% of pot).** The formula reserves $\lambda_{\max} = 23.1\%$ of the pot — **3.58M ADA every epoch** — as a bonus for operators who self-pledge. On mainnet, only **0.16M** of that budget is captured. The remaining 3.43M returns to the reserve unused. This is 95.6% of the pledge-incentive budget, and it is the single largest addressable inefficiency in the system.
+#### 2.3.1 Bonus budget unused
+
+The formula reserves $\lambda_{\max} = 23.1\%$ of the pot — **3.58M ADA every epoch** — as a bonus for operators who self-pledge. On mainnet, only **0.16M** of that budget is captured. The remaining 3.43M returns to the reserve unused. This is 95.6% of the pledge-incentive budget, and it is the single largest addressable inefficiency in the system.
 
 Why is the capture so low? The bonus scales as $\nu^3$, where $\nu$ is the pool's stake as a fraction of $z_0$. A pool at 10% saturation with *perfect* self-pledge captures 0.1% of the maximum bonus. A pool at 50% captures 12.5%. Only at full saturation does the bonus become meaningful — and fewer than 8 pools reach that level. §3 derives this in detail; §5 shows that 75% of staked supply is held by MPOs who either *cannot* pledge (exchanges, validators) or *choose* not to.
 
-**b) Performance loss (0.08M, 0.5% of pot).** Eligible pools that missed some blocks lose reward proportionally. The network-wide average performance is $\hat{\eta} = 0.990$ — excellent. This is a rounding error in the context of the full pot.
+#### 2.3.2 Performance loss
 
-**c) Oversaturation cap (0.04M, 0.3% of pot).** Seven pools hold stake above $z_0$; the excess earns nothing. Minimal.
+Eligible pools that missed some blocks lose reward proportionally. The network-wide average performance is $\hat{\eta} = 0.990$ — excellent. This is a rounding error in the context of the full pot.
+
+#### 2.3.3 Oversaturation cap
+
+Seven pools hold stake above $z_0$; the excess earns nothing. Minimal.
 
 | Component | ADA/epoch | % of pot |
 | --- | ---: | ---: |
@@ -177,17 +189,19 @@ Why is the capture so low? The bonus scales as $\nu^3$, where $\nu$ is the pool'
 
 ### 2.4 Summary
 
-| Step | ADA/epoch | % pot | What happens |
-| --- | ---: | ---: | --- |
-| **Pot** | 15.53M | 100% | Total budget entering the reward formula |
-| | | | |
-| **Step 1: Participation gap** | −4.91M | 31.6% | ADA not staked → no pool claims this share |
-| **Step 2: Pledge-not-met** | −0.32M | 2.1% | 692 pools produce blocks but receive zero |
-| **Step 3: Bonus unused** | −3.43M | 22.1% | The pledge-incentive budget is 95.6% uncaptured |
-| **Step 4: Performance** | −0.08M | 0.5% | Missed blocks by eligible pools |
-| **Step 5: Oversaturation** | −0.04M | 0.3% | 7 pools above $z_0$ |
-| | | | |
-| **= Distributed** | **6.79M** | **43.7%** | What reaches operators and delegators |
+**Distribution efficiency waterfall — epoch 616**
+
+| Stage | ADA/epoch | % pot | Cause | Pools affected |
+| --- | ---: | ---: | --- | --- |
+| **Pools pot** | **15.53M** | **100.0%** | Total budget entering the reward formula | — |
+| − Participation gap | −4.91M | 31.6% | ADA not staked → no pool claims this share | System-wide |
+| **= Staked pot** | **10.62M** | **68.4%** | Budget claimable by delegated pools | — |
+| − Pledge-not-met confiscation | −0.32M | 2.1% | Pools produce blocks but receive zero | 692 pools |
+| **= Eligible pot** | **10.30M** | **66.3%** | Budget entering the reward formula proper | — |
+| − Bonus budget unused | −3.43M | 22.1% | Pledge-incentive budget 95.6% uncaptured | ~2,670 pools |
+| − Performance | −0.08M | 0.5% | Missed blocks by eligible pools | Variable |
+| − Oversaturation | −0.04M | 0.3% | Pools above saturation cap $z_0$ | 7 pools |
+| **= Distributed** | **6.79M** | **43.7%** | **What reaches operators and delegators** | **~1,350 pools** |
 
 > [!IMPORTANT]
 > **Key observation (O1).** Two causes account for **53.7% of the entire pools pot** returning to reserve: the participation gap (31.6%) and the unused pledge budget (22.1%). Everything else — pledge-not-met confiscation (2.1%), performance (0.5%), oversaturation (0.3%) — is secondary by an order of magnitude. This concentration makes the reform priority unambiguous: the participation gap is upstream and outside the formula's control; the unused pledge budget is the single largest inefficiency that incentive reform *can* address.
