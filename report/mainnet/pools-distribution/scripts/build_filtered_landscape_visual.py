@@ -3,21 +3,26 @@
 Pool Landscape excluding Non-Compliant MPOs.
 
 Produces TWO butterfly charts:
-  1. filtered_landscape_spo_only_mainnet.png  — SPOs only (all MPOs removed)
-  2. filtered_landscape_mainnet.png           — SPOs + compliant/exemplary MPOs
-     (hatched bars distinguish compliant MPOs from independent SPOs)
+  1. filtered_landscape_spo_only_mainnet.png  — current independent SPO basket
+  2. filtered_landscape_mainnet.png           — current filtered basket
+     (independent SPOs + retained MPO pools; hatched bars distinguish retained MPOs)
+  3. filtered_landscape_history_mainnet.png   — historical evolution of those
+     same current baskets, with stance reconstructed from pool update history
 
 Also emits summary CSVs for both variants.
 
 Outputs:
   figures/filtered_landscape_spo_only_mainnet.png
   figures/filtered_landscape_mainnet.png
+  figures/filtered_landscape_history_mainnet.png
   data/filtered_landscape_spo_only_summary.csv
   data/filtered_landscape_summary.csv
+  data/filtered_landscape_history_key_epochs.csv
 """
 
 from __future__ import annotations
 
+import bisect
 import csv
 import json
 from pathlib import Path
@@ -77,6 +82,9 @@ SEG_STACK = [
     "mpo_marginal", "mpo_compliant", "mpo_exemplary",
 ]
 
+CARLOS_REPORT_END_EPOCH = 583
+KEY_EPOCHS = [210, 250, 400, 410, 548, 583, 615]
+
 
 def pf(v, d=0.0):
     if v is None:
@@ -93,6 +101,91 @@ def classify_stance(pledge_ratio: float) -> str:
     if pledge_ratio >= 0.02:
         return "marginal"
     return "non_compliant"
+
+
+def load_mpo_filter_sets():
+    """Return current MPO pool sets used by the section-5 filter."""
+    archetypes = {}
+    with (DATA_DIR / "mpo_entity_archetypes.csv").open(newline="") as f:
+        for r in csv.DictReader(f):
+            archetypes[r["entity_id"]] = r
+
+    mpo_pool_entity = {}
+    with (DATA_DIR / "mpo_entity_pool_mapping_mainnet.csv").open(newline="") as f:
+        for r in csv.DictReader(f):
+            mpo_pool_entity[r["pool_id_bech32"]] = r["entity_id"]
+
+    mpo_pool_stance = {}
+    with (DATA_DIR / "mpo_entity_pool_health_mainnet.csv").open(newline="") as f:
+        for r in csv.DictReader(f):
+            pid = r["pool_id_bech32"]
+            stake = pf(r.get("current_active_stake_ada"))
+            pledge = pf(r.get("declared_pledge_ada"))
+            ratio = min(pledge, stake) / stake if stake > 100 else 0.0
+            mpo_pool_stance[pid] = classify_stance(ratio)
+
+    non_compliant_entities = {
+        eid for eid, a in archetypes.items()
+        if a.get("incentive_alignment") == "none"
+    }
+
+    nc_mpo_pools = set()
+    retained_mpo_pools = set()
+    all_mpo_pools = set()
+    for pid, eid in mpo_pool_entity.items():
+        all_mpo_pools.add(pid)
+        if eid in non_compliant_entities:
+            nc_mpo_pools.add(pid)
+        else:
+            stance = mpo_pool_stance.get(pid, "non_compliant")
+            if stance == "non_compliant":
+                nc_mpo_pools.add(pid)
+            else:
+                retained_mpo_pools.add(pid)
+
+    return all_mpo_pools, nc_mpo_pools, retained_mpo_pools
+
+
+def load_pledge_timelines():
+    """Return per-pool historical pledge timelines from pool updates."""
+    epochs_by_pool = defaultdict(list)
+    pledges_by_pool = defaultdict(list)
+
+    with (DATA_DIR / "koios_pool_updates_mainnet.csv").open(newline="") as f:
+        for row in csv.DictReader(f):
+            active_epoch = row.get("active_epoch_no") or ""
+            if not active_epoch:
+                continue
+            pool_id = row["pool_id_bech32"]
+            epochs_by_pool[pool_id].append(int(active_epoch))
+            pledges_by_pool[pool_id].append(float(row.get("pledge_ada") or 0.0))
+
+    result = {}
+    for pool_id, epochs in epochs_by_pool.items():
+        pairs = sorted(zip(epochs, pledges_by_pool[pool_id]))
+        uniq_epochs = []
+        uniq_pledges = []
+        last_epoch = None
+        for epoch_no, pledge_ada in pairs:
+            if last_epoch == epoch_no:
+                uniq_epochs[-1] = epoch_no
+                uniq_pledges[-1] = pledge_ada
+            else:
+                uniq_epochs.append(epoch_no)
+                uniq_pledges.append(pledge_ada)
+                last_epoch = epoch_no
+        result[pool_id] = (uniq_epochs, uniq_pledges)
+    return result
+
+
+def historical_pledge_ada(pool_id, epoch_no, pledge_timelines):
+    epochs, pledges = pledge_timelines.get(pool_id, (None, None))
+    if not epochs:
+        return 0.0
+    idx = bisect.bisect_right(epochs, epoch_no) - 1
+    if idx < 0:
+        return 0.0
+    return pledges[idx]
 
 
 # ── Tier definitions (shared) ──
@@ -241,7 +334,7 @@ def draw_butterfly(pools, z0, epoch, title, subtitle, fig_path,
     ax_r.set_yticks([])
     ax_r.xaxis.tick_top()
     ax_r.xaxis.set_label_position("top")
-    xlabel_r = ("Share of stake (%) — hatched = compliant MPO"
+    xlabel_r = ("Share of stake (%) — hatched = retained MPO"
                 if show_mpo_hatch else "Share of stake (%) — by incentive stance")
     ax_r.set_xlabel(xlabel_r, fontsize=10, color=DIM, labelpad=6)
     ax_r.tick_params(axis="x", colors=DIM, labelsize=8, top=True, bottom=False)
@@ -286,7 +379,7 @@ def draw_butterfly(pools, z0, epoch, title, subtitle, fig_path,
         legend_elements.append(
             mpatches.Patch(facecolor="#0E8A7A", alpha=0.88, hatch="///",
                            edgecolor="white", linewidth=0.5,
-                           label="Compliant MPO (hatched)")
+                           label="Retained MPO (hatched)")
         )
     ax_r.legend(handles=legend_elements, loc="lower right",
                 fontsize=8, framealpha=0.95, title="Population segment",
@@ -301,6 +394,230 @@ def draw_butterfly(pools, z0, epoch, title, subtitle, fig_path,
     fig.savefig(fig_path, dpi=180, bbox_inches="tight", facecolor=BG)
     plt.close()
     print(f"✓ Saved {fig_path}")
+
+
+def build_historical_series(
+    spo_only_pool_ids,
+    filtered_pool_ids,
+    current_rows_by_pool,
+):
+    """Track the current section-5 baskets back through history.
+
+    Basket membership is fixed to the current snapshot so the historical figure answers:
+    how did today's filtered populations evolve over time?
+    """
+    pledge_timelines = load_pledge_timelines()
+
+    view_a = defaultdict(lambda: defaultdict(float))
+    view_b = defaultdict(lambda: defaultdict(float))
+    epochs_seen = set()
+
+    with (DATA_DIR / "koios_pool_history_mainnet.csv").open(newline="") as f:
+        for row in csv.DictReader(f):
+            stake_ada = pf(row.get("active_stake_ada"))
+            if stake_ada <= 0:
+                continue
+            epoch_no = int(row["epoch_no"])
+            pool_id = row["pool_id_bech32"]
+            pct_staked = pf(row.get("active_stake_pct"))
+            pledge_ada = historical_pledge_ada(pool_id, epoch_no, pledge_timelines)
+            ratio = min(pledge_ada, stake_ada) / stake_ada if stake_ada > 100 else 0.0
+            stance = classify_stance(ratio)
+
+            if pool_id in spo_only_pool_ids:
+                view_a[epoch_no][stance] += pct_staked
+            if pool_id in filtered_pool_ids:
+                view_b[epoch_no][stance] += pct_staked
+            if pool_id in spo_only_pool_ids or pool_id in filtered_pool_ids:
+                epochs_seen.add(epoch_no)
+
+    live_epoch = None
+    for pool_id, row in current_rows_by_pool.items():
+        if live_epoch is None:
+            live_epoch = int(row["epoch"])
+        stake_ada = row["stake"]
+        if stake_ada <= 0:
+            continue
+        ratio = min(row["pledge"], stake_ada) / stake_ada if stake_ada > 100 else 0.0
+        stance = classify_stance(ratio)
+        pct_staked = row["pct_staked"]
+        if pool_id in spo_only_pool_ids:
+            view_a[live_epoch][stance] += pct_staked
+        if pool_id in filtered_pool_ids:
+            view_b[live_epoch][stance] += pct_staked
+    epochs_seen.add(live_epoch)
+
+    return sorted(epochs_seen), view_a, view_b, live_epoch
+
+
+def write_history_key_epochs_csv(view_a, view_b, live_epoch):
+    out_path = DATA_DIR / "filtered_landscape_history_key_epochs.csv"
+    rows = []
+    for epoch_no in KEY_EPOCHS + [live_epoch]:
+        if epoch_no not in view_a and epoch_no not in view_b:
+            continue
+        for view_name, data in [
+            ("spo_only", view_a.get(epoch_no, {})),
+            ("filtered_proxy", view_b.get(epoch_no, {})),
+        ]:
+            rows.append([
+                epoch_no,
+                view_name,
+                f"{sum(data.get(st, 0.0) for st in STANCE_STACK):.4f}",
+                f"{data.get('non_compliant', 0.0):.4f}",
+                f"{data.get('marginal', 0.0):.4f}",
+                f"{data.get('compliant', 0.0):.4f}",
+                f"{data.get('exemplary', 0.0):.4f}",
+            ])
+
+    with out_path.open("w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow([
+            "epoch_no", "view", "total_pct_staked",
+            "non_compliant_pct", "marginal_pct",
+            "compliant_pct", "exemplary_pct",
+        ])
+        w.writerows(rows)
+    print(f"✓ Saved {out_path}")
+
+
+def draw_history_figure(epochs, view_a, view_b, live_epoch):
+    out_path = FIG_DIR / "filtered_landscape_history_mainnet.png"
+    x = np.array(epochs)
+
+    def stack_arrays(view_dict):
+        return np.vstack([
+            np.array([view_dict.get(epoch, {}).get(st, 0.0) for epoch in epochs], dtype=float)
+            for st in STANCE_STACK
+        ])
+
+    a_stack = stack_arrays(view_a)
+    b_stack = stack_arrays(view_b)
+
+    plt.style.use("seaborn-v0_8-whitegrid")
+    fig, axes = plt.subplots(2, 1, figsize=(15, 10), sharex=True, sharey=True)
+    fig.patch.set_facecolor(BG)
+
+    panel_specs = [
+        (
+            axes[0],
+            a_stack,
+            "View A — Independent SPOs only",
+            "Current basket = all non-MPO pools that are live in the epoch-618 snapshot",
+            view_a,
+        ),
+        (
+            axes[1],
+            b_stack,
+            "View B — Current filtered proxy basket",
+            "Current basket = independent SPOs + retained MPO pools from the section-5 filter",
+            view_b,
+        ),
+    ]
+
+    colors = [STANCE_COLORS[s] for s in STANCE_STACK]
+
+    for ax, stack, title, subtitle, view_dict in panel_specs:
+        ax.set_facecolor(BG)
+        ax.stackplot(x, stack, colors=colors, alpha=0.88, linewidth=0)
+        top = stack.sum(axis=0)
+        ax.plot(x, top, color=INK, linewidth=2.1, label="Total basket share")
+        ax.axvline(CARLOS_REPORT_END_EPOCH, color="#7F8C8D", linestyle=":", linewidth=1.2, alpha=0.9)
+
+        ax.text(
+            0.01, 0.97, title,
+            transform=ax.transAxes, ha="left", va="top",
+            fontsize=12, fontweight="bold", color=INK,
+        )
+        ax.text(
+            0.01, 0.90, subtitle,
+            transform=ax.transAxes, ha="left", va="top",
+            fontsize=9, color=DIM,
+        )
+
+        report_total = sum(view_dict.get(CARLOS_REPORT_END_EPOCH, {}).get(st, 0.0) for st in STANCE_STACK)
+        live_total = sum(view_dict.get(live_epoch, {}).get(st, 0.0) for st in STANCE_STACK)
+        report_quality = (
+            view_dict.get(CARLOS_REPORT_END_EPOCH, {}).get("compliant", 0.0)
+            + view_dict.get(CARLOS_REPORT_END_EPOCH, {}).get("exemplary", 0.0)
+        )
+        live_quality = (
+            view_dict.get(live_epoch, {}).get("compliant", 0.0)
+            + view_dict.get(live_epoch, {}).get("exemplary", 0.0)
+        )
+        ax.text(
+            0.97, 0.96,
+            f"Epoch {CARLOS_REPORT_END_EPOCH}: {report_total:.1f}% total\n"
+            f"Epoch {live_epoch}: {live_total:.1f}% total\n"
+            f"Compliant + exemplary: {report_quality:.1f}% → {live_quality:.1f}%",
+            transform=ax.transAxes,
+            ha="right",
+            va="top",
+            fontsize=9,
+            color=INK,
+            bbox=dict(boxstyle="round,pad=0.3", facecolor="white", edgecolor="#D9D9D9", alpha=0.95),
+        )
+
+        ax.annotate(
+            f"{live_total:.1f}%",
+            xy=(live_epoch, live_total),
+            xytext=(live_epoch + 1.5, live_total + 0.6),
+            fontsize=9,
+            color=INK,
+            arrowprops=dict(arrowstyle="-", color=INK),
+        )
+        ax.grid(axis="y", color=GRID, linewidth=0.7)
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.spines["left"].set_visible(False)
+        ax.spines["bottom"].set_visible(False)
+        ax.tick_params(axis="both", colors=DIM)
+
+    axes[1].text(
+        CARLOS_REPORT_END_EPOCH - 3,
+        axes[1].get_ylim()[1] * 0.80 if axes[1].get_ylim()[1] else 1,
+        "Carlos report endpoint\n(epoch 583)",
+        ha="right",
+        va="top",
+        fontsize=9,
+        color="#4B5563",
+        bbox=dict(boxstyle="round,pad=0.2", facecolor="white", edgecolor="#D1D5DB", alpha=0.9),
+    )
+
+    axes[1].set_xlabel("Epoch", fontsize=11, color=INK)
+    for ax in axes:
+        ax.set_ylabel("Share of active stake (%)", fontsize=10, color=INK)
+        ax.set_xlim(min(epochs), max(epochs) + 6)
+
+    legend_handles = [
+        mpatches.Patch(facecolor=STANCE_COLORS[st], alpha=0.88, label=STANCE_LABELS[st])
+        for st in reversed(STANCE_STACK)
+    ]
+    fig.legend(
+        handles=legend_handles,
+        loc="upper center",
+        ncol=4,
+        frameon=False,
+        fontsize=10,
+        bbox_to_anchor=(0.5, 0.942),
+    )
+    fig.suptitle(
+        "Historical evolution of the section-5 filtered baskets",
+        fontsize=16,
+        fontweight="bold",
+        color=INK,
+        y=0.99,
+    )
+    fig.text(
+        0.5, 0.955,
+        f"Fixed current baskets tracked through pool history; stance reconstructed from pool update pledge history · live snapshot at epoch {live_epoch}",
+        ha="center", va="top", fontsize=10, color=DIM,
+    )
+
+    fig.tight_layout(rect=[0.03, 0.05, 0.97, 0.87])
+    fig.savefig(out_path, dpi=220, bbox_inches="tight", facecolor=BG)
+    plt.close(fig)
+    print(f"✓ Saved {out_path}")
 
 
 def write_summary_csv(pools, z0, csv_path, show_mpo=False):
@@ -346,48 +663,11 @@ def main():
         snap = json.load(f)
     z0, epoch = snap["z0_ada"], snap["epoch"]
 
-    # ── Load MPO data ──
-    archetypes = {}
-    with (DATA_DIR / "mpo_entity_archetypes.csv").open(newline="") as f:
-        for r in csv.DictReader(f):
-            archetypes[r["entity_id"]] = r
-
-    mpo_pool_entity = {}
-    with (DATA_DIR / "mpo_entity_pool_mapping_mainnet.csv").open(newline="") as f:
-        for r in csv.DictReader(f):
-            mpo_pool_entity[r["pool_id_bech32"]] = r["entity_id"]
-
-    mpo_pool_stance = {}
-    with (DATA_DIR / "mpo_entity_pool_health_mainnet.csv").open(newline="") as f:
-        for r in csv.DictReader(f):
-            pid = r["pool_id_bech32"]
-            stake = pf(r.get("current_active_stake_ada"))
-            pledge = pf(r.get("declared_pledge_ada"))
-            ratio = min(pledge, stake) / stake if stake > 100 else 0.0
-            mpo_pool_stance[pid] = classify_stance(ratio)
-
-    non_compliant_entities = {
-        eid for eid, a in archetypes.items()
-        if a.get("incentive_alignment") == "none"
-    }
-
-    # Classify every MPO pool
-    nc_mpo_pools = set()      # non-compliant MPO pools (to exclude)
-    compliant_mpo_pools = set()  # compliant/exemplary MPO pools (to keep & tag)
-    all_mpo_pools = set()     # all MPO pools
-    for pid, eid in mpo_pool_entity.items():
-        all_mpo_pools.add(pid)
-        if eid in non_compliant_entities:
-            nc_mpo_pools.add(pid)
-        else:
-            stance = mpo_pool_stance.get(pid, "non_compliant")
-            if stance == "non_compliant":
-                nc_mpo_pools.add(pid)
-            else:
-                compliant_mpo_pools.add(pid)
+    all_mpo_pools, nc_mpo_pools, retained_mpo_pools = load_mpo_filter_sets()
 
     # ── Load all registered pools with stake ──
     all_pools = []
+    current_rows_by_pool = {}
     with (DATA_DIR / "koios_pool_list_mainnet.csv").open(newline="") as f:
         for r in csv.DictReader(f):
             if r.get("pool_status") != "registered":
@@ -401,23 +681,32 @@ def main():
             ratio  = eff_pledge / stake if stake > 100 else 0.0
             stance = classify_stance(ratio)
             is_any_mpo = pid in all_mpo_pools
-            is_compliant_mpo = pid in compliant_mpo_pools
+            is_retained_mpo = pid in retained_mpo_pools
             is_nc_mpo = pid in nc_mpo_pools
-            seg = f"mpo_{stance}" if is_compliant_mpo else f"spo_{stance}"
-            all_pools.append({
+            seg = f"mpo_{stance}" if is_retained_mpo else f"spo_{stance}"
+            row = {
                 "pool_id": pid,
+                "epoch": epoch,
                 "stake": stake,
                 "pledge": pledge,
+                "pct_staked": 0.0,  # filled below once the total is known
                 "ratio": ratio,
                 "stance": stance,
-                "is_mpo": is_compliant_mpo,
+                "is_mpo": is_retained_mpo,
                 "is_any_mpo": is_any_mpo,
                 "is_nc_mpo": is_nc_mpo,
                 "segment": seg,
-            })
+            }
+            all_pools.append(row)
+            current_rows_by_pool[pid] = row
+
+    total_stake = sum(p["stake"] for p in all_pools)
+    for p in all_pools:
+        p["pct_staked"] = p["stake"] / total_stake * 100 if total_stake else 0.0
 
     # ── Variant 1: SPO-only (no MPOs at all) ──
     spo_only = [p for p in all_pools if not p["is_any_mpo"]]
+    spo_only_pool_ids = {p["pool_id"] for p in spo_only}
     n1 = len(spo_only)
     s1 = sum(p["stake"] for p in spo_only)
     print("=" * 60)
@@ -431,7 +720,7 @@ def main():
 
     draw_butterfly(
         spo_only, z0, epoch,
-        title="Pool Landscape — Independent SPOs Only",
+        title="Competitive Landscape — Independent SPOs Only",
         subtitle=(f"Epoch {epoch}  ·  {n1:,} pools  ·  {s1/1e9:.1f}B ADA  "
                   f"·  All {len(all_mpo_pools):,} attributed MPO pools removed"),
         fig_path=FIG_DIR / "filtered_landscape_spo_only_mainnet.png",
@@ -445,13 +734,14 @@ def main():
     with_compliant = [p for p in all_pools if not p["is_nc_mpo"]]
     n2 = len(with_compliant)
     s2 = sum(p["stake"] for p in with_compliant)
+    filtered_pool_ids = {p["pool_id"] for p in with_compliant}
     n_mpo = sum(1 for p in with_compliant if p["is_mpo"])
     s_mpo = sum(p["stake"] for p in with_compliant if p["is_mpo"])
     print("=" * 60)
-    print(f"VARIANT 2 — SPOs + COMPLIANT MPOs (non-compliant MPOs removed)")
+    print(f"VARIANT 2 — CURRENT FILTERED BASKET (independent SPOs + retained MPO pools)")
     print(f"  Pools: {n2:,}  Stake: {s2/1e9:.2f}B ADA")
     print(f"    SPO: {n2 - n_mpo}  stake: {(s2-s_mpo)/1e9:.2f}B")
-    print(f"    Compliant MPO: {n_mpo}  stake: {s_mpo/1e9:.2f}B")
+    print(f"    Retained MPO: {n_mpo}  stake: {s_mpo/1e9:.2f}B")
     for st in STANCE_STACK:
         sp = [p for p in with_compliant if p["stance"] == st]
         print(f"    {st}: {len(sp)} pools, "
@@ -460,16 +750,25 @@ def main():
 
     draw_butterfly(
         with_compliant, z0, epoch,
-        title="Pool Landscape — Excluding Non-Compliant MPOs",
+        title="Competitive Landscape — Independent SPOs + Retained MPO Pools",
         subtitle=(f"Epoch {epoch}  ·  {n2:,} pools  ·  {s2/1e9:.1f}B ADA  "
-                  f"·  {len(nc_mpo_pools):,} non-compliant MPO pools removed  "
-                  f"·  {n_mpo} compliant MPO pools retained (hatched)"),
+                  f"·  {len(nc_mpo_pools):,} MPO pools removed by the section-5 filter  "
+                  f"·  {n_mpo} retained MPO pools shown hatched"),
         fig_path=FIG_DIR / "filtered_landscape_mainnet.png",
         show_mpo_hatch=True,
     )
     write_summary_csv(with_compliant, z0,
                       DATA_DIR / "filtered_landscape_summary.csv",
                       show_mpo=True)
+
+    # ── Historical evolution of the current section-5 baskets ──
+    epochs, view_a, view_b, live_epoch = build_historical_series(
+        spo_only_pool_ids,
+        filtered_pool_ids,
+        current_rows_by_pool,
+    )
+    draw_history_figure(epochs, view_a, view_b, live_epoch)
+    write_history_key_epochs_csv(view_a, view_b, live_epoch)
 
 
 if __name__ == "__main__":

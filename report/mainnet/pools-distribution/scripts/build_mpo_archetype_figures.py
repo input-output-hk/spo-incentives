@@ -24,8 +24,11 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Tuple
 
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import matplotlib.patheffects as pe
 import numpy as np
 from matplotlib.ticker import PercentFormatter
 
@@ -54,6 +57,7 @@ CIRCULATING_SUPPLY_ADA = float(_snap.get("supply_ada", 0))        # ~38.49B
 ARCHETYPE_COLORS: Dict[str, str] = {
     "cex":                      "#E52321",  # INFARED
     "ivaas":                    "#2C4FFA",  # COBALT PULSE
+    "capital_insufficient":     "#8C6D1F",  # ochre-brown
     "ecosystem":                "#FFBA36",  # SOLAR AMBER
     "platform":                 "#16B2A8",  # teal variant
     "independent_mpo":          "#00875A",  # muted Acid Green
@@ -67,6 +71,7 @@ ARCHETYPE_COLORS: Dict[str, str] = {
 ARCHETYPE_LABELS: Dict[str, str] = {
     "cex":                      "Exchange Custody (CEX)",
     "ivaas":                    "Institutional Validator (IVaaS)",
+    "capital_insufficient":     "Capital-insufficient",
     "ecosystem":                "Ecosystem Steward",
     "platform":                 "Platform / Wallet",
     "independent_mpo":          "Independent MPO",
@@ -77,10 +82,25 @@ ARCHETYPE_LABELS: Dict[str, str] = {
     "opaque":                   "Opaque / Unresolved",
 }
 
+ARCHETYPE_INLINE_LABELS: Dict[str, str] = {
+    "cex":                     "CEX",
+    "ivaas":                   "IVaaS",
+    "capital_insufficient":    "Cap.-insuf.",
+    "community_branded_fleet": "Branded",
+    "independent_mpo":         "Indep. MPO",
+    "multi_brand_fleet":       "Multi-brand",
+    "opaque":                  "Opaque",
+    "ecosystem":               "Ecosystem",
+    "platform":                "Platform",
+    "opaque_fleet":            "Opaque fleet",
+    "protocol_project":        "Protocol",
+}
+
 # Display order for groups in the bar chart (largest / most relevant first)
 ARCHETYPE_ORDER: List[str] = [
     "cex",
     "ivaas",
+    "capital_insufficient",
     "community_branded_fleet",
     "independent_mpo",
     "multi_brand_fleet",
@@ -106,24 +126,40 @@ STANCE_THRESHOLDS = [
 ]
 
 STANCE_LABELS: Dict[str, str] = {
+    "cant_play":       "Can't play",
     "exemplary":      "Exemplary",
     "compliant":      "Compliant",
     "marginal":       "Marginal",
     "non_compliant":  "Non-compliant",
 }
 
+STANCE_INLINE_LABELS: Dict[str, str] = {
+    "cant_play":      "Can't play",
+    "non_compliant":  "Non-compliant",
+    "marginal":       "Marginal",
+    "compliant":      "Compliant",
+    "exemplary":      "Exemplary",
+}
+
 STANCE_COLORS: Dict[str, str] = {
+    "cant_play":       "#8C6D1F",  # same structural bucket as archetype
     "exemplary":      "#06FF89",  # Acid Green  – best-in-class
     "compliant":      "#16E9D8",  # Electric Blue – solid
     "marginal":       "#FFBA36",  # Solar Amber – room to improve
     "non_compliant":  "#E52321",  # Infared – forfeiting bonus
 }
 
-STANCE_ORDER: List[str] = ["exemplary", "compliant", "marginal", "non_compliant"]
+STANCE_ORDER: List[str] = ["exemplary", "compliant", "marginal", "non_compliant", "cant_play"]
+
+ENTITY_ID_ALIASES: Dict[str, str] = {
+    "BIGLAZYCAT": "BIGLAZY",
+}
 
 
-def classify_stance(pct_pledged: float) -> str:
+def classify_stance(pct_pledged: float, archetype: str | None = None) -> str:
     """Classify an entity or pool by pledge-bonus capture stance."""
+    if archetype == "capital_insufficient":
+        return "cant_play"
     ratio = pct_pledged / 100.0
     for threshold, label in STANCE_THRESHOLDS:
         if ratio >= threshold:
@@ -140,14 +176,77 @@ def load_csv(path: Path) -> List[Dict[str, str]]:
         return list(csv.DictReader(f))
 
 
+def clean_display_name(value: str | None, fallback: str) -> str:
+    text = (value or "").strip()
+    if not text or text.lower() == "nan":
+        return fallback
+    return text
+
+
+def derive_archetype(row: Dict[str, str]) -> str:
+    if row.get("capital_class") == "insufficient":
+        return "capital_insufficient"
+    return row["archetype"]
+
+
+def load_archetype_lookups() -> Tuple[Dict[str, Dict[str, str]], Dict[str, Dict[str, str]]]:
+    rows = load_csv(DATA_DIR / "mpo_entity_archetypes.csv")
+    by_entity: Dict[str, Dict[str, str]] = {}
+    by_display: Dict[str, Dict[str, str]] = {}
+
+    for row in rows:
+        entity_id = row["entity_id"]
+        display_name = clean_display_name(row.get("display_name"), entity_id)
+        record = dict(row)
+        record["display_name"] = display_name
+        record["archetype_base"] = row["archetype"]
+        record["archetype"] = derive_archetype(row)
+        by_entity[entity_id] = record
+        by_display[display_name] = record
+
+    for alias_id, canonical_id in ENTITY_ID_ALIASES.items():
+        canonical = by_entity.get(canonical_id)
+        if canonical and alias_id not in by_entity:
+            alias = dict(canonical)
+            alias["entity_id"] = alias_id
+            by_entity[alias_id] = alias
+
+    return by_entity, by_display
+
+
 def load_archetypes() -> Dict[str, str]:
     """Return entity_id → archetype mapping."""
-    rows = load_csv(DATA_DIR / "mpo_entity_archetypes.csv")
-    return {r["entity_id"]: r["archetype"] for r in rows}
+    by_entity, _ = load_archetype_lookups()
+    return {entity_id: row["archetype"] for entity_id, row in by_entity.items()}
 
 
 def load_entity_stats() -> List[Dict[str, str]]:
-    return load_csv(DATA_DIR / "mpo_entity_health_overview_mainnet.csv")
+    by_entity, _ = load_archetype_lookups()
+    stake_by_entity: Dict[str, float] = defaultdict(float)
+
+    for row in load_csv(DATA_DIR / "mpo_entity_pool_health_mainnet.csv"):
+        if row.get("pool_status") != "registered":
+            continue
+        stake_ada = float(row.get("current_active_stake_ada") or 0.0)
+        if stake_ada <= 100.0:
+            continue
+        entity_id = row["entity_id"]
+        stake_by_entity[entity_id] += stake_ada
+
+    entity_rows: List[Dict[str, str]] = []
+    for entity_id, stake_ada in sorted(stake_by_entity.items(), key=lambda item: item[1], reverse=True):
+        meta = by_entity.get(entity_id, {})
+        display_name = meta.get("display_name") or clean_display_name(entity_id, entity_id)
+        entity_rows.append(
+            {
+                "entity_id": entity_id,
+                "display_name": display_name,
+                "current_stake_ada": f"{stake_ada:.6f}",
+                "current_pct_supply": f"{(stake_ada / CIRCULATING_SUPPLY_ADA * 100.0) if CIRCULATING_SUPPLY_ADA else 0.0:.6f}",
+            }
+        )
+
+    return entity_rows
 
 
 def load_pool_to_entity() -> Dict[str, str]:
@@ -293,28 +392,27 @@ def figure_current_distribution(
 
     # Load per-entity pool-level metrics (pledge, delegation, margin)
     entity_pool_metrics = _load_entity_pool_metrics()
+    stake_by_entity = {
+        row["entity_id"]: float(row.get("current_stake_ada", 0) or 0)
+        for row in entity_stats
+    }
 
     # Build entity → archetype and current % supply
     entity_rows: List[Dict] = []
     for row in entity_stats:
-        entity_id = row.get("display_name", "")  # health overview uses display_name as key
         pct = float(row.get("current_pct_supply", 0) or 0)
         # Drop entities with negligible / inactive stake (< 0.01% of supply).
         if pct < 0.01:
             continue
         entity_rows.append({
+            "entity_id": row["entity_id"],
             "display_name": row["display_name"],
             "pct_supply": pct,
         })
 
-    # Load archetypes by display_name and entity_id
-    archetype_rows = load_csv(DATA_DIR / "mpo_entity_archetypes.csv")
-    name_to_archetype: Dict[str, str] = {r["display_name"]: r["archetype"] for r in archetype_rows}
-    name_to_entity_id: Dict[str, str] = {r["display_name"]: r["entity_id"] for r in archetype_rows}
-
     for r in entity_rows:
-        r["archetype"] = name_to_archetype.get(r["display_name"], "opaque")
-        eid = name_to_entity_id.get(r["display_name"], "")
+        eid = r["entity_id"]
+        r["archetype"] = entity_to_archetype.get(eid, "opaque")
         metrics = entity_pool_metrics.get(eid, {})
         r["pct_pledged"] = metrics.get("pct_pledged", 0.0)
         r["pct_delegated"] = metrics.get("pct_delegated", 100.0)
@@ -322,12 +420,8 @@ def figure_current_distribution(
         r["n_live_pools"] = int(metrics.get("n_live_pools", 0))
         r["n_dormant_pools"] = int(metrics.get("n_dormant_pools", 0))
         r["total_pledge_ada"] = metrics.get("total_pledge_ada", 0.0)
-        r["stance"] = classify_stance(r["pct_pledged"])
-        # Compute % of staked supply (active delegated stake)
-        stake_ada = float(
-            next((s.get("current_stake_ada", 0) for s in entity_stats
-                  if s["display_name"] == r["display_name"]), 0) or 0
-        )
+        r["stance"] = classify_stance(r["pct_pledged"], r["archetype"])
+        stake_ada = stake_by_entity.get(eid, 0.0)
         r["stake_ada"] = stake_ada
         r["pct_staked"] = stake_ada / STAKED_SUPPLY_ADA * 100 if STAKED_SUPPLY_ADA > 0 else 0.0
 
@@ -482,7 +576,7 @@ def figure_current_distribution(
         ax.spines[spine].set_visible(False)
 
     ax.set_title(
-        "MPO entities by archetype — share of staked supply (epoch 618)",
+        "MPO entities by archetype — capital-insufficient isolated (epoch 618)",
         fontsize=12, fontweight="bold", pad=14,
     )
 
@@ -611,7 +705,7 @@ def figure_current_distribution(
         ha="left", va="bottom", fontsize=6.5, color="#555555",
     )
 
-    fig.subplots_adjust(left=0.14, right=0.84, top=0.97, bottom=0.03, hspace=0.22)
+    fig.subplots_adjust(left=0.14, right=0.84, top=0.97, bottom=0.03, hspace=0.04)
     fig.savefig(out_path, dpi=200, bbox_inches="tight", facecolor=fig.get_facecolor())
     plt.close(fig)
     print(f"✓  {out_path.name}")
@@ -766,8 +860,10 @@ def figure_entity_progression(
     out_path = FIGURES_DIR / "mpo_entity_progression_stacked_by_entity_mainnet.png"
 
     # Load display names from archetype CSV
-    archetype_rows = load_csv(DATA_DIR / "mpo_entity_archetypes.csv")
-    entity_id_to_display: Dict[str, str] = {r["entity_id"]: r["display_name"] for r in archetype_rows}
+    metadata_by_entity, _ = load_archetype_lookups()
+    entity_id_to_display: Dict[str, str] = {
+        entity_id: row["display_name"] for entity_id, row in metadata_by_entity.items()
+    }
 
     # Focus on Shelley era
     all_epochs = sorted(set(entity_by_epoch) & set(total_by_epoch))
@@ -886,188 +982,237 @@ def figure_stance_distribution(
     entity_stats: List[Dict[str, str]],
     entity_to_archetype: Dict[str, str],
 ) -> None:
-    """Compact stance summary: two stacked horizontal bars (archetype vs stance)
-    showing the same attributed stake decomposed two ways, plus key stats."""
+    """Readable two-row summary: stacked bars on the left, clean readout panels on the right."""
     out_path = FIGURES_DIR / "mpo_entity_stance_distribution_mainnet.png"
 
     entity_pool_metrics = _load_entity_pool_metrics()
 
-    archetype_rows_csv = load_csv(DATA_DIR / "mpo_entity_archetypes.csv")
-    name_to_archetype = {r["display_name"]: r["archetype"] for r in archetype_rows_csv}
-    name_to_entity_id = {r["display_name"]: r["entity_id"] for r in archetype_rows_csv}
-
     entity_rows: List[Dict] = []
     for row in entity_stats:
         pct = float(row.get("current_pct_supply", 0) or 0)
-        if pct < 0.01:
-            continue
-        eid = name_to_entity_id.get(row["display_name"], "")
+        eid = row["entity_id"]
         metrics = entity_pool_metrics.get(eid, {})
         pct_pledged = metrics.get("pct_pledged", 0.0)
         stake_ada = float(row.get("current_stake_ada", 0) or 0)
+        archetype = entity_to_archetype.get(eid, "opaque")
         pct_staked = stake_ada / STAKED_SUPPLY_ADA * 100 if STAKED_SUPPLY_ADA > 0 else 0.0
         entity_rows.append({
+            "entity_id": eid,
             "display_name": row["display_name"],
             "pct_supply": pct,
             "pct_staked": pct_staked,
-            "archetype": name_to_archetype.get(row["display_name"], "opaque"),
-            "stance": classify_stance(pct_pledged),
+            "archetype": archetype,
+            "stance": classify_stance(pct_pledged, archetype),
             "pct_pledged": pct_pledged,
             "n_live_pools": int(metrics.get("n_live_pools", 0)),
         })
 
     # ---- Aggregate by archetype and by stance ----
     arch_totals: Dict[str, float] = defaultdict(float)
+    arch_entities: Dict[str, int] = defaultdict(int)
     stance_totals: Dict[str, float] = defaultdict(float)
     stance_entities: Dict[str, List[str]] = defaultdict(list)
-    stance_pools: Dict[str, int] = defaultdict(int)
 
     for r in entity_rows:
         arch_totals[r["archetype"]] += r["pct_staked"]
+        arch_entities[r["archetype"]] += 1
         stance_totals[r["stance"]] += r["pct_staked"]
         stance_entities[r["stance"]].append(r["display_name"])
-        stance_pools[r["stance"]] += r["n_live_pools"]
 
-    # ---- Plot: compact figure with two stacked bars + annotations ----
-    fig, axes = plt.subplots(2, 1, figsize=(16, 6), gridspec_kw={"height_ratios": [1, 1], "hspace": 0.35})
-    fig.patch.set_facecolor("#FAFAFA")
+    def _segment_text(ax, x: float, y: float, text: str, fontsize: float = 10.0) -> None:
+        ax.text(
+            x,
+            y,
+            text,
+            ha="center",
+            va="center",
+            fontsize=fontsize,
+            color="white",
+            fontweight="bold",
+            zorder=5,
+            linespacing=1.15,
+            path_effects=[
+                pe.Stroke(linewidth=2.2, foreground="black", alpha=0.20),
+                pe.Normal(),
+            ],
+        )
 
-    bar_height = 0.55
+    def _draw_readout_panel(
+        ax: plt.Axes,
+        title: str,
+        keys: List[str],
+        totals: Dict[str, float],
+        labels: Dict[str, str],
+        colors: Dict[str, str],
+        counts: Dict[str, int],
+    ) -> None:
+        ax.set_facecolor("#FFFFFF")
+        ax.axis("off")
+        ax.text(0.0, 1.02, title, transform=ax.transAxes, fontsize=10, fontweight="bold", color="#222222")
+
+        visible_keys = [key for key in keys if totals.get(key, 0.0) > 0]
+        step = 0.082 if len(visible_keys) >= 9 else 0.11
+        y = 0.92
+        for key in visible_keys:
+            ax.add_patch(
+                mpatches.FancyBboxPatch(
+                    (0.00, y - 0.020),
+                    0.038,
+                    0.038,
+                    transform=ax.transAxes,
+                    boxstyle="round,pad=0.004,rounding_size=0.008",
+                    linewidth=0,
+                    facecolor=colors[key],
+                    alpha=0.95,
+                    clip_on=False,
+                )
+            )
+            ax.text(
+                0.055,
+                y,
+                labels[key],
+                transform=ax.transAxes,
+                ha="left",
+                va="center",
+                fontsize=8.7,
+                color="#222222",
+                fontweight="bold",
+            )
+            ax.text(
+                0.99,
+                y,
+                f"{totals[key]:.1f}% · {counts[key]} ent.",
+                transform=ax.transAxes,
+                ha="right",
+                va="center",
+                fontsize=8.5,
+                color="#555555",
+            )
+            y -= step
+
+    # ---- Plot: wider layout with side readouts ----
+    fig = plt.figure(figsize=(18, 7.8), facecolor="#FFFFFF")
+    gs = fig.add_gridspec(
+        2,
+        2,
+        width_ratios=[5.8, 2.4],
+        height_ratios=[1, 1],
+        hspace=0.44,
+        wspace=0.06,
+    )
+
+    ax0 = fig.add_subplot(gs[0, 0])
+    ax0_info = fig.add_subplot(gs[0, 1])
+    ax1 = fig.add_subplot(gs[1, 0])
+    ax1_info = fig.add_subplot(gs[1, 1])
+
+    for ax in (ax0, ax1):
+        ax.set_facecolor("#FFFFFF")
+        ax.set_axisbelow(True)
+        ax.xaxis.grid(True, linestyle="--", alpha=0.18, color="#BDBDBD")
+        for spine in ax.spines.values():
+            spine.set_visible(False)
+
+    bar_height = 0.62
+    inline_threshold = 6.2
 
     # --- Row 0: by archetype ---
-    ax0 = axes[0]
-    ax0.set_facecolor("#FAFAFA")
-    # Minimum segment width (% of staked supply) for inline labels
-    INLINE_THRESHOLD = 5.0
-
-    # First pass: draw bars and collect segment positions
-    segments: List[Tuple[float, float, str, str, float]] = []  # (left, w, arch, label, pct)
+    arch_keys = [arch for arch in ARCHETYPE_ORDER if arch_totals.get(arch, 0.0) > 0]
     left = 0.0
-    for arch in ARCHETYPE_ORDER:
-        w = arch_totals.get(arch, 0.0)
-        if w <= 0:
-            continue
-        ax0.barh(0, w, left=left, height=bar_height,
-                 color=ARCHETYPE_COLORS[arch], alpha=0.88, zorder=3)
-        segments.append((left, w, arch, ARCHETYPE_LABELS[arch], w))
-        left += w
+    for arch in arch_keys:
+        width = arch_totals[arch]
+        ax0.barh(0, width, left=left, height=bar_height, color=ARCHETYPE_COLORS[arch], alpha=0.92, zorder=3)
+        if width >= inline_threshold:
+            _segment_text(
+                ax0,
+                left + width / 2,
+                0,
+                f"{ARCHETYPE_INLINE_LABELS.get(arch, ARCHETYPE_LABELS[arch])}\n{width:.1f}%",
+                fontsize=10.2 if width >= 9 else 9.2,
+            )
+        left += width
     total_width = left
 
-    # Second pass: labels — inline for wide segments, above for narrow ones
-    callout_y = 0.55   # y position for callout labels (above bar)
-
-    # Collect callout labels that need collision avoidance
-    callouts: List[Tuple[float, str, str, float]] = []  # (center_x, label, arch, pct)
-    for seg_left, w, arch, label_txt, pct in segments:
-        center_x = seg_left + w / 2
-        if w >= INLINE_THRESHOLD:
-            # Wide segment: label inside
-            ax0.text(center_x, 0, f"{label_txt}\n{pct:.1f}%",
-                     ha="center", va="center", fontsize=8, color="white",
-                     fontweight="bold", zorder=4, linespacing=1.3)
-        else:
-            callouts.append((center_x, label_txt, arch, pct))
-
-    # Spread callout x-positions to avoid overlap (min gap in data units)
-    if callouts:
-        min_gap = total_width * 0.10  # ~10% of bar width per label
-        adjusted_x = [callouts[0][0]]
-        for i in range(1, len(callouts)):
-            desired = callouts[i][0]
-            prev = adjusted_x[-1]
-            adjusted_x.append(max(desired, prev + min_gap))
-
-        for i, (orig_x, label_txt, arch, pct) in enumerate(callouts):
-            ax0.annotate(
-                f"{label_txt}\n{pct:.1f}%",
-                xy=(orig_x, bar_height / 2),
-                xytext=(adjusted_x[i], callout_y + 0.15),
-                ha="center", va="bottom",
-                fontsize=7, fontweight="bold",
-                color=ARCHETYPE_COLORS[arch],
-                linespacing=1.3,
-                arrowprops=dict(
-                    arrowstyle="-",
-                    color=ARCHETYPE_COLORS[arch],
-                    lw=0.8,
-                    shrinkA=0, shrinkB=2,
-                ),
-                zorder=5,
-            )
-
-    ax0.set_xlim(0, total_width * 1.02)
-    ax0.set_yticks([0])
-    ax0.set_yticklabels(["By archetype"], fontsize=10, fontweight="bold")
-    ax0.set_ylim(-0.5, 1.4)  # extra headroom for callout labels
-    for spine in ax0.spines.values():
-        spine.set_visible(False)
-    ax0.tick_params(left=False, bottom=False)
-    ax0.set_xticklabels([])
-
     # --- Row 1: by stance ---
-    ax1 = axes[1]
-    ax1.set_facecolor("#FAFAFA")
-    stance_segs: List[Tuple[float, float, str, str, int]] = []
+    stance_keys = [stance for stance in reversed(STANCE_ORDER) if stance_totals.get(stance, 0.0) > 0]
     left = 0.0
-    for stance in reversed(STANCE_ORDER):  # incentive_deaf first (largest)
-        w = stance_totals.get(stance, 0.0)
-        if w <= 0:
-            continue
-        n = len(stance_entities.get(stance, []))
-        ax1.barh(0, w, left=left, height=bar_height,
-                 color=STANCE_COLORS[stance], alpha=0.85, zorder=3)
-        stance_segs.append((left, w, stance, STANCE_LABELS[stance], n))
-        left += w
+    for stance in stance_keys:
+        width = stance_totals[stance]
+        n_entities = len(stance_entities.get(stance, []))
+        ax1.barh(0, width, left=left, height=bar_height, color=STANCE_COLORS[stance], alpha=0.90, zorder=3)
+        if width >= inline_threshold:
+            _segment_text(
+                ax1,
+                left + width / 2,
+                0,
+                f"{STANCE_INLINE_LABELS.get(stance, STANCE_LABELS[stance])}\n{width:.1f}% · {n_entities} ent.",
+                fontsize=10.0 if width >= 9 else 9.0,
+            )
+        left += width
     total_stance_width = left
 
-    for seg_left, w, stance, label_txt, n_ent in stance_segs:
-        center_x = seg_left + w / 2
-        if w >= INLINE_THRESHOLD:
-            ax1.text(center_x, 0,
-                     f"{label_txt}\n{w:.1f}% · {n_ent} ent.",
-                     ha="center", va="center", fontsize=8, color="white",
-                     fontweight="bold", zorder=4, linespacing=1.3)
-        else:
-            ax1.annotate(
-                f"{label_txt}\n{w:.1f}% · {n_ent} ent.",
-                xy=(center_x, bar_height / 2),
-                xytext=(center_x, callout_y + 0.15),
-                ha="center", va="bottom",
-                fontsize=7, fontweight="bold",
-                color=STANCE_COLORS[stance],
-                linespacing=1.3,
-                arrowprops=dict(
-                    arrowstyle="-",
-                    color=STANCE_COLORS[stance],
-                    lw=0.8,
-                    shrinkA=0, shrinkB=2,
-                ),
-                zorder=5,
-            )
+    common_width = max(total_width, total_stance_width)
 
-    ax1.set_xlim(0, total_stance_width * 1.02)
+    # --- Axis formatting ---
+    ax0.set_xlim(0, common_width * 1.01)
+    ax1.set_xlim(0, common_width * 1.01)
+
+    ax0.set_yticks([0])
+    ax0.set_yticklabels(["By archetype"], fontsize=12, fontweight="bold")
     ax1.set_yticks([0])
-    ax1.set_yticklabels(["By stance"], fontsize=10, fontweight="bold")
-    ax1.set_ylim(-0.5, 1.4)
-    ax1.set_xlabel("Share of staked supply (%)", fontsize=9, labelpad=6)
-    for spine in ax1.spines.values():
-        spine.set_visible(False)
-    ax1.tick_params(left=False)
+    ax1.set_yticklabels(["By stance"], fontsize=12, fontweight="bold")
+
+    for ax in (ax0, ax1):
+        ax.set_ylim(-0.55, 0.55)
+        ax.tick_params(axis="y", length=0)
+        ax.tick_params(axis="x", labelsize=10, colors="#333333")
+
+    ax0.tick_params(axis="x", bottom=False, labelbottom=False)
+    ax1.set_xlabel("Share of staked supply (%)", fontsize=11, labelpad=8, color="#333333")
+
+    _draw_readout_panel(
+        ax0_info,
+        "Archetype Breakdown",
+        arch_keys,
+        arch_totals,
+        ARCHETYPE_LABELS,
+        ARCHETYPE_COLORS,
+        arch_entities,
+    )
+    _draw_readout_panel(
+        ax1_info,
+        "Stance Breakdown",
+        stance_keys,
+        stance_totals,
+        STANCE_LABELS,
+        STANCE_COLORS,
+        {stance: len(names) for stance, names in stance_entities.items()},
+    )
 
     fig.suptitle(
         "MPO attributed stake — archetype vs incentive stance · share of staked supply (epoch 618)",
-        fontsize=11.5, fontweight="bold", y=0.98,
+        fontsize=14, fontweight="bold", y=0.97,
+    )
+    fig.text(
+        0.5,
+        0.928,
+        f"Same 85 attributed entities, decomposed two ways · total attributed = {common_width:.1f}% of staked supply",
+        ha="center",
+        va="center",
+        fontsize=10,
+        color="#666666",
     )
 
     fig.text(
         0.01, 0.01,
-        "Same 26 entities decomposed two ways. Top = identity (who). Bottom = behaviour (pledge-bonus capture). "
+        "Same 85 entities decomposed two ways. Top = structural archetype. Bottom = incentive accessibility + bonus capture. "
+        "Can't play = capital-insufficient (< z0 total stake); remaining classes use effective pledge ratio: "
         "Non-compliant <2% | Marginal 2–30% | Compliant 30–80% | Exemplary ≥80%.",
-        ha="left", va="bottom", fontsize=7, color="#555555",
+        ha="left", va="bottom", fontsize=8, color="#555555",
     )
 
-    fig.tight_layout(rect=(0, 0.06, 1, 0.95))
-    fig.savefig(out_path, dpi=200, bbox_inches="tight", facecolor=fig.get_facecolor())
+    fig.tight_layout(rect=(0, 0.05, 1, 0.94))
+    fig.savefig(out_path, dpi=220, bbox_inches="tight", facecolor=fig.get_facecolor())
     plt.close(fig)
     print(f"✓  {out_path.name}")
 

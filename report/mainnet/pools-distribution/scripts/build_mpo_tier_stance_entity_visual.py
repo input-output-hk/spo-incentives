@@ -28,24 +28,33 @@ INK = "#1A1A1A"
 DIM = "#666666"
 
 STANCE_COLORS = {
+    "cant_play":     "#8C6D1F",
     "exemplary":     "#06FF89",
     "compliant":     "#16E9D8",
     "marginal":      "#FFBA36",
     "non_compliant": "#E52321",
 }
 STANCE_LABELS = {
+    "cant_play":     "Can't play (capital-insufficient)",
     "exemplary":     "Exemplary (≥80%)",
     "compliant":     "Compliant (30–80%)",
     "marginal":      "Marginal (2–30%)",
     "non_compliant": "Non-compliant (<2%)",
 }
-STANCE_STACK = ["non_compliant", "marginal", "compliant", "exemplary"]
+STANCE_STACK = ["cant_play", "non_compliant", "marginal", "compliant", "exemplary"]
 
 def classify_stance(ratio):
     if ratio >= 0.80: return "exemplary"
     if ratio >= 0.30: return "compliant"
     if ratio >= 0.02: return "marginal"
     return "non_compliant"
+
+
+def clean_display_name(value, fallback):
+    text = (value or "").strip()
+    if not text or text.lower() == "nan":
+        return fallback
+    return text
 
 def main():
     FIG_DIR.mkdir(parents=True, exist_ok=True)
@@ -60,6 +69,10 @@ def main():
     for r in csv.DictReader((DATA_DIR / "mpo_entity_pool_mapping_mainnet.csv").open(newline="")):
         mpo_map[r['pool_id_bech32']] = r.get('entity_id', '')
     archetypes = {r['entity_id']: r for r in csv.DictReader((DATA_DIR / "mpo_entity_archetypes.csv").open(newline=""))}
+    if 'BIGLAZY' in archetypes:
+        alias = dict(archetypes['BIGLAZY'])
+        alias['entity_id'] = 'BIGLAZYCAT'
+        archetypes['BIGLAZYCAT'] = alias
 
     def get_tier(s):
         if s < 3e6: return None  # skip below viability
@@ -94,10 +107,12 @@ def main():
         eff_pledge = min(pledge, stake)
         ratio = eff_pledge / stake if stake > 100 else 0.0
         eid = mpo_map[pid]
-        display = archetypes.get(eid, {}).get('display_name', eid)
+        meta = archetypes.get(eid, {})
+        display = clean_display_name(meta.get('display_name'), eid)
+        stance = "cant_play" if meta.get("capital_class") != "sufficient" else classify_stance(ratio)
         pools.append({
             'stake': stake, 'ratio': ratio,
-            'tier': tier, 'stance': classify_stance(ratio),
+            'tier': tier, 'stance': stance,
             'entity': display,
         })
 
@@ -201,7 +216,7 @@ def main():
         0.01, 0.01,
         "Each coloured sub-bar = one entity's pools within a tier+stance group. "
         "White borders separate entities. Only pools ≥3M ADA (viable threshold) shown. "
-        "Denominator = total staked supply.",
+        "Ochre = capital-insufficient / can't play. Denominator = total staked supply.",
         ha="left", va="bottom", fontsize=7.5, color=DIM,
     )
 

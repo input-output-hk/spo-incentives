@@ -3,7 +3,7 @@
 MPO Pool Taxonomy by Incentive Stance.
 
 Same butterfly layout as taxonomy_by_stance_mainnet.png but filtered to
-the ~450 pools belonging to attributed MPO entities only.
+the pools belonging to attributed MPO entities only.
 
 Outputs: figures/mpo_taxonomy_by_stance_mainnet.png
 """
@@ -41,18 +41,20 @@ GREY_DARK    = "#555555"
 
 # Stance
 STANCE_COLORS = {
+    "cant_play":     "#8C6D1F",
     "exemplary":     "#06FF89",
     "compliant":     "#16E9D8",
     "marginal":      "#FFBA36",
     "non_compliant": "#E52321",
 }
 STANCE_LABELS = {
+    "cant_play":     "Can't play (capital-insufficient)",
     "exemplary":     "Exemplary (≥80%)",
     "compliant":     "Compliant (30–80%)",
     "marginal":      "Marginal (2–30%)",
     "non_compliant": "Non-compliant (<2%)",
 }
-STANCE_STACK = ["non_compliant", "marginal", "compliant", "exemplary"]
+STANCE_STACK = ["cant_play", "non_compliant", "marginal", "compliant", "exemplary"]
 
 
 def pf(v, d=0.0):
@@ -78,34 +80,47 @@ def main():
     with (DATA_DIR / "pool_distribution_snapshot.json").open() as f:
         snap = json.load(f)
     z0    = snap["z0_ada"]
-    k     = snap["k"]
     epoch = snap["epoch"]
     total_staked = float(snap["total_active_stake_ada"])
 
+    archetype_meta = {
+        r["entity_id"]: r
+        for r in csv.DictReader((DATA_DIR / "mpo_entity_archetypes.csv").open(newline=""))
+    }
+    if "BIGLAZY" in archetype_meta:
+        alias = dict(archetype_meta["BIGLAZY"])
+        alias["entity_id"] = "BIGLAZYCAT"
+        archetype_meta["BIGLAZYCAT"] = alias
+
     # Load MPO pool IDs
-    mpo_pool_ids = set(
-        r['pool_id_bech32']
+    pool_to_entity = {
+        r["pool_id_bech32"]: r["entity_id"]
         for r in csv.DictReader((DATA_DIR / "mpo_entity_pool_mapping_mainnet.csv").open(newline=""))
-    )
+    }
+    mpo_pool_ids = set(pool_to_entity)
 
     # Load all registered pools, filter to MPO
     pools = []
+    entity_ids = set()
     with (DATA_DIR / "koios_pool_list_mainnet.csv").open(newline="") as f:
         for r in csv.DictReader(f):
             if r.get("pool_status") != "registered":
                 continue
             if r["pool_id_bech32"] not in mpo_pool_ids:
                 continue
+            entity_id = pool_to_entity[r["pool_id_bech32"]]
+            entity_ids.add(entity_id)
             stake = pf(r.get("active_stake")) / 1e6
             pledge = pf(r.get("pledge")) / 1e6
             if stake <= 0:
                 continue
             eff_pledge = min(pledge, stake)
             ratio = eff_pledge / stake if stake > 100 else 0.0
+            capital_class = archetype_meta.get(entity_id, {}).get("capital_class", "sufficient")
             pools.append({
                 "stake": stake,
                 "ratio": ratio,
-                "stance": classify_stance(ratio),
+                "stance": "cant_play" if capital_class != "sufficient" else classify_stance(ratio),
             })
 
     stakes_arr = np.array([p["stake"] for p in pools])
@@ -275,18 +290,21 @@ def main():
              ha="center", fontsize=17, fontweight="bold", color=INK)
     fig.text(0.5, 0.88,
              f"{n:,} MPO pools  ·  {total_mpo/1e9:.2f}B ADA ({total_mpo/total_staked*100:.1f}% of staked supply)  "
-             f"·  26 entities  ·  epoch {epoch}",
+             f"·  {len(entity_ids)} entities  ·  epoch {epoch}",
              ha="center", fontsize=10.5, color=DIM)
 
     # Insight footer
     nc_viable = sum(p["stake"] for p in pools if p["stance"] == "non_compliant" and p["stake"] >= 3e6)
-    viable_total = sum(p["stake"] for p in pools if p["stake"] >= 3e6)
+    viable_total = sum(
+        p["stake"]
+        for p in pools
+        if p["stance"] != "cant_play" and p["stake"] >= 3e6
+    )
     nc_pct = nc_viable / viable_total * 100 if viable_total > 0 else 0
 
     fig.text(0.5, 0.015,
-             f"Non-compliant MPO pools hold {nc_pct:.0f}% of MPO viable-and-above stake. "
-             f"The red dominance above the viability threshold shows that pledge non-compliance "
-             f"is the norm, not the exception, among attributed multi-pool operators.",
+             f"Among capital-sufficient MPO pools, non-compliant red still holds {nc_pct:.0f}% of viable-and-above stake. "
+             f"Ochre isolates capital-insufficient fleets that cannot fully play the saturation-scale pledge game.",
              ha="center", fontsize=9.5, color=INFARED,
              fontweight="bold",
              bbox=dict(boxstyle="round,pad=0.3", facecolor="#FFF3CD",

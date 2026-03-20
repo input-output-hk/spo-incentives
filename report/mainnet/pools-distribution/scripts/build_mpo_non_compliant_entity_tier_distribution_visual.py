@@ -43,6 +43,9 @@ TEAL = "#00897B"
 GREY_DARK = "#555555"
 
 LIVE_THRESHOLD_ADA = 100.0
+ENTITY_ID_ALIASES = {
+    "BIGLAZYCAT": "BIGLAZY",
+}
 
 TIER_ORDER = [
     "Dormant",
@@ -65,6 +68,13 @@ TIER_COLORS = {
     "Saturated": COBALT_PULSE,
     "Oversaturated": ULTRAVIOLET,
 }
+
+
+def clean_display_name(value: str | None, fallback: str) -> str:
+    text = (value or "").strip()
+    if not text or text.lower() == "nan":
+        return fallback
+    return text
 
 
 def classify_entity_stance(pct_pledged: float) -> str:
@@ -119,6 +129,21 @@ def main() -> None:
     epoch = int(snap["epoch"])
     total_staked_ada = float(snap["total_active_stake_ada"])
 
+    entity_display_names: dict[str, str] = {}
+    entity_capital_class: dict[str, str] = {}
+    with (DATA_DIR / "mpo_entity_archetypes.csv").open(newline="") as f:
+        for row in csv.DictReader(f):
+            entity_id = row["entity_id"]
+            entity_display_names[entity_id] = clean_display_name(
+                row.get("display_name"),
+                entity_id,
+            )
+            entity_capital_class[entity_id] = row.get("capital_class", "sufficient")
+    for alias_id, canonical_id in ENTITY_ID_ALIASES.items():
+        if canonical_id in entity_display_names and alias_id not in entity_display_names:
+            entity_display_names[alias_id] = entity_display_names[canonical_id]
+            entity_capital_class[alias_id] = entity_capital_class.get(canonical_id, "sufficient")
+
     bounds = [0, 100e3, 1e6, 3e6, z0 * 0.5, z0 * 0.8, z0 * 0.95, z0 * 1.05, float("inf")]
     tier_labels = format_tier_labels(bounds)
 
@@ -134,6 +159,8 @@ def main() -> None:
 
     entities = []
     for entity_id, pools in pools_by_entity.items():
+        if entity_capital_class.get(entity_id) != "sufficient":
+            continue
         total_stake_ada = sum(float(p["current_active_stake_ada"]) for p in pools)
         effective_pledge_ada = sum(
             min(float(p["declared_pledge_ada"]), float(p["current_active_stake_ada"]))
@@ -154,7 +181,10 @@ def main() -> None:
         entities.append(
             {
                 "entity_id": entity_id,
-                "display_name": pools[0]["display_name"],
+                "display_name": entity_display_names.get(
+                    entity_id,
+                    clean_display_name(pools[0].get("display_name"), entity_id),
+                ),
                 "pct_pledged": pct_pledged,
                 "total_pools": len(pools),
                 "total_stake_ada": total_stake_ada,
@@ -169,7 +199,7 @@ def main() -> None:
     total_non_compliant_stake = sum(row["total_stake_ada"] for row in entities)
     total_non_compliant_pools = sum(row["total_pools"] for row in entities)
 
-    fig_h = max(9.5, n_entities * 0.46 + 3.6)
+    fig_h = max(5.5, n_entities * 0.46 + 3.6)
     fig = plt.figure(figsize=(18.5, fig_h), facecolor=BG)
     gs = fig.add_gridspec(
         1,
@@ -304,7 +334,7 @@ def main() -> None:
     )
 
     fig.suptitle(
-        "Non-compliant MPO entities by pool-size tier",
+        "Non-compliant capital-sufficient MPO entities by pool-size tier",
         fontsize=14,
         fontweight="bold",
         color=INK,
@@ -314,7 +344,7 @@ def main() -> None:
         0.27,
         0.885,
         (
-            f"19 aggregate non-compliant entities (<2% effective pledge) · "
+            f"{n_entities} capital-sufficient non-compliant entities (<2% effective pledge) · "
             f"{total_non_compliant_pools} live pools (>100 ADA) · "
             f"{total_non_compliant_stake / 1e9:.2f}B ADA · epoch {epoch}"
         ),
