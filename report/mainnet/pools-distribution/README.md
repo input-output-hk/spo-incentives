@@ -41,6 +41,7 @@ All counts and amounts use the latest available pool snapshot (**epoch 618**) an
       - [Decomposition by formula factor](#decomposition-by-formula-factor)
       - [Where the waste lives](#where-the-waste-lives)
       - [Relationship to §2 waste decomposition](#relationship-to-2-waste-decomposition)
+   - 3.7 [The pledge paradox: a security failure, not a zero-sum redistribution](#37-the-pledge-paradox-a-security-failure-not-a-zero-sum-redistribution)
 4. [Pool taxonomy](#4-pool-taxonomy)
    - 4.1 [The case for pool categorization](#41-the-case-for-pool-categorization)
    - 4.2 [Structural thresholds](#42-structural-thresholds)
@@ -189,19 +190,7 @@ Seven pools hold stake above $z_0$; the excess earns nothing. Minimal.
 
 ### 2.4 Summary
 
-**Distribution efficiency waterfall — epoch 616**
-
-| Stage | ADA/epoch | % pot | Cause | Pools affected |
-| --- | ---: | ---: | --- | --- |
-| **Pools pot** | **15.53M** | **100.0%** | Total budget entering the reward formula | — |
-| − Participation gap | −4.91M | 31.6% | ADA not staked → no pool claims this share | System-wide |
-| **= Staked pot** | **10.62M** | **68.4%** | Budget claimable by delegated pools | — |
-| − Pledge-not-met confiscation | −0.32M | 2.1% | Pools produce blocks but receive zero | 692 pools |
-| **= Eligible pot** | **10.30M** | **66.3%** | Budget entering the reward formula proper | — |
-| − Bonus budget unused | −3.43M | 22.1% | Pledge-incentive budget 95.6% uncaptured | ~2,670 pools |
-| − Performance | −0.08M | 0.5% | Missed blocks by eligible pools | Variable |
-| − Oversaturation | −0.04M | 0.3% | Pools above saturation cap $z_0$ | 7 pools |
-| **= Distributed** | **6.79M** | **43.7%** | **What reaches operators and delegators** | **~1,350 pools** |
+![Distribution efficiency waterfall — epoch 616](figures/distribution_efficiency_waterfall_mainnet.png)
 
 > [!IMPORTANT]
 > **Key observation (O1).** Two causes account for **53.7% of the entire pools pot** returning to reserve: the participation gap (31.6%) and the unused pledge budget (22.1%). Everything else — pledge-not-met confiscation (2.1%), performance (0.5%), oversaturation (0.3%) — is secondary by an order of magnitude. This concentration makes the reform priority unambiguous: the participation gap is upstream and outside the formula's control; the unused pledge budget is the single largest inefficiency that incentive reform *can* address.
@@ -215,6 +204,12 @@ The unused pledge budget represents **3.43M ADA per epoch (~250M ADA per year)**
 ## 3. Reward formula anatomy
 
 The pool reward curve is the single expression that governs how the pools pot is distributed. Every pool's reward — and every ADA that returns to the reserve — is determined by this formula. This section reads it left to right, factor by factor, to show exactly where value is captured and where it leaks.
+
+But the analysis that follows is not merely accounting. The formula reserves **23.1% of the entire pools pot** — over 3.4M ADA per epoch — for a single purpose: incentivising pledge. Pledge is Cardano's primary Sybil-resistance mechanism. It is the economic barrier that makes it costly to multiply pool identities and accumulate disproportionate influence over consensus. Without effective pledge incentives, the cost of running a pool farm drops to near zero and the network's decentralisation guarantees erode.
+
+The prior report (Lopez de Lara, 2025/11) characterised the pledge-bonus shortfall as economically neutral — a zero-sum redistribution where what pools do not capture simply returns to the reserve and is recycled. This framing is incomplete. **The 22.1% of the pot that returns unused is not idle capital awaiting redistribution. It is the budget the protocol explicitly allocates to its own security model — and 95.6% of that budget fails to activate.** The consequence is not that rewards shift between actors; it is that the mechanism designed to prevent pool proliferation and concentration is functionally inert.
+
+This distinction matters for every CIP evaluation downstream. Proposals that merely redistribute the same pot more evenly — without restoring the pledge signal — address a symptom (uneven rewards) while leaving the root cause (a broken anti-Sybil incentive) untouched.
 
 ### 3.1 The full formula
 
@@ -449,6 +444,19 @@ The §2 decomposition split waste into participation (78%) and within-staked ine
 - The **within-staked inefficiency** from §2 (22%, 1.92M ADA) includes both the pledge shortfall at the current participation level and performance losses.
 
 Both views confirm the same conclusion: the dominant loss is participation, the pledge mechanism is inert, and pool structure contributes modest additional waste.
+
+### 3.7 The pledge paradox: a security failure, not a zero-sum redistribution
+
+The formula decomposition makes the situation precise. The protocol allocates **23.077% of every epoch's pools pot** to the pledge bonus — 3.43M ADA/epoch, ~250M ADA/year at current pot levels. Of this allocation, **95.6% returns to the reserve unused**. Only ~40 pools with pledge above 10M ADA capture any meaningful fraction.
+
+It is tempting to treat this as neutral: the uncaptured ADA returns to the reserve, feeds the next epoch's budget, and is eventually distributed through other channels. This is the "zero-sum" reading — what pools do not earn is not destroyed, merely deferred.
+
+But this reading misses what the pledge bonus *is for*. The Reward Sharing Scheme does not include the pledge term as a reward optimisation. It includes it as a **Sybil-resistance mechanism** — the economic cost that makes pool proliferation expensive. The design specification (Brünjes et al., 2020) is explicit: the pledge requirement exists so that "an adversary who wishes to increase his chances of being elected [must] split his stake among several stakepools, decreasing each pool's apparent pledge and therefore its attractiveness." The bonus is the price signal that makes this logic work.
+
+When 95.6% of the bonus budget fails to activate, the price signal vanishes. The marginal cost of opening an additional pool drops to near zero — the operator forgoes almost nothing in pledge premium by spreading thin. The mechanism that was designed to make pool farms expensive becomes permissive. This is not a hypothetical risk: §5 documents that **85 MPO entities now control 75.4% of participating stake**, and §5.3 shows that **41 capital-sufficient entities holding 12B ADA are non-compliant** — they could play the pledge game and choose not to, because the current $a_0 = 0.3$ makes the cost of ignoring it negligible.
+
+> [!IMPORTANT]
+> **The 22.1% waste is not economically neutral.** It represents the near-total failure of the protocol's primary anti-Sybil incentive. Proposals that redistribute the existing pot more evenly — without restoring the pledge signal — improve reward fairness but leave the security mechanism broken. Any reform that aims to address the pool-distribution problem must engage with the pledge curve itself, not merely with how the non-pledge portion is divided.
 
 ---
 
