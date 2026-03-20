@@ -343,7 +343,7 @@ Cardano's Ouroboros Praos assigns block production rights slot by slot. For each
 
 $$\phi(f, \sigma_i) = 1 - (1-f)^{\sigma_i}$$
 
-where $f$ is the **active slot coefficient** and $\sigma_i = \text{stake}_i / \text{total\_active\_stake}$.
+where $f$ is the **active slot coefficient** and $\sigma_i = \text{stake}_i / S_{\text{active}}$.
 
 The expected number of blocks for pool $i$ per epoch is:
 
@@ -351,7 +351,7 @@ $$E[\text{blocks}_i] = L \times \phi(f, \sigma_i) = L \times \left(1 - (1-f)^{\s
 
 For small $\sigma_i$ (all pools below saturation), this is well approximated by the linear form:
 
-$$E[\text{blocks}_i] \approx L \times f \times \sigma_i = \frac{L \times f \times \text{stake}_i}{\text{total\_active\_stake}}$$
+$$E[\text{blocks}_i] \approx L \times f \times \sigma_i = \frac{L \times f \times \text{stake}_i}{S_{\text{active}}}$$
 
 #### Current parameters
 
@@ -364,7 +364,7 @@ $$E[\text{blocks}_i] \approx L \times f \times \sigma_i = \frac{L \times f \time
 
 The threshold for $n$ blocks per epoch follows directly:
 
-$$\text{stake}_{n\text{-blocks}} \approx \frac{n \times \text{total\_active\_stake}}{L \times f}$$
+$$\text{stake}_{n\text{-blocks}} \approx \frac{n \times S_{\text{active}}}{L \times f}$$
 
 #### What it depends on
 
@@ -698,7 +698,7 @@ The figure decomposes the same attributed stake two ways: top bar by structural 
 
 For each MPO pool, we compute three reward levels under the current formula $\hat{f}'(\pi, \nu, \bar{p})$:
 
-- **Actual reward**: using the pool's current effective pledge ($\min(\text{declared}, \text{active\_stake})$)
+- **Actual reward**: using the pool's current effective pledge ($\min(\text{declared}, \sigma \cdot S_{\text{active}})$)
 - **Maximum reward**: assuming full self-pledge ($\pi = \nu$) at the pool's current stake level
 - **Lost reward**: the difference — ADA that returns to the reserve instead of being distributed
 
@@ -741,7 +741,7 @@ Within the **can't-play** bucket, the largest contributors are much smaller in a
 
 ###### 3.2.3.4.1 Top 10 contributors to MPO pledge waste
 
-The "top five" table above understates the concentration: extending to ten entities captures over half of all MPO-attributable waste. The table below uses a per-pool bonus model — $\lambda_{\max} \cdot R \cdot \sigma \cdot \frac{s}{s + a_0(1-s)}$ where $s = \min(\text{pledge}/\text{saturation\_cap},\,1)$ — applied to every pool of each entity.
+The "top five" table above understates the concentration: extending to ten entities captures over half of all MPO-attributable waste. The table below uses a per-pool bonus model — $\lambda_{\max} \cdot R \cdot \sigma \cdot \frac{s}{s + a_0(1-s)}$ where $s = \min(\text{pledge}/z_0,\,1)$ — applied to every pool of each entity.
 
 | Rank | Entity | Pools | Pledge (ADA) | Stake (ADA) | Ratio | Waste (₳/epoch) | Bonus capture |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
