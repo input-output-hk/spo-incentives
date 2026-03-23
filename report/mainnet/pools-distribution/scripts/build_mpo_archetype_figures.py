@@ -510,13 +510,13 @@ def figure_current_distribution(
     n_arch_present = len(archetype_agg)
     table_row_count = len(entity_rows) + n_arch_present + 1  # +1 for header
     table_height = max(3.5, table_row_count * 0.28 + 1.0)
-    fig_height = bar_height_chart + table_height + 1.5
+    fig_height = bar_height_chart + table_height + 0.5
 
     fig = plt.figure(figsize=(14, fig_height))
     fig.patch.set_facecolor("#FAFAFA")
 
     # GridSpec: bar chart on top (larger), table on bottom
-    gs = fig.add_gridspec(2, 1, height_ratios=[bar_height_chart, table_height], hspace=0.25)
+    gs = fig.add_gridspec(2, 1, height_ratios=[bar_height_chart, table_height], hspace=0.08)
     ax = fig.add_subplot(gs[0])
     ax_table = fig.add_subplot(gs[1])
     ax.set_facecolor("#FAFAFA")
