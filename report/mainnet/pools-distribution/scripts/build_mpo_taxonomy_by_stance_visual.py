@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MPO Pool Taxonomy by Incentive Stance.
+MPO Pool Taxonomy by Pledge Compliance.
 
 Same butterfly layout as taxonomy_by_stance_mainnet.png but filtered to
 the pools belonging to attributed MPO entities only.
@@ -240,7 +240,7 @@ def main():
     ax_r.set_yticks([])
     ax_r.xaxis.tick_top()
     ax_r.xaxis.set_label_position("top")
-    ax_r.set_xlabel("Share of staked supply (%) — coloured by incentive stance",
+    ax_r.set_xlabel("Share of staked supply (%) — coloured by pledge compliance",
                     fontsize=10, color=DIM, labelpad=6)
     ax_r.tick_params(axis="x", colors=DIM, labelsize=8, top=True, bottom=False)
     ax_r.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:.0f}%"))
@@ -281,12 +281,12 @@ def main():
         for s in reversed(STANCE_STACK)
     ]
     ax_r.legend(handles=legend_elements, loc="lower right",
-                fontsize=8.5, framealpha=0.95, title="Incentive stance",
+                fontsize=8.5, framealpha=0.95, title="Pledge compliance",
                 title_fontsize=9)
 
     # Title
     fig.text(0.5, 0.92,
-             "MPO Pool Taxonomy by Incentive Stance",
+             "MPO Pools — Pledge Compliance × Pool Tier",
              ha="center", fontsize=17, fontweight="bold", color=INK)
     fig.text(0.5, 0.88,
              f"{n:,} MPO pools  ·  {total_mpo/1e9:.2f}B ADA ({total_mpo/total_staked*100:.1f}% of staked supply)  "
