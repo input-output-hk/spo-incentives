@@ -86,10 +86,12 @@ All counts and amounts use the latest available pool snapshot (**epoch 618**) an
 | F2.2 | Yield on pledge capital is 0.68%/yr at best (full saturation) — below passive delegation yield of 2.3%/yr | §2.4.2 | Economically irrational to pledge |
 | F2.3 | 3.4M ADA/epoch (22% of pot) is reserved for pledge bonus but returns to reserve unused | §2.6.1 | Structural cost of maintaining $a_0 = 0.3$ |
 | | **O3 — The pool landscape is stratified into four tiers** | | |
-| F3.1 | Regular block production requires ~3M ADA stake (~3 blocks/epoch) — the emergent viability boundary | §3.1.2 | Structural — not a protocol parameter |
-| F3.2 | Below 1.1M ADA, the 340 ADA fixed cost exceeds pool reward — operators are in economic loss | §3.1.2 | 1,987 below-viability pools affected |
-| F3.3 | Only 8 pools reach the saturation threshold ($z_0$ = 77M ADA) — the cap designed for 500 pools is nearly inactive | §3.1.2 | 1.6% of design target |
-| F3.4 | Active stake fills only 56.5% of theoretical capacity ($k \times z_0$) — at most 282 pools could saturate | §3.1.2 | Capital constraint |
+| F3.1 | Regular block production requires ~3M ADA stake (~3 blocks/epoch) — the emergent viability boundary | §3.1.2.1 | Structural — not a protocol parameter |
+| F3.2 | Below 1.1M ADA, the 340 ADA fixed cost exceeds pool reward — operators are in economic loss | §3.1.2.2 | 1,987 below-viability pools affected |
+| F3.3 | Only 8 pools reach the saturation threshold ($z_0$ = 77M ADA) — the cap designed for 500 pools is nearly inactive | §3.1.2.3 | 1.6% of design target |
+| F3.4 | Active stake fills only 56.5% of theoretical capacity ($k \times z_0$) — at most 282 pools could saturate | §3.1.2.3 | Capital constraint |
+| F3.5 | Tier boundaries are dynamic — they shift with active stake, fixed costs, and $k$; any CIP evaluation must track where they move | §3.1.5 | Framework — not a snapshot |
+| F3.6 | CIPs targeting $k$ reshape the upper tail; CIPs targeting fees reshape the lower tail — reforms hit different tiers | §3.1.5 | Asymmetric reform impact |
 | | **O4 — Multi-pool operators control 75% of staked supply** | | |
 | F4.1 | 85 MPO entities operate 901 pools holding 16.4B ADA — 75.4% of participating stake | §3 | Structural — concentration |
 | F4.2 | 48 capital-sufficient MPOs (14.5B ADA) could play the pledge game; 37 capital-insufficient MPOs (1.74B ADA) cannot | §3.2.1 | Scale determines access |
@@ -133,7 +135,7 @@ The pools pot is sized for the full circulating supply. With 43.5% of ADA undele
 | Participation gap | −4.91M | 31.6% |
 | **Staked pot** | **10.62M** | **68.4%** |
 
-Because the base is distribution-neutral, this gap depends *only* on how much ADA is staked — not on how it is arranged across pools. No formula change can close it. Only increased staking participation can.
+> **Finding F1.2 — The participation gap returns 4.91M ADA/epoch (31.6% of the pot) to the reserve.** Because the base is distribution-neutral, this gap depends *only* on how much ADA is staked — not on how it is arranged across pools. No formula change can close it. Only increased staking participation can.
 
 ### 2.2 Pledge-not-met confiscation
 
@@ -419,77 +421,76 @@ Below this threshold, pools produce too few blocks for delegators to assess reli
 
 ##### 3.1.2.2 Viability threshold
 
-Block production is necessary but not sufficient. A pool must also cover its operating costs — at minimum, the protocol-enforced **fixed cost** floor.
+> **Key result:** 1,987 pools (73% of all pools with stake) sit below viability. They collectively owe **647K ADA/epoch** in fixed costs but earn only **182K ADA** — destroying value for their delegators.
 
-The reward per ADA staked per epoch is approximately **0.000312 ADA** (annualized: ~2.28%). For a pool with fixed cost of 340 ADA (the dominant setting at 66.3% of pools):
+Block production is necessary but not sufficient. A pool must also cover the protocol-enforced **fixed cost** floor. The break-even point is straightforward:
 
-$$\text{Break-even stake} = \frac{\text{Fixed cost}}{\text{Reward per ADA}} = \frac{340}{0.000312} \approx 1.09\text{M ADA}$$
+$$\text{Break-even stake} = \frac{\text{Fixed cost}}{\text{Reward per ADA per epoch}}$$
 
-For 170 ADA fixed cost (17.3% of pools): break-even is ~0.54M ADA.
+| Fixed cost | Share of pools | Break-even stake |
+| --- | --- | --- |
+| 340 ADA (dominant) | 66.3% | ~1.09M ADA |
+| 170 ADA | 17.3% | ~0.54M ADA |
 
-Below break-even, the pool's entire reward — and then some — is consumed by the fixed cost. The delegator receives nothing; the operator extracts more than the pool earns.
+Below break-even, the pool's entire reward is consumed by the fixed cost. The delegator receives nothing; the operator extracts more than the pool earns.
 
-**The below-viability problem is severe:**
+**The scale of the problem:**
 
 | Metric | Below viability (<3M) | Healthy (≥3M) |
 | --- | --- | --- |
 | Pools | 1,987 | 731 |
 | Estimated group reward | 182K ADA/epoch | 6.61M ADA/epoch |
 | Total fixed costs | 647K ADA/epoch | 1.56M ADA/epoch |
-| Average pool reward | 91 ADA/epoch | 9,040 ADA/epoch |
 | Fixed cost as % of avg reward | **372%** | 3.8% |
-| Operator take | **358%** of group reward | 41.7% |
 
-Below-viability pools collectively owe **647K ADA/epoch** in fixed costs but earn only **182K ADA**. The fixed cost exceeds pool reward by a factor of 3.6×. In aggregate, these pools destroy value: their delegators receive negative net reward (the fixed cost is deducted before any distribution).
+In aggregate, below-viability pools **destroy value**: their fixed costs exceed their total reward by 3.6×. Delegators to these pools receive negative net reward.
 
-This is not a marginal effect. The 1,987 below-viability pools represent 73% of all pools with stake. They exist — and attract delegators — despite being economically irrational for both parties. The persistence of this layer suggests delegators either do not understand the fee mechanics, are staking for non-economic reasons (governance, ideology, wallet defaults), or face friction in redelegating.
+> **Why do they persist?** 1,987 below-viability pools represent 73% of all pools with stake — yet they exist and attract delegators despite being economically irrational for both parties. The persistence suggests delegators either do not understand the fee mechanics, stake for non-economic reasons (governance, ideology, wallet defaults), or face friction in redelegating.
 
 ##### 3.1.2.3 Saturation threshold
 
-The saturation point $z_0 = \text{Supply}/k = 76.99\text{M ADA}$ was designed as the central equilibrium mechanism: once a pool reaches z₀, the per-ADA reward for its delegators drops, pushing stake toward smaller pools until all k = 500 pools are equally sized.
+> **Key result:** the saturation cap binds for **8 pools** — 1.6% of the design target of 500. With 56.5% participation, the system can support at most **282** saturated pools. The mechanism's central equilibrium tool is nearly inactive.
 
-| Metric | Value |
-| --- | --- |
-| Saturation point (z₀) | **76.99M ADA** |
-| Theoretical capacity (k × z₀) | **38.49B ADA** |
-| Active stake | **21.75B ADA** |
-| Capacity utilisation | **56.5%** |
-| Max pools that could saturate | **282** |
-| Pools at ≥80% saturation | 104 |
-| Pools at or above saturation | **8** |
-| Design target | **500** |
+The saturation point $z_0 = \text{Supply}/k = 76.99\text{M ADA}$ was designed as the central equilibrium mechanism: once a pool reaches $z_0$, the per-ADA reward for its delegators drops, pushing stake toward smaller pools until all $k = 500$ pools are equally sized.
 
-The saturation cap is nearly inactive. It binds for 8 pools — 1.6% of the design target. The reason is arithmetic: with 21.75B ADA delegated and z₀ at 77M, the system can support at most 282 saturated pools even under perfect redistribution. The k = 500 target implicitly required near-complete participation (~100% of supply). Actual participation at 56.5% makes the target structurally unreachable.
+| Metric | Design | Reality |
+| --- | --- | --- |
+| Target pools at saturation | **500** | **8** |
+| Theoretical capacity ($k \times z_0$) | **38.49B ADA** | — |
+| Active stake | — | **21.75B ADA** |
+| Capacity utilisation | 100% | **56.5%** |
+| Max pools that could saturate | 500 | **282** |
 
-The near-saturation zone (≥80% of z₀) contains 104 pools — a thin cluster rather than the broad plateau the design envisioned. The bulk of the healthy pool landscape sits between 3M and 60M ADA — far below saturation.
+The reason is arithmetic: $k = 500$ implicitly required near-complete participation (~100% of supply). Actual participation at 56.5% makes the target structurally unreachable — regardless of operator behaviour or pledge reform.
+
+The near-saturation zone (≥80% of $z_0$) contains 104 pools — a thin cluster rather than the broad plateau the design envisioned. The bulk of the healthy pool landscape sits between 3M and 60M ADA, far below saturation.
 
 #### 3.1.3 Tier definitions
 
-The three thresholds partition the pool space into nine tiers. Each tier is defined by its bounding thresholds, its characteristic block production behaviour, and its economic status.
+The three thresholds partition the pool space into **nine tiers**. Boundary values are for epoch 616 (21.57B ADA active stake).
 
-| Tier | Range (mainnet, epoch 616) | Defining threshold | Block production | Economic status |
-| --- | --- | --- | --- | --- |
-| **Zero-stake** | 0 ADA | — | None | Not operational |
-| **Dormant** | >0 → ~100K ADA | — | < 0.1 blocks/epoch — effectively zero | Registered but inactive |
-| **Sub-production** | ~100K → ~1M ADA | Production threshold (lower) | Sporadic — high variance, unreliable | Below break-even; extreme fixed-cost burden |
-| **Sub-viable** | ~1M → ~3M ADA | Production threshold (upper) / Viability threshold | Regular but insufficient to cover fixed costs | Economically loss-making for delegators |
-| **Healthy** | ~3M → ~38.5M ADA (50% sat) | Viability threshold | Consistent block production | Viable — covers costs, rewards delegators |
-| **Large healthy** | ~38.5M → ~61.6M ADA (80% sat) | — | High, stable | Well-capitalised, efficient |
-| **Near-saturation** | ~61.6M → ~73.1M ADA (95% sat) | Saturation threshold (approach) | Near-optimal | Close to maximum reward density |
-| **Saturated** | ~73.1M → ~80.8M ADA (105% sat) | Saturation threshold | Optimal | Maximum reward; cap binding |
-| **Oversaturated** | > ~80.8M ADA | Saturation threshold (exceeded) | Capped | Delegators penalised; stake should migrate |
+**Below viability — the struggling pools:**
 
-#### Threshold values are dynamic
+| Tier | Stake range | What happens |
+| --- | --- | --- |
+| **Zero-stake** | 0 ADA | Registered, no stake, not operational |
+| **Dormant** | >0 → ~100K | < 0.1 blocks/epoch — effectively zero production |
+| **Sub-production** | ~100K → ~1M | Sporadic blocks, high variance — unreliable for delegators |
+| **Sub-viable** | ~1M → ~3M | Produces blocks but cannot cover the 340 ADA fixed cost |
 
-The boundary values above are computed from current mainnet conditions (epoch 616, 21.57B ADA active stake). They shift with three inputs:
+**Above viability — the functioning landscape:**
 
-| Threshold | Depends on | Direction with more participation | Direction with higher $k$ |
-| --- | --- | --- | --- |
-| Production | Active stake, $L$, $f$ | Rises — pools need more stake to reach same block count | Unchanged |
-| Viability | Fixed cost, reward rate per ADA | Rises if rewards per ADA fall (e.g. as reserves deplete) | Unchanged |
-| Saturation | Circulating supply, $k$ | Unchanged | Falls — each pool's cap shrinks |
+| Tier | Stake range | What happens |
+| --- | --- | --- |
+| **Healthy** | ~3M → ~38.5M | Consistent production, viable economics — the core operating tier |
+| **Large healthy** | ~38.5M → ~61.6M | Well-capitalised, efficient, stable reward stream |
+| **Near-saturation** | ~61.6M → ~73.1M | Close to maximum reward density |
+| **Saturated** | ~73.1M → ~80.8M | At the cap — maximum reward; mechanism binding |
+| **Oversaturated** | > ~80.8M | Past the cap — delegators penalised, stake should migrate |
 
-When evaluating a scenario such as $k = 1000$, the saturation threshold halves to ~38.5M ADA — immediately reclassifying every current "large healthy" pool as near-saturation or saturated. The production and viability thresholds are unaffected by $k$ alone. This asymmetry is analytically important: CIPs targeting $k$ reshape the upper tail; CIPs targeting fees or block production reshape the lower tail.
+> **Finding F3.5 — These boundaries move.** The tier ranges above are not fixed ADA amounts — they are functions of active stake, fixed costs, and $k$. When a CIP proposes $k = 1000$, the saturation threshold halves to ~38.5M ADA and every current "Large healthy" pool is reclassified as near-saturation. When active stake grows, the production and viability lines rise.
+>
+> **Finding F3.6 — CIPs hit different tails.** CIPs targeting $k$ reshape the upper tail of the distribution; CIPs targeting fees or block production reshape the lower tail. Any reform proposal must be evaluated against the tier it actually moves — not against the landscape as a whole.
 
 #### 3.1.4 Pool distribution by tier
 
@@ -501,7 +502,15 @@ The inversion is stark: **1,987 pools (73%) sit below the Viability threshold �
 
 #### 3.1.5 Conclusion
 
-The prior report (Lopez de Lara, 2025/11) identified the 3M ADA viability line and focused on the 873 operators below it as the primary policy concern. This analysis confirms that threshold and grounds it in the protocol's own mechanics: the viability line is not an arbitrary ADA amount but the point where expected block production becomes regular enough for a pool to demonstrate reliability. What the taxonomy adds is the full tier structure above and below that line, and the observation that these thresholds are *dynamic* — they shift with $k$, active stake, and fee parameters. Any CIP evaluation must account for where the boundaries move, not just where they sit today. §3.2.3 crosses this grid with the entity pledge-compliance classes documented in §3.2.
+**What prior work established.** The ~3M ADA viability line was identified as the primary policy concern, with operators below it flagged as the struggling population requiring reform attention.
+
+**What this analysis adds.** The viability line is not an arbitrary ADA amount — it is the point where Poisson noise stops dominating block production (~3 blocks/epoch, CV = 58%). This analysis grounds it in the protocol's own slot-leadership mechanics, extends it into a full nine-tier taxonomy spanning from zero-stake pools to oversaturated fleets, and reveals two properties that matter for any CIP evaluation:
+
+> **Finding F3.5 — Tier boundaries are dynamic, not fixed.** They are functions of active stake, fixed costs, and $k$. When a CIP proposes $k = 1000$, the saturation threshold halves to ~38.5M ADA and every current "Large healthy" pool is reclassified as near-saturation. When active stake grows from 21B to 35B ADA, the production and viability lines rise proportionally. Any reform evaluation must account for where the boundaries *move*, not just where they sit today.
+
+> **Finding F3.6 — CIPs hit different tails.** CIPs targeting $k$ reshape the upper tail of the distribution (saturation, near-saturation); CIPs targeting fees or block production reshape the lower tail (sub-viable, sub-production). Any reform proposal must be evaluated against the tier it actually moves — not against the landscape as a whole.
+
+But the taxonomy describes the terrain as if each pool were independent. It is not. Nothing in the Cardano protocol prevents a single entity — an exchange, a staking-as-a-service provider, or even a well-capitalised individual — from registering and operating multiple pools under different identities. Each pool appears as a separate entry on-chain, but the economic decisions (how much to pledge, how to price fees, whether to respond to incentive signals) are made at the entity level, not the pool level. §3.2 looks behind the pools to identify who actually controls them — and the answer reshapes the entire landscape.
 
 
 ### 3.2 Behind the pools — entity-level analysis
