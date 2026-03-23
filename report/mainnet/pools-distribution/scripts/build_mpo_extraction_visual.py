@@ -2,8 +2,8 @@
 """
 MPO Extraction Visual — before/after tier comparison.
 
-Shows the full landscape vs single-pool-only landscape side by side,
-with MPO pools shown as the removed portion in each tier.
+Shows the full landscape with MPO pools shown as the removed hatched portion
+in each tier, using the same butterfly layout as Competitive Landscape.
 
 Output:
   figures/mpo_extraction_by_tier_mainnet.png
@@ -25,37 +25,31 @@ REPORT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR   = REPORT_DIR / "data"
 FIG_DIR    = REPORT_DIR / "figures"
 
-# ── IOG Brand colours ──
-BG          = "#FFFFFF"
-INK         = "#1A1A1A"
-DIM         = "#666666"
-GRID        = "#EBEBEB"
-INFARED     = "#E52321"
-DAWN        = "#EC641D"
-ACID_GREEN  = "#00B35F"
-SOLAR_AMBER = "#FFBA36"
-COBALT      = "#2C4FFA"
-ULTRAVIOLET = "#A700FF"
-TEAL        = "#16E9D8"
-GREY_DARK   = "#999999"
-GREY_MID    = "#BBBBBB"
+# ── IOG Brand colours (same as filtered_landscape) ──
+BG     = "#FFFFFF"
+INK    = "#1A1A1A"
+DIM    = "#666666"
+GRID   = "#EBEBEB"
 
+INFARED      = "#E52321"
+DAWN         = "#EC641D"
+ACID_GREEN   = "#00B35F"
+SOLAR_AMBER  = "#FFBA36"
+COBALT_PULSE = "#2C4FFA"
+ULTRAVIOLET  = "#A700FF"
+TEAL         = "#00897B"
+GREY_DARK    = "#555555"
+
+# ── Tier definitions (identical to filtered_landscape) ──
 TIER_NAMES = [
-    "Oversaturated", "Saturated", "Near-saturation", "Large healthy",
-    "Healthy", "Sub-viable", "Sub-production", "Dormant",
+    "Dormant", "Sub-production", "Sub-viable", "Healthy",
+    "Large healthy", "Near-saturation", "Saturated", "Oversaturated",
 ]
-
-# Colours per tier (reversed order — top-down from Oversaturated)
-TIER_COLORS_MAP = {
-    "Dormant":          GREY_DARK,
-    "Sub-production":   DAWN,
-    "Sub-viable":       INFARED,
-    "Healthy":          ACID_GREEN,
-    "Large healthy":    TEAL,
-    "Near-saturation":  SOLAR_AMBER,
-    "Saturated":        COBALT,
-    "Oversaturated":    ULTRAVIOLET,
-}
+TIER_COLORS = [
+    GREY_DARK, DAWN, INFARED, ACID_GREEN,
+    TEAL, SOLAR_AMBER, COBALT_PULSE, ULTRAVIOLET,
+]
+NZ = len(TIER_NAMES)
 
 
 def muted(hex_color, factor=0.55):
@@ -70,13 +64,11 @@ def muted(hex_color, factor=0.55):
 
 
 def load_data():
-    z0 = 77_000_000
+    """Load pool data and classify by tier / MPO status."""
     LOVELACE = 1_000_000
-    T_bounds = [0, 100, 1e6, 3e6, z0 * 0.5, z0 * 0.8, z0 * 0.95, z0 * 1.05, np.inf]
-    TIER_ORDER = [
-        "Dormant", "Sub-production", "Sub-viable", "Healthy",
-        "Large healthy", "Near-saturation", "Saturated", "Oversaturated",
-    ]
+    z0 = 77_000_000
+    T_bounds = [0, 100e3, 1e6, 3e6, z0 * 0.5, z0 * 0.8, z0 * 0.95,
+                z0 * 1.05, np.inf]
 
     pool_entity = set()
     with open(DATA_DIR / "mpo_entity_pool_mapping_mainnet.csv") as f:
@@ -98,228 +90,243 @@ def load_data():
             pools.append({"stake": stake_ada, "is_mpo": is_mpo})
 
     stakes = np.array([p["stake"] for p in pools])
-    zones = np.digitize(stakes, T_bounds[1:])
+    zone_id = np.digitize(stakes, T_bounds[1:])
+    n = len(pools)
+    total = stakes.sum()
 
-    result = {}
-    for i, name in enumerate(TIER_ORDER):
-        idx = [j for j in range(len(pools)) if zones[j] == i]
-        fp = len(idx)
-        fs = sum(pools[j]["stake"] for j in idx)
-        sp = len([j for j in idx if not pools[j]["is_mpo"]])
-        ss = sum(pools[j]["stake"] for j in idx if not pools[j]["is_mpo"])
-        mp = fp - sp
-        ms = fs - ss
-        result[name] = {
-            "full_pools": fp, "full_stake": fs,
-            "spo_pools": sp, "spo_stake": ss,
-            "mpo_pools": mp, "mpo_stake": ms,
-        }
-    return result
+    # Build per-tier pool/stake counts split by SPO vs MPO
+    counts      = [0] * NZ
+    spo_counts  = [0] * NZ
+    mpo_counts  = [0] * NZ
+    tier_stake   = [0.0] * NZ
+    spo_stake    = [0.0] * NZ
+    mpo_stake    = [0.0] * NZ
+
+    for i, p in enumerate(pools):
+        t = zone_id[i]
+        counts[t] += 1
+        tier_stake[t] += p["stake"]
+        if p["is_mpo"]:
+            mpo_counts[t] += 1
+            mpo_stake[t] += p["stake"]
+        else:
+            spo_counts[t] += 1
+            spo_stake[t] += p["stake"]
+
+    return {
+        "n": n, "total": total, "z0": z0,
+        "counts": counts, "spo_counts": spo_counts, "mpo_counts": mpo_counts,
+        "tier_stake": tier_stake, "spo_stake": spo_stake, "mpo_stake": mpo_stake,
+        "n_mpo_total": sum(mpo_counts),
+    }
 
 
-def build_figure(data):
-    """
-    Two-panel horizontal stacked bar chart:
-      Left:  Pool count  (single-pool solid + MPO hatched)
-      Right: Stake in B ADA (single-pool solid + MPO hatched)
+# ───────────────────────────────────────────────────────────────────────────
+# draw_butterfly — copied from build_filtered_landscape_visual.py and adapted
+# to show SPO (solid) + MPO (hatched) instead of incentive-stance stacking.
+# ───────────────────────────────────────────────────────────────────────────
 
-    Top-down order: Oversaturated → Dormant (gravity = top tiers at top).
-    """
-    n = len(TIER_NAMES)
-    fig, (ax_pools, ax_stake) = plt.subplots(
-        1, 2, figsize=(16, 7.5),
-        gridspec_kw={"wspace": 0.05, "left": 0.20, "right": 0.96,
-                     "top": 0.80, "bottom": 0.13}
-    )
-    fig.patch.set_facecolor(BG)
+def draw_butterfly(data, fig_path):
+    """Draw the butterfly chart — identical layout to Competitive Landscape."""
 
-    y = np.arange(n)
+    n       = data["n"]
+    total   = data["total"]
+    z0      = data["z0"]
+    counts  = data["counts"]
+    n_mpo   = data["n_mpo_total"]
+
+    spo_c  = np.array(data["spo_counts"], dtype=float)
+    mpo_c  = np.array(data["mpo_counts"], dtype=float)
+    spo_s  = np.array(data["spo_stake"])
+    mpo_s  = np.array(data["mpo_stake"])
+
+    pct_pools_spo = spo_c / n * 100 if n else spo_c
+    pct_pools_mpo = mpo_c / n * 100 if n else mpo_c
+    pct_pools     = (spo_c + mpo_c) / n * 100 if n else spo_c
+
+    pct_stake_spo = spo_s / total * 100 if total else spo_s
+    pct_stake_mpo = mpo_s / total * 100 if total else mpo_s
+    pct_stake     = pct_stake_spo + pct_stake_mpo
+
+    T_bounds = [0, 100e3, 1e6, 3e6, z0 * 0.5, z0 * 0.8, z0 * 0.95,
+                z0 * 1.05, np.inf]
+
+    # Threshold markers — same as reference
+    threshold_after = {
+        1: ("Production\nthreshold",  "1M ADA",  DAWN),
+        2: ("Viability\nthreshold",   "3M ADA",  INFARED),
+        6: ("Saturation\nthreshold", f"{z0/1e6:.0f}M ADA", ULTRAVIOLET),
+    }
+
+    # ── Figure — same dimensions & gridspec as reference ──
+    fig = plt.figure(figsize=(18, 8.5), facecolor=BG)
+    gs = fig.add_gridspec(1, 3, width_ratios=[5, 4, 7],
+                          left=0.03, right=0.97, top=0.82, bottom=0.06,
+                          wspace=0.0)
+    ax_l = fig.add_subplot(gs[0])
+    ax_m = fig.add_subplot(gs[1])
+    ax_r = fig.add_subplot(gs[2])
+
+    for ax in (ax_l, ax_m, ax_r):
+        ax.set_facecolor(BG)
+        for sp in ax.spines.values():
+            sp.set_visible(False)
+
+    y_pos = np.arange(NZ)
     bar_h = 0.62
 
-    spo_p = np.array([data[t]["spo_pools"] for t in TIER_NAMES])
-    mpo_p = np.array([data[t]["mpo_pools"] for t in TIER_NAMES])
-    spo_s = np.array([data[t]["spo_stake"] / 1e9 for t in TIER_NAMES])
-    mpo_s = np.array([data[t]["mpo_stake"] / 1e9 for t in TIER_NAMES])
-    colors = [TIER_COLORS_MAP[t] for t in TIER_NAMES]
-    muted_colors = [muted(TIER_COLORS_MAP[t]) for t in TIER_NAMES]
+    # ── Left panel — pool count % (SPO solid + MPO hatched) ──
+    for i in range(NZ):
+        col = TIER_COLORS[i]
+        # SPO solid segment
+        ax_l.barh(y_pos[i], pct_pools_spo[i], height=bar_h,
+                  color=col, alpha=0.88, align="center")
+        # MPO hatched segment stacked after SPO
+        if pct_pools_mpo[i] > 0:
+            ax_l.barh(y_pos[i], pct_pools_mpo[i], height=bar_h,
+                      left=pct_pools_spo[i],
+                      color=muted(col), alpha=0.88, align="center",
+                      edgecolor="white", hatch="///", linewidth=0.5)
 
-    # ── Left panel: Pool count ──
-    ax_pools.set_facecolor(BG)
-    ax_pools.barh(y, spo_p, height=bar_h, color=colors,
-                  edgecolor="white", linewidth=0.5, zorder=3)
-    ax_pools.barh(y, mpo_p, height=bar_h, left=spo_p,
-                  color=muted_colors, edgecolor="white", linewidth=0.5,
-                  hatch="///", zorder=3)
-
-    for i in range(n):
-        total = spo_p[i] + mpo_p[i]
-        if total == 0:
+        # Label — "total → SPO (−X%)" showing extraction effect
+        pp = pct_pools[i]
+        full_cnt = counts[i]
+        spo_cnt = int(spo_c[i])
+        mpo_cnt = int(mpo_c[i])
+        if full_cnt == 0:
             continue
-        # Always place label outside right edge for clarity
-        label_parts = []
-        if spo_p[i] > 0:
-            label_parts.append(f"{int(spo_p[i]):,}")
-        if mpo_p[i] > 0:
-            label_parts.append(f"+{int(mpo_p[i]):,}")
-        label = "  |  ".join(label_parts) if len(label_parts) == 2 else label_parts[0]
-        # Large bars: labels inside; small bars: labels outside
-        if total > 100:
-            if spo_p[i] > 60:
-                ax_pools.text(spo_p[i] * 0.5, y[i], f"{int(spo_p[i]):,}",
-                             ha="center", va="center", fontsize=8.5,
-                             fontweight="bold", color="white", zorder=5)
-            if mpo_p[i] > 40:
-                ax_pools.text(spo_p[i] + mpo_p[i] * 0.5, y[i],
-                             f"+{int(mpo_p[i]):,}",
-                             ha="center", va="center", fontsize=7.5,
-                             color=INK, style="italic", zorder=5)
-            elif mpo_p[i] > 0:
-                ax_pools.text(total + 8, y[i], f"+{int(mpo_p[i])}",
-                             ha="left", va="center", fontsize=7.5,
-                             color=DIM, zorder=5)
+        drop = f"−{mpo_cnt}" if mpo_cnt > 0 else ""
+        if mpo_cnt > 0:
+            lbl = f"{full_cnt:,} → {spo_cnt:,}  ({drop})"
         else:
-            # Small bars — all labels outside
-            ax_pools.text(total + 8, y[i], label,
-                         ha="left", va="center", fontsize=8,
-                         color=INK, zorder=5)
+            lbl = f"{full_cnt:,}"
+        margin = 2.0
+        ax_l.text(pp + margin, y_pos[i], lbl, va="center", ha="right",
+                  fontsize=8.5, color=INK, fontweight="bold")
 
-    ax_pools.set_xlabel("Pool count", fontsize=10.5, color=INK, labelpad=10)
-    ax_pools.set_title("Pool Count", fontsize=12.5, fontweight="bold",
-                       color=INK, pad=12)
+    max_pool_pct = max(pct_pools) * 1.18 if n else 10
+    ax_l.set_xlim(max_pool_pct, 0)
+    ax_l.set_ylim(-0.6, NZ - 0.4)
+    ax_l.set_yticks([])
+    ax_l.xaxis.tick_top()
+    ax_l.xaxis.set_label_position("top")
+    ax_l.set_xlabel("Share of pools (%)", fontsize=10, color=DIM, labelpad=6)
+    ax_l.tick_params(axis="x", colors=DIM, labelsize=8, top=True, bottom=False)
+    ax_l.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:.0f}%"))
+    ax_l.grid(axis="x", color=GRID, linewidth=0.6, zorder=0)
 
-    # ── Right panel: Stake ──
-    ax_stake.set_facecolor(BG)
-    ax_stake.barh(y, spo_s, height=bar_h, color=colors,
-                  edgecolor="white", linewidth=0.5, zorder=3)
-    ax_stake.barh(y, mpo_s, height=bar_h, left=spo_s,
-                  color=muted_colors, edgecolor="white", linewidth=0.5,
-                  hatch="///", zorder=3)
+    # ── Right panel — stake % (SPO solid + MPO hatched, stacked) ──
+    for i in range(NZ):
+        col = TIER_COLORS[i]
+        ax_r.barh(y_pos[i], pct_stake_spo[i], height=bar_h,
+                  color=col, alpha=0.88, align="center", zorder=3)
+        if pct_stake_mpo[i] > 0:
+            ax_r.barh(y_pos[i], pct_stake_mpo[i], height=bar_h,
+                      left=pct_stake_spo[i],
+                      color=muted(col), alpha=0.88, align="center",
+                      edgecolor="white", hatch="///", linewidth=0.5, zorder=3)
 
-    def fmt_stake(v):
-        if v >= 1.0:
-            return f"{v:.1f}B"
-        if v >= 0.01:
-            return f"{v:.2f}B"
-        if v >= 0.001:
-            return f"{v:.3f}B"
-        return f"{v * 1000:.1f}M"
-
-    for i in range(n):
-        total_s = spo_s[i] + mpo_s[i]
-        if total_s < 0.0001:
+        # Label — "full_ada → spo_ada (−X%)" showing extraction effect
+        total_pct = pct_stake[i]
+        full_ada = data["tier_stake"][i]
+        spo_ada_i = spo_s[i]
+        mpo_ada_i = mpo_s[i]
+        if full_ada <= 0:
             continue
-        # Large bars: labels inside; small bars: labels outside
-        if total_s > 0.5:
-            if spo_s[i] > 0.25:
-                ax_stake.text(spo_s[i] * 0.5, y[i], fmt_stake(spo_s[i]),
-                             ha="center", va="center", fontsize=8.5,
-                             fontweight="bold", color="white", zorder=5)
-            if mpo_s[i] > 0.4:
-                ax_stake.text(spo_s[i] + mpo_s[i] * 0.5, y[i],
-                             f"+{fmt_stake(mpo_s[i])}",
-                             ha="center", va="center", fontsize=7.5,
-                             color=INK, style="italic", zorder=5)
-            elif mpo_s[i] > 0.005:
-                ax_stake.text(total_s + 0.08, y[i],
-                             f"+{fmt_stake(mpo_s[i])}",
-                             ha="left", va="center", fontsize=7.5,
-                             color=DIM, zorder=5)
+
+        def _fmt_ada(v):
+            if v >= 1e9:
+                return f"{v/1e9:.1f}B"
+            if v >= 1e6:
+                return f"{v/1e6:.0f}M"
+            if v >= 1e3:
+                return f"{v/1e3:.0f}K"
+            return f"{v:.0f}"
+
+        if mpo_ada_i > 0 and total_pct >= 0.3:
+            drop_pct = mpo_ada_i / full_ada * 100
+            lbl = (f"{_fmt_ada(full_ada)} → {_fmt_ada(spo_ada_i)}"
+                   f"  (−{drop_pct:.0f}%)")
+        elif total_pct >= 0.3:
+            lbl = f"{_fmt_ada(full_ada)}"
+        elif total_pct > 0:
+            lbl = "< 0.1%"
         else:
-            # Small bars — all labels outside
-            parts = []
-            if spo_s[i] > 0.0001:
-                parts.append(fmt_stake(spo_s[i]))
-            if mpo_s[i] > 0.0001:
-                parts.append(f"+{fmt_stake(mpo_s[i])}")
-            label = "  |  ".join(parts) if len(parts) == 2 else (parts[0] if parts else "")
-            ax_stake.text(total_s + 0.08, y[i], label,
-                         ha="left", va="center", fontsize=8,
-                         color=INK, zorder=5)
+            lbl = ""
+        if lbl:
+            x_lbl = max(total_pct, 0.15) + 0.35
+            ax_r.text(x_lbl, y_pos[i], lbl, va="center", ha="left",
+                      fontsize=8.5, color=INK, fontweight="bold")
 
-    ax_stake.set_xlabel("Stake (B ADA)", fontsize=10.5, color=INK, labelpad=10)
-    ax_stake.set_title("Stake", fontsize=12.5, fontweight="bold",
-                       color=INK, pad=12)
+    max_stake_pct = max(pct_stake) * 1.25 if n else 10
+    ax_r.set_xlim(0, max_stake_pct)
+    ax_r.set_ylim(-0.6, NZ - 0.4)
+    ax_r.set_yticks([])
+    ax_r.xaxis.tick_top()
+    ax_r.xaxis.set_label_position("top")
+    ax_r.set_xlabel("Share of stake (%) — hatched = MPO removed",
+                    fontsize=10, color=DIM, labelpad=6)
+    ax_r.tick_params(axis="x", colors=DIM, labelsize=8, top=True, bottom=False)
+    ax_r.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:.0f}%"))
+    ax_r.grid(axis="x", color=GRID, linewidth=0.6, zorder=0)
 
-    # ── Shared formatting ──
-    for ax in (ax_pools, ax_stake):
-        ax.set_yticks(y)
-        ax.set_ylim(-0.5, n - 0.5)
-        ax.invert_yaxis()
-        ax.grid(axis="x", color=GRID, linewidth=0.5, zorder=0)
-        ax.tick_params(axis="both", colors=INK, labelsize=9.5)
-        for spine in ax.spines.values():
-            spine.set_visible(False)
-        # Ensure x-axis has room for outside labels
-        xmax = ax.get_xlim()[1]
-        ax.set_xlim(right=xmax * 1.25)
+    # ── Middle panel — tier names + ADA ranges + thresholds ──
+    ax_m.set_xlim(0, 1)
+    ax_m.set_ylim(-0.6, NZ - 0.4)
+    ax_m.set_yticks([])
+    ax_m.set_xticks([])
 
-    # Tier labels on left axis — include MPO % in parentheses
-    tier_labels = []
-    for t in TIER_NAMES:
-        pct = data[t]["mpo_pools"] / data[t]["full_pools"] * 100 if data[t]["full_pools"] > 0 else 0
-        tier_labels.append(f"{t}  ({pct:.0f}% MPO)")
-    ax_pools.set_yticklabels(tier_labels, fontsize=10, fontweight="bold", color=INK)
-    ax_stake.set_yticklabels([""] * n)
+    for i, name in enumerate(TIER_NAMES):
+        ax_m.text(0.04, y_pos[i], name, va="center", ha="left",
+                  fontsize=10, color=INK, fontweight="bold")
+        lo, hi = T_bounds[i], T_bounds[i + 1]
+        lo_s = f"{lo/1e6:.0f}M" if lo >= 1e6 else (
+               f"{lo/1e3:.0f}K" if lo > 0 else "0")
+        hi_s = (f"{hi/1e6:.0f}M" if hi < np.inf and hi >= 1e6
+                else (f"{hi/1e3:.0f}K" if hi < 1e6 else "∞"))
+        ax_m.text(0.04, y_pos[i] - 0.26, f"{lo_s} – {hi_s} ADA",
+                  va="center", ha="left", fontsize=7.5, color=DIM)
 
-    # Viability threshold line (between Healthy idx=4 and Sub-viable idx=5 in TIER_NAMES)
-    via_y = 4.5
-    for ax in (ax_pools, ax_stake):
-        ax.axhline(via_y, color=INFARED, linewidth=1.8, linestyle="--",
-                   alpha=0.8, zorder=4)
-
-    # Place viability label in the stake panel (more room there)
-    # With inverted y-axis, "above" the line visually = smaller y value
-    ax_stake.text(ax_stake.get_xlim()[0] + 0.02, via_y - 0.25,
-                  "VIABILITY THRESHOLD  (3 M ADA)",
-                  ha="left", va="bottom", fontsize=8, color=INFARED,
-                  fontweight="bold", fontstyle="italic")
+    for tier_idx, (t_name, t_detail, t_col) in threshold_after.items():
+        y_sep = tier_idx + 0.5
+        for ax in (ax_l, ax_r):
+            ax.axhline(y_sep, color=t_col, linewidth=1.5,
+                       linestyle="--", alpha=0.7, zorder=5)
+        ax_m.axhline(y_sep, color=t_col, linewidth=1.5,
+                     linestyle="--", alpha=0.7, zorder=5)
+        ax_m.text(0.5, y_sep + 0.03, f"▲ {t_name}  {t_detail}",
+                  va="bottom", ha="center", fontsize=7.5,
+                  color=t_col, fontweight="bold", style="italic")
 
     # ── Legend ──
-    spo_patch = mpatches.Patch(facecolor=ACID_GREEN, edgecolor="white",
-                               label="Single-pool operators  (remain)")
-    mpo_patch = mpatches.Patch(facecolor=muted(ACID_GREEN), edgecolor=DIM,
-                               hatch="///",
-                               label="Multi-pool operator pools  (removed by attribution)")
-    fig.legend(handles=[spo_patch, mpo_patch], loc="lower center",
-               ncol=2, fontsize=10, frameon=False,
-               bbox_to_anchor=(0.55, 0.01))
+    spo_patch = mpatches.Patch(facecolor=ACID_GREEN, alpha=0.88,
+                                label="Single-pool operators (remain)")
+    mpo_patch = mpatches.Patch(facecolor=muted(ACID_GREEN), alpha=0.88,
+                                hatch="///", edgecolor="white", linewidth=0.5,
+                                label="MPO pools (removed)")
+    ax_r.legend(handles=[spo_patch, mpo_patch], loc="lower right",
+                fontsize=8, framealpha=0.95, title="Population segment",
+                title_fontsize=9)
 
-    # ── Summary box at top ──
-    viable_tiers = ["Healthy", "Large healthy", "Near-saturation",
-                    "Saturated", "Oversaturated"]
-    full_v_p = sum(data[t]["full_pools"] for t in viable_tiers)
-    spo_v_p  = sum(data[t]["spo_pools"]  for t in viable_tiers)
-    full_v_s = sum(data[t]["full_stake"]  for t in viable_tiers) / 1e9
-    spo_v_s  = sum(data[t]["spo_stake"]   for t in viable_tiers) / 1e9
+    # ── Titles ──
+    title = "MPO Extraction Effect — Full Landscape vs Single-Pool Operators"
+    subtitle = (f"Epoch 618  ·  {n:,} pools  ·  {total/1e9:.1f}B ADA  "
+                f"·  All {n_mpo:,} attributed MPO pools removed")
 
-    lines = [
-        f"Viable+ pools:  {full_v_p:,}  \u2192  {spo_v_p:,}   "
-        f"(\u2212{full_v_p - spo_v_p:,} pools,  \u2212{(full_v_p - spo_v_p) / full_v_p * 100:.0f}%)",
-        f"Viable+ stake:  {full_v_s:.1f} B  \u2192  {spo_v_s:.1f} B ADA   "
-        f"(\u2212{full_v_s - spo_v_s:.1f} B,  \u2212{(full_v_s - spo_v_s) / full_v_s * 100:.0f}%)",
-    ]
-    summary = "\n".join(lines)
-    fig.text(0.55, 0.96, summary, ha="center", va="top",
-             fontsize=10, color=INK, fontfamily="monospace",
-             bbox=dict(boxstyle="round,pad=0.5", facecolor="#F7F7F7",
-                       edgecolor="#DDDDDD", linewidth=0.8))
+    fig.text(0.5, 0.92, title,
+             ha="center", va="bottom", fontsize=16, fontweight="bold", color=INK)
+    fig.text(0.5, 0.895, subtitle,
+             ha="center", va="top", fontsize=10, color=DIM)
 
-    fig.suptitle(
-        "MPO Extraction Effect \u2014 Full Landscape vs Single-Pool Operators",
-        fontsize=14, fontweight="bold", color=INK, y=1.01,
-    )
-
-    return fig
+    fig.savefig(fig_path, dpi=180, bbox_inches="tight", facecolor=BG)
+    plt.close()
+    print(f"✓ Saved {fig_path}")
 
 
 def main():
     FIG_DIR.mkdir(parents=True, exist_ok=True)
     data = load_data()
-    fig = build_figure(data)
-    out = FIG_DIR / "mpo_extraction_by_tier_mainnet.png"
-    fig.savefig(out, dpi=200, bbox_inches="tight", facecolor=fig.get_facecolor())
-    plt.close(fig)
-    print(f"Saved: {out}")
+    draw_butterfly(data, FIG_DIR / "mpo_extraction_by_tier_mainnet.png")
 
 
 if __name__ == "__main__":

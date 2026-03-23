@@ -103,8 +103,8 @@ All counts and amounts use the latest available pool snapshot (**epoch 618**) an
 | F4.7 | 3 exemplary MPOs capture 82% of bonus ADA among pledging entities — but CF pledges by mandate; the mechanism's output rests on 2 private entities (67% of pledging bonus) | §3.2.4.3 | A Sybil-resistance tool for 500 pools is a transfer to two |
 | | **O5 — The incentive-responsive playing field is much smaller than the headline active set** | | |
 | F5.1 | 2,097 unattributed pools hold 5.44B ADA (25% of staked supply) — they appear as single-pool operators but some may be undiscovered MPOs | §3.3 | After MPO attribution |
-| F5.2 | 78% of independent single-pool stake is non-compliant — the pledge signal is correctly priced as irrelevant at their scale | §3.3.2 | Rational non-compliance |
-| F5.3 | 561 marginal single-pool operators (0.87B ADA) sit at the decision boundary — the primary policy lever | §3.3.3 | Target for parameter reform |
+| F5.2 | 78% of independent single-pool stake is non-compliant — the pledge signal is correctly priced as irrelevant at their scale | §3.3.1 | Rational non-compliance |
+| F5.3 | 561 marginal single-pool operators (0.87B ADA) sit at the decision boundary — the primary policy lever | §3.3.2 | Target for parameter reform |
 | F5.4 | The filtered proxy (single-pool operators + retained MPOs) holds 7.89B ADA — 36% of active stake | §4.3 | The actual incentive-responsive arena |
 | F5.5 | The prior report's ~741 viable pools were 61% MPO fleet members — only 283 viable single-pool operators remain (4.9B of 21.2B viable stake) | §3.3.1 | The competitive field is 38% of headline |
 | | **O6 — Non-compliance is a multi-game phenomenon, not a calibration failure** | | |
@@ -898,22 +898,9 @@ The entity-level analysis above accounts for **16.4B ADA** across 85 MPO entitie
 
 Applying the tier taxonomy from §3.1 to the single-pool population alone produces a fundamentally different landscape than the full pool set.
 
-| Tier | Pools (full) | Pools (single-pool) | Pools removed | Stake full (B ₳) | Stake single-pool (B ₳) | Stake removed (B ₳) | MPO share of tier |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Dormant | 274 | 239 | 35 | 0.00 | 0.00 | 0.00 | 13% |
-| Sub-production | 1,494 | 1,380 | 114 | 0.19 | 0.17 | 0.02 | 8% |
-| Sub-viable | 219 | 195 | 24 | 0.39 | 0.35 | 0.04 | 11% |
-| **Healthy** | **515** | **242** | **273** | **7.93** | **2.52** | **5.41** | **53%** |
-| Large healthy | 112 | 23 | 89 | 5.66 | 1.16 | 4.51 | 79% |
-| Near-saturation | 59 | 13 | 46 | 4.04 | 0.87 | 3.18 | 78% |
-| Saturated | 39 | 5 | 34 | 2.94 | 0.38 | 2.56 | 87% |
-| Oversaturated | 6 | 0 | 6 | 0.60 | 0.00 | 0.60 | 100% |
-| | | | | | | | |
-| **Viable+** | **731** | **283** | **448** | **21.17** | **4.92** | **16.25** | **77%** |
-| Below viable | 1,987 | 1,814 | 173 | 0.58 | 0.52 | 0.06 | 9% |
-| **Total** | **2,718** | **2,097** | **621** | **21.75** | **5.44** | **16.31** | **75%** |
-
 ![MPO Extraction Effect — Full Landscape vs Single-Pool Operators](figures/mpo_extraction_by_tier_mainnet.png)
+
+![Stake distribution by tier — MPO fleet vs Single-pool operators](figures/experiment_pie_mpo_vs_spo.png)
 
 The extraction effect is starkly asymmetric. Below viability, MPO pools are rare — only **9%** of below-viable pools are MPO fleet members. Above viability, MPOs dominate: **53%** of Healthy pools, **79%** of Large healthy, **87%** of Saturated, and **100%** of Oversaturated. The higher the tier, the greater the MPO share.
 
