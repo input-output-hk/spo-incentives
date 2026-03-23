@@ -34,7 +34,7 @@ All counts and amounts use the latest available pool snapshot (**epoch 618**) an
       - 2.6.2 [Historical evolution](#262-historical-evolution)
       - 2.6.3 [Conclusion](#263-conclusion)
 3. [The pool landscape — who wastes, who pledges, and who struggles](#3-the-pool-landscape--who-wastes-who-pledges-and-who-struggles)
-   - 3.1 [Pool taxonomy](#31-pool-taxonomy)
+   - 3.1 [Theoretical pool classification](#31-theoretical-pool-classification)
       - 3.1.1 [The case for pool categorization](#311-the-case-for-pool-categorization)
       - 3.1.2 [Structural thresholds](#312-structural-thresholds)
          - 3.1.2.1 [Production threshold](#3121-production-threshold)
@@ -313,96 +313,105 @@ This is not a zero-sum redistribution. The **3.43M ADA** that returns to the **r
 
 ## 3. The pool landscape — who wastes, who pledges, and who struggles
 
-§2 established that the pledge-incentive budget — 22.1% of the pools pot — has returned to the reserve every epoch since Shelley launch. The mechanism designed as Cardano's primary Sybil-resistance tool has never activated. This section asks the next question: *where* in the landscape does that failure sit, who bears the cost, and who — if anyone — actually plays the pledge game?
+§2 showed that **56.3% of the pools pot** never reaches operators — and that the single largest addressable cause is the **unused pledge-incentive budget**:
 
-The answer requires two moves. First, examine the pool landscape by size to see where operators struggle and where they thrive (§3.1). Second, look *behind* the pools to identify the entities that control them — because 75% of staked supply turns out to be operated by multi-pool entities whose relationship to the pledge mechanism ranges from structural impossibility to strategic indifference (§3.2). With that map in hand, §3.3 isolates the remaining single-pool operators — the community base that any reform ultimately aims to support — and §3.4 assembles the full picture.
+> **3.43M ADA/epoch (~250M ADA/year)** — returning to the reserve unused since Shelley launch.
 
-### 3.1 Pool taxonomy
+The pledge mechanism — designed as Cardano's primary Sybil-resistance tool — has never activated:
 
-Before investigating entities, we need a structural map of the pool landscape itself. The reward curve treats all pools identically, but the reality is stratified: pools cluster into groups with qualitatively different economic realities, separated by thresholds that emerge from the protocol's own mechanics.
+| Signal | Value | Reading |
+| --- | ---: | --- |
+| Bonus budget wasted | **95.6%** | Near-total failure |
+| Staked ADA in pools with pledge ratio < 1% | **78%** | Pledge is absent where stake concentrates |
+| Best-case yield on pledge capital | **0.68%/yr** | Below passive delegation yield (2.3%/yr) |
+
+By every measure, the mechanism is broken.
+
+---
+
+**The question this section asks:** prior work identified a population of struggling pools below the viability line as the primary policy concern. But how many operators are genuinely in that position? Who are they? And is their struggle a *cause* of the pledge failure — or a *consequence* of something deeper about who controls the landscape?
+
+**How we answer it:**
+
+- **§3.1 — Theoretical pool classification.** A size-based taxonomy grounded in the protocol's own mechanics, separating where operators struggle from where they thrive.
+- **§3.2 — Behind the pools: entity-level analysis.** 75% of staked supply turns out to be operated by multi-pool entities whose relationship to the pledge mechanism ranges from structural impossibility to strategic indifference.
+- **§3.3 — The remaining single-pool operators.** The community base that any reform ultimately aims to support — isolated from the MPO landscape.
+- **§3.4 — The full picture.** Who wastes, who pledges, and who genuinely struggles.
+
+### 3.1 Theoretical pool classification
+
+Before looking at who controls the pools, we need a structural map of the landscape itself.
 
 #### 3.1.1 The case for pool categorization
 
-The reward curve is continuous — it maps stake to reward without discrete jumps. Yet the pool landscape is not continuous: pools cluster into groups with qualitatively different economic realities, separated by thresholds that emerge from the protocol's own mechanics.
+The reward curve is continuous — it maps stake to reward without discrete jumps. Yet the pool landscape is **not** continuous. A pool with 50K ADA and one with 50M ADA both participate in the same formula, but they inhabit entirely different worlds: one barely produces blocks, the other anchors the delegation market.
 
-Treating all pools as points on a single spectrum obscures these structural differences. A pool with 50K ADA and one with 50M ADA both participate in the same reward formula, but they inhabit entirely different worlds: one barely produces blocks, the other anchors the delegation market. Applying the same analysis or the same CIP evaluation to both without distinguishing them leads to conclusions that are technically correct and analytically useless.
+Treating them as points on a single spectrum leads to conclusions that are technically correct and analytically useless. Three thresholds — **production**, **viability**, and **saturation** — emerge from the protocol's own mechanics and partition the space into tiers with distinct identities:
 
-The taxonomy defined here uses three thresholds derived from protocol parameters and economic constraints — not arbitrary ADA amounts — to partition the pool space into tiers with distinct identities. Each tier has a characteristic behaviour, a characteristic problem (or none), and a characteristic response to parameter changes.
+| Threshold | What it captures | Derived from |
+| --- | --- | --- |
+| **Production** | Minimum stake for regular block production | Slot leadership probability × epoch length |
+| **Viability** | Minimum stake to cover operating costs | Fixed-cost floor ÷ reward rate per ADA |
+| **Saturation** | Maximum efficient stake per pool | Circulating supply ÷ $k$ |
 
-Crucially, these thresholds are **dynamic**. They are functions of active stake, fixed costs, reward rates, and protocol parameters like $k$. When a CIP proposes to change $k$ from 500 to 1000, or when active stake grows from 21B to 35B ADA, the threshold values shift — and so do the tier boundaries. The taxonomy is a framework for reasoning across scenarios, not a snapshot of today's values.
+Each tier has a characteristic behaviour, a characteristic problem (or none), and a characteristic response to parameter changes.
+
+> **Why this matters for CIP evaluation.** These thresholds are **dynamic** — they are functions of active stake, fixed costs, reward rates, and $k$. When a CIP proposes to change $k$ from 500 to 1000, the saturation cap halves and the tier boundaries shift. When active stake grows from 21B to 35B ADA, the production and viability lines rise. The taxonomy is a framework for reasoning across scenarios, not a snapshot of today's values.
 
 #### 3.1.2 Structural thresholds
 
-Three thresholds emerge from the protocol's mechanics that create qualitatively distinct tiers in the pool landscape.
-
 ##### 3.1.2.1 Production threshold
 
-#### The slot leadership formula
+> **Key result:** at current active stake (21.57B ADA), a pool needs **~1M ADA** to expect 1 block/epoch and **~3M ADA** to produce blocks regularly. This threshold scales linearly with participation — it is not fixed.
 
-Cardano's Ouroboros Praos assigns block production rights slot by slot. For each of the $L$ slots in an epoch, a pool with relative active stake $\sigma_i$ is elected slot leader with probability:
+**The mechanism.** Cardano's Ouroboros Praos assigns block production rights slot by slot. For each of the $L$ slots in an epoch, a pool with relative active stake $\sigma_i$ is elected slot leader with probability:
 
 $$\phi(f, \sigma_i) = 1 - (1-f)^{\sigma_i}$$
 
-where $f$ is the **active slot coefficient** and $\sigma_i = \text{stake}_i / S_{\text{active}}$.
+where $f$ is the **active slot coefficient** and $\sigma_i = \text{stake}_i / S_{\text{active}}$. For small $\sigma_i$ (all pools below saturation), the expected block count simplifies to:
 
-The expected number of blocks for pool $i$ per epoch is:
+$$E[\text{blocks}_i] \approx L \times f \times \sigma_i$$
 
-$$E[\text{blocks}_i] = L \times \phi(f, \sigma_i) = L \times \left(1 - (1-f)^{\sigma_i}\right)$$
+The protocol constants have **never changed**:
 
-For small $\sigma_i$ (all pools below saturation), this is well approximated by the linear form:
+| Parameter | Symbol | Value |
+| --- | --- | --- |
+| Epoch length | $L$ | 432,000 slots |
+| Active slot coefficient | $f$ | 0.05 |
+| Expected blocks/epoch | $L \times f$ | 21,600 |
 
-$$E[\text{blocks}_i] \approx L \times f \times \sigma_i = \frac{L \times f \times \text{stake}_i}{S_{\text{active}}}$$
-
-#### Current parameters
-
-| Parameter | Symbol | Value | History |
-| --- | --- | --- | --- |
-| Epoch length | $L$ | 432,000 slots | Protocol constant since Shelley |
-| Active slot coefficient | $f$ | 0.05 | Protocol parameter, **never changed** |
-| Expected blocks/epoch | $L \times f$ | 21,600 | Consequence of L and f |
-| Total active stake (epoch 616) | | 21.57B ADA | Variable — increases with participation |
-
-The threshold for $n$ blocks per epoch follows directly:
+The only moving part is **total active stake** — and that makes the threshold dynamic:
 
 $$\text{stake}_{n\text{-blocks}} \approx \frac{n \times S_{\text{active}}}{L \times f}$$
-
-#### What it depends on
-
-The production threshold depends on exactly **three quantities**: epoch length $L$, active slot coefficient $f$, and total active stake. The first two are protocol constants/parameters that have never changed. The third — total active stake — is the only moving part.
-
-This means the production threshold **scales linearly with total active stake**: as more ADA enters staking, every pool needs more stake to produce the same number of blocks. The viability line is not fixed — it rises with participation.
 
 | Total active stake | 1-block threshold | 3-block threshold |
 | --- | --- | --- |
 | 10B ADA | 0.46M ADA | 1.39M ADA |
 | 15B ADA | 0.69M ADA | 2.08M ADA |
-| 20B ADA | 0.93M ADA | 2.78M ADA |
 | **21.57B ADA** (current) | **0.97M ADA** | **2.92M ADA** |
-| 25B ADA | 1.16M ADA | 3.47M ADA |
 | 30B ADA | 1.39M ADA | 4.17M ADA |
 | 38.49B ADA (full supply) | 1.78M ADA | 5.35M ADA |
 
-If all circulating ADA were staked (full participation), the 3-block threshold would rise to **5.35M ADA** — the viability threshold would shift upward, pushing more pools below viability.
+At full participation the 3-block threshold rises to **5.35M ADA** — pushing more pools below viability.
 
-#### Production and variance
+---
 
-Block assignments follow a Bernoulli process across slots. For small $\sigma$, the block count per epoch is approximately **Poisson-distributed** with rate $\lambda = E[\text{blocks}]$. The coefficient of variation is $\text{CV} = 1/\sqrt{\lambda}$.
+**Why 3 blocks matters.** Block assignments are Poisson-distributed. The coefficient of variation ($\text{CV} = 1/\sqrt{\lambda}$) tells the story:
 
-| Pool stake | E[blocks] | Std dev | CV | Practical meaning |
-| --- | --- | --- | --- | --- |
-| 100K ADA | 0.10 | 0.32 | 316% | Mostly zero — one block is an event |
-| 500K ADA | 0.51 | 0.72 | 139% | One block every ~2 epochs, very noisy |
-| **0.97M ADA** | **1.00** | **1.00** | **100%** | **1 block/epoch — Poisson noise dominates** |
-| **2.92M ADA** | **3.00** | **1.73** | **58%** | **Regular production begins** |
-| 10M ADA | 10.27 | 3.20 | 31% | Stable reward stream |
-| 30M ADA | 30.81 | 5.55 | 18% | Reliable production |
-| 77M ADA (z₀) | 79.09 | 8.89 | 11% | Near-deterministic |
+| Pool stake | E[blocks] | CV | What a delegator sees |
+| --- | --- | --- | --- |
+| 100K ADA | 0.10 | 316% | Mostly zero — one block is an event |
+| 500K ADA | 0.51 | 139% | One block every ~2 epochs, very noisy |
+| **~1M ADA** | **1.00** | **100%** | **0 blocks as likely as 2 — unreliable** |
+| **~3M ADA** | **3.00** | **58%** | **Regular production begins** |
+| 10M ADA | 10.27 | 31% | Stable reward stream |
+| 77M ADA (z₀) | 79.09 | 11% | Near-deterministic |
 
-At **1 block/epoch**, the CV is 100% — the reward is as variable as its own mean. An epoch with 0 blocks is just as likely as one with 2. A delegator observing such a pool sees wild oscillations between zero and double the expected reward.
+At 1 block/epoch the reward is as variable as its own mean. At **3 blocks/epoch** the pool produces in the overwhelming majority of epochs — this is where a delegator can first observe *consistent* performance. The ~3M ADA line identified in prior work is not an arbitrary ADA amount: it is the point where Poisson noise stops dominating.
 
-At **3 blocks/epoch**, the CV drops to 58% — still volatile, but the pool produces blocks in the overwhelming majority of epochs. This is the threshold where a delegator can observe *consistent* performance. It coincides almost exactly with the **3M ADA viability line** identified in the prior report (Lopez de Lara, 2025/11) — not because 3M was chosen arbitrarily, but because regular block production is the minimum condition for a pool to demonstrate reliability.
+---
 
-#### Current landscape
+**Current landscape:**
 
 | Threshold | Pools above | Active stake covered |
 | --- | --- | --- |
@@ -410,7 +419,7 @@ At **3 blocks/epoch**, the CV drops to 58% — still volatile, but the pool prod
 | ≥3 blocks/epoch (2.92M ADA) | 729 | 97.3% |
 | ≥10 blocks/epoch (10.1M ADA) | 511 | 91.6% |
 
-The production threshold creates a natural cliff: pools below it produce too few blocks for delegators to assess reliability, and their reward variance is too high to sustain consistent yields.
+Below this threshold, pools produce too few blocks for delegators to assess reliability — and their reward variance is too high to sustain consistent yields.
 
 ##### 3.1.2.2 Viability threshold
 
