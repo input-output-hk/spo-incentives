@@ -394,8 +394,6 @@ $$\text{stake}_{n\text{-blocks}} \approx \frac{n \times S_{\text{active}}}{L \ti
 
 At full participation the 3-block threshold rises to **5.35M ADA** — pushing more pools below viability.
 
----
-
 **Why 3 blocks matters.** Block assignments are Poisson-distributed. The coefficient of variation ($\text{CV} = 1/\sqrt{\lambda}$) tells the story:
 
 | Pool stake | E[blocks] | CV | What a delegator sees |
@@ -408,8 +406,6 @@ At full participation the 3-block threshold rises to **5.35M ADA** — pushing m
 | 77M ADA (z₀) | 79.09 | 11% | Near-deterministic |
 
 At 1 block/epoch the reward is as variable as its own mean. At **3 blocks/epoch** the pool produces in the overwhelming majority of epochs — this is where a delegator can first observe *consistent* performance. The ~3M ADA line identified in prior work is not an arbitrary ADA amount: it is the point where Poisson noise stops dominating.
-
----
 
 **Current landscape:**
 
@@ -494,8 +490,6 @@ The boundary values above are computed from current mainnet conditions (epoch 61
 | Saturation | Circulating supply, $k$ | Unchanged | Falls — each pool's cap shrinks |
 
 When evaluating a scenario such as $k = 1000$, the saturation threshold halves to ~38.5M ADA — immediately reclassifying every current "large healthy" pool as near-saturation or saturated. The production and viability thresholds are unaffected by $k$ alone. This asymmetry is analytically important: CIPs targeting $k$ reshape the upper tail; CIPs targeting fees or block production reshape the lower tail.
-
----
 
 #### 3.1.4 Pool distribution by tier
 
