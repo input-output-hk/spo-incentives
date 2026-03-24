@@ -4,79 +4,93 @@ _Built on 2026/03/18 from mainnet data at epoch `618` plus historical analysis f
 
 ## Objective
 
-This report analyses the **pool-level reward distribution** — the second stage of Cardano's reward pipeline — and traces a single diagnostic thread from mechanism to actors to consequences. It extends the empirical baseline established in the *Analysis of Cardano's Incentive Mechanism* (Lopez de Lara, 2025; hereafter the *Incentive Mechanism Analysis*).
+This report analyses the **pool-level reward distribution** — the second stage of Cardano's reward pipeline — and traces a single diagnostic thread from mechanism to actors to consequences. It extends the empirical baseline established in the [*Analysis of Cardano's Incentive Mechanism*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf) (Lopez de Lara, 2025; hereafter the *Incentive Mechanism Analysis*).
 
 Every epoch, the pools pot (~15.5M ADA at epoch 616) enters this stage. The reward curve allocates it across pools based on their stake, pledge, and block performance. What is not distributed **returns to the reserve**. At epoch 616, only **43.7%** of the pools pot reached operators and delegators. This report asks *why*, and follows the answer where it leads.
 
-The argument proceeds in three steps:
+The argument proceeds in four steps:
 
-1. **Diagnosis** (§2). A waterfall decomposition of the pools pot reveals that two causes account for over half the loss. The participation gap (31.6%) is upstream and outside the formula's control. The unused pledge-incentive budget (22.1%) is the single largest *addressable* inefficiency — unchanged since Shelley launch. The pledge mechanism, designed as Cardano's primary Sybil-resistance tool, has never activated.
+1. **The initial design** (§2). The pool-level reward formula — from SL-D1's original specification through a reader-friendly rewrite in normalized saturation coordinates to mainnet parameterization. This establishes the mechanism whose behaviour the rest of the report diagnoses.
 
-2. **Dissection** (§3.1–3.3). The pool landscape is examined layer by layer:
-   - **By structure** (§3.1) — a tier taxonomy from Dormant to Oversaturated, grounded in protocol-derived thresholds (production, viability, saturation).
-   - **By entity** (§3.2) — 85 multi-pool operators control 75% of staked supply. Most are structurally or strategically outside the pledge game. 41 of 48 capital-sufficient MPOs *could* pledge but do not — a revealed preference explained by multi-game optimization.
-   - **By the independent base** (§3.3) — the 2,097 single-pool operators that remain after MPO extraction. The *Incentive Mechanism Analysis*'s 741 healthy pools collapse to 283 once fleet members are removed. 78% of independent stake is non-compliant; 561 marginal operators represent the narrow policy-sensitive population.
+2. **Diagnosis** (§3). A waterfall decomposition of the pools pot reveals that two causes account for over half the loss. The participation gap (31.6%) is upstream and outside the formula's control. The unused pledge-incentive budget (22.1%) is the single largest *addressable* inefficiency — unchanged since Shelley launch. The pledge mechanism, designed as Cardano's primary Sybil-resistance tool, has never activated.
 
-3. **Synthesis** (§3.4). The full picture reassembles these layers. The incentive-responsive field — pools that demonstrably react to the pledge signal — holds only 36% of active stake. The reward sharing scheme was designed for a world of independent operators competing on pledge commitment; the world that exists is a multi-game environment dominated by entities operating outside the mechanism's reach.
+3. **Dissection** (§4.1–4.3). The pool landscape is examined layer by layer:
+   - **By structure** (§4.1) — a tier taxonomy from Dormant to Oversaturated, grounded in protocol-derived thresholds (production, viability, saturation).
+   - **By entity** (§4.2) — 85 multi-pool operators control 75% of staked supply. Most are structurally or strategically outside the pledge game. 41 of 48 capital-sufficient MPOs *could* pledge but do not — a revealed preference explained by multi-game optimization.
+   - **By the independent base** (§4.3) — the 2,097 single-pool operators that remain after MPO extraction. The [*Incentive Mechanism Analysis*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf)'s 741 healthy pools collapse to 283 once fleet members are removed. 78% of independent stake is non-compliant; 561 marginal operators represent the narrow policy-sensitive population.
+
+4. **Synthesis** (§4.4). The full picture reassembles these layers. The incentive-responsive field — pools that demonstrably react to the pledge signal — holds only 36% of active stake. The reward sharing scheme was designed for a world of independent operators competing on pledge commitment; the world that exists is a multi-game environment dominated by entities operating outside the mechanism's reach.
 
 All counts and amounts use the latest available pool snapshot (**epoch 618**) and the latest complete epoch with reward data (**epoch 616**) unless stated otherwise.
 
 ## Contents
 
 1. [Mainnet Observations](#1-mainnet-observations)
-2. [Distribution efficiency](#2-distribution-efficiency)
-   - 2.1 [The participation gap](#21-the-participation-gap)
-   - 2.2 [Pledge-not-met confiscation](#22-pledge-not-met-confiscation)
-   - 2.3 [The reward formula](#23-the-reward-formula)
-   - 2.4 [The eligible pot and the pledge problem](#24-the-eligible-pot-and-the-pledge-problem)
-      - 2.4.1 [Why pledge matters — and why this is not zero-sum](#241-why-pledge-matters--and-why-this-is-not-zero-sum)
-      - 2.4.2 [The playing field: what pledge actually buys](#242-the-playing-field-what-pledge-actually-buys)
-      - 2.4.3 [The envelope mechanics](#243-the-envelope-mechanics)
-      - 2.4.4 [The evidence on mainnet](#244-the-evidence-on-mainnet)
-   - 2.5 [Performance and oversaturation](#25-performance-and-oversaturation)
-   - 2.6 [Summary](#26-summary)
-      - 2.6.1 [Current snapshot](#261-current-snapshot)
-      - 2.6.2 [Historical evolution](#262-historical-evolution)
-      - 2.6.3 [Conclusion](#263-conclusion)
-3. [The pool landscape — who wastes, who pledges, and who struggles](#3-the-pool-landscape--who-wastes-who-pledges-and-who-struggles)
-   - 3.1 [Theoretical pool classification](#31-theoretical-pool-classification)
-      - 3.1.1 [The case for pool categorization](#311-the-case-for-pool-categorization)
-      - 3.1.2 [Structural thresholds](#312-structural-thresholds)
-         - 3.1.2.1 [Production threshold](#3121-production-threshold)
-         - 3.1.2.2 [Viability threshold](#3122-viability-threshold)
-         - 3.1.2.3 [Saturation threshold](#3123-saturation-threshold)
-      - 3.1.3 [Tier definitions](#313-tier-definitions)
-      - 3.1.4 [Pool distribution by tier](#314-pool-distribution-by-tier)
-      - 3.1.5 [Conclusion](#315-conclusion)
-   - 3.2 [Behind the pools — entity-level analysis](#32-behind-the-pools--entity-level-analysis)
-      - 3.2.1 [Attribution method and headline figures](#321-attribution-method-and-headline-figures)
-      - 3.2.2 [The capital-sufficiency divide](#322-the-capital-sufficiency-divide)
-      - 3.2.3 [Operator archetypes](#323-operator-archetypes)
-         - 3.2.3.1 [Classification](#3231-classification)
-         - 3.2.3.2 [Current distribution](#3232-current-distribution)
-         - 3.2.3.3 [Historical evolution](#3233-historical-evolution)
-      - 3.2.4 [Pledge compliance — who plays and who doesn't](#324-pledge-compliance--who-plays-and-who-doesnt)
-         - 3.2.4.1 [Pledge compliance classification](#3241-pledge-compliance-classification)
-         - 3.2.4.2 [Structural non-compliance — CEX and IVaaS](#3242-structural-non-compliance--cex-and-ivaas)
-         - 3.2.4.3 [The cost of non-compliance](#3243-the-cost-of-non-compliance)
-            - 3.2.4.3.1 [Top 10 contributors to MPO pledge waste](#32431-top-10-contributors-to-mpo-pledge-waste)
-            - 3.2.4.3.2 [Top 10 most exemplary MPOs](#32432-top-10-most-exemplary-mpos)
-         - 3.2.4.4 [Pledge compliance × pool tier](#3244-pledge-compliance--pool-tier)
-      - 3.2.5 [Conclusion](#325-conclusion)
-   - 3.3 [The remaining single-pool operators](#33-the-remaining-single-pool-operators)
-      - 3.3.1 [Tier distribution — what MPO removal reveals](#331-tier-distribution--what-mpo-removal-reveals)
-      - 3.3.2 [Pledge compliance and the policy-sensitive population](#332-pledge-compliance-and-the-policy-sensitive-population)
-      - 3.3.3 [Historical evolution](#333-historical-evolution--has-the-single-pool-landscape-always-looked-like-this)
-      - 3.3.4 [Conclusion](#334-conclusion)
-   - 3.4 [The full picture](#34-the-full-picture)
-      - 3.4.1 [The bad actors](#341-the-bad-actors)
-      - 3.4.2 [The good actors](#342-the-good-actors)
-      - 3.4.3 [The struggling middle](#343-the-struggling-middle)
-      - 3.4.4 [The incentive-responsive field](#344-the-incentive-responsive-field)
-      - 3.4.5 [The structural mismatch](#345-the-structural-mismatch)
-4. [Reproduction](#4-reproduction)
-   - 4.1 [Full rebuild](#41-full-rebuild)
-   - 4.2 [Refreshing MPO data](#42-refreshing-mpo-data)
+2. [The initial design](#2-the-initial-design)
+   - 2.1 [Upstream: how the pools pot is assembled](#21-upstream-how-the-pools-pot-is-assembled)
+   - 2.2 [Flow overview](#22-flow-overview)
+   - 2.3 [Formulas](#23-formulas)
+      - 2.3.1 [SL-D1 (Original)](#231-sl-d1-original)
+      - 2.3.2 [Interpretation of the original reward function](#232-interpretation-of-the-original-reward-function)
+      - 2.3.3 [Why rewrite the original formulation](#233-why-rewrite-the-original-formulation)
+      - 2.3.4 [Normalized saturation coordinates](#234-normalized-saturation-coordinates)
+      - 2.3.5 [Reader-friendly reward function](#235-reader-friendly-reward-function)
+      - 2.3.6 [Summary in normalized notation](#236-summary-in-normalized-notation)
+      - 2.3.7 [Mainnet parameterization](#237-mainnet-parameterization)
+      - 2.3.8 [Concept glossary](#238-concept-glossary)
+3. [Distribution efficiency](#3-distribution-efficiency)
+   - 3.1 [The participation gap](#31-the-participation-gap)
+   - 3.2 [Pledge-not-met confiscation](#32-pledge-not-met-confiscation)
+   - 3.3 [The reward formula](#33-the-reward-formula)
+   - 3.4 [The eligible pot and the pledge problem](#34-the-eligible-pot-and-the-pledge-problem)
+      - 3.4.1 [Why pledge matters — and why this is not zero-sum](#341-why-pledge-matters--and-why-this-is-not-zero-sum)
+      - 3.4.2 [The playing field: what pledge actually buys](#342-the-playing-field-what-pledge-actually-buys)
+      - 3.4.3 [The envelope mechanics](#343-the-envelope-mechanics)
+      - 3.4.4 [The evidence on mainnet](#344-the-evidence-on-mainnet)
+   - 3.5 [Performance and oversaturation](#35-performance-and-oversaturation)
+   - 3.6 [Summary](#36-summary)
+      - 3.6.1 [Current snapshot](#361-current-snapshot)
+      - 3.6.2 [Historical evolution](#362-historical-evolution)
+      - 3.6.3 [Conclusion](#363-conclusion)
+4. [The pool landscape — who wastes, who pledges, and who struggles](#4-the-pool-landscape--who-wastes-who-pledges-and-who-struggles)
+   - 4.1 [Theoretical pool classification](#41-theoretical-pool-classification)
+      - 4.1.1 [The case for pool categorization](#411-the-case-for-pool-categorization)
+      - 4.1.2 [Structural thresholds](#412-structural-thresholds)
+         - 4.1.2.1 [Production threshold](#4121-production-threshold)
+         - 4.1.2.2 [Viability threshold](#4122-viability-threshold)
+         - 4.1.2.3 [Saturation threshold](#4123-saturation-threshold)
+      - 4.1.3 [Tier definitions](#413-tier-definitions)
+      - 4.1.4 [Pool distribution by tier](#414-pool-distribution-by-tier)
+      - 4.1.5 [Conclusion](#415-conclusion)
+   - 4.2 [Behind the pools — entity-level analysis](#42-behind-the-pools--entity-level-analysis)
+      - 4.2.1 [Attribution method and headline figures](#421-attribution-method-and-headline-figures)
+      - 4.2.2 [The capital-sufficiency divide](#422-the-capital-sufficiency-divide)
+      - 4.2.3 [Operator archetypes](#423-operator-archetypes)
+         - 4.2.3.1 [Classification](#4231-classification)
+         - 4.2.3.2 [Current distribution](#4232-current-distribution)
+         - 4.2.3.3 [Historical evolution](#4233-historical-evolution)
+      - 4.2.4 [Pledge compliance — who plays and who doesn't](#424-pledge-compliance--who-plays-and-who-doesnt)
+         - 4.2.4.1 [Pledge compliance classification](#4241-pledge-compliance-classification)
+         - 4.2.4.2 [Structural non-compliance — CEX and IVaaS](#4242-structural-non-compliance--cex-and-ivaas)
+         - 4.2.4.3 [The cost of non-compliance](#4243-the-cost-of-non-compliance)
+            - 4.2.4.3.1 [Top 10 contributors to MPO pledge waste](#42431-top-10-contributors-to-mpo-pledge-waste)
+            - 4.2.4.3.2 [Top 10 most exemplary MPOs](#42432-top-10-most-exemplary-mpos)
+         - 4.2.4.4 [Pledge compliance × pool tier](#4244-pledge-compliance--pool-tier)
+      - 4.2.5 [Conclusion](#425-conclusion)
+   - 4.3 [The remaining single-pool operators](#43-the-remaining-single-pool-operators)
+      - 4.3.1 [Tier distribution — what MPO removal reveals](#431-tier-distribution--what-mpo-removal-reveals)
+      - 4.3.2 [Pledge compliance and the policy-sensitive population](#432-pledge-compliance-and-the-policy-sensitive-population)
+      - 4.3.3 [Historical evolution](#433-historical-evolution)
+      - 4.3.4 [Conclusion](#434-conclusion)
+   - 4.4 [The full picture](#44-the-full-picture)
+      - 4.4.1 [The bad actors](#441-the-bad-actors)
+      - 4.4.2 [The good actors](#442-the-good-actors)
+      - 4.4.3 [The struggling middle](#443-the-struggling-middle)
+      - 4.4.4 [The incentive-responsive field](#444-the-incentive-responsive-field)
+      - 4.4.5 [The structural mismatch](#445-the-structural-mismatch)
+5. [Reproduction](#5-reproduction)
+   - 5.1 [Full rebuild](#51-full-rebuild)
+   - 5.2 [Refreshing MPO data](#52-refreshing-mpo-data)
 
 ---
 
@@ -85,38 +99,38 @@ All counts and amounts use the latest available pool snapshot (**epoch 618**) an
 | # | Observation | Section | Nature |
 | --- | --- | --- | --- |
 | | **O1 — Two causes account for 54% of the pools pot returning to reserve** | | |
-| F1.1 | Only 6.79M of 15.53M ADA/epoch reaches operators and delegators — 44% distribution efficiency | §2.6.1 | Epoch 616 |
-| F1.2 | The participation gap (unstaked ADA) alone returns 4.91M ADA/epoch — 31.6% of the pot | §2.1 | Upstream — outside formula control |
-| F1.3 | The unused pledge-incentive budget returns 3.43M ADA/epoch — 22.1% of the pot, 95.6% of the bonus budget wasted | §2.4.1 | Addressable by formula reform |
-| F1.4 | These two causes together (53.7% of pot) dwarf all others: pledge-not-met confiscation (2.1%), performance (0.5%), oversaturation (0.3%) are secondary | §2.6.1 | The reform priority is clear |
+| F1.1 | Only 6.79M of 15.53M ADA/epoch reaches operators and delegators — 44% distribution efficiency | §3.6.1 | Epoch 616 |
+| F1.2 | The participation gap (unstaked ADA) alone returns 4.91M ADA/epoch — 31.6% of the pot | §3.1 | Upstream — outside formula control |
+| F1.3 | The unused pledge-incentive budget returns 3.43M ADA/epoch — 22.1% of the pot, 95.6% of the bonus budget wasted | §3.4.1 | Addressable by formula reform |
+| F1.4 | These two causes together (53.7% of pot) dwarf all others: pledge-not-met confiscation (2.1%), performance (0.5%), oversaturation (0.3%) are secondary | §3.6.1 | The reform priority is clear |
 | | **O2 — The pledge mechanism is economically broken** | | |
-| F2.1 | 78% of staked ADA sits in pools with pledge ratio < 1%; stake-weighted median ratio is 0.07% | §2.4.4 | Structural — pledge is absent where stake concentrates |
-| F2.2 | Yield on pledge capital is 0.68%/yr at best (full saturation) — below passive delegation yield of 2.3%/yr | §2.4.2 | Economically irrational to pledge |
-| F2.3 | 3.4M ADA/epoch (22% of pot) is reserved for pledge bonus but returns to reserve unused | §2.6.1 | Structural cost of maintaining $a_0 = 0.3$ |
+| F2.1 | 78% of staked ADA sits in pools with pledge ratio < 1%; stake-weighted median ratio is 0.07% | §3.4.4 | Structural — pledge is absent where stake concentrates |
+| F2.2 | Yield on pledge capital is 0.68%/yr at best (full saturation) — below passive delegation yield of 2.3%/yr | §3.4.2 | Economically irrational to pledge |
+| F2.3 | 3.4M ADA/epoch (22% of pot) is reserved for pledge bonus but returns to reserve unused | §3.6.1 | Structural cost of maintaining $a_0 = 0.3$ |
 | | **O3 — The pool landscape is stratified into four tiers** | | |
-| F3.1 | Regular block production requires ~3M ADA stake (~3 blocks/epoch) — the emergent viability boundary | §3.1.2.1 | Structural — not a protocol parameter |
-| F3.2 | Below 1.1M ADA, the 340 ADA fixed cost exceeds pool reward — operators are in economic loss | §3.1.2.2 | 1,987 below-viability pools affected |
-| F3.3 | Only 8 pools reach the saturation threshold ($z_0$ = 77M ADA) — the cap designed for 500 pools is nearly inactive | §3.1.2.3 | 1.6% of design target |
-| F3.4 | Active stake fills only 56.5% of theoretical capacity ($k \times z_0$) — at most 282 pools could saturate | §3.1.2.3 | Capital constraint |
-| F3.5 | Tier boundaries are dynamic — they shift with active stake, fixed costs, and $k$; any CIP evaluation must track where they move | §3.1.5 | Framework — not a snapshot |
-| F3.6 | CIPs targeting $k$ reshape the upper tail; CIPs targeting fees reshape the lower tail — reforms hit different tiers | §3.1.5 | Asymmetric reform impact |
+| F3.1 | Regular block production requires ~3M ADA stake (~3 blocks/epoch) — the emergent viability boundary | §4.1.2.1 | Structural — not a protocol parameter |
+| F3.2 | Below 1.1M ADA, the 340 ADA fixed cost exceeds pool reward — operators are in economic loss | §4.1.2.2 | 1,987 below-viability pools affected |
+| F3.3 | Only 8 pools reach the saturation threshold ($z_0$ = 77M ADA) — the cap designed for 500 pools is nearly inactive | §4.1.2.3 | 1.6% of design target |
+| F3.4 | Active stake fills only 56.5% of theoretical capacity ($k \times z_0$) — at most 282 pools could saturate | §4.1.2.3 | Capital constraint |
+| F3.5 | Tier boundaries are dynamic — they shift with active stake, fixed costs, and $k$; any CIP evaluation must track where they move | §4.1.5 | Framework — not a snapshot |
+| F3.6 | CIPs targeting $k$ reshape the upper tail; CIPs targeting fees reshape the lower tail — reforms hit different tiers | §4.1.5 | Asymmetric reform impact |
 | | **O4 — Multi-pool operators control 75% of staked supply** | | |
-| F4.1 | 85 MPO entities operate 901 pools holding 16.4B ADA — 75.4% of participating stake | §3.2.1 | Structural — concentration |
-| F4.2 | 48 capital-sufficient MPOs (14.5B ADA) could play the pledge game; 37 capital-insufficient MPOs (1.74B ADA) cannot | §3.2.2 | Scale determines access |
-| F4.3 | 41 of 48 capital-sufficient MPOs are non-compliant — they forfeit ~550K ADA/epoch in pledge bonus | §3.2.4.1 | Strategic non-response |
-| F4.4 | CEX + IVaaS alone hold 7.4B ADA (19.2% of supply) at structurally zero pledge | §3.2.4.2 | Custodial constraint |
-| F4.5 | Capital-sufficient non-compliance is a scale phenomenon — 82.9% of capital-sufficient viable MPO stake, >99% of 12B ADA in viable-and-above pools | §3.2.4.4 | Non-compliance spans every viable tier |
-| F4.6 | Non-compliance is spread across the full tier spectrum — no single-tier fix exists; any parameter change ripples across all tiers | §3.2.4.4 | Reform constraint |
-| F4.7 | 3 exemplary MPOs capture 82% of bonus ADA among pledging entities — but CF pledges by mandate; the mechanism's output rests on 2 private entities (67% of pledging bonus) | §3.2.4.3 | A Sybil-resistance tool for 500 pools is a transfer to two |
+| F4.1 | 85 MPO entities operate 901 pools holding 16.4B ADA — 75.4% of participating stake | §4.2.1 | Structural — concentration |
+| F4.2 | 48 capital-sufficient MPOs (14.5B ADA) could play the pledge game; 37 capital-insufficient MPOs (1.74B ADA) cannot | §4.2.2 | Scale determines access |
+| F4.3 | 41 of 48 capital-sufficient MPOs are non-compliant — they forfeit ~550K ADA/epoch in pledge bonus | §4.2.4.1 | Strategic non-response |
+| F4.4 | CEX + IVaaS alone hold 7.4B ADA (19.2% of supply) at structurally zero pledge | §4.2.4.2 | Custodial constraint |
+| F4.5 | Capital-sufficient non-compliance is a scale phenomenon — 82.9% of capital-sufficient viable MPO stake, >99% of 12B ADA in viable-and-above pools | §4.2.4.4 | Non-compliance spans every viable tier |
+| F4.6 | Non-compliance is spread across the full tier spectrum — no single-tier fix exists; any parameter change ripples across all tiers | §4.2.4.4 | Reform constraint |
+| F4.7 | 3 exemplary MPOs capture 82% of bonus ADA among pledging entities — but CF pledges by mandate; the mechanism's output rests on 2 private entities (67% of pledging bonus) | §4.2.4.3 | A Sybil-resistance tool for 500 pools is a transfer to two |
 | | **O5 — The independent operator base is far smaller and weaker than it appears** | | |
-| F3.7 | The *Incentive Mechanism Analysis*'s 741 healthy pools collapse to 283 independent viable operators once MPO fleet members are removed — the other 61% were fleet pools | §3.3.1 | The competitive field is 3× smaller than headline |
-| F3.8 | 78% of independent single-pool stake is non-compliant — the pledge signal is correctly priced as irrelevant at their scale | §3.3.2 | Rational non-compliance |
-| F3.9 | 561 marginal single-pool operators (16% of single-pool stake) partially pledge — the narrow policy-sensitive population | §3.3.2 | Target for parameter reform |
-| F3.10 | Independent operators' share of active stake has fallen from 28.0% to 25.0% since epoch 583 — internal pledge composition barely changed | §3.3.3 | Slow structural decline |
+| F3.7 | The [*Incentive Mechanism Analysis*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf)'s 741 healthy pools collapse to 283 independent viable operators once MPO fleet members are removed — the other 61% were fleet pools | §4.3.1 | The competitive field is 3× smaller than headline |
+| F3.8 | 78% of independent single-pool stake is non-compliant — the pledge signal is correctly priced as irrelevant at their scale | §4.3.2 | Rational non-compliance |
+| F3.9 | 561 marginal single-pool operators (16% of single-pool stake) partially pledge — the narrow policy-sensitive population | §4.3.2 | Target for parameter reform |
+| F3.10 | Independent operators' share of active stake has fallen from 28.0% to 25.0% since epoch 583 — internal pledge composition barely changed | §4.3.3 | Slow structural decline |
 | | **O6 — The incentive-responsive field is a fraction of the network** | | |
-| F6.1 | 78 of 85 MPO entities (13.74B ADA, 63% of active stake) are outside the pledge-response path — multi-game optimization, not calibration failure | §3.4.1 | Structural + strategic |
-| F6.2 | CEX cannot pledge custodied funds; IVaaS cannot pledge client assets; community fleets choose not to — three distinct mechanisms | §3.2.4.2 | Architectural vs strategic |
-| F6.3 | The filtered proxy (single-pool operators + retained MPOs) holds 7.89B ADA — only 36% of active stake responds to the pledge signal | §3.4.4 | The actual incentive-responsive arena |
+| F6.1 | 78 of 85 MPO entities (13.74B ADA, 63% of active stake) are outside the pledge-response path — multi-game optimization, not calibration failure | §4.4.1 | Structural + strategic |
+| F6.2 | CEX cannot pledge custodied funds; IVaaS cannot pledge client assets; community fleets choose not to — three distinct mechanisms | §4.2.4.2 | Architectural vs strategic |
+| F6.3 | The filtered proxy (single-pool operators + retained MPOs) holds 7.89B ADA — only 36% of active stake responds to the pledge signal | §4.4.4 | The actual incentive-responsive arena |
 
 ### The big picture
 
@@ -143,13 +157,287 @@ The rest of the landscape is a fixed background — structurally non-responsive 
 
 ---
 
-## 2. Distribution efficiency
+## 2. The initial design
+
+The pool-level reward mechanism analysed in this report was specified in [*Design Specification for Delegation and Incentives in Cardano*](https://github.com/IntersectMBO/cardano-ledger/releases/latest/download/shelley-delegation.pdf) (Kant, Brünjes & Coutts, IOHK, 2019 — deliverable **SL-D1**). The scheme has been operational on mainnet since the Shelley hard fork on 2020/07/29 and its core parameters ($a_0$, $k$, $\rho$, $\tau$) have never been modified since.
+
+This section presents the mechanism in two parts: the upstream pipeline that produces the budget (§2.1), and the formula that allocates it across pools (§2.2–2.3). Understanding both is necessary to interpret the efficiency and behavioural analysis that follows.
+
+### 2.1 Upstream: how the pools pot is assembled
+
+Before any individual pool receives rewards, the protocol must answer a prior question: **how much ADA is available this epoch?**
+
+The answer comes from the *Treasury & Pool Pots Distribution* stage — the first layer of the reward pipeline. Each epoch, the protocol assembles an **epoch pot** from three on-chain sources, then splits it between the treasury and the pools:
+
+$$
+Pot^{\text{epoch}}
+= Fee^{\text{epoch}}_{\text{tx}}
++ Deposit^{\text{epoch}}_{\text{nonRefundable}}
++ \min\!\left(\frac{Blocks^{\text{epoch}}_{\text{produced}}}{Blocks^{\text{epoch}}_{\text{expected}}},\,1\right)
+\cdot \rho \cdot (T_{\infty} - T)
+$$
+
+$$
+PoolsPot^{\text{epoch}} = (1 - \tau) \cdot Pot^{\text{epoch}}
+\qquad\qquad
+TreasuryPot^{\text{epoch}} = \tau \cdot Pot^{\text{epoch}}
+$$
+
+On mainnet: $\rho = 0.3\%$ (monetary expansion rate), $\tau = 20\%$ (treasury take). The split is exhaustive — nothing is lost.
+
+In practice, this stage is dominated by a single input: **monetary expansion accounts for ~99.8% of the epoch pot**. Transaction fees contribute ~0.19%; deposits are unmeasurable at epoch granularity. SPOs produce ~97% of assigned blocks on average, so the pot assembles reliably. The mechanism works — but it runs on a finite fuel supply.
+
+**Key facts from the upstream analysis** (documented in the companion report *Treasury & Pool Pots Distribution*):
+
+- **The reserve has crossed its half-life.** From 13.29B to 6.53B ADA in 5.5 years. The nominal expansion draw has halved from ~39.9M to ~19.5M ADA/epoch. Significant reward pressure is projected around epochs 1000–1200 (~2028–2029).
+
+- **Fee revenue is orders of magnitude below self-sufficiency.** Even at full realistic capacity (~3.1 TPS), fees would cover only ~1.3% of the reserve expansion term. Reaching fee self-sufficiency requires 12–16× today's realistic throughput — both a capacity upgrade and a structural increase in demand.
+
+- **Only ~44% of the pools pot is distributed.** Of the ~15.5M ADA entering the pool-distribution stage at epoch 616, only ~6.8M reaches operators and delegators. The rest returns to the reserve — primarily because 43.5% of circulating ADA does not participate in delegation.
+
+- **Reward parameters have never been adjusted.** $\rho = 0.3\%$ and $\tau = 20\%$ are unchanged since Shelley inception. Neither has been the subject of a formal governance proposal.
+
+These upstream conditions define the sustainability context within which the pool-level mechanism operates. They are outside the scope of the pool-distribution formula analysed below — but they set the budget ceiling that makes every inefficiency at this layer more consequential.
+
+### 2.2 Flow overview
+
+The pools pot ($PoolsPot^{\text{epoch}}$) enters this stage as a single budget. The protocol distributes it across individual pools in three steps:
+
+1. **Saturation clipping.** Both total stake ($\sigma_i$) and pledge ($s_i$) are capped at the saturation threshold $z_0 = 1/k$. This prevents any single pool from capturing a disproportionate share.
+
+2. **Reward curve evaluation.** A reward function $f$ computes the pool's *optimal* allocation from its clipped stake and pledge. The curve has two components: a **base stake term** (proportional to delegation) and a **pledge-bonus term** (nonlinear, governed by $a_0$). The pledge bonus is meant to reward operator commitment ("skin in the game").
+
+3. **Performance adjustment.** The optimal allocation is scaled by apparent performance $\bar{p}_i$ to produce the *actual* allocation. Pools that miss blocks receive less. If the registered pledge is not met, the allocation is zeroed entirely.
+
+Any rewards not distributed ($\sum_i \hat{f}_i < R$) return to the reserve.
+
+Two design choices matter for the rest of the analysis:
+
+- **Pledge sensitivity via $a_0$.** The parameter $a_0$ controls how much additional reward a pool can earn through pledge. At $a_0 = 0.3$, the pledge bonus represents at most ~23% of the optimal allocation. Whether this is sufficient to meaningfully incentivise pledge is a central question.
+
+- **Uniform saturation threshold.** All pools share the same cap $z_0 = 1/k$. There is no mechanism to differentiate saturation based on pledge level or pool characteristics — CIP-0050 and CIP-0037 both propose to change this.
+
+### 2.3 Formulas
+
+#### 2.3.1 SL-D1 (Original)
+
+The original SL-D1 pool-distribution rules are:
+
+$$
+f(s,\sigma)
+= \frac{R}{1+a_0}
+\left(
+\sigma' + s'a_0\cdot\frac{\sigma' - s'\left(\frac{z_0-\sigma'}{z_0}\right)}{z_0}
+\right)
+$$
+
+$$
+\hat f(s,\sigma,\bar p) := \bar p \cdot f(s,\sigma)
+$$
+
+$$
+\sum_i \hat f(s_i,\sigma_i,\bar p_i) \le R
+$$
+
+$$
+R - \sum_i \hat f(s_i,\sigma_i,\bar p_i) \; \text{is not paid out and remains accounted in } (T_{\infty}-T)
+$$
+
+$$
+\text{if pledge not met in epoch } \Rightarrow \hat f = 0
+$$
+
+#### 2.3.2 Interpretation of the original reward function
+
+The core reward function is evaluated on the clipped inputs
+$s' := \min(s,z_0)$ and $\sigma' := \min(\sigma,z_0)$, not directly on the raw quantities $s$ and $\sigma$.
+Thus:
+
+- $s$ — operator pledge before clipping
+- $\sigma$ — total stake delegated to the pool before clipping
+- $s'$ — pledge after clipping at the saturation threshold
+- $\sigma'$ — total stake after clipping at the saturation threshold
+
+The function has two components:
+
+- A **base term**, $\sigma'$, which rewards stake up to saturation.
+- A **pledge-bonus term**, $s'a_0 \cdot \dfrac{\sigma' - s'\left(\frac{z_0-\sigma'}{z_0}\right)}{z_0}$.
+
+The factor $\left(\frac{z_0-\sigma'}{z_0}\right)$ measures the remaining headroom before saturation. As the pool approaches saturation, this headroom shrinks and the pledge-bonus term is progressively dampened. The outer factor $\dfrac{R}{1+a_0}$ keeps the overall reward mass bounded.
+
+#### 2.3.3 Why rewrite the original formulation
+
+The original SL-D1 formula is correct, but awkward to analyze directly:
+
+- It mixes two separate concerns in a single expression — the clipping step that enforces saturation, and the reward computation performed after clipping.
+- The pledge-sensitive part is harder to read than it needs to be. The term $\sigma' - s'\left(\frac{z_0-\sigma'}{z_0}\right)$ hides a quadratic dependence on pledge that only becomes obvious after expansion.
+- The most natural coordinates for analysis are not the raw stake shares $s$ and $\sigma$, but their positions relative to the saturation threshold $z_0$.
+
+#### 2.3.4 Normalized saturation coordinates
+
+In the **non-saturated regime** where clipping is inactive ($s' = s$, $\sigma' = \sigma$), we introduce two normalized coordinates measured relative to the saturation threshold $z_0$:
+
+$$
+\pi := \frac{s}{z_0}
+\qquad\text{and}\qquad
+\nu := \frac{\sigma}{z_0}
+$$
+
+Under $0 < s \le \sigma \le z_0$, these satisfy $0 < \pi \le \nu \le 1$.
+
+The variables have a direct interpretation:
+
+- $\pi$ is the **pledge saturation level** — what fraction of the saturation threshold is covered by operator pledge
+- $\nu$ is the **total-stake saturation level** — what fraction of the saturation threshold is covered by the pool's total stake
+
+An important structural property emerges: the allocation depends only on the **ratios of pledge and total stake relative to the saturation threshold**, not on their absolute values. The saturation threshold $z_0$ acts purely as a scaling parameter; the shape of the reward curve is governed by $a_0$ alone.
+
+Substituting $s = \pi z_0$ and $\sigma = \nu z_0$ into the non-saturated SL-D1 formula gives:
+
+$$
+f(\pi z_0,\nu z_0)
+= z_0R
+\left(
+\frac{1}{1+a_0}\nu
++
+\frac{a_0}{1+a_0}\left(\pi\nu-\pi^2(1-\nu)\right)
+\right)
+$$
+
+This makes the structure explicit:
+
+- $z_0R$ — the **maximum reward scale of a fully saturated pool**
+- $\frac{1}{1+a_0}\nu$ — the **base stake component**
+- $\frac{a_0}{1+a_0}\left(\pi\nu-\pi^2(1-\nu)\right)$ — the **pledge-sensitive component**
+
+The nonlinear pledge-sensitive part isolates as
+
+$$
+A(\pi,\nu) := \pi\nu - \pi^2(1-\nu)
+$$
+
+which we call the **pledge-bonus activation function**.
+
+#### 2.3.5 Reader-friendly reward function
+
+Define three derived quantities:
+
+| Symbol | Name | Definition | Interpretation |
+| --- | --- | --- | --- |
+| $P_{\max}$ | **Reward ceiling** | $z_0R$ | Maximum any single pool can earn per epoch. In the ideal design, $k$ pools each earn $P_{\max}$ and the full pot is distributed. |
+| $\lambda_{\min}$ | **Size fraction** | $\frac{1}{1+a_0}$ | Share of $P_{\max}$ accessible through stake alone (zero pledge). Defines the **size ceiling**. |
+| $\lambda_{\max}$ | **Pledge fraction** | $\frac{a_0}{1+a_0}$ | Remaining share of $P_{\max}$ unlockable by pledge. The **commitment premium**. |
+
+These satisfy $\lambda_{\min} + \lambda_{\max} = 1$.
+
+The reward function becomes:
+
+$$
+f'(\pi,\nu)
+= P_{\max}
+\left(
+\lambda_{\min}\nu
++
+\lambda_{\max}A(\pi,\nu)
+\right)
+$$
+
+This reads as: **ceiling** ($P_{\max}$) × **proportioning envelope** $E(\pi,\nu)$, where
+
+$$
+E(\pi,\nu) = \lambda_{\min}\nu + \lambda_{\max}A(\pi,\nu)
+$$
+
+The envelope determines what fraction of $P_{\max}$ the pool captures, and ranges from 0 to 1:
+
+| Tier | Envelope value | What it requires | Interpretation |
+| --- | --- | --- | --- |
+| Absolute ceiling | $E = 1$ | $\nu = 1, \pi = 1$ | Full saturation + full pledge → pool earns $P_{\max}$ |
+| Size ceiling | $E = \lambda_{\min}$ | $\nu = 1, \pi = 0$ | Full saturation, zero pledge → pool earns $\lambda_{\min} \times P_{\max}$ |
+| Typical pool | $E \ll 1$ | $\nu \ll 1$ | Undersaturated → reward scales linearly with $\nu$ |
+
+Two structural properties of the envelope:
+
+- The **base term** $\lambda_{\min}\nu$ is **linear in $\nu$** — it depends only on total pool size relative to saturation. The distribution of stake across pools does not affect the aggregate base.
+
+- The **bonus term** $\lambda_{\max}A(\pi,\nu)$ is **non-linear** — at maximum pledge ($\pi = \nu$) it reduces to $\lambda_{\max}\nu^3$. The cubic dependence means the bonus is structurally suppressed at low saturation levels and favours fewer, larger pools.
+
+#### 2.3.6 Summary in normalized notation
+
+| Rule / function | Mathematical form | Interpretation |
+| --- | --- | --- |
+| Pledge-bonus activation | $A(\pi,\nu) := \pi\nu - \pi^2(1-\nu)$ | Nonlinear pledge-sensitive part of the reward curve |
+| Normalized optimal reward | $f'(\pi,\nu) = P_{\max}\left(\lambda_{\min}\nu + \lambda_{\max}A(\pi,\nu)\right)$ | Ceiling × envelope |
+| Performance-adjusted allocation | $\hat f'(\pi,\nu,\bar p) := \bar p \cdot f'(\pi,\nu)$ | Actual pool allocation |
+| Epoch consistency | $\sum_i \hat f'(\pi_i,\nu_i,\bar p_i) \le R$ | Total cannot exceed budget |
+| Undistributed remainder | $R - \sum_i \hat f'(\pi_i,\nu_i,\bar p_i)$ | Returns to reserve |
+| Pledge enforcement | if pledge not met → $\hat f' = 0$ | Pool allocation zeroed |
+
+#### 2.3.7 Mainnet parameterization
+
+On mainnet, the key protocol parameters are:
+
+$$
+a_0 = 0.3 \qquad k = 500 \qquad z_0 = \frac{1}{k} = 0.2\%
+$$
+
+From which:
+
+$$
+\lambda_{\min} = \frac{1}{1.3} \approx 76.9\% \qquad \lambda_{\max} = \frac{0.3}{1.3} \approx 23.1\%
+$$
+
+$$
+P_{\max} = z_0 \cdot R = 0.2\% \times PoolsPot^{\text{epoch}}
+$$
+
+The three reward tiers under mainnet conditions (epoch 616, $R \approx 15.53\text{M ADA}$):
+
+| Tier | Formula | Reward/epoch | Capital required |
+| --- | --- | --- | --- |
+| **Absolute ceiling** ($P_{\max}$) | $\frac{R}{k}$ | ~31K ADA | 77M ADA stake + 77M ADA pledge |
+| **Size ceiling** ($\lambda_{\min} P_{\max}$) | $\frac{R}{k} \cdot 76.9\%$ | ~23.9K ADA | 77M ADA stake, no pledge |
+| **Commitment premium** ($\lambda_{\max} P_{\max}$) | $\frac{R}{k} \cdot 23.1\%$ | ~7.2K ADA | Gap — requires 77M ADA personal pledge |
+
+The size ceiling is accessible to **any** saturated pool regardless of pledge. The commitment premium reserves 23.1% of $P_{\max}$ for pledge activation — but unlocking it requires operator capital equal to the full saturation threshold. The implied yield on that capital ($\lambda_{\max} \cdot P_{\max}$ annualized / $z_0$ in ADA) is substantially below the passive delegation yield, making the pledge bonus economically weak as an incentive.
+
+The full formula including apparent performance reads as a cascade:
+
+$$
+\hat f'(\pi,\nu,\bar p) = \underbrace{\bar{p}}_{\text{performance}} \;\cdot\; \underbrace{P_{\max}}_{\text{ceiling}} \;\cdot\; \underbrace{E(\pi,\nu)}_{\text{envelope}}
+$$
+
+Each factor acts as a discount from $P_{\max}$. When all three equal their ideal value, the pool earns the full ceiling. Every departure reduces the payout, and the difference returns to the reserve. §3 decomposes exactly how much is lost at each step on mainnet.
+
+#### 2.3.8 Concept glossary
+
+| SL-D1 | Normalized | Meaning | Mainnet |
+| --- | --- | --- | --- |
+| $R$ | $PoolsPot^{\text{epoch}}$ | Pool-side reward budget | ~15.5M ADA |
+| $a_0$ | $\alpha^{\text{protocol}}_{\text{skinInTheGame}}$ | Pledge-influence strength | 0.3 |
+| $z_0$ | $k^{\text{protocol}}_{\text{saturation}}$ | Saturation threshold per pool | 0.2% |
+| $\sigma$ | $\sigma^{\text{totalStaked}}_{i}$ | Total stake before clipping | Dynamic |
+| $s$ | $\pi^{\text{pledged}}_{i}$ | Pledge before clipping | Dynamic |
+| $f$ | $PoolPot^{\text{optimal}}_{i}$ | Optimal pool allocation | Dynamic |
+| $\bar p$ | $\bar p^{\text{pool}}_{\text{apparent},i}$ | Performance multiplier | ~1 |
+| $\hat f$ | $PoolPot^{\text{actual}}_{i}$ | Actual pool allocation | Dynamic |
+| — | $\pi$ | Normalized pledge ($s/z_0$) | $0 < \pi < 1$ |
+| — | $\nu$ | Normalized total stake ($\sigma/z_0$) | $0 < \nu < 1$ |
+| — | $A(\pi,\nu)$ | Pledge-bonus activation | $\pi\nu - \pi^2(1-\nu)$ |
+| — | $P_{\max}$ | Reward ceiling | $z_0 R$ |
+| — | $\lambda_{\min}$ | Size fraction | $1/(1+a_0)$ |
+| — | $\lambda_{\max}$ | Pledge fraction | $a_0/(1+a_0)$ |
+| — | $E(\pi,\nu)$ | Proportioning envelope | $\lambda_{\min}\nu + \lambda_{\max}A(\pi,\nu)$ |
+
+---
+
+## 3. Distribution efficiency
 
 > **56.3% of the pools pot never reaches operators or delegators.** Of the 15.53M ADA entering this stage at epoch 616, only 6.79M ADA was distributed. The rest returned to the reserve.
 
 This section traces where the pot goes, step by step. Each step removes a slice before the next cause can act, and at each step we open the formula to show *why* that slice is lost.
 
-### 2.1 The participation gap
+### 3.1 The participation gap
 
 The pools pot is sized for the full circulating supply. With 43.5% of ADA undelegated, a proportional share of the pot has no pool to claim it.
 
@@ -161,7 +449,7 @@ The pools pot is sized for the full circulating supply. With 43.5% of ADA undele
 
 > **Finding F1.2 — The participation gap returns 4.91M ADA/epoch (31.6% of the pot) to the reserve.** Because the base is distribution-neutral, this gap depends *only* on how much ADA is staked — not on how it is arranged across pools. No formula change can close it. Only increased staking participation can.
 
-### 2.2 Pledge-not-met confiscation
+### 3.2 Pledge-not-met confiscation
 
 When a pool operator *declares* a pledge in their pool certificate but the owners' stake keys do not actually hold that amount at the epoch boundary, the protocol sets the pool's reward to **zero for the entire epoch**. Not a reduction — a total confiscation.
 
@@ -177,7 +465,7 @@ At epoch 615, **692 pools** failed this check. They produced **1,049 blocks**, a
 
 This happens more often than one might expect. Historically, **2,797 pools** have experienced at least one pledge-unmet epoch, and **833 are chronically in default** (pledge met less than 50% of the time). The typical cause is operational: an operator moves ADA out of their pledge wallet for liquidity or DeFi, or mishandles a key rotation, and doesn't realize the consequence until rewards are already lost.
 
-### 2.3 The reward formula
+### 3.3 The reward formula
 
 Before going further down the waterfall, we need to open the formula that governs everything below this point. Each pool's reward is:
 
@@ -215,19 +503,19 @@ The base is **distribution-neutral**: 100M ADA in one pool earns exactly the sam
 
 This split — 76.9% for size, 23.1% for pledge — is the key to understanding everything that follows.
 
-### 2.4 The eligible pot and the pledge problem
+### 3.4 The eligible pot and the pledge problem
 
 After removing the participation gap and confiscated rewards, **10.30M ADA/epoch** remains — the "eligible pot". This is what the formula distributes among pools that passed the pledge check. Within it, the single largest loss is the **unused pledge budget**.
 
-#### 2.4.1 Why pledge matters — and why this is not zero-sum
+#### 3.4.1 Why pledge matters — and why this is not zero-sum
 
 The formula reserves $\lambda_{\max} = 23.1\%$ of the pot — **3.58M ADA every epoch** — as a bonus for operators who self-pledge. This is not a reward optimisation. It is the protocol's **primary Sybil-resistance mechanism**. The design specification (Brünjes et al., 2020) is explicit: the pledge requirement exists so that "an adversary who wishes to increase his chances of being elected [must] split his stake among several stakepools, decreasing each pool's apparent pledge and therefore its attractiveness." Pledge is the economic barrier that makes pool proliferation expensive. Without it, the cost of running a pool farm drops to near zero and the network's decentralisation guarantees erode.
 
-The *Incentive Mechanism Analysis* characterised the pledge-bonus shortfall as economically neutral — a zero-sum redistribution where uncaptured ADA returns to the reserve. This framing is incomplete. **The 22.1% of the pot that returns unused is not idle capital awaiting redistribution. It is the budget the protocol explicitly allocates to its own security model — and 95.6% of that budget fails to activate.**
+The [*Incentive Mechanism Analysis*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf) characterised the pledge-bonus shortfall as economically neutral — a zero-sum redistribution where uncaptured ADA returns to the reserve. This framing is incomplete. **The 22.1% of the pot that returns unused is not idle capital awaiting redistribution. It is the budget the protocol explicitly allocates to its own security model — and 95.6% of that budget fails to activate.**
 
 > **Finding F1.3 — The unused pledge-incentive budget returns 3.43M ADA/epoch (~250M ADA/year) — 22.1% of the pot, with 95.6% of the bonus budget wasted.** This is the single largest inefficiency that incentive reform *can* address. Unlike the participation gap, it is entirely within the formula's control.
 
-#### 2.4.2 The playing field: what pledge actually buys
+#### 3.4.2 The playing field: what pledge actually buys
 
 ![The Playing Field](figures/playing_field_mainnet.png)
 
@@ -257,7 +545,7 @@ A 10M ADA pool where the operator pledges the entire pool earns 16 ADA more per 
 
 The bonus exists in the formula but not in the economics.
 
-#### 2.4.3 The envelope mechanics
+#### 3.4.3 The envelope mechanics
 
 The proportioning envelope determines what fraction of $P_{\max}$ the pool can capture:
 
@@ -279,7 +567,7 @@ The cubic scaling is the crux. At ν = 0.1 (a 7.7M pool), even with perfect pled
 | 0.3 | 0.027 | 0.62% | 23.70% | 2.70% |
 | 0.1 | 0.001 | 0.023% | 7.72% | 0.30% |
 
-#### 2.4.4 The evidence on mainnet
+#### 3.4.4 The evidence on mainnet
 
 Absolute pledge amounts are misleading — a 1M ADA pledge means something very different for a saturated pool (ν ≈ 1, π ≈ 0.013) than for a small one (ν ≈ 0.1, π ≈ 0.13). The relevant metric is the **pledge ratio**: declared pledge divided by active stake. This is what the formula actually prices through the $A(\pi, \nu)$ term.
 
@@ -301,7 +589,7 @@ The stake-weighted median pledge ratio is **0.07%** — meaning half of all stak
 
 This asymmetry is the structural signature of the pledge problem. At π = 0.001 and ν = 0.5, the bonus is 0.0006% of $P_{\max}$. The anti-Sybil mechanism is present in the formula but absent from the economics.
 
-### 2.5 Performance and oversaturation
+### 3.5 Performance and oversaturation
 
 Two minor waste sources complete the picture:
 
@@ -311,9 +599,9 @@ Two minor waste sources complete the picture:
 
 Combined: **0.8% of the pot**. These are well-functioning mechanisms that do their job — they are not the problem.
 
-### 2.6 Summary
+### 3.6 Summary
 
-#### 2.6.1 Current snapshot
+#### 3.6.1 Current snapshot
 
 ![Distribution efficiency waterfall — epoch 616](figures/distribution_efficiency_waterfall_mainnet.png)
 
@@ -328,7 +616,7 @@ Combined: **0.8% of the pot**. These are well-functioning mechanisms that do the
 
 §3 maps the population structure that produces this outcome.
 
-#### 2.6.2 Historical evolution
+#### 3.6.2 Historical evolution
 
 ![Distribution efficiency — historical (Shelley epoch 211 → 615)](figures/distribution_efficiency_history_mainnet.png)
 
@@ -338,11 +626,11 @@ The historical decomposition reveals two facts that the single-epoch snapshot ca
 
 **The bonus budget has never activated.** The red band — pledge bonus unused — has sat at **~22–23% of the pot since Shelley epoch 211**. It was 23.1% when $a_0 = 0.3$ was set, and it is 22.5% today. The pledge incentive was not functional at launch, did not improve after the $k$ increase at epoch 257, and has not responded to any subsequent change in the pool landscape. This is not a recent degradation. It is a **structural failure present since the mechanism was deployed**.
 
-#### 2.6.3 Conclusion
+#### 3.6.3 Conclusion
 
-**What the *Incentive Mechanism Analysis* established.** Lopez de Lara (2025) produced the first waterfall decomposition of the pools pot and identified the participation gap and the pledge-bonus shortfall as the two dominant waste channels. The analysis characterised the bonus shortfall as economically neutral — a zero-sum redistribution where uncaptured ADA returns to the reserve.
+**What the [*Incentive Mechanism Analysis*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf) established.** Lopez de Lara (2025) produced the first waterfall decomposition of the pools pot and identified the participation gap and the pledge-bonus shortfall as the two dominant waste channels. The analysis characterised the bonus shortfall as economically neutral — a zero-sum redistribution where uncaptured ADA returns to the reserve.
 
-**What this analysis adds.** The zero-sum framing is incomplete. The pledge bonus is the protocol's primary Sybil-resistance mechanism — the economic cost that makes pool proliferation expensive. When 95.6% of this budget fails to activate, the marginal cost of opening an additional pool drops to near zero. The mechanism designed to make pool farms expensive becomes permissive. The **3.43M ADA** returning to the reserve every epoch is the budget the protocol explicitly allocates to its own security model — and the five-year historical record (§2.6.2) confirms it has never responded to any change in the pool landscape. This is not a recent degradation; it is a structural failure present since the mechanism was deployed. Furthermore, the yield analysis (§2.4.2) shows the bonus is economically irrational to pursue at every realistic scale, and the mainnet evidence (§2.4.4) confirms that operators have responded accordingly — pledge is absent precisely where stake concentrates.
+**What this analysis adds.** The zero-sum framing is incomplete. The pledge bonus is the protocol's primary Sybil-resistance mechanism — the economic cost that makes pool proliferation expensive. When 95.6% of this budget fails to activate, the marginal cost of opening an additional pool drops to near zero. The mechanism designed to make pool farms expensive becomes permissive. The **3.43M ADA** returning to the reserve every epoch is the budget the protocol explicitly allocates to its own security model — and the five-year historical record (§3.6.2) confirms it has never responded to any change in the pool landscape. This is not a recent degradation; it is a structural failure present since the mechanism was deployed. Furthermore, the yield analysis (§3.4.2) shows the bonus is economically irrational to pursue at every realistic scale, and the mainnet evidence (§3.4.4) confirms that operators have responded accordingly — pledge is absent precisely where stake concentrates.
 
 > **Finding F1.1 — Only 44% distribution efficiency.** 6.79M of 15.53M ADA/epoch reaches operators and delegators.
 >
@@ -362,7 +650,7 @@ The historical decomposition reveals two facts that the single-epoch snapshot ca
 
 ---
 
-## 3. The pool landscape — who wastes, who pledges, and who struggles
+## 4. The pool landscape — who wastes, who pledges, and who struggles
 
 §2 showed that **56.3% of the pools pot** never reaches operators — and that the single largest addressable cause is the **unused pledge-incentive budget**:
 
@@ -384,16 +672,16 @@ By every measure, the mechanism is broken.
 
 **How we answer it:**
 
-- **§3.1 — Theoretical pool classification.** A size-based taxonomy grounded in the protocol's own mechanics, separating where operators struggle from where they thrive.
-- **§3.2 — Behind the pools: entity-level analysis.** 75% of staked supply turns out to be operated by multi-pool entities whose relationship to the pledge mechanism ranges from structural impossibility to strategic indifference.
-- **§3.3 — The remaining single-pool operators.** The community base that any reform ultimately aims to support — isolated from the MPO landscape.
-- **§3.4 — The full picture.** Who wastes, who pledges, and who genuinely struggles.
+- **§4.1 — Theoretical pool classification.** A size-based taxonomy grounded in the protocol's own mechanics, separating where operators struggle from where they thrive.
+- **§4.2 — Behind the pools: entity-level analysis.** 75% of staked supply turns out to be operated by multi-pool entities whose relationship to the pledge mechanism ranges from structural impossibility to strategic indifference.
+- **§4.3 — The remaining single-pool operators.** The community base that any reform ultimately aims to support — isolated from the MPO landscape.
+- **§4.4 — The full picture.** Who wastes, who pledges, and who genuinely struggles.
 
-### 3.1 Theoretical pool classification
+### 4.1 Theoretical pool classification
 
 Before looking at who controls the pools, we need a structural map of the landscape itself.
 
-#### 3.1.1 The case for pool categorization
+#### 4.1.1 The case for pool categorization
 
 The reward curve is continuous — it maps stake to reward without discrete jumps. Yet the pool landscape is **not** continuous. A pool with 50K ADA and one with 50M ADA both participate in the same formula, but they inhabit entirely different worlds: one barely produces blocks, the other anchors the delegation market.
 
@@ -409,9 +697,9 @@ Each tier has a characteristic behaviour, a characteristic problem (or none), an
 
 > **Why this matters for CIP evaluation.** These thresholds are **dynamic** — they are functions of active stake, fixed costs, reward rates, and $k$. When a CIP proposes to change $k$ from 500 to 1000, the saturation cap halves and the tier boundaries shift. When active stake grows from 21B to 35B ADA, the production and viability lines rise. The taxonomy is a framework for reasoning across scenarios, not a snapshot of today's values.
 
-#### 3.1.2 Structural thresholds
+#### 4.1.2 Structural thresholds
 
-##### 3.1.2.1 Production threshold
+##### 4.1.2.1 Production threshold
 
 > **Key result:** at current active stake (21.57B ADA), a pool needs **~1M ADA** to expect 1 block/epoch and **~3M ADA** to produce blocks regularly. This threshold scales linearly with participation — it is not fixed.
 
@@ -468,7 +756,7 @@ At 1 block/epoch the reward is as variable as its own mean. At **3 blocks/epoch*
 
 Below this threshold, pools produce too few blocks for delegators to assess reliability — and their reward variance is too high to sustain consistent yields.
 
-##### 3.1.2.2 Viability threshold
+##### 4.1.2.2 Viability threshold
 
 > **Key result:** 1,987 pools (73% of all pools with stake) sit below viability. They collectively owe **647K ADA/epoch** in fixed costs but earn only **182K ADA** — destroying value for their delegators.
 
@@ -496,7 +784,7 @@ In aggregate, below-viability pools **destroy value**: their fixed costs exceed 
 
 > **Why do they persist?** 1,987 below-viability pools represent 73% of all pools with stake — yet they exist and attract delegators despite being economically irrational for both parties. The persistence suggests delegators either do not understand the fee mechanics, stake for non-economic reasons (governance, ideology, wallet defaults), or face friction in redelegating.
 
-##### 3.1.2.3 Saturation threshold
+##### 4.1.2.3 Saturation threshold
 
 > **Key result:** the saturation cap binds for **8 pools** — 1.6% of the design target of 500. With 56.5% participation, the system can support at most **282** saturated pools. The mechanism's central equilibrium tool is nearly inactive.
 
@@ -514,7 +802,7 @@ The reason is arithmetic: $k = 500$ implicitly required near-complete participat
 
 The near-saturation zone (≥80% of $z_0$) contains 104 pools — a thin cluster rather than the broad plateau the design envisioned. The bulk of the healthy pool landscape sits between 3M and 60M ADA, far below saturation.
 
-#### 3.1.3 Tier definitions
+#### 4.1.3 Tier definitions
 
 The three thresholds partition the pool space into **nine tiers**. Boundary values are for epoch 616 (21.57B ADA active stake).
 
@@ -541,7 +829,7 @@ The three thresholds partition the pool space into **nine tiers**. Boundary valu
 >
 > **Finding F3.6 — CIPs hit different tails.** CIPs targeting $k$ reshape the upper tail of the distribution; CIPs targeting fees or block production reshape the lower tail. Any reform proposal must be evaluated against the tier it actually moves — not against the landscape as a whole.
 
-#### 3.1.4 Pool distribution by tier
+#### 4.1.4 Pool distribution by tier
 
 The three thresholds produce a sharply asymmetric distribution: the vast majority of pools cluster at the bottom of the stake scale, while the overwhelming majority of delegated ADA concentrates in the upper tiers.
 
@@ -549,7 +837,7 @@ The three thresholds produce a sharply asymmetric distribution: the vast majorit
 
 The inversion is stark: **1,987 pools (73%) sit below the Viability threshold — yet collectively hold only 2.7% of active stake.** The top four tiers (Healthy and above) account for 27% of pools but 96.6% of stake. This structural gap between pool count and stake share is the defining feature of the current landscape and the primary motivation for the CIP proposals under evaluation.
 
-#### 3.1.5 Conclusion
+#### 4.1.5 Conclusion
 
 **What prior work established.** The ~3M ADA viability line was identified as the primary policy concern, with operators below it flagged as the struggling population requiring reform attention.
 
@@ -559,16 +847,16 @@ The inversion is stark: **1,987 pools (73%) sit below the Viability threshold �
 
 > **Finding F3.6 — CIPs hit different tails.** CIPs targeting $k$ reshape the upper tail of the distribution (saturation, near-saturation); CIPs targeting fees or block production reshape the lower tail (sub-viable, sub-production). Any reform proposal must be evaluated against the tier it actually moves — not against the landscape as a whole.
 
-But the taxonomy describes the terrain as if each pool were independent. It is not. Nothing in the Cardano protocol prevents a single entity — an exchange, a staking-as-a-service provider, or even a well-capitalised individual — from registering and operating multiple pools under different identities. Each pool appears as a separate entry on-chain, but the economic decisions (how much to pledge, how to price fees, whether to respond to incentive signals) are made at the entity level, not the pool level. §3.2 looks behind the pools to identify who actually controls them — and the answer reshapes the entire landscape.
+But the taxonomy describes the terrain as if each pool were independent. It is not. Nothing in the Cardano protocol prevents a single entity — an exchange, a staking-as-a-service provider, or even a well-capitalised individual — from registering and operating multiple pools under different identities. Each pool appears as a separate entry on-chain, but the economic decisions (how much to pledge, how to price fees, whether to respond to incentive signals) are made at the entity level, not the pool level. §4.2 looks behind the pools to identify who actually controls them — and the answer reshapes the entire landscape.
 
 
-### 3.2 Behind the pools — entity-level analysis
+### 4.2 Behind the pools — entity-level analysis
 
 The pool taxonomy above describes the terrain as if each pool were an independent actor. It is not. Nothing in the Cardano protocol prevents a single entity — an exchange, a staking-as-a-service provider, or a well-capitalised individual — from registering and operating multiple pools. Each pool appears as a separate entry on-chain, but the economic decisions (how much to pledge, how to price fees, whether to respond to incentive signals) are made at the **entity level**, not the pool level.
 
-Viewing the landscape pool-by-pool without entity attribution pollutes every metric: concentration appears lower, pledge ratios look more uniformly poor, and the policy-sensitive population is invisible. This section first identifies who these entities are and how many there are (§3.2.1), distinguishes who has enough capital to play the pledge game (§3.2.2), classifies them by archetype (§3.2.3), and measures how they behave with respect to pledge (§3.2.4).
+Viewing the landscape pool-by-pool without entity attribution pollutes every metric: concentration appears lower, pledge ratios look more uniformly poor, and the policy-sensitive population is invisible. This section first identifies who these entities are and how many there are (§4.2.1), distinguishes who has enough capital to play the pledge game (§4.2.2), classifies them by archetype (§4.2.3), and measures how they behave with respect to pledge (§4.2.4).
 
-#### 3.2.1 Attribution method and headline figures
+#### 4.2.1 Attribution method and headline figures
 
 Cardano's on-chain data does not natively group pools by operator. A pool is registered with a cold key, a VRF key, and optional metadata — but nothing links two pools to the same controlling entity. Attribution therefore relies on layered heuristics:
 
@@ -588,9 +876,9 @@ The full pipeline is implemented in `scripts/build_hidden_mpo_discovery.py`.
 | **Attributed MPOs** | 85 | 901 | 16.4B ADA | **75.4%** |
 | **Unattributed pools** | — | 2,097 | 5.44B ADA | 25.0% |
 
-> **Finding F4.1 — 85 MPO entities operate 901 pools holding 16.4B ADA — 75.4% of participating stake.** Three quarters of the network's economic weight is controlled by entities running multiple pools. The remaining 2,097 pools (25% of stake) are not attributed to any MPO — they *appear* as single-pool operators, but some may be undiscovered MPOs. They are analysed in §3.3 under that caveat.
+> **Finding F4.1 — 85 MPO entities operate 901 pools holding 16.4B ADA — 75.4% of participating stake.** Three quarters of the network's economic weight is controlled by entities running multiple pools. The remaining 2,097 pools (25% of stake) are not attributed to any MPO — they *appear* as single-pool operators, but some may be undiscovered MPOs. They are analysed in §4.3 under that caveat.
 
-#### 3.2.2 The capital-sufficiency divide
+#### 4.2.2 The capital-sufficiency divide
 
 Before classifying these 85 entities by identity, one structural distinction matters above all others. The critical question for any MPO is: **can the entity, if it chose to, self-pledge an entire pool to saturation?**
 
@@ -603,13 +891,13 @@ The saturation cap $z_0 \approx 77\text{M ADA}$ divides the population in two:
 
 For capital-sufficient entities, failure to capture the pledge bonus is not a lack of raw capital — it is either a **structural constraint** (custody, delegated institutional mandates) or an **explicit strategic choice**. Capital-insufficient entities are closer to single-pool operators in their relationship to the reward sharing scheme.
 
-#### 3.2.3 Operator archetypes
+#### 4.2.3 Operator archetypes
 
 Capital-sufficiency tells us whether an entity *can* play the pledge game. It does not tell us *why* it does or doesn't. An exchange with 2B ADA and a community fleet with 200M ADA are both capital-sufficient — but their relationship to pledge is entirely different. One holds custodied retail funds it legally cannot pledge; the other chooses not to.
 
-To separate structural constraints from strategic choices, we classify each entity by its **delegation source and operating model**. The capital split from §3.2.2 is important enough that we elevate **Capital-insufficient** to a first-class archetype in its own right — cleanly isolating the sub-scale fleets that should not be read through the same lens as a Coinbase or a Binance.
+To separate structural constraints from strategic choices, we classify each entity by its **delegation source and operating model**. The capital split from §4.2.2 is important enough that we elevate **Capital-insufficient** to a first-class archetype in its own right — cleanly isolating the sub-scale fleets that should not be read through the same lens as a Coinbase or a Binance.
 
-##### 3.2.3.1 Classification
+##### 4.2.3.1 Classification
 
 **Archetype definitions:**
 
@@ -647,11 +935,11 @@ The canonical classification is in `data/mpo_entity_archetypes.csv` (includes `e
 
 **By entity count** — the largest archetype is **Capital-insufficient** (37 of 85). Most of the long tail that appears as community-branded fleets, protocol projects, and smaller independent clusters falls into this bucket. The first-order fact is not brand identity but **scale**: nearly half of all MPO entities are sub-scale for the saturation-level pledge game.
 
-**By stake** — the landscape is dominated by custodial and validator infrastructure. **CEX + IVaaS alone control 7.39B ADA (19.2% of circulating supply)** across 219 live pools, all with near-zero effective pledge. The capital-sufficient sovereign archetypes (community fleets, independent MPOs, multi-brand fleets, ecosystem/platform operators, opaque fleets) collectively manage another **7.11B ADA**. This is the population where the distinction between *can play*, *won't play*, and *does play* becomes analytically useful — §3.2.4 measures exactly that.
+**By stake** — the landscape is dominated by custodial and validator infrastructure. **CEX + IVaaS alone control 7.39B ADA (19.2% of circulating supply)** across 219 live pools, all with near-zero effective pledge. The capital-sufficient sovereign archetypes (community fleets, independent MPOs, multi-brand fleets, ecosystem/platform operators, opaque fleets) collectively manage another **7.11B ADA**. This is the population where the distinction between *can play*, *won't play*, and *does play* becomes analytically useful — §4.2.4 measures exactly that.
 
 > **Finding F4.4 — CEX + IVaaS alone hold 7.39B ADA (19.2% of supply) at structurally zero pledge.** These ten entities operate 219 pools whose delegation source — custodied retail balances and institutional client assets — makes pledge structurally impossible. No parameter change can move this stake into the pledge game.
 
-##### 3.2.3.2 Current distribution
+##### 4.2.3.2 Current distribution
 
 ![Current MPO entity distribution](figures/mpo_entity_current_distribution_mainnet.png)
 
@@ -661,7 +949,7 @@ The concentration is immediate: the top six entities (Coinbase, Binance, Figment
 
 Per-entity descriptions including pledge-coverage ratios are in the annex: **[docs/mpo_entity_profiles.md](docs/mpo_entity_profiles.md)**.
 
-##### 3.2.3.3 Historical evolution
+##### 4.2.3.3 Historical evolution
 
 The archetype-level composition has been remarkably stable across three years of Shelley operation. The aggregate MPO share has hovered around 42–43% of circulating supply since epoch 300 — the internal mix shifts, but the total barely moves.
 
@@ -680,11 +968,11 @@ That stability masks significant **entity-level rotation**:
 
 The entities rotate but the archetype totals persist. CEX as a whole has remained at roughly 12–13% of supply throughout. This is the structural signature of a **fixed background**: the MPO landscape is not converging toward pledge compliance over time — it is cycling entities through the same non-compliant archetypes.
 
-#### 3.2.4 Pledge compliance — who plays and who doesn't
+#### 4.2.4 Pledge compliance — who plays and who doesn't
 
 The archetype taxonomy answers *who is operating*. The more consequential question for mechanism design is: **how does each entity sit relative to the pledge game?** Before answering that, we need to define what "playing the pledge game" means — and why the answer is not a simple binary.
 
-##### 3.2.4.1 Pledge compliance classification
+##### 4.2.4.1 Pledge compliance classification
 
 The pool-level pledge data reveals that MPO non-response to pledge incentives takes two distinct forms:
 
@@ -728,7 +1016,7 @@ The figure decomposes the same attributed stake two ways: top bar by structural 
 > [!NOTE]
 > **Implication for mechanism-design work.** Any proposed change to $a_0$, $k$, or the pledge-benefit curve should be evaluated against three separate populations, not one MPO blob: **Can't play** (37 entities, 4.51% of supply), **capital-sufficient non-compliant** (41 entities, 31.17%), and the thin **responsive middle** of marginal + compliant operators (5 entities, 4.89%). The exemplary population (1.60%) already captures most of the bonus.
 
-##### 3.2.4.2 Structural non-compliance — CEX and IVaaS
+##### 4.2.4.2 Structural non-compliance — CEX and IVaaS
 
 The 41 non-compliant entities are not a uniform mass. Two archetypes — **Exchange Custody** and **Institutional Validator** — account for 10 entities and 7.39B ADA, and their non-compliance is *structural*, not strategic. Understanding why they cannot play is essential before attempting any reform.
 
@@ -768,9 +1056,9 @@ Detailed entity profiles (Coinbase obfuscation, Binance ghost fleet, Figment/Led
 
 **CEX-adjusted baseline.** Excluding CEX entities remains analytically useful because it removes structurally pledge-zero, non-sovereign stake from the denominator. But the revised §3 framing shows that this is only a partial cleanup: a second fixed population also exists in the form of capital-insufficient MPOs. The `exclude_from_baseline: true` flag in `data/mpo_entity_archetypes.csv` identifies the custodial entities to drop when a CEX-free comparison is desired.
 
-##### 3.2.4.3 The cost of non-compliance
+##### 4.2.4.3 The cost of non-compliance
 
-§2.4 established that the network-wide pledge bonus uncaptured is **~770K ADA/epoch (~56.2M/year)** — the second-largest component of within-staked waste at 39% of the total. The pledge-compliance classification allows us to attribute this waste to its sources.
+§3.4 established that the network-wide pledge bonus uncaptured is **~770K ADA/epoch (~56.2M/year)** — the second-largest component of within-staked waste at 39% of the total. The pledge-compliance classification allows us to attribute this waste to its sources.
 
 For each MPO pool, we compute three reward levels under the current formula $\hat{f}'(\pi, \nu, \bar{p})$:
 
@@ -813,11 +1101,11 @@ Coinbase alone accounts for **24.5% of all MPO pledge waste** (~156K/epoch). The
 Within the **can't-play** bucket, the largest contributors are much smaller in absolute terms: **RETIR** (~6.3K/epoch), **SNAKE** (~4.0K), **BRAVO** (~3.0K), **ADAOZ** (~3.0K), and **SASA** (~2.2K). These are not giant custodial fleets refusing a meaningful bonus. They are sub-scale operators for whom the pledge premium remains economically secondary.
 
 > [!NOTE]
-> **Connection to §2.4.** The **636,771 ADA/epoch** of MPO pledge waste is the dominant subset of the ~770K network-wide "pledge bonus uncaptured" identified in §2.4. MPO entities contribute **82.7%** of this waste because they concentrate large stake volumes at near-zero pledge ratios. The remaining ~17% is distributed across thousands of smaller pools where low absolute pledge is more a function of operator capital constraints than of strategic indifference.
+> **Connection to §3.4.** The **636,771 ADA/epoch** of MPO pledge waste is the dominant subset of the ~770K network-wide "pledge bonus uncaptured" identified in §3.4. MPO entities contribute **82.7%** of this waste because they concentrate large stake volumes at near-zero pledge ratios. The remaining ~17% is distributed across thousands of smaller pools where low absolute pledge is more a function of operator capital constraints than of strategic indifference.
 >
 > **Why this matters for mechanism design.** If a parameter change (e.g., increasing $a_0$) aims to reduce within-staked inefficiency, its impact would differ by stance. For **can't-play** MPOs it would mostly raise a cost they are structurally too small to optimise away. For **capital-sufficient non-compliant** MPOs it would increase a penalty they already ignore or cannot operationally access. In both cases, the likely first-order effect is more ADA returning to the reserve, not a clean behavioural transition toward pledge.
 
-###### 3.2.4.3.1 Top 10 contributors to MPO pledge waste
+###### 4.2.4.3.1 Top 10 contributors to MPO pledge waste
 
 The "top five" table above understates the concentration: extending to ten entities captures over half of all MPO-attributable waste. The table below uses a per-pool bonus model — $\lambda_{\max} \cdot R \cdot \sigma \cdot \frac{s}{s + a_0(1-s)}$ where $s = \min(\text{pledge}/z_0,\,1)$ — applied to every pool of each entity.
 
@@ -836,7 +1124,7 @@ The "top five" table above understates the concentration: extending to ten entit
 
 These ten entities collectively forfeit **~566K ADA/epoch** — **52% of all MPO pledge waste**. Eight of the ten have bonus capture below 2%, meaning the pledge mechanism is essentially invisible to them. AdaLite is the notable outlier: it pledges 147M ADA (12% ratio), yet its large fleet still leaves 77K/epoch on the table — demonstrating that even partial pledging at scale produces significant absolute waste.
 
-###### 3.2.4.3.2 Top 10 most exemplary MPOs
+###### 4.2.4.3.2 Top 10 most exemplary MPOs
 
 Not all multi-pool operators ignore pledge. A handful treat it as a genuine commitment. To qualify for this table, an entity must operate at least 2 pools with a combined stake above 10M ADA.
 
@@ -853,15 +1141,15 @@ Not all multi-pool operators ignore pledge. A handful treat it as a genuine comm
 | 9 | ATADA | 4 | 2,825,000 | 131M | 2.16% | 868 | 9.2% |
 | 10 | Beast | 2 | 2,000,000 | 19M | 10.52% | 99 | 7.3% |
 
-The contrast with §3.2.4.3 is stark. The top three — Cardano Foundation (93.9% capture), Chuck/Bux (81.1%), and Liqwid (73.9%) — demonstrate that high pledge ratios *are* achievable at scale. These entities have made an active choice to lock capital, accepting the opportunity cost. Yet even the "exemplary" tier drops off quickly: only six MPOs exceed 30% capture, and only three exceed 70%. The mechanism is designed so that every entity *should* be at 100%; the fact that it barely reaches double digits for most of the landscape confirms the §2.4 diagnosis — pledge as anti-Sybil friction is functionally broken.
+The contrast with §4.2.4.3 is stark. The top three — Cardano Foundation (93.9% capture), Chuck/Bux (81.1%), and Liqwid (73.9%) — demonstrate that high pledge ratios *are* achievable at scale. These entities have made an active choice to lock capital, accepting the opportunity cost. Yet even the "exemplary" tier drops off quickly: only six MPOs exceed 30% capture, and only three exceed 70%. The mechanism is designed so that every entity *should* be at 100%; the fact that it barely reaches double digits for most of the landscape confirms the §3.4 diagnosis — pledge as anti-Sybil friction is functionally broken.
 
 The concentration is extreme. Among entities that actively pledge — the exemplary, compliant, and marginal stances combined — the **3 exemplary entities alone capture 82% of all bonus ADA** (107K of 131K ADA/epoch) and hold **70% of pledging-population stake** (1.35B of 1.92B ADA). The compliant class (Wave, Bloom) adds 18% of captured bonus; the marginal class is effectively empty among MPOs. Of those three, **Cardano Foundation** accounts for a third of the exemplary bonus (35.7K ADA/epoch) — but it pledges by institutional mandate, not because the mechanism incentivises it to do so. Remove the Foundation and the mechanism's entire success story rests on **two private entities** (Chuck/Bux and Adalite) capturing 67% of all pledging-population bonus. A Sybil-resistance mechanism designed for 500 pools is, in practice, a transfer programme for two.
 
 > **Finding F4.7 — The pledge mechanism's entire output rests on 3 entities — one of which pledges by mandate, not incentive.** Among MPOs that actively pledge, 3 exemplary entities capture 82% of all bonus ADA (107K of 131K ADA/epoch). Cardano Foundation (33% of the exemplary bonus) pledges by institutional obligation, not economic incentive. The remaining two private entities (Chuck/Bux, Adalite) account for 67% of all bonus captured by pledging MPOs. A mechanism designed to differentiate 500 pools has collapsed into a transfer to two.
 
-##### 3.2.4.4 Pledge compliance × pool tier
+##### 4.2.4.4 Pledge compliance × pool tier
 
-Crossing the pledge-compliance classification with the pool-size taxonomy (§3.1) reveals where MPO pledge compliance *actually sits* in the stake landscape — and the picture is more telling than either dimension alone.
+Crossing the pledge-compliance classification with the pool-size taxonomy (§4.1) reveals where MPO pledge compliance *actually sits* in the stake landscape — and the picture is more telling than either dimension alone.
 
 ![MPO Pool Taxonomy by Incentive Stance](figures/mpo_taxonomy_by_stance_mainnet.png)
 
@@ -887,9 +1175,9 @@ The entity profiles reinforce this pattern. **Upbit** and **YUTA** remain almost
 
 On the other side of the spectrum, **exemplary compliance exists only at saturation scale**: **Cardano Foundation** and **Adalite** self-pledge tens of millions of ADA per pool to reach the ≥80% threshold at $z_0 = 77M$. The **compliant class** (**Wave**, **Bloom**, **CHUCK BUX**) appears in Near-saturation and Healthy tiers with 30–80% pledge ratios — proof that meaningful bonus capture *is* feasible at mid-scale, but only for operators who **own** their delegated stake. The **marginal class**, by contrast, is nearly empty among MPOs: just **ATADA** and **ACL**.
 
-#### 3.2.5 Conclusion
+#### 4.2.5 Conclusion
 
-**What the *Incentive Mechanism Analysis* established.** Lopez de Lara (2025) identified multi-pool operators as a significant presence in the landscape and flagged exchange-custody stake as structurally outside the pledge mechanism. The analysis treated MPOs as a single population and recommended excluding CEX entities from baseline calculations.
+**What the [*Incentive Mechanism Analysis*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf) established.** Lopez de Lara (2025) identified multi-pool operators as a significant presence in the landscape and flagged exchange-custody stake as structurally outside the pledge mechanism. The analysis treated MPOs as a single population and recommended excluding CEX entities from baseline calculations.
 
 **What this analysis adds.** The single-population framing obscures three distinct sub-populations with fundamentally different relationships to the pledge mechanism. Attribution of 85 entities across 901 pools reveals that 75% of staked supply is controlled by MPOs — but these entities split into capital-sufficient (48) and capital-insufficient (37) classes, and further into ten archetypes with different delegation sources, operating models, and structural constraints. The compliance classification shows that non-compliance is not a fringe pattern but the overwhelming norm among capital-sufficient MPOs (41 of 48), and that the cost of that non-compliance (550K ADA/epoch) is concentrated in a handful of large entities for whom the penalty is a modest tax, not a deterrent. The tier × stance cross-analysis confirms that non-compliance spans *every* viable tier — it is a scale phenomenon, not a small-pool problem.
 
@@ -907,15 +1195,15 @@ On the other side of the spectrum, **exemplary compliance exists only at saturat
 >
 > **Finding F4.7 — The pledge mechanism's entire output rests on 3 entities — one of which pledges by mandate, not incentive.** Among MPOs that actively pledge, 3 exemplary entities capture 82% of all bonus ADA (107K of 131K ADA/epoch). Cardano Foundation (33% of the exemplary bonus) pledges by institutional obligation, not economic incentive. The remaining two private entities (Chuck/Bux, Adalite) account for 67% of all bonus captured by pledging MPOs. A mechanism designed to differentiate 500 pools has collapsed into a transfer to two.
 
-The double asymmetry is now sharp: **1.74B ADA of MPO stake cannot enter the game**, and another **12.00B ADA could enter it but largely does not**. This is not a calibration gap that parameter tuning can close — it is a structural mismatch between the mechanism's assumptions and the operator populations that now dominate the stake landscape. §3.3 turns to the remaining 25% of stake: the unattributed single-pool operators who are the intended beneficiaries of any reform.
+The double asymmetry is now sharp: **1.74B ADA of MPO stake cannot enter the game**, and another **12.00B ADA could enter it but largely does not**. This is not a calibration gap that parameter tuning can close — it is a structural mismatch between the mechanism's assumptions and the operator populations that now dominate the stake landscape. §4.3 turns to the remaining 25% of stake: the unattributed single-pool operators who are the intended beneficiaries of any reform.
 
-### 3.3 The remaining single-pool operators
+### 4.3 The remaining single-pool operators
 
 The entity-level analysis above accounts for **16.3B ADA** across 85 MPO entities. The remaining **2,097 pools** carrying **5.44B ADA** (25% of staked supply) are the unattributed single-pool operators — individuals, small teams, and community projects running one pool with their own stake and organic delegation. These are the operators the reward sharing scheme was originally designed for, and they are the population most affected by any parameter reform.
 
-#### 3.3.1 Tier distribution — what MPO removal reveals
+#### 4.3.1 Tier distribution — what MPO removal reveals
 
-**Reassessing the *Incentive Mechanism Analysis*'s landscape.** Lopez de Lara (2025) classified all 2,919 non-retired pools at epoch 583 into four viability tiers, treating each pool as an independent actor:
+**Reassessing the [*Incentive Mechanism Analysis*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf)'s landscape.** Lopez de Lara (2025) classified all 2,919 non-retired pools at epoch 583 into four viability tiers, treating each pool as an independent actor:
 
 - **Inactive** — 1,305 pools (44%), 47M ADA. Unmet pledge, no blocks, no updates.
 - **Struggling** — 627 pools (22%), 191M ADA. Active but below 3M ADA stake and below the cumulative reward break-even point.
@@ -930,18 +1218,18 @@ That headline — *741 healthy pools controlling 97% of stake* — was presented
 
 The extraction effect is starkly asymmetric. Below viability, MPO pools are rare — only **9%** of below-viable pools are MPO fleet members. Above viability, MPOs dominate: **53%** of Healthy pools, **79%** of Large healthy, **87%** of Saturated, and **100%** of Oversaturated. The higher the tier, the greater the MPO share.
 
-Mapping the *Incentive Mechanism Analysis*'s categories to our finer tier taxonomy and applying entity attribution:
+Mapping the [*Incentive Mechanism Analysis*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf)'s categories to our finer tier taxonomy and applying entity attribution:
 
 - **Inactive (1,305 pools)** → mostly Dormant and Sub-production in our taxonomy. MPO presence is low (~9%). This category is essentially unchanged by entity attribution — the long tail of inactive pools is genuinely independent.
 - **Struggling (627 pools)** → maps to our Sub-viable and lower Sub-production tiers. MPO share remains modest (~11%). These operators are real — they are independent, they are trying, and they are failing.
 - **Viable but small (246 pools)** → straddles the Sub-viable/Healthy boundary. After extraction, the majority remain — these are the community operators the reward scheme was designed for.
 - **Healthy (741 pools, 21.14B ADA)** → this is where the picture collapses. Our epoch-618 snapshot shows **731 viable-and-above pools** (the near-identical count confirms structural stability). After removing MPO fleet members, only **283 viable single-pool operators remain** — **61% of the "healthy" headline was MPO pools**. The stake reduction is even more dramatic: from 21.2B to 4.9B ADA — a **77% drop**.
 
-The *Incentive Mechanism Analysis*'s conclusion that "the existence of a large and diverse set of healthy operators is an indicator of the incentive scheme's success" was based on a population that was neither as large nor as diverse as it appeared. The 741 pools were not 741 independent actors making individual economic decisions — they were ~280 independent operators plus ~450 fleet members whose pledge, fee, and delegation strategies were set at the entity level.
+The [*Incentive Mechanism Analysis*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf)'s conclusion that "the existence of a large and diverse set of healthy operators is an indicator of the incentive scheme's success" was based on a population that was neither as large nor as diverse as it appeared. The 741 pools were not 741 independent actors making individual economic decisions — they were ~280 independent operators plus ~450 fleet members whose pledge, fee, and delegation strategies were set at the entity level.
 
-> **Finding F5.5 — The *Incentive Mechanism Analysis*'s "741 healthy pools" were 61% MPO fleet members.** After entity attribution, only 283 viable single-pool operators remain (39% of the headline count), holding 4.9B of the original 21.2B viable stake (23%). The competitive field for independent operators is far smaller than the full landscape suggests. The incentive scheme's success should be measured against the 283, not the 741.
+> **Finding F5.5 — The [*Incentive Mechanism Analysis*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf)'s "741 healthy pools" were 61% MPO fleet members.** After entity attribution, only 283 viable single-pool operators remain (39% of the headline count), holding 4.9B of the original 21.2B viable stake (23%). The competitive field for independent operators is far smaller than the full landscape suggests. The incentive scheme's success should be measured against the 283, not the 741.
 
-#### 3.3.2 Pledge compliance and the policy-sensitive population
+#### 4.3.2 Pledge compliance and the policy-sensitive population
 
 With MPOs removed, the single-pool landscape can be evaluated on its own terms: do independent operators behave differently with respect to pledge?
 
@@ -949,7 +1237,7 @@ With MPOs removed, the single-pool landscape can be evaluated on its own terms: 
 
 The single-pool landscape is dominated by a **massive below-viability tail** — **1,814 pools (87%)** sit below the viability threshold, carrying only **0.52B ADA (9.5%)** of single-pool stake. The **Healthy tier** (3M–38.5M ADA) is the centre of gravity: **242 pools** holding **2.52B ADA (46%)**. Above it, the tiers thin out rapidly — reaching Near-saturation as an independent single-pool operator, without custodial or institutional delegation, is genuinely rare (13 pools). The Saturated tier contains only **5 pools**, and no single-pool operator reaches Oversaturated.
 
-Applying the pledge-compliance classification from §3.2.4.1 to this population:
+Applying the pledge-compliance classification from §4.2.4.1 to this population:
 
 | Stance | Pools | Stake (B ₳) | % of single-pool stake | Reading |
 | --- | ---: | ---: | ---: | --- |
@@ -964,7 +1252,7 @@ Without MPO stake, the exemplary and compliant classes are economically negligib
 
 For mechanism design, this is the highest-return target. A reformed pledge curve that differentiates at realistic pledge levels (100K–10M ADA) rather than at saturation scale could shift this population toward higher compliance — provided the marginal reward exceeds the opportunity cost of locking additional capital.
 
-#### 3.3.3 Historical evolution — has the single-pool landscape always looked like this?
+#### 4.3.3 Historical evolution — has the single-pool landscape always looked like this?
 
 The tier and pledge snapshots above describe the current state. But the single-pool population is not static — pools enter, exit, grow, and shrink across epochs. To understand whether the current picture is a recent development or a long-standing structural feature, the chart below tracks today's single-pool basket backwards through pool history, reconstructing each pool's pledge stance at every past epoch from on-chain pool update records.
 
@@ -972,15 +1260,15 @@ The tier and pledge snapshots above describe the current state. But the single-p
 
 The answer is unambiguous: **the single-pool landscape has been structurally stable since the early Shelley era.** Independent operators have held between 20% and 28% of active stake since epoch ~250, with the non-compliant band (red) consistently dominating — typically 75–80% of the SPO share. The marginal band (amber) has hovered at 4–6% throughout, and the compliant + exemplary sliver has never exceeded 2% until the very recent epochs.
 
-Two features stand out. First, the **drop from ~28% to ~25%** between epoch 583 (the *Incentive Mechanism Analysis*'s endpoint) and epoch 618. This is not noise — it reflects a real decline in independent operator stake share, likely driven by delegation migrating toward MPO fleets offering lower margins and higher reliability. The competitive landscape for single-pool operators is *shrinking*, not growing.
+Two features stand out. First, the **drop from ~28% to ~25%** between epoch 583 (the [*Incentive Mechanism Analysis*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf)'s endpoint) and epoch 618. This is not noise — it reflects a real decline in independent operator stake share, likely driven by delegation migrating toward MPO fleets offering lower margins and higher reliability. The competitive landscape for single-pool operators is *shrinking*, not growing.
 
 Second, the **composition within the band has barely moved**. Non-compliant stake was 23.1% at epoch 583 and is 19.5% at epoch 618 — the drop tracks the overall decline, not a shift toward compliance. The compliant + exemplary slice improved from 0.8% to 1.5%, but this remains negligible in absolute terms. The pledge mechanism has not produced a behavioural transition among independent operators over any time horizon visible in the data.
 
 > **Finding F3.10 — The single-pool landscape is in slow structural decline.** Independent operators' share of active stake has fallen from 28.0% to 25.0% since epoch 583 — a 3 percentage-point loss in 35 epochs. The internal pledge composition has barely changed: non-compliant stake dominates now just as it did at the start of the Shelley era.
 
-#### 3.3.4 Conclusion
+#### 4.3.4 Conclusion
 
-> **Finding F3.7 — The *Incentive Mechanism Analysis* overstated the competitive field by 3×.** The headline of 741 healthy pools collapses to 283 independent operators once MPO fleet members are removed. The "large and diverse" ecosystem presented as evidence of a functioning incentive scheme was 61% multi-pool fleet members operating under entity-level strategies unrelated to single-pool economics.
+> **Finding F3.7 — The [*Incentive Mechanism Analysis*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf) overstated the competitive field by 3×.** The headline of 741 healthy pools collapses to 283 independent operators once MPO fleet members are removed. The "large and diverse" ecosystem presented as evidence of a functioning incentive scheme was 61% multi-pool fleet members operating under entity-level strategies unrelated to single-pool economics.
 
 > **Finding F3.8 — Independent operators do not pledge better — they pledge *worse*.** 78% of single-pool stake is non-compliant (pledge ratio < 2%). The compliant and exemplary classes combined hold only 5.8% of single-pool stake — economically negligible. The pledge mechanism, at current $a_0 = 0.3$, is correctly priced as irrelevant by the very population it was designed to reward.
 
@@ -988,17 +1276,17 @@ Second, the **composition within the band has barely moved**. Non-compliant stak
 
 The implication is clear: the reward sharing scheme, as currently parameterised, does not differentiate effectively at the scale where independent operators actually live. The pledge bonus rewards saturation-level commitment that only MPOs and a handful of large community pools can reach. For the 2,097 single-pool operators carrying 5.4B ADA, the mechanism is functionally inert.
 
-### 3.4 The full picture
+### 4.4 The full picture
 
 Section 3 has peeled the pool landscape layer by layer:
 
-- **Structure** (§3.1) — what a pool *can* be, from Dormant to Oversaturated, defined by protocol-derived tier boundaries.
-- **Entities** (§3.2) — who actually controls the pools, how many games they play, and whether they respond to the pledge signal.
-- **Independent operators** (§3.3) — the community base that remains once the fleets are removed, and how it compares to the *Incentive Mechanism Analysis*'s landscape.
+- **Structure** (§4.1) — what a pool *can* be, from Dormant to Oversaturated, defined by protocol-derived tier boundaries.
+- **Entities** (§4.2) — who actually controls the pools, how many games they play, and whether they respond to the pledge signal.
+- **Independent operators** (§4.3) — the community base that remains once the fleets are removed, and how it compares to the [*Incentive Mechanism Analysis*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf)'s landscape.
 
 This section reassembles those layers into a single map. The picture that emerges is one of three distinct populations — bad actors, good actors, and a struggling middle — competing on a field where the pledge mechanism reaches only a fraction of the stake it was designed to influence.
 
-#### 3.4.1 The bad actors
+#### 4.4.1 The bad actors
 
 The pool-level view — 2,718 registered pools spread across eight tiers — is a statistical illusion. Entity attribution reveals that **85 MPO entities** operate 901 of those pools and control **16.4B ADA — 75% of participating stake** (F4.1). The competitive dynamics, pledge decisions, and delegation flows are governed at the entity level, not the pool level.
 
@@ -1016,7 +1304,7 @@ Adding the 37 capital-insufficient MPOs (who are multi-pool by form but single-p
 - **636.8K ADA/epoch** in pledge waste — 82.7% of the network total
 - Every tier from Healthy (4.07B) through Oversaturated (1.50B) — meaning any parameter adjustment ripples across the full spectrum (F4.5, F4.6)
 
-#### 3.4.2 The good actors
+#### 4.4.2 The good actors
 
 A handful of entities demonstrate that high pledge *is* achievable at scale:
 
@@ -1031,11 +1319,11 @@ These are deliberate capital commitments, not accidents. But the mechanism's ent
 
 Among single-pool operators, **360 exemplary pools** self-pledge at high ratios, proving that small operators *can* play. But they hold only **0.23B ADA** in aggregate — economically marginal. The good actors exist; they are too few and too small to anchor the mechanism.
 
-#### 3.4.3 The struggling middle
+#### 4.4.3 The struggling middle
 
 The operators the reward sharing scheme was originally designed for — independent, single-pool, community-run — are the population most affected by this landscape and least served by the current mechanism.
 
-**The field is far smaller than it appears.** The *Incentive Mechanism Analysis*'s headline of 741 healthy pools collapses to **283 independent viable operators** once MPO fleet members are removed — the other 61% were fleet pools operating under entity-level strategies unrelated to single-pool economics (F3.7). The 2,097 single-pool operators that remain hold **5.44B ADA**, 25% of staked supply.
+**The field is far smaller than it appears.** The [*Incentive Mechanism Analysis*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf)'s headline of 741 healthy pools collapses to **283 independent viable operators** once MPO fleet members are removed — the other 61% were fleet pools operating under entity-level strategies unrelated to single-pool economics (F3.7). The 2,097 single-pool operators that remain hold **5.44B ADA**, 25% of staked supply.
 
 **They do not pledge better than MPOs — they pledge *worse*.** 78% of single-pool stake is non-compliant (pledge ratio < 2%). The compliant + exemplary classes combined hold just **5.8%** of the basket — economically negligible (F3.8). The pledge mechanism, at current $a_0 = 0.3$, is correctly priced as irrelevant by the very population it was designed to reward.
 
@@ -1043,7 +1331,7 @@ The operators the reward sharing scheme was originally designed for — independ
 
 **And the window is closing.** Independent operators' share of active stake has fallen from 28.0% to 25.0% since epoch 583 — a 3 percentage-point loss in 35 epochs. The internal pledge composition has barely moved: non-compliant stake dominates now just as it did at the start of the observation window (F3.10).
 
-#### 3.4.4 The incentive-responsive field
+#### 4.4.4 The incentive-responsive field
 
 How large is the arena where the pledge mechanism actually has an observable effect?
 
@@ -1055,7 +1343,7 @@ To measure this, we strip out all pools belonging to non-responsive MPOs. Among 
 
 ![Competitive Landscape — Independent Single-Pool Operators + Retained MPO Pools](figures/filtered_landscape_mainnet.png)
 
-The retained MPOs — 70 marginal, 17 compliant, 34 exemplary — reshape the tier structure when added back. The Saturated tier, nearly empty in the single-pool-only view (§3.3), now carries **2.0B ADA** (24.8% of the filtered basket). These are the only MPO pools where the pledge signal visibly influences behaviour.
+The retained MPOs — 70 marginal, 17 compliant, 34 exemplary — reshape the tier structure when added back. The Saturated tier, nearly empty in the single-pool-only view (§4.3), now carries **2.0B ADA** (24.8% of the filtered basket). These are the only MPO pools where the pledge signal visibly influences behaviour.
 
 The contrast between the two views captures the core asymmetry:
 
@@ -1067,7 +1355,7 @@ The contrast between the two views captures the core asymmetry:
 
 The pledge bonus *does* capture meaningful capital — but almost exclusively among operators who already sit at or near saturation scale. For the vast majority of independent operators, the mechanism is functionally inert.
 
-#### 3.4.5 The structural mismatch
+#### 4.4.5 The structural mismatch
 
 The reward sharing scheme was designed for a world of independent, single-pool operators competing on pledge commitment. The world that exists is fundamentally different. Three numbers frame the gap:
 
@@ -1085,9 +1373,9 @@ SL-D1 modelled a single-game world to derive tractable equilibria — this was s
 
 ---
 
-## 4. Reproduction
+## 5. Reproduction
 
-### 4.1 Full rebuild
+### 5.1 Full rebuild
 
 All figures and data summaries rebuild from a single entry point:
 
@@ -1107,7 +1395,7 @@ python3 build_pledge_bonus_activation_visual.py
 python3 build_saturation_utilisation_visual.py
 python3 build_pool_landscape_by_size_visual.py
 python3 build_three_thresholds_visual.py
-python3 build_mpo_entity_deep_dive.py          # fetches Koios — see §4.2
+python3 build_mpo_entity_deep_dive.py          # fetches Koios — see §5.2
 python3 build_mpo_progression_analysis.py      # reads local history CSV
 ```
 
@@ -1128,7 +1416,7 @@ python3 build_mpo_progression_analysis.py      # reads local history CSV
 - `mpo_unresolved_group_labels_mainnet.csv` — unresolved Koios group labels
 - `mpo_progression_proxy_key_epochs_mainnet.csv` — historical concentration at key epochs
 
-### 4.2 Refreshing MPO data
+### 5.2 Refreshing MPO data
 
 The MPO scripts (`build_mpo_entity_deep_dive.py` and `build_mpo_progression_analysis.py`) fetch live data from the [Koios REST API](https://api.koios.rest) and require an internet connection. They should be re-run whenever a new epoch's pool snapshot is needed.
 
