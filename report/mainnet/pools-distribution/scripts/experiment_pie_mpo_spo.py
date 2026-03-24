@@ -32,9 +32,10 @@ GREY_DARK    = "#555555"
 GREY_MID     = "#AAAAAA"
 
 # Display order: top tiers first (most interesting at 12 o'clock)
+# Dormant excluded — near-zero stake inflates pool counts misleadingly
 TIER_NAMES = [
     "Oversaturated", "Saturated", "Near-saturation", "Large healthy",
-    "Healthy", "Sub-viable", "Sub-production", "Dormant",
+    "Healthy", "Sub-viable", "Sub-production",
 ]
 TIER_COLORS_MAP = {
     "Dormant":          GREY_DARK,
@@ -93,6 +94,10 @@ def load_data():
         else:
             spo_stake[t] += p["stake"]
             spo_pools[t] += 1
+
+    # Exclude Dormant — near-zero stake inflates pool counts misleadingly
+    for d in (mpo_stake, spo_stake, mpo_pools, spo_pools):
+        d.pop("Dormant", None)
 
     return mpo_stake, spo_stake, mpo_pools, spo_pools
 
@@ -192,7 +197,7 @@ def main():
         fontsize=18, fontweight="bold", color=INK, y=0.97,
     )
     fig.text(0.5, 0.925,
-             "Epoch 618  ·  Where does each population's stake sit in the tier hierarchy?",
+             "Epoch 618  ·  Dormant pools excluded  ·  Where does each population's stake sit?",
              ha="center", fontsize=11, color=DIM)
 
     # Shared legend at bottom

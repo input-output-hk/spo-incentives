@@ -620,6 +620,104 @@ def draw_history_figure(epochs, view_a, view_b, live_epoch):
     print(f"✓ Saved {out_path}")
 
 
+def draw_spo_only_history(epochs, view_a, live_epoch):
+    """Single-panel historical chart for SPO-only basket."""
+    out_path = FIG_DIR / "spo_only_history_mainnet.png"
+    x = np.array(epochs)
+
+    stack = np.vstack([
+        np.array([view_a.get(ep, {}).get(st, 0.0) for ep in epochs], dtype=float)
+        for st in STANCE_STACK
+    ])
+
+    plt.style.use("seaborn-v0_8-whitegrid")
+    fig, ax = plt.subplots(1, 1, figsize=(15, 6), facecolor=BG)
+    fig.patch.set_facecolor(BG)
+    ax.set_facecolor(BG)
+
+    colors = [STANCE_COLORS[s] for s in STANCE_STACK]
+    ax.stackplot(x, stack, colors=colors, alpha=0.88, linewidth=0)
+    top = stack.sum(axis=0)
+    ax.plot(x, top, color=INK, linewidth=2.1)
+
+    ax.axvline(CARLOS_REPORT_END_EPOCH, color="#7F8C8D", linestyle=":",
+               linewidth=1.2, alpha=0.9)
+
+    # Key epoch annotations
+    report_total = sum(view_a.get(CARLOS_REPORT_END_EPOCH, {}).get(st, 0.0)
+                       for st in STANCE_STACK)
+    live_total = sum(view_a.get(live_epoch, {}).get(st, 0.0)
+                     for st in STANCE_STACK)
+    report_nc = view_a.get(CARLOS_REPORT_END_EPOCH, {}).get("non_compliant", 0.0)
+    live_nc = view_a.get(live_epoch, {}).get("non_compliant", 0.0)
+    report_qual = sum(view_a.get(CARLOS_REPORT_END_EPOCH, {}).get(st, 0.0)
+                      for st in ["compliant", "exemplary"])
+    live_qual = sum(view_a.get(live_epoch, {}).get(st, 0.0)
+                    for st in ["compliant", "exemplary"])
+
+    ax.text(
+        0.97, 0.96,
+        f"Epoch {CARLOS_REPORT_END_EPOCH}: {report_total:.1f}% of active stake\n"
+        f"Epoch {live_epoch}: {live_total:.1f}% of active stake\n"
+        f"Non-compliant: {report_nc:.1f}% → {live_nc:.1f}%\n"
+        f"Compliant + exemplary: {report_qual:.1f}% → {live_qual:.1f}%",
+        transform=ax.transAxes, ha="right", va="top",
+        fontsize=9, color=INK,
+        bbox=dict(boxstyle="round,pad=0.3", facecolor="white",
+                  edgecolor="#D9D9D9", alpha=0.95),
+    )
+
+    ax.annotate(
+        f"{live_total:.1f}%",
+        xy=(live_epoch, live_total),
+        xytext=(live_epoch + 2, live_total + 1),
+        fontsize=10, fontweight="bold", color=INK,
+        arrowprops=dict(arrowstyle="-", color=INK),
+    )
+
+    ax.text(
+        CARLOS_REPORT_END_EPOCH - 3,
+        ax.get_ylim()[1] * 0.50 if ax.get_ylim()[1] else 1,
+        "Carlos report\nendpoint (epoch 583)",
+        ha="right", va="top", fontsize=9, color="#4B5563",
+        bbox=dict(boxstyle="round,pad=0.2", facecolor="white",
+                  edgecolor="#D1D5DB", alpha=0.9),
+    )
+
+    ax.set_xlabel("Epoch", fontsize=11, color=INK)
+    ax.set_ylabel("Share of active stake (%)", fontsize=10, color=INK)
+    ax.set_xlim(min(epochs), max(epochs) + 6)
+    ax.grid(axis="y", color=GRID, linewidth=0.7)
+    for sp in ["top", "right", "left", "bottom"]:
+        ax.spines[sp].set_visible(False)
+    ax.tick_params(axis="both", colors=DIM)
+
+    legend_handles = [
+        mpatches.Patch(facecolor=STANCE_COLORS[st], alpha=0.88,
+                       label=STANCE_LABELS[st])
+        for st in reversed(STANCE_STACK)
+    ]
+    ax.legend(handles=legend_handles, loc="upper left", ncol=2,
+              frameon=True, fontsize=9, framealpha=0.95)
+
+    fig.suptitle(
+        "Historical evolution — Independent single-pool operators",
+        fontsize=16, fontweight="bold", color=INK, y=0.99,
+    )
+    fig.text(
+        0.5, 0.94,
+        f"Fixed basket = today's non-MPO pools tracked backwards · "
+        f"pledge stance reconstructed from pool update history · "
+        f"epoch {live_epoch} snapshot",
+        ha="center", va="top", fontsize=10, color=DIM,
+    )
+
+    fig.tight_layout(rect=[0.03, 0.05, 0.97, 0.90])
+    fig.savefig(out_path, dpi=220, bbox_inches="tight", facecolor=BG)
+    plt.close(fig)
+    print(f"✓ Saved {out_path}")
+
+
 def write_summary_csv(pools, z0, csv_path, show_mpo=False):
     """Write per-tier summary CSV."""
     stakes = np.array([p["stake"] for p in pools])
@@ -722,7 +820,7 @@ def main():
         spo_only, z0, epoch,
         title="Competitive Landscape — Independent SPOs Only",
         subtitle=(f"Epoch {epoch}  ·  {n1:,} pools  ·  {s1/1e9:.1f}B ADA  "
-                  f"·  All {len(all_mpo_pools):,} attributed MPO pools removed"),
+                  f"·  All {len(all_mpo_pools & {p['pool_id'] for p in all_pools}):,} attributed MPO pools removed"),
         fig_path=FIG_DIR / "filtered_landscape_spo_only_mainnet.png",
         show_mpo_hatch=False,
     )
@@ -768,6 +866,7 @@ def main():
         current_rows_by_pool,
     )
     draw_history_figure(epochs, view_a, view_b, live_epoch)
+    draw_spo_only_history(epochs, view_a, live_epoch)
     write_history_key_epochs_csv(view_a, view_b, live_epoch)
 
 
