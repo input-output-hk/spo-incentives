@@ -95,7 +95,7 @@ def add_checkpoint(ax: plt.Axes, *, y: float = 0.97) -> None:
     ax.text(
         REPORT_CHECKPOINT_EPOCH + 2,
         y,
-        "Carlos report endpoint\n(epoch 583)",
+        "IMA endpoint\n(epoch 583)",
         transform=ax.get_xaxis_transform(),
         ha="left",
         va="top",

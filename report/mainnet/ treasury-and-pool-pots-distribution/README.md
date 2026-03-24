@@ -155,7 +155,7 @@ Fee revenue is volatile and tracks network activity spikes (NFT minting, DeFi wa
 
 The **realistic capacity ceiling** (red dashed line on the visual) estimates the maximum fee revenue if the network operated at full realistic throughput: **~254K ADA/epoch** (3.1 TPS × 432,000 s × 0.19 ADA avg fee). Even at this theoretical maximum, fees would cover only **~1.3% of the reserve expansion term** (19.4M ADA at epoch 616). The all-time peak (epoch 304, 308K ADA) briefly exceeded this ceiling during exceptional NFT/DeFi activity.
 
-The report (Lopez de Lara, 2025/11, §3.8) estimates the network would need to process **12–16× more transactions** than its current realistic maximum capacity to fund rewards through fees alone — requiring both a throughput upgrade (Leios) and a fundamental shift in network utilization.
+The *Analysis of Cardano's Incentive Mechanism* (Lopez de Lara, 2025; hereafter the *Incentive Mechanism Analysis*, §3.8) estimates the network would need to process **12–16× more transactions** than its current realistic maximum capacity to fund rewards through fees alone — requiring both a throughput upgrade (Leios) and a fundamental shift in network utilization.
 
 ### 3.4 Deposit obligations
 
@@ -245,7 +245,7 @@ $d$ affected the epoch pot during the Shelley-to-decentralisation transition thr
 
 The reserve has lost 50.95% of its initial value in ~5.5 years. The depletion is not linear — it follows an exponential decay driven by $\rho \times \text{Reserve}$, meaning each epoch draws a smaller absolute amount.
 
-The report (Lopez de Lara, 2025/11, §3.8, Figure 19) projects:
+The *Incentive Mechanism Analysis* (§3.8, Figure 19) projects:
 
 | Horizon | Reserve estimate | Implication |
 | --- | --- | --- |
@@ -270,7 +270,7 @@ No single lever is sufficient. The report recommends a multi-pronged approach: c
 
 ### 4.3 Upcoming events and risks
 
-**Leios upgrade.** Designed to substantially increase network throughput. This is a necessary precondition for fee growth, but does not guarantee traffic. "Leios provides the highway — it does not guarantee the traffic" (Lopez de Lara, 2025/11, §5).
+**Leios upgrade.** Designed to substantially increase network throughput. This is a necessary precondition for fee growth, but does not guarantee traffic. "Leios provides the highway — it does not guarantee the traffic" (Lopez de Lara, 2025, §5).
 
 **Governance activation of latent stake.** If a significant portion of the ~16B ADA currently outside consensus enters staking — through governance incentives, exchange policy changes, or new delegation products — the return-to-reserve buffer shrinks, the pool-side pot gets distributed more fully, and reserve depletion accelerates. This is a double-edged dynamic: more participation strengthens decentralization but increases sustainability pressure.
 

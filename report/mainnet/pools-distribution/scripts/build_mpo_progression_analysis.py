@@ -81,7 +81,7 @@ PROXY_GROUP_PATTERNS: List[Tuple[str, str]] = [
 
 MPO_MIN_REGISTERED_POOLS = 2
 REPORT_CHECKPOINT_EPOCH = 593
-REPORT_CHECKPOINT_LABEL = "Prior report checkpoint\nNov 6, 2025"
+REPORT_CHECKPOINT_LABEL = "IMA checkpoint\n(epoch 593)"
 
 
 def fetch_json(url: str) -> object:

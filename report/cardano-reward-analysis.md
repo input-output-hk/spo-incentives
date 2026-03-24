@@ -4,7 +4,7 @@
 
 The *Shelley-era Delegation and Incentives Design Specification* (SL-D1) defined the economic rules that were meant to guide Cardano toward a stable, decentralized equilibrium of $k$ well-funded stake pools.
 Five years of mainnet operation have exposed significant divergences between those design intentions and the on-chain reality.
-The *Analysis of Cardano's Incentive Mechanism* (Lopez de Lara, 2025/11) documented the key findings empirically: a stratified equilibrium with 873 active operators below the 3M ADA viability threshold, a pledge mechanism that is functionally irrelevant for most pools, and a capital-constrained environment where ~16B ADA remains outside consensus.
+The *Analysis of Cardano's Incentive Mechanism* (Lopez de Lara, 2025; hereafter the *Incentive Mechanism Analysis*) documented the key findings empirically: a stratified equilibrium with 873 active operators below the 3M ADA viability threshold, a pledge mechanism that is functionally irrelevant for most pools, and a capital-constrained environment where ~16B ADA remains outside consensus.
 
 This document is the formula-level companion to that analysis.
 It restates the SL-D1 reward pipeline in reader-friendly, domain-oriented notation, then isolates *where* and *how* each stage of the pipeline contributes to the observed problems.
@@ -15,7 +15,7 @@ The goal is not to re-derive the math, but to provide a self-contained reference
 ## Canonical sources
 
 - **SL-D1**: *Engineering Design Specification for Delegation and Incentives in Cardano-Shelley* (Kant et al.).
-- **Empirical baseline**: *Analysis of Cardano's Incentive Mechanism* (Lopez de Lara, 2025/11).
+- **Empirical baseline**: *Analysis of Cardano's Incentive Mechanism* (Lopez de Lara, 2025).
 - **CIP proposals**: CIP-0023, CIP-0037, CIP-0050, CIP-0082.
 
 
@@ -265,7 +265,7 @@ Even at full realistic network capacity, fees would cover ~1.3% of the reserve e
 These solutions have been discussed in the literature or community but fall **outside the scope** of this stream (issue #12). They are listed here for completeness.
 
 - **Tiered fee models** (Kiayias et al., 2023) — congestion-based pricing to increase fee revenue per transaction.
-- **Leios throughput upgrade** — necessary precondition for fee growth, but "provides the highway, not the traffic" (Lopez de Lara, 2025/11, §5).
+- **Leios throughput upgrade** — necessary precondition for fee growth, but "provides the highway, not the traffic" (*Incentive Mechanism Analysis*, §5).
 - **Dynamic $\rho$ governance** — periodic review of the monetary expansion rate to balance reserve longevity against reward levels.
 - **Adaptive $\tau$ governance** — adjusting the treasury/pools split in response to ecosystem needs rather than keeping it fixed.
 - **Staking participation incentives** — mechanisms to bring inactive ADA into delegation, which would increase distribution efficiency but accelerate reserve depletion (the O3 paradox).
@@ -674,7 +674,7 @@ The reward curve includes a pledge bonus controlled by `a0 = 0.3`. Its purpose i
 
 The reward formulas define a uniform saturation point $z_0 = \text{Supply}/k$ (currently **76.99M ADA**). The design intent was a flat landscape of 500 comparably-sized pools. Mainnet shows a steeply stratified distribution instead.
 
-**The viability threshold creates a cliff** (F2.1, F2.2). Of 2,718 pools with stake, **1,987 (73%)** sit below the 3M ADA viability line established in the prior report. Together they carry only **2.7% of active stake**. The remaining **731 healthy pools** carry **97.3%** — effectively the entire delegation market. The transition across the viability threshold is not gradual; it is a cliff in both block production frequency and economic sustainability.
+**The viability threshold creates a cliff** (F2.1, F2.2). Of 2,718 pools with stake, **1,987 (73%)** sit below the 3M ADA viability line established in the *Incentive Mechanism Analysis*. Together they carry only **2.7% of active stake**. The remaining **731 healthy pools** carry **97.3%** — effectively the entire delegation market. The transition across the viability threshold is not gradual; it is a cliff in both block production frequency and economic sustainability.
 
 **Saturation is barely reached** (F2.3). Only **7 pools** are at or above the saturation point — out of a design target of 500. The saturation cap, the core mechanism designed to prevent stake concentration, is nearly inactive. It affects less than **1.4%** of its intended scope.
 

@@ -82,7 +82,7 @@ SEG_STACK = [
     "mpo_marginal", "mpo_compliant", "mpo_exemplary",
 ]
 
-CARLOS_REPORT_END_EPOCH = 583
+IMA_END_EPOCH = 583  # Incentive Mechanism Analysis (Lopez de Lara, 2025)
 KEY_EPOCHS = [210, 250, 400, 410, 548, 583, 615]
 
 
@@ -522,7 +522,7 @@ def draw_history_figure(epochs, view_a, view_b, live_epoch):
         ax.stackplot(x, stack, colors=colors, alpha=0.88, linewidth=0)
         top = stack.sum(axis=0)
         ax.plot(x, top, color=INK, linewidth=2.1, label="Total basket share")
-        ax.axvline(CARLOS_REPORT_END_EPOCH, color="#7F8C8D", linestyle=":", linewidth=1.2, alpha=0.9)
+        ax.axvline(IMA_END_EPOCH, color="#7F8C8D", linestyle=":", linewidth=1.2, alpha=0.9)
 
         ax.text(
             0.01, 0.97, title,
@@ -535,11 +535,11 @@ def draw_history_figure(epochs, view_a, view_b, live_epoch):
             fontsize=9, color=DIM,
         )
 
-        report_total = sum(view_dict.get(CARLOS_REPORT_END_EPOCH, {}).get(st, 0.0) for st in STANCE_STACK)
+        report_total = sum(view_dict.get(IMA_END_EPOCH, {}).get(st, 0.0) for st in STANCE_STACK)
         live_total = sum(view_dict.get(live_epoch, {}).get(st, 0.0) for st in STANCE_STACK)
         report_quality = (
-            view_dict.get(CARLOS_REPORT_END_EPOCH, {}).get("compliant", 0.0)
-            + view_dict.get(CARLOS_REPORT_END_EPOCH, {}).get("exemplary", 0.0)
+            view_dict.get(IMA_END_EPOCH, {}).get("compliant", 0.0)
+            + view_dict.get(IMA_END_EPOCH, {}).get("exemplary", 0.0)
         )
         live_quality = (
             view_dict.get(live_epoch, {}).get("compliant", 0.0)
@@ -547,7 +547,7 @@ def draw_history_figure(epochs, view_a, view_b, live_epoch):
         )
         ax.text(
             0.97, 0.96,
-            f"Epoch {CARLOS_REPORT_END_EPOCH}: {report_total:.1f}% total\n"
+            f"Epoch {IMA_END_EPOCH}: {report_total:.1f}% total\n"
             f"Epoch {live_epoch}: {live_total:.1f}% total\n"
             f"Compliant + exemplary: {report_quality:.1f}% → {live_quality:.1f}%",
             transform=ax.transAxes,
@@ -574,9 +574,9 @@ def draw_history_figure(epochs, view_a, view_b, live_epoch):
         ax.tick_params(axis="both", colors=DIM)
 
     axes[1].text(
-        CARLOS_REPORT_END_EPOCH - 3,
+        IMA_END_EPOCH - 3,
         axes[1].get_ylim()[1] * 0.80 if axes[1].get_ylim()[1] else 1,
-        "Carlos report endpoint\n(epoch 583)",
+        "IMA endpoint\n(epoch 583)",
         ha="right",
         va="top",
         fontsize=9,
@@ -640,24 +640,24 @@ def draw_spo_only_history(epochs, view_a, live_epoch):
     top = stack.sum(axis=0)
     ax.plot(x, top, color=INK, linewidth=2.1)
 
-    ax.axvline(CARLOS_REPORT_END_EPOCH, color="#7F8C8D", linestyle=":",
+    ax.axvline(IMA_END_EPOCH, color="#7F8C8D", linestyle=":",
                linewidth=1.2, alpha=0.9)
 
     # Key epoch annotations
-    report_total = sum(view_a.get(CARLOS_REPORT_END_EPOCH, {}).get(st, 0.0)
+    report_total = sum(view_a.get(IMA_END_EPOCH, {}).get(st, 0.0)
                        for st in STANCE_STACK)
     live_total = sum(view_a.get(live_epoch, {}).get(st, 0.0)
                      for st in STANCE_STACK)
-    report_nc = view_a.get(CARLOS_REPORT_END_EPOCH, {}).get("non_compliant", 0.0)
+    report_nc = view_a.get(IMA_END_EPOCH, {}).get("non_compliant", 0.0)
     live_nc = view_a.get(live_epoch, {}).get("non_compliant", 0.0)
-    report_qual = sum(view_a.get(CARLOS_REPORT_END_EPOCH, {}).get(st, 0.0)
+    report_qual = sum(view_a.get(IMA_END_EPOCH, {}).get(st, 0.0)
                       for st in ["compliant", "exemplary"])
     live_qual = sum(view_a.get(live_epoch, {}).get(st, 0.0)
                     for st in ["compliant", "exemplary"])
 
     ax.text(
         0.97, 0.96,
-        f"Epoch {CARLOS_REPORT_END_EPOCH}: {report_total:.1f}% of active stake\n"
+        f"Epoch {IMA_END_EPOCH}: {report_total:.1f}% of active stake\n"
         f"Epoch {live_epoch}: {live_total:.1f}% of active stake\n"
         f"Non-compliant: {report_nc:.1f}% → {live_nc:.1f}%\n"
         f"Compliant + exemplary: {report_qual:.1f}% → {live_qual:.1f}%",
@@ -676,9 +676,9 @@ def draw_spo_only_history(epochs, view_a, live_epoch):
     )
 
     ax.text(
-        CARLOS_REPORT_END_EPOCH - 3,
+        IMA_END_EPOCH - 3,
         ax.get_ylim()[1] * 0.50 if ax.get_ylim()[1] else 1,
-        "Carlos report\nendpoint (epoch 583)",
+        "IMA endpoint\n(epoch 583)",
         ha="right", va="top", fontsize=9, color="#4B5563",
         bbox=dict(boxstyle="round,pad=0.2", facecolor="white",
                   edgecolor="#D1D5DB", alpha=0.9),
