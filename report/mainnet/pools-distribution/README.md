@@ -941,7 +941,9 @@ The canonical classification is in `data/mpo_entity_archetypes.csv` (includes `e
 
 ##### 4.2.3.2 Current distribution
 
-![Current MPO entity distribution](figures/mpo_entity_current_distribution_mainnet.png)
+![Current MPO entity distribution — stake share by archetype](figures/mpo_entity_current_distribution_chart_mainnet.png)
+
+![Current MPO entity distribution — per-entity metrics](figures/mpo_entity_current_distribution_table_mainnet.png)
 
 The figure groups every entity with ≥0.01% of circulating supply by archetype. The bar chart shows their share of staked supply; the metrics table below it reports pool counts, pledge coverage, and average margin for each entity and archetype subtotal.
 
