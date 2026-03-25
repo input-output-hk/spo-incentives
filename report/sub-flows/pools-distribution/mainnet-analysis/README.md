@@ -1,4 +1,4 @@
-# The Pledge Problem — A Mainnet Analysis of Cardano's Pool Reward Distribution
+# The Pools Pot Distribution Gaps — A Mainnet Analysis of Cardano's Pool Reward Distribution
 
 _Built on 2026/03/18 from mainnet data at epoch `618` plus historical analysis from epoch `208` (Shelley inception)._
 

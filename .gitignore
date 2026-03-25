@@ -8,3 +8,5 @@ report/mainnet/pools-distribution/data/koios_pool_history_mainnet.csv
 report/mainnet/pools-distribution/data/koios_pool_owner_history_mainnet.csv
 scenarii-evaluation-legacy/data/koios_pool_history_mainnet.csv
 scenarii-evaluation-legacy/data/koios_pool_owner_history_mainnet.csv
+report/sub-flows/pools-distribution/mainnet-analysis/data/koios_pool_history_mainnet.csv
+report/sub-flows/pools-distribution/mainnet-analysis/data/koios_pool_owner_history_mainnet.csv

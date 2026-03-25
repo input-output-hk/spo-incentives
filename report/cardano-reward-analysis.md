@@ -1,4 +1,4 @@
-# Cardano Reward Formulas: From Design Intent to Mainnet Reality
+# Cardano Reward Pipeline: From Design Intent to Mainnet Reality
 
 ## Motivation
 
@@ -6,17 +6,15 @@ The *Shelley-era Delegation and Incentives Design Specification* (SL-D1) defined
 Five years of mainnet operation have exposed significant divergences between those design intentions and the on-chain reality.
 The *Analysis of Cardano's Incentive Mechanism* (Lopez de Lara, 2025; hereafter the *Incentive Mechanism Analysis*) documented the key findings empirically: a stratified equilibrium with 873 active operators below the 3M ADA viability threshold, a pledge mechanism that is functionally irrelevant for most pools, and a capital-constrained environment where ~16B ADA remains outside consensus.
 
-This document is the formula-level companion to that analysis.
-It restates the SL-D1 reward pipeline in reader-friendly, domain-oriented notation, then isolates *where* and *how* each stage of the pipeline contributes to the observed problems.
-The same notation is then used to express the four community CIP proposals (CIP-0023, CIP-0050, CIP-0082, CIP-0037) as targeted substitutions within that pipeline, making it possible to compare each proposal against the status quo on a formula-by-formula basis.
+This document decomposes the SL-D1 reward pipeline into three stages and, for each stage, follows the same analytical arc: describe the intended design, confront it with mainnet observations, synthesise the observations into a *problem statement*, and verify whether a formal *Cardano Problem Statement* (CPS) exists for that problem in the CIP governance process. Where a CPS exists, the document evaluates the CIPs proposed as solutions against it. Where no CPS exists, the document identifies the gap and produces one.
 
-The goal is not to re-derive the math, but to provide a self-contained reference that connects *protocol intent*, *observed failure modes*, and *proposed remedies* in a single, auditable document.
+Each pipeline stage is backed by a dedicated sub-report containing the formula derivations, mainnet observations, and empirical evidence — serving as the *Cardano Problem Definition* (CPD) that grounds the corresponding CPS.
 
 ## Canonical sources
 
 - **SL-D1**: *Engineering Design Specification for Delegation and Incentives in Cardano-Shelley* (Kant et al.).
 - **Empirical baseline**: *Analysis of Cardano's Incentive Mechanism* (Lopez de Lara, 2025).
-- **CIP proposals**: CIP-0023, CIP-0037, CIP-0050, CIP-0082.
+- **CIP/CPS process**: [CIP-0001](https://cips.cardano.org/cip/CIP-0001) (CIP Process), [CIP-9999](https://cips.cardano.org/cips/cip9999) (Cardano Problem Statements).
 
 
 ## Table of Contents
@@ -24,31 +22,24 @@ The goal is not to re-derive the math, but to provide a self-contained reference
 - [1. Reward Flow](#1-reward-flow)
   - [1.1 Treasury & Pool Pots Distribution](#11-treasury--pool-pots-distribution)
     - [1.1.1 Flow Overview](#111-flow-overview)
-    - [1.1.2 Formulas](#112-formulas)
-      - [1.1.2.1 SL-D1 (Original)](#1121-sl-d1-original)
-      - [1.1.2.2 Reader-Friendly](#1122-reader-friendly)
-      - [1.1.2.3 Mainnet Reader-Friendly](#1123-mainnet-reader-friendly)
-      - [1.1.2.4 Concept glossary](#1124-concept-glossary)
-    - [1.1.3 Mainnet Observations](#113-mainnet-observations)
-    - [1.1.4 Problems](#114-problems)
-    - [1.1.5 Prior Art & Cited Solutions](#115-prior-art--cited-solutions)
+    - [1.1.2 Mainnet Observations](#112-mainnet-observations) 
+    - [1.1.3 From Observations to Problem](#113-from-observations-to-problem)
   - [1.2 Pools Distribution](#12-pools-distribution)
     - [1.2.1 Flow Overview](#121-flow-overview)
-    - [1.2.2 Formulas](#122-formulas)
-      - [1.2.2.1 SL-D1 (Original)](#1221-sl-d1-original)
-      - [1.2.2.2 Interpretation of the original reward function](#1222-interpretation-of-the-original-reward-function)
-      - [1.2.2.3 Why rewrite the original formulation](#1223-why-rewrite-the-original-formulation)
-      - [1.2.2.4 Normalized saturation coordinates](#1224-normalized-saturation-coordinates)
-      - [1.2.2.5 Reader-friendly reward function](#1225-reader-friendly-reward-function)
-      - [1.2.2.6 Summary in normalized notation](#1226-summary-in-normalized-notation)
-      - [1.2.2.7 Mainnet parameterization (normalized form)](#1227-mainnet-parameterization-normalized-form)
-      - [1.2.2.8 Concept glossary](#1228-concept-glossary)
-    - [1.2.3 Mainnet Observations](#123-mainnet-observations)
-    - [1.2.4 Problems](#124-problems)
-    - [1.2.5 Prior Art & Cited Solutions](#125-prior-art--cited-solutions)
-    - [1.2.6 CIP Evaluation: Pledge & Curve Adjustments](#126-cip-evaluation-pledge--curve-adjustments)
-      - [1.2.6.1 CIP-0050 — Pledge Leverage Cap](#1261-cip-0050--pledge-leverage-cap)
-      - [1.2.6.2 CIP-0037 — Dynamic Pledge-Linked Saturation](#1262-cip-0037--dynamic-pledge-linked-saturation)
+    - [1.2.2 Mainnet Observations](#122-mainnet-observations) 
+    - [1.2.3 Problems](#123-problems)
+      - [1.2.3.1 The staking mechanism is half-utilised](#1231-the-staking-mechanism-is-half-utilised)
+      - [1.2.3.2 The incentive game does not work](#1232-the-incentive-game-does-not-work)
+        - [1.2.3.2.1 The intended game](#12321-the-intended-game)
+          - [1.2.3.2.1.1 The design objective](#123211-the-design-objective)
+          - [1.2.3.2.1.2 The players](#123212-the-players)
+          - [1.2.3.2.1.3 The progression](#123213-the-progression)
+          - [1.2.3.2.1.4 The aligned dynamics](#123214-the-aligned-dynamics)
+        - [1.2.3.2.2 Where the design breaks](#12322-where-the-design-breaks)
+    - [1.2.4 Prior Art & Cited Solutions](#124-prior-art--cited-solutions)
+    - [1.2.5 CIP Evaluation: Pledge & Curve Adjustments](#125-cip-evaluation-pledge--curve-adjustments)
+      - [1.2.5.1 CIP-0050 — Pledge Leverage Cap](#1251-cip-0050--pledge-leverage-cap)
+      - [1.2.5.2 CIP-0037 — Dynamic Pledge-Linked Saturation](#1252-cip-0037--dynamic-pledge-linked-saturation)
   - [1.3 Operator / Delegator Distribution](#13-operator--delegator-distribution)
     - [1.3.1 Flow Overview](#131-flow-overview)
     - [1.3.2 Formulas](#132-formulas)
@@ -62,6 +53,7 @@ The goal is not to re-derive the math, but to provide a self-contained reference
     - [1.3.7 CIP Evaluation: Fee Structure Adjustments](#137-cip-evaluation-fee-structure-adjustments)
       - [1.3.7.1 CIP-0023 — Fair Min Fees](#1371-cip-0023--fair-min-fees)
       - [1.3.7.2 CIP-0082 — Improved Rewards Scheme](#1372-cip-0082--improved-rewards-scheme)
+- [Sub-reports](#sub-reports)
 - [Appendices](#appendices)
   - [A. Notation Convention](#a-notation-convention)
   - [B. Symbol Mapping (SL-D1 → Reader-Friendly)](#b-symbol-mapping-sl-d1--reader-friendly)
@@ -87,188 +79,34 @@ Two design choices embedded at this stage matter for the rest of the analysis:
 
 - **Fixed split rule.** The treasury/pools ratio is a protocol constant ($\tau$), not a function of network activity or reserve level. It does not adapt as the balance between fees and expansion shifts over time.
 
-#### 1.1.2 Formulas
+> **Formulas.** The epoch-pot assembly and treasury/pools split formulas — from the original SL-D1 notation through a reader-friendly rewrite to mainnet parameterization — are in the dedicated sub-report: [`Treasury & Pool Pots Distribution`](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md) — §2.1.
 
-The formulas are presented in three layers: the original SL-D1 notation, a reader-friendly rewrite, and the mainnet-parameterized form.
+#### 1.1.2 Mainnet Observations
 
-##### 1.1.2.1 SL-D1 (Original)
+The epoch-level analysis (epochs 208–617) yields four observations at this pipeline stage. The full data, visuals, and methodology are in the dedicated sub-report: [`Treasury & Pool Pots Distribution`](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md).
 
-The design spec defines three quantities. First, the **gross epoch pot** — the total ADA entering the reward pipeline this epoch:
+| # | Observation | Summary |
+| --- | --- | --- |
+| **O1** | **The epoch pot is a single-source budget** | Monetary expansion provides ~99.8% of the pot. Fees cover ~0.19%; self-sufficiency would require 12–16× current capacity. Block production is reliable (η ≈ 0.977). |
+| **O2** | **The reserve has crossed its half-life** | Reserve is half-depleted (13.29B → 6.53B ADA) in 5.5 years. Significant reward pressure expected at epochs 1000–1200 (~2028–2029). |
+| **O3** | **The reward mechanism operates at ~44% of its potential** | Only ~6.8M of ~15.5M ADA pools pot reaches operators/delegators — the rest returns to reserve. 4.55B ADA cumulative (~70% of current reserve) exists because of this. Root cause: ~17B ADA (~44%) does not participate in delegation. |
+| **O4** | **Reward parameters have never been adjusted** | $\rho = 0.3\%$ and $\tau = 20\%$ are unchanged since Shelley. Neither has been subject to a governance proposal. |
 
-$$
-Pot^{\text{epoch}}
-:=
-F + D + \min(\eta,1)\rho\,(T_{\infty}-T)
-$$
+> **Scope note.** Observations O1–O4 are structural to the epoch-budget layer. No existing CIP targets this stage — they all operate downstream (§1.2, §1.3). These observations document the sustainability context within which all downstream proposals operate.
 
-Then, the **treasury/pools split** — a single parameter $\tau$ determines how much goes to the treasury vs. pools:
+#### 1.1.3 From Observations to Problem
 
-$$
-R
-:=
-(1-\tau)\,Pot^{\text{epoch}}
-$$
+The four observations above are individually informative, but their significance emerges when read together. Each observation constrains what the system can do; the combination reveals what it *cannot* do.
 
-$$
-TreasuryPot^{\text{epoch}}
-:=
-\tau\,Pot^{\text{epoch}}
-$$
+The epoch pot is funded almost entirely by monetary expansion from the reserve (O1). That reserve is finite and has already crossed its half-life (O2). In principle, transaction fees could eventually replace expansion as the primary funding source — but fees currently cover ~0.19% of the pot, and even at full realistic throughput would reach only ~1.3% (O1). Closing this gap requires 12–16× today's capacity, implying both a throughput upgrade (Leios) and a structural increase in transaction demand — neither of which is on a defined timeline. Meanwhile, the two parameters that govern the draw ($\rho$, $\tau$) have never been reviewed or adjusted since Shelley launch (O4), and no governance process exists to do so.
 
-> **Reading note.** $F$ = fees, $D$ = deposits, $\eta$ = block-production ratio, $\rho$ = monetary expansion rate, $(T_{\infty}-T)$ = remaining reserve. The mapping to reader-friendly names is in the glossary below (§1.1.2.4).
+Taken together, these observations point to a single structural problem: **the reward system has no viable path from reserve-funded to fee-funded sustainability.** The reserve is depleting on a known schedule, the only alternative revenue source is orders of magnitude too small, and the parameters governing the transition have never been subject to governance. The system is on a countdown with no scheduled response.
 
-##### 1.1.2.2 Reader-Friendly
+This is not a failure of any individual parameter or mechanism — it is a *design gap* at the epoch-budget layer. No protocol-level or governance-level instrument currently exists to manage this transition.
 
-Same logic, with self-documenting names. The epoch pot aggregates **three inputs** — fees, deposits, and a reserve draw gated by the block-production ratio:
+> **Note on O3.** The ~44% distribution efficiency is not a problem *at this stage* — it is a consequence of participation levels, which are shaped by incentives defined at the pool-distribution (§1.2) and operator/delegator (§1.3) layers. It is documented here because it materially affects reserve depletion timing: activating inactive ADA would increase distribution efficiency but accelerate reserve consumption — a tension that any sustainability strategy must address.
 
-$$
-Pot^{\text{epoch}}
-= Fee^{\text{epoch}}_{\text{tx}}
-+
-Deposit^{\text{epoch}}_{\text{nonRefundable}}
-+
-\min\left(\frac{Blocks^{\text{epoch}}_{\text{produced}}}{Blocks^{\text{epoch}}_{\text{expected}}},1\right)\rho^{\text{monetaryExpansion}}_{\text{rate}}(Supply^{\text{system}}_{\text{total}}-Supply^{\text{system}}_{\text{circulating}})
-$$
-
-The split is then purely multiplicative — no pool-level logic involved:
-
-$$
-PoolsPot^{\text{epoch}}
-:=
-(1-\tau^{\text{treasury}}_{\text{rate}})\,Pot^{\text{epoch}}
-$$
-
-$$
-TreasuryPot^{\text{epoch}}
-:=
-\tau^{\text{treasury}}_{\text{rate}}\,Pot^{\text{epoch}}
-$$
-
-##### 1.1.2.3 Mainnet Reader-Friendly
-
-Substituting the current mainnet protocol parameters ($\rho = 0.3\%$, $\tau = 20\%$, 21,600 expected blocks per epoch, 45 billion max supply):
-
-$$
-Pot^{\text{epoch}}
-= Fee^{\text{epoch}}_{\text{tx}}
-+
-Deposit^{\text{epoch}}_{\text{nonRefundable}}
-+
-\min\left(\frac{Blocks^{\text{epoch}}_{\text{produced}}}{21{,}600},1\right)\cdot 0.3\% \cdot \left(45\,\text{billion} - Supply^{\text{system}}_{\text{circulating}}\right)
-$$
-
-$$
-PoolsPot^{\text{epoch}}
-:=
-80\% \cdot Pot^{\text{epoch}}
-$$
-
-$$
-TreasuryPot^{\text{epoch}}
-:=
-20\% \cdot Pot^{\text{epoch}}
-$$
-
-Conservation — the split is exhaustive, nothing is lost:
-
-$$
-PoolsPot^{\text{epoch}} + TreasuryPot^{\text{epoch}}
-= Pot^{\text{epoch}}
-$$
-
-##### 1.1.2.4 Concept glossary
-
-| SL-D1 | Reader-Friendly | Meaning | Mainnet baseline |
-| --- | --- | --- | --- |
-| $F$ | $Fee^{\text{epoch}}_{\text{tx}}$ | Epoch transaction fees | Dynamic |
-| $D$ | $Deposit^{\text{epoch}}_{\text{nonRefundable}}$ | Epoch non-refundable deposits | Dynamic |
-| $\eta$ | $\frac{Blocks^{\text{epoch}}_{\text{produced}}}{Blocks^{\text{epoch}}_{\text{expected}}}$ | Epoch block-production ratio | $Blocks^{\text{epoch}}_{\text{expected}}=21{,}600$ |
-| $\rho$ | $\rho^{\text{monetaryExpansion}}_{\text{rate}}$ | Monetary expansion rate | $0.3\%$ |
-| $T_{\infty}-T$ | $Supply^{\text{system}}_{\text{total}}-Supply^{\text{system}}_{\text{circulating}}$ | Reserve entering the monetary-expansion term | $45\,\text{billion} - Supply^{\text{system}}_{\text{circulating}}$ |
-| $\tau$ | $\tau^{\text{treasury}}_{\text{rate}}$ | Treasury take rate | $20\%$ treasury / $80\%$ pools |
-| $R$ | $PoolsPot^{\text{epoch}}$ | Pool-side share of the epoch pot | $80\% \cdot Pot^{\text{epoch}}$ |
-| n/a | $TreasuryPot^{\text{epoch}}$ | Treasury-side share of the epoch pot | $20\% \cdot Pot^{\text{epoch}}$ |
-
-#### 1.1.3 Mainnet Observations
-
-The epoch-level analysis (epochs 208–617) yields four observations at this pipeline stage. The full data, visuals, and methodology are in the dedicated sub-report: [`report/mainnet/treasury-and-pool-pots-distribution/`](mainnet/%20treasury-and-pool-pots-distribution/README.md).
-
-| # | Observation | Section | Status |
-| --- | --- | --- | --- |
-| | **O1 — The epoch pot is a single-source budget** | | |
-| F1.1 | Monetary expansion dominates the epoch pot (~99.8%) | §3.1 | Structural — unchanged since Shelley |
-| F1.2 | Fee revenue is structurally insufficient — even at full capacity, fees cover ~1.3% of expansion | §3.3, §4.2 | 12–16× capacity gap; no CIP in scope |
-| F1.3 | Deposit contribution is small and unmeasurable at epoch granularity | §3.4 | Data limitation |
-| F1.4 | SPOs produce ~97% of their assigned blocks — the pot assembles reliably | §3.5 | Avg η = 0.977 |
-| | **O2 — The reserve has crossed its half-life** | | |
-| F2.1 | Reserve is half-depleted (−50.95%) in 5.5 years | §3.2 | Ongoing decline |
-| F2.2 | Significant reward pressure expected at epochs 1000–1200 | §4.1 | Projected ~2028–2029 |
-| | **O3 — The reward mechanism operates at ~44% of its potential** | | |
-| F3.1 | Only ~44% of the pools pot is distributed to operators and delegators — the rest returns to the reserve | §3.7 | 6.8M distributed out of 15.5M |
-| F3.2 | 4.55B ADA cumulative (~70% of current reserve) exists because of undistributed rewards | §3.7 | Slows depletion but is not by design |
-| F3.3 | The primary driver is inactive stake — ~17B ADA (~44%) does not participate in delegation | §3.7 | Staking mechanism half-utilised |
-| | **O4 — Reward parameters have never been adjusted** | | |
-| F4.1 | Treasury split and expansion rate never adjusted since Shelley | §3.8 | τ = 20%, ρ = 0.3% — constant |
-
-##### The big picture
-
-Five and a half years after Shelley, the epoch-budget stage tells a clear story: **the system works, but it runs on a finite fuel supply that is now half-spent.**
-
-##### O1 — The epoch pot is a single-source budget
-
-The protocol assembles the epoch reward pot from three sources: monetary expansion, transaction fees, and deposit flows. In practice only one matters.
-
-**Monetary expansion: ~99.8% of the pot** (F1.1). Every epoch, 0.3% of the reserve is drawn. This has dominated the pot in every single epoch since Shelley — fees have never crossed 3%, even during peak NFT/DeFi activity.
-
-**Transaction fees: ~0.19% of the pot** (F1.2). At current levels, fees are negligible. Even at full realistic network capacity (3.1 TPS, ~1.34M tx/epoch), fee revenue would reach only ~254K ADA/epoch — barely 1.3% of the reserve expansion term. Reaching fee self-sufficiency would require **12–16× today's realistic maximum throughput**: both a capacity upgrade (Leios) and a fundamental shift in transaction demand.
-
-**Deposits: unmeasurable at epoch granularity** (F1.3). The non-refundable deposit flow is not directly available in the Koios dataset. Cross-validation shows a median gap of only ~49K ADA against treasury stock deltas — a rounding error.
-
-**Block production: the pot assembles reliably** (F1.4). SPOs produce ~97% of their assigned blocks on average (η = 0.977). The pot assembly mechanism works as intended — block production is not a bottleneck.
-
-##### O2 — The reserve has crossed its half-life
-
-The reserve has gone from **13.29B to 6.53B ADA** — half depleted in ~5.5 years (F2.1). The decline is exponential: each epoch draws 0.3% of whatever remains, so the absolute draw shrinks over time. The nominal expansion has already halved, from ~39.9M to ~19.5M ADA/epoch.
-
-**Projected timeline** (F2.2). At current parameters and participation levels, the reserve reaches ~2B ADA around epochs 1000–1200 (~2028–2029) — at which point per-epoch rewards drop significantly. Full depletion is projected around epoch 3500 (~2040s).
-
-##### O3 — The reward mechanism operates at ~44% of its potential
-
-Every epoch, the protocol allocates ~15.5M ADA to the pools pot. Only **~6.8M ADA (~44%) is actually distributed as rewards** to operators and delegators — the remaining ~8.7M returns to the reserve (F3.1).
-
-This is not a small leak. Over 400+ epochs, **4.55B ADA** has flowed back to the reserve through this mechanism — roughly **70% of the current reserve stock** exists because rewards were not fully distributed (F3.2). It is the single biggest reason the reserve has lasted as long as it has.
-
-The root cause is straightforward: **the staking mechanism is half-utilised** (F3.3). Out of ~38.5B ADA in circulation, only ~21.6B (~56%) participates in delegation. The remaining ~17B ADA sits outside the system entirely — it earns no rewards, but it still dilutes the distribution. If that inactive stake were to enter consensus — through governance incentives, exchange staking changes, or new delegation products — this buffer would shrink and reserve depletion would accelerate.
-
-This creates a paradox: the return-to-reserve mechanism slows depletion, but it is a side effect of low participation, not a design feature. Greater adoption — normally desirable — would remove this safety margin.
-
-##### O4 — Reward parameters have never been adjusted
-
-The two parameters that shape this entire pipeline — the monetary expansion rate ($\rho = 0.3\%$) and the treasury rate ($\tau = 20\%$) — have **never been adjusted** since Shelley inception (F4.1). The decentralisation parameter $d$ was gradually reduced to 0 and $k$ was raised from 150 to 500, but the reward-level parameters remain at their day-one values. Neither has been the subject of a formal governance proposal.
-
-> **Scope note.** Observations O1–O4 are structural to the epoch-budget layer and fall **outside the scope of the four CIPs** under evaluation (CIP-0023, CIP-0037, CIP-0050, CIP-0082). They document the sustainability context within which all CIP proposals operate, and distinguish them from the problems the CIPs actually target — at the pool-distribution and operator/delegator layers downstream.
-
-#### 1.1.4 Problems
-
-The observations above point to two structural problems at this pipeline stage. Neither is addressed by the four CIPs under evaluation — they operate downstream (§1.2, §1.3).
-
-**P1.1 — Reserve dependency with no transition path.**
-The epoch pot is funded almost entirely by a depleting resource (O1). The reserve has crossed its half-life (O2) and the parameters governing the draw have never been reviewed (O4). There is currently no mechanism — protocol-level or governance-level — to manage the transition from reserve-funded to fee-funded rewards. The system is on a known countdown with no scheduled response.
-
-**P1.2 — Fee revenue is orders of magnitude below self-sufficiency.**
-Even at full realistic network capacity, fees would cover ~1.3% of the reserve expansion term (O1). Closing this gap requires 12–16× today's realistic maximum throughput — implying both a capacity upgrade (Leios) and a structural increase in transaction demand and fee levels. No single lever is sufficient.
-
-> **Note.** The ~44% distribution efficiency (O3) is not a problem *at this stage* — it is a consequence of participation levels, which are shaped by incentives defined at the pool-distribution (§1.2) and operator/delegator (§1.3) layers. It is documented here because it materially affects reserve depletion timing.
-
-#### 1.1.5 Prior Art & Cited Solutions
-
-These solutions have been discussed in the literature or community but fall **outside the scope** of this stream (issue #12). They are listed here for completeness.
-
-- **Tiered fee models** (Kiayias et al., 2023) — congestion-based pricing to increase fee revenue per transaction.
-- **Leios throughput upgrade** — necessary precondition for fee growth, but "provides the highway, not the traffic" (*Incentive Mechanism Analysis*, §5).
-- **Dynamic $\rho$ governance** — periodic review of the monetary expansion rate to balance reserve longevity against reward levels.
-- **Adaptive $\tau$ governance** — adjusting the treasury/pools split in response to ecosystem needs rather than keeping it fixed.
-- **Staking participation incentives** — mechanisms to bring inactive ADA into delegation, which would increase distribution efficiency but accelerate reserve depletion (the O3 paradox).
+**CPS identified.** No *Cardano Problem Statement* (CPS) has been formally written for this problem. The CIP governance process is designed so that solutions (CIPs) are scoped against a well-defined problem statement (CPS). This foundational sustainability problem has remained formally unstated. This analysis identifies the gap. A formal CPS, derived from the mainnet evidence in the companion [CPD](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md), is defined in [`sub-flows/treasury-and-pool-pots-distribution/cps/`](sub-flows/treasury-and-pool-pots-distribution/cps/).
 
 ### 1.2 Pools Distribution
 
@@ -284,7 +122,7 @@ For each pool $i$, the protocol performs three steps:
 
 3. **Performance adjustment.** The optimal allocation is scaled by apparent performance $\bar{p}_i$ to produce the *actual* allocation. Pools that miss blocks receive less. If the registered pledge is not met, the allocation is zeroed entirely.
 
-Any rewards not distributed (because $\sum_i \hat{f}_i < R$) return to the reserve — this is the mechanism behind O3 in §1.1.3.
+Any rewards not distributed (because $\sum_i \hat{f}_i < R$) return to the reserve — this is the mechanism behind O3 in §1.1.2.
 
 Two design choices matter for the rest of the analysis:
 
@@ -292,448 +130,136 @@ Two design choices matter for the rest of the analysis:
 
 - **Uniform saturation threshold.** All pools share the same cap $z_0 = 1/k$. There is no mechanism to differentiate saturation based on pledge level or pool characteristics — CIP-0050 and CIP-0037 both propose to change this.
 
-#### 1.2.2 Formulas
+> **Formulas.** The pool-level reward formulas — from the original SL-D1 reward curve through the normalized saturation coordinates rewrite to mainnet parameterization — are in the dedicated sub-report: [`The Pools Pot Distribution Gaps`](sub-flows/pools-distribution/mainnet-analysis/README.md) — §2.3.
 
-The formulas are presented in the same layered approach as §1.1: original SL-D1, then a reader-friendly rewrite using normalized saturation coordinates, then mainnet parameterization.
+#### 1.2.2 Mainnet Observations
 
-The original SL-D1 presentation mixes saturation clipping and reward evaluation in a single expression. The rewrite below separates these two concerns without changing the math — it makes the saturation regimes and pledge-bonus structure easier to read and analyze.
+The pool-level analysis (epochs 208–618) yields four observations at this pipeline stage. The full data, figures, entity analysis, and reproduction scripts are in the dedicated sub-report: [`The Pools Pot Distribution Gaps`](sub-flows/pools-distribution/mainnet-analysis/README.md).
 
-##### 1.2.2.1 SL-D1 (Original)
-
-The original SL-D1 pool-distribution rules are:
-
-$$
-f(s,\sigma)
-= \frac{R}{1+a_0}
-\left(
-\sigma' + s'a_0\cdot\frac{\sigma' - s'\left(\frac{z_0-\sigma'}{z_0}\right)}{z_0}
-\right)
-$$
-
-$$
-\hat f(s,\sigma,\bar p) := \bar p \cdot f(s,\sigma)
-$$
-
-$$
-\sum_i \hat f(s_i,\sigma_i,\bar p_i) \le R
-$$
-
-$$
-R - \sum_i \hat f(s_i,\sigma_i,\bar p_i) \; \text{is not paid out and remains accounted in } (T_{\infty}-T)
-$$
-
-$$
-\text{if pledge not met in epoch } \Rightarrow \hat f = 0
-$$
-
-##### 1.2.2.2 Interpretation of the original reward function
-
-The SL-D1 pool-distribution rule is centered on the reward function \(f\), and the actual pool allocation is then obtained through \(\hat f\). The core reward function is evaluated on the clipped inputs
-$s' := \min(s,z_0)$ and $\sigma' := \min(\sigma,z_0)$, not directly on the raw quantities $s$ and $\sigma$.
-Thus:
-
-- $s$ is the operator pledge before clipping
-- $\sigma$ is the total stake delegated to the pool before clipping
-- $s'$ is the pledge after clipping at the saturation threshold
-- $\sigma'$ is the total stake after clipping at the saturation threshold
-
-In this notation, the function has two components:
-
-- a base term, $\sigma'$, which rewards stake up to saturation
-- a pledge-bonus term, $s'a_0 \cdot \dfrac{\sigma' - s'\left(\frac{z_0-\sigma'}{z_0}\right)}{z_0}$
-
-The factor $\left(\frac{z_0-\sigma'}{z_0}\right)$ measures the remaining headroom before saturation. As the pool approaches saturation, this headroom shrinks and the pledge-bonus term is progressively dampened. The outer factor $\dfrac{R}{1+a_0}$ keeps the overall reward mass bounded.
-
-##### 1.2.2.3 Why rewrite the original formulation
-
-The original SL-D1 formula is correct, but awkward to analyze directly.
-
-First, it mixes two separate concerns in a single expression:
-
-- the clipping step that enforces saturation, and
-- the reward computation performed after clipping.
-
-Second, the pledge-sensitive part is harder to read than it needs to be. The term
-$\sigma' - s'\left(\frac{z_0-\sigma'}{z_0}\right)$
-hides a quadratic dependence on pledge that only becomes obvious after expansion.
-
-Third, the most natural coordinates for analysis are not the raw stake shares $s$ and $\sigma$, but their positions relative to the saturation threshold $z_0$.
-
-##### 1.2.2.4 Normalized saturation coordinates
-
-To make the structure explicit, we now move to the **non-saturated regime**, where clipping is inactive. In that regime,
-
-$$
-s' = s
-\qquad\text{and}\qquad
-\sigma' = \sigma
-$$
-
-so the SL-D1 formula can be rewritten without the clipping operators.
-
-We then introduce two normalized coordinates, both measured **relative to the saturation threshold** $z_0$:
-The purpose of this change of variables is to express the reward curve directly in saturation coordinates.
-
-$$
-\pi := \frac{s}{z_0}
-\qquad\text{and}\qquad
-\nu := \frac{\sigma}{z_0}
-$$
-
-###### 1.2.2.4.1 Domain and interpretation
-
-Under the non‑saturated regime $0 < s \le \sigma \le z_0$, the normalized variables satisfy
-
-$$
-0 < \pi \le \nu \le 1
-$$
-
-This change of variables expresses both inputs relative to the pool saturation threshold $z_0$. In other words, instead of measuring pledge and total stake directly as fractions of the total stake supply, we measure their **distance to saturation**.
-
-Substituting $s = \pi z_0$ and $\sigma = \nu z_0$ into the original SL‑D1 reward curve allows the function to be rewritten entirely in terms of the normalized variables $(\pi, \nu)$.
-
-This reveals an important structural property of the reward curve: the allocation depends only on the **ratios of pledge and total stake relative to the saturation threshold**, not on their absolute values. Pools that share the same normalized coordinates $(\pi,\nu)$ therefore receive the same fraction of the saturated pool reward.
-
-The saturation threshold $z_0$ thus acts purely as a **scaling parameter**, while the shape of the reward curve itself is governed by the pledge‑influence parameter $a_0$.
-
-This normalization allows the reward function to be analyzed in the compact domain
-
-$$
-0 \le \pi \le \nu \le 1
-$$
-
-which simplifies both the mathematical analysis and the economic interpretation of the reward mechanism.
-
-These variables have a simple interpretation:
-
-- $\pi$ is the **pledge saturation level**: it tells us what fraction of the saturation threshold is covered by operator pledge
-- $\nu$ is the **total-stake saturation level**: it tells us what fraction of the saturation threshold is covered by the pool’s total stake
-
-So, in the non-saturated regime:
-
-- $\pi = 1$ would mean the pledge alone already reaches the saturation threshold
-- $\nu = 1$ would mean the total pool stake reaches the saturation threshold
-- $0 < \pi \le \nu < 1$ expresses the economically valid non-saturated domain
-
-Equivalently, the original stake variables can be recovered as:
-
-$$
-s = \pi z_0
-\qquad\text{and}\qquad
-\sigma = \nu z_0
-$$
-
-###### 1.2.2.4.2 Rewriting the reward curve in saturation coordinates
-Substituting these identities into the non-saturated SL-D1 formula gives:
-
-$$
-f(\pi z_0,\nu z_0)
-= z_0R
-\left(
-\frac{1}{1+a_0}\nu
-+ 
-\frac{a_0}{1+a_0}\left(\pi\nu-\pi^2(1-\nu)\right)
-\right)
-$$
-
-This expression makes the structure of the reward curve much clearer.
-
-- The factor $z_0R$ is the **maximum reward scale of a fully saturated pool**
-- The term $\frac{1}{1+a_0}\nu$ is the **base stake component**
-- The term $\frac{a_0}{1+a_0}\left(\pi\nu-\pi^2(1-\nu)\right)$ is the **pledge-sensitive component**
-
-The nonlinear pledge-sensitive part is therefore isolated as
-
-$$
-A(\pi,\nu) := \pi\nu - \pi^2(1-\nu)
-$$
-
-which we call the **pledge-bonus activation function**.
-
-This naming is useful because $A(\pi,\nu)$ is the only nonlinear part of the normalized reward curve. Once extracted, it can be analyzed separately from the outer scaling factors.
-
-##### 1.2.2.5 Reader-friendly reward function
-
-Define the following three derived quantities:
-
-$$
-P_{\max} := z_0R
-$$
-
-$$
-\lambda_{\min} := \frac{1}{1+a_0}
-$$
-
-$$
-\lambda_{\max} := \frac{a_0}{1+a_0}
-$$
-
-They each have a direct interpretation:
-
-- $P_{\max}$ is the **reward ceiling** — the maximum any single pool can earn per epoch. It is the reward of a fully saturated ($\nu = 1$), fully pledged ($\pi = 1$), perfectly performing ($\bar{p} = 1$) pool. No pool can exceed it. In the ideal design, $k$ pools each earn $P_{\max}$ and the entire pot $R$ is distributed.
-
-- $\lambda_{\min}$ is the **size fraction** — the share of $P_{\max}$ a pool can capture through stake alone, without any pledge. This defines the **size ceiling**: a pool at full saturation with zero pledge earns $\lambda_{\min} \times P_{\max}$.
-
-- $\lambda_{\max}$ is the **pledge fraction** — the remaining share of $P_{\max}$ that the pledge bonus can unlock. This is the **commitment premium**: the gap between the size ceiling and the absolute ceiling. Unlocking it in full requires the operator to pledge the entire saturation amount ($\pi = 1$, i.e. pledge $= z_0$).
-
-These coefficients satisfy
-
-$$
-\lambda_{\min} + \lambda_{\max} = 1
-$$
-
-The reward function is then:
-
-$$
-f'(\pi,\nu)
-= P_{\max}
-\left(
-\lambda_{\min}\nu
-+
-\lambda_{\max}A(\pi,\nu)
-\right)
-$$
-
-This reads as a product of two factors: the **ceiling** ($P_{\max}$) and the **proportioning envelope** $E(\pi,\nu) = \lambda_{\min}\nu + \lambda_{\max}A(\pi,\nu)$. The envelope determines what fraction of $P_{\max}$ the pool captures, and ranges from 0 to 1:
-
-| Tier | Envelope value | What it requires | Interpretation |
-| --- | --- | --- | --- |
-| Absolute ceiling | $E = 1$ | $\nu = 1, \pi = 1$ | Full saturation + full pledge → pool earns $P_{\max}$ |
-| Size ceiling | $E = \lambda_{\min}$ | $\nu = 1, \pi = 0$ | Full saturation, zero pledge → pool earns $\lambda_{\min} \times P_{\max}$ |
-| Typical pool | $E \ll 1$ | $\nu \ll 1$ | Undersaturated → reward scales linearly with $\nu$ |
-
-Two structural properties of the envelope are worth noting:
-
-- The **base term** $\lambda_{\min}\nu$ is **linear in $\nu$** — it depends only on total pool size relative to saturation. The distribution of stake across pools does not affect the aggregate base: $\sum_i \lambda_{\min}\nu_i = \lambda_{\min} \cdot \text{totalStake}/z_0$ regardless of how many pools share that stake.
-
-- The **bonus term** $\lambda_{\max}A(\pi,\nu)$ is **non-linear** — it depends on both $\pi$ and $\nu$, and at maximum pledge ($\pi = \nu$) reduces to $\lambda_{\max}\nu^3$. The cubic dependence means the bonus is structurally suppressed at low saturation levels and favours fewer, larger pools.
-
-The purpose of this normalized form is not to change the reward rule, but to expose its internal structure: a ceiling, a size-proportional base, and a commitment-sensitive bonus whose activation is governed by $A(\pi,\nu)$.
-
-##### 1.2.2.6 Summary in normalized notation
-
-Using the normalized variables introduced above, the non-saturated reward rule can be summarized as follows.
-
-
-| Rule / function | Mathematical form | Reader-friendly interpretation |
+| # | Observation | Summary |
 | --- | --- | --- |
-| Pledge-bonus activation | $A(\pi,\nu) := \pi\nu - \pi^2(1-\nu)$ | Isolates the nonlinear pledge-sensitive part of the reward curve. Inputs: $\pi$ = normalized pledge level, $\nu$ = normalized total-stake level. |
-| Normalized optimal pool reward | $f'(\pi,\nu) = P_{\max}\left(\lambda_{\min}\nu + \lambda_{\max}A(\pi,\nu)\right)$ | Gives the pool's optimal pre-performance reward in normalized notation. Uses $P_{\max}$ as the saturated reward scale, $\lambda_{\min}$ as the base stake weight, and $\lambda_{\max}$ as the pledge-bonus weight. |
-| Performance-adjusted pool allocation | $\hat f'(\pi,\nu,\bar p) := \bar p \cdot f'(\pi,\nu)$ | Applies apparent performance $\bar p$ to the normalized optimal reward. This is the actual pool allocation in normalized notation. |
-| Epoch consistency condition | $\sum_i \hat f'(\pi_i,\nu_i,\bar p_i) \le R$ | The sum of all realized pool allocations cannot exceed the epoch pool-side budget $R$. |
-| Undistributed remainder | $R - \sum_i \hat f'(\pi_i,\nu_i,\bar p_i)$ | Portion of the pool-side epoch budget that is not paid out because of performance adjustment and remains accounted in the reserve term $(T_{\infty}-T)$. |
-| Pledge enforcement | $\text{if pledge not met in epoch } \Rightarrow \hat f' = 0$ | If the registered pledge is not met, the pool allocation is zeroed before any operator/member split. |
+| **O1** | **The pledge bonus is functionally irrelevant at realistic pledge levels** | At median pledge the bonus adds ~0.006% to rewards — undetectable. Yield on pledge capital (0.68%/yr at best) is below passive delegation yield (~2.3%/yr). 22.1% of the pools pot (~3.4M ADA/epoch) returns to reserve unused because the $a_0$ curve is too flat. |
+| **O2** | **The pool landscape is stratified far from the k = 500 design target** | 73% of pools (1,987) sit below the 3M ADA viability line, carrying only 2.7% of active stake. Only 7 pools reach saturation — 1.4% of the k = 500 target. |
+| **O3** | **Saturation is structurally underutilised** | Active stake fills 56.5% of theoretical capacity (k × z₀). At most 282 pools could saturate under perfect redistribution. The near-saturation zone holds only 104 pools. |
+| **O4** | **The delegation market is capital-constrained** | 16.75B ADA (43.5%) does not participate in delegation — this is the binding constraint. k = 500 is feasible only at full participation. 85 MPO entities control ~51% of staked ADA. |
 
+> **Scope note.** Observations O1–O3 directly motivate CIP-0050 (pledge leverage cap) and CIP-0037 (dynamic pledge-linked saturation), both of which operate at this layer. O4 is upstream and outside CIP scope.
 
-##### 1.2.2.7 Mainnet parameterization (normalized form)
+#### 1.2.3 Problems
 
-On mainnet, the key protocol parameters are currently:
+The mainnet observations documented in the sub-report ([*The Pools Pot Distribution Gaps*](sub-flows/pools-distribution/mainnet-analysis/README.md)) point to two problems at this pipeline stage. The first is an upstream constraint that bounds everything the reward curve can accomplish. The second is a fundamental design misalignment within the reward curve itself.
 
-$$
-\alpha^{\text{protocol}}_{\text{skinInTheGame}} = 30\% = 0.3
-$$
+##### 1.2.3.1 The staking mechanism is half-utilised
 
-$$
-k^{\text{protocol}}_{\text{targetPools}} = 500
-\qquad\Rightarrow\qquad
-z_0 = k^{\text{protocol}}_{\text{saturation}} = \frac{1}{500} = 0.2\%
-$$
+43.5% of circulating ADA (16.75B) does not participate in delegation (O4). This is the same upstream condition documented at §1.1 O3, but its consequences at the pool-distribution layer are direct and structural.
 
-From these we obtain the normalized reward weights:
+The participation gap sets the ceiling on how many pools can reach viability and saturation. At current participation, at most 282 pools could saturate versus the k = 500 design target (O3). The saturation cap — the core mechanism designed to prevent stake concentration — binds for only 7 pools, reaching 1.4% of its intended scope (O2). The viability threshold acts as a cliff, not a gradient: 73% of pools sit below it, carrying only 2.7% of active stake (O2).
 
-$$
-\lambda_{\min} = \frac{1}{1+0.3} \approx 76.923\%
-$$
+The pool landscape that the reward curve is supposed to shape is fundamentally constrained by a capital base that is half the size the design assumed. The k = 500 target implicitly required near-complete participation. At 56.5%, the target is structurally unreachable. No formula change at this layer can close this gap — it requires upstream intervention to bring inactive ADA into delegation.
 
-$$
-\lambda_{\max} = \frac{0.3}{1+0.3} \approx 23.077\%
-$$
+##### 1.2.3.2 The incentive game does not work
 
-The maximum reward scale of a fully saturated pool becomes:
+The pool reward curve is not merely a reward-distribution mechanism. It is the protocol's only tool for shaping the operator ecosystem that secures consensus. Cardano does not select operators by committee or licence — it defines a set of economic rules and lets actors self-select. The reward curve *is* the game. Its design determines who plays, how they progress, and what the endgame looks like.
 
-$$
-P_{\max} = z_0 \cdot R = 0.2\% \cdot PoolsPot^{\text{epoch}}
-$$
+The protocol's ultimate need at this layer is **optimally secure consensus.** This section first defines what a well-functioning incentive game looks like at this layer, then identifies the specific points where the SL-D1 reward curve diverges from that design.
 
-The normalized optimal reward function therefore becomes:
+###### 1.2.3.2.1 The intended game
 
-$$
-f'(\pi,\nu)
-= P_{max}
-\left(
-76.923\%\,\nu
-+ 
-23.077\%\,A(\pi,\nu)
-\right)
-$$
+**1.2.3.2.1.1 The design objective.** The protocol needs a specific set of properties at this layer: a sufficiently large number of independent block producers, each with meaningful personal capital at risk (*Sybil resistance*), subject to continuous community oversight (*accountability*), with no single entity able to capture a dominant share of consensus power (*decentralisation*). These are not aspirational qualities — they are the security invariants that the protocol's consensus layer depends on.
 
-Applying apparent performance gives the actual pool allocation in normalized form:
+Cardano cannot enforce these properties by fiat. It has no licensing authority, no operator selection committee, no means of compelling participation. It must instead rely on *mechanism design*: defining a set of economic rules — the reward curve — such that rational, self-interested participants, each optimising their own payoff, collectively produce and maintain the desired system properties. The reward curve *is* the mechanism. Its success or failure is measured by a single criterion: does the *equilibrium* — the stable state toward which rational play converges — exhibit the security invariants above?
 
-$$
-\hat f'(\pi,\nu,\bar p)
-= \bar p
-\cdot
-P_{max}
-\left(
-76.923\%\,\nu
-+ 
-23.077\%\,A(\pi,\nu)
-\right)
-$$
+For this to work, two conditions must hold. First, participation must be *individually rational*: each player must be better off entering the game than staying out. Second, the mechanism must be *incentive-compatible*: the strategy that maximises each player's individual reward must also be the strategy that reinforces the system's security properties. When these conditions hold, the protocol does not need to trust its participants — it only needs them to be rational.
 
-These formulas are mathematically identical to the normalized expressions above, but with the current Cardano mainnet parameters substituted explicitly.
+**1.2.3.2.1.2 The players.** The mechanism operates through three distinct classes of participant. Each has a different *motivation* for entering the game, a different set of *actions* (in mechanism-design terms, a different *strategy space*), and a different *trajectory* — the way their participation evolves as the system matures. Understanding all three is necessary before evaluating whether the reward curve aligns them correctly.
 
-###### The playing field at current parameters
+*Transaction submitters* are the source of economic demand.
 
-The three reward tiers under mainnet conditions (epoch 616, $R \approx 15.53\text{M ADA}$):
+- **Motivation.** They need reliable, censorship-resistant settlement. They do not participate in the staking game directly — they are *users* of the service that the game produces. Their willingness to pay fees is a revealed-preference signal: it measures the real-world value the network delivers.
+- **How they operate.** They submit transactions and pay fees. Those fees — together with the monetary expansion draw from the reserve — fund the epoch pot that the reward pipeline distributes (§1.1). Transaction submitters are the reason the system exists: without them, there is no economic activity to secure, and no sustainable revenue to fund the operators who secure it.
+- **How they evolve.** In the current regime, transaction fees are negligible (~0.19% of the epoch pot — §1.1.2 O1). The game is almost entirely funded by monetary expansion from a depleting reserve. As the reserve crosses its half-life and expansion shrinks (§1.1.2 O2), the system's economic viability progressively shifts onto fee revenue. Transaction submitters are therefore a latent constraint: marginal today, existential tomorrow. Their long-term participation is what makes the staking game *sustainably worth playing* for every other participant.
 
-| Tier | Formula | Reward/epoch | Capital required |
-| --- | --- | --- | --- |
-| **Absolute ceiling** ($P_{\max}$) | $\frac{R}{k}$ | ~31K ADA | 77M ADA stake + 77M ADA pledge |
-| **Size ceiling** ($\lambda_{\min} P_{\max}$) | $\frac{R}{k} \cdot 76.923\%$ | ~23.9K ADA | 77M ADA stake. No pledge. |
-| **Commitment premium** ($\lambda_{\max} P_{\max}$) | $\frac{R}{k} \cdot 23.077\%$ | ~7.2K ADA | The gap — requires 77M ADA personal pledge |
+*Operators* register pools and produce blocks.
 
-The size ceiling is accessible to **any** saturated pool regardless of pledge. The commitment premium reserves 23.1% of $P_{\max}$ for pledge activation — but unlocking it requires operator capital equal to the full saturation threshold. The implied yield on that capital commitment ($\lambda_{\max} \cdot P_{\max}$ annualized / $z_0$ in ADA) is substantially below the passive delegation yield, making the pledge bonus economically weak as an incentive.
+- **Motivation.** Operators seek a return on two forms of capital: the ADA they pledge and the infrastructure they maintain. A rational operator enters the game when the expected reward — block production fees, pool margin, and stake-proportional share — exceeds the combined opportunity cost of pledged capital and operational expenses. In mechanism-design terms, the *participation constraint* must be satisfied: the operator must be better off running a pool than simply delegating the same ADA.
+- **How they operate.** Their primary strategic instrument is **pledge**: personal capital locked into the pool. Pledge serves as the protocol's *commitment mechanism* — the signal through which an operator demonstrates alignment with the network's interests. An operator who pledges significant ADA has more to lose from protocol failure or malicious behaviour than one who pledges nothing. This "skin in the game" is the protocol's primary defence against Sybil attacks. Operators also set a *margin* (their fee) and maintain infrastructure quality (uptime, latency) — but the reward curve at this layer is primarily sensitive to pledge and total stake, not operational quality.
+- **How they evolve.** A new operator starts with a small pledge, minimal delegation, and sub-viable block production. Over time, the intended trajectory is one of *increasing commitment*: as the operator builds reputation and attracts delegation, they pledge more, their pool grows, and they earn a larger share of the pools pot. The mechanism should make each step up in pledge produce a measurable competitive advantage — visible to delegators and economically meaningful to the operator — so that the progression from "new pool" to "established pool" to "fully committed pool" is a legible arc that both players can follow.
 
-The full formula including apparent performance reads as a cascade of multiplicative factors:
+*Delegators* allocate stake to pools of their choice.
 
-$$
-\hat f'(\pi,\nu,\bar p) = \underbrace{\bar{p}}_{\text{performance}} \;\cdot\; \underbrace{P_{\max}}_{\text{ceiling}} \;\cdot\; \underbrace{E(\pi,\nu)}_{\text{proportioning envelope}}
-$$
+- **Motivation.** Delegators seek yield on their ADA holdings with minimal effort and risk. They do not produce blocks and bear no operational cost. Their decision is purely allocative: which pool to delegate to, and when to move. A rational delegator maximises risk-adjusted return, favouring pools with high expected yield, reliable performance, and trustworthy operators.
+- **How they operate.** Their strategic instrument is **liquid delegation**: the ability to freely choose a pool — and freely withdraw at any time. This makes delegation a *continuous approval signal*. No operator can capture stake permanently; an operator who underperforms or behaves badly faces immediate capital flight. Liquid delegation is the protocol's *accountability mechanism* and its primary anti-monopoly tool. But this mechanism only functions if pools *need* delegators — if operators depend on community-sourced stake to reach their optimal reward. Without this dependency, delegators have no leverage and the accountability channel collapses.
+- **How they evolve.** Delegators respond to the information environment the mechanism creates. Early on, when pools are new and differentiation is low, delegation may be driven by brand, community ties, or social signals. As the mechanism matures, delegators should increasingly be able to differentiate pools on *commitment-based criteria* — pledge level, track record, margin policy — and reallocate accordingly. The mechanism should make these criteria observable and economically meaningful, so that delegator behaviour reinforces the operator progression described above: committed pools attract more delegation, which rewards commitment further, creating a virtuous cycle.
 
-Each factor acts as a discount from $P_{\max}$. When all three equal their ideal value (1, $P_{\max}$, 1), the pool earns the full ceiling. Every departure reduces the payout, and the difference returns to the reserve. For the detailed mainnet decomposition of these factors, see the pools-distribution sub-report (§1.2.3).
+These three roles form a dependency chain. Transaction submitters generate the economic value that funds the game. Operators commit capital and infrastructure to secure the network that processes those transactions. Delegators allocate capital to select and police the operators. The mechanism's task is to make each link *individually rational* and *incentive-compatible* — so that the chain holds without requiring trust between participants.
 
-##### 1.2.2.8 Concept glossary
+At this layer (pool distribution), the reward curve directly governs the operator–delegator relationship. Neither player alone should be able to maximise rewards — the mechanism deliberately requires both. This *interdependence* is the core of the design: operators need delegators for scale, delegators need operators for block production, and the reward curve should make their partnership the individually rational path for both. Transaction submitters are upstream — their contribution is mediated through the epoch pot (§1.1) — but they set the ultimate economic boundary within which the operator–delegator game plays out.
 
-| SL-D1 | Reader-Friendly / Normalized | Meaning | Mainnet baseline |
-| --- | --- | --- | --- |
-| $R$ | $PoolsPot^{\text{epoch}}$ | Pool-side reward budget entering the pool reward curve | Inherited from section `1.1` |
-| $a_0$ | $\alpha^{\text{protocol}}_{\text{skinInTheGame}}$ | Strength of the pledge (“skin‑in‑the‑game”) effect in the reward curve | $30\%$ |
-| $z_0$ | $k^{\text{protocol}}_{\text{saturation}}$ | Global saturation threshold per pool | $0.2\%$ |
-| $\sigma$ | $\sigma^{\text{totalStaked}}_{i}$ | Total stake share of pool $i$ before clipping | Dynamic |
-| $s$ | $\pi^{\text{pledged}}_{i}$ | Pledged stake share of pool $i$ before clipping | Dynamic |
-| $\sigma'$ | $\sigma^{\text{totalStaked}}_{\text{capped},i}$ | Total stake share after applying the saturation cap | $\min(\sigma^{\text{totalStaked}}_{i},0.2\%)$ |
-| $s'$ | $\pi^{\text{pledged}}_{\text{capped},i}$ | Pledge share after applying the saturation cap | $\min(\pi^{\text{pledged}}_{i},0.2\%)$ |
-| $f$ | $PoolPot^{\text{optimal}}_{i}$ | Optimal pool allocation before performance adjustment | Dynamic |
-| $\bar p$ | $\bar p^{\text{pool}}_{\text{apparent},i}$ | Apparent performance multiplier of pool $i$ | Typically near $1$ |
-| $\hat f$ | $PoolPot^{\text{actual}}_{i}$ | Actual pool allocation after performance adjustment | Dynamic |
-| n/a | $\pi$ | Normalized pledge coordinate ($\pi=s/z_0$) | Dimensionless, $0<\pi<1$ (non‑saturated regime) |
-| n/a | $\nu$ | Normalized total-stake coordinate ($\nu=\sigma/z_0$) | Dimensionless, $0<\nu<1$ (non‑saturated regime) |
-| n/a | $A(\pi,\nu)$ | Pledge‑bonus activation function. Only nonlinear part of the reward curve; ranges 0 → 1. At maximum pledge ($\pi=\nu$): $A = \nu^3$ (cubic suppression at low saturation) | $A(\pi,\nu)=\pi\nu-\pi^2(1-\nu)$ |
-| n/a | $P_{\max}$ | **Reward ceiling** — maximum any single pool can earn per epoch. The reward of an ideal pool ($\nu=1, \pi=1, \bar{p}=1$). In the ideal design, $k$ pools each earn $P_{\max}$ and the full pot is distributed | $P_{\max}=z_0R$ |
-| n/a | $\lambda_{\min}$ | **Size fraction** — share of $P_{\max}$ accessible through stake alone (zero pledge). Defines the size ceiling. Linear in $\nu$ → distribution-neutral | $\lambda_{\min}=\frac{1}{1+a_0}$ |
-| n/a | $\lambda_{\max}$ | **Pledge fraction** — remaining share of $P_{\max}$ unlockable by pledge commitment. Gap between size ceiling and absolute ceiling. Non-linear in $(\pi,\nu)$ → distribution-sensitive | $\lambda_{\max}=\frac{a_0}{1+a_0}$ |
-| n/a | $E(\pi,\nu)$ | **Proportioning envelope** — fraction of $P_{\max}$ the pool captures based on size and pledge. $E = \lambda_{\min}\nu + \lambda_{\max}A(\pi,\nu)$, ranges 0 → 1 | $E=1$ at $(\pi,\nu)=(1,1)$ |
-| n/a | $f'(\pi,\nu)$ | Normalized optimal reward = ceiling × envelope | $P_{\max} \cdot E(\pi,\nu)$ |
-| n/a | $\hat f'(\pi,\nu,\bar p)$ | Actual pool allocation = performance × ceiling × envelope | $\bar p \cdot P_{\max} \cdot E(\pi,\nu)$ |
-| $\sum_i \hat f$ | $\sum_i PoolPot^{\text{actual}}_{i}$ | Total rewards distributed across pools | Dynamic |
-| $R-\sum_i \hat f$ | $PoolsPot^{\text{epoch}}-\sum_i PoolPot^{\text{actual}}_{i}$ | Undistributed remainder remaining accounted in reserves | Dynamic |
+**1.2.3.2.1.3 The progression.** Each player class experiences the game through its own trajectory — entry, progression, and endgame. A well-designed mechanism makes each trajectory *individually rational* at every stage, so that no player has a reason to drop out or deviate.
 
-#### 1.2.3 Mainnet Observations
+*Transaction submitters.*
+- **Entry.** Early adopters use the network for basic settlement. Transaction volume is low, and fees contribute negligibly to the epoch pot. The game is almost entirely funded by monetary expansion from the reserve — a bootstrap subsidy that makes staking rewards viable before organic demand exists.
+- **Progression.** As the network matures, transaction volume and diversity grow. Fee revenue increases, gradually reducing dependence on the reserve. The ratio of fees to expansion becomes a measure of the system's economic maturity.
+- **Endgame.** Fee revenue fully replaces monetary expansion as the primary funding source for the epoch pot. The staking game is self-sustaining: operators and delegators are paid by the economic activity they secure, not by a depleting reserve. The protocol has achieved *economic self-sufficiency*.
 
-> Full analysis with data, figures, and reproduction scripts: [`report/mainnet/pools-distribution/`](report/mainnet/pools-distribution/README.md)
+*Operators.*
+- **Entry.** A new operator registers a pool, pledges an initial amount, and begins attracting delegation. The mechanism must make this *individually rational*: the expected payoff should offer a credible path forward — not just survival, but growth — so that the *participation constraint* is met from the start.
+- **Progression.** As the operator builds reputation and delegation, the mechanism should reward increasing pledge commitment. Each step up in pledge should produce a measurable competitive advantage — visible to delegators, economically meaningful to the operator. The progression from "new pool" to "established pool" to "fully committed pool" should be a legible arc that both operators and delegators can follow.
+- **Endgame.** The operator has committed deeply (high pledge) and earned broad delegation. Their pool captures the maximum reward the protocol offers. This state should require *both* high pledge and high delegation to reach — it cannot be attained by capital alone or by delegation alone.
 
-| # | Observation | Section | Status |
-| --- | --- | --- | --- |
-| | **O1 — The pledge bonus is functionally irrelevant at realistic pledge levels** | | |
-| F1.1 | At median pledge, the bonus adds ~0.006% to pool rewards — undetectable by delegators | §4.5.3 | Structural — a0 curve too flat |
-| F1.2 | Only 37 out of 731 healthy pools (5%) receive a pledge bonus above 1% | §4.5.3 | Dominated by high-pledge institutional pools |
-| F1.3 | 83% of pools with stake (2,266 out of 2,718) pledge below 100K ADA — well within the flat zone of the a0 curve | §4.5.3 | Pledge has no meaningful effect below ~1M ADA |
-| F1.4 | Yield on pledge capital is 0.68%/yr at best (full saturation + full pledge) — below passive delegation yield of ~2.3%/yr | §4.4 | Economically irrational to pledge |
-| F1.5 | 22.1% of the pools pot (~3.4M ADA/epoch) is reserved for the pledge bonus but returns to reserve unused | §4.6 | Structural cost of maintaining $a_0 = 0.3$ |
-| | **O2 — The pool landscape is stratified far from the k = 500 design target** | | |
-| F2.1 | 1,987 pools with stake (73%) sit below the 3M ADA viability line — they carry only 2.7% of active stake | §3.1 | Structural imbalance |
-| F2.2 | 731 healthy pools carry 97.3% of active stake — concentration above the viability line | §3.1 | Viability threshold acts as a cliff |
-| F2.3 | Only 7 pools are at or above the saturation point (z₀ = 76.99M ADA) — the mechanism designed for 500 saturated pools reaches barely 1.4% of its target | §3.2 | Saturation cap nearly inactive |
-| | **O3 — Saturation is structurally underutilised** | | |
-| F3.1 | Active stake (21.75B ADA) fills only 56.5% of the theoretical capacity (k × z₀ = 38.49B ADA) — at most 282 pools could theoretically saturate | §3.2 | Capital constraint |
-| F3.2 | 104 pools are within the near-saturation zone (≥80% of z₀) — the equilibrium state produces a thin cluster, not a broad plateau | §3.2 | Far from the k = 500 vision |
-| F3.3 | The top 100 pools capture 23.2% of recent rewards; the top 250 capture 46.9% | §3.4 | Reward distribution is moderately concentrated |
-| | **O4 — The delegation market is capital-constrained** | | |
-| F4.1 | 16.75B ADA (43.5% of supply) does not participate in delegation — this is the binding constraint on pool saturation | §3.2 | Mirrors O3 from stage 1 (return-to-reserve) |
-| F4.2 | If all circulating ADA delegated, the system could support all 500 target pools at saturation — the pool structure is not the bottleneck, participation is | §3.2 | k = 500 is feasible only at full participation |
-| F4.3 | The attributed MPO entities control ~29% of supply and ~51% of staked ADA — institutional concentration shapes the delegation landscape | §3.5 | Structural feature, not anomaly |
+*Delegators.*
+- **Entry.** A new delegator selects a pool and allocates stake. Early on, differentiation between pools is low — delegation may be driven by brand, community ties, or social signals rather than on-chain metrics. The mechanism must still make participation *individually rational*: delegation yield should exceed the opportunity cost of holding idle ADA.
+- **Progression.** As the pool landscape matures and the mechanism produces legible differences between pools, delegators increasingly differentiate on *commitment-based criteria*: pledge level, track record, margin policy. Delegation flows toward the most committed operators and away from uncommitted ones. The accountability mechanism becomes active — delegators are now *policing* operator behaviour through capital reallocation.
+- **Endgame.** Delegators act as an efficient market for operator commitment. Capital moves fluidly to the pools that best combine commitment and performance, and exits quickly from those that fall short. The accountability mechanism operates at full power: no operator can sustain high rewards without continuous community approval.
 
-##### The big picture
+**1.2.3.2.1.4 The aligned dynamics.** When all three trajectories function as intended, they form a self-reinforcing cycle. Transaction submitters generate economic demand that funds the epoch pot. The epoch pot rewards operators and delegators, making participation *individually rational* for both. Operators compete on pledge commitment because the mechanism makes pledge the primary competitive dimension. Delegators reward the most committed operators because the mechanism makes commitment observable and economically meaningful. This selective pressure produces an operator landscape that is decentralised (many independent, committed pools), accountable (delegators can exit at any time), and Sybil-resistant (pledge is costly to fake). A more secure, decentralised network is a more valuable network — which attracts more transaction demand, which grows fee revenue, which funds better rewards, which sustains the cycle.
 
-The pool reward curve was designed to produce an equilibrium of **k = 500 well-funded, pledge-committed stake pools**. Five and a half years of mainnet operation show a fundamentally different landscape: **a stratified market where the pledge bonus is irrelevant, saturation barely binds, and participation is the binding constraint.**
+This is the *incentive-compatible equilibrium* the mechanism should converge toward: a state where each player, pursuing their own rational self-interest, reinforces the system's security properties — and where no player can improve their payoff by deviating. The reward curve's success or failure is measured against this target.
 
-##### O1 — The pledge bonus is functionally irrelevant at realistic pledge levels
+###### 1.2.3.2.2 Where the design breaks
 
-The reward curve includes a pledge bonus controlled by `a0 = 0.3`. Its purpose is to incentivize operators to commit personal capital — the more pledge relative to pool size, the higher the reward. In practice, this incentive barely exists.
+The SL-D1 reward curve fails at all three levels of this game. The failures are examined from the deepest (endgame) to the most visible (entry), because the endgame contradiction is the one that defines what the whole curve optimises toward.
 
-**The a0 curve is too flat to matter** (F1.1). At the median pledge level of healthy pools, the pledge bonus adds approximately **0.006%** to pool rewards. Even at 1M ADA pledge (~$400K at current prices), the bonus is only ~0.39% — invisible to any delegator comparing pool yields.
+**The endgame eliminates the delegator from the game entirely.** The reward function decomposes into two components: a **size fraction** ($\lambda_{\min} \approx 76.9\%$) that rewards delegation regardless of pledge, and a **pledge fraction** ($\lambda_{\max} \approx 23.1\%$) that rewards operator commitment. The formula's maximum — $P_{\max}$ — is reached when $\pi = 1$ and $\nu = 1$: the operator pledges the full saturation amount *and* the pool is fully saturated. But since pledge counts as stake, an operator who pledges $z_0$ (currently 77M ADA) fills the entire pool with their own capital. There is no room for delegators. The "dream" the reward curve defines is a pool with no community participation — a private operation where the operator is both the sole funder and the sole beneficiary. The accountability mechanism — delegators voting with their feet — is eliminated at the endgame because there are no feet left to vote with.
 
-**The bonus only activates at extreme pledge levels** (F1.2). Only **37 out of 731 healthy pools** (5%) receive a pledge bonus above 1%. These are almost exclusively high-pledge institutional or foundation pools (Cardano Foundation, Adalite, Wave) with pledges above 50M ADA. For the remaining 95% of the healthy pool landscape, the a0 mechanism does not function as an incentive.
+This means the reward curve's ideal state *contradicts the protocol's security model*. The mechanism designed to produce 500 pools anchored by community trust instead defines an optimum of 500 private pools with no delegator oversight. The anti-monopoly tool is absent precisely where rewards are highest.
 
-**The economics of pledging are structurally inverted** (F1.4). The playing field analysis (§1.2.2.7) shows that the pledge fraction ($\lambda_{\max}$) reserves 23.1% of $P_{\max}$ for commitment incentives — but unlocking the full bonus requires 77M ADA of personal capital for an incremental yield of 0.68%/yr. This is below the ~2.3%/yr passive delegation yield. At every pool size below full saturation, the bonus is even weaker: the activation function $A(\pi,\nu)$ reduces to $\nu^3$ at maximum pledge, so undersaturation cubically suppresses the incentive. The result: 22.1% of the pools pot (~3.4M ADA/epoch) is structurally unreachable and returns to the reserve (F1.5).
+**The endgame is also economically irrational.** Even setting aside the design contradiction, reaching $P_{\max}$ requires 77M ADA (~30M USD at recent prices) of personal capital. The incremental reward for this commitment is approximately 7.2K ADA/epoch ($\lambda_{\max} \cdot P_{\max}$), a yield of ~0.68%/yr on the pledged capital. The same 77M ADA passively delegated to any saturated pool would earn ~2.3%/yr — more than three times the return, with zero operational burden. The rational actor should never pledge. The curve therefore presents a double failure at the endgame: it asks operators to lock capital at a yield *below* the opportunity cost of delegating it, and the state it defines as optimal removes the delegator accountability layer. No rational progression path leads to the endgame, and even if it did, reaching it would weaken the network.
 
-**Most pools pledge far below the activation zone** (F1.3). The pledge distribution is heavily right-skewed: 83% of pools with stake pledge below 100K ADA — well within the flat zone of the a0 curve where the bonus is effectively zero. The median pledge-to-stake ratio for healthy pools is **0.14%**. The pledge bonus was designed for a world where operators commit meaningful personal capital; the actual pool landscape is one where most operators commit a negligible fraction.
+**The progression is invisible.** Even if an operator accepts the sub-optimal yield, the pledge bonus is too small to be a competitive differentiator. At median pledge, the bonus adds ~0.006% to pool rewards (O1). Delegators comparing pool yields cannot detect it. There is no visible signal that says "this pool is more committed" — the game's progression system produces no legible advantage at any realistic scale. An operator who pledges 1M ADA looks the same to delegators as one who pledges nothing. The delegator accountability mechanism cannot function because there is nothing for delegators to differentiate on.
 
-##### O2 — The pool landscape is stratified far from the k = 500 design target
+**The entry creates a cliff, not a ramp.** 73% of pools sit below the viability threshold (O2). The transition from sub-viable to viable is not gradual — it is a cliff in block production frequency and economic sustainability. Below-viability pools owe 647K ADA/epoch in fixed costs but earn only 182K ADA — destroying value for delegators by 3.6× (O2). The curve does not offer a credible early-game path. New operators face a binary outcome: attract enough delegation to clear the viability cliff, or operate at a loss with no visible competitive tool (since pledge is invisible) to distinguish themselves.
 
-The reward formulas define a uniform saturation point $z_0 = \text{Supply}/k$ (currently **76.99M ADA**). The design intent was a flat landscape of 500 comparably-sized pools. Mainnet shows a steeply stratified distribution instead.
+**The result on mainnet.** The dominant strategy at every level of the game — entry, progression, endgame — is to maximise delegation and minimise pledge. This is the exact opposite of what the protocol needs for consensus security. And at the theoretical optimum the curve defines, the delegator — the protocol's anti-monopoly safeguard — is absent entirely.
 
-**The viability threshold creates a cliff** (F2.1, F2.2). Of 2,718 pools with stake, **1,987 (73%)** sit below the 3M ADA viability line established in the *Incentive Mechanism Analysis*. Together they carry only **2.7% of active stake**. The remaining **731 healthy pools** carry **97.3%** — effectively the entire delegation market. The transition across the viability threshold is not gradual; it is a cliff in both block production frequency and economic sustainability.
+The evidence confirms this at scale. 82% of the MPO-level pledge bonus flows to three entities — two by private choice, one by institutional mandate (O4). 41 of 48 capital-sufficient MPOs choose non-compliance, forfeiting ~550K ADA/epoch collectively, because they optimise across custody rules, governance, brand, and adjacent business lines — a multi-game environment the single-game formula cannot reach (O4). Structural populations (CEX, IVaaS) totalling 7.39B ADA cannot pledge custodied assets at all — an architectural constraint immune to any parameter change (O4). The incentive-responsive field holds only 36% of active stake (O6). The independent operator base — the population the mechanism was designed for — has collapsed to 283 viable operators after removing MPO fleet members, with 78% of their stake non-compliant and their share declining (O5). 95.6% of the pledge-bonus budget returns to reserve unused, unchanged since Shelley launch (O1).
 
-**Saturation is barely reached** (F2.3). Only **7 pools** are at or above the saturation point — out of a design target of 500. The saturation cap, the core mechanism designed to prevent stake concentration, is nearly inactive. It affects less than **1.4%** of its intended scope.
+CIP-0050 and CIP-0037 both operate at this layer and propose to restructure the relationship between pledge and saturation — breaking the uniform threshold ($z_0 = 1/k$) that currently treats all pools identically regardless of commitment. Both aim to make pledge a *competitive dimension* rather than an irrelevant bonus, which would address the invisible progression and the broken endgame. Their evaluation follows in §1.2.5.
 
-##### O3 — Saturation is structurally underutilised
-
-The saturation mechanism cannot reach its design equilibrium because the available capital is insufficient.
-
-**The delegation market can support at most 282 saturated pools** (F3.1). Active stake (21.75B ADA) fills only **56.5%** of the theoretical capacity defined by k × z₀ (38.49B ADA). Even under perfect redistribution — every ADA optimally allocated — only 282 pools could reach saturation. The k = 500 target requires participation that does not exist.
-
-**The near-saturation zone is thin** (F3.2). Only **104 pools** sit above 80% of z₀. Rather than the broad plateau of comparable pools that the design envisions, the landscape produces a thin cluster of near-saturated pools surrounded by a long tail of undersized operations.
-
-**Reward concentration is moderate but tilted** (F3.3). The top 100 pools capture 23.2% of recent rewards; the top 250 capture 46.9%. The distribution is not as extreme as a winner-take-all market, but it is far from the flat reward landscape the formulas were designed to produce.
-
-##### O4 — The delegation market is capital-constrained
-
-The binding constraint on the pool landscape is not the reward formulas — it is the amount of ADA participating in delegation.
-
-**43.5% of supply sits outside consensus** (F4.1). Of 38.49B ADA in circulation, only **21.75B** participates in delegation. The remaining **16.75B ADA** earns no rewards and delegates to no pool. This is the same inactive-stake observation documented at stage 1 (§1.1 O3), but here its consequence is direct: it limits how many pools can reach viability and saturation.
-
-**k = 500 is feasible only at full participation** (F4.2). If all circulating ADA entered delegation, 500 saturated pools would be achievable (38.49B / 76.99M ≈ 500). The design target implicitly assumed near-complete participation. Actual participation at 56.5% makes it structurally impossible.
-
-**Institutional actors shape the landscape** (F4.3). The attributed MPO entities — exchanges, custodians, and infrastructure providers — control approximately **29% of supply** and **51% of staked ADA**. Delegation decisions by Coinbase, Binance, Figment, Kiln, and similar institutions are not marginal effects; they define the structural distribution of the pool market. This is neither a bug nor a temporary state — it is the stable configuration of a staking economy where institutional actors dominate capital deployment.
-
-> **Scope note.** Observations O1–O4 document the structural state of the pool-level reward distribution and directly motivate the CIP proposals under evaluation. CIP-0050 (pledge leverage cap) and CIP-0037 (dynamic pledge-linked saturation) both operate at this layer, targeting the pledge-bonus ineffectiveness (O1), the stratification (O2), and the saturation underutilisation (O3). The capital constraint (O4) is upstream and outside CIP scope.
-
-#### 1.2.4 Problems
-
-<!-- TODO: define each problem with evidence from mainnet observations -->
-<!-- Expected problems at this layer:
-  P2.1 — Pledge paradox: the pledge bonus is designed to incentivise operator commitment, but the a0 curve is too flat to matter at realistic pledge levels
-  P2.2 — Viability gap: a large fraction of pools operate below economic viability, creating centralisation pressure
-  P2.3 — Capital constraint: inactive stake limits the delegation market, leaving most pools far from saturation
-  P2.4 — Uniform saturation threshold: z0 = 1/k treats all pools identically regardless of pledge or quality
--->
-
-#### 1.2.5 Prior Art & Cited Solutions
+#### 1.2.4 Prior Art & Cited Solutions
 
 <!-- TODO: cite solutions from the report and community discussions that are outside stream scope -->
 <!-- e.g. pool alliances / virtual pools, latent stake activation, k parameter governance -->
 
-#### 1.2.6 CIP Evaluation: Pledge & Curve Adjustments
+#### 1.2.5 CIP Evaluation: Pledge & Curve Adjustments
 
 > Both CIP-0050 and CIP-0037 operate at this layer.
 > They modify the reward-eligible stake definition inside the pool reward curve.
 
-##### 1.2.6.1 CIP-0050 — Pledge Leverage Cap
+##### 1.2.5.1 CIP-0050 — Pledge Leverage Cap
 
 <!-- TODO for each CIP at this layer:
   1. Mechanism summary (one paragraph)
-  2. Formula substitution (reference the cleaned formulas from §1.2.2)
-  3. Which problems from §1.2.4 does it address?
+  2. Formula substitution (reference the sub-report formulas)
+  3. Which problems from §1.2.3 does it address?
   4. Expected effects (positive)
   5. Risks / side effects
   6. Open questions (e.g. parametrization of L)
 -->
 
-##### 1.2.6.2 CIP-0037 — Dynamic Pledge-Linked Saturation
+##### 1.2.5.2 CIP-0037 — Dynamic Pledge-Linked Saturation
 
-<!-- TODO: same structure as 1.2.6.1 -->
+<!-- TODO: same structure as 1.2.5.1 -->
 
 ### 1.3 Operator / Delegator Distribution
 
@@ -941,6 +467,18 @@ This makes the split easy to read: fixed cost first, operator margin second, and
 ##### 1.3.7.2 CIP-0082 — Improved Rewards Scheme
 
 <!-- TODO: same structure as 1.3.7.1, note the staged approach -->
+
+---
+
+## Sub-reports
+
+Each pipeline stage is backed by a dedicated empirical analysis containing the formula derivations, mainnet data, figures, and reproduction scripts.
+
+| Stage | Sub-report | Scope |
+| --- | --- | --- |
+| §1.1 Treasury & Pool Pots | [`Treasury & Pool Pots Distribution`](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md) | Epoch-pot assembly, reserve trajectory, fee analysis, return-to-reserve mechanism |
+| §1.2 Pools Distribution | [`The Pools Pot Distribution Gaps`](sub-flows/pools-distribution/mainnet-analysis/README.md) | Reward curve formulas, distribution efficiency, pool landscape, entity analysis |
+| §1.3 Operator / Delegator | *Not yet extracted* | Fee-split formulas remain in this document (§1.3.2) pending sub-report creation |
 
 ---
 
