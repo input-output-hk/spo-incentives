@@ -5,7 +5,8 @@ Category: Ledger
 Status: Draft
 Authors:
     - Nicolas Henin <nicolas.henin@iohk.io>
-Proposed Solutions: []
+Proposed Solutions:
+    - CIP-0163
 Discussions: []
 Created: 2026/03/25
 License: Apache-2.0
@@ -81,16 +82,6 @@ The following goals are ranked by importance. A solution to this problem should 
 - Modifying the pool-level reward curve or the operator/delegator split — those are downstream problems addressed by separate CPS/CIP pairs at the §1.2 and §1.3 layers.
 - Redesigning the fee mechanism itself (e.g., congestion pricing, tiered fees) — though such changes may be proposed as CIPs responding to this CPS.
 
-## Prior Art & Cited Solutions
-
-The following solutions have been discussed in the literature or community but no formal CIP has been proposed for any of them:
-
-- **Tiered fee models** (Kiayias et al., 2023) — congestion-based pricing to increase fee revenue per transaction. Addresses the supply side of the fee gap.
-- **Leios throughput upgrade** — necessary precondition for fee revenue growth, but "provides the highway, not the traffic" (*Incentive Mechanism Analysis*, §5). Addresses throughput capacity, not demand.
-- **Dynamic $\rho$ governance** — periodic review of the monetary expansion rate to balance reserve longevity against reward levels. Addresses the transition timeline.
-- **Adaptive $\tau$ governance** — adjusting the treasury/pools split in response to ecosystem needs rather than keeping it fixed. Addresses budget allocation flexibility.
-- **Staking participation incentives** — mechanisms to bring inactive ADA into delegation, which would increase distribution efficiency but accelerate reserve depletion (the O3 paradox). Addresses participation but interacts non-trivially with sustainability.
-
 ## Open Questions
 
 These questions are intended to save time for potential solution authors. Any CIP proposed against this CPS should consider them in its design.
@@ -103,11 +94,15 @@ These questions are intended to save time for potential solution authors. Any CI
 
 - **Should $\tau$ adapt dynamically to fee revenue levels?** If fee revenue grows, should a larger share go to the pools pot (to sustain staking) or to the treasury (to fund ecosystem development)? The current fixed 80/20 split may not be optimal across all revenue regimes.
 
-- **What role does the ~44% non-participating stake play?** If inactive ADA enters delegation — through governance incentives, exchange staking, or new products — the return-to-reserve buffer shrinks. Should a solution *encourage* participation (improving efficiency) or *account for it as a risk* (accelerating depletion)? Can it do both?
+- **What role does the ~44% non-participating stake play?** If inactive ADA enters delegation — through governance incentives, exchange staking, or new products — the return-to-reserve buffer shrinks. Should a solution *encourage* participation (improving efficiency) or *account for it as a risk* (accelerating depletion)? Can it do both? CIP-0163 proposes one approach: tightening eligibility (proof-of-life) while distributing the full pot — but its interaction with $\rho$ requires careful modelling.
+
+- **What is the interaction between full-pot distribution and reserve depletion?** CIP-0163 proposes eliminating the return-to-reserve residual, which currently returns ~10.3M ADA/epoch to the reserve (O3). This would accelerate nominal depletion unless $\rho$ is reduced to compensate. What is the net effect on reserve lifetime under different $\rho$ scenarios? How does the proof-of-life mechanism (removing lost/inactive stake from the reward base) offset the faster draw?
+
+- **How does lost stake interact with reward sustainability?** CPS-0022 estimates that a significant and growing fraction of delegated ADA is permanently inaccessible. Rewards flowing to lost stake are effectively removed from circulation forever. Any solution to the sustainability problem must account for this drain — either by excluding lost stake from the reward base (as CIP-0163 proposes) or by modelling it as a permanent leakage factor in reserve projections.
 
 - **How do downstream CIPs interact with reward sustainability?** CIP-0050, CIP-0037, CIP-0023, and CIP-0082 all modify how the pools pot is distributed, not its size. But by changing distribution efficiency and operator/delegator incentives, they may affect participation levels, which in turn affect the return-to-reserve rate (O3). Are these interactions material?
 
-- **What is the governance readiness for parameter changes?** The Voltaire governance framework enables parameter changes, but $\rho$ and $\tau$ have never been touched. Is the community equipped to evaluate proposals affecting these parameters? What analytical tools or frameworks would be needed?
+- **What is the governance readiness for parameter changes?** The Voltaire governance framework (CIP-1694) enables parameter changes, but $\rho$ and $\tau$ have never been touched. Is the community equipped to evaluate proposals affecting these parameters? What analytical tools, dashboards, or decision frameworks would be needed? CPS-0007 identified governance readiness as a systemic concern — that concern applies directly here.
 
 ## Copyright
 
