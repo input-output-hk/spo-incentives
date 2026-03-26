@@ -22,7 +22,7 @@ This CPS formally defines the reward sustainability problem at the epoch-budget 
 
 ## Problem
 
-This CPS builds upon the foundational work of the [**Cardano Problem Definition (CPD): Treasury & Pool Pots Distribution — Mainnet Analysis**](../mainnet-analysis/README.md), which provides the full empirical analysis, data, figures, and reproduction scripts behind the findings summarised here. All figures below reference the CPD's observation framework (O1–O4) and their supporting findings (F1.x–F4.x).
+This CPS builds upon the mainnet evidence documented in the dedicated [sub-report: Treasury & Pool Pots Distribution — Mainnet Analysis](../mainnet-analysis/README.md), which provides the full empirical analysis, data, figures, and reproduction scripts behind the findings summarised here. All observations below reference the sub-report's observation framework (O1–O4) and their supporting findings (F1.x–F4.x).
 
 ### Context
 
@@ -32,7 +32,7 @@ The design was specified in *SL-D1* (Kant, Brünjes & Coutts, 2019) and has been
 
 ### Observations
 
-The [CPD](../mainnet-analysis/README.md) documents four observations from mainnet data (epochs 208–617) at this pipeline stage:
+The [sub-report](../mainnet-analysis/README.md) documents four observations from mainnet data (epochs 208–617) at this pipeline stage:
 
 **O1 — The epoch pot is a single-source budget.** Monetary expansion provides ~99.8% of the pot. Transaction fees contribute ~0.19%; deposit flows are unmeasurable at epoch granularity. Block production is reliable (η ≈ 0.977) — the pot assembles as designed. The bottleneck is not operational; it is structural: the revenue mix is almost entirely dependent on a depleting resource.
 
