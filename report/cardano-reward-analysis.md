@@ -23,11 +23,11 @@ Each pipeline stage is backed by a dedicated sub-report containing the formula d
   - [1.1 Treasury & Pool Pots Distribution](#11-treasury--pool-pots-distribution)
     - [1.1.1 Flow Overview](#111-flow-overview)
     - [1.1.2 Mainnet Observations](#112-mainnet-observations) 
-    - [1.1.3 Problem Induction: Funding the Protocol Without a Reserve](#113-problem-induction-funding-the-protocol-without-a-reserve)
+    - [1.1.3 Problem Induction → CPS: Funding the Protocol Without a Reserve](#113-problem-induction--cps-funding-the-protocol-without-a-reserve)
   - [1.2 Pools Distribution](#12-pools-distribution)
     - [1.2.1 Flow Overview](#121-flow-overview)
     - [1.2.2 Mainnet Observations](#122-mainnet-observations) 
-    - [1.2.3 Problem Induction: Closing the Consensus Incentive Gap](#123-problem-induction-closing-the-consensus-incentive-gap)
+    - [1.2.3 Problem Induction → CPS: Closing the Consensus Incentive Gap](#123-problem-induction--cps-closing-the-consensus-incentive-gap)
     - [1.2.4 Proposed Solutions Evaluation](#124-proposed-solutions-evaluation)
       - [1.2.4.1 CIP-0050 — Pledge Leverage Cap](#1241-cip-0050--pledge-leverage-cap)
       - [1.2.4.2 CIP-0037 — Dynamic Pledge-Linked Saturation](#1242-cip-0037--dynamic-pledge-linked-saturation)
@@ -83,7 +83,7 @@ The epoch-level analysis (epochs 208–617) yields four observations at this pip
 
 > **Scope note.** Observations O1–O4 are structural to the epoch-budget layer. No existing CIP targets this stage — they all operate downstream (§1.2, §1.3). These observations document the sustainability context within which all downstream proposals operate.
 
-#### 1.1.3 Problem Induction: Funding the Protocol Without a Reserve
+#### 1.1.3 Problem Induction → CPS: Funding the Protocol Without a Reserve
 
 Each observation above constrains what the system can do. Read together, they reveal what it *cannot* do.
 
@@ -134,7 +134,7 @@ The pool-level analysis (epochs 208–618) yields four observations at this pipe
 
 > **Scope note.** Observations O1–O3 are structural to the pool-distribution layer. O4 (capital constraint) is the same upstream condition documented at §1.1 O3 — it sets the playing field within which the reward curve operates.
 
-#### 1.2.3 Problem Induction: Closing the Consensus Incentive Gap
+#### 1.2.3 Problem Induction → CPS: Closing the Consensus Incentive Gap
 
 Each observation above constrains what the reward curve can accomplish. Read together, they reveal a gap between the equilibrium the mechanism was designed to produce and the equilibrium it actually produces.
 

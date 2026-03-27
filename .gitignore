@@ -1,3 +1,6 @@
+# git filter-branch rewrite artefacts
+.git-rewrite/
+
 spo_incentives/report.log
 spo_incentives/report.out
 spo_incentives/report.toc
