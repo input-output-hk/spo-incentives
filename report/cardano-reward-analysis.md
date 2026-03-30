@@ -44,6 +44,23 @@ Each pipeline stage is backed by a dedicated sub-report containing the formula d
     - [1.3.7 CIP Evaluation: Fee Structure Adjustments](#137-cip-evaluation-fee-structure-adjustments)
       - [1.3.7.1 CIP-0023 — Fair Min Fees](#1371-cip-0023--fair-min-fees)
       - [1.3.7.2 CIP-0082 — Improved Rewards Scheme](#1372-cip-0082--improved-rewards-scheme)
+- [2. The divergence — when the optimal move breaks the game](#2-the-divergence--when-the-optimal-move-breaks-the-game)
+  - [2.1 The operator's experience](#21-the-operators-experience)
+    - [2.1.1 Below 1M ₳ — too committed to just delegate, too small to operate](#211-below-1m---too-committed-to-just-delegate-too-small-to-operate)
+    - [2.1.2 The pledge curve that nobody climbs](#212-the-pledge-curve-that-nobody-climbs)
+    - [2.1.3 Endgame](#213-endgame)
+    - [2.1.4 The operator's verdict](#214-the-operators-verdict)
+  - [2.2 The delegator's experience](#22-the-delegators-experience)
+    - [2.2.1 Entry](#221-entry)
+    - [2.2.2 Progression](#222-progression)
+    - [2.2.3 Endgame](#223-endgame)
+    - [2.2.4 The delegator's verdict](#224-the-delegators-verdict)
+  - [2.3 The transaction submitter's experience](#23-the-transaction-submitters-experience)
+    - [2.3.1 Entry](#231-entry)
+    - [2.3.2 Progression](#232-progression)
+    - [2.3.3 Endgame](#233-endgame)
+    - [2.3.4 The transaction submitter's verdict](#234-the-transaction-submitters-verdict)
+  - [2.4 What the three perspectives reveal together](#24-what-the-three-perspectives-reveal-together)
 - [Sub-reports](#sub-reports)
 - [Appendices](#appendices)
   - [A. Notation Convention](#a-notation-convention)
@@ -148,7 +165,7 @@ The observations above, confronted with this intended design, reveal two interre
 
 **The playing field is half the size the design assumed.** $k = 500$ implicitly required near-complete participation. At 56.5%, the target is structurally unreachable — at most 282 pools could saturate (O3). The saturation cap binds for only 7 pools (O2). No formula change at this layer can close this gap; it requires upstream intervention to bring inactive ADA into delegation.
 
-**The incentive game does not converge toward the intended equilibrium.** The reward curve's theoretical optimum ($\pi = 1, \nu = 1$) is a fully-pledged private pool with no delegator — eliminating the accountability mechanism at the endgame. Reaching it requires 77M ADA at a yield of ~0.68%/yr, below passive delegation (~2.3%/yr) — making the endgame economically irrational. The progression is invisible: the pledge bonus adds ~0.006% at median pledge, undetectable by delegators (O1). The entry creates a viability cliff, not a ramp (O2). The dominant strategy at every level — entry, progression, endgame — is to maximise delegation and minimise pledge, the exact opposite of what consensus security requires. The full analysis of these distortions, from endgame down to entry, is in [*The Intended Game*](sub-flows/pools-distribution/the-intended-game/README.md) §5.
+**The incentive game does not converge toward the intended equilibrium.** The reward curve's theoretical optimum ($\pi = 1, \nu = 1$) is a fully-pledged private pool with no delegator — eliminating the accountability mechanism at the endgame. Reaching it requires 77M ADA at a yield of ~0.68%/yr, below passive delegation (~2.3%/yr) — making the endgame economically irrational. The progression is invisible: the pledge bonus adds ~0.006% at median pledge, undetectable by delegators (O1). The entry creates a viability cliff, not a ramp (O2). The dominant strategy at every level — entry, progression, endgame — is to maximise delegation and minimise pledge, the exact opposite of what consensus security requires. The full analysis of these distortions, from each player's perspective, is in [§2 below](#2-the-divergence--when-the-optimal-move-breaks-the-game).
 
 The evidence confirms this at scale: 95.6% of the pledge-bonus budget returns to reserve unused (O1), the independent operator base has collapsed to 283 viable operators (O5), the incentive-responsive field holds only 36% of active stake (O6), and structural populations totalling 7.39B ADA cannot pledge by architectural constraint (O4).
 
@@ -411,6 +428,269 @@ Each pipeline stage is backed by a dedicated empirical analysis containing the f
 ### C. Detailed Variable Glossary
 
 <!-- TODO: migrate from sandbox §10 -->
+
+## 2. The divergence — when the optimal move breaks the game
+
+> **Status:** Staging area. This section was extracted from [*The Intended Game*](sub-flows/pools-distribution/the-intended-game/README.md) Part II and will be progressively integrated into the §1.2 narrative. Cross-references to §2–4 below refer to sections in *The Intended Game*.
+
+Sections 2–4 of [*The Intended Game*](sub-flows/pools-distribution/the-intended-game/README.md) described the game as designed: three player classes, each with a clear trajectory, converging on an incentive-compatible equilibrium. The SL-D1 reward curve was meant to produce that game. This section examines what actually happens when each player class tries to play it.
+
+The approach is simple: follow each participant through the trajectory the mechanism promises (entry → progression → endgame), and identify the point at which the reward curve stops rewarding the intended strategy. Each perspective reveals a different face of the same structural failure — and together, they show why the equilibrium described in [*The Intended Game* §4](sub-flows/pools-distribution/the-intended-game/README.md#4-the-aligned-dynamics) never materialises.
+
+### 2.1 The operator's experience
+
+#### 2.1.1 Below 1M ₳ — too committed to just delegate, too small to operate
+
+An operator registers a pool, pledges what they can — say 50K ADA — and starts looking for delegators.
+
+The promise ([*The Intended Game* §3.2](sub-flows/pools-distribution/the-intended-game/README.md#32-operators)) is clear: pledge commitment is the competitive dimension, and increasing it should produce visible, measurable advantages that attract delegation. The game should feel like a ramp — each step forward in commitment unlocking the next level of reward and reputation.
+
+The first step is high.
+
+##### 2.1.1.1 The structural floor
+
+Block production is a Poisson process, and below ~1M ₳ in total stake a pool expects less than one block per epoch. Reward variance equals its own mean — yield is noise, not signal.
+
+This is the *production threshold* (F3.1): a hard structural floor set by the physics of the consensus protocol, not by a tuneable parameter.
+
+Above that sits the *viability threshold* (~3M ₳, F3.2): below it, the 340 ₳ fixed cost per epoch exceeds the pool's expected reward. This second boundary is softer — it depends on the reward curve's parameters and narrows over time as node implementations improve and hardware costs decline.
+
+But the production threshold is irreducible.
+
+##### 2.1.1.2 A gate with no sign
+
+Crucially, the mechanism does not communicate this floor. Nothing in the protocol tells a prospective operator "do not register a pool below 1M ₳ — it will not produce blocks." Registration is open at any amount.
+
+The game lets participants in, takes their operational costs, and gives nothing in return.
+
+The result is visible on mainnet: 73% of pools sit below the viability threshold.
+
+These pools have no reason to exist — not from a consensus perspective (they contribute negligibly to block production), not from an investment perspective (they destroy value for their delegators), not from any perspective.
+
+And the damage extends beyond the pools themselves. They pollute the landscape for every other participant.
+
+Delegators browsing a pool explorer must navigate hundreds of sub-viable pools that look superficially legitimate but cannot deliver reliable yield. Wallet developers building staking features must decide how to present a pool set where the majority are economically inert. Viable operators must compete for visibility in a catalogue diluted by pools that the mechanism should never have admitted.
+
+The signal-to-noise ratio of the entire pool marketplace degrades — making delegation decisions harder, accountability less effective, and the competitive environment less legible for everyone.
+
+They are artifacts of a mechanism that defines a structural floor but does not signal it. The protocol silently accepts participants it cannot serve — and in doing so, degrades the experience for those it can.
+
+##### 2.1.1.3 Capital over competence
+
+Below the structural floor, the rational move is to delegate — not operate. An operator can still accumulate the deflationary asset, but as a passive participant.
+
+Delegation earns yield, but it does not earn the *leverage* that comes with consensus participation. The skin in the game is capital; it is not *commitment* to the network.
+
+A prospective operator may have exceptional technical knowledge — capable of running a reliable, performant node — but the mechanism does not value knowledge. It values capital at scale.
+
+An operator with deep expertise and 100K ₳ is invisible to the reward curve. A capital holder with no expertise and 5M ₳ can hire the expertise.
+
+The game's entry filter selects for capital, not for the operational competence the protocol actually needs.
+
+##### 2.1.1.4 A gap worth exploring
+
+The current mechanism offers two modes — delegate or operate — with nothing in between. A participant who is ready to commit beyond passive delegation but cannot meet the production threshold has no path forward.
+
+Concepts like *pool alliances* — mechanisms that would let smaller stakeholders combine their commitment to participate at a higher level of engagement — represent a design space worth exploring.
+
+They would not lower the production threshold itself (that is structural), but they could create an intermediate tier of participation where conviction and competence find expression before capital alone permits full operation.
+
+This is not a detailed proposal — it is an observation that the gap between delegation and operation is where the protocol currently loses participants it could benefit from retaining.
+
+#### 2.1.2 The pledge curve that nobody climbs
+
+An operator has crossed the production threshold. The pool produces blocks, earns rewards, and the deflationary accumulation thesis from [*The Intended Game* §2.2.1](sub-flows/pools-distribution/the-intended-game/README.md#221-an-open-seat-at-the-deflationary-table) is finally in play. The question becomes: how does the operator grow?
+
+The mechanism's answer ([*The Intended Game* §3.2.2](sub-flows/pools-distribution/the-intended-game/README.md#322-progression)) is *pledge*. Increasing personal commitment should produce a measurable competitive advantage — visible to delegators, economically meaningful to the operator — creating a legible progression from "new pool" to "established pool" to "fully committed pool."
+
+The Playing Field visual (Figure 1) shows what the reward curve actually offers.
+
+![The Playing Field — what a pool can earn vs. what it costs (epoch 616)](sub-flows/pools-distribution/the-intended-game/figures/playing_field_mainnet.png)
+*Figure 1 — Left: reward composition at full saturation. Right: reward by pool size, comparing size-only reward (green) to the pledge premium (purple). Data: epoch 616.*
+
+##### 2.1.2.1 Size buys almost everything
+
+The right panel of Figure 1 tells the story. The green area — reward earned from stake size alone, with zero pledge — dominates at every scale. A pool that grows from 5M to 30M ₳ in total stake sees its per-epoch reward climb from ~2,000 to ~12,000 ADA, entirely from the size fraction ($\lambda_{\min} \approx 76.9\%$ of $P_{\max}$).
+
+This component is completely insensitive to pledge. An operator who pledges nothing and one who pledges everything earn the same green area. The only strategic variable that moves this component is *delegation attraction* — and delegation responds to yield, brand, and convenience, not to pledge.
+
+The left panel confirms the scale: at full saturation, the size-only reward reaches 23,898 ADA/epoch (~1.74M/yr), representing a yield of ~2.3% on the saturated stake. This is the baseline — the reward an operator earns by filling the pool, regardless of commitment.
+
+##### 2.1.2.2 Pledge buys almost nothing
+
+The purple area in the right panel is the pledge premium — the only component the mechanism offers as a reward for deepening commitment. It is barely visible.
+
+At its theoretical maximum — an operator pledging the entire saturation cap of ~77M ₳ — the premium adds 7,168 ADA/epoch to the base reward. That is the full $\lambda_{\max}$ component: 23.1% of $P_{\max}$.
+
+But no realistic operator pledges 77M ₳. Consider the trajectory the mechanism is supposed to encourage:
+
+An operator crosses the production threshold at ~1M ₳, builds to 30M ₳ in total stake through delegation, and pledges 100K ₳ — a meaningful personal commitment. The pledge premium at this point is approximately +3.6 ADA/epoch. Not 3,600. Not 360. **3.6 ADA** — less than $2 per five-day epoch.
+
+A tenfold increase in pledge to 1M ₳ raises the premium to roughly +36 ADA/epoch. Still invisible against the ~12,000 ADA/epoch the pool earns from size alone.
+
+The pledge premium at realistic commitment levels is not small — it is *indistinguishable from noise*. Block-production variance at 30M ₳ in stake produces epoch-to-epoch swings of hundreds of ADA. A delegator comparing pool yields across a few epochs cannot detect a +3.6 ADA signal buried in that variance.
+
+The progression the mechanism describes — each step up in pledge producing a "measurable competitive advantage" — does not exist at any scale an operator can realistically reach.
+
+##### 2.1.2.3 The inversion
+
+The relationship between pledge and reward contains a deeper structural problem than mere smallness.
+
+Each ADA an operator pledges is ADA that could instead be delegated — to the operator's own pool or to any other saturated pool. Passive delegation yields ~2.3%/yr. The marginal yield of pledging, at realistic levels, is orders of magnitude lower.
+
+This means the pledge mechanism is not just unrewarding — it is *dominated*. An operator who takes 500K ₳ out of pledge and delegates it elsewhere earns more than the pledge premium those 500K ₳ would have generated. The mechanism asks operators to lock capital at a return below its opportunity cost.
+
+The left panel of Figure 1 illustrates the endpoint of this logic. Even at full saturation with maximum pledge, the total yield (size + pledge) on 77M ₳ of pledged capital is ~0.68%/yr — less than a third of the passive delegation yield shown at the bottom of the panel.
+
+A competing operator who pledges nothing and deploys that capital on marketing, multi-pool infrastructure, or exchange partnerships will attract more delegation — and earn more — than one who pledges it. The mechanism has inverted its own logic: the strategy it was designed to reward (deepening commitment) is dominated by the strategy it was designed to discourage (capital deployed outside the pledge mechanism).
+
+##### 2.1.2.4 What mainnet confirms
+
+The dominant strategy on mainnet is to maximise delegation and minimise pledge. 41 of 48 capital-sufficient MPOs choose this path, collectively forfeiting ~550K ADA/epoch in pledge bonuses they could claim — because the bonuses are too small to justify the capital lock-up (§1.2.2 O4).
+
+The multi-pool operators who dominate the landscape do not compete on pledge. They compete on brand, custody convenience, exchange integration, and fleet scale — dimensions the reward curve does not measure but that delegation responds to.
+
+The capital accumulation thesis that attracted the operator — *commit more, earn more, compound the deflationary upside* — has no expression in the mechanism. The pledge curve exists in the formula but not in the game.
+
+The 95.6% of the pledge-bonus budget that returns to reserve unused every epoch (§1.2.2 O1) is not a failure of adoption. It is the rational response to a progression system that rewards commitment with nothing.
+
+#### 2.1.3 Endgame
+
+Consider what the reward curve defines as *optimal* — the destination the mechanism points toward.
+
+The formula's maximum ($P_{\max}$) is reached when $\pi = 1$ and $\nu = 1$: the operator pledges the full saturation amount ($z_0$ ≈ 77M ADA) and the pool is fully saturated. But since pledge counts as stake, pledging $z_0$ fills the entire pool with the operator's own capital.
+
+There are no delegators. The "dream" the reward curve defines is a private pool — the operator is the sole funder, the sole block producer, and the sole beneficiary.
+
+This is the opposite of the narrative that attracts operators. The game was supposed to be *accessible* — a realistic initial stake, a meritocratic progression, an open community of participants.
+
+The endgame the mechanism defines requires 77M ADA (~30M USD) of personal capital, locked, for a yield of ~0.68%/yr (§1.2.2 O1). The same capital passively delegated to any saturated pool earns ~2.3%/yr — more than three times the return, with zero operational burden.
+
+The mechanism's ideal operator is not the committed community member who grew from a modest start; it is a solitary whale who locks a fortune at below-market yield to run a pool that no one else participates in.
+
+The endgame is both *unreachable* from a realistic starting position and *undesirable* even if reached — it contradicts the very investment thesis that made the game attractive.
+
+#### 2.1.4 The operator's verdict
+
+The mechanism promises operators an accessible, meritocratic path where commitment to a deflationary asset compounds into long-term value.
+
+Instead, it delivers a high floor at entry that blocks the accessible start, invisibility at progression that nullifies the commitment advantage, and an endgame that requires whale-scale capital, excludes the community, and yields less than passive delegation.
+
+The rational response — confirmed on mainnet — is to abandon pledge as a strategy entirely and compete on dimensions the reward curve does not measure.
+
+### 2.2 The delegator's experience
+
+#### 2.2.1 Entry
+
+A delegator holds ADA and wants yield. They open a pool explorer and look for the best pool to delegate to.
+
+The mechanism promised ([*The Intended Game* §3.3](sub-flows/pools-distribution/the-intended-game/README.md#33-delegators)) that as the system matures, delegators would be able to differentiate pools on commitment-based criteria — pledge level, track record, margin — and that delegation choices would function as an accountability mechanism ([*The Intended Game* §2.3](sub-flows/pools-distribution/the-intended-game/README.md#23-delegators)), rewarding committed operators and punishing uncommitted ones.
+
+The delegator starts comparing pools, looks at expected yield, and they all look roughly the same.
+
+This is not an accident — it is a direct consequence of the reward formula. The size fraction ($\lambda_{\min} \approx 76.9\%$) dominates pool rewards and is entirely insensitive to pledge. The pledge fraction ($\lambda_{\max} \approx 23.1\%$) is the only component that differentiates on commitment, but its contribution is so small that it disappears into the noise of block-production variance.
+
+A pool with 1M ADA pledged and a pool with zero pledge offer functionally identical yield.
+
+The mechanism provides an accountability tool — liquid delegation — but removes the *information* needed to use it.
+
+#### 2.2.2 Progression
+
+A more diligent delegator looks at pledge levels directly, reasoning that even if yield differences are invisible, delegating to high-pledge pools on principle supports the network.
+
+But this strategy has no economic payoff. Moving delegation from a zero-pledge pool to a high-pledge pool does not measurably improve the return. The delegator is subsidising the operator's commitment with *opportunity cost* (the foregone yield from a larger, more liquid pool) for a reward difference that cannot be measured.
+
+Meanwhile, the pools that *are* easy to find — the ones with the largest delegations, the most name recognition, the exchange-affiliated ones — are rarely the most committed. They compete on convenience and brand, not pledge.
+
+The information environment the mechanism creates does not help identify commitment; it buries it. The accountability mechanism described in [*The Intended Game* §2.3](sub-flows/pools-distribution/the-intended-game/README.md#23-delegators) — delegators policing operators through capital reallocation — requires a signal to act on. The SL-D1 curve produces no such signal.
+
+There is also a subtler problem: a delegator cannot distinguish an operator running one pool with genuine commitment from an operator running ten pools with minimal commitment each.
+
+Multi-pool operators (MPOs) can spread capital across a fleet, pledging minimally per pool, and capture more total reward than a single committed operator. The mechanism does not penalise this — it arguably rewards it.
+
+Delegation to any one pool in an MPO fleet reinforces a structure the mechanism was supposed to prevent.
+
+#### 2.2.3 Endgame
+
+The mechanism's theoretical optimum reveals the deepest problem: the delegator is not part of it.
+
+The maximum-reward pool ($\pi = 1$, $\nu = 1$) is fully funded by the operator's own pledge. There is no room for delegation.
+
+The reward curve's ideal state is a network of 500 private pools in which delegators play no role whatsoever. The accountability mechanism — the reason delegator participation matters for consensus security — is absent at the optimum.
+
+Delegators are not just poorly served by the endgame; they are *excluded* from it.
+
+#### 2.2.4 The delegator's verdict
+
+The mechanism promises delegators a role as the network's accountability layer, but gives them no signal to act on, no economic reward for commitment-based choices, and an endgame that eliminates them entirely.
+
+The rational response — confirmed on mainnet — is to delegate based on convenience, brand, or exchange integration, ignoring pledge completely.
+
+The accountability function collapses.
+
+### 2.3 The transaction submitter's experience
+
+#### 2.3.1 Entry
+
+A transaction submitter uses Cardano for settlement. They do not participate in the staking game directly, but they depend on its output: a sufficiently decentralised, secure, accountable network of block producers.
+
+The mechanism promised ([*The Intended Game* §2.4](sub-flows/pools-distribution/the-intended-game/README.md#24-the-dependency-chain)) that the reward curve would produce this by aligning operator and delegator incentives around commitment and community oversight.
+
+The network the mechanism has actually produced tells a different story.
+
+The independent operator base — the population the mechanism was designed for — has collapsed to 283 viable operators after removing MPO fleet members (O5). 78% of their stake is non-compliant. Their share of the network is declining.
+
+The entities that dominate block production compete on fleet scale and delegation capture, not pledge commitment.
+
+Structural populations (exchanges, institutional staking providers) totalling 7.39B ADA cannot pledge custodied assets at all — an architectural constraint that no parameter change can fix (§1.2.2 O4).
+
+#### 2.3.2 Progression
+
+The reserve is depleting. Monetary expansion — which currently funds ~99.8% of the epoch pot (§1.1.2 O1) — will decline as the reserve crosses its half-life.
+
+The game's economic viability will progressively shift onto fee revenue — transaction submitters' fees.
+
+Transaction submitters are being asked to fund, through increasing volume and willingness to pay, a staking game whose mechanism has failed to produce the security properties they depend on.
+
+The operator landscape is consolidating rather than diversifying. The accountability layer is non-functional. The pledge mechanism — the protocol's Sybil defence — is unused: 95.6% of the pledge-bonus budget returns to reserve every epoch (§1.2.2 O1).
+
+#### 2.3.3 Endgame
+
+Transaction submitters need the network to be *more* secure and decentralised as it becomes more valuable — as the economic stakes of each transaction grow, so does the cost of a consensus failure.
+
+But the mechanism's trajectory points in the opposite direction.
+
+The reward curve optimises toward concentration (fewer, larger operators with minimal pledge) and away from the distributed, committed operator base that consensus security requires.
+
+The incentive-responsive field holds only 36% of active stake (O6) — the rest is structurally immune to the reward signal.
+
+The mechanism cannot course-correct through parameter changes alone because the populations it cannot reach (CEX, IVaaS, non-compliant MPOs) hold the majority of stake.
+
+#### 2.3.4 The transaction submitter's verdict
+
+The mechanism was supposed to produce the security properties transaction submitters depend on.
+
+Instead, it has produced an operator landscape that is consolidating, an accountability layer that is inert, and a Sybil defence that is unused — and transaction submitters are about to become the primary funders of this system as the reserve depletes.
+
+### 2.4 What the three perspectives reveal together
+
+The three player experiences are not three separate failures — they are three views of a single structural contradiction.
+
+The dependency chain described in [*The Intended Game* §2.4](sub-flows/pools-distribution/the-intended-game/README.md#24-the-dependency-chain) requires *interdependence*: operators need delegators for scale, delegators need operators for block production, and the reward curve should make their partnership the individually rational path for both. The SL-D1 curve breaks this interdependence at every level:
+
+- **At entry**, the operator has no visible tool to attract delegation based on commitment, and the delegator has no signal to differentiate on. The two players cannot find each other through the mechanism.
+- **At progression**, increasing pledge produces no competitive advantage the delegator can detect, so the operator rationally abandons pledge as a strategy. The delegator, seeing no commitment-based signal, rationally delegates on convenience. Both players optimise away from the intended strategy — not because they are irrational, but because they *are* rational.
+- **At endgame**, the reward curve's theoretical optimum eliminates the delegator entirely. The operator fills the pool with their own capital. The dependency chain collapses: the mechanism's ideal state is one where the accountability layer does not exist.
+
+The result is not a failure of adoption or education. The players are not making mistakes — they are responding correctly to the incentives the mechanism actually provides.
+
+The dominant strategy at every stage of the game, for every player class, is the exact opposite of what the protocol needs for consensus security.
+
+The equilibrium the curve converges toward is not the one described in [*The Intended Game* §4](sub-flows/pools-distribution/the-intended-game/README.md#4-the-aligned-dynamics). It is one where pledge is minimised, delegation is driven by brand rather than commitment, accountability is inert, and the operator landscape consolidates around fleet scale rather than individual commitment.
+
+The mainnet evidence confirms this comprehensively: 95.6% of the pledge-bonus budget unused (§1.2.2 O1), 82% of what *is* used flowing to three entities (§1.2.2 O4), 73% of pools below viability (§1.2.2 O2), and the incentive-responsive field holding only 36% of active stake (O6).
+
+The mechanism is not failing to reach equilibrium — it *has* reached equilibrium. It is simply the wrong one.
 
 ---
 
