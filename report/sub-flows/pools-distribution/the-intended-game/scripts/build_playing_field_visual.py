@@ -200,10 +200,13 @@ def main():
              color=TEXT_DIM, alpha=0.6)
 
     # Annotate specific pool sizes with bonus amounts
+    # Place labels INSIDE or immediately adjacent to the purple zone,
+    # with short arrows pointing at the midpoint of the bonus band.
     annotations = [
-        (10, 10,  5500),
-        (30, 12,  7000),
-        (55, 8,   4500),
+        # (pool_size_M, text_offset_x, text_offset_y)
+        (10,  3.5,  900),
+        (30,  3.5,  1200),
+        (55,  3.5,  1500),
     ]
     for size_m, dx, dy in annotations:
         idx = np.argmin(np.abs(sizes_m - size_m))
@@ -214,25 +217,14 @@ def main():
 
         mid_y = (r0 + rm) / 2
         ax2.annotate(
-            f"+{b:,.0f} ADA/ep\n{yld:.2f}%/yr yield on pledge",
+            f"+{b:,.0f} ADA/ep\n{yld:.2f}%/yr on pledge",
             xy=(size_m, mid_y),
             xytext=(size_m + dx, mid_y + dy),
             fontsize=8, color="#B8860B",
-            arrowprops=dict(arrowstyle="->", color="#B8860B", alpha=0.5,
-                           connectionstyle="arc3,rad=0.15"),
-            bbox=dict(boxstyle="round,pad=0.3", fc="#FFFFFF", ec="#B8860B", alpha=0.85))
+            arrowprops=dict(arrowstyle="->", color="#B8860B", alpha=0.6,
+                           lw=1.2),
+            bbox=dict(boxstyle="round,pad=0.3", fc="#FFFFFF", ec="#B8860B", alpha=0.9))
 
-    # Typical pool marker
-    typical_y = P_max * lam_min * 30e6 / z0
-    ax2.plot(30, typical_y, 'o', color=SOLAR_AMBER, markersize=8, zorder=5)
-    ax2.annotate(
-        "Typical pool (30M, 100K pledge)\nBonus: +3.6 ADA/epoch",
-        xy=(30, typical_y),
-        xytext=(5, 2000),
-        fontsize=8.5, color=SOLAR_AMBER,
-        arrowprops=dict(arrowstyle="->", color=SOLAR_AMBER, alpha=0.6,
-                       connectionstyle="arc3,rad=-0.3"),
-        bbox=dict(boxstyle="round,pad=0.4", fc="#FFFFFF", ec=SOLAR_AMBER, alpha=0.9))
 
     ax2.set_xlabel("Pool size (M ADA)", fontsize=10, color=TEXT_DIM)
     ax2.set_ylabel("Pool reward per epoch (ADA)", fontsize=10, color=TEXT_DIM)

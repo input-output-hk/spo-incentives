@@ -36,6 +36,13 @@
     - [3.3.1 Entry](#331-entry)
     - [3.3.2 Progression](#332-progression)
     - [3.3.3 Endgame](#333-endgame)
+  - [3.4 The security properties the equilibrium must satisfy](#34-the-security-properties-the-equilibrium-must-satisfy)
+    - [3.4.1 Accountability](#341-accountability)
+    - [3.4.2 Delegation as counter-power](#342-delegation-as-counter-power)
+    - [3.4.3 Sybil resistance](#343-sybil-resistance)
+    - [3.4.4 Decentralisation](#344-decentralisation)
+    - [3.4.5 The properties are not independent](#345-the-properties-are-not-independent)
+    - [3.4.6 The structural requirement](#346-the-structural-requirement)
 - [4. The aligned dynamics](#4-the-aligned-dynamics)
 
 ---
@@ -207,6 +214,76 @@ As the pool landscape matures and the mechanism produces legible differences bet
 #### 3.3.3 Endgame
 
 Delegators act as an efficient market for operator commitment. Capital moves fluidly to the pools that best combine commitment and performance, and exits quickly from those that fall short. The accountability mechanism operates at full power: no operator can sustain high rewards without continuous community approval.
+
+### 3.4 The security properties the equilibrium must satisfy
+
+The three trajectories above describe individual paths. But the protocol does not care which path any single operator or delegator takes — it cares whether the *equilibrium* that emerges from the aggregate of all rational choices preserves the security invariants defined in [§1](#1-the-design-objective).
+
+The formal literature — *Reward Sharing Schemes for Stake Pools* (Brünjes, Kiayias et al., 2020) and the SL-D1 engineering specification (Kant, Brünjes & Coutts, 2019) — defines these invariants implicitly through the constraints the reward function must satisfy: the equilibrium must exhibit $k$ independent block producers, each bearing a non-trivial personal cost, subject to continuous community oversight, with no single entity able to capture a dominant share of consensus power. Four properties encode these invariants. They are not a menu of desirable features — they are load-bearing elements of the security argument. Losing any one degrades the model; losing two or more can break it.
+
+#### 3.4.1 Accountability
+
+The Ouroboros security model assumes that block producers are *identifiable* and have *something to lose*. Accountability is the property that connects a block-producing identity to a real economic cost: if the operator misbehaves — equivocates, censors, goes offline — there must exist a mechanism through which that behaviour imposes a loss on the operator that is proportional to the damage it causes.
+
+Cardano's consensus layer does not implement slashing. Unlike protocols that destroy a validator's deposit upon detectable misbehaviour, Ouroboros relies on an indirect accountability structure built from two components that operate at different time-scales:
+
+*Pledge as a static bond.* Capital registered in the pool certificate creates a visible, on-chain commitment. It is not locked in the custodial sense — the operator retains the keys — but it is *declared*: the protocol observes it at every epoch boundary, and failure to maintain the declared amount triggers a total reward wipe for that epoch (the pledge-unmet penalty). This bond serves a signalling function: an operator who has pledged substantial capital has an observable, verifiable stake in the pool's continued operation. The cost of abandoning or sabotaging the pool includes forfeiting the competitive position that pledge confers.
+
+*Delegation as a dynamic discipline.* Delegators can revoke their delegation unilaterally, at any epoch boundary, without the operator's consent (SL-D1 §3.4.6). This is the protocol's primary enforcement mechanism: an operator who degrades performance, raises fees exploitatively, or behaves dishonestly faces capital flight. The pool shrinks, rewards drop, and the operator's income falls — not because the protocol punished them, but because the community withdrew its approval.
+
+These two components are not redundant. The static bond ensures that the operator has a *minimum* cost of entry and a *minimum* exposure to the pool's fate — it exists even when no delegator is watching. The dynamic discipline ensures that the operator faces *continuous* pressure to maintain performance — it operates even when the bond is too small to matter on its own.
+
+A system that relies on only one of these components is fragile. Pledge without delegation produces accountability that is entirely self-referential: the operator answers to no one but themselves. Delegation without pledge produces accountability without cost: the operator can walk away from a misbehaving pool and register a new one at zero loss. The security model requires both — a floor of personal exposure *and* a continuous external check.
+
+#### 3.4.2 Delegation as counter-power
+
+Delegation in the SL-D1 design is not merely a capital-routing mechanism. It is the protocol's substitute for the governance layer that Cardano does not have at the consensus level.
+
+The formal design separates control over *funds* (payment keys) from rights in the *PoS protocol* (staking keys). A delegator who assigns their staking key to a pool does not transfer custody — they grant a revocable licence to include their stake in the pool's block-production weight. The revocation is non-consensual: the protocol processes it without requiring the operator's approval. This makes delegation a *continuous approval signal* rather than a one-time capital commitment.
+
+The disciplinary power of this mechanism depends on a structural condition: **the operator must need delegators more than delegators need the operator.** If a pool is filled entirely with the operator's own capital, delegator exit is irrelevant — there are no delegators to leave. If a pool is filled entirely by external delegation, delegator exit destroys the operator's income — but only if the operator has something at stake that makes rebuilding costly. The ratio between owner stake and delegated stake determines the *leverage* delegators have over the operator.
+
+This is why the pledge/delegation ratio is not just an accounting detail — it defines the power structure within the pool. For the credible exit threat to function, both parties must have real stakes: the operator cannot be replaced without cost (their pledge and infrastructure matter), and the delegators cannot be ignored without cost (their departure shrinks the pool materially). This mutual dependency is the structural condition the mechanism must produce.
+
+#### 3.4.3 Sybil resistance
+
+The $k$-pool target assumes that $k$ pools represent $k$ *independent* block-producing entities. Sybil resistance is the property that makes this assumption defensible: creating additional block-producing identities must carry a cost high enough that fragmentation is economically dominated by honest, single-pool operation.
+
+Brünjes & Kiayias (2020, §4) formalise this through the pledge parameter $a_0$. The reward function $r(\sigma, \lambda)$ includes a pledge-sensitive component — the $\lambda_{\max} \cdot A(\pi, \nu)$ term — designed so that splitting capital across $n$ pools dilutes the pledge bonus per pool. An attacker who fragments into $n$ identities must commit capital linearly: each pool requires its own pledge to earn the bonus. The intended cost of a Sybil attack scales as $O(n)$ in committed capital.
+
+This defence has a quantitative precondition: **the pledge bonus must be large enough that forfeiting it is costly.** If the bonus is negligible, the Sybil tax approaches zero — an attacker who registers additional pools forgoes a bonus that was worth nothing to begin with. The formal mechanism exists; whether its economic bite is sufficient is a question of parameter calibration.
+
+There is a subtlety in *how* the Sybil cost operates. When the cost comes from the pledge mechanism itself — forfeiting a meaningful bonus by fragmenting — it is the *design* that provides the defence. When the cost comes from raw capital requirements alone — an attacker simply running out of money — the defence is incidental, not engineered. The mechanism should ensure that the Sybil cost operates through the reward structure, not merely through wealth constraints that exist independently of the protocol.
+
+#### 3.4.4 Decentralisation
+
+Decentralisation is the property that the $k$-pool target is supposed to produce: consensus power distributed across many independent entities, with no single actor or coordinated group able to dominate block production.
+
+This requires more than a count of pools. A network with 500 pool certificates but a handful of controlling entities is not decentralised in any security-relevant sense — it merely *appears* decentralised at the certificate level while concentrating power at the entity level. Decentralisation requires that pools be operated by *distinct, economically independent* actors.
+
+The entry barrier determines who can participate. If the barrier is too high — requiring enormous personal capital per pool — the operator set shrinks to a small, wealthy elite, and block production becomes permissioned by wealth. If the barrier is too low — requiring no meaningful commitment — entry is cheap, but competitive dynamics drive concentration through brand, convenience, and scale rather than through commitment. In both cases, the resulting equilibrium fails the decentralisation test, though for different structural reasons.
+
+The mechanism must calibrate the barrier so that *commitment* — not wealth alone and not zero-cost entry — determines who can participate. The entry requirement should be high enough to be meaningful but low enough that operators of moderate means can enter, with delegation providing the growth path beyond the initial commitment.
+
+#### 3.4.5 The properties are not independent
+
+These four properties interact, and the interactions constrain the design space.
+
+Accountability and delegation-as-counter-power are two faces of the same disciplinary structure. In a system without slashing, the *only* continuous enforcement mechanism is delegator exit. Pledge creates the *precondition* for that mechanism to have force — the operator must have something at stake — but delegation creates the *mechanism itself*. Accountability without delegation is a bond with no enforcer. Delegation without accountability is a vote with no consequence. Neither alone produces the discipline the protocol requires; together, they form a closed feedback loop.
+
+Sybil resistance and decentralisation are in tension. A higher Sybil cost (requiring more pledge per pool) raises the entry barrier, which can reduce the number of independent operators. A lower Sybil cost (requiring less pledge) lowers the barrier but makes fragmentation cheap. The mechanism must find a calibration where the pledge requirement is high enough to impose a real cost on fragmentation but low enough — with delegation providing the remaining stake — that operators of moderate means can still enter and compete.
+
+Decentralisation and delegation-as-counter-power reinforce each other when the equilibrium satisfies both. More independent operators means more choices for delegators, which strengthens the exit threat, which improves accountability, which makes the operator landscape more trustworthy, which attracts more delegation to committed pools. This is the virtuous cycle that §4 describes. It requires all four properties to be present simultaneously — remove any one, and the cycle breaks.
+
+#### 3.4.6 The structural requirement
+
+Taken together, the four properties impose a specific structural requirement on the equilibrium the mechanism must produce: **each pool must combine meaningful operator commitment with meaningful external delegation.**
+
+Operator commitment (pledge) is required for accountability and Sybil resistance — it creates the bond that makes misbehaviour costly and fragmentation expensive. External delegation is required for counter-power and decentralisation — it creates the oversight mechanism and ensures that the entry barrier does not exclude operators of moderate means.
+
+An equilibrium where operators fund pools entirely from their own capital satisfies accountability in a narrow sense but eliminates delegation's disciplinary role and restricts participation to the capital-rich. An equilibrium where operators commit nothing satisfies no property — the bond is absent, the Sybil defence is gone, and concentration emerges through market dynamics unchecked by any commitment signal.
+
+The design's target is an equilibrium where the pledge/delegation ratio within each pool reflects genuine *interdependence* between operator and community — where neither party can be absent without degrading the security properties the consensus layer depends on. This is the benchmark against which any evaluation of the mechanism's actual performance must be measured.
 
 ## 4. The aligned dynamics
 

@@ -1,0 +1,206 @@
+{
+  "epoch": 614,
+  "all": {
+    "label": "all",
+    "pools": 991,
+    "total_active_stake_ada": 21226317025.84,
+    "total_rewards_ada": 6797069.26,
+    "operator_take_ada": 1668864.42,
+    "operator_take_pct": 24.55,
+    "fixed_cost_total_ada": 335585.86,
+    "fixed_cost_pct": 4.94,
+    "margin_total_ada": 1333278.56,
+    "margin_pct": 19.62,
+    "delegator_pot_ada": 5128204.84,
+    "delegator_pot_pct": 75.45,
+    "margin_distribution": {
+      "mean": 0.131615,
+      "median": 0.02,
+      "stake_weighted": 0.18956,
+      "pct_zero_margin": 19.2,
+      "pct_below_2pct": 44.7,
+      "pct_above_5pct": 16.5
+    },
+    "fixed_cost_distribution": {
+      "mean_ada": 1660.5,
+      "median_ada": 340.0,
+      "pct_at_minimum_340": 92.7
+    },
+    "effective_tax": {
+      "mean_pct": 34.72,
+      "median_pct": 16.16,
+      "stake_weighted_pct": 22.85,
+      "p10_pct": 3.9,
+      "p90_pct": 100.0
+    }
+  },
+  "hollow": {
+    "label": "hollow",
+    "pools": 835,
+    "total_active_stake_ada": 18109571172.83,
+    "total_rewards_ada": 5626083.78,
+    "operator_take_ada": 729257.03,
+    "operator_take_pct": 12.96,
+    "fixed_cost_total_ada": 291187.02,
+    "fixed_cost_pct": 5.18,
+    "margin_total_ada": 438070.01,
+    "margin_pct": 7.79,
+    "delegator_pot_ada": 4896826.75,
+    "delegator_pot_pct": 87.04,
+    "margin_distribution": {
+      "mean": 0.098864,
+      "median": 0.02,
+      "stake_weighted": 0.089809,
+      "pct_zero_margin": 19.8,
+      "pct_below_2pct": 45.6,
+      "pct_above_5pct": 13.9
+    },
+    "fixed_cost_distribution": {
+      "mean_ada": 1916.7,
+      "median_ada": 340.0,
+      "pct_at_minimum_340": 92.1
+    },
+    "effective_tax": {
+      "mean_pct": 29.11,
+      "median_pct": 12.57,
+      "stake_weighted_pct": 13.14,
+      "p10_pct": 3.4,
+      "p90_pct": 100.0
+    }
+  },
+  "balanced": {
+    "label": "balanced",
+    "pools": 107,
+    "total_active_stake_ada": 605045384.21,
+    "total_rewards_ada": 221918.55,
+    "operator_take_ada": 38626.17,
+    "operator_take_pct": 17.41,
+    "fixed_cost_total_ada": 29318.84,
+    "fixed_cost_pct": 13.21,
+    "margin_total_ada": 9307.33,
+    "margin_pct": 4.19,
+    "delegator_pot_ada": 183292.37,
+    "delegator_pot_pct": 82.59,
+    "margin_distribution": {
+      "mean": 0.034969,
+      "median": 0.015,
+      "stake_weighted": 0.050979,
+      "pct_zero_margin": 23.4,
+      "pct_below_2pct": 56.1,
+      "pct_above_5pct": 3.7
+    },
+    "fixed_cost_distribution": {
+      "mean_ada": 280.7,
+      "median_ada": 340.0,
+      "pct_at_minimum_340": 94.4
+    },
+    "effective_tax": {
+      "mean_pct": 51.21,
+      "median_pct": 54.26,
+      "stake_weighted_pct": 16.52,
+      "p10_pct": 9.14,
+      "p90_pct": 100.0
+    }
+  },
+  "private": {
+    "label": "private",
+    "pools": 49,
+    "total_active_stake_ada": 2511700468.8,
+    "total_rewards_ada": 949066.94,
+    "operator_take_ada": 900981.21,
+    "operator_take_pct": 94.93,
+    "fixed_cost_total_ada": 15080.0,
+    "fixed_cost_pct": 1.59,
+    "margin_total_ada": 885901.21,
+    "margin_pct": 93.34,
+    "delegator_pot_ada": 48085.73,
+    "delegator_pot_pct": 5.07,
+    "margin_distribution": {
+      "mean": 0.900765,
+      "median": 1.0,
+      "stake_weighted": 0.942154,
+      "pct_zero_margin": 0.0,
+      "pct_below_2pct": 4.1,
+      "pct_above_5pct": 89.8
+    },
+    "fixed_cost_distribution": {
+      "mean_ada": 307.8,
+      "median_ada": 340.0,
+      "pct_at_minimum_340": 100.0
+    },
+    "effective_tax": {
+      "mean_pct": 94.21,
+      "median_pct": 100.0,
+      "stake_weighted_pct": 94.33,
+      "p10_pct": 99.18,
+      "p90_pct": 100.0
+    }
+  },
+  "hollow_captive": {
+    "pools": 50,
+    "total_active_stake_ada": 976830822.61,
+    "total_rewards_ada": 307829.38,
+    "operator_take_ada": 307826.31,
+    "operator_take_pct": 100.0
+  },
+  "nonpriv_mpo": {
+    "pools": 425,
+    "total_rewards_ada": 4273897.65,
+    "operator_take_ada": 534701.71,
+    "operator_take_pct": 12.51
+  },
+  "nonpriv_spo": {
+    "pools": 517,
+    "total_rewards_ada": 1574104.68,
+    "operator_take_ada": 233181.49,
+    "operator_take_pct": 14.81
+  },
+  "entity_level_margin": {
+    "n_entities": 596,
+    "n_mpo_entities": 79,
+    "n_spo_entities": 517,
+    "mean_entity_margin": 0.086164,
+    "median_entity_margin": 0.01,
+    "stake_weighted_entity_margin": 0.088554,
+    "entities_at_zero": 157,
+    "entities_below_2pct": 348,
+    "entities_2_to_5pct": 186,
+    "entities_above_5pct": 62,
+    "entities_with_mixed_policy": 37
+  },
+  "strategy_consistency": {
+    "total_entities": 609,
+    "pure_strategy_entities": 601,
+    "pure_strategy_pct": 98.7,
+    "hybrid_entities": 8,
+    "by_dominant_strategy": {
+      "hollow": {
+        "entities": 501,
+        "pools": 836,
+        "total_active_stake_ada": 18137235168.06,
+        "total_rewards_ada": 5643575.28,
+        "operator_take_ada": 766564.54,
+        "operator_take_pct": 13.58,
+        "owner_stake_ada": 178394178.71
+      },
+      "balanced": {
+        "entities": 95,
+        "pools": 109,
+        "total_active_stake_ada": 798243822.38,
+        "total_rewards_ada": 292587.51,
+        "operator_take_ada": 41830.59,
+        "operator_take_pct": 14.3,
+        "owner_stake_ada": 413498294.6
+      },
+      "private": {
+        "entities": 13,
+        "pools": 46,
+        "total_active_stake_ada": 2290838035.4,
+        "total_rewards_ada": 860906.48,
+        "operator_take_ada": 860469.29,
+        "operator_take_pct": 99.95,
+        "owner_stake_ada": 2289895739.83
+      }
+    }
+  }
+}
