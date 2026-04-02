@@ -6,7 +6,7 @@ _Built on 2026/03/31 from mainnet data at epoch `614` (settled) plus historical 
 
 This report analyses the **intra-pool reward split** — the third and final stage of Cardano's reward pipeline — and traces the structural forces that determine how much of each pool's reward reaches delegators versus operators. It extends the empirical baseline established in the [*Analysis of Cardano's Incentive Mechanism*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf) (Lopez de Lara, 2025; hereafter the *Incentive Mechanism Analysis*) and operates downstream of the companion reports [*Treasury & Pool Pots Distribution*](../../treasury-and-pool-pots-distribution/mainnet-analysis/) (stage 1) and [*The Pools Pot Distribution Gaps*](../../pools-distribution/mainnet-analysis/) (stage 2).
 
-Every epoch, once the reward curve assigns a total reward $\hat{f}$ to each pool, a second mechanism activates: the **intra-pool split**. The pool operator extracts a fixed cost $c$ and a proportional margin $m$; the remainder is distributed pro-rata among all delegators (including the operator's own stake). At epoch 614, this mechanism processed **6.80M ADA** across 991 rewarded pools — but the headline aggregate (24.6% operator take) conceals three radically different strategies. Adopting the Hollow–Private pledge spectrum from the upstream analysis ([§2.4.2](../../../cardano-reward-analysis.md#242-progression--private-pools-by-design-hollow-pools-in-practice)), this report classifies entities by **owner-stake ratio** (owner active stake / pool active stake) across their pool fleets. Three strategies emerge along this spectrum: the **hollow strategy** (owner-stake ratio < 10%, 501 entities, 836 pools, 18.14B ADA, op_take=13.58%) where entities depend entirely on external delegation; the **balanced strategy** (10–95% owner-stake, 95 entities, 109 pools, 0.80B ADA, op_take=14.3%) where entities and delegators share capital with genuine alignment; and the **private strategy** (≥ 95% owner-stake, 13 entities, 46 pools, 2.29B ADA, op_take=99.95%) where entities are operator-funded. Remarkably, 601 of 609 entities (98.7%) apply a single pure strategy across all their pools, demonstrating high strategic consistency. Within hollow-strategy entities, a sub-population of 50 "hollow captive" pools (margin ≥ 99.9%, typically exchanges and custodians) extract 100% via margin, leaving 785 genuine hollow pools at 7.9% operator take. The entity-level analysis reveals that margin competition is broadly active in the genuine hollow market (median entity margin 1.0%, stake-weighted 8.9%) but fixed cost, not margin, is the dominant extraction channel. Balanced-strategy entities form the smallest population but analytically most significant: they are where the pledge mechanism produces genuine alignment, with many pools carrying Material or High pledge tags and median owner-ratio 26.4%.
+Every epoch, once the reward curve assigns a total reward $\hat{f}$ to each pool, a second mechanism activates: the **intra-pool split**. The pool operator extracts a fixed cost $c$ and a proportional margin $m$; the remainder is distributed pro-rata among all delegators (including the operator's own stake). At epoch 614, this mechanism processed **6.80M ADA** across 991 rewarded pools — but the headline aggregate (24.6% operator take) conceals three radically different strategies. Adopting the Hollow–Private pledge spectrum from the upstream analysis ([§2.4.2](../../../cardano-reward-analysis.md#242-progression--balanced-as-intended-but-private-by-design)), this report classifies entities by **owner-stake ratio** (owner active stake / pool active stake) across their pool fleets. Three strategies emerge along this spectrum: the **hollow strategy** (owner-stake ratio < 10%, 501 entities, 836 pools, 18.14B ADA, op_take=13.58%) where entities depend entirely on external delegation; the **balanced strategy** (10–95% owner-stake, 95 entities, 109 pools, 0.80B ADA, op_take=14.3%) where entities and delegators share capital with genuine alignment; and the **private strategy** (≥ 95% owner-stake, 13 entities, 46 pools, 2.29B ADA, op_take=99.95%) where entities are operator-funded. Remarkably, 601 of 609 entities (98.7%) apply a single pure strategy across all their pools, demonstrating high strategic consistency. Within hollow-strategy entities, a sub-population of 50 "hollow captive" pools (margin ≥ 99.9%, typically exchanges and custodians) extract 100% via margin, leaving 785 genuine hollow pools at 7.9% operator take. The entity-level analysis reveals that margin competition is broadly active in the genuine hollow market (median entity margin 1.0%, stake-weighted 8.9%) but fixed cost, not margin, is the dominant extraction channel. Balanced-strategy entities form the smallest population but analytically most significant: they are where the pledge mechanism produces genuine alignment, with many pools carrying Material or High pledge tags and median owner-ratio 26.4%.
 
 The argument proceeds in seven steps:
 
@@ -18,11 +18,11 @@ The argument proceeds in seven steps:
 
 4. **The balanced strategy population** (§5). The 95 entities following the balanced strategy (109 pools, 0.80B ADA, op_take=14.3%) split capital between themselves and delegators with genuine alignment. Median owner-ratio is 26.4%, margins are low, and many pools carry Material or High pledge tags — genuine skin-in-the-game. This is the only population where the pledge mechanism produces meaningful operator alignment.
 
-5. **The private strategy universe** (§6). The 13 entities following the private strategy (46 pools, 2.29B ADA, op_take=99.95%) are operator-funded and absorb 99.95% of their rewards as operator take. Margin is an accounting choice (vast majority set ≥ 99.9%), fixed cost negligible. Paradoxically, entities in this group often carry Low or Zero pledge tags despite owning the capital and facing no custodial constraint — the pledge mechanism fails to attract commitment even where its success should be easiest.
+5. **The private strategy universe** (§6). The 13 entities following the private strategy (46 pools, 2.29B ADA, op_take=99.95%) are operator-funded and absorb 99.95% of their rewards as operator take. Margin is an accounting choice (vast majority set ≥ 99.9%), fixed cost negligible. Paradoxically, entities in this group often carry Low or Zero pledge tags despite owning the capital and facing no custodial constraint — the pledge mechanism does not appear to attract commitment even where conditions are most favourable.
 
 6. **Strategy consistency across fleets** (§3.2). The empirical finding: 601 of 609 entities (98.7%) apply a single pure strategy across all their pools. Only 8 entities are hybrid (operating pools in multiple strategy bins), and they cluster near threshold boundaries. This justifies using entity-level strategy grouping and validates the framing of these as deliberate, coherent strategic choices rather than pool-level accidents.
 
-7. **Structural implications** (§7). The fixed-cost floor creates a regressive tax on small-pool delegators. Margin competition is active in the genuine hollow market (median entity margin 1.0%) but the fixed cost, being a flat ADA amount, penalises small pools disproportionately. CIP-0023 (remove minimum cost) would address the small-pool regime; CIP-0082 (replace with minimum rate) would reshape the cost structure proportionally.
+7. **Structural implications** (§7). The fixed-cost floor creates a regressive tax on small-pool delegators. Margin competition is active in the genuine hollow market (median entity margin 1.0%) but the fixed cost, being a flat ADA amount, penalises small pools disproportionately. The two-regime structure — where fixed cost dominates small pools and margin dominates large pools — has direct consequences for any future mechanism revision.
 
 All counts and amounts use epoch **614** (the latest settled epoch with complete reward data). Source data: `koios_pool_history_mainnet.csv`, `koios_pool_owner_history_mainnet.csv`, `koios_pool_list_mainnet.csv`, `mpo_entity_pool_mapping_mainnet.csv` (Koios + entity attribution from the [*pools-distribution*](../../pools-distribution/mainnet-analysis/) flow).
 
@@ -66,11 +66,8 @@ All counts and amounts use epoch **614** (the latest settled epoch with complete
    - 7.1 [Two regimes, one mechanism](#71-two-regimes-one-mechanism)
    - 7.2 [The fixed-cost floor as a regressive tax on small pools](#72-the-fixed-cost-floor-as-a-regressive-tax-on-small-pools)
    - 7.3 [Margin competition in the hollow strategy market](#73-margin-competition-in-the-hollow-strategy-market)
-   - 7.4 [Consequences for CIP evaluation](#74-consequences-for-cip-evaluation)
-   - 7.5 [Open questions](#75-open-questions)
+   - 7.4 [Open questions](#74-open-questions)
 8. [Reproduction](#8-reproduction)
-
----
 
 ## 1. Mainnet Observations
 
@@ -119,9 +116,7 @@ All counts and amounts use epoch **614** (the latest settled epoch with complete
 
 **The balanced-strategy population.** The 95 entities following the balanced strategy (11.0% of pool count, 3.8% of stake, median owner-ratio 26.4%) form an analytically crucial segment where the pledge mechanism produces genuine alignment. Many carry Material or High pledge tags — genuine skin-in-the-game. They are the smallest segment but structurally important: they demonstrate that entities with real capital at stake behave differently and compete fiercely on fees.
 
-**Why it matters for reform.** CIP-0023 proposes removing the minimum fixed cost. In the hollow-strategy market, fixed cost (4.4%) is the slightly dominant extraction component. Removing the floor would directly benefit small-pool delegators and lower the viability threshold. CIP-0082 proposes replacing the cost floor with a minimum margin rate — a proportional mechanism that would eliminate the regressivity of the flat-ADA floor.
-
----
+**Why it matters for mechanism design.** The two-regime structure reveals that the intra-pool split does not operate as a single, uniform mechanism. The fixed-cost floor creates a regressive tax that penalises small-pool delegators disproportionately, while margin competition functions effectively in the large-pool regime. Any revision to the fee structure should account for this bifurcation — the small-pool regime and the large-pool regime respond to different parameters and require distinct analytical treatment.
 
 ## 2. The formula — intra-pool reward sharing
 
@@ -195,13 +190,11 @@ At epoch 614 (hollow-strategy pools): 93.5% of rewarded hollow-strategy pools de
 | Delegator pot | $(1-m)(\hat{f} - c_{\text{eff}})$ | Amount entering pro-rata distribution |
 | Effective tax | Operator take / $\hat{f}$ | Fraction of pool reward extracted before pro-rata |
 
----
-
 ## 3. Three strategies
 
 ### 3.1 Strategy classification
 
-The upstream analysis ([§2.4.2](../../../cardano-reward-analysis.md#242-progression--private-pools-by-design-hollow-pools-in-practice)) defines a five-point pledge-commitment spectrum — from **Hollow** (zero pledge, all self-delegation) to **Private** (100% pledge, no outside delegation) — to characterise how operators allocate capital within a pool. The fundamental axis is the **proportion of owner stake to total active stake**: a private-strategy entity funds its pools entirely; a hollow-strategy entity depends on external delegation.
+The upstream analysis ([§2.4.2](../../../cardano-reward-analysis.md#242-progression--balanced-as-intended-but-private-by-design)) defines a five-point pledge-commitment spectrum — from **Hollow** (zero pledge, all self-delegation) to **Private** (100% pledge, no outside delegation) — to characterise how operators allocate capital within a pool. The fundamental axis is the **proportion of owner stake to total active stake**: a private-strategy entity funds its pools entirely; a hollow-strategy entity depends on external delegation.
 
 This report adopts the same axis to classify all 609 entities operating rewarded pools. The classification divides the spectrum into three populations based on a single observable criterion applied at the **entity level**: **dominant owner-stake ratio** (mean owner active stake / mean pool active stake across all pools operated by the entity).
 
@@ -257,8 +250,6 @@ The entity-level view clarifies what the pool-level framing obscured. The hollow
 
 The three strategies operate under different logics — hollow-strategy entities compete for external delegation, balanced-strategy entities split capital with committed delegators, and private-strategy entities are internal accounting operations for self-funded operators. The following three sections apply the same analytical framework to each strategy independently.
 
----
-
 ## 4. The hollow strategy
 
 All analysis in this section is restricted to the **501 entities following the hollow strategy** (owner-stake ratio < 10%, 836 pools). These entities depend entirely on external delegation and form the public delegation market where fee-competition dynamics apply.
@@ -275,7 +266,7 @@ Before analysing the hollow-strategy market, a distortion must be isolated. 50 p
 | Operator take | 308K ADA (100.0%) | 422K ADA (7.9%) | 730K ADA (12.96%) |
 | Delegator pot | ~0 ADA (0.0%) | 4.90M ADA (92.1%) | 4.90M ADA (87.04%) |
 
-Among hollow captive pools with upstream health metadata: 15 carry Zero pledge, 6 Minimal pledge. The upstream analysis identifies the architectural constraint: custodial operators cannot pledge the capital they manage ([§2.4.2.3](../../../cardano-reward-analysis.md#2423-off-the-road-before-it-starts)). They reached the extraction endpoint without traversing the pledge arc. Their 0.98B ADA in stake exists in the hollow universe by capital composition but outside the fee market by behaviour — their delegators (exchange customers) do not choose pools based on on-chain fee parameters.
+Among hollow captive pools with upstream health metadata: 15 carry Zero pledge, 6 Minimal pledge. The upstream analysis identifies the architectural constraint: custodial operators cannot pledge the capital they manage ([§2.4.3.2](../../../cardano-reward-analysis.md#2432-delegating-is-inherently-less-constraining-than-pledging)). They reached the extraction endpoint without traversing the pledge arc. Their 0.98B ADA in stake exists in the hollow universe by capital composition but outside the fee market by behaviour — their delegators (exchange customers) do not choose pools based on on-chain fee parameters.
 
 All subsequent analysis in this section covers the full 835-pool hollow segment (all pools operated by hollow-strategy entities). Where the hollow captive distortion materially affects an aggregate, it is noted.
 
@@ -405,8 +396,6 @@ The top 20 entities by absolute operator take in the hollow-strategy market are 
 
 The intra-pool split in the hollow-strategy market operates as a genuine competitive mechanism — but with two distortions. First, 50 hollow captive pools inflate the aggregate operator take from 7.9% to 12.96%; they sit in the hollow universe by capital composition but outside the fee market by behaviour. Second, the fixed-cost floor creates a regressive tax that penalises small-pool delegators: the effective tax for a 3M ADA pool is ~35%, versus ~4% for a large pool. Margin competition is broadly active in the hollow-strategy market (median entity margin 1.0%), but fixed cost — not margin — is the dominant extraction channel in the genuine market. The competitive dynamics envisioned in SL-D1 function in this universe; the structural concern is the cost floor, not the margin mechanism.
 
----
-
 ## 5. The balanced strategy
 
 All analysis in this section is restricted to the **95 entities following the balanced strategy** (owner-stake ratio 10–95%, 109 pools). These entities have genuine capital commitment and form the segment where the pledge mechanism produces meaningful alignment.
@@ -456,8 +445,6 @@ This is the only population where meaningful pledge adoption occurs in tandem wi
 
 Entities following the balanced strategy form a tiny segment (3.8% of delegated stake, 95 entities, 109 pools) but are analytically significant: they are the *only* population where the pledge mechanism produces meaningful operator alignment. The presence of high pledge-commitment signals in balanced-strategy entities, paired with aggressive fee competition (median margin 1.5%), demonstrates that when operators have genuine capital at stake, the incentive mechanism works as intended. The network is polarized between hollow (externally-funded) and private (operator-funded) entities, with almost nothing in between — the balanced segment proves that genuinely committed intermediate operators exist but are rare. Their structural behaviour (low margins, high pledge commitment) should inform the design of future incentive mechanisms aimed at attracting committed operators.
 
----
-
 ## 6. The private strategy
 
 All analysis in this section is restricted to the **13 entities following the private strategy** (owner-stake ratio ≥ 95%, 46 pools). These entities are operator-funded: the owner provides effectively all of the stake, and the intra-pool split is an internal accounting operation rather than a market transaction.
@@ -503,17 +490,15 @@ Among the 41 pools operated by private-strategy entities with upstream health me
 | Zero pledge | 3 | 96M ADA |
 | Material pledge | 1 | 6M ADA |
 
-22 pools are private in both the capital-composition and pledge-commitment senses — their operators fund the pool *and* formally pledge a significant share. But 18 of 41 (15 Low pledge + 3 Zero pledge) fund the pool from owner wallets without formally pledging the capital. These pools are **private by capital, hollow by pledge** — precisely the pattern the upstream analysis ([§2.4.2.4](../../../cardano-reward-analysis.md#2424-the-delegation-pull)) predicts: pledging imposes liquidity constraints and the pledge-unmet cliff, while the bonus it produces is negligible. Even operators who *could* pledge — they own the capital, there is no custodial constraint — rationally choose not to.
+22 pools are private in both the capital-composition and pledge-commitment senses — their operators fund the pool *and* formally pledge a significant share. But 18 of 41 (15 Low pledge + 3 Zero pledge) fund the pool from owner wallets without formally pledging the capital. These pools are **private by capital, hollow by pledge** — precisely the pattern the upstream analysis ([§2.4.3](../../../cardano-reward-analysis.md#243-endgame--the-hollow-strategy-is-the-dominant-one)) predicts: pledging imposes liquidity constraints and the pledge-unmet cliff, while the bonus it produces is negligible. Even operators who *could* pledge — they own the capital, there is no custodial constraint — rationally choose not to.
 
-This finding reinforces the upstream conclusion: the pledge mechanism fails to attract commitment not because operators lack capital, but because the incentive is too weak to justify the constraints.
+This finding reinforces the upstream observation: the pledge mechanism does not appear to attract commitment — not because operators lack capital, but because the incentive may be too weak to justify the constraints it imposes.
 
 ### 6.5 Key findings — private strategy
 
 The intra-pool split at this stage is structurally trivial for entities following the private strategy — the operator funds the pools and collects the reward. Margin is an accounting choice (89.8% at 100%), fixed cost is negligible, and the delegator pot is effectively zero. The mechanism's fee-competition logic does not apply: there is no external delegation to compete for.
 
-The analytical value lies in the pledge dimension. Entities following the private strategy are the population *most able* to pledge — they own the capital, face no custodial constraint, and would benefit most from the pledge bonus (their high owner-stake ratio maximises the bonus function). Yet 44% of mapped private-strategy pools do not pledge meaningfully. The pledge mechanism's failure is most visible precisely where its success should be easiest.
-
----
+The analytical value lies in the pledge dimension. Entities following the private strategy are the population *most able* to pledge — they own the capital, face no custodial constraint, and would benefit most from the pledge bonus (their high owner-stake ratio maximises the bonus function). Yet 44% of mapped private-strategy pools do not pledge meaningfully. The pledge mechanism's limited effectiveness is most visible precisely where conditions for its success are most favourable.
 
 ## 7. Structural implications
 
@@ -545,19 +530,9 @@ With private-strategy entities removed from the picture, the hollow-strategy mar
 
 The small number of entities above 5% margin (62 out of 501) are not analogous to the private-strategy entities — they are hollow-strategy operators choosing to charge higher margins, presumably on differentiated service. The delegation market can discipline these margins if delegators are price-sensitive.
 
-The previous analysis, which mixed private- and hollow-strategy entities, suggested that "margin competition exists where it matters least and fails where it matters most." With the private-strategy confound removed and the hollow and balanced populations distinguished, the revised finding is that margin competition is broadly active in the hollow-strategy market. The competitive failure is restricted to the private-strategy universe, where it is structural and deliberate — not a mechanism failure but an out-of-scope use of pool infrastructure. The balanced-strategy population demonstrates that intermediate operators *can* compete on margins and pledge simultaneously, but they are rare.
+The previous analysis, which mixed private- and hollow-strategy entities, suggested that "margin competition exists where it matters least and fails where it matters most." With the private-strategy confound removed and the hollow and balanced populations distinguished, the revised finding is that margin competition is broadly active in the hollow-strategy market. The absence of competition is restricted to the private-strategy universe, where it is structural and deliberate — not a mechanism shortcoming but an out-of-scope use of pool infrastructure. The balanced-strategy population demonstrates that intermediate operators *can* compete on margins and pledge simultaneously, but they are rare.
 
-### 7.4 Consequences for CIP evaluation
-
-This three-strategy, entity-level analysis provides sharpened input to the CIPs targeting the intra-pool split:
-
-- **CIP-0023** (remove minimum fixed cost). In the hollow-strategy market, fixed cost (4.4%) is the slightly dominant extraction component. Removing the floor would directly benefit small-pool delegators and lower the viability threshold. The impact is concentrated where it matters most — the small-pool regime — without affecting the large-pool regime where margin (3.6%) is the binding parameter.
-
-- **CIP-0082** (replace minimum cost with minimum margin rate). A proportional mechanism would eliminate the regressivity of the flat-ADA floor. Instead of a fixed 340 ADA regardless of pool size, a minimum margin rate would extract proportionally — pool size would no longer determine the effective tax structure. This addresses the fundamental architectural issue.
-
-The private-strategy universe is unaffected by either CIP because private-strategy pools already extract 100% through margin. The CIP evaluation should be framed entirely within the hollow-strategy-market context. The balanced-strategy population is also largely unaffected, as these pools are small (low rewards) and already operate at low margins — the fixed-cost issue impacts them through pool count rather than individual pool viability.
-
-### 7.5 Open questions
+### 7.4 Open questions
 
 1. **Captive delegation volume.** What fraction of delegated ADA in the *hollow-strategy* market is subject to soft captivity (exchange-intermediated delegation to hollow-strategy pools at moderate margins)? This would refine the competition analysis.
 
@@ -568,8 +543,6 @@ The private-strategy universe is unaffected by either CIP because private-strate
 4. **Cross-stage interaction.** The fixed-cost tax interacts with the reward curve's unused pledge budget (documented in the companion [*pools-distribution*](../../pools-distribution/mainnet-analysis/) analysis). Pools that already lose rewards through incomplete pledge activation then lose further rewards through the fixed-cost extraction — a double inefficiency for small pools.
 
 5. **Balanced-strategy persistence.** Why are genuinely committed operators (balanced-strategy entities with 10–95% owner-ratio) so rare? Understanding the barriers to entry for this segment would illuminate whether they represent a viable alternative to the hollow–private dichotomy.
-
----
 
 ## 8. Reproduction
 

@@ -6,7 +6,7 @@ The *Shelley-era Delegation and Incentives Design Specification* (SL-D1) defined
 Five years of mainnet operation have exposed significant divergences between those design intentions and the on-chain reality.
 The *Analysis of Cardano's Incentive Mechanism* (Lopez de Lara, 2025; hereafter the *Incentive Mechanism Analysis*) documented the key findings empirically: a stratified equilibrium with 873 active operators below the 3M ADA viability threshold, a pledge mechanism that is functionally irrelevant for most pools, and a capital-constrained environment where ~16B ADA remains outside consensus.
 
-This document decomposes the SL-D1 reward pipeline into three stages and, for each stage, follows the same analytical arc: describe the intended design, confront it with mainnet observations, synthesise the observations into a *problem statement*, and verify whether a formal *Cardano Problem Statement* (CPS) exists for that problem in the CIP governance process. Where a CPS exists, the document evaluates the CIPs proposed as solutions against it. Where no CPS exists, the document identifies the gap and produces one.
+This document decomposes the SL-D1 reward pipeline into three stages — epoch-budget assembly (§1), pool-level distribution (§2), and operator/delegator split (§3) — and, for each stage, follows the same analytical arc: describe the intended design, confront it with mainnet observations, synthesise the observations into a *problem statement*, and verify whether a formal *Cardano Problem Statement* (CPS) exists for that problem in the CIP governance process. Where no CPS exists, the document identifies the gap and produces one. A cross-layer synthesis (§4) then evaluates the proposed CIPs jointly against the compound problem that emerges from all three stages.
 
 Each pipeline stage is backed by a dedicated sub-report containing the formula derivations, mainnet observations, and empirical evidence that grounds the corresponding CPS.
 
@@ -20,12 +20,12 @@ Each pipeline stage is backed by a dedicated sub-report containing the formula d
   - [2.1 Flow Overview](#21-flow-overview)
   - [2.2 Mainnet Observations](#22-mainnet-observations)
   - [2.3 Problem Induction → Closing the Consensus Incentive Gap](#23-problem-induction--closing-the-consensus-incentive-gap)
-  - [2.4 The Divergent Operator Experience](#24-the-divergent-operator-experience)
+  - [2.4 Divergence with intended equilibrium](#24-divergence-with-intended-equilibrium)
     - [2.4.1 Entry — below 1M ₳, too committed to just delegate, too small to operate](#241-entry--below-1m--too-committed-to-just-delegate-too-small-to-operate)
       - [2.4.1.1 The structural floor](#2411-the-structural-floor)
       - [2.4.1.2 A gate with no sign](#2412-a-gate-with-no-sign)
       - [2.4.1.3 Capital over competence](#2413-capital-over-competence)
-      - [2.4.1.4 A gap worth exploring](#2414-a-gap-worth-exploring)
+      - [2.4.1.4 Pool alliances — a gap worth exploring](#2414-pool-alliances--a-gap-worth-exploring)
     - [2.4.2 Progression — balanced as intended, but private by design](#242-progression--balanced-as-intended-but-private-by-design)
       - [2.4.2.1 The three strategies](#2421-the-three-strategies)
         - [2.4.2.1.1 The common endgame — saturate, then become an MPO](#24211-the-common-endgame--saturate-then-become-an-mpo)
@@ -42,22 +42,15 @@ Each pipeline stage is backed by a dedicated sub-report containing the formula d
       - [2.4.3.4 The pledge bonus is inoperative at realistic scale](#2434-the-pledge-bonus-is-inoperative-at-realistic-scale)
       - [2.4.3.5 The size-visibility-delegation loop](#2435-the-size-visibility-delegation-loop)
       - [2.4.3.6 The inversion](#2436-the-inversion)
-  - [2.5 Proposed Solutions Evaluation](#25-proposed-solutions-evaluation)
-    - [2.5.1 CIP-0050 — Pledge Leverage Cap](#251-cip-0050--pledge-leverage-cap)
-    - [2.5.2 CIP-0037 — Dynamic Pledge-Linked Saturation](#252-cip-0037--dynamic-pledge-linked-saturation)
+    - [2.4.4 Conclusion — the reward curve must target the balanced strategy](#244-conclusion--the-reward-curve-must-target-the-balanced-strategy)
 - [3. Operator / Delegator Distribution](#3-operator--delegator-distribution)
   - [3.1 Flow Overview](#31-flow-overview)
-  - [3.2 Formulas](#32-formulas)
-    - [3.2.1 SL-D1 (Original)](#321-sl-d1-original)
-    - [3.2.2 Residual split decomposition](#322-residual-split-decomposition)
-    - [3.2.3 Reader-Friendly](#323-reader-friendly)
-  - [3.3 Structural Decomposition](#33-structural-decomposition)
-  - [3.4 Mainnet Observations](#34-mainnet-observations)
-  - [3.5 Problems](#35-problems)
-  - [3.6 Prior Art & Cited Solutions](#36-prior-art--cited-solutions)
-  - [3.7 CIP Evaluation: Fee Structure Adjustments](#37-cip-evaluation-fee-structure-adjustments)
-    - [3.7.1 CIP-0023 — Fair Min Fees](#371-cip-0023--fair-min-fees)
-    - [3.7.2 CIP-0082 — Improved Rewards Scheme](#372-cip-0082--improved-rewards-scheme)
+  - [3.2 Mainnet Observations](#32-mainnet-observations)
+  - [3.3 Problem Induction](#33-problem-induction)
+- [4. Synthesis and CIP Evaluation](#4-synthesis-and-cip-evaluation)
+  - [4.1 The compound problem](#41-the-compound-problem)
+  - [4.2 CIP evaluation against the compound problem](#42-cip-evaluation-against-the-compound-problem)
+  - [4.3 What a revised mechanism needs to achieve](#43-what-a-revised-mechanism-needs-to-achieve)
 - [Sub-reports](#sub-reports)
 
 # 1. Treasury & Pool Pots Distribution
@@ -118,7 +111,7 @@ For each pool $i$, the protocol performs three steps:
 
 3. **Performance adjustment.** The optimal allocation is scaled by apparent performance $\bar{p}_i$ to produce the *actual* allocation. Pools that miss blocks receive less. If the registered pledge is not met, the allocation is zeroed entirely.
 
-Any rewards not distributed (because $\sum_i \hat{f}_i < R$) return to the reserve — this is the mechanism behind O3 in §2.
+Any rewards not distributed (because $\sum_i \hat{f}_i < R$) return to the reserve — this is the mechanism behind O3 in §1.
 
 Two design choices matter for the rest of the analysis:
 
@@ -159,9 +152,9 @@ The observations above, confronted with this intended design, reveal two interre
 
 The evidence confirms this at scale: 95.6% of the pledge-bonus budget returns to reserve unused (O1), the independent operator base has collapsed to 283 viable operators (O5), the incentive-responsive field holds only 36% of active stake (O6), and structural populations totalling 7.39B ADA cannot pledge by architectural constraint (O4).
 
-**CPS identified.** No *Cardano Problem Statement* (CPS) has been formally written for this problem. CIP-0050 and CIP-0037 both propose modifications to the reward curve at this layer — but they were designed without a shared, formal problem definition to scope them against. This analysis identifies the gap and produces the missing CPS — *Closing the Consensus Incentive Gap* — derived from the mainnet evidence in the dedicated [sub-report](sub-flows/pools-distribution/mainnet-analysis/README.md) and defined in [`sub-flows/pools-distribution/cps/`](sub-flows/pools-distribution/cps/). The CPS evaluation of CIP-0050 and CIP-0037 follows in §2.5.
+**CPS identified.** No *Cardano Problem Statement* (CPS) has been formally written for this problem. CIP-0050 and CIP-0037 both propose modifications to the reward curve at this layer — but they were designed without a shared, formal problem definition to scope them against. This analysis identifies the gap and produces the missing CPS — *Closing the Consensus Incentive Gap* — derived from the mainnet evidence in the dedicated [sub-report](sub-flows/pools-distribution/mainnet-analysis/README.md) and defined in [`sub-flows/pools-distribution/cps/`](sub-flows/pools-distribution/cps/). The evaluation of proposed solutions (CIP-0050, CIP-0037, and the downstream CIPs that interact with them) follows in §4, after the operator/delegator distribution analysis in §3 completes the picture.
 
-## 2.4 The Divergent Operator Experience
+## 2.4 Divergence with intended equilibrium
 
 The observations above document *what* the reward curve produces. This section examines *why* — by following an operator through the trajectory the mechanism promises (entry → progression → endgame) and identifying the point at which the reward curve stops rewarding the intended strategy. The baseline for this analysis is [*The Intended Game*](sub-flows/pools-distribution/the-intended-game/README.md), which describes the game as it should play out.
 
@@ -213,7 +206,7 @@ An operator with deep expertise and 100K ₳ is invisible to the reward curve. A
 
 The game's entry filter selects for capital, not for the operational competence the protocol actually needs.
 
-#### 2.4.1.4 A gap worth exploring
+#### 2.4.1.4 Pool alliances — a gap worth exploring
 
 The current mechanism offers two modes — delegate or operate — with nothing in between. A participant who is ready to commit beyond passive delegation but cannot meet the production threshold has no path forward.
 
@@ -453,6 +446,8 @@ A competing operator who pledges nothing and deploys that capital toward marketi
 
 The mechanism has inverted its own logic. The formula points toward private (§2.4.2.3); the game converges on hollow. The strategy the formula was supposed to make suboptimal — capital deployed outside the pledge mechanism toward delegation growth — is the one that dominates. The mainnet data in §2.4.3.1 is not a failure of adoption. It is the rational response to a mechanism at war with itself.
 
+<!-- SANDBOX — 2.5 Proposed Solutions Evaluation (to be revisited)
+
 ## 2.5 Proposed Solutions Evaluation
 
 CIP-0050 and CIP-0037 are listed as *Proposed Solutions* in the CPS [*Closing the Consensus Incentive Gap*](sub-flows/pools-distribution/cps/README.md). Both modify the reward curve at this layer — CIP-0050 by capping pledge leverage, CIP-0037 by linking saturation to pledge. They were authored before the CPS existed: each proposal defines its own local problem statement and evaluates itself against it. This section evaluates them against the CPS instead.
@@ -463,46 +458,68 @@ The evaluation criteria derive directly from the CPS goals: does the proposal al
 
 ### 2.5.1 CIP-0050 — Pledge Leverage Cap
 
-<!-- TODO for each CIP at this layer:
+TODO for each CIP at this layer:
   1. Mechanism summary (one paragraph)
   2. Formula substitution (reference the sub-report formulas)
   3. Which problems from §2.3 does it address?
   4. Expected effects (positive)
   5. Risks / side effects
   6. Open questions (e.g. parametrization of L)
--->
 
 ### 2.5.2 CIP-0037 — Dynamic Pledge-Linked Saturation
 
-<!-- TODO: same structure as 2.5.1 -->
+TODO: same structure as 2.5.1
+
+END SANDBOX -->
+
+### 2.4.4 Conclusion — the reward curve must target the balanced strategy
+
+The purpose of the reward formula is not to reward operators. It is to preserve the security properties the consensus layer depends on — accountability, delegation as counter-power, Sybil resistance, and decentralisation (§2.4.2.2). The formula is a tool in service of consensus integrity; the incentive structure it creates for operators is the *means*, not the *end*. The order of priorities matters: the mechanism must first ensure that consensus retains its structural properties, and it does so by aligning the rational self-interest of operators with the equilibrium those properties require.
+
+The analysis in §2.4 suggests that the current formula does not optimally achieve this alignment. The equilibrium the security model requires is balanced (§2.4.2.2). The formula's designed optimum is private (§2.4.2.3) — a configuration that weakens delegation as counter-power and narrows consensus participation to the capital-rich. The dominant strategy on mainnet is hollow (§2.4.3) — a configuration that erodes the costs the consensus layer relies on and produces concentration through market dynamics. The balanced strategy — the only one that preserves all four security properties simultaneously — is neither the formula's target nor the market's outcome. It is the strategy the current design does not incentivise.
+
+The reward curve must therefore be revised so that the balanced strategy becomes the incentivised equilibrium — not as a compromise between private and hollow, but as the point toward which the reward gradient actively pulls rational operators. The goal is not to make pledge more profitable for its own sake; it is to make the strategy that preserves consensus security the one that rational actors converge on. The pledge bonus must be large enough to overcome the inherent asymmetry between pledging and delegating (§2.4.3.2), legible enough to function as a competitive signal, and calibrated to the capital scales at which operators actually operate (§2.4.3.4).
+
+However, the pool-level reward curve is not the only mechanism that shapes operator behaviour. The next pipeline stage — the operator/delegator split (§3) — determines how the pool-level reward is divided between the operator and the pool's delegators. The fixed cost floor, the margin parameter, and the proportional sharing rule all interact with the reward curve to define the operator's actual income and the delegator's actual yield. A revised reward curve that correctly incentivises balanced pools could still fail if the fee structure at the next layer distorts the signal — for example, if the fixed cost floor penalises small balanced pools more than large hollow ones, or if margin competition erases the yield differential the curve was designed to create.
+
+Understanding whether the divergence analysed in §2.4 can be corrected by modifying the reward curve alone — or whether it requires coordinated changes across both pipeline stages — demands a complete picture of the downstream dynamics. The analysis therefore continues into §3 before any conclusion on the path forward can be drawn. The synthesis of both layers, and the requirements any revised mechanism must satisfy, follows in §4.
 
 # 3. Operator / Delegator Distribution
 
 ## 3.1 Flow Overview
 
-These formulas define how a pool's realized allocation is split between the operator and the rest of the pool participants.
-The split happens only after the pool-level reward has already been computed and adjusted by apparent performance.
+This stage takes the per-pool allocation ($PoolPot^{\text{actual}}_i$) produced by §2 and splits it between the operator and the pool's delegators. The output is the final per-participant reward.
 
-The distribution logic is sequential:
+The split follows a three-layer sequential rule: a **fixed cost** is deducted first (base compensation for operating the node), then an **operator margin** is applied to the remainder (proportional take), and whatever is left is distributed **proportionally across all stake holders** — the operator receiving a share through their pledge, each delegator receiving a share through their delegation.
 
-- first, the operator fixed cost is covered
-- second, the operator margin is applied to the remaining amount
-- finally, the residual reward is distributed proportionally across stake holders
+Two design choices embedded at this stage matter for the rest of the analysis:
 
-In this final step, the operator still receives a stake-proportional share through the pledge held inside the pool, while delegators receive the complementary share.
+- **Fixed cost floor ($minPoolCost$).** The protocol enforces a minimum fixed cost (currently 340 ₳/epoch). This was intended to prevent fee wars and ensure operator sustainability, but it creates a regressive tax: 340 ₳ is ~110% of total reward for a 1M pool and ~1.4% for a saturated one. The floor penalises small pools far more than large ones.
 
-## 3.2 Formulas
+- **Margin as a single parameter.** The operator margin $m$ applies uniformly to the entire post-cost residual. There is no mechanism to differentiate between operator types, pool sizes, or service levels. Price competition collapses to a single dimension.
 
-The operator and member rewards are two complementary views of the same split rule applied to the realized pool allocation.
-Once the pool-level reward has been computed, the split follows the same sequence:
+> **Formulas.** The operator/member split formulas — from the original SL-D1 notation through a residual-split decomposition to a reader-friendly rewrite — are in the dedicated sub-report: [`Operator / Delegator Distribution`](sub-flows/operator-delegator-distribution/mainnet-analysis/README.md) — §2.
 
-- cover the operator fixed cost first
-- apply the operator margin to the remaining amount
-- distribute the residual proportionally across stake holders
+## 3.2 Mainnet Observations
 
-Under this rule, the operator receives both the explicit operator share and the stake-proportional share attached to the pledge held inside the pool, while each member receives a stake-proportional share of the residual amount.
+<!-- TODO: observation table (O1–On) following the §1.2 and §2.2 pattern.
+Expected observations:
+  - minPoolCost distortion: 340 ADA fixed cost penalises small pools disproportionately
+  - Margin distribution: race to bottom (median margin clustering near 0–2%)
+  - Fee-war dynamics: zero-margin pools and competitive pressure on viable operators
+  - ROS variance: delegator return varies significantly by pool tier despite similar performance
+  - Operator insolvency: break-even threshold sits at ~3M ADA under current fee structure
+-->
 
-### 3.2.1 SL-D1 (Original)
+## 3.3 Problem Induction
+
+<!-- TODO: read observations together, identify the structural problem, point to CPS — following the §1.3 and §2.3 pattern.
+Expected CPS: fee structure does not serve the operator ecosystem the protocol needs.
+-->
+
+<!-- SANDBOX — §3 Formulas, structural decomposition, CIP evaluations (to be extracted to sub-report)
+
+### Formulas — SL-D1 (Original)
 
 Operator reward, using the operator stake-share ratio $\frac{s}{\sigma}$ as a single input:
 
@@ -524,7 +541,7 @@ r_{\text{member}}\left(\hat f,c,m,\frac{t}{\sigma}\right)=
 \end{cases}
 $$
 
-### 3.2.2 Residual split decomposition
+### Formulas — Residual split decomposition
 
 Before switching to reader-friendly variable names, it is useful to separate the split rule into the two regimes induced by the fixed operator cost $c$. Let
 
@@ -579,7 +596,7 @@ $$
 
 This makes the three-layer structure explicit: fixed cost first, operator margin second, proportional sharing of the remainder third.
 
-### 3.2.3 Reader-Friendly
+### Formulas — Reader-Friendly
 
 Let the operator and member pool-share ratios be defined as:
 
@@ -635,52 +652,84 @@ $$
 Reward^{\text{member}} = Share\,\rho^{\text{member}}_{i}
 $$
 
-This makes the split easy to read: fixed cost first, operator margin second, and proportional sharing of the remainder third.
+### Structural Decomposition
 
-## 3.3 Structural Decomposition
+TODO: decompose the split into its three layers and their economic roles
+Key axes: fixed cost as base compensation, margin as proportional take, residual as delegator yield
 
-<!-- TODO: decompose the split into its three layers and their economic roles -->
-<!-- Key axes: fixed cost as base compensation, margin as proportional take, residual as delegator yield -->
+### Prior Art & Cited Solutions
 
-## 3.4 Mainnet Observations
+TODO: cite solutions from the report and community discussions that are outside stream scope
+e.g. minPoolMargin community consensus, two-stage parameter introduction via hardfork
 
-<!-- TODO: integrate data from pool-landscape-mainnet.md -->
-<!-- Key patterns: minPoolCost usage, margin distribution, fee-war dynamics, ROS variance across pool tiers -->
+### CIP Evaluation: Fee Structure Adjustments
 
-## 3.5 Problems
+Both CIP-0023 and CIP-0082 operate at this layer.
+They modify the operator/member split rule without changing the pool-level reward curve.
 
-<!-- TODO: clearly define each problem with evidence -->
-<!-- Expected problems at this layer:
-  - minPoolCost distortion: 170 ADA fixed cost penalizes small pools relative to their total reward
-  - Fee wars: zero-margin race to bottom erodes operator sustainability
-  - ROS inequality: delegator return varies significantly by pool despite similar performance
-  - Operator insolvency: break-even threshold sits at ~3M ADA under current fee structure
--->
+#### CIP-0023 — Fair Min Fees
 
-## 3.6 Prior Art & Cited Solutions
-
-<!-- TODO: cite solutions from the report and community discussions that are outside stream scope -->
-<!-- e.g. minPoolMargin community consensus, two-stage parameter introduction via hardfork -->
-
-## 3.7 CIP Evaluation: Fee Structure Adjustments
-
-> Both CIP-0023 and CIP-0082 operate at this layer.
-> They modify the operator/member split rule without changing the pool-level reward curve.
-
-### 3.7.1 CIP-0023 — Fair Min Fees
-
-<!-- TODO for each CIP at this layer:
+TODO:
   1. Mechanism summary (one paragraph)
   2. Formula substitution (reference the cleaned formulas)
-  3. Which problems from §3.5 does it address?
+  3. Which problems from §3.3 does it address?
   4. Expected effects (positive)
   5. Risks / side effects
   6. Open questions (e.g. what value for minPoolRate?)
+
+#### CIP-0082 — Improved Rewards Scheme
+
+TODO: same structure as CIP-0023, note the staged approach
+
+END SANDBOX -->
+
+# 4. Synthesis and CIP Evaluation
+
+## 4.1 The compound problem
+
+<!-- TODO: synthesise findings from §1 (reserve sustainability), §2 (pool-distribution divergence), and §3 (operator/delegator split distortions) into a single compound problem statement.
+Key threads to weave:
+  - The reserve is finite and fee revenue is negligible (§1) — the reward budget is shrinking
+  - The reward curve incentivises the wrong strategy at the pool level (§2) — the budget that exists is misallocated
+  - The fee structure may compound the misallocation at the split level (§3) — even correct pool-level incentives can be distorted downstream
+  - The participation gap (§1 O3, §2 O4) is the binding constraint on everything — and any formula change that improves incentive alignment may also affect participation, feeding back into §1
 -->
 
-### 3.7.2 CIP-0082 — Improved Rewards Scheme
+## 4.2 CIP evaluation against the compound problem
 
-<!-- TODO: same structure as 3.7.1, note the staged approach -->
+The four CIPs proposed as solutions to incentive-layer problems operate across two pipeline stages. CIP-0050 (Pledge Leverage Cap) and CIP-0037 (Dynamic Pledge-Linked Saturation) modify the pool-level reward curve (§2). CIP-0023 (Fair Min Fees) and CIP-0082 (Improved Rewards Scheme) modify the operator/delegator split (§3). No existing CIP targets the epoch-budget layer (§1).
+
+Evaluating them in isolation — as each proposal's own documentation does — misses the cross-layer interactions. A reward-curve change that correctly incentivises balanced pools at the §2 level can be undermined by a fee structure at the §3 level that erases the yield signal. Conversely, a fee-structure fix that makes small pools viable at the §3 level cannot help if the reward curve at the §2 level still drives operators toward hollow. The evaluation must be joint.
+
+<!-- TODO: for each CIP, evaluate against the compound problem:
+  1. Mechanism summary (one paragraph)
+  2. Which layers does it touch? (§2 only, §3 only, or both?)
+  3. Which threads of the compound problem does it address?
+  4. Which threads does it leave untouched or worsen?
+  5. Cross-layer interactions with the other CIPs
+  6. Does it move the equilibrium toward balanced?
+  7. Open questions and parameter sensitivity
+
+### 4.2.1 CIP-0050 — Pledge Leverage Cap
+
+### 4.2.2 CIP-0037 — Dynamic Pledge-Linked Saturation
+
+### 4.2.3 CIP-0023 — Fair Min Fees
+
+### 4.2.4 CIP-0082 — Improved Rewards Scheme
+-->
+
+## 4.3 What a revised mechanism needs to achieve
+
+<!-- TODO: derive the requirements for any formula revision from the compound problem.
+Not a specific proposal — a set of constraints any solution must satisfy:
+  - Re-converge toward balanced as the incentivised equilibrium
+  - Make the pledge bonus overcome the inherent pledge/delegation asymmetry (§2.4.3.2)
+  - Operate at realistic capital scales, not only at saturation (§2.4.3.4)
+  - Not worsen the participation gap (§1 O3)
+  - Be robust to the fee-structure interactions at §3
+  - Preserve the security properties (§2.4.2.2)
+-->
 
 # Sub-reports
 
@@ -690,4 +739,4 @@ Each pipeline stage is backed by a dedicated empirical analysis containing the f
 | --- | --- | --- |
 | §1 Treasury & Pool Pots | [`Treasury & Pool Pots Distribution`](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md) | Epoch-pot assembly, reserve trajectory, fee analysis, return-to-reserve mechanism |
 | §2 Pools Distribution | [`The Pools Pot Distribution Gaps`](sub-flows/pools-distribution/mainnet-analysis/README.md) | Reward curve formulas, distribution efficiency, pool landscape, entity analysis |
-| §3 Operator / Delegator | *Not yet extracted* | Fee-split formulas remain in this document (§3.2) pending sub-report creation |
+| §3 Operator / Delegator | [`Operator / Delegator Distribution`](sub-flows/operator-delegator-distribution/mainnet-analysis/README.md) | Fee-split formulas, margin/cost analysis, entity strategy data |
