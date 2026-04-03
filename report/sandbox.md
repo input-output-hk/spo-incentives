@@ -1,10 +1,10 @@
 ## 2. The divergence — when the optimal move breaks the game
 
-> **Status:** Staging area. This section was extracted from [*The Intended Game*](sub-flows/pools-distribution/the-intended-game/README.md) Part II and will be progressively integrated into the §1.2 narrative. Cross-references to §2–4 below refer to sections in *The Intended Game*.
+> **Status:** Staging area. This section was extracted from [*The Intended Game*](the-intended-game/README.md) Part II and will be progressively integrated into the §1.2 narrative. Cross-references to §2–4 below refer to sections in *The Intended Game*.
 
-Sections 2–4 of [*The Intended Game*](sub-flows/pools-distribution/the-intended-game/README.md) described the game as designed: three player classes, each with a clear trajectory, converging on an incentive-compatible equilibrium. The SL-D1 reward curve was meant to produce that game. This section examines what actually happens when each player class tries to play it.
+Sections 2–4 of [*The Intended Game*](the-intended-game/README.md) described the game as designed: three player classes, each with a clear trajectory, converging on an incentive-compatible equilibrium. The SL-D1 reward curve was meant to produce that game. This section examines what actually happens when each player class tries to play it.
 
-The approach is simple: follow each participant through the trajectory the mechanism promises (entry → progression → endgame), and identify the point at which the reward curve stops rewarding the intended strategy. Each perspective reveals a different face of the same structural failure — and together, they show why the equilibrium described in [*The Intended Game* §4](sub-flows/pools-distribution/the-intended-game/README.md#4-the-aligned-dynamics) never materialises.
+The approach is simple: follow each participant through the trajectory the mechanism promises (entry → progression → endgame), and identify the point at which the reward curve stops rewarding the intended strategy. Each perspective reveals a different face of the same structural failure — and together, they show why the equilibrium described in [*The Intended Game* §4](the-intended-game/README.md#4-the-aligned-dynamics) never materialises.
 
 ### 2.2 The delegator's experience
 
@@ -12,7 +12,7 @@ The approach is simple: follow each participant through the trajectory the mecha
 
 A delegator holds ADA and wants yield. They open a pool explorer and look for the best pool to delegate to.
 
-The mechanism promised ([*The Intended Game* §3.3](sub-flows/pools-distribution/the-intended-game/README.md#33-delegators)) that as the system matures, delegators would be able to differentiate pools on commitment-based criteria — pledge level, track record, margin — and that delegation choices would function as an accountability mechanism ([*The Intended Game* §2.3](sub-flows/pools-distribution/the-intended-game/README.md#23-delegators)), rewarding committed operators and punishing uncommitted ones.
+The mechanism promised ([*The Intended Game* §3.3](the-intended-game/README.md#33-delegators)) that as the system matures, delegators would be able to differentiate pools on commitment-based criteria — pledge level, track record, margin — and that delegation choices would function as an accountability mechanism ([*The Intended Game* §2.3](the-intended-game/README.md#23-delegators)), rewarding committed operators and punishing uncommitted ones.
 
 The delegator starts comparing pools, looks at expected yield, and they all look roughly the same.
 
@@ -30,7 +30,7 @@ But this strategy has no economic payoff. Moving delegation from a zero-pledge p
 
 Meanwhile, the pools that *are* easy to find — the ones with the largest delegations, the most name recognition, the exchange-affiliated ones — are rarely the most committed. They compete on convenience and brand, not pledge.
 
-The information environment the mechanism creates does not help identify commitment; it buries it. The accountability mechanism described in [*The Intended Game* §2.3](sub-flows/pools-distribution/the-intended-game/README.md#23-delegators) — delegators policing operators through capital reallocation — requires a signal to act on. The SL-D1 curve produces no such signal.
+The information environment the mechanism creates does not help identify commitment; it buries it. The accountability mechanism described in [*The Intended Game* §2.3](the-intended-game/README.md#23-delegators) — delegators policing operators through capital reallocation — requires a signal to act on. The SL-D1 curve produces no such signal.
 
 There is also a subtler problem: a delegator cannot distinguish an operator running one pool with genuine commitment from an operator running ten pools with minimal commitment each.
 
@@ -62,7 +62,7 @@ The accountability function collapses.
 
 A transaction submitter uses Cardano for settlement. They do not participate in the staking game directly, but they depend on its output: a sufficiently decentralised, secure, accountable network of block producers.
 
-The mechanism promised ([*The Intended Game* §2.4](sub-flows/pools-distribution/the-intended-game/README.md#24-the-dependency-chain)) that the reward curve would produce this by aligning operator and delegator incentives around commitment and community oversight.
+The mechanism promised ([*The Intended Game* §2.4](the-intended-game/README.md#24-the-dependency-chain)) that the reward curve would produce this by aligning operator and delegator incentives around commitment and community oversight.
 
 The network the mechanism has actually produced tells a different story.
 
@@ -104,7 +104,7 @@ Instead, it has produced an operator landscape that is consolidating, an account
 
 The three player experiences are not three separate failures — they are three views of a single structural contradiction.
 
-The dependency chain described in [*The Intended Game* §2.4](sub-flows/pools-distribution/the-intended-game/README.md#24-the-dependency-chain) requires *interdependence*: operators need delegators for scale, delegators need operators for block production, and the reward curve should make their partnership the individually rational path for both. The SL-D1 curve breaks this interdependence at every level:
+The dependency chain described in [*The Intended Game* §2.4](the-intended-game/README.md#24-the-dependency-chain) requires *interdependence*: operators need delegators for scale, delegators need operators for block production, and the reward curve should make their partnership the individually rational path for both. The SL-D1 curve breaks this interdependence at every level:
 
 - **At entry**, the operator has no visible tool to attract delegation based on commitment, and the delegator has no signal to differentiate on. The two players cannot find each other through the mechanism.
 - **At progression**, increasing pledge produces no competitive advantage the delegator can detect, so the operator rationally abandons pledge as a strategy. The delegator, seeing no commitment-based signal, rationally delegates on convenience. Both players optimise away from the intended strategy — not because they are irrational, but because they *are* rational.
@@ -114,7 +114,7 @@ The result is not a failure of adoption or education. The players are not making
 
 The dominant strategy at every stage of the game, for every player class, is the exact opposite of what the protocol needs for consensus security.
 
-The equilibrium the curve converges toward is not the one described in [*The Intended Game* §4](sub-flows/pools-distribution/the-intended-game/README.md#4-the-aligned-dynamics). It is one where pledge is minimised, delegation is driven by brand rather than commitment, accountability is inert, and the operator landscape consolidates around fleet scale rather than individual commitment.
+The equilibrium the curve converges toward is not the one described in [*The Intended Game* §4](the-intended-game/README.md#4-the-aligned-dynamics). It is one where pledge is minimised, delegation is driven by brand rather than commitment, accountability is inert, and the operator landscape consolidates around fleet scale rather than individual commitment.
 
 The mainnet evidence confirms this comprehensively: 95.6% of the pledge-bonus budget unused (§1.2.2 O1), 82% of what *is* used flowing to three entities (§1.2.2 O4), 73% of pools below viability (§1.2.2 O2), and the incentive-responsive field holding only 36% of active stake (O6).
 

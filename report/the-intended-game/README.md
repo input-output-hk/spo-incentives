@@ -1,7 +1,7 @@
 # The Intended Game
 ### A Narrative Description of the Consensus Incentive Mechanism
 
-> **Status:** Working document — companion to the main [Cardano Reward Pipeline](../../../main-flow/cardano-reward-analysis.md) analysis (§1.2) and the CPS [*Closing the Consensus Incentive Gap*](../cps/README.md).
+> **Status:** Working document — companion to the main [Cardano Reward Pipeline](../README.md) analysis (§1.2) and the CPS [*Closing the Consensus Incentive Gap*](../sub-flows/pools-distribution/cps/README.md).
 
 <br>
 
@@ -323,4 +323,4 @@ A more secure, decentralised network is a more valuable network — which attrac
 
 The reward curve's success or failure is measured against this target.
 
-> **Next:** The divergence analysis — examining what actually happens when each player class tries to play this game — has been moved to the [main report §2](../../../main-flow/cardano-reward-analysis.md#2-the-divergence--when-the-optimal-move-breaks-the-game).
+> **Next:** The divergence analysis — examining what actually happens when each player class tries to play this game — has been moved to the [main report §2](../README.md#2-the-divergence--when-the-optimal-move-breaks-the-game).
