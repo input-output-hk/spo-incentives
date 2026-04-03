@@ -22,7 +22,8 @@
   - [2.3 Delegators — the oversight layer](#23-delegators--the-oversight-layer)
     - [2.3.1 Yield-seeking with minimal effort](#231-yield-seeking-with-minimal-effort)
     - [2.3.2 Liquid delegation as continuous approval](#232-liquid-delegation-as-continuous-approval)
-    - [2.3.3 From brand loyalty to commitment-based selection](#233-from-brand-loyalty-to-commitment-based-selection)
+    - [2.3.3 The delegator as ethical arbiter](#233-the-delegator-as-ethical-arbiter)
+    - [2.3.4 Myopic and non-myopic delegation](#234-myopic-and-non-myopic-delegation)
   - [2.4 The dependency chain](#24-the-dependency-chain)
 - [3. The progression](#3-the-progression)
   - [3.1 Transaction submitters — from subsidy to self-sufficiency](#31-transaction-submitters--from-subsidy-to-self-sufficiency)
@@ -134,7 +135,9 @@ A new operator starts with a small pledge, minimal delegation, and sub-viable bl
 
 #### 2.3.1 Yield-seeking with minimal effort
 
-Delegators seek yield on their ADA holdings with minimal effort and risk. They do not produce blocks and bear no operational cost. Their decision is purely allocative: which pool to delegate to, and when to move. A rational delegator maximises risk-adjusted return, favouring pools with high expected yield, reliable performance, and trustworthy operators.
+Delegators seek yield on their ADA holdings with minimal effort and risk. They do not produce blocks and bear no operational cost. Their entire strategic space reduces to a single decision: *which pool to delegate to*. A rational delegator maximises risk-adjusted return, favouring pools with high expected yield, reliable performance, and trustworthy operators.
+
+The natural selection metric is the **annualised return on stake (ROS)** — the single number that aggregates pool performance, operator fees, and saturation into a comparable yield figure. But the formula's structure ensures that the yield spread between well-run pools is narrow — a few tenths of a percent. This narrow spread is a design consequence, not an accident: it means that yield alone cannot meaningfully differentiate most of the pool landscape. A second criterion enters — one the formula does not price but that the mechanism depends on.
 
 #### 2.3.2 Liquid delegation as continuous approval
 
@@ -145,13 +148,32 @@ This makes delegation a *continuous approval signal*. No operator can capture st
 > [!IMPORTANT]
 > Liquid delegation is the protocol's **accountability mechanism** and its primary anti-monopoly tool. But this mechanism only functions if pools *need* delegators — if operators depend on community-sourced stake to reach their optimal reward. Without this dependency, delegators have no leverage and the accountability channel collapses.
 
-#### 2.3.3 From brand loyalty to commitment-based selection
+#### 2.3.3 The delegator as ethical arbiter
 
-Delegators respond to the information environment the mechanism creates. Early on, when pools are new and differentiation is low, delegation may be driven by brand, community ties, or social signals.
+Because the yield spread between well-run pools is narrow, the delegator's choice is not purely economic — it is partly an expression of values. Two pools that offer identical ROS may differ in ways the formula does not capture but that matter to the delegator and to the network:
 
-As the mechanism matures, delegators should increasingly be able to differentiate pools on *commitment-based criteria* — pledge level, track record, margin policy — and reallocate accordingly.
+**Commitment.** A pool where the operator has pledged meaningful personal capital is structurally more aligned with the delegator's interest than one where the operator pledges nothing. The operator has more to lose, the accountability channel is active, and the pool is less likely to change strategy abruptly.
 
-The mechanism should make these criteria observable and economically meaningful, so that delegator behaviour reinforces the operator progression described above: committed pools attract more delegation, which rewards commitment further, creating a virtuous cycle.
+**Independence.** Delegating to an independent single-pool operator contributes to decentralisation in a way that delegating to the tenth pool of a large multi-pool operator (MPO) fleet does not. The protocol does not distinguish between the two — the formula treats every pool identically — but the delegator who values a decentralised network may deliberately choose the independent operator.
+
+**Transparency and conduct.** Operators differ in how they communicate fee changes, maintain infrastructure, and engage with the community. These are reputational signals that the protocol does not encode but that delegators can observe and act on. A delegator who exits a pool after a surprise margin increase is exercising the accountability mechanism — even if the formal yield difference is negligible.
+
+The delegator, in this sense, acts as an **ethical arbiter** of the pool landscape. Where the formula is indifferent, the delegator is not. The mechanism's long-term health depends on enough delegators treating this ethical dimension as part of their decision — supporting commitment, independence, and transparency beyond what yield alone would justify.
+
+#### 2.3.4 Myopic and non-myopic delegation
+
+The formal literature distinguishes two delegator models that map directly onto the yield-vs-ethics tension above.
+
+A **myopic** delegator optimises for the *current epoch*. The decision is purely backward-looking: which pool delivered the highest ROS last epoch? The myopic delegator treats delegation as a spot market — move to the best-yielding pool, every epoch, ignoring second-order effects. Under this model, delegation flows toward the largest, most reliable, lowest-fee pools. The myopic delegator has no reason to consider pledge, operator commitment, or network-level properties: none of these affect the per-ADA yield in the next five days.
+
+A **non-myopic** delegator anticipates the *downstream effects* of delegation decisions. This delegator recognises that moving stake into a pool changes the pool's size, affects its yield through saturation dynamics, and — in aggregate — shapes the pool landscape. Brünjes & Kiayias (2020) prove that the *k*-pool equilibrium holds under non-myopic play: delegators who factor in the long-term consequences of their delegation converge on a distribution of *k* pools.
+
+The non-myopic delegator is the one for whom the ethical dimension of pool selection is not a luxury but a rational strategy: supporting committed, independent operators produces a more decentralised, more accountable network — which is a more valuable network — which sustains the yield the delegator depends on.
+
+> [!IMPORTANT]
+> The mechanism implicitly *assumes* non-myopic delegation. The equilibrium results in the formal literature require delegators who look past the current epoch. But the information environment the mechanism creates — where yield differences between pools are negligible, where pledge is invisible, where pool size is the dominant signal — rewards myopic behaviour. The mechanism needs non-myopic delegators to reach its intended equilibrium, but it provides myopic delegators with no reason to become non-myopic.
+
+This is the core tension in the delegator's role. The ethical arbitration that the mechanism depends on operates *outside* the formula, sustained only by the delegator's understanding that the network they help shape is the network they depend on.
 
 ### 2.4 The dependency chain
 
@@ -200,7 +222,7 @@ Each player class experiences the game through its own trajectory — entry, pro
 
 **Progression.** As the pool landscape matures and the mechanism produces legible differences between pools, delegators increasingly differentiate on *commitment-based criteria*: pledge level, track record, margin policy. Delegation flows toward the most committed operators and away from uncommitted ones. The accountability mechanism becomes active — delegators are now *policing* operator behaviour through capital reallocation.
 
-**Endgame.** Delegators act as an efficient market for operator commitment. Capital moves fluidly to the pools that best combine commitment and performance, and exits quickly from those that fall short. The accountability mechanism operates at full power: no operator can sustain high rewards without continuous community approval.
+**Endgame.** Delegators act as an efficient market for operator commitment — and as ethical arbiters of the pool landscape (§2.3.3). Capital moves fluidly to the pools that best combine commitment and performance, and exits quickly from those that fall short. The accountability mechanism operates at full power: no operator can sustain high rewards without continuous community approval. This endgame requires non-myopic delegation (§2.3.4): delegators who factor in commitment, independence, and network health — not only current-epoch yield — into their allocation decisions.
 
 ### 3.4 The security properties the equilibrium must satisfy
 

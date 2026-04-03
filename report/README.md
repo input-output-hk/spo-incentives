@@ -38,7 +38,7 @@ Each pipeline stage is backed by a dedicated sub-report containing the formula d
       - [2.4.2.3 The current design incentivises the private strategy](#2423-the-current-design-incentivises-the-private-strategy)
     - [2.4.3 Endgame — the hollow strategy is the dominant one](#243-endgame--the-hollow-strategy-is-the-dominant-one)
       - [2.4.3.1 What mainnet reveals](#2431-what-mainnet-reveals)
-        - [2.4.3.1.1 Three strategies, one dominant](#24311-three-strategies-one-dominant)
+        - [2.4.3.1.1 Three operator strategies, one dominant](#24311-three-operator-strategies-one-dominant)
         - [2.4.3.1.2 Strategies are entity-level commitments, not pool-level accidents](#24312-strategies-are-entity-level-commitments-not-pool-level-accidents)
         - [2.4.3.1.3 The hollow strategy dominates at every level of aggregation](#24313-the-hollow-strategy-dominates-at-every-level-of-aggregation)
         - [2.4.3.1.4 The pledge bonus is a dead letter](#24314-the-pledge-bonus-is-a-dead-letter)
@@ -363,7 +363,7 @@ The spectrum divides into three populations:
 
 The entity-level strategy profiles, population breakdowns, and consistency data that follow are drawn from [*The Operator's Cut*](sub-flows/operator-delegator-distribution/mainnet-analysis/README.md), a companion analysis of the intra-pool reward split (§3) that applies this classification across all 502 entities operating rewarded pools above the production threshold at epoch 614 (§2.4.1.5).
 
-##### 2.4.3.1.1 Three strategies, one dominant
+##### 2.4.3.1.1 Three operator strategies, one dominant
 
 The distribution is not ambiguous.
 
