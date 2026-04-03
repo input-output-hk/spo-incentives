@@ -58,6 +58,9 @@ HOLLOW_OWNER_THRESHOLD  = 0.10   # owner_stake / active_stake <  10% → hollow 
 PRIVATE_OWNER_THRESHOLD = 0.95   # owner_stake / active_stake >= 95% → private strategy
 # Between 10% and 95% → balanced strategy
 
+PRODUCTION_THRESHOLD_ADA = 1_000_000  # 1M ADA — pools below this cannot produce
+                                       # blocks reliably (see main report §2.4.1.5)
+
 
 def load_pool_history():
     """Load full pool history with reward-split columns."""
@@ -149,6 +152,13 @@ def build_snapshot(hist, latest, owner_snap, pool_list, entity_map,
     """Per-pool reward-split decomposition at latest epoch."""
     snap = hist[hist["epoch_no"] == latest].copy()
     snap = snap[snap["total_pool_rewards_ada"] > 0].copy()
+    # Filter out sub-production-threshold pools (main report §2.4.1.5)
+    n_before = len(snap)
+    snap = snap[snap["active_stake_ada"] >= PRODUCTION_THRESHOLD_ADA].copy()
+    n_after = len(snap)
+    if n_before != n_after:
+        print(f"  production-threshold filter: {n_before} → {n_after} pools "
+              f"(dropped {n_before - n_after} below {PRODUCTION_THRESHOLD_ADA/1e6:.0f}M ADA)")
 
     # Merge owner stake
     snap = snap.merge(owner_snap, on="pool_id_bech32", how="left")
@@ -275,6 +285,8 @@ def build_entity_policies(snap):
 def build_timeseries(hist, owner_full):
     """Epoch-level aggregates — total, hollow, mixed, and private."""
     active = hist[hist["total_pool_rewards_ada"] > 0].copy()
+    # Apply production-threshold filter (main report §2.4.1.5)
+    active = active[active["active_stake_ada"] >= PRODUCTION_THRESHOLD_ADA].copy()
 
     hat_f = active["total_pool_rewards_ada"]
     c     = active["fixed_cost_ada"]
@@ -355,6 +367,8 @@ def build_timeseries(hist, owner_full):
 def build_fee_param_history(hist, owner_full):
     """Track evolution of margin and fixed-cost declarations (non-private)."""
     active = hist[hist["total_pool_rewards_ada"] > 0].copy()
+    # Apply production-threshold filter (main report §2.4.1.5)
+    active = active[active["active_stake_ada"] >= PRODUCTION_THRESHOLD_ADA].copy()
 
     # Join owner history and classify
     active = active.merge(
