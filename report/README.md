@@ -378,6 +378,16 @@ The distribution is not ambiguous.
 
 Hollow entities control 18.10B ₳ (85.6% of active stake) with a collective owner-ratio of 1.0% — for every 100 ADA staked in hollow pools, about 1 ADA comes from the operator. Private entities control 2.29B ₳ (10.8%), almost entirely self-funded. Balanced entities hold 0.77B ₳ (3.6%) — the smallest segment but the only one where the pledge mechanism produces genuine alignment.
 
+This snapshot captures the end-state of a trajectory that has been remarkably stable since the early Shelley era. The figures below track both pool counts and active stake per strategy across 405 epochs (2020–2026).
+
+![Strategy Composition — Pool Count and Active Stake Share](main-flow/figures/strategy_evolution.png)
+
+![Pool Count and Active Stake by Strategy — Individual Trajectories](main-flow/figures/strategy_trends.png)
+
+The hollow strategy established dominance within the first 50 epochs of Shelley and has held 85–92% of active stake ever since. Pool count peaked at 904 around epoch 400 (2023/03) and has since declined to 771 — a 15% contraction — as the shrinking epoch pot makes marginal pools unprofitable. Balanced pools have thinned more sharply: from a peak of 119 (epoch 300) to 57 today, a 52% drop. Their stake share has fluctuated between 2.1% and 3.9% without a clear trend — the balanced strategy has neither grown nor consolidated.
+
+The most visible shift is in the private segment. Private pool count has risen from zero at genesis to 47, and their stake share has nearly doubled from ~7% to 11.9% over the last 200 epochs. This growth is driven by exchange and custodial operators internalising staking rather than delegating to third-party pools — a structural trend that the reward formula neither encourages nor penalises.
+
 ##### 2.4.3.1.2 Strategies are entity-level commitments, not pool-level accidents
 
 A critical empirical finding validates the entity-level framing: strategy choice is highly consistent across pool fleets.

@@ -474,18 +474,9 @@ The more important question for the delegator is not the absolute level but the 
 
 ##### 4.2.5.1 Cross-strategy trajectory
 
-The table below tracks the stake-weighted average delegator yield for each strategy at regular intervals since the Shelley era. The *gap* column measures how much more a balanced pool pays relative to a hollow pool of the same epoch.
+The figure below tracks the stake-weighted average delegator yield for each strategy across 405 epochs of mainnet history. The solid lines show single-epoch yields; the dashed lines show the trailing-year (73-epoch) average, which smooths out block-production noise. The shaded area between the two curves is the balanced-hollow gap.
 
-| Epoch | Date | Hollow yield | Balanced yield | Gap | Hollow pools | Balanced pools |
-| ---: | --- | ---: | ---: | ---: | ---: | ---: |
-| 250 | 2021/02 | 4.65% | 5.58% | +0.93pp | 660 | 86 |
-| 300 | 2021/10 | 3.85% | 4.20% | +0.35pp | 827 | 119 |
-| 350 | 2022/07 | 3.44% | 3.79% | +0.36pp | 858 | 105 |
-| 400 | 2023/03 | 3.12% | 3.31% | +0.20pp | 904 | 91 |
-| 450 | 2023/11 | 2.75% | 2.86% | +0.11pp | 852 | 87 |
-| 500 | 2024/07 | 2.50% | 2.49% | −0.01pp | 853 | 73 |
-| 550 | 2025/03 | 2.29% | 2.26% | −0.03pp | 810 | 73 |
-| 614 | 2026/02 | 1.97% | 2.23% | +0.25pp | 771 | 57 |
+![Delegator Yield by Strategy — Historical Trajectory](figures/yield_trajectory_by_strategy.png)
 
 Three patterns are visible across the full history:
 
@@ -495,31 +486,17 @@ Three patterns are visible across the full history:
 
 3. **The pool count is diverging.** Hollow pools peaked at 904 (epoch 400) and have since declined to 771. Balanced pools have declined more steeply, from 119 to 57 — a 52% drop. The balanced strategy is thinning out as yields compress.
 
-Private pools are excluded from the table: they have negligible third-party delegation by definition and their per-delegator yield is meaningless at the aggregate level.
+Private pools are excluded from the figure: they have negligible third-party delegation by definition and their per-delegator yield is meaningless at the aggregate level.
 
-At the most recent closed epoch (614), the cross-strategy snapshot looks as follows. The *bottom-quartile* and *top-quartile* columns mark the yield below which the worst 25% and above which the best 25% of pools fall; the *middle-half spread* is the gap between them.
+At the most recent closed epoch (614), the hollow market is where almost all delegation lives: 17.75B ADA across 765 pools, with a stake-weighted average yield of 2.01%. The middle half of hollow pools fall between 1.39% and 2.38% — a spread of just 1.00 percentage point. Balanced pools (57 pools, 0.31B ADA) show a headline spread more than twice as wide (2.36pp), but this is misleading — the dispersion is driven by small-pool block luck rather than structural factors, as §4.2.5.3 explains. Private pools (47) have negligible third-party delegation.
 
-| Strategy | Pools | Delegated stake | Bottom-quartile yield | Median yield | Top-quartile yield | Stake-weighted avg | Middle-half spread |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Hollow | 765 | 17.75B ADA | 1.39% | 1.96% | 2.38% | 2.01% | 1.00pp |
-| Balanced | 57 | 0.31B ADA | 1.61% | 2.90% | 3.97% | 4.08% | 2.36pp |
-| Private | 47 | ~0 | — | — | — | — | — |
-
-The hollow market is where almost all delegation lives: 17.75B ADA across 765 pools, with a stake-weighted average yield of 2.01% and a middle-half spread of just 1.00 percentage point. Balanced pools show a headline spread more than twice as wide (2.36pp), but this is misleading — the dispersion is driven by small-pool block luck rather than structural factors, as §4.2.5.3 explains.
-
-Six additional pools are structurally hollow by their owner-stake ratio but operationally dead — they hold 0.22B ADA in nominal delegation yet pay 0% yield. They are not participants in the delegation market; §4.2.5.4 discusses them separately. The 765 hollow pools in the table above exclude these six.
+Six additional pools are structurally hollow by their owner-stake ratio but operationally dead — they hold 0.22B ADA in nominal delegation yet pay 0% yield. They are not participants in the delegation market; §4.2.5.4 discusses them separately. The 765 hollow pools referenced above exclude these six.
 
 ##### 4.2.5.2 Inside the hollow market
 
-Within these 765 hollow pools, yield is overwhelmingly determined by pool size — specifically, by the interaction between the 340 ADA fixed-cost floor and total pool rewards.
+Within these 765 hollow pools, yield is overwhelmingly determined by pool size — specifically, by the interaction between the 340 ADA fixed-cost floor and total pool rewards. The figure below shows the median yield (bar height) and the middle-half range (25th–75th percentile, vertical line) for each size bucket at epoch 614. The annotation above each bar indicates how much delegation and how many pools each bucket contains.
 
-| Size bucket | Pools | Delegated stake | Median yield | Middle-half spread | Stake-weighted avg |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| <3M ADA | 136 | 0.25B | 1.12% | 2.25pp | 1.44% |
-| 3–10M ADA | 186 | 1.07B | 1.70% | 1.39pp | 1.73% |
-| 10–30M ADA | 195 | 3.37B | 1.93% | 0.85pp | 1.86% |
-| 30–77M ADA | 242 | 12.43B | 2.18% | 0.46pp | 2.11% |
-| >77M ADA (oversaturated) | 6 | 0.63B | 1.68% | 0.47pp | 1.63% |
+![Delegator Yield by Pool Size — Hollow Pools](figures/yield_by_size_bucket.png)
 
 Two patterns emerge:
 
@@ -539,14 +516,7 @@ Two factors explain the inflated epoch-614 number:
 
 2. **Mechanical delegation-base effect.** In a balanced pool, the operator absorbs a larger share of rewards through the proportional (ρ_operator) term of the SL-D1 split. The remaining rewards are divided among fewer delegated ADA, sometimes producing a higher per-ADA yield for the delegator.
 
-A fair comparison controls for size. Among pools with 10–50M ADA active stake at epoch 614:
-
-| Strategy | Pools | Stake-weighted avg | Median yield |
-| --- | ---: | ---: | ---: |
-| Hollow | 310 | 2.04% | 2.05% |
-| Balanced | 11 | 3.01% | 2.92% |
-
-Even at comparable size, balanced pools show a ~0.9pp premium — but the sample is just 11 pools, and the historical data shows this gap is not stable across epochs. A delegator cannot rely on a persistent balanced premium.
+A fair comparison controls for size. Among pools with 10–50M ADA active stake at epoch 614, balanced pools show a stake-weighted average of 3.01% versus 2.04% for hollow — a ~0.9pp premium (right panel below). But the sample is just 11 balanced pools, and the historical trajectory in §4.2.5.1 shows this gap is not stable across epochs. A delegator cannot rely on a persistent balanced premium.
 
 ##### 4.2.5.4 Dead pools — hollow in name, zero in yield
 
@@ -556,14 +526,11 @@ These pools are not competitive participants in the delegation market. They serv
 
 ##### 4.2.5.5 SPO versus MPO
 
-Among hollow pools, single-pool operators (SPOs) and multi-pool operators (MPOs) deliver near-identical stake-weighted yields:
+Among hollow pools, single-pool operators (SPOs) and multi-pool operators (MPOs) deliver near-identical stake-weighted yields. The left panel of the figure below shows the comparison at epoch 614.
 
-| Entity type | Pools | Median yield | Stake-weighted avg | Median margin |
-| --- | ---: | ---: | ---: | ---: |
-| SPO | 368 | 1.77% | 2.05% | 1.0% |
-| MPO | 397 | 2.05% | 2.00% | 3.0% |
+![SPO vs MPO and Hollow vs Balanced — Epoch 614](figures/spo_mpo_and_balanced_comparison.png)
 
-SPOs charge lower margins (median 1.0% vs 3.0%) but tend to run smaller pools, so the fixed-cost floor erodes more of their reward. MPO pools are typically larger, which offsets their higher margins. The net effect: from the delegator's perspective, the yield difference between SPO and MPO is negligible at the portfolio level. The choice between them is driven by decentralisation preferences (§4.3) rather than return.
+SPOs charge lower margins (median 1.0% vs 3.0%) but tend to run smaller pools, so the fixed-cost floor erodes more of their reward. MPO pools are typically larger, which offsets their higher margins. The net effect: from the delegator's perspective, the yield difference between SPO and MPO is negligible at the portfolio level (2.05% vs 2.00%). The choice between them is driven by decentralisation preferences (§4.3) rather than return.
 
 ##### 4.2.5.6 Oversaturation drag
 
@@ -581,20 +548,13 @@ The historical data confirms this at the aggregate level: the standard deviation
 
 The size-bucket analysis in §4.2.5.2 demonstrates *that* yield rises with pool size; the question here is *why*. Two factors account for nearly all persistent yield variation among hollow pools.
 
-**The fixed-cost hyperbola.** The 340 ADA minimum cost consumes a fraction of the pool reward that depends entirely on pool size:
+**The fixed-cost hyperbola.** The 340 ADA minimum cost consumes a fraction of the pool reward that depends entirely on pool size. At current reward levels, a 3M ADA pool loses 35% of its reward to the floor (leaving ~1.6% annual yield at 0% margin), while a 30M pool loses only 3.5% (yielding ~2.4%). A delegator in the smaller pool sacrifices ~0.8pp of annual yield — entirely because of the fixed cost, not because of any difference in operator quality or margin. In effective-tax terms, the 340 ADA floor acts as a regressive levy: 54.3% for pools below 3M ADA, collapsing to 4.7% in the 30–77M band.
 
-| Pool active stake | Reward per epoch | Fixed-cost share | Annual ROS (0% margin) | Annual ROS (3% margin) |
-| --- | --- | --- | --- | --- |
-| 1M ADA | 320 ADA | 100% — non-viable | 0.00% | 0.00% |
-| 3M ADA | 960 ADA | 35.4% | 1.59% | 1.54% |
-| 5M ADA | 1,600 ADA | 21.2% | 1.94% | 1.88% |
-| 10M ADA | 3,200 ADA | 10.6% | 2.20% | 2.13% |
-| 30M ADA | 9,600 ADA | 3.5% | 2.37% | 2.30% |
-| 60M ADA | 19,200 ADA | 1.8% | 2.42% | 2.34% |
+This effect is growing over time. The figure below shows the fixed-cost share of hollow-pool rewards rising steadily across the full mainnet history, while the margin share has fluctuated without a clear trend.
 
-The cost floor creates a hyperbolic penalty that dominates yield variation in the small-pool regime (§7.6). A delegator in a 3M ADA pool sacrifices ~0.8pp of annual yield relative to a 30M ADA pool, entirely because of the fixed cost — not because of any difference in operator quality or margin. In effective-tax terms, the 340 ADA floor acts as a regressive levy: 54.3% for pools below 3M ADA, collapsing to 4.7% in the 30–77M band.
+![The Growing Fixed-Cost Burden — Hollow Pools](figures/fixed_cost_share_growth.png)
 
-This effect is growing over time. As the reserve depletes and epoch rewards shrink, the 340 ADA floor consumes a larger fraction of each pool's reward. The aggregate fixed-cost share of hollow rewards has risen steadily: from 1.6% at epoch 250 to 3.2% at epoch 400 to 4.9% at epoch 614. The hyperbolic penalty that today penalises sub-3M pools will, within a few years, begin to erode yields for pools in the 5–10M range that are currently viable.
+The aggregate fixed-cost share has tripled from 1.6% at epoch 250 to 4.9% at epoch 614, and will continue climbing as the reserve depletes. The hyperbolic penalty that today penalises sub-3M pools will, within a few years, begin to erode yields for pools in the 5–10M range that are currently viable.
 
 **Margin.** Among large pools where the fixed cost is negligible, margin is the residual differentiator — but its impact is small. On a 30M ADA pool, moving from 0% to 3% margin reduces the delegator's annual yield by 0.07pp (from 2.37% to 2.30%). Moving from 0% to 10% costs 0.24pp. Margin explains the remaining spread once size is controlled for, but that remaining spread is narrow.
 
@@ -969,3 +929,7 @@ Both scripts read from the `pools-distribution/mainnet-analysis/data/` directory
 | `fee_parameter_evolution.png` | Two-panel — margin rate percentiles and fee-parameter adoption over time (non-private) |
 | `mpo_vs_spo_operator_take.png` | Grouped bars — MPO vs SPO reward and operator-take comparison (hollow-strategy) |
 | `top20_entities_operator_take.png` | Horizontal bars — top 20 entities by operator take, decomposed into fixed cost and margin (hollow-strategy) |
+| `yield_trajectory_by_strategy.png` | Line chart — hollow vs balanced stake-weighted delegator yield across epochs 211–615, with trailing-year averages |
+| `yield_by_size_bucket.png` | Bar chart — median delegator yield and middle-half range by pool-size bucket (hollow pools, epoch 614) |
+| `spo_mpo_and_balanced_comparison.png` | Dual-panel bars — SPO vs MPO yield (left) and hollow vs balanced at same size (right), epoch 614 |
+| `fixed_cost_share_growth.png` | Line chart — fixed-cost and margin share of hollow rewards over epochs 211–615 |
