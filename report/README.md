@@ -31,9 +31,10 @@ Each pipeline stage is backed by a dedicated sub-report containing the formula d
       - [2.4.2.1 The three strategies](#2421-the-three-strategies)
         - [2.4.2.1.1 The common endgame — saturate, then become an MPO](#24211-the-common-endgame--saturate-then-become-an-mpo)
         - [2.4.2.1.2 The degree of freedom](#24212-the-degree-of-freedom)
-        - [2.4.2.1.3 The balanced strategy](#24213-the-balanced-strategy)
-        - [2.4.2.1.4 The private strategy](#24214-the-private-strategy)
-        - [2.4.2.1.5 The hollow strategy](#24215-the-hollow-strategy)
+        - [2.4.2.1.3 Strategy stability over time](#24213-strategy-stability-over-time)
+        - [2.4.2.1.4 The balanced strategy](#24214-the-balanced-strategy)
+        - [2.4.2.1.5 The private strategy](#24215-the-private-strategy)
+        - [2.4.2.1.6 The hollow strategy](#24216-the-hollow-strategy)
       - [2.4.2.2 Why balanced should be the intended equilibrium](#2422-why-balanced-should-be-the-intended-equilibrium)
       - [2.4.2.3 The current design incentivises the private strategy](#2423-the-current-design-incentivises-the-private-strategy)
     - [2.4.3 Endgame — the hollow strategy is the dominant one](#243-endgame--the-hollow-strategy-is-the-dominant-one)
@@ -277,7 +278,25 @@ The reward formula is sensitive to this ratio through the pledge bonus ($\lambda
 
 Three archetypes capture the essential strategic postures along this spectrum. They are not discrete options — real operators occupy every point on the continuum — but they define the poles and the centre in terms that map cleanly onto the security properties the protocol depends on.
 
-##### 2.4.2.1.3 The balanced strategy
+##### 2.4.2.1.3 Strategy stability over time
+
+The three strategies described below are not transient labels. A natural question is whether entities migrate between postures over time — i.e. whether the archetypes are stable structural features or shift as delegation flows.
+
+![Strategy Evolution — Entity-Level View, Epochs 210–615](sub-flows/operator-delegator-distribution/mainnet-analysis/figures/strategy_evolution.png)
+
+The figure tracks three panels across 405 epochs. The top panel shows entity counts by owner-stake strategy (restricted to pools above the 1M ADA production threshold): hollow entities have grown steadily from ~200 to ~500, balanced has peaked around 300 and declined to ~200, and private has remained flat at ~50. The middle panel shows the corresponding stake composition — hollow has dominated throughout, rising from ~8B to ~21B. The bottom panel tracks the per-epoch strategy transition rate: the fraction of entities whose dominant owner-stake strategy changed from one epoch to the next.
+
+The transition rate is remarkably low. The median per-epoch rate is **0.28%** — meaning that in a typical epoch, fewer than 2 entities out of ~600 change strategy. The margin-band transition rate is even lower at 0.16% per epoch.
+
+Over the full 405-epoch span, 446 of 1,830 entities tracked (24.4%) changed strategy at least once. But the nature of these transitions reveals that nearly all of them are boundary drift rather than genuine strategic pivots: 89% of the 1,431 total transition events are hollow ↔ balanced oscillations (652 balanced→hollow, 621 hollow→balanced). These occur when an entity's delegation fluctuates around the 10% owner-stake threshold — the entity's *behaviour* does not change, only the label assigned by the classification boundary. Transitions involving the private strategy are rare: 78 private→balanced, 52 balanced→private, 28 involving hollow↔private. Among entities active for at least 200 epochs (n=612), 37.9% experienced at least one label change — but the overwhelming majority are threshold oscillations, not deliberate repositionings.
+
+The margin landscape confirms this stability. The median margin across all pools has held at 2.0% since the early Shelley era. The rising stake-weighted mean (4.2% → 18.9%) is driven entirely by the growing weight of declared-private and functionally private pools in the overall stake distribution, not by fee inflation in the competitive market.
+
+![Margin Rate Evolution — Epochs 211–615](sub-flows/operator-delegator-distribution/mainnet-analysis/figures/margin_evolution.png)
+
+> The per-epoch strategy transition rate is 0.28% (median) — fewer than 2 entities per epoch. Over 405 epochs, 89% of all transitions are boundary drift between hollow and balanced, not genuine regime changes. The three strategies are durable features of the network's economic structure, not artefacts of a single snapshot. Margin competition in the hollow market has been stable at a median of 2.0% for the entire Shelley era — the apparent rise in the stake-weighted mean is a compositional effect from the growing weight of private-strategy pools.
+
+##### 2.4.2.1.4 The balanced strategy
 
 The balanced strategy maintains a meaningful owner-stake ratio while leaving substantial room for delegation. Both the operator and external delegators contribute to the pool's stake. The exact split — whether 20/80, 50/50, or 80/20 in favour of owner commitment — varies across entities, but the defining characteristic is that neither party fills the pool alone.
 
@@ -285,7 +304,7 @@ The economic logic is partnership: the operator commits personal capital and ope
 
 This is the posture the mechanism was designed to encourage. The operator's progression described in [*The Intended Game* §3.2](the-intended-game/README.md#32-operators) — build reputation, attract delegation, deepen pledge, compound — presupposes a balanced configuration where increasing commitment produces a measurable competitive edge.
 
-##### 2.4.2.1.4 The private strategy
+##### 2.4.2.1.5 The private strategy
 
 The operator pledges and self-delegates the majority or totality of the pool's stake, minimising or eliminating external delegation. The pool operates as a closed vehicle: the operator funds it, produces blocks, and collects the full reward.
 
@@ -295,7 +314,7 @@ The reward formula explicitly endorses this posture. The maximum pool reward $P_
 
 Private pools are therefore not deviations from the mechanism's intent — they are its literal target. The tension this creates with the security properties the protocol depends on (which require delegation to be present and pledge to be an active competitive dimension, not a wealth filter) is the subject of §2.4.2.2.
 
-##### 2.4.2.1.5 The hollow strategy
+##### 2.4.2.1.6 The hollow strategy
 
 The operator pledges nothing or near-nothing and fills the pool entirely through external delegation. The pool operates at zero or near-zero owner commitment — block-production rewards are generated almost entirely from third-party stake.
 
