@@ -15,6 +15,7 @@ import numpy as np
 REPORT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR   = REPORT_DIR / "data"
 FIG_DIR    = REPORT_DIR / "figures"
+ENTITY_DATA = REPORT_DIR.parent.parent / "census" / "mainnet-analysis" / "data"
 
 # ── IOG Brand colours ──
 BG     = "#FFFFFF"
@@ -61,7 +62,7 @@ def load_data():
     T_bounds = [0, 100e3, 1e6, 3e6, z0*0.5, z0*0.8, z0*0.95, z0*1.05, np.inf]
 
     pool_entity = set()
-    with open(DATA_DIR / "mpo_entity_pool_mapping_mainnet.csv") as f:
+    with open(ENTITY_DATA / "mpo_entity_pool_mapping_mainnet.csv") as f:
         for row in csv.DictReader(f):
             pool_entity.add(row["pool_id_bech32"])
 

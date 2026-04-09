@@ -8,13 +8,17 @@ This report analyses the **intra-pool reward split** — the third and final sta
 
 Every epoch, once the reward curve assigns a total reward $\hat{f}$ to each pool, a second mechanism activates: the **intra-pool split**. The pool operator extracts a fixed cost $c$ and a proportional margin $m$; the remainder is distributed pro-rata among all delegators (including the operator's own stake). At epoch 614, this mechanism processed **6.75M ADA** across 875 rewarded pools — but the headline aggregate (24.3% operator take) conceals three radically different strategies. Adopting the Hollow–Private pledge spectrum from the upstream analysis ([§2.4.2](../../../README.md#242-progression--balanced-as-intended-but-private-by-design)), this report classifies entities by **owner-stake ratio** (owner active stake / pool active stake) across their pool fleets. Three strategies emerge along this spectrum: the **hollow strategy** (owner-stake ratio < 10%, 445 entities, 771 pools, 18.10B ADA, op_take=13.34%) where entities depend entirely on external delegation; the **balanced strategy** (10–95% owner-stake, 46 entities, 60 pools, 0.77B ADA, op_take=10.75%) where entities and delegators share capital with genuine alignment; and the **private strategy** (≥ 95% owner-stake, 11 entities, 44 pools, 2.29B ADA, op_take=99.97%) where entities are operator-funded. Remarkably, 495 of 502 entities (98.6%) apply a single pure strategy across all their pools, demonstrating high strategic consistency. Within hollow-strategy entities, a sub-population of 48 "functionally private" pools (margin ≥ 99.9%, typically exchanges and custodians) extract 100% via margin, leaving 723 genuine hollow pools at 7.7% operator take. The entity-level analysis reveals that margin competition is broadly active in the genuine hollow market (median entity margin 1.0%, stake-weighted 8.9%) but fixed cost, not margin, is the dominant extraction channel. Balanced-strategy entities form the smallest population but analytically most significant: they are where the pledge mechanism produces genuine alignment, with many pools carrying Material or High pledge tags and median owner-ratio 26.4%.
 
-The argument proceeds in three parts:
+The argument proceeds in five parts:
 
 1. **The formula** (§2). The SL-D1 intra-pool reward-sharing specification — from the original design through a residual-split decomposition to a reader-friendly rewrite and mainnet parameterization. The mechanism is sequential: fixed cost first, margin on the remainder, then pro-rata distribution. A critical protocol detail: when $\hat{f} < c$, the operator takes $\hat{f}$ (not $c$) — the effective fixed cost is $\min(c, \hat{f})$.
 
-2. **Operator strategies** (§3). The fee-parameter landscape — fixed cost adoption, margin categorisation, and the strategy × margin matrix that partitions 875 pools into structurally distinct regimes.
+2. **Fee parameters** (§3). The fee-parameter landscape — fixed cost adoption and margin categorisation across 875 rewarded pools.
 
-3. **The delegator's strategy** (§4). The delegator's action space reduces to a single decision — which pool — governed by two criteria: yield (annualised ROS) and the ethics of pool selection (commitment, independence, transparency). The yield trajectory is declining predictably (halving every ~3 years, R²=0.99 fit to reserve depletion), and Cardano's 2.01% sits below the risk-free rate and most PoS peers. Within the pool landscape, the yield surface is remarkably flat: the 30–77M bucket where 70% of delegation lives shows a middle-half spread of just 0.46pp, and the fixed-cost floor — not margin — is the dominant differentiator. When yield cannot meaningfully distinguish pools, the delegator's choice becomes partly an expression of values.
+3. **The delegation landscape** (§4). Who are the 1.27M delegators? 80% of delegation relationships land in the hollow × competitive cell. 30% of stake is custodial — 12% custodial by pledge (private-strategy entities self-delegating their own capital) and 18% custodial by delegation (hollow-strategy entities routing client capital through operator-controlled addresses). Together, 35 entities control 6.42B ADA through 1,125 delegation addresses. The remaining 70% is retail, but concentrated: two entities (Everstake, Atomic Wallet) account for a quarter of all delegations through wallet integrations.
+
+4. **Entities & Strategies** (§5). The strategy × margin matrix that partitions 875 pools into structurally distinct regimes — from the competitive hollow market (60.1% of stake) through the fragile subsidised tail to the self-funded private regime.
+
+5. **The delegator's strategy** (§6). The delegator's action space reduces to a single decision — which pool — governed by two criteria: yield (annualised ROS) and the ethics of pool selection (commitment, independence, transparency). The yield trajectory is declining predictably (halving every ~3 years, R²=0.99 fit to reserve depletion), and Cardano's 2.01% sits below the risk-free rate and most PoS peers. Within the pool landscape, the yield surface is remarkably flat: the 30–77M bucket where 70% of delegation lives shows a middle-half spread of just 0.46pp, and the fixed-cost floor — not margin — is the dominant differentiator. When yield cannot meaningfully distinguish pools, the delegator's choice becomes partly an expression of values.
 
 All counts and amounts use epoch **614** (the latest settled epoch with complete reward data). Source data: `koios_pool_history_mainnet.csv`, `koios_pool_owner_history_mainnet.csv`, `koios_pool_list_mainnet.csv`, `mpo_entity_pool_mapping_mainnet.csv` (Koios + entity attribution from the [*pools-distribution*](../../pools-distribution/mainnet-analysis/) flow).
 
@@ -27,7 +31,7 @@ All counts and amounts use epoch **614** (the latest settled epoch with complete
    - 2.3 [Reader-friendly formulation](#23-reader-friendly-formulation)
    - 2.4 [Mainnet parameterization](#24-mainnet-parameterization)
    - 2.5 [Concept glossary](#25-concept-glossary)
-3. [Operator strategies](#3-operator-strategies)
+3. [Fee parameters](#3-fee-parameters)
    - 3.1 [The fixed cost](#31-the-fixed-cost)
       - 3.1.1 [Economic weight — material only for sub-viable pools](#311-economic-weight--material-only-for-sub-viable-pools)
       - 3.1.2 [The floor reduction — a governance action that does not propagate](#312-the-floor-reduction--a-governance-action-that-does-not-propagate)
@@ -40,38 +44,45 @@ All counts and amounts use epoch **614** (the latest settled epoch with complete
    - 3.2 [The margin](#32-the-margin)
       - 3.2.1 [The common ground — margin as the operator's sole differentiator](#321-the-common-ground--margin-as-the-operators-sole-differentiator)
       - 3.2.2 [Margin categorisation — the degree of freedom](#322-margin-categorisation--the-degree-of-freedom)
-   - 3.3 [Entities & Strategies](#33-entities--strategies)
-      - 3.3.1 [Hollow × competitive — the delegation market](#331-hollow--competitive--the-delegation-market)
-         - 3.3.1.1 [Who are the 290 entities?](#3311-who-are-the-290-entities)
-      - 3.3.2 [Hollow × subsidised — the fragile tail](#332-hollow--subsidised--the-fragile-tail)
-      - 3.3.3 [Private × privatisation — the self-funded regime](#333-private--privatisation--the-self-funded-regime)
-      - 3.3.4 [Hollow × additional-services — the premium tier](#334-hollow--additional-services--the-premium-tier)
-      - 3.3.5 [Hollow × privatisation — the blind spot](#335-hollow--privatisation--the-blind-spot)
-      - 3.3.6 [Balanced × competitive — skin in the game](#336-balanced--competitive--skin-in-the-game)
-      - 3.3.7 [Private × competitive — the structural exception](#337-private--competitive--the-structural-exception)
-      - 3.3.8 [Balanced × subsidised — community operators](#338-balanced--subsidised--community-operators)
-      - 3.3.9 [Balanced × additional-services](#339-balanced--additional-services)
-      - 3.3.10 [Balanced × privatisation](#3310-balanced--privatisation)
-      - 3.3.11 [Comparative summary](#3311-comparative-summary)
-      - 3.3.12 [Margin extraction decomposition](#3312-margin-extraction-decomposition)
-4. [The delegator's strategy](#4-the-delegators-strategy)
-   - 4.1 [What the formula offers](#41-what-the-formula-offers)
-   - 4.2 [The yield criterion](#42-the-yield-criterion)
-     - 4.2.1 [The yield trajectory — level, decline, and projection](#421-the-yield-trajectory--level-decline-and-projection)
-     - 4.2.2 [Cardano's yield in context — three evaluation frames](#422-cardanos-yield-in-context--three-evaluation-frames)
-     - 4.2.3 [The yield spread — how different are pools?](#423-the-yield-spread--how-different-are-pools)
-       - 4.2.3.1 [Cross-strategy trajectory](#4231-cross-strategy-trajectory)
-       - 4.2.3.2 [Inside the hollow market](#4232-inside-the-hollow-market)
-       - 4.2.3.3 [The balanced premium — real or artefact?](#4233-the-balanced-premium--real-or-artefact)
-       - 4.2.3.4 [Dead pools — hollow in name, zero in yield](#4234-dead-pools--hollow-in-name-zero-in-yield)
-       - 4.2.3.5 [SPO versus MPO](#4235-spo-versus-mpo)
-       - 4.2.3.6 [Oversaturation drag](#4236-oversaturation-drag)
-       - 4.2.3.7 [Variance decomposition — luck versus structure](#4237-variance-decomposition--luck-versus-structure)
-     - 4.2.4 [What drives the spread, and why the yield surface is flat](#424-what-drives-the-spread-and-why-the-yield-surface-is-flat)
-   - 4.3 [Beyond yield — the ethics of pool selection](#43-beyond-yield--the-ethics-of-pool-selection)
-   - 4.4 [Myopic and non-myopic delegation](#44-myopic-and-non-myopic-delegation)
-   - 4.5 [The delegator's leverage](#45-the-delegators-leverage)
-5. [Reproduction](#5-reproduction)
+4. [The delegation landscape](#4-the-delegation-landscape)
+   - 4.1 [Counting delegators](#41-counting-delegators)
+   - 4.2 [Where do delegators sit?](#42-where-do-delegators-sit)
+   - 4.3 [Custodial versus retail](#43-custodial-versus-retail)
+   - 4.4 [Credential type — key versus script](#44-credential-type--key-versus-script)
+   - 4.5 [Delegation concentration](#45-delegation-concentration)
+   - 4.6 [The pool-level distribution](#46-the-pool-level-distribution)
+5. [Entities & Strategies](#5-entities--strategies)
+   - 5.1 [Hollow × competitive — the delegation market](#51-hollow--competitive--the-delegation-market)
+      - 5.1.1 [Who are the 290 entities?](#511-who-are-the-290-entities)
+   - 5.2 [Hollow × subsidised — the fragile tail](#52-hollow--subsidised--the-fragile-tail)
+   - 5.3 [Private × privatisation — the self-funded regime](#53-private--privatisation--the-self-funded-regime)
+   - 5.4 [Hollow × additional-services — the premium tier](#54-hollow--additional-services--the-premium-tier)
+   - 5.5 [Hollow × privatisation — the blind spot](#55-hollow--privatisation--the-blind-spot)
+   - 5.6 [Balanced × competitive — skin in the game](#56-balanced--competitive--skin-in-the-game)
+   - 5.7 [Private × competitive — the structural exception](#57-private--competitive--the-structural-exception)
+   - 5.8 [Balanced × subsidised — community operators](#58-balanced--subsidised--community-operators)
+   - 5.9 [Balanced × additional-services](#59-balanced--additional-services)
+   - 5.10 [Balanced × privatisation](#510-balanced--privatisation)
+   - 5.11 [Comparative summary](#511-comparative-summary)
+   - 5.12 [Margin extraction decomposition](#512-margin-extraction-decomposition)
+6. [The delegator's strategy](#6-the-delegators-strategy)
+   - 6.1 [What the formula offers](#61-what-the-formula-offers)
+   - 6.2 [The yield criterion](#62-the-yield-criterion)
+     - 6.2.1 [The yield trajectory — level, decline, and projection](#621-the-yield-trajectory--level-decline-and-projection)
+     - 6.2.2 [Cardano's yield in context — three evaluation frames](#622-cardanos-yield-in-context--three-evaluation-frames)
+     - 6.2.3 [The yield spread — how different are pools?](#623-the-yield-spread--how-different-are-pools)
+       - 6.2.3.1 [Cross-strategy trajectory](#6231-cross-strategy-trajectory)
+       - 6.2.3.2 [Inside the hollow market](#6232-inside-the-hollow-market)
+       - 6.2.3.3 [The balanced premium — real or artefact?](#6233-the-balanced-premium--real-or-artefact)
+       - 6.2.3.4 [Dead pools — hollow in name, zero in yield](#6234-dead-pools--hollow-in-name-zero-in-yield)
+       - 6.2.3.5 [SPO versus MPO](#6235-spo-versus-mpo)
+       - 6.2.3.6 [Oversaturation drag](#6236-oversaturation-drag)
+       - 6.2.3.7 [Variance decomposition — luck versus structure](#6237-variance-decomposition--luck-versus-structure)
+     - 6.2.4 [What drives the spread, and why the yield surface is flat](#624-what-drives-the-spread-and-why-the-yield-surface-is-flat)
+   - 6.3 [Beyond yield — the ethics of pool selection](#63-beyond-yield--the-ethics-of-pool-selection)
+   - 6.4 [Myopic and non-myopic delegation](#64-myopic-and-non-myopic-delegation)
+   - 6.5 [The delegator's leverage](#65-the-delegators-leverage)
+7. [Reproduction](#7-reproduction)
 
 ## 1. Mainnet Observations
 
@@ -89,7 +100,7 @@ All counts and amounts use epoch **614** (the latest settled epoch with complete
 | O10 | **Fixed cost, not margin, is the dominant yield differentiator** | The fixed-cost floor acts as a regressive levy: 54.3% effective tax for sub-3M pools, collapsing to 4.7% in the 30–77M band. A counterfactual removing the floor flattens the yield surface entirely — median yield rises +1.0pp for < 3M pools but only +0.05pp for 30–77M pools. The aggregate fixed-cost share has tripled from 1.6% (epoch 250) to 4.9% (epoch 614). Among large pools, moving from 0% to 3% margin costs only 0.07pp; small pools charge *lower* margins than large ones, so margins attenuate the size gradient rather than reinforce it. |
 | O11 | **Block luck dominates single-epoch variance; structure emerges only over time** | Block-production luck explains R²=0.41 of single-epoch yield variance among large hollow pools. Over a full year, the structural spread is an order of magnitude smaller than single-epoch noise (hollow SW std dev: 0.10pp across 73 trailing epochs). Epoch-to-epoch movement is noise, not signal. |
 
-**Scope note.** O1–O2 cover fee parameter adoption (§3). O3–O6 are structural to the intra-pool split (§3.3). O7–O11 characterise the delegator's yield landscape (§4).
+**Scope note.** O1–O2 cover fee parameter adoption (§3). O3–O6 are structural to the intra-pool split (§5). O7–O11 characterise the delegator's yield landscape (§6).
 
 ### The big picture
 
@@ -303,7 +314,7 @@ At epoch 614 (hollow-strategy pools): 93.5% of rewarded hollow-strategy pools de
 | Delegator pot | $(1-m)(\hat{f} - c_{\text{eff}})$ | Amount entering pro-rata distribution |
 | Effective tax | Operator take / $\hat{f}$ | Fraction of pool reward extracted before pro-rata |
 
-## 3. Operator strategies
+## 3. Fee parameters
 
 The formula gives operators two levers: a fixed cost $c$ (constrained by the protocol floor $c_{\min}$) and a proportional margin $m \in [0, 1]$. Before analysing how rewards flow through the split, it is worth examining how operators actually set these parameters — and how the distributions have evolved over 405 epochs.
 
@@ -481,9 +492,205 @@ At epoch 614, the margin distribution among hollow pools clusters into four band
 
 The four bands are not arbitrary quantiles — they correspond to visible gaps in the distribution. The cliff between competitive and additional-services is sharp: 85.5% of hollow pools sit at or below 5%, then the density drops to near zero before resurfacing at 99–100%. The middle ground (5–99%) is sparsely populated and structurally distinct from the two clusters on either side.
 
-These margin bands cross-cut the three owner-stake strategies. The same band label applies regardless of strategy — what changes is the economic meaning of that choice, because the operator's alternative revenue (pro-rata owner share) depends on pledge. The next section maps the full matrix and quantifies where the economic weight actually sits.
+These margin bands cross-cut the three owner-stake strategies. The same band label applies regardless of strategy — what changes is the economic meaning of that choice, because the operator's alternative revenue (pro-rata owner share) depends on pledge. Section §5 maps the full matrix and quantifies where the economic weight actually sits.
 
-### 3.3 Entities & Strategies
+## 4. The delegation landscape
+
+Before mapping how entities combine fee parameters into strategies (§5), it is necessary to understand the other side of the split: who are the delegators, how many are there, and where does their capital sit?
+
+### 4.1 Counting delegators
+
+At epoch 614, the 875 rewarded pools report a combined **1,270,903 delegation relationships**. This is the sum of per-pool `delegator_cnt` from Koios — the number of distinct `stake1...` addresses delegating to each pool. A wallet that splits its delegation across three pools is counted three times; the number of unique wallets is therefore slightly lower, but the double-counting is small because the vast majority of delegators delegate to a single pool.
+
+For reference, ~5.8 million staking addresses have been *registered* on-chain since Shelley launch (epoch 208). Most are inactive — empty, abandoned, or de-registered. The 1.27M active delegations represent the living market.
+
+### 4.2 Where do delegators sit?
+
+Delegations concentrate overwhelmingly in one cell:
+
+| Cell | Pools | Delegations | Share | Stake (B) | Stake share | ADA / deleg |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Hollow × competitive | 519 | 1,016,299 | 80.0% | 12.72 | 60.1% | 12,513 |
+| Hollow × subsidised | 140 | 136,635 | 10.8% | 2.60 | 12.3% | 19,050 |
+| Hollow × additional-services | 55 | 68,155 | 5.4% | 1.64 | 7.8% | 24,106 |
+| Balanced × competitive | 42 | 25,091 | 2.0% | 0.50 | 2.4% | 19,862 |
+| Hollow × privatisation | 57 | 20,019 | 1.6% | 1.11 | 5.2% | 55,449 |
+| All other cells | 62 | 4,704 | 0.4% | 4.59 | 21.7% | 976,272 |
+
+80% of all delegations land in hollow × competitive. 10.8% in hollow × subsidised. Together, these two cells — the genuine delegation market — account for 90.8% of delegations but only 72.4% of stake. The gap is explained by the privatisation cells: private × privatisation holds 11.2% of stake through just 210 delegation addresses (operator self-delegation), and hollow × privatisation holds 5.2% of stake with 20K delegations averaging 55K ADA each — the custodial regime.
+
+### 4.3 Custodial versus retail
+
+Not all staked ADA is delegated by sovereign users choosing a pool on the open market. A significant share is **custodial** — controlled by operators who route capital through their own infrastructure. Custodial capital takes two structurally distinct forms.
+
+**Custodial by pledge** — private-strategy entities (≥ 95% owner-stake) who fund their pools with their own capital. The 290 delegation addresses in these pools are operator wallets, not market participants. The operator *is* the delegator.
+
+**Custodial by delegation** — hollow-strategy entities (< 10% owner-stake) where the ratio of stake to delegator count exceeds 1M ADA per address. The protocol classifies these pools as delegation-funded, but the delegated capital is not attracted from an open market — the operator controls the routing. Exchanges and institutional validators are the primary examples.
+
+#### The headline split
+
+| Segment | Entities | Pools | Delegations | Stake (B) | % of total stake |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| **Custodial by pledge** | 13 | 47 | 290 | 2.51 | 11.9% |
+| **Custodial by delegation** | 22 | ~84 | 835 | 3.91 | 18.5% |
+| **Combined custodial** | **35** | **~131** | **1,125** | **6.42** | **30.4%** |
+| Retail | ~458 | ~744 | 1,269,778 | 14.74 | 69.6% |
+
+30.4% of all staked ADA is custodial. It flows through 1,125 delegation addresses — 0.09% of the 1.27M total. The remaining 69.6% is retail: 1.27M sovereign delegators choosing pools on the open market.
+
+#### Custodial by pledge — the private-strategy entities
+
+These 13 entities operate 47 pools funded almost entirely by operator capital. Most apply 100% margin — rewards never leave the operator's control. Two entities (Wave, one anonymous) sit in the competitive band with margin ≤ 5%, but their ≥ 95% owner-stake ratio still makes them self-delegating.
+
+| Entity | Pools | Stake (M) | Deleg | ADA / deleg | Margin |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| CHUCK BUX | 12 | 772 | 12 | 64.3M | 100% |
+| Upbit | 15 | 517 | 19 | 27.2M | 100% |
+| Cardano Foundation | 6 | 456 | 30 | 15.2M | 100% |
+| Adalite platform cluster | 3 | 158 | 5 | 31.6M | 100% |
+| Wave | 2 | 150 | 73 | 2.1M | 4.0% |
+| 3 × anonymous | 3 | 228 | 3 | 75.5M | 100% |
+| 1 × anonymous | 1 | 73 | 24 | 3.0M | 100% |
+| Bloom | 1 | 71 | 8 | 8.9M | 100% |
+| LQWD | 2 | 47 | 17 | 2.8M | 100% |
+| 1 × anonymous | 1 | 39 | 92 | 0.4M | 100% |
+| 1 × anonymous | 1 | 1 | 7 | 0.2M | 1.0% |
+| **Total** | **47** | **2,512** | **290** | | |
+
+The top three — CHUCK BUX, Upbit, Cardano Foundation — hold 69.5% of custodial-by-pledge stake. CHUCK BUX is an opaque multi-pool entity (12 pools, 64M ADA per delegation address, 100% margin). Upbit is a Korean exchange. The Cardano Foundation operates its own treasury pools. Wave is the only named entity in the competitive band — a community fleet that happens to self-fund.
+
+#### Custodial by delegation — the hollow-strategy custodial entities
+
+22 entities with ≥ 1M ADA per delegation address. These are exchanges, institutional validators (IVaaS), and anonymous whale pools that appear hollow to the protocol — owner-stake below 10% — but whose delegation addresses are operator-controlled.
+
+The custodial-by-delegation stake distributes unevenly across the four hollow cells. The measurement is per entity × cell: an entity spanning two cells (e.g. Blockdaemon in competitive and additional-services) is assessed separately in each.
+
+| Cell | Cell total (B) | Custodial entities | Custodial pools | Custodial stake (B) | % of cell stake | % of cell deleg |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Hollow × competitive | 12.72 | 11 | 66 | 3.65 | 28.7% | 0.1% |
+| Hollow × additional-services | 1.64 | 5 | 11 | 0.33 | 20.1% | 0.4% |
+| Hollow × privatisation | 1.11 | 11 | 23 | 0.78 | 70.3% | 0.6% |
+| Hollow × subsidised | 2.60 | 1 | 1 | 0.01 | 0.3% | 0.0% |
+
+The pattern is clear: custodial capital represents a large share of *stake* but a negligible share of *delegations*. In hollow × competitive, 28.7% of stake flows through 0.1% of delegation relationships. In hollow × privatisation, the cell is 70.3% custodial — confirming that "functionally private" pools (§5.5) are overwhelmingly operator-routed. The subsidised cell is essentially custodial-free.
+
+**Hollow × competitive — the 11 custodial entities.**
+
+| Entity | Pools | Stake (M) | Cell share | Deleg | ADA / deleg | Margin |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Coinbase | 41 | 2,444 | 19.2% | 403 | 6.1M | 5.0% |
+| Kiln | 9 | 635 | 5.0% | 445 | 1.4M | 3.0% |
+| Blockdaemon | 5 | 289 | 2.3% | 47 | 6.1M | 3.0% |
+| Figment | 4 | 152 | 1.2% | 22 | 6.9M | 2.0% |
+| pool106s… | 1 | 51 | 0.4% | 3 | 16.9M | 3.0% |
+| Binance | 1 | 34 | 0.3% | 17 | 2.0M | 3.0% |
+| pool18jq… | 1 | 13 | 0.1% | 9 | 1.5M | 2.0% |
+| pool1m4n… | 1 | 12 | 0.1% | 5 | 2.4M | 1.0% |
+| pool16qr… | 1 | 7 | 0.1% | 2 | 3.5M | 2.0% |
+| pool1hjp… | 1 | 5 | 0.0% | 3 | 1.8M | 2.0% |
+| pool1wun… | 1 | 5 | 0.0% | 3 | 1.7M | 5.0% |
+| **Total** | **66** | **3,649** | **28.7%** | **959** | | |
+
+Four named entities — Coinbase, Kiln, Blockdaemon, Figment — account for 96.5% of custodial-by-delegation stake within the cell (3.52B of 3.65B). These are the exchanges and institutional validators identified in §5.1.1: hollow by owner-stake ratio, but the delegated capital is routed by the operator, not attracted from an open market. Coinbase alone — 19.2% of the cell — holds more stake than the bottom 200 entities combined.
+
+The remaining 7 are anonymous single-pool entities with 2 to 17 delegators each, collectively holding 0.13B. The custodial signal (millions of ADA per address) suggests whale self-delegation or small custodial operations.
+
+#### The structural implication
+
+The two forms of custodial capital are economically identical — the operator controls the ADA — but structurally distinct. Custodial-by-pledge entities own the capital and extract through margin (typically 100%). Custodial-by-delegation entities route client capital and extract through competitive margins (2–5%) plus off-chain fees invisible to the protocol.
+
+Together, 35 entities control 6.42B ADA — 30.4% of all staked capital — through 1,125 delegation addresses. The remaining 69.6% (14.74B) is retail, distributed across 1.27M delegations. The average retail delegation is ~11,600 ADA, but this masks enormous variance — from Everstake's mass market (1,730 ADA/deleg, 258K delegators) to mid-tier community pools (20–50K ADA/deleg, hundreds of delegators each).
+
+### 4.4 Credential type — key versus script
+
+The on-chain transaction itself carries no metadata identifying the originating wallet software (Eternl, Lace, Yoroi, Daedalus, `cardano-cli`) — a `stake_delegation_certificate` is identical regardless of the interface that submitted it. The credential type, however, is encoded in the stake address: `stake1u…` for **key-based** credentials (wallet controlled by a private key) and `stake17…` for **script-based** credentials (smart contract, multisig, or governance script). This is the finest on-chain classification available.
+
+Querying all 871 rewarded pools via Koios `pool_delegators` (epoch 614):
+
+| Credential | Delegations | % | Stake (B) | % |
+| --- | ---: | ---: | ---: | ---: |
+| Key-based | 1,188,967 | 99.97% | 20.37 | 99.81% |
+| Script-based | 318 | 0.03% | 0.04 | 0.19% |
+
+Script-based delegations are negligible — 318 addresses out of 1.19M, carrying 39M ADA. DeFi vaults, DAO treasuries, and multisig governance mechanisms account for almost none of the staking capital.
+
+By strategy, the distribution is uniformly key-dominated:
+
+| Strategy | Key deleg | Script deleg | Script % (deleg) | Script % (stake) |
+| --- | ---: | ---: | ---: | ---: |
+| Hollow | 1,159,710 | 303 | 0.03% | 0.22% |
+| Balanced | 28,985 | 14 | 0.05% | 0.03% |
+| Private | 272 | 1 | 0.37% | 0.00% |
+
+The only entity with material script-stake is Spire (3 script-delegations, 9.5M ADA, 9.6% of its own stake). No other entity exceeds 0.5M ADA in script-based delegation.
+
+The closest proxy for wallet-of-origin is the default pool assignment: platforms like Everstake and Atomic Wallet capture hundreds of thousands of delegators through UX-driven defaults, but this is an inference from delegation patterns, not an on-chain datum. The key/script split confirms that the ADA-per-delegator heuristic used in §4.3 remains the most effective on-chain proxy for distinguishing custodial from retail capital — the credential type cannot separate them.
+
+_Data: `data/delegator_credential_by_pool.csv` (871 pools, built via `scripts/build_delegator_credential_profile.py`)._
+
+### 4.5 Delegation concentration
+
+Delegation relationships are concentrated by entity — but the concentration follows a different axis than stake concentration. The top 20 entities by delegator count:
+
+| # | Entity | Delegations | Cum. deleg | ADA / deleg | Stake (M) | Cum. stake |
+| ---: | --- | ---: | ---: | ---: | ---: | ---: |
+| 1 | Everstake | 264,002 | 20.8% | 2K | 562 | 2.7% |
+| 2 | STSH1 / Atomic Wallet | 83,770 | 27.4% | 1K | 48 | 2.9% |
+| 3 | NuFi | 41,483 | 30.6% | 8K | 314 | 4.4% |
+| 4 | Kiln | 35,170 | 33.4% | 21K | 750 | 7.9% |
+| 5 | Figment | 31,838 | 35.9% | 22K | 700 | 11.2% |
+| 6 | CRDNS | 23,397 | 37.7% | 10K | 230 | 12.3% |
+| 7 | CCV | 23,371 | 39.6% | 8K | 177 | 13.1% |
+| 8 | pool19f6… | 22,052 | 41.3% | 1K | 31 | 13.3% |
+| 9 | FREE | 18,061 | 42.7% | 4K | 78 | 13.7% |
+| 10 | NORTH | 17,380 | 44.1% | 21K | 362 | 15.4% |
+| 11 | Bloom | 15,300 | 45.3% | 14K | 220 | 16.4% |
+| 12 | DAPP | 15,281 | 46.5% | 9K | 141 | 17.1% |
+| 13 | Emurgo | 15,242 | 47.7% | 17K | 259 | 18.3% |
+| 14 | PAUL1 | 15,047 | 48.9% | 6K | 91 | 18.7% |
+| 15 | EDEN | 13,516 | 50.0% | 13K | 171 | 19.5% |
+| 16 | 5BINARIES | 12,372 | 50.9% | 9K | 108 | 20.0% |
+| 17 | ADV | 12,267 | 51.9% | 21K | 258 | 21.3% |
+| 18 | BRAVO | 10,826 | 52.7% | 6K | 68 | 21.6% |
+| 19 | pool1jt7… | 10,646 | 53.6% | 1K | 13 | 21.6% |
+| 20 | SECUR | 10,062 | 54.4% | 23K | 233 | 22.7% |
+
+Two numbers tell the story. After 20 entities: 54.4% of delegations but only 22.7% of stake. Delegation and stake are concentrated along different axes.
+
+The delegation leaders are wallet integrations and retail-facing platforms — Everstake (264K delegators, 2K ADA each), Atomic Wallet / STSH1 (84K, 568 ADA each), NuFi (41K, 8K each). They capture enormous numbers of small delegators through product UX. The stake leaders (§5.1.1) are custodial entities — Coinbase (2.44B, 403 delegators), Kiln (750M, 35K), Figment (700M, 32K). They hold far more capital per delegation address.
+
+The thresholds summarise this:
+
+| | Top entities by delegation count | Top entities by stake |
+| --- | ---: | ---: |
+| **Top 2** | 27.4% of deleg, 2.9% of stake | 15.2% of stake, 0.0% of deleg |
+| **Top 5** | 35.9% of deleg, 11.2% of stake | 24.8% of stake, 5.4% of deleg |
+| **Top 10** | 44.1% of deleg, 15.4% of stake | 37.3% of stake, 26.9% of deleg |
+| **Top 20** | 54.4% of deleg, 22.7% of stake | 51.8% of stake, 38.5% of deleg |
+| **Top 50** | 72.4% of deleg, 35.5% of stake | 68.1% of stake, 54.6% of deleg |
+
+The top 2 by delegation count hold 27.4% of delegations but only 2.9% of stake — mass-market retail. The top 2 by stake hold 15.2% of stake but 0.0% of delegations — custodial capital. The two rankings converge only past the top 50, where the distinction between institutional and community operators blurs.
+
+This dual concentration has a governance implication: the entities that touch the most *people* (wallet platforms) are not the entities that control the most *capital* (exchanges, IVaaS). Any mechanism that counts delegators weighs the ecosystem differently from one that counts ADA.
+
+### 4.6 The pool-level distribution
+
+Pools vary by four orders of magnitude in delegator count:
+
+| Delegators per pool | Pools | Delegations | Stake (B) |
+| --- | ---: | ---: | ---: |
+| 1–10 | 140 | 571 | 5.51 |
+| 10–100 | 188 | 7,521 | 3.63 |
+| 100–500 | 195 | 51,563 | 2.23 |
+| 500–1K | 94 | 67,972 | 1.33 |
+| 1K–5K | 198 | 437,141 | 5.74 |
+| 5K+ | 60 | 706,135 | 2.73 |
+
+The 1–10 bracket holds 140 pools with 5.51B ADA but only 571 delegations — these are private and custodial pools where a few large wallets account for all the stake. The 5K+ bracket holds 60 pools with 706K delegations — the retail-heavy pools (Everstake, Atomic, NuFi). The median pool has 271 delegators.
+
+The table reveals an inversion: the pools with the fewest delegators hold *more* stake (5.51B) than the pools with the most delegators (2.73B). Capital concentration and delegation count measure different things — the first tracks where institutional and custodial money sits, the second tracks where retail users go.
+
+## 5. Entities & Strategies
 
 Crossing the three owner-stake strategies with the four margin bands produces a 3 × 4 matrix of combined positions. At epoch 614, ten of the twelve cells are populated. The figure below shows each cell's pool count, entity count, aggregate stake, and internal composition by pool-size tier ($z_0 \approx 77\text{M ADA}$). The classification is an entity-level property: 472 of 502 entities (94.0%) place all their pools in a single cell, and 98.6% follow a single pure owner-stake strategy across their entire fleet. The 30 entities that span multiple cells are large institutional operators (Kiln, Figment, Binance) whose margin varies across pools while the owner-stake strategy remains the same.
 
@@ -493,11 +700,11 @@ Two cells are empty — *private × subsidised* and *private × additional-servi
 
 The ten populated cells are presented below in descending order of active stake.
 
-#### 3.3.1 Hollow × competitive — the delegation market
+### 5.1 Hollow × competitive — the delegation market
 
 519 pools, 290 entities, 12.72B ADA, 60.1% of stake.
 
-##### 3.3.1.1 Who are the 290 entities?
+#### 5.1.1 Who are the 290 entities?
 
 The delegation market is structurally dual: a small institutional head and a long community tail.
 
@@ -564,7 +771,7 @@ The operator take of 6.4% is the lowest of any non-subsidised cell, yet it still
 
 **Market structure.** MPOs control 70% of the stake despite representing 51% of pools. SPOs undercut them on margin (median 1.0% vs 3.0%), but delegation flows to scale, not to price. The tier composition is broadly healthy — 80% of pools fall in the 3–62M ADA Healthy range — but 14% remain Sub-viable, persisting below the 3M ADA threshold where the fixed-cost tax exceeds 30%. The top five entities (Everstake, Kiln, Coinbase, NuFi, Blockdaemon) collectively control 1.7B ADA (18% of the cell) across 43 pools — all large MPOs.
 
-#### 3.3.2 Hollow × subsidised — the fragile tail
+### 5.2 Hollow × subsidised — the fragile tail
 
 140 pools, 125 entities, 2.60B ADA, 12.3%.
 
@@ -588,7 +795,7 @@ The effective operator take of 4.7% is the lowest of any cell on the network. Th
 
 **Market structure.** Unlike every other hollow cell, stake splits almost evenly between MPOs (51%) and single-pool operators (49%). This is the only cell where SPOs hold near-parity. The median pool size (5.6M ADA) is the second-lowest of any hollow cell, and the tier composition is stark: 39% Sub-viable, 47% Healthy, 14% Large. The top entities (NORTH, ADV, Everstake) run multi-pool fleets at zero margin — but 103 of the 140 pools are operated by single-pool operators. The zero-margin choice correlates with a different operator profile: smaller, less professionalised, competing on principle rather than on infrastructure. The 39% sub-viable rate — the highest of any cell — signals that this population is the most vulnerable to the declining epoch pot.
 
-#### 3.3.3 Private × privatisation — the self-funded regime
+### 5.3 Private × privatisation — the self-funded regime
 
 44 pools, 11 entities, 2.36B ADA, 11.2%.
 
@@ -612,7 +819,7 @@ Margin absorbs 98.5% of rewards. Fixed cost is negligible (1.5%) because these p
 
 **Market structure.** The tier composition contradicts the intuition that "private" means "small": 50% of pools sit above 62M ADA (Near-saturation or Saturated), and the average pool size is 53.6M ADA. MPOs dominate (86% of stake across 39 of 44 pools). The top three entities — CHUCK BUX (12 pools, 0.77B), Upbit (15 pools, 0.52B), Cardano Foundation (6 pools, 0.46B) — control 74% of the cell's stake. These are well-capitalised institutional operators running pools as internal capital allocation, not as market participants.
 
-#### 3.3.4 Hollow × additional-services — the premium tier
+### 5.4 Hollow × additional-services — the premium tier
 
 55 pools, 19 entities, 1.64B ADA, 7.8% of stake.
 
@@ -636,7 +843,7 @@ The operator take of 11.9% is nearly double the competitive cell (6.4%), driven 
 
 **Market structure.** This is the most MPO-concentrated cell on the network: 90% of stake across 42 of 55 pools. The top three entities — Binance (16 pools, 0.56B), Figment (16 pools, 0.55B), Blockdaemon (7 pools, 0.25B) — control 82% of the cell's stake. Only 13 SPO pools remain, holding 10% of stake. The tier composition is 80% Healthy, 11% Sub-viable, 9% Large. These operators justify the premium margin through institutional-grade infrastructure, reporting, compliance, and multi-chain service bundles — but from the delegator's perspective, the higher margin translates directly into lower yield.
 
-#### 3.3.5 Hollow × privatisation — the blind spot
+### 5.5 Hollow × privatisation — the blind spot
 
 57 pools, 39 entities, 1.11B ADA, 5.2%.
 
@@ -660,7 +867,7 @@ Unlike private × privatisation where fixed cost is negligible (1.5%), here it r
 
 **Market structure.** These are exchanges, custodians, and staking-as-a-service providers — eToro (11 pools, 0.51B ADA), StakeBowl (2 pools, 0.14B), YUTA (2 pools, 0.04B) — that exercise de facto control over delegated stake through custody. The on-chain owner-stake ratio measures *ownership*, not *control*: the exchange does not own the ADA, but it chooses the pool, sets the margin at ≥ 99%, and captures the reward. MPOs control 77% of the stake. The tier composition is 75% Healthy, 19% Sub-viable, 6% Large — a distribution that reflects captive pools sized to operational convenience rather than to competitive positioning. We call these **functionally private** pools: hollow by the owner-stake metric, private by economic behaviour. Their delegators are platform users, not free-market participants.
 
-#### 3.3.6 Balanced × competitive — skin in the game
+### 5.6 Balanced × competitive — skin in the game
 
 42 pools, 37 entities, 0.50B ADA, 2.4% of stake.
 
@@ -684,7 +891,7 @@ The operator take of 10.1% is higher than the hollow competitive cell (6.4%) for
 
 **Market structure.** The median pool size is 3.2M ADA — the smallest of any cell with more than 5 pools. 48% Sub-viable, 45% Healthy, 7% Large. MPOs hold 73% of stake but only operate 26% of pools — Wave/Wavepool (4 pools, 0.26B ADA) dominates the MPO segment. The remaining 31 pools are single-pool operators, making this the most structurally independent cell on the network. Entity scale is bounded by the operator's own capital, producing a population that is economically viable but never dominant.
 
-#### 3.3.7 Private × competitive — the structural exception
+### 5.7 Private × competitive — the structural exception
 
 3 pools, 2 entities, 0.15B ADA, 0.7% of stake.
 
@@ -708,7 +915,7 @@ The operator take of 5.9% is the lowest of any non-subsidised cell — even lowe
 
 **Market structure.** The cell is dominated by Wave/Wavepool (2 pools, 0.15B ADA), which operates across the private and balanced strategies with consistently competitive margins and high pledge. The third pool is a small independent. This cell is analytically small but structurally significant: it demonstrates that private-strategy operators *can* price competitively and pledge meaningfully — they simply choose not to in 94% of cases.
 
-#### 3.3.8 Balanced × subsidised — community operators
+### 5.8 Balanced × subsidised — community operators
 
 11 pools, 11 entities, 0.05B ADA, 0.2% of stake.
 
@@ -732,7 +939,7 @@ The operator take of 17.5% is high relative to the cell's altruistic positioning
 
 **Market structure.** 10 of 11 pools are single-pool operators — the purest SPO cell in the matrix. Median pool size 3.1M ADA, 45% Sub-viable. These are community operators who commit personal capital (median owner ratio 27.8%) and forgo all discretionary revenue. The population is small but structurally revealing: it represents the maximum alignment the current mechanism can produce without any pledge-bonus incentive.
 
-#### 3.3.9 Balanced × additional-services
+### 5.9 Balanced × additional-services
 
 2 pools, 2 entities, 0.02B ADA, 0.1% of stake.
 
@@ -748,7 +955,7 @@ The operator take of 17.5% is high relative to the cell's altruistic positioning
 
 **Fee and market profile.** Median margin 8.5%. One pool is operated by IOG (13M ADA, Material pledge); the other is a small independent (3M ADA). The cell is too small for statistical characterisation but notable as the only balanced cell where an institutional operator (IOG) appears.
 
-#### 3.3.10 Balanced × privatisation
+### 5.10 Balanced × privatisation
 
 2 pools, 2 entities, 0.01B ADA, 0.1% of stake.
 
@@ -764,7 +971,7 @@ The operator take of 17.5% is high relative to the cell's altruistic positioning
 
 **Fee and market profile.** Both pools declare margin ≥ 99%, extracting effectively all rewards. One is operated by Wave/Wavepool (12M ADA, the same entity that appears across private × competitive and balanced × competitive — the only entity spanning three matrix cells), the other is a small independent (2M ADA). These are balanced by owner-stake ratio (10–95%) but privatised by margin choice — a hybrid posture where the operator commits capital but captures the full reward, leaving no meaningful delegator pot.
 
-#### 3.3.11 Comparative summary
+### 5.11 Comparative summary
 
 The ten cells share a common analytical template but reveal radically different economic regimes. The table below juxtaposes the key metrics, ordered by descending stake:
 
@@ -783,7 +990,7 @@ The ten cells share a common analytical template but reveal radically different 
 
 Four observations cut across the cells. First, the fixed-cost floor is the dominant extraction mechanism in every cell where operator take is below 100% — it exceeds margin in the competitive cells (hollow: 60% of operator take, balanced: 71%) and accounts for 100% of operator take in both subsidised cells. Second, pledge commitment correlates inversely with cell size: the three private-strategy pools pledge at 67%, balanced cells average 26–50%, while the competitive hollow market (60.1% of total stake) pledges at only 13%. Third, the sub-viable rate rises as the operator profile moves from institutional (0% in private privatisation and private competitive) to community-driven (12% in balanced competitive, 9% in balanced subsidised) — the populations with the most aligned operators are also the most fragile. Fourth, the additional-services band reveals two distinct economic models: in the hollow population (55 pools, 1.64B ADA) it covers exchanges and custodians extracting a premium margin, while in the balanced population (2 pools, 15M ADA) it represents niche operators with genuine capital commitment but above-competitive fees.
 
-#### 3.3.12 Margin extraction decomposition
+### 5.12 Margin extraction decomposition
 
 These structural differences have a direct consequence for how we read the headline margin figure. Total margin extraction at epoch 614 is **1,332,699 ADA** — but 88% of it comes from populations where margin is not a competitive instrument:
 
@@ -801,11 +1008,11 @@ In the genuine hollow market — the only population where margin operates as a 
 > **Finding F3.10 — Margin is a competitive instrument in only 12% of its own headline extraction.** Of the 1.33M ADA extracted via margin per epoch, 88% comes from declared-private and functionally private pools where the margin serves an accounting or custodial function, not a pricing one. In the genuine hollow market, fixed cost exceeds margin as the dominant fee component (58.6% vs 41.4%), and margin competition resolves into a tight low-fee norm once the compositional artefact is removed.
 
 
-## 4. The delegator's strategy
+## 6. The delegator's strategy
 
-The three strategies above describe the operator's side of the split. The delegator's side is simpler — not because the decision is trivial, but because the formula gives delegators a narrower action space.
+The preceding sections describe the operator's side of the split — fee parameters (§3), the delegation terrain (§4), and how entities combine these into strategies (§5). The delegator's side is simpler — not because the decision is trivial, but because the formula gives delegators a narrower action space.
 
-### 4.1 What the formula offers
+### 6.1 What the formula offers
 
 A delegator who stakes $t$ ADA in a pool receives:
 
@@ -815,11 +1022,11 @@ $$
 
 The delegator controls $t$ (the amount staked) and the choice of pool. Everything else — the pool reward $PoolPot^{\text{actual}}_{i}$, the fixed cost, the margin, and the total stake $\sigma$ — is set by the operator or determined by the protocol. The delegator's entire strategic space reduces to a single decision: *which pool to delegate to*.
 
-### 4.2 The yield criterion
+### 6.2 The yield criterion
 
 From the formula, the delegator's per-ADA yield depends on three factors, none of which the delegator controls directly: pool performance (reliable block production), operator fees (the effective tax extracted before pro-rata), and pool saturation (oversaturated pools dilute returns). The annualised return on stake (ROS) — the single metric that aggregates all three — is the delegator's natural selection criterion.
 
-#### 4.2.1 The yield trajectory — level, decline, and projection
+#### 6.2.1 The yield trajectory — level, decline, and projection
 
 At epoch 614, a delegator in the hollow market earns a stake-weighted annualised yield of **2.01%**. A delegation of 10,000 ADA produces approximately **201 ADA/year**, or ~2.8 ADA per epoch.
 
@@ -831,9 +1038,9 @@ The figure shows the full trajectory: 405 epochs of observed yield (solid red) a
 
 This projection assumes constant active stake and no governance action. Both assumptions will eventually break — active stake may decline as yield compresses, and the community may revise protocol parameters before the yield reaches negligibility. But the trajectory establishes the default path: absent intervention, the native staking yield will halve roughly every 3 years, reaching sub-1% within a single governance cycle.
 
-The declining yield also tightens the participation constraint for operators (§3.3): as the epoch pot shrinks, the operator's margin and cost premium shrinks proportionally. At some point, operating a pool becomes unprofitable at any margin the delegation market will bear. This is the downstream dependency that the main report ([§2.4.4.4](../../../README.md#2444-the-downstream-dependency)) identifies.
+The declining yield also tightens the participation constraint for operators (§5): as the epoch pot shrinks, the operator's margin and cost premium shrinks proportionally. At some point, operating a pool becomes unprofitable at any margin the delegation market will bear. This is the downstream dependency that the main report ([§2.4.4.4](../../../README.md#2444-the-downstream-dependency)) identifies.
 
-#### 4.2.2 Cardano's yield in context — three evaluation frames
+#### 6.2.2 Cardano's yield in context — three evaluation frames
 
 At ~2.1% annualised, Cardano's native staking yield sits at the lower end of the PoS landscape and below the risk-free rate in traditional finance.
 
@@ -851,11 +1058,11 @@ Whether this yield is "good enough" depends on the delegator's evaluation frame:
 
 What Cardano's delegation mechanism loses in yield, it gains in liquidity and simplicity: no lockup, no unbonding delay, no slashing risk, no minimum threshold, no custodial transfer. No other major PoS chain offers this combination. The low yield is the price of a design that prioritises liquid, non-custodial participation — a deliberate trade-off, not an oversight.
 
-#### 4.2.3 The yield spread — how different are pools?
+#### 6.2.3 The yield spread — how different are pools?
 
 The more important question for the delegator is not the absolute level but the *spread* — how much yield varies across the pools available for delegation. The answer depends on which segment of the pool landscape the delegator is looking at, and it changes over time as the reserve depletes. What follows is a per-strategy decomposition of the yield surface, grounded in 405 epochs of mainnet history (epochs 211–615).
 
-##### 4.2.3.1 Cross-strategy trajectory
+##### 6.2.3.1 Cross-strategy trajectory
 
 The figure below tracks the stake-weighted average delegator yield for each strategy across 405 epochs of mainnet history. The solid lines show single-epoch yields; the dashed lines show the trailing-year (73-epoch) average, which smooths out block-production noise. The shaded area between the two curves is the balanced-hollow gap.
 
@@ -871,11 +1078,11 @@ Three patterns are visible across the full history:
 
 Private pools are excluded from the figure: they have negligible third-party delegation by definition and their per-delegator yield is meaningless at the aggregate level.
 
-At the most recent closed epoch (614), the hollow market is where almost all delegation lives: 17.75B ADA across 765 pools, with a stake-weighted average yield of 2.01%. The middle half of hollow pools fall between 1.39% and 2.38% — a spread of just 1.00 percentage point. Balanced pools (57 pools, 0.31B ADA) show a headline spread more than twice as wide (2.36pp), but this is misleading — the dispersion is driven by small-pool block luck rather than structural factors, as §4.2.3.3 explains. Private pools (47) have negligible third-party delegation.
+At the most recent closed epoch (614), the hollow market is where almost all delegation lives: 17.75B ADA across 765 pools, with a stake-weighted average yield of 2.01%. The middle half of hollow pools fall between 1.39% and 2.38% — a spread of just 1.00 percentage point. Balanced pools (57 pools, 0.31B ADA) show a headline spread more than twice as wide (2.36pp), but this is misleading — the dispersion is driven by small-pool block luck rather than structural factors, as §6.2.3.3 explains. Private pools (47) have negligible third-party delegation.
 
-Six additional pools are structurally hollow by their owner-stake ratio but operationally dead — they hold 0.22B ADA in nominal delegation yet pay 0% yield. They are not participants in the delegation market; §4.2.3.4 discusses them separately. The 765 hollow pools referenced above exclude these six.
+Six additional pools are structurally hollow by their owner-stake ratio but operationally dead — they hold 0.22B ADA in nominal delegation yet pay 0% yield. They are not participants in the delegation market; §6.2.3.4 discusses them separately. The 765 hollow pools referenced above exclude these six.
 
-##### 4.2.3.2 Inside the hollow market
+##### 6.2.3.2 Inside the hollow market
 
 Within these 765 hollow pools, yield is overwhelmingly determined by pool size — specifically, by the interaction between the 340 ADA fixed-cost floor and total pool rewards. The figure below shows the median yield (bar height) and the middle-half range (25th–75th percentile, vertical line) for each size bucket at epoch 614. The annotation above each bar indicates how much delegation and how many pools each bucket contains.
 
@@ -883,15 +1090,15 @@ Within these 765 hollow pools, yield is overwhelmingly determined by pool size �
 
 Two patterns emerge:
 
-1. **Yield rises monotonically with size** up to the saturation point. The median ROS doubles from 1.12% in the smallest bucket to 2.18% in the 30–77M bucket. This is almost entirely a fixed-cost effect: the 340 ADA floor consumes 100% of rewards for pools near 1M ADA but only ~3.5% for pools at 30M ADA (§4.2.4).
+1. **Yield rises monotonically with size** up to the saturation point. The median ROS doubles from 1.12% in the smallest bucket to 2.18% in the 30–77M bucket. This is almost entirely a fixed-cost effect: the 340 ADA floor consumes 100% of rewards for pools near 1M ADA but only ~3.5% for pools at 30M ADA (§6.2.4).
 
 2. **Variance collapses as pools grow.** The middle-half spread drops from 2.25pp for sub-3M pools to 0.46pp in the 30–77M band — a fivefold narrowing. Small pools are dominated by block-production luck: a pool expecting two blocks per epoch may mint zero or four, creating wild single-epoch swings that have nothing to do with pool quality. Large pools, minting 20+ blocks per epoch, converge on their expected share and the remaining spread becomes structural.
 
 The 30–77M bucket carries 70% of all hollow delegation (12.43B ADA). This is the segment most delegators actually inhabit, and it is the flattest part of the yield surface.
 
-##### 4.2.3.3 The balanced premium — real or artefact?
+##### 6.2.3.3 The balanced premium — real or artefact?
 
-At epoch 614, balanced pools report a stake-weighted average yield of 4.08% — nearly double the hollow average of 2.01%. The historical trajectory in §4.2.3.1 shows the gap has fluctuated between −0.03pp and +0.93pp over 405 epochs, with a trailing-year average that has hovered around 0.12–0.36pp since the pool landscape stabilised. The single-epoch snapshot overstates the structural difference.
+At epoch 614, balanced pools report a stake-weighted average yield of 4.08% — nearly double the hollow average of 2.01%. The historical trajectory in §6.2.3.1 shows the gap has fluctuated between −0.03pp and +0.93pp over 405 epochs, with a trailing-year average that has hovered around 0.12–0.36pp since the pool landscape stabilised. The single-epoch snapshot overstates the structural difference.
 
 Two factors explain the inflated epoch-614 number:
 
@@ -899,37 +1106,37 @@ Two factors explain the inflated epoch-614 number:
 
 2. **Mechanical delegation-base effect.** In a balanced pool, the operator absorbs a larger share of rewards through the proportional (ρ_operator) term of the SL-D1 split. The remaining rewards are divided among fewer delegated ADA, sometimes producing a higher per-ADA yield for the delegator.
 
-A fair comparison controls for size. Among pools with 10–50M ADA active stake at epoch 614, balanced pools show a stake-weighted average of 3.01% versus 2.04% for hollow — a ~0.9pp premium (right panel below). But the sample is just 11 balanced pools, and the historical trajectory in §4.2.3.1 shows this gap is not stable across epochs. A delegator cannot rely on a persistent balanced premium.
+A fair comparison controls for size. Among pools with 10–50M ADA active stake at epoch 614, balanced pools show a stake-weighted average of 3.01% versus 2.04% for hollow — a ~0.9pp premium (right panel below). But the sample is just 11 balanced pools, and the historical trajectory in §6.2.3.1 shows this gap is not stable across epochs. A delegator cannot rely on a persistent balanced premium.
 
-##### 4.2.3.4 Dead pools — hollow in name, zero in yield
+##### 6.2.3.4 Dead pools — hollow in name, zero in yield
 
 Six pools classified as hollow by their owner-stake ratio (<10%) have two or fewer delegators and pay exactly 0% delegator yield. The operator controls each pool entirely and extracts all rewards through the cost-plus-margin mechanism, leaving nothing for the residual delegation slot. Together they hold 0.22B ADA in nominal delegation — stake that earns zero return.
 
-These pools are not competitive participants in the delegation market. They serve as a reminder that the structural label alone does not guarantee a functioning delegator relationship. A delegator who selects a pool purely on declared parameters without checking the actual yield history risks a complete loss of staking return. The phenomenon is analysed in detail in §3.3.1 (the hollow competitive market).
+These pools are not competitive participants in the delegation market. They serve as a reminder that the structural label alone does not guarantee a functioning delegator relationship. A delegator who selects a pool purely on declared parameters without checking the actual yield history risks a complete loss of staking return. The phenomenon is analysed in detail in §5.1 (the hollow competitive market).
 
-##### 4.2.3.5 SPO versus MPO
+##### 6.2.3.5 SPO versus MPO
 
 Among hollow pools, single-pool operators (SPOs) and multi-pool operators (MPOs) deliver near-identical stake-weighted yields. The left panel of the figure below shows the comparison at epoch 614.
 
 ![SPO vs MPO and Hollow vs Balanced — Epoch 614](figures/spo_mpo_and_balanced_comparison.png)
 
-SPOs charge lower margins (median 1.0% vs 3.0%) but tend to run smaller pools, so the fixed-cost floor erodes more of their reward. MPO pools are typically larger, which offsets their higher margins. The net effect: from the delegator's perspective, the yield difference between SPO and MPO is negligible at the portfolio level (2.05% vs 2.00%). The choice between them is driven by decentralisation preferences (§4.3) rather than return.
+SPOs charge lower margins (median 1.0% vs 3.0%) but tend to run smaller pools, so the fixed-cost floor erodes more of their reward. MPO pools are typically larger, which offsets their higher margins. The net effect: from the delegator's perspective, the yield difference between SPO and MPO is negligible at the portfolio level (2.05% vs 2.00%). The choice between them is driven by decentralisation preferences (§6.3) rather than return.
 
-##### 4.2.3.6 Oversaturation drag
+##### 6.2.3.6 Oversaturation drag
 
 Six hollow pools operate above the saturation threshold (~77M ADA), with active stakes ranging from 83M to 122M ADA (108–158% saturation). Their yields range from 1.30% to 2.03%, consistently below the 2.18% median of the 30–77M bucket.
 
 The drag is mechanical: the reward formula caps the pool's reward at the saturation level, but the rewards are still divided across all delegated ADA. Every ADA above the cap dilutes returns for all delegators in the pool. The most oversaturated pool (158% saturation) delivers only 1.56% ROS — equivalent to a normally saturated pool in the 10–30M range. A delegator in an oversaturated pool would improve their yield by roughly 0.5–0.9pp simply by moving to a non-saturated pool of any size above 10M ADA.
 
-##### 4.2.3.7 Variance decomposition — luck versus structure
+##### 6.2.3.7 Variance decomposition — luck versus structure
 
 Much of the within-epoch spread overstates the *structural* differences between pools. Among 443 hollow pools above 10M ADA at epoch 614, the correlation between blocks-per-ADA and single-epoch yield is 0.64 (R² = 0.41). Block-production luck accounts for roughly 41% of single-epoch yield variance.
 
-The historical data confirms this at the aggregate level: the standard deviation of the hollow stake-weighted yield across 73 trailing epochs is just 0.10pp. Epoch-to-epoch changes in the aggregate hollow yield average −0.008pp (the secular decline) with a standard deviation of 0.075pp — meaning most of the epoch-to-epoch movement is noise rather than signal. Over a full year (73 epochs), block luck averages out and the structural spread that persists — the part driven by pool size and operator fees — is an order of magnitude smaller than the single-epoch noise. This is the core finding that §4.2.4 synthesises.
+The historical data confirms this at the aggregate level: the standard deviation of the hollow stake-weighted yield across 73 trailing epochs is just 0.10pp. Epoch-to-epoch changes in the aggregate hollow yield average −0.008pp (the secular decline) with a standard deviation of 0.075pp — meaning most of the epoch-to-epoch movement is noise rather than signal. Over a full year (73 epochs), block luck averages out and the structural spread that persists — the part driven by pool size and operator fees — is an order of magnitude smaller than the single-epoch noise. This is the core finding that §6.2.4 synthesises.
 
-#### 4.2.4 What drives the spread, and why the yield surface is flat
+#### 6.2.4 What drives the spread, and why the yield surface is flat
 
-The size-bucket analysis in §4.2.3.2 demonstrates *that* yield rises with pool size; the question here is *why*, and what it means for the delegator's choice.
+The size-bucket analysis in §6.2.3.2 demonstrates *that* yield rises with pool size; the question here is *why*, and what it means for the delegator's choice.
 
 **The fixed-cost hyperbola.** The 340 ADA minimum cost consumes a fraction of the pool reward that depends entirely on pool size. At current reward levels, a 3M ADA pool loses 35% of its reward to the floor (leaving ~1.6% annual yield at 0% margin), while a 30M pool loses only 3.5% (yielding ~2.4%). A delegator in the smaller pool sacrifices ~0.8pp of annual yield — entirely because of the fixed cost, not because of any difference in operator quality or margin. In effective-tax terms, the 340 ADA floor acts as a regressive levy: 54.3% for pools below 3M ADA, collapsing to 4.7% in the 30–77M band.
 
@@ -943,17 +1150,17 @@ A counterfactual confirms the diagnosis. The figure below removes the 340 ADA fl
 
 ![Fixed-Cost Effect on Delegator Yield — Hollow Pools](figures/yield_by_size_bucket_no_fixed_cost.png)
 
-Without the floor, the yield surface flattens: the median rises from 1.71% to 2.73% in the <3M bucket (+1.0pp) but barely moves in the 30–77M bucket (+0.05pp). The entire size gradient visible in §4.2.3.2 is produced by the fixed cost alone. The residual spread in the counterfactual comes from margin differences — which the bottom panel quantifies. Small pools charge lower margins (median 1.0%) than large ones (median 3.0%), so margins actually *attenuate* the size gradient rather than reinforce it. The stake-weighted mean margin is lowest in the 30–77M band (2.8%), confirming that margin competition is fiercest where most delegation lives.
+Without the floor, the yield surface flattens: the median rises from 1.71% to 2.73% in the <3M bucket (+1.0pp) but barely moves in the 30–77M bucket (+0.05pp). The entire size gradient visible in §6.2.3.2 is produced by the fixed cost alone. The residual spread in the counterfactual comes from margin differences — which the bottom panel quantifies. Small pools charge lower margins (median 1.0%) than large ones (median 3.0%), so margins actually *attenuate* the size gradient rather than reinforce it. The stake-weighted mean margin is lowest in the 30–77M band (2.8%), confirming that margin competition is fiercest where most delegation lives.
 
 **Margin.** Among large pools where the fixed cost is negligible, margin is the residual differentiator — but its impact is small. On a 30M ADA pool, moving from 0% to 3% margin reduces the delegator's annual yield by 0.07pp (from 2.37% to 2.30%). Moving from 0% to 10% costs 0.24pp. Margin explains the remaining spread once size is controlled for, but that remaining spread is narrow.
 
-**The flat yield surface.** The per-strategy decomposition in §4.2.3 and the structural analysis above converge on a single conclusion: the delegator's yield surface is remarkably flat. Among hollow pools, 70.2% of delegated stake sits within ±0.5 percentage points of the median yield (1.96%). The middle-half spread in the 30–77M band — where 70% of delegation lives — is just 0.46pp. Once block-production noise is averaged over a year (§4.2.3.7), the structural spread that persists across epochs is an order of magnitude smaller than the single-epoch noise.
+**The flat yield surface.** The per-strategy decomposition in §6.2.3 and the structural analysis above converge on a single conclusion: the delegator's yield surface is remarkably flat. Among hollow pools, 70.2% of delegated stake sits within ±0.5 percentage points of the median yield (1.96%). The middle-half spread in the 30–77M band — where 70% of delegation lives — is just 0.46pp. Once block-production noise is averaged over a year (§6.2.3.7), the structural spread that persists across epochs is an order of magnitude smaller than the single-epoch noise.
 
-The narrowness is not a bug — it is a direct consequence of a reward curve that distributes rewards roughly proportional to stake. The fixed-cost hyperbola penalises only small pools, margin competition has compressed fees in the large-pool regime, block production is proportional to stake, and the SPO/MPO distinction has no net yield effect (§4.2.3.5). The only pools that offer materially different returns are those the delegator should avoid: dead pools that extract 100% of rewards (§4.2.3.4), oversaturated pools (penalty of 0.5–0.9pp), and sub-3M pools (median 1.12%).
+The narrowness is not a bug — it is a direct consequence of a reward curve that distributes rewards roughly proportional to stake. The fixed-cost hyperbola penalises only small pools, margin competition has compressed fees in the large-pool regime, block production is proportional to stake, and the SPO/MPO distinction has no net yield effect (§6.2.3.5). The only pools that offer materially different returns are those the delegator should avoid: dead pools that extract 100% of rewards (§6.2.3.4), oversaturated pools (penalty of 0.5–0.9pp), and sub-3M pools (median 1.12%).
 
 A rational, yield-maximising delegator scanning the pool landscape finds that — after excluding these edge cases — most pools offer nearly identical returns. This is the structural condition that opens the door to the second criterion: when yield cannot meaningfully differentiate pools, the delegator's choice becomes partly an expression of values.
 
-### 4.3 Beyond yield — the ethics of pool selection
+### 6.3 Beyond yield — the ethics of pool selection
 
 The yield criterion is necessary but not sufficient. Two pools that offer identical ROS may differ in ways the formula does not capture but that matter to the delegator and to the network:
 
@@ -963,19 +1170,19 @@ The yield criterion is necessary but not sufficient. Two pools that offer identi
 
 **Transparency and conduct.** Operators differ in how they communicate fee changes, how they maintain infrastructure, how they engage with the community. These are reputational signals that the protocol does not encode but that delegators can observe and act on. A delegator who exits a pool after a surprise margin increase is exercising the accountability mechanism described in [*The Intended Game* §2.3](../../../the-intended-game/README.md#23-delegators--the-oversight-layer) — even if the formal yield difference is negligible.
 
-### 4.4 Myopic and non-myopic delegation
+### 6.4 Myopic and non-myopic delegation
 
 The formal literature distinguishes two delegator models that map directly onto the yield-vs-ethics tension above.
 
 A **myopic** delegator optimises for the *current epoch*. The decision is purely backward-looking: which pool delivered the highest ROS last epoch? The myopic delegator treats delegation as a spot market — move to the best-yielding pool, every epoch, ignoring second-order effects. Under this model, delegation flows toward the largest, most reliable, lowest-fee pools — which are overwhelmingly hollow. The myopic delegator has no reason to consider pledge, operator commitment, or network-level properties: none of these affect the per-ADA yield in the next five days.
 
-A **non-myopic** delegator anticipates the *downstream effects* of delegation decisions. This delegator recognises that moving stake into a pool changes the pool's size, affects its yield (through saturation dynamics), and — in aggregate — shapes the pool landscape. Brünjes & Kiayias (2020) prove that the $k$-pool equilibrium holds under non-myopic play: delegators who factor in the long-term consequences of their delegation converge on a distribution of $k$ pools. The non-myopic delegator is the one for whom the ethics of pool selection (§4.3) are not a luxury but a rational strategy: supporting committed, independent operators produces a more decentralised, more accountable network — which is a more valuable network — which sustains the yield the delegator depends on.
+A **non-myopic** delegator anticipates the *downstream effects* of delegation decisions. This delegator recognises that moving stake into a pool changes the pool's size, affects its yield (through saturation dynamics), and — in aggregate — shapes the pool landscape. Brünjes & Kiayias (2020) prove that the $k$-pool equilibrium holds under non-myopic play: delegators who factor in the long-term consequences of their delegation converge on a distribution of $k$ pools. The non-myopic delegator is the one for whom the ethics of pool selection (§6.3) are not a luxury but a rational strategy: supporting committed, independent operators produces a more decentralised, more accountable network — which is a more valuable network — which sustains the yield the delegator depends on.
 
 The distinction matters because the mechanism implicitly *assumes* non-myopic delegation. The equilibrium results in the formal literature require delegators who look past the current epoch. But the information environment the mechanism creates — where yield differences between pools are negligible, where pledge is invisible, where pool size is the dominant signal — rewards myopic behaviour. A delegator who delegates to the largest hollow pool is making the rational myopic choice. A delegator who deliberately chooses a smaller balanced pool, accepting marginally lower yield to support commitment and decentralisation, is making the rational non-myopic choice — but the mechanism gives no visible reward for it.
 
 This is the core tension in the delegator's strategy. The mechanism needs non-myopic delegators to reach its intended equilibrium, but it provides myopic delegators with no reason to become non-myopic. The ethics of pool selection are real and consequential — but they operate outside the formula, sustained only by the delegator's understanding that the network they help shape is the network they depend on.
 
-### 4.5 The delegator's leverage
+### 6.5 The delegator's leverage
 
 The delegator's single decision — which pool — is also the protocol's primary accountability instrument. Liquid delegation means that capital can move freely, at any epoch boundary, without the operator's consent. This makes every delegation a *continuous approval signal* and every withdrawal a *credible exit threat*.
 
@@ -983,20 +1190,21 @@ But this leverage only works if delegators actually exercise it. The formula str
 
 This is the delegator's strategic position: a narrow yield optimisation on the surface, resting on a deeper choice about what kind of network the delegator wants to sustain.
 
-## 5. Reproduction
+## 7. Reproduction
 
 
-### 5.1 Full rebuild
+### 7.1 Full rebuild
 
 ```bash
 cd spo-incentives/report/sub-flows/operator-delegator-distribution/mainnet-analysis
 python3 scripts/build_operator_delegator_profile.py
 python3 scripts/build_operator_delegator_visuals.py
+python3 scripts/build_delegator_credential_profile.py   # §4.3 key/script classification (Koios live query, ~20 min)
 ```
 
-The profiling script automatically selects the second-to-last epoch in the dataset (guaranteed settled, not pending). Entities are classified as hollow (owner-stake ratio < 10%), balanced (10–95%), or private (≥ 95%). Entity-level grouping uses the MPO entity mapping where available; unmapped pools are each treated as their own entity.
+The profiling script automatically selects the second-to-last epoch in the dataset (guaranteed settled, not pending). Entities are classified as hollow (owner-stake ratio < 10%), balanced (10–95%), or private (≥ 95%). Entity-level grouping uses the MPO entity mapping where available; unmapped pools are each treated as their own entity. The credential profile script queries Koios `pool_delegators` for each pool and classifies stake addresses by Bech32 prefix (key vs script); it is resume-safe and can be interrupted and restarted.
 
-### 5.2 Dependencies
+### 7.2 Dependencies
 
 Both scripts read from the `pools-distribution/mainnet-analysis/data/` directory (the sister flow). No additional data fetch is required. The profiling script produces five intermediate artefacts consumed by the visual script:
 
@@ -1008,8 +1216,11 @@ Both scripts read from the `pools-distribution/mainnet-analysis/data/` directory
 | `data/entity_fee_policies.csv` | Entity-level fee-policy summary (non-private): 491 entities with stake-weighted margin, pool count, margin values, operator take decomposition |
 | `data/reward_split_summary.json` | Headline statistics for all, hollow, balanced, and private segments; entity strategy consistency metrics |
 | `data/entity_strategy_summary.csv` | Entity-level strategy assignment: dominant strategy, n_strategies, pool count, stake, operator take per entity |
+| `data/delegator_credential_by_pool.csv` | Per-pool key vs script delegation counts and stake (Koios live query) |
+| `data/delegator_credential_summary.csv` | Strategy-level aggregate: key vs script delegations and stake |
+| `data/delegator_credential_by_entity.csv` | Entity-level key vs script delegations and stake |
 
-### 5.3 Figures
+### 7.3 Figures
 
 | Figure | Description |
 | --- | --- |

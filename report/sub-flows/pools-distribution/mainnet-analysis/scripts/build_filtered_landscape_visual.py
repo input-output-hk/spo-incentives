@@ -37,6 +37,7 @@ import numpy as np
 REPORT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR   = REPORT_DIR / "data"
 FIG_DIR    = REPORT_DIR / "figures"
+ENTITY_DATA = REPORT_DIR.parent.parent / "census" / "mainnet-analysis" / "data"
 
 # ── IOG Brand colours ──
 BG     = "#FFFFFF"
@@ -106,17 +107,17 @@ def classify_stance(pledge_ratio: float) -> str:
 def load_mpo_filter_sets():
     """Return current MPO pool sets used by the section-5 filter."""
     archetypes = {}
-    with (DATA_DIR / "mpo_entity_archetypes.csv").open(newline="") as f:
+    with (ENTITY_DATA / "mpo_entity_archetypes.csv").open(newline="") as f:
         for r in csv.DictReader(f):
             archetypes[r["entity_id"]] = r
 
     mpo_pool_entity = {}
-    with (DATA_DIR / "mpo_entity_pool_mapping_mainnet.csv").open(newline="") as f:
+    with (ENTITY_DATA / "mpo_entity_pool_mapping_mainnet.csv").open(newline="") as f:
         for r in csv.DictReader(f):
             mpo_pool_entity[r["pool_id_bech32"]] = r["entity_id"]
 
     mpo_pool_stance = {}
-    with (DATA_DIR / "mpo_entity_pool_health_mainnet.csv").open(newline="") as f:
+    with (ENTITY_DATA / "mpo_entity_pool_health_mainnet.csv").open(newline="") as f:
         for r in csv.DictReader(f):
             pid = r["pool_id_bech32"]
             stake = pf(r.get("current_active_stake_ada"))

@@ -32,6 +32,7 @@ import numpy as np
 REPORT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = REPORT_DIR / "data"
 FIG_DIR = REPORT_DIR / "figures"
+ENTITY_DATA = REPORT_DIR.parent.parent / "census" / "mainnet-analysis" / "data"
 
 BG = "#FFFFFF"
 INK = "#1A1A1A"
@@ -114,7 +115,7 @@ def load_label_maps():
         }
 
     archetypes = {}
-    for row in load_csv(DATA_DIR / "mpo_entity_archetypes.csv"):
+    for row in load_csv(ENTITY_DATA / "mpo_entity_archetypes.csv"):
         entity_id = row["entity_id"]
         archetype = row["archetype"]
         if row.get("capital_class") == "insufficient":
@@ -126,7 +127,7 @@ def load_label_maps():
         }
 
     entity_by_pool = {}
-    for row in load_csv(DATA_DIR / "mpo_entity_pool_mapping_mainnet.csv"):
+    for row in load_csv(ENTITY_DATA / "mpo_entity_pool_mapping_mainnet.csv"):
         pool_id = row["pool_id_bech32"]
         entity_id = row["entity_id"]
         meta = archetypes.get(entity_id, {})

@@ -914,7 +914,7 @@ To separate structural constraints from strategic choices, we classify each enti
 | Platform / Wallet | `platform` | 2 | Wallet users; staking mediated by platform UX | Variable | Partial |
 | Opaque Fleet | `opaque_fleet` | 4 | Unknown — no public-facing brand | Near-zero | Unknown |
 
-The canonical classification is in `data/mpo_entity_archetypes.csv` (includes `exclude_from_baseline` and `capital_class` fields).
+The canonical classification is in `../../census/mainnet-analysis/data/mpo_entity_archetypes.csv` (includes `exclude_from_baseline` and `capital_class` fields). All entity data now lives in the dedicated `entities/` folder at report level.
 
 **Snapshot by archetype (epoch 618, live pools >100 ADA):**
 
@@ -941,25 +941,25 @@ The canonical classification is in `data/mpo_entity_archetypes.csv` (includes `e
 
 ##### 4.2.3.2 Current distribution
 
-![Current MPO entity distribution — stake share by archetype](figures/mpo_entity_current_distribution_chart_mainnet.png)
+![Current MPO entity distribution — stake share by archetype](../census/mainnet-analysis/figures/mpo_entity_current_distribution_chart_mainnet.png)
 
-![Current MPO entity distribution — per-entity metrics](figures/mpo_entity_current_distribution_table_mainnet.png)
+![Current MPO entity distribution — per-entity metrics](../census/mainnet-analysis/figures/mpo_entity_current_distribution_table_mainnet.png)
 
 The figure groups every entity with ≥0.01% of circulating supply by archetype. The bar chart shows their share of staked supply; the metrics table below it reports pool counts, pledge coverage, and average margin for each entity and archetype subtotal.
 
 The concentration is immediate: the top six entities (Coinbase, Binance, Figment, CHUCK BUX, Upbit, Cardano Foundation) collectively exceed 20% of staked supply. The long tail of capital-insufficient and community fleets — numerous by entity count — barely registers in stake terms.
 
-Per-entity descriptions including pledge-coverage ratios are in the annex: **[docs/mpo_entity_profiles.md](docs/mpo_entity_profiles.md)**.
+Per-entity descriptions including pledge-coverage ratios are in the annex: **[entities/docs/mpo_entity_profiles.md](../census/mainnet-analysis/docs/mpo_entity_profiles.md)**.
 
 ##### 4.2.3.3 Historical evolution
 
 The archetype-level composition has been remarkably stable across three years of Shelley operation. The aggregate MPO share has hovered around 42–43% of circulating supply since epoch 300 — the internal mix shifts, but the total barely moves.
 
-![Historical MPO composition by archetype](figures/mpo_entity_progression_stacked_mainnet.png)
+![Historical MPO composition by archetype](../census/mainnet-analysis/figures/mpo_entity_progression_stacked_mainnet.png)
 
 That stability masks significant **entity-level rotation**:
 
-![Per-entity progression — share of circulating supply](figures/mpo_entity_progression_stacked_by_entity_mainnet.png)
+![Per-entity progression — share of circulating supply](../census/mainnet-analysis/figures/mpo_entity_progression_stacked_by_entity_mainnet.png)
 
 | Movement | Epoch range | What happened |
 | --- | --- | --- |
@@ -1011,7 +1011,7 @@ The result is two-layered. First, **37 of 85 entities (1.74B ADA)** sit outside 
 
 The responsive middle is correspondingly thin. Only **two** capital-sufficient entities are truly **marginal** at the decision boundary, and only **three** are clearly **compliant** without already being near-fully self-funded. The exemplary pair — **Cardano Foundation** and **Adalite** — already capture almost the full premium and act more as a positive control than as a policy target.
 
-![MPO attributed stake — archetype vs pledge compliance](figures/mpo_entity_stance_distribution_mainnet.png)
+![MPO attributed stake — archetype vs pledge compliance](../census/mainnet-analysis/figures/mpo_entity_stance_distribution_mainnet.png)
 
 The figure decomposes the same attributed stake two ways: top bar by structural archetype, bottom bar by pledge compliance. The key split is now explicit: **1.74B ADA sits in the ochre "Can't play" bucket**, while **12.00B ADA sits in capital-sufficient non-compliance**. The problem is therefore not a single low-pledge mass but a combination of structural inaccessibility and large-scale strategic non-response.
 
@@ -1054,9 +1054,9 @@ IVaaS entities serve institutional clients via staking-as-a-service. Unlike CEX,
 | YUTA | CEX | 25 | 0.465 | 0 | 50K ₳ | 12.6% | Custodial/platform staking |
 | StakeBowl | CEX | 9 | 0.140 | 2 | 0 | 80.7% | Custodial/platform staking |
 
-Detailed entity profiles (Coinbase obfuscation, Binance ghost fleet, Figment/Ledger Live back-end, Kiln enterprise wallets, etc.) are in the annex: **[docs/mpo_entity_profiles.md](docs/mpo_entity_profiles.md)**.
+Detailed entity profiles (Coinbase obfuscation, Binance ghost fleet, Figment/Ledger Live back-end, Kiln enterprise wallets, etc.) are in the annex: **[entities/docs/mpo_entity_profiles.md](../census/mainnet-analysis/docs/mpo_entity_profiles.md)**.
 
-**CEX-adjusted baseline.** Excluding CEX entities remains analytically useful because it removes structurally pledge-zero, non-sovereign stake from the denominator. But the revised §3 framing shows that this is only a partial cleanup: a second fixed population also exists in the form of capital-insufficient MPOs. The `exclude_from_baseline: true` flag in `data/mpo_entity_archetypes.csv` identifies the custodial entities to drop when a CEX-free comparison is desired.
+**CEX-adjusted baseline.** Excluding CEX entities remains analytically useful because it removes structurally pledge-zero, non-sovereign stake from the denominator. But the revised §3 framing shows that this is only a partial cleanup: a second fixed population also exists in the form of capital-insufficient MPOs. The `exclude_from_baseline: true` flag in `census/mainnet-analysis/data/mpo_entity_archetypes.csv` identifies the custodial entities to drop when a CEX-free comparison is desired.
 
 ##### 4.2.4.3 The cost of non-compliance
 
@@ -1397,7 +1397,7 @@ python3 build_pledge_bonus_activation_visual.py
 python3 build_saturation_utilisation_visual.py
 python3 build_pool_landscape_by_size_visual.py
 python3 build_three_thresholds_visual.py
-python3 build_mpo_entity_deep_dive.py          # fetches Koios — see §5.2
+# Entity scripts are now in census/mainnet-analysis/scripts/ — see §5.2
 python3 build_mpo_progression_analysis.py      # reads local history CSV
 ```
 
@@ -1409,41 +1409,41 @@ python3 build_mpo_progression_analysis.py      # reads local history CSV
 - `pool_reward_pool_summary_mainnet.csv` — aggregated pool-level rewards
 - `pool_reward_epoch_summary_mainnet.csv` — epoch-wide reward totals
 - `koios_pool_updates_mainnet.csv` — pool registration/update history
-- `mainnet_entity_owner_capital_status_quo.csv` — entity attribution
+- `mpo_progression_proxy_key_epochs_mainnet.csv` — historical concentration at key epochs
 
-**MPO derived data** (generated by `build_mpo_entity_deep_dive.py`, checked in for offline use):
+**Entity data** (now in `census/mainnet-analysis/data/`, generated by `census/mainnet-analysis/scripts/build_mpo_entity_deep_dive.py`):
 - `mpo_entity_summary_mainnet.csv` — one row per attributed entity
 - `mpo_entity_pool_mapping_mainnet.csv` — pool → entity mapping
 - `mpo_entity_health_overview_mainnet.csv` — health metrics per entity
-- `mpo_unresolved_group_labels_mainnet.csv` — unresolved Koios group labels
-- `mpo_progression_proxy_key_epochs_mainnet.csv` — historical concentration at key epochs
+- `mpo_entity_archetypes.csv` — entity → archetype classification
+- `mainnet_entity_owner_capital_status_quo.csv` — capital-sufficiency classification
 
 ### 5.2 Refreshing MPO data
 
-The MPO scripts (`build_mpo_entity_deep_dive.py` and `build_mpo_progression_analysis.py`) fetch live data from the [Koios REST API](https://api.koios.rest) and require an internet connection. They should be re-run whenever a new epoch's pool snapshot is needed.
+The entity attribution scripts have moved to `census/mainnet-analysis/scripts/`. The progression script (`build_mpo_progression_analysis.py`) remains here but reads entity data from `census/mainnet-analysis/data/`.
 
 **Refresh procedure:**
 
 ```bash
-cd scripts/
-
 # Step 1 — refresh the base pool list and history (if not already done)
 # These come from Koios exports — replace data/koios_pool_list_mainnet.csv
 # and data/koios_pool_history_mainnet.csv with updated exports.
 
 # Step 2 — re-run the MPO entity analysis (fetches live Koios data)
+cd ../../census/mainnet-analysis/scripts/
 python3 build_mpo_entity_deep_dive.py
 
-# Step 3 — re-run the progression analysis (reads local history CSV)
+# Step 3 — re-run the progression analysis (reads local history CSV + entity data)
+cd ../../sub-flows/pools-distribution/mainnet-analysis/scripts/
 python3 build_mpo_progression_analysis.py
 ```
 
-`build_mpo_entity_deep_dive.py` calls three Koios endpoints:
+`build_mpo_entity_deep_dive.py` (now in `census/mainnet-analysis/scripts/`) calls three Koios endpoints:
 - `pool_list` — all registered pools with current stake and metadata
 - `pool_groups` — Koios-curated group labels (used as a seed for entity attribution)
 - `tip` + `totals` — live epoch number and circulating supply
 
-The entity attribution logic (regex patterns, manual overrides, pledge thresholds) is entirely self-contained in the script — no external configuration file is needed. To add or update an entity cluster, edit the `ENTITY_PATTERNS` block near the top of `build_mpo_entity_deep_dive.py`.
+The entity attribution logic (regex patterns, manual overrides, pledge thresholds) is entirely self-contained in the script — no external configuration file is needed. To add or update an entity cluster, edit the `ENTITY_PATTERNS` block near the top of `census/mainnet-analysis/scripts/build_mpo_entity_deep_dive.py`.
 
 ---
 

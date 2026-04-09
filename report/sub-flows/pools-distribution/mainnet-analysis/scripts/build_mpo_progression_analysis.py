@@ -573,17 +573,20 @@ def write_summary(
 
 
 def main() -> None:
-    report_dir  = Path(__file__).resolve().parent.parent   # pools-distribution/
-    data_dir    = report_dir / "data"
-    figures_dir = report_dir / "figures"
-    outputs_dir = report_dir / "data"   # CSVs live alongside other data files
+    report_dir   = Path(__file__).resolve().parent.parent   # mainnet-analysis/
+    data_dir     = report_dir / "data"
+    figures_dir  = report_dir / "figures"
+    outputs_dir  = report_dir / "data"                     # local CSVs
+    entity_data  = report_dir.parent.parent / "census" / "mainnet-analysis" / "data"
+    entity_figs  = report_dir.parent.parent.parent / "entities" / "figures"
     figures_dir.mkdir(parents=True, exist_ok=True)
     outputs_dir.mkdir(parents=True, exist_ok=True)
+    entity_figs.mkdir(parents=True, exist_ok=True)
 
     pool_list_path = data_dir / "koios_pool_list_mainnet.csv"
     history_path = data_dir / "koios_pool_history_mainnet.csv"
-    overview_path = outputs_dir / "mpo_entity_health_overview_mainnet.csv"
-    mapping_path = outputs_dir / "mpo_entity_pool_mapping_mainnet.csv"
+    overview_path = entity_data / "mpo_entity_health_overview_mainnet.csv"
+    mapping_path = entity_data / "mpo_entity_pool_mapping_mainnet.csv"
 
     proxy_by_pool, proxy_counts = build_proxy_pool_map(pool_list_path)
     broad_by_pool, broad_counts = build_broad_pool_map(pool_list_path)
@@ -604,7 +607,7 @@ def main() -> None:
     live_entity_totals = aggregate_live_entity_totals(live_pool_rows, entity_pool_map)
 
     figure_path = figures_dir / "mpo_progression_proxy_mainnet.png"
-    stacked_figure_path = figures_dir / "mpo_entity_progression_stacked_mainnet.png"
+    stacked_figure_path = entity_figs / "mpo_entity_progression_stacked_mainnet.png"
     summary_path = outputs_dir / "mpo_progression_proxy_mainnet_summary.md"
     csv_path = outputs_dir / "mpo_progression_proxy_key_epochs_mainnet.csv"
 

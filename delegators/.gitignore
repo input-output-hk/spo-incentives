@@ -1,0 +1,9 @@
+# Raw and processed data — too large for git.
+# Reproduce via: scripts/fetch_account_history.py  (Koios)
+#            or: scripts/ingest_dbsync.py          (db-sync)
+#          then: scripts/ingest_to_duckdb.py
+data/
+
+# DuckDB is an embedded file, not a service — ignore it.
+*.duckdb
+*.duckdb.wal

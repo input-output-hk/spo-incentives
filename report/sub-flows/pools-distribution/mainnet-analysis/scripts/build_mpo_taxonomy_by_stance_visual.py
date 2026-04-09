@@ -23,6 +23,7 @@ import numpy as np
 REPORT_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR   = REPORT_DIR / "data"
 FIG_DIR    = REPORT_DIR / "figures"
+ENTITY_DATA = REPORT_DIR.parent.parent / "census" / "mainnet-analysis" / "data"
 
 # ── IOG Brand colours ──
 BG     = "#FFFFFF"
@@ -85,7 +86,7 @@ def main():
 
     archetype_meta = {
         r["entity_id"]: r
-        for r in csv.DictReader((DATA_DIR / "mpo_entity_archetypes.csv").open(newline=""))
+        for r in csv.DictReader((ENTITY_DATA / "mpo_entity_archetypes.csv").open(newline=""))
     }
     if "BIGLAZY" in archetype_meta:
         alias = dict(archetype_meta["BIGLAZY"])
@@ -95,7 +96,7 @@ def main():
     # Load MPO pool IDs
     pool_to_entity = {
         r["pool_id_bech32"]: r["entity_id"]
-        for r in csv.DictReader((DATA_DIR / "mpo_entity_pool_mapping_mainnet.csv").open(newline=""))
+        for r in csv.DictReader((ENTITY_DATA / "mpo_entity_pool_mapping_mainnet.csv").open(newline=""))
     }
     mpo_pool_ids = set(pool_to_entity)
 

@@ -315,8 +315,9 @@ def append_to_csv(csv_path, new_rows, expected_columns):
 def main():
     base_path = Path(__file__).parent.parent
     pool_list_path = base_path / 'data' / 'koios_pool_list_mainnet.csv'
-    mapping_path = base_path / 'data' / 'mpo_entity_pool_mapping_mainnet.csv'
-    archetype_path = base_path / 'data' / 'mpo_entity_archetypes.csv'
+    entity_data_path = base_path.parent.parent.parent / 'entities' / 'data'
+    mapping_path = entity_data_path / 'mpo_entity_pool_mapping_mainnet.csv'
+    archetype_path = entity_data_path / 'mpo_entity_archetypes.csv'
 
     print("=" * 80)
     print("Hidden MPO Discovery")
