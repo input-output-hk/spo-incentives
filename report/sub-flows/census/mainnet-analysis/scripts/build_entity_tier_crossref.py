@@ -2,10 +2,10 @@
 """
 Pass 3 — Cross-reference entity attribution with pool stake.
 
-Links the 85 named MPO entities (from entity mapping) to their aggregate
-stake at epoch 623 (from pool_stake_623.csv), then decomposes the full
-staking landscape into: attributed MPO stake, unattributed pool stake,
-and per-archetype breakdown.
+Links named MPO entities (from entity mapping) to their aggregate stake at
+epoch 623 (from pool_stake_623.csv), filtered to productive pools (≥1M ADA),
+then decomposes the productive staking landscape into: attributed MPO stake,
+unattributed pool stake, and per-archetype breakdown.
 
 Reads:
   data/mpo_entity_pool_mapping_mainnet.csv   (pool → entity)
@@ -77,8 +77,10 @@ def main():
     archetypes = pd.read_csv(DATA_DIR / "mpo_entity_archetypes.csv")
     entity_to_archetype = dict(zip(archetypes["entity_id"], archetypes["archetype"]))
 
-    # ── Load pool stake ──
-    pool_stake = pd.read_csv(DATA_DIR / "pool_stake_623.csv")
+    # ── Load pool stake (filter to productive pools ≥1M ADA) ──
+    pool_stake_all = pd.read_csv(DATA_DIR / "pool_stake_623.csv")
+    PRODUCTION_THRESHOLD = 1_000_000
+    pool_stake = pool_stake_all[pool_stake_all["total_ada"] >= PRODUCTION_THRESHOLD].copy()
     pool_stake_map = dict(zip(pool_stake["pool_id"], pool_stake["total_ada"]))
     pool_deleg_map = dict(zip(pool_stake["pool_id"], pool_stake["delegation_count"]))
 
@@ -148,7 +150,7 @@ def main():
     wedges, texts = ax_left.pie(sizes, labels=labels_pie, colors=colours_pie,
                                  startangle=90, textprops={"fontsize": 9, "color": INK},
                                  wedgeprops={"edgecolor": "white", "linewidth": 1.5})
-    ax_left.set_title("Stake Attribution — Epoch 623", fontsize=12, fontweight="medium", color=INK)
+    ax_left.set_title("Stake Attribution — Productive Pools — Epoch 623", fontsize=12, fontweight="medium", color=INK)
 
     # Right: horizontal bar — top 15 entities by stake
     ax_right.set_facecolor(BG)
@@ -223,7 +225,7 @@ def main():
 
     # ── Summary ──
     print(f"\n{'='*60}")
-    print(f"PASS 3 — Entity attribution cross-reference (epoch 623)")
+    print(f"PASS 3 — Entity attribution cross-reference — productive pools (epoch 623)")
     print(f"{'='*60}")
     print(f"Total staked:       {total_staked/1e9:.2f}B ADA across {len(pool_stake)} pools")
     print(f"Attributed:         {attributed_stake/1e9:.2f}B ADA ({attributed_stake/total_staked*100:.1f}%) — "
