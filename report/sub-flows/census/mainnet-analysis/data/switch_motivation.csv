@@ -1,0 +1,10 @@
+margin_direction,size_direction,switch_count,pct
+lower_margin,to_larger,204967,14.57
+lower_margin,similar_size,190588,13.54
+higher_margin,similar_size,184573,13.12
+higher_margin,to_larger,175464,12.47
+higher_margin,to_smaller,175264,12.45
+lower_margin,to_smaller,161326,11.46
+same_margin,to_smaller,112387,7.99
+same_margin,to_larger,110883,7.88
+same_margin,similar_size,91793,6.52

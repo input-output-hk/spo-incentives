@@ -17,6 +17,7 @@
 services:
   postgres:
     image: postgres:17.2-alpine
+    shm_size: 4g
     environment:
       - POSTGRES_LOGGING=true
       - POSTGRES_DB_FILE=/run/secrets/postgres_db
