@@ -148,10 +148,9 @@ The entity attribution data lives in:
 | Below production threshold (noise) | 1,742 | 1,925 | 0.19B | 0.9% |
 | **Productive total** | **560** | **952** | **21.57B** | **99.1%** |
 | _of which:_ | | | | |
-| Identified entities (all pools) | 85 | 660 | 16.31B | 75.0% |
+| Identified entities | 83 | 475 | 16.30B | 75.6% |
 | Identified — multiple productive pools | 73 | 465 | 15.83B | 73.4% |
 | Identified — single productive pool | 10 | 10 | 0.46B | 2.1% |
-| Identified — no productive pool (RAID, RockX) | 2 | 17 | 0.6M | <0.1% |
 | Independent single-pool operators | 477 | 477 | 5.28B | 24.5% |
 
 The entity attribution is a current-epoch snapshot and a lower bound — entities using entirely separate infrastructure and branding for each pool remain invisible. The real multi-pool operator count is certainly higher than 73. Historical entity decomposition requires reconstructing the owner-key graph and metadata per epoch.
