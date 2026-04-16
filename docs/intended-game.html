@@ -93,8 +93,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 
 /* MathJax */
 mjx-container{color:var(--text-primary)!important}
-mjx-container[display=true]{display:block!important;overflow-x:auto;overflow-y:visible;max-width:100%;margin:20px auto!important;text-align:center}
-.content{overflow-x:auto}
+mjx-container[display=true]{display:block!important;max-width:100%;margin:20px auto!important;text-align:center}
 
 /* TOC inside content */
 .content .toc{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin:20px 0}
@@ -152,8 +151,8 @@ mjx-container[display=true]{display:block!important;overflow-x:auto;overflow-y:v
 .section-toggle{cursor:pointer;user-select:none}
 .section-toggle::before{content:'▾';position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--text-muted);transition:transform .2s;width:16px;text-align:center}
 .section-toggle.collapsed::before{transform:translateY(-50%) rotate(-90deg)}
-.section-body{overflow:hidden;transition:max-height .35s ease, opacity .25s ease;opacity:1}
-.section-body.collapsed{max-height:0!important;opacity:0;margin:0;padding:0}
+.section-body{transition:max-height .35s ease, opacity .25s ease;opacity:1}
+.section-body.collapsed{max-height:0!important;opacity:0;margin:0;padding:0;overflow:hidden}
 
 /* ── Collapsible TOC sub-lists ── */
 .toc-nav li{padding-left:18px;position:relative}
@@ -601,12 +600,16 @@ This is the <strong>incentive-compatible equilibrium</strong> the mechanism shou
     if(nodes.length===0){ heading.classList.remove('section-toggle'); return; }
     heading.after(wrapper);
     nodes.forEach(function(n){ wrapper.appendChild(n); });
-    wrapper.style.maxHeight=wrapper.scrollHeight+'px';
+    wrapper.style.maxHeight='none';
     heading.addEventListener('click',function(){
       heading.classList.toggle('collapsed');
       if(wrapper.classList.contains('collapsed')){
         wrapper.style.maxHeight=wrapper.scrollHeight+'px';
         wrapper.classList.remove('collapsed');
+        wrapper.addEventListener('transitionend',function handler(){
+          if(!wrapper.classList.contains('collapsed')) wrapper.style.maxHeight='none';
+          wrapper.removeEventListener('transitionend',handler);
+        });
       } else {
         wrapper.style.maxHeight=wrapper.scrollHeight+'px';
         requestAnimationFrame(function(){ wrapper.style.maxHeight='0px'; wrapper.classList.add('collapsed'); });
