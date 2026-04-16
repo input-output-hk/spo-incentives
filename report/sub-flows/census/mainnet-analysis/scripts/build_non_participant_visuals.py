@@ -270,6 +270,9 @@ def build_breakdown_figure():
         return None
 
     addr_rows = load_csv(addr_path)
+    if not addr_rows:
+        print("  utxo_address_type_decomposition.csv is empty — skipping breakdown figure.")
+        return None
     has_dormancy = dorm_path.exists()
     dorm_rows = load_csv(dorm_path) if has_dormancy else []
 

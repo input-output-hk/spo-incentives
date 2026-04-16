@@ -36,6 +36,7 @@ _Built on 2026/04/09 from db-sync snapshot at epoch 623._
      - [4.7.2 Operator take is symmetric](#472-operator-take-is-symmetric)
      - [4.7.3 Pool size is the only asymmetric signal](#473-pool-size-is-the-only-asymmetric-signal)
      - [4.7.4 Loyal delegators and their pools](#474-loyal-delegators-and-their-pools)
+   - [4.8 Credential type — key versus script](#48-credential-type--key-versus-script)
 5. [Non-Participants](#5-non-participants)
    - [5.1 Circulating supply decomposition](#51-circulating-supply-decomposition)
    - [5.2 Anatomy of the unstaked UTxO](#52-anatomy-of-the-unstaked-utxo)
@@ -82,7 +83,7 @@ the raw query result is shown first, then the noise is named, then the cleaned v
 | F3.5 | The n-MPO distribution is heavy-tailed: 12 entities with 11+ pools control 40.4% of productive stake | §3.4 | Scale dominance |
 | F3.6 | CEX + IVaaS (10 entities, 181 pools) hold 7.40B ADA — 34.3% of productive stake at structurally zero pledge | §3.4 | Custodial constraint |
 | | **O2 — Pool size variability is an institutional rebalancing phenomenon** | | |
-| F3.4 | Custodial-by-delegation pools have median CV 15.1% and 20% exceed CV 50%; retail pools sit at median CV 8.1%; custodial-by-extraction are the most stable (median CV 5.1%) | §3.6 | Segment-driven variance |
+| F3.4 | Custodial-by-delegation pools (28 pools, median delegation ≥ 100K ₳) have median CV 19.3% and 21% exceed CV 50%; retail pools sit at median CV 8.4%; custodial-by-extraction are the most inert (median CV 6.6%) | §3.6 | Segment-driven variance |
 | | **O3 — Stake concentration among delegators is extreme and frozen** | | |
 | F4.1 | The median delegator holds 32 ADA; the mean is 16,055 ADA — a 500× gap measuring power-law skewness | §4.4 | Structural inequality |
 | F4.2 | 1,000 delegators (0.07%) control 57% of staked ADA; the top 10,000 (0.74%) control 79.2%; Gini = 0.976 | §4.4 | Concentration — demand side |
@@ -99,9 +100,10 @@ the raw query result is shown first, then the noise is named, then the cleaned v
 | F4.10 | Operator take direction is symmetric: 30.8% lower / 37.7% similar / 31.5% higher — no optimisation pattern | §4.7 | No fee-chasing |
 | F4.11 | Pool size is the only asymmetric signal: moves to smaller pools accept higher take (21.5%), moves to larger pools are take-neutral (21.0%) | §4.7 | Visibility over optimality |
 | F4.12 | 92.1% of loyal delegations sit in the 0–5% margin range — loyalty and low fees coexist, not trade off | §4.7 | Entry filter, not trigger |
+| F4.13 | 99.97% of delegations and 99.83% of stake are key-based; script-based delegation (399 addresses, 38M ADA) is negligible — DeFi operates outside the delegation system | §4.8 | No smart-contract staking |
 | | **O7 — The staking participation rate is structurally declining** | | |
 | F2.1 | Staking rate has fallen from 71% (epoch ~260) to 59% (epoch 623) — driven by supply growth outpacing stake inflows | §2 | Supply-side erosion |
-| F5.1 | 14.36B ADA (38.9%) does not participate — how much is addressable vs structurally excluded is the critical open question | §5 | Pending tx_out decomposition |
+| F5.1 | 14.36B ADA (39.8%) does not participate; of this, only 134.6M (0.37%) is *addressable* (registered stake credential, not delegated) — the remaining 14.2B sits in addresses with no stake credential | §5 | Structural non-participation |
 
 ### The big picture
 
@@ -113,7 +115,7 @@ the raw query result is shown first, then the noise is named, then the cleaned v
 
 **The yield signal is invisible to delegators.** Net ROS varies by less than 5 bps across the competitive pool market. When delegators switch, 50.5% move to a pool with an indistinguishable yield. Neither operator take nor margin direction shows any systematic pattern. The one asymmetric signal is pool size — delegators drift toward larger, more visible pools. The incentive mechanism's core assumption of yield-sensitive delegation is not supported by the on-chain evidence.
 
-**Who is off the field — and why it matters.** 14.36B ADA (38.9%) sits unstaked. The staking rate has declined from 71% to 59% since epoch 260 — not because delegators leave, but because circulating supply growth outpaces new inflows. The non-participant decomposition (exchange custody, DeFi-locked, dormant wallets) is the critical missing piece: it determines how much of the unstaked pool is *addressable* by incentive changes versus *structurally excluded* by address type or custodial arrangement.
+**Who is off the field — and why it matters.** 14.36B ADA (39.8%) sits unstaked. The staking rate has declined from 71% to 60% since epoch 260 — not because delegators leave, but because circulating supply growth outpaces new inflows. The non-participant decomposition reveals that only 134.6M ADA (0.37% of circulation) belongs to accounts with a registered stake credential that have simply not delegated — the *addressable* non-participant pool. The remaining 14.2B sits in addresses with no stake credential at all: enterprise addresses (exchange cold storage, institutional custody), script addresses without staking capability (DeFi-locked ADA), and base addresses whose staking key was never registered. Incentive changes cannot reach the bulk of non-participation; only structural protocol changes (enabling enterprise-address staking, requiring DeFi protocols to use staking-capable script addresses) could move the needle.
 
 
 ## 2. The ADA Supply
@@ -122,7 +124,7 @@ The Cardano monetary policy fixes the maximum supply at 45 billion ADA. At epoch
 
 ![Supply decomposition](figures/supply_decomposition_mainnet.png)
 
-At epoch 623: **21.75B ADA** staked out of **36.88B** circulating = **59.0%** staking rate. The remaining **15.13B ADA** (41.0%) is not staked — of which 14.36B sits in unstaked UTxOs and 0.77B in unclaimed rewards. This population is decomposed in §5.
+At epoch 623: **21.755B ADA** staked out of **36.110B** circulating = **60.2%** staking rate. The remaining **14.355B ADA** (39.8%) is not staked. Of this, only 134.6M (0.37%) has a registered stake credential without delegation — the *addressable* non-participant pool. The remaining 14.2B sits in addresses with no stake credential at all. This population is decomposed in §5.
 
 ![Staking participation](figures/staking_participation_clean.png)
 
@@ -562,55 +564,75 @@ Loyal delegators are not paying a premium for stability — they sit in the chea
 
 **The top 20 pools by loyal-delegation count** (`data/loyal_delegator_pools.csv`) are overwhelmingly single-pool operators with margins of 2–4% and fixed costs of 340–400 ADA. Average tenure among their loyal delegations ranges from 290 to 362 epochs (roughly 4 to 5 years). These pools support 10,000–36,000 delegators each and have operated since the early Shelley era — their delegator bases crystallised early and have remained remarkably stable.
 
+### 4.8 Credential type — key versus script
+
+The on-chain transaction carries no metadata identifying the originating wallet software — a `stake_delegation_certificate` is identical regardless of the interface that submitted it. The credential type, however, is encoded in the stake address: `stake1u…` for **key-based** credentials (wallet controlled by a private key) and `stake17…` for **script-based** credentials (smart contract, multisig, or governance script). This is the finest on-chain classification available for delegator provenance.
+
+From `stake_account_census_623.csv` (epoch 623, db-sync):
+
+| Credential | Delegations | % | Stake (B ADA) | % |
+|---|---:|---:|---:|---:|
+| Key-based | 1,354,636 | 99.97% | 21.72 | 99.83% |
+| Script-based | 399 | 0.03% | 0.04 | 0.17% |
+
+Script-based delegations are negligible — 399 addresses out of 1.355M, carrying 38M ADA. DeFi vaults, DAO treasuries, and multisig governance mechanisms account for almost none of the staking capital. The companion [*Operator's Cut*](../../operator-delegator-distribution/mainnet-analysis/) per-pool breakdown confirms that the distribution is uniformly key-dominated across operator strategies: hollow pools show 0.03% script delegations (0.22% of stake), balanced pools 0.05% (0.03%), and private pools 0.37% (≈0%). The only entity with material script-stake is a single hollow fleet (3 script-delegations, 9.5M ADA).
+
+The credential type cannot separate custodial from retail capital — both are key-based. The ADA-per-delegator heuristic used in the companion Operator's Cut (median delegation as proxy for custodial platform signatures) remains the most effective on-chain classification tool. The key/script split does, however, confirm one structural observation: the DeFi ecosystem has not yet integrated with the delegation system in any meaningful way. If protocol changes were to mandate staking-capable script addresses in DeFi standards (cf. §5.2), the script-based share could grow substantially — but under current conditions it rounds to zero.
+
+> **Finding F4.13 — 99.97% of delegations and 99.83% of stake are key-based.** Script-based delegation (smart contracts, multisig, governance) is negligible at 399 addresses and 38M ADA. The DeFi ecosystem operates almost entirely outside the delegation system. The credential type is the finest on-chain classification available but cannot distinguish custodial from retail capital — both present as key-based delegations.
+
+_Data: `data/stake_account_census_623.csv`; per-pool credential breakdown in `operator-delegator-distribution/mainnet-analysis/data/delegator_credential_by_pool.csv`._
+
 
 ## 5. Non-Participants
 
 ### 5.1 Circulating supply decomposition
 
-Before isolating non-participants, the circulating supply itself must be decomposed. The `ada_pots` table records four buckets that sum to circulating ADA: UTxO balances (the ADA sitting in unspent transaction outputs), unclaimed rewards (earned but not yet withdrawn to a UTxO), stake-key and governance deposits, and the fee accumulator. Combining these with the staked amount from `epoch_stake` yields:
+Before isolating non-participants, the circulating supply itself must be decomposed. The Koios `totals` endpoint (cross-checked against `ada_pots` in db-sync) records the key components that sum to circulating ADA: UTxO balances, unclaimed reward-account balances, and protocol deposits. Combining these with the staked amount from `epoch_stake` yields:
 
 | Component | Epoch 623 | Share of circulating |
 |---|---|---|
-| **Staked ADA** (in epoch_stake snapshot) | **21.75B** | **59.0%** |
-| **Unstaked UTxO** (UTxO − staked) | **14.36B** | **38.9%** |
-| Unclaimed rewards | 0.77B | 2.1% |
-| Deposits + fees | 0.01B | <0.1% |
-| **Circulating supply** | **36.88B** | **100%** |
+| **Staked ADA** (delegated key + script) | **21.755B** | **60.2%** |
+| **Non-participant ADA** (all remaining) | **14.355B** | **39.8%** |
+| _of which: unstaked UTxO + rewards_ | _14.350B_ | _39.7%_ |
+| _of which: deposits (stake, DRep, gov)_ | _0.006B_ | _<0.1%_ |
+| **Circulating supply** | **36.110B** | **100%** |
 
-Staked ADA is covered by §§3–4. Unclaimed rewards are ADA earned by delegators and operators that has not yet been withdrawn via a transaction — it exists on the ledger but not as a UTxO. Deposits are the 2-ADA stake-key registration deposits and DRep/governance deposits locked by the protocol. Neither rewards nor deposits are available for spending until explicitly claimed or deregistered; they are not "non-participants" in the staking sense but they are not freely circulating either.
+Staked ADA is covered by §§3–4. It comprises 1,354,636 key-based delegations (21.717B) and 399 script-based delegations (0.038B). Deposits are the 2-ADA stake-key registration deposits (4.4M ADA), DRep deposits (0.5M), and governance-proposal deposits (0.6M) locked by the protocol. These are mechanically excluded from spending until the credential is deregistered or the proposal resolved.
 
-The non-participant population is therefore the **14.36B ADA in unstaked UTxOs** — outputs controlled by addresses that are not delegated to any pool at epoch 623.
+The non-participant population is therefore the **14.355B ADA** controlled by addresses that are not delegated to any pool at epoch 623.
 
 ![Circulating supply decomposition](figures/circulating_supply_decomposition.png)
 
 The top panel shows the absolute decomposition over time. The bottom panel shows the percentage shares. The staking rate stabilised around 59–62% from epoch ~300 onward, meaning the non-participant share has hovered between 36–39% for over 300 epochs. The brief spike in unstaked share around epoch 365 coincides with the Alonzo hard fork and the initial wave of smart-contract deployments, which locked ADA in script addresses outside the delegation system.
 
-> **Finding F5.1 — 14.36B ADA (38.9% of circulating supply) does not participate in staking.** The non-participant pool has been stable at 36–39% for over 300 epochs. How much of this is *addressable* by incentive changes (base addresses that could delegate but do not) versus *structurally excluded* (enterprise and script addresses) is the critical question for mechanism design. The decomposition awaits a full db-sync restore with `tx_out`.
+> **Finding F5.1 — 14.355B ADA (39.8% of circulating supply) does not participate in staking.** The non-participant pool has been stable at 36–39% for over 300 epochs. As §5.2 demonstrates, only 134.6M ADA (0.37% of circulation) is *addressable* by incentive changes — registered stake credentials that have not delegated. The remaining 14.2B has no stake credential and is structurally excluded from the delegation system without protocol-level changes.
 
-### 5.2 Anatomy of the unstaked UTxO
+### 5.2 Anatomy of the non-participant population
 
-The 14.36B unstaked ADA is not a monolithic block of disengaged holders. It divides into structurally distinct populations based on address type and delegation status:
+The 14.355B non-participant ADA is not a monolithic block of disengaged holders. It divides into structurally distinct populations based on whether a stake credential exists and, if so, whether it has been registered and delegated.
 
-**By address type.** Cardano addresses encode their staking capability in their structure. Base addresses carry both a payment credential and a staking credential — they *can* delegate. Enterprise addresses carry only a payment credential — they *cannot* delegate by design. Script addresses are controlled by on-chain validators (smart contracts) rather than key pairs; some carry a staking credential, most do not.
+The classification pipeline (`15_utxo_from_koios.py`) combines two data sources: the delegation and stake-address tables in Instance A postgres (pruned db-sync) provide the full list of registered stake credentials and their delegation status; the Koios public API provides per-account balance data and epoch-level supply totals. The methodology works by subtraction: the total ADA controlled by all stake addresses (delegated and not) is computed directly, and the residual — circulation minus stake-controlled minus deposits — gives the ADA held in addresses with no stake credential at all.
 
-**By delegation status.** Among addresses that *can* stake (base addresses and script addresses with a staking credential), many have never registered a stake key, others registered but never delegated, and some previously delegated but have since deregistered.
+> **Methodology note.** The `cardano-cli query utxo --whole-utxo` approach (which would give a per-UTxO address-type classification) is blocked by a known CBOR deserialization bug in the cardano-ledger library: a TxIx value exceeding 16 bits exists in the mainnet UTxO set, and the library's `Word16` decoder rejects it. The bug affects both `cardano-cli` (10.15, 10.16) and ogmios (6.12.0). The approach below bypasses the UTxO dump entirely by working at the stake-account level.
 
-The SQL query `07_non_participant_decomposition.sql` classifies every unspent transaction output at the chain tip into six categories:
+| Category | Accounts | ADA | % of circulation | Description |
+|---|---|---|---|---|
+| **Delegated — key-based** | 1,354,636 | **21,716.6M** | **60.14%** | Standard stakers (covered in §§3–4) |
+| **Delegated — script-based** | 399 | **38.0M** | **0.11%** | Smart-contract staking |
+| Registered, not delegated — key | 23,074 | 23.6M | 0.07% | Addressable: could delegate but do not |
+| Registered, not delegated — script | 1,102 | 111.0M | 0.31% | Addressable: script credential without delegation |
+| Deposits (stake + DRep + governance) | — | 5.5M | 0.02% | Protocol-locked, mechanically excluded |
+| **No stake credential** | **—** | **14,215.2M** | **39.37%** | Enterprise, unregistered base, script-without-staking |
+| **Circulation** | | **36,110.0M** | **100%** | |
 
-| Classification | Description |
-|---|---|
-| `base_delegated` | Base address, stake key delegated — this is the *staked* population |
-| `base_not_delegated` | Base address, not currently delegated — *could* stake but does not |
-| `enterprise` | Enterprise address, no staking credential — *cannot* stake |
-| `script_delegated` | Script address with staking credential, delegated |
-| `script_not_delegated` | Script address with staking credential, not delegated |
-| `script_no_staking_cred` | Script address without staking credential — *cannot* stake |
+The decomposition reveals a stark asymmetry. The *addressable* non-participant pool — accounts that possess a registered stake credential but have simply not delegated — amounts to only **134.6M ADA** across 24,176 accounts (0.37% of circulation). This is the population that incentive adjustments could, in principle, reach without any protocol change.
 
-> **Data dependency.** This query requires the `tx_out` table, which contains the full UTxO set. The current db-sync instance was restored from a pruned snapshot that excludes `tx_out` (the table exists but contains zero rows — all staking-related tables are fully populated). A full db-sync restore is planned; once completed, running `07_non_participant_decomposition.sql` and `build_non_participant_visuals.py` will populate the breakdown figure below.
+The overwhelming majority of non-participant ADA (**14.215B**, 39.4% of circulation) sits in addresses with no stake credential whatsoever. This category is an upper bound on *structurally excluded* ADA: it includes enterprise addresses (which by CIP-19 design carry no staking capability — commonly used by exchanges and institutional custodians), script addresses without a staking part (DeFi-locked ADA in Plutus contracts that omit the staking credential), and base addresses whose staking key was never registered (passive holders who have never engaged with the delegation system). Separating these sub-categories requires a full UTxO dump (to read the CIP-19 header byte of each output), which is deferred until the cardano-ledger TxIx bug is resolved or Instance B's full db-sync completes.
+
+> **Finding F5.1 — The non-participant floor is structural, not behavioural.** Only 134.6M ADA (0.37% of circulation) belongs to registered stake credentials that have not delegated. The remaining 14.2B ADA in non-participant addresses has no stake credential at all. Incentive-mechanism changes (reward adjustments, fee-structure reforms) can at most shift the 0.37% addressable pool. Moving the other 39.4% requires structural protocol changes: enabling enterprise-address staking, mandating staking-capable script addresses in DeFi standards, or introducing delegation-by-default for newly minted base addresses.
 
 <!-- ![Non-participant breakdown](figures/non_participant_breakdown.png) -->
-
-This decomposition answers a critical question for incentive design: how much of the unstaked ADA *could* participate but *chooses* not to (base_not_delegated), versus how much is *structurally excluded* from staking (enterprise + script_no_staking_cred)? The former is the population that incentive adjustments could in principle reach; the latter is a hard floor on non-participation that no reward-scheme change can address.
 
 ### 5.3 Dormancy vintage
 
@@ -618,19 +640,19 @@ Among the non-delegated UTxOs, the creation date of each output provides a rough
 
 The SQL query produces a vintage breakdown of non-delegated UTxOs by creation epoch range: pre-Shelley, early Shelley (208–299), and 100-epoch bands thereafter. This separates the population into "probably dormant" (pre-Shelley outputs untouched for 400+ epochs) and "actively non-participating" (recent outputs from wallets that could delegate but do not).
 
-> **Data dependency.** Same as §5.2 — requires `tx_out`. Deferred until the full db-sync restore is completed.
+> **Data dependency.** Unlike §5.2, the dormancy analysis requires `tx_out` creation timestamps — these cannot be obtained from `cardano-cli`, which only returns current UTxO state. Deferred until Instance B's full db-sync restore is completed.
 
 ### 5.4 What the non-participant population likely contains
 
-Without off-chain attribution (which would require matching addresses to known exchange and DeFi protocol wallets), the on-chain decomposition can only classify by address structure and activity. However, the major constituents of the 14.36B are identifiable by elimination:
+The 14.215B ADA in the "no stake credential" residual category cannot be further decomposed on-chain without a full UTxO dump (blocked by the TxIx bug; see §5.2 methodology note). However, the major constituents are identifiable by elimination:
 
-**Exchange custody (likely dominant).** Centralised exchanges hold ADA in hot and cold wallets. Some exchanges stake user ADA through their own pools (Coinbase, Binance — visible in §3.3 entity attribution), but the custodial ADA that is *not* staked — either because the exchange has not implemented staking or because users have not opted in — sits in enterprise or base addresses without delegation. Exchange cold-wallet identification requires cross-referencing with known address clusters, which is deferred to a companion analysis.
+**Exchange custody (likely dominant).** Centralised exchanges hold ADA in enterprise addresses (hot and cold wallets). Some exchanges stake user ADA through their own pools (Coinbase, Binance — visible in §3.3 entity attribution), but the custodial ADA that is *not* staked sits in enterprise addresses by design. Enterprise addresses structurally cannot delegate; this is the largest single contributor to the 14.2B residual. Exchange cold-wallet identification requires cross-referencing with known address clusters, which is deferred to a companion analysis.
 
-**Smart-contract-locked ADA.** DeFi protocols (DEXes, lending platforms, liquidity pools) lock ADA in script addresses. Most script addresses lack a staking credential, making their ADA structurally unstakeable. The growth of DeFi since the Alonzo hard fork (epoch ~290) has steadily increased the script-locked portion of the unstaked UTxO.
+**Smart-contract-locked ADA.** DeFi protocols (DEXes, lending platforms, liquidity pools) lock ADA in script addresses. Most Plutus script addresses omit the staking credential (CIP-19 type 7), making their ADA structurally unstakeable. The growth of DeFi since the Alonzo hard fork (epoch ~290) has steadily increased the script-locked portion. The 1,102 script accounts that *do* carry a staking credential but have not delegated control 111M ADA — a small but notable population that could participate with a single delegation transaction.
 
-**Dormant and lost wallets.** Wallets that received ADA before or shortly after the Shelley hard fork and have never transacted since. Some fraction of these represent lost keys. The dormancy vintage analysis (§5.3) quantifies this segment.
+**Dormant and lost wallets.** Wallets that received ADA before or shortly after the Shelley hard fork and have never transacted since. Some fraction of these represent lost keys. The dormancy vintage analysis (§5.3) will quantify this segment once Instance B's full db-sync provides `tx_out` creation timestamps.
 
-**Active non-stakers.** Wallets that transact regularly but whose owners have never registered a stake key or have deregistered. This group is the most responsive to incentive changes — they are engaged with the network but have chosen not to delegate.
+**Active non-stakers.** The 23,074 key-based accounts that are registered but not delegated (23.6M ADA) represent the purest "addressable" non-participant pool. These holders have engaged with the staking infrastructure (registered a stake key, paid the 2-ADA deposit) but stopped short of delegating. Whether this reflects a deliberate opt-out, a failed transaction sequence, or wallet UX friction is not determinable from on-chain data alone.
 
 
 ## 6. Synthesis
@@ -639,18 +661,19 @@ Without off-chain attribution (which would require matching addresses to known e
 
 | Metric | Value | Source |
 |---|---|---|
-| Circulating supply | 36.88B ADA | ada_pots |
-| Staked | 21.75B ADA (59.0%) | epoch_stake |
-| Unstaked UTxO | 14.36B ADA (38.9%) | utxo − staked |
-| Unclaimed rewards | 0.77B ADA (2.1%) | ada_pots |
-| Deposits + fees | 0.01B ADA (<0.1%) | ada_pots |
+| Circulating supply | 36.110B ADA | Koios totals (epoch 623) |
+| Staked (delegated) | 21.755B ADA (60.2%) | epoch_stake |
+| Non-participant ADA | 14.355B ADA (39.8%) | residual |
+| _Addressable (reg, !delegated)_ | _134.6M ADA (0.37%)_ | _Koios account_info + Instance A_ |
+| _No stake credential_ | _14.215B ADA (39.4%)_ | _residual_ |
+| _Deposits_ | _5.5M ADA (<0.1%)_ | _Koios totals_ |
 | Active delegations | 1,355,035 | epoch_stake |
 | Active pools | 2,877 | epoch_stake |
 | Named entities (productive) | 73 entities / 464 pools | entity attribution on productive pools |
 | Unattributed single-pool operators (productive) | 477 pools | epoch_stake − entity attribution |
 | Delegations per pool | ~471 | epoch_stake |
 | ADA per delegation | ~16,050 ADA | epoch_stake |
-| Gini coefficient (stake concentration) | 0.974 | tier-aggregated Lorenz |
+| Gini coefficient (stake concentration) | 0.976 | tier-aggregated Lorenz |
 
 ### Concentration headline
 
@@ -672,7 +695,7 @@ Without off-chain attribution (which would require matching addresses to known e
 
 ### What remains noisy
 
-1. **Non-participant decomposition** (§5) — the 38.9% unstaked UTxO ADA is a mix of exchanges, smart contracts, and dormant wallets. The address-type and dormancy-vintage queries (`07_non_participant_decomposition.sql`) are written but require a full db-sync with `tx_out` populated (the current instance uses a pruned snapshot). Restore planned.
+1. **Non-participant decomposition** (§5) — the address-type classification (`15_utxo_from_cli.py`) bypasses the pruned db-sync by querying the UTxO set directly via `cardano-cli`. The dormancy-vintage analysis (§5.3) still requires `tx_out` creation dates and is deferred to Instance B's full sync.
 2. **Delegator-side entity attribution** — which delegation tiers delegate to exchange pools vs independent pools? The pool-side is resolved; the delegator-side is not.
 3. **Historical SPO/MPO** — current snapshot only. Need per-epoch owner-key reconstruction.
 
