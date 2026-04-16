@@ -33,10 +33,41 @@ html{scroll-behavior:smooth;scroll-padding-top:56px}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;background:var(--bg-warm);color:var(--text-body);line-height:1.78;-webkit-font-smoothing:antialiased}
 
 /* ── NAV ── */
-.site-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto;display:flex;gap:0;white-space:nowrap}
-.site-nav a{padding:13px 16px;font:500 12.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;flex-shrink:0}
-.site-nav a:hover{color:var(--text-body)}
-.site-nav a.active{color:var(--text-primary);border-bottom-color:var(--accent)}
+/* ── Site header: two bars ── */
+.site-nav{position:sticky;top:0;z-index:100;display:flex;flex-direction:column}
+
+/* Bar 1: brand identity */
+.nav-brand{background:#111;padding:0 28px;display:flex;align-items:center;min-height:38px}
+.nav-brand-home{display:flex;align-items:baseline;gap:12px;text-decoration:none}
+.nav-brand-org{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.nav-brand-title{font:600 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.2px}
+
+/* Bar 2: page navigation */
+.nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:stretch;padding:0 28px;overflow-x:auto;white-space:nowrap;min-height:46px}
+.nav-pages a{text-decoration:none;transition:color .15s,background .15s}
+
+/* Nav sections */
+.nav-section{display:flex;align-items:stretch}
+.nav-section+.nav-section{margin-left:12px;padding-left:16px;border-left:1px solid var(--border)}
+
+/* Section title (Mainnet Analysis) */
+.nav-section-title{display:flex;align-items:center;font:700 9.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:var(--infared);padding-right:10px;flex-shrink:0}
+.nav-section-links{display:flex;align-items:stretch}
+
+/* Nav tabs */
+.nav-tab{display:flex;align-items:center;gap:5px;padding:0 14px;font:500 12.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.3px;text-transform:uppercase;color:var(--text-muted);border-bottom:3px solid transparent;margin-bottom:-1px}
+.nav-tab:hover{color:var(--text-primary);background:rgba(0,0,0,.02)}
+.nav-tab.active{color:var(--text-primary);font-weight:600;border-bottom-color:var(--accent)}
+
+/* Flow separator + tag */
+.nav-flow-sep{width:1px;align-self:center;height:20px;background:var(--border);margin:0 8px;flex-shrink:0}
+.nav-flow-tag{display:flex;align-items:center;font:500 8.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);opacity:.5;padding-right:4px;flex-shrink:0}
+
+/* Colored dots per page */
+.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* Flow arrows */
+.nav-arrow{font-size:12px;color:var(--dawn);opacity:.5;display:flex;align-items:center;padding:0 2px;flex-shrink:0}
 
 /* ── HERO ── */
 .hero{position:relative;overflow:hidden;padding:52px 40px 44px;background:#111;border-bottom:3px solid var(--accent)}
@@ -193,12 +224,30 @@ mjx-container[display=true]{display:block!important;max-width:100%;margin:20px a
 </head>
 <body>
 <div class="progress-bar" id="progress"></div>
-<nav class="site-nav"><a href="index.html">Main Report</a>
-<a href="intended-game.html">The Intended Game</a>
-<a href="treasury.html">§1 Treasury</a>
-<a href="pools.html" class="active">§2 Pools</a>
-<a href="operator.html">§3 Operator</a>
-<a href="census.html">Census</a></nav>
+<nav class="site-nav"><div class="nav-brand">
+<a href="index.html" class="nav-brand-home">
+<span class="nav-brand-org">Input Output · IO Research</span>
+<span class="nav-brand-title">Cardano Reward Pipeline</span>
+</a>
+</div>
+<div class="nav-pages">
+<div class="nav-section">
+<a href="intended-game.html" class="nav-tab">The Intended Game</a>
+</div>
+<div class="nav-section nav-analysis">
+<span class="nav-section-title">Mainnet Analysis</span>
+<div class="nav-section-links">
+<a href="census.html" class="nav-tab">Census</a>
+<span class="nav-flow-sep"></span>
+<span class="nav-flow-tag">Reward Flow</span>
+<a href="treasury.html" class="nav-tab"><span class="nav-dot" style="background:#E52321"></span>Monetary Reserve</a>
+<span class="nav-arrow">→</span>
+<a href="pools.html" class="nav-tab active"><span class="nav-dot" style="background:#2C4FFA"></span>Pools</a>
+<span class="nav-arrow">→</span>
+<a href="operator.html" class="nav-tab"><span class="nav-dot" style="background:#EC641D"></span>Operators & Delegators</a>
+</div>
+</div>
+</div></nav>
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-label">Input Output &middot; IO Research</div>
