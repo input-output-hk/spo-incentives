@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cardano Reward Pipeline — Mainnet Observations</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --infared:#E52321; --dawn:#EC641D; --black:#000; --white:#FFF;
+  --electric-blue:#16E9D8; --acid-green:#06FF89; --volt-yellow:#F2FF58;
+  --solar-amber:#FFBA36; --ember-orange:#FF532C; --cobalt-pulse:#2C4FFA;
+  --ultraviolet:#A700FF; --hyper-pink:#FF79FC;
+  --surface:#09090b; --surface-1:#111113; --surface-2:#1a1a1d; --surface-3:#242428;
+  --text-primary:#e4e4e7; --text-secondary:#a1a1aa; --text-muted:#52525b;
+  --border:#27272a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Barlow',system-ui,sans-serif;background:var(--surface);color:var(--text-primary);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ── HERO ── */
+.hero{position:relative;overflow:hidden;padding:56px 40px 48px;border-bottom:1px solid var(--border)}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% 40%,rgba(174,20,15,.25),transparent 70%),radial-gradient(ellipse 60% 50% at 30% 70%,rgba(232,128,4,.15),transparent 60%);pointer-events:none}
+.hero-inner{position:relative;max-width:1200px;margin:0 auto}
+.hero-label{font-size:11px;font-weight:300;letter-spacing:3.5px;text-transform:uppercase;color:var(--dawn);margin-bottom:14px}
+.hero h1{font-size:32px;font-weight:600;color:var(--white);margin-bottom:6px}
+.hero .subtitle{font-size:15px;font-weight:300;color:rgba(255,255,255,.55)}
+.hero .subtitle strong{color:rgba(255,255,255,.8);font-weight:500}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:100;background:rgba(9,9,11,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;overflow-x:auto}
+.nav-inner{display:flex;gap:0;max-width:1200px;margin:0 auto}
+.nav-btn{padding:14px 20px;font:500 13px/1 'Barlow',sans-serif;letter-spacing:.5px;color:var(--text-muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav-btn:hover{color:var(--text-secondary)}
+.nav-btn.active{color:var(--white);border-bottom-color:var(--dawn)}
+.nav-btn .nav-count{display:inline-block;margin-left:6px;font-size:11px;font-weight:400;color:var(--text-muted);background:var(--surface-2);padding:1px 6px;border-radius:10px}
+
+/* ── SECTIONS ── */
+.section{display:none;max-width:1200px;margin:0 auto;padding:32px 40px 80px}
+.section.active{display:block}
+.section-header{margin-bottom:28px}
+.section-title{font-size:20px;font-weight:600;color:var(--white);margin-bottom:6px}
+.section-desc{font-size:14px;color:var(--text-secondary);font-weight:300;line-height:1.7;max-width:860px}
+.section-desc a{color:var(--dawn);text-decoration:none;border-bottom:1px solid rgba(236,100,29,.3)}
+.section-desc a:hover{border-bottom-color:var(--dawn)}
+
+/* ── STATS BAR ── */
+.stats{display:flex;gap:28px;padding:18px 24px;background:var(--surface-1);border:1px solid var(--border);border-radius:10px;margin-bottom:28px;overflow-x:auto;flex-wrap:wrap}
+.stat{min-width:100px}
+.stat-val{font-size:20px;font-weight:600;color:var(--white)}
+.stat-lbl{font-size:10px;font-weight:300;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-top:1px}
+
+/* ── GROUP LABELS ── */
+.group-label{font-size:11px;font-weight:300;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin:24px 0 10px;padding-left:2px;display:flex;align-items:center;gap:8px}
+.group-label:first-of-type{margin-top:0}
+.group-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── OBS CARD ── */
+.obs-card{background:var(--surface-1);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden;transition:border-color .2s}
+.obs-card:hover{border-color:#3a3a3a}
+.obs-card.open{border-color:color-mix(in srgb,var(--card-accent) 50%,transparent)}
+.obs-head{display:flex;align-items:flex-start;gap:14px;padding:18px 22px;cursor:pointer;user-select:none}
+.obs-head:hover{background:var(--surface-2)}
+.obs-tag{flex-shrink:0;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:12px;font-weight:600;background:color-mix(in srgb,var(--card-accent) 14%,transparent);color:var(--card-accent)}
+.obs-body{flex:1}
+.obs-title{font-size:14.5px;font-weight:500;color:var(--white);line-height:1.4}
+.obs-meta{font-size:12px;color:var(--text-muted);margin-top:3px}
+.obs-chev{flex-shrink:0;width:18px;height:18px;margin-top:8px;color:var(--text-muted);transition:transform .25s ease}
+.obs-card.open .obs-chev{transform:rotate(180deg)}
+.findings{display:none;padding:0 22px 18px}
+.obs-card.open .findings{display:block}
+.finding{display:grid;grid-template-columns:50px 1fr auto;gap:10px;padding:12px 0;border-top:1px solid var(--border);align-items:baseline}
+.finding:first-child{border-top:none}
+.f-id{font-size:11.5px;font-weight:500;color:var(--text-muted);font-family:'Barlow',monospace}
+.f-txt{font-size:13.5px;color:var(--text-secondary);line-height:1.65}
+.f-txt strong{color:var(--text-primary);font-weight:500}
+.f-ref{font-size:10.5px;font-weight:400;letter-spacing:.5px;white-space:nowrap;padding:2px 7px;border-radius:4px;background:rgba(255,255,255,.04);color:color-mix(in srgb,var(--card-accent) 80%,var(--text-secondary))}
+
+/* ── SCOPE NOTE ── */
+.scope{background:var(--surface-1);border-left:3px solid var(--dawn);padding:14px 18px;margin-top:24px;border-radius:0 6px 6px 0;font-size:12.5px;color:var(--text-secondary);line-height:1.7}
+.scope strong{color:var(--text-primary);font-weight:500}
+
+/* ── RESPONSIVE ── */
+@media(max-width:720px){
+  .hero{padding:32px 20px 28px} .section{padding:24px 20px 60px}
+  .nav{padding:0 16px} .nav-btn{padding:12px 14px;font-size:12px}
+  .stats{padding:14px 16px;gap:20px} .finding{grid-template-columns:42px 1fr} .f-ref{display:none}
+}
+
+/* ── STAGE COLOURS ── */
+[data-stage="treasury"]{--card-accent:var(--infared)}
+[data-stage="pools"]{--card-accent:var(--cobalt-pulse)}
+[data-stage="operator"]{--card-accent:var(--dawn)}
+[data-stage="census"]{--card-accent:var(--electric-blue)}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Input Output &middot; IO Research</div>
+    <h1>Cardano Reward Pipeline &mdash; Mainnet Observations</h1>
+    <div class="subtitle">From Design Intent to Mainnet Reality &middot; <strong>Epoch 623</strong> &middot; 25 observations &middot; 70+ findings</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="show('treasury')">§1 Treasury &amp; Pool Pots<span class="nav-count">4</span></button>
+    <button class="nav-btn" onclick="show('pools')">§2 Pools Distribution<span class="nav-count">6</span></button>
+    <button class="nav-btn" onclick="show('operator')">§3 Operator / Delegator<span class="nav-count">8</span></button>
+    <button class="nav-btn" onclick="show('census')">Staking Census<span class="nav-count">7</span></button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- §1 TREASURY & POOL POTS DISTRIBUTION                       -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section active" id="sec-treasury" data-stage="treasury">
+  <div class="section-header">
+    <div class="section-title">§1 &mdash; Treasury &amp; Pool Pots Distribution</div>
+    <div class="section-desc">How much ADA is available for distribution this epoch? The epoch pot is assembled from monetary expansion, transaction fees, and deposit flows, then split between the treasury and the pools pot. Epochs 208&ndash;617.</div>
+  </div>
+  <div class="stats">
+    <div class="stat"><span class="stat-val">~99.8%</span><span class="stat-lbl">Expansion share</span></div>
+    <div class="stat"><span class="stat-val">6.53B</span><span class="stat-lbl">Reserve remaining</span></div>
+    <div class="stat"><span class="stat-val">~44%</span><span class="stat-lbl">Distribution efficiency</span></div>
+    <div class="stat"><span class="stat-val">4.55B</span><span class="stat-lbl">Cumul. return-to-reserve</span></div>
+    <div class="stat"><span class="stat-val">&eta; = 0.977</span><span class="stat-lbl">Block production</span></div>
+  </div>
+
+  <div class="obs-card" data-stage="treasury">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O1</div>
+      <div class="obs-body"><div class="obs-title">The epoch pot is a single-source budget</div><div class="obs-meta">4 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F1.1</span><span class="f-txt">Monetary expansion dominates the epoch pot (<strong>~99.8%</strong>).</span><span class="f-ref">§4.1</span></div>
+      <div class="finding"><span class="f-id">F1.2</span><span class="f-txt">Fee revenue is structurally insufficient — even at full capacity, fees cover <strong>~1.3%</strong> of expansion.</span><span class="f-ref">§4.3</span></div>
+      <div class="finding"><span class="f-id">F1.3</span><span class="f-txt">Deposit contribution is small and unmeasurable at epoch granularity.</span><span class="f-ref">§4.4</span></div>
+      <div class="finding"><span class="f-id">F1.4</span><span class="f-txt">SPOs produce <strong>~97%</strong> of assigned blocks (&eta; &asymp; 0.977) — the pot assembles reliably.</span><span class="f-ref">§4.5</span></div>
+    </div>
+  </div>
+  <div class="obs-card" data-stage="treasury">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O2</div>
+      <div class="obs-body"><div class="obs-title">The reserve has crossed its half-life</div><div class="obs-meta">2 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F2.1</span><span class="f-txt">Reserve is <strong>half-depleted</strong> (13.29B &rarr; 6.53B ADA) in 5.5 years.</span><span class="f-ref">§4.2</span></div>
+      <div class="finding"><span class="f-id">F2.2</span><span class="f-txt">Significant reward pressure expected at <strong>epochs 1000&ndash;1200</strong> (~2028&ndash;2029).</span><span class="f-ref">§5.1</span></div>
+    </div>
+  </div>
+  <div class="obs-card" data-stage="treasury">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O3</div>
+      <div class="obs-body"><div class="obs-title">The reward mechanism operates at ~44% of its potential</div><div class="obs-meta">3 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F3.1</span><span class="f-txt">Only <strong>~44%</strong> of the pools pot is distributed — the rest returns to the reserve.</span><span class="f-ref">§4.7</span></div>
+      <div class="finding"><span class="f-id">F3.2</span><span class="f-txt"><strong>4.55B ADA</strong> cumulative (~70% of current reserve) exists because of undistributed rewards.</span><span class="f-ref">§4.7</span></div>
+      <div class="finding"><span class="f-id">F3.3</span><span class="f-txt">Primary driver: <strong>~17B ADA (~44%)</strong> does not participate in delegation.</span><span class="f-ref">§4.7</span></div>
+    </div>
+  </div>
+  <div class="obs-card" data-stage="treasury">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O4</div>
+      <div class="obs-body"><div class="obs-title">Reward parameters have never been adjusted</div><div class="obs-meta">1 finding</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F4.1</span><span class="f-txt">&rho; = 0.3% and &tau; = 20% are <strong>unchanged since Shelley</strong>. Neither has been subject to a governance proposal.</span><span class="f-ref">§4.8</span></div>
+    </div>
+  </div>
+  <div class="scope"><strong>Scope.</strong> O1&ndash;O4 are structural to the epoch-budget layer. No existing CIP targets this stage — they all operate downstream (§2, §3). These observations document the sustainability context within which all downstream proposals operate.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- §2 POOLS DISTRIBUTION                                      -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="sec-pools" data-stage="pools">
+  <div class="section-header">
+    <div class="section-title">§2 &mdash; The Pools Pot Distribution Gaps</div>
+    <div class="section-desc">How the pools pot is distributed across individual pools. The reward curve, pledge mechanism, saturation threshold, and the entity landscape. Epochs 208&ndash;618.</div>
+  </div>
+  <div class="stats">
+    <div class="stat"><span class="stat-val">44%</span><span class="stat-lbl">Distribution efficiency</span></div>
+    <div class="stat"><span class="stat-val">95.6%</span><span class="stat-lbl">Pledge bonus wasted</span></div>
+    <div class="stat"><span class="stat-val">85</span><span class="stat-lbl">MPO entities</span></div>
+    <div class="stat"><span class="stat-val">75.4%</span><span class="stat-lbl">MPO stake share</span></div>
+    <div class="stat"><span class="stat-val">283</span><span class="stat-lbl">Independent viable SPOs</span></div>
+    <div class="stat"><span class="stat-val">36%</span><span class="stat-lbl">Incentive-responsive stake</span></div>
+  </div>
+
+  <div class="group-label"><span class="group-dot" style="background:var(--cobalt-pulse)"></span>Distribution efficiency</div>
+  <div class="obs-card" data-stage="pools">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O1</div>
+      <div class="obs-body"><div class="obs-title">Two causes account for 54% of the pools pot returning to reserve</div><div class="obs-meta">4 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F1.1</span><span class="f-txt">Only <strong>6.79M of 15.53M ADA/epoch</strong> reaches operators and delegators — 44% distribution efficiency.</span><span class="f-ref">§3.6.1</span></div>
+      <div class="finding"><span class="f-id">F1.2</span><span class="f-txt">The participation gap (unstaked ADA) alone returns <strong>4.91M ADA/epoch</strong> — 31.6% of the pot.</span><span class="f-ref">§3.1</span></div>
+      <div class="finding"><span class="f-id">F1.3</span><span class="f-txt">The unused pledge-incentive budget returns <strong>3.43M ADA/epoch</strong> — 22.1% of the pot, <strong>95.6%</strong> of the bonus budget wasted.</span><span class="f-ref">§3.4.1</span></div>
+      <div class="finding"><span class="f-id">F1.4</span><span class="f-txt">These two causes together (53.7%) dwarf all others: pledge-not-met confiscation (2.1%), performance (0.5%), oversaturation (0.3%).</span><span class="f-ref">§3.6.1</span></div>
+    </div>
+  </div>
+  <div class="obs-card" data-stage="pools">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O2</div>
+      <div class="obs-body"><div class="obs-title">The pledge mechanism is economically broken</div><div class="obs-meta">3 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F2.1</span><span class="f-txt"><strong>78%</strong> of staked ADA sits in pools with pledge ratio &lt; 1%; stake-weighted median ratio is <strong>0.07%</strong>.</span><span class="f-ref">§3.4.4</span></div>
+      <div class="finding"><span class="f-id">F2.2</span><span class="f-txt">Yield on pledge capital is <strong>0.68%/yr</strong> at best (full saturation) — below passive delegation yield of 2.3%/yr.</span><span class="f-ref">§3.4.2</span></div>
+      <div class="finding"><span class="f-id">F2.3</span><span class="f-txt"><strong>3.4M ADA/epoch</strong> (22% of pot) is reserved for the pledge bonus but returns to reserve unused.</span><span class="f-ref">§3.6.1</span></div>
+    </div>
+  </div>
+
+  <div class="group-label"><span class="group-dot" style="background:var(--cobalt-pulse)"></span>Pool landscape</div>
+  <div class="obs-card" data-stage="pools">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O3</div>
+      <div class="obs-body"><div class="obs-title">The pool landscape is stratified into four tiers</div><div class="obs-meta">6 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F3.1</span><span class="f-txt">Regular block production requires <strong>~3M ADA</strong> — the emergent viability boundary.</span><span class="f-ref">§4.1.2.1</span></div>
+      <div class="finding"><span class="f-id">F3.2</span><span class="f-txt">Below 1.1M ADA, the 340 ADA fixed cost exceeds pool reward — operators are in <strong>economic loss</strong>.</span><span class="f-ref">§4.1.2.2</span></div>
+      <div class="finding"><span class="f-id">F3.3</span><span class="f-txt">Only <strong>8 pools</strong> reach the saturation threshold (z&#8320; = 77M ADA) — the cap designed for 500 pools is nearly inactive.</span><span class="f-ref">§4.1.2.3</span></div>
+      <div class="finding"><span class="f-id">F3.4</span><span class="f-txt">Active stake fills only <strong>56.5%</strong> of theoretical capacity — at most 282 pools could saturate.</span><span class="f-ref">§4.1.2.3</span></div>
+      <div class="finding"><span class="f-id">F3.5</span><span class="f-txt">Tier boundaries are dynamic — they shift with active stake, fixed costs, and k.</span><span class="f-ref">§4.1.5</span></div>
+      <div class="finding"><span class="f-id">F3.6</span><span class="f-txt">CIPs targeting k reshape the upper tail; CIPs targeting fees reshape the lower tail — <strong>reforms hit different tiers</strong>.</span><span class="f-ref">§4.1.5</span></div>
+    </div>
+  </div>
+
+  <div class="group-label"><span class="group-dot" style="background:var(--cobalt-pulse)"></span>Entity landscape</div>
+  <div class="obs-card" data-stage="pools">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O4</div>
+      <div class="obs-body"><div class="obs-title">Multi-pool operators control 75% of staked supply</div><div class="obs-meta">7 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F4.1</span><span class="f-txt"><strong>85 MPO entities</strong> operate 901 pools holding <strong>16.4B ADA</strong> — 75.4% of participating stake.</span><span class="f-ref">§4.2.1</span></div>
+      <div class="finding"><span class="f-id">F4.2</span><span class="f-txt">48 capital-sufficient MPOs could play the pledge game; 37 cannot.</span><span class="f-ref">§4.2.2</span></div>
+      <div class="finding"><span class="f-id">F4.3</span><span class="f-txt"><strong>41 of 48</strong> capital-sufficient MPOs are non-compliant — forfeiting ~550K ADA/epoch in pledge bonus.</span><span class="f-ref">§4.2.4.1</span></div>
+      <div class="finding"><span class="f-id">F4.4</span><span class="f-txt">CEX + IVaaS alone hold <strong>7.4B ADA (19.2%)</strong> at structurally zero pledge.</span><span class="f-ref">§4.2.4.2</span></div>
+      <div class="finding"><span class="f-id">F4.5</span><span class="f-txt">Capital-sufficient non-compliance is a scale phenomenon — 82.9% of viable MPO stake.</span><span class="f-ref">§4.2.4.4</span></div>
+      <div class="finding"><span class="f-id">F4.6</span><span class="f-txt">Non-compliance spans the full tier spectrum — no single-tier fix exists.</span><span class="f-ref">§4.2.4.4</span></div>
+      <div class="finding"><span class="f-id">F4.7</span><span class="f-txt"><strong>3 exemplary MPOs</strong> capture 82% of bonus ADA — the mechanism's output rests on 2 private entities.</span><span class="f-ref">§4.2.4.3</span></div>
+    </div>
+  </div>
+  <div class="obs-card" data-stage="pools">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O5</div>
+      <div class="obs-body"><div class="obs-title">The independent operator base is far smaller and weaker than it appears</div><div class="obs-meta">4 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F3.7</span><span class="f-txt">741 healthy pools collapse to <strong>283 independent viable operators</strong> once MPO fleets are removed.</span><span class="f-ref">§4.3.1</span></div>
+      <div class="finding"><span class="f-id">F3.8</span><span class="f-txt"><strong>78%</strong> of independent single-pool stake is non-compliant — the pledge signal is correctly priced as irrelevant.</span><span class="f-ref">§4.3.2</span></div>
+      <div class="finding"><span class="f-id">F3.9</span><span class="f-txt"><strong>561 marginal single-pool operators</strong> (16% of single-pool stake) partially pledge — the narrow policy-sensitive population.</span><span class="f-ref">§4.3.2</span></div>
+      <div class="finding"><span class="f-id">F3.10</span><span class="f-txt">Independent operators' share of active stake has fallen from <strong>28.0% to 25.0%</strong> since epoch 583.</span><span class="f-ref">§4.3.3</span></div>
+    </div>
+  </div>
+  <div class="obs-card" data-stage="pools">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O6</div>
+      <div class="obs-body"><div class="obs-title">The incentive-responsive field is a fraction of the network</div><div class="obs-meta">3 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F6.1</span><span class="f-txt"><strong>78 of 85</strong> MPO entities (13.74B ADA, 63%) are outside the pledge-response path.</span><span class="f-ref">§4.4.1</span></div>
+      <div class="finding"><span class="f-id">F6.2</span><span class="f-txt">CEX cannot pledge custodied funds; IVaaS cannot pledge client assets; community fleets choose not to — <strong>three distinct mechanisms</strong>.</span><span class="f-ref">§4.2.4.2</span></div>
+      <div class="finding"><span class="f-id">F6.3</span><span class="f-txt">The filtered proxy holds <strong>7.89B ADA</strong> — only <strong>36%</strong> of active stake responds to the pledge signal.</span><span class="f-ref">§4.4.4</span></div>
+    </div>
+  </div>
+  <div class="scope"><strong>Scope.</strong> O1&ndash;O3 are structural to the pool-distribution layer. O4&ndash;O6 characterise the entity landscape and the incentive-responsive arena. The participation gap (O1) and capital constraint (O4) set the playing field within which the reward curve operates.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- §3 OPERATOR / DELEGATOR DISTRIBUTION                       -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="sec-operator" data-stage="operator">
+  <div class="section-header">
+    <div class="section-title">§3 &mdash; The Operator's Cut</div>
+    <div class="section-desc">How each pool's reward is split between the operator and delegators. The pricing plan landscape, custodial/retail boundary, profitability, and delegator yield. Epochs 211&ndash;623.</div>
+  </div>
+  <div class="stats">
+    <div class="stat"><span class="stat-val">952</span><span class="stat-lbl">Productive pools</span></div>
+    <div class="stat"><span class="stat-val">21.57B</span><span class="stat-lbl">ADA staked</span></div>
+    <div class="stat"><span class="stat-val">809</span><span class="stat-lbl">Retail pools</span></div>
+    <div class="stat"><span class="stat-val">516</span><span class="stat-lbl">Entities</span></div>
+    <div class="stat"><span class="stat-val">1.27M</span><span class="stat-lbl">Delegators</span></div>
+    <div class="stat"><span class="stat-val">87 ₳</span><span class="stat-lbl">Median delegation</span></div>
+    <div class="stat"><span class="stat-val">2.0%</span><span class="stat-lbl">Yield (ann.)</span></div>
+  </div>
+
+  <div class="group-label"><span class="group-dot" style="background:var(--infared)"></span>Extraction channels</div>
+  <div class="obs-card" data-stage="operator">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O1</div>
+      <div class="obs-body"><div class="obs-title">The flat fee dominates operator revenue but operators do not actively set it</div><div class="obs-meta">4 findings &middot; §4.1, §4.4</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F1.1</span><span class="f-txt">The flat fee accounts for <strong>60%</strong> of all operator revenue in the retail market; the commission accounts for 40%.</span><span class="f-ref">§4.4</span></div>
+      <div class="finding"><span class="f-id">F1.2</span><span class="f-txt"><strong>64%</strong> of pools still declare the former floor (340 ₳) — 178 epochs after governance halved it to 170 ₳.</span><span class="f-ref">§4.1</span></div>
+      <div class="finding"><span class="f-id">F1.3</span><span class="f-txt"><strong>89.5%</strong> declare one of two floor values; "custom" values are mostly near-floor inertia or extraction.</span><span class="f-ref">§4.1</span></div>
+      <div class="finding"><span class="f-id">F1.4</span><span class="f-txt">The flat fee follows a <strong>1/&sigma; hyperbola</strong>: 47.5% at sub-viable, 1.5% at near-saturation. Unique to Cardano.</span><span class="f-ref">§4.1</span></div>
+    </div>
+  </div>
+  <div class="obs-card" data-stage="operator">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O2</div>
+      <div class="obs-body"><div class="obs-title">The commission market is bimodal with an empty middle</div><div class="obs-meta">2 findings &middot; §4.2</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F2.1</span><span class="f-txt"><strong>87%</strong> of pools set commission &le; 10%; <strong>12%</strong> set &ge; 99% (privatisation). The 89pp middle contains 12 pools.</span><span class="f-ref">§4.2</span></div>
+      <div class="finding"><span class="f-id">F2.2</span><span class="f-txt">Four bands: no-commission (170, 17.9%), competitive (<strong>658, 69.1%</strong>), no man's land (12, 1.3%), privatisation (112, 11.8%).</span><span class="f-ref">§4.2</span></div>
+    </div>
+  </div>
+
+  <div class="group-label"><span class="group-dot" style="background:var(--electric-blue)"></span>Custodial / retail boundary</div>
+  <div class="obs-card" data-stage="operator">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O3</div>
+      <div class="obs-body"><div class="obs-title">21% of productive stake is custodial — three mechanisms, three economics</div><div class="obs-meta">3 findings &middot; §4.3</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F3.1</span><span class="f-txt"><strong>79 entities</strong>, 143 pools (<strong>4.55B, 21.1%</strong>): by pledge (10, 1.59B), by extraction (57, 2.04B), by delegation (15, 0.92B).</span><span class="f-ref">§4.3</span></div>
+      <div class="finding"><span class="f-id">F3.2</span><span class="f-txt">Custodial-by-delegation uses per-pool <strong>median delegation &ge; 100K ₳</strong>. A 50K ₳ delegation is already top 1.5%.</span><span class="f-ref">§4.3.2</span></div>
+      <div class="finding"><span class="f-id">F3.3</span><span class="f-txt">By-pledge: <strong>1.76M ₳/yr</strong>. By-extraction: <strong>282K ₳/yr</strong>. By-delegation: <strong>29K ₳/yr</strong>. Three distinct economic outcomes.</span><span class="f-ref">§4.3.3</span></div>
+    </div>
+  </div>
+  <div class="obs-card" data-stage="operator">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O4</div>
+      <div class="obs-body"><div class="obs-title">The retail market is 79% of stake and the typical delegator holds 87 ₳</div><div class="obs-meta">2 findings &middot; §4.3.3, §4.4</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F4.1</span><span class="f-txt"><strong>809 pools, 516 entities, 17.02B ADA, 1,272,836 delegators.</strong> Includes institutional operators — retail by median delegation.</span><span class="f-ref">§4.3.3</span></div>
+      <div class="finding"><span class="f-id">F4.2</span><span class="f-txt">Median retail delegation is <strong>87 ₳</strong> — remarkably uniform across operator types.</span><span class="f-ref">§4.4</span></div>
+    </div>
+  </div>
+
+  <div class="group-label"><span class="group-dot" style="background:var(--dawn)"></span>Double asymmetry</div>
+  <div class="obs-card" data-stage="operator">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O5</div>
+      <div class="obs-body"><div class="obs-title">Delegators pay 18&times; more for the same return</div><div class="obs-meta">2 findings &middot; §4.4</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F5.1</span><span class="f-txt">Sub-viable: <strong>48.3%</strong> effective price, 2.04% return. Near-saturation: <strong>2.7%</strong> price, 2.34% return. <strong>18&times;</strong> the price for 0.30pp.</span><span class="f-ref">§4.4</span></div>
+      <div class="finding"><span class="f-id">F5.2</span><span class="f-txt">Net return converges to <strong>1.95&ndash;2.34%</strong> across the entire retail market. The signal is too weak to drive delegation.</span><span class="f-ref">§4.4</span></div>
+    </div>
+  </div>
+  <div class="obs-card" data-stage="operator">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O6</div>
+      <div class="obs-body"><div class="obs-title">Operator profitability: 24K to 1M ₳/yr — those who charge the most earn the least</div><div class="obs-meta">4 findings &middot; §4.4, §4.5</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F6.1</span><span class="f-txt">Sub-viable SPO: 48.3% take, <strong>24,820 ₳/yr</strong>. 11+ pool MPO: 7.7% take, <strong>1,035,496 ₳/yr</strong> — <strong>42&times;</strong> more at 6&times; less price.</span><span class="f-ref">§4.4</span></div>
+      <div class="finding"><span class="f-id">F6.2</span><span class="f-txt">MPO revenue scales <strong>horizontally</strong> (more pools). The 11+ bracket captures <strong>26.5%</strong> of retail rewards through 7 entities.</span><span class="f-ref">§4.4</span></div>
+      <div class="finding"><span class="f-id">F6.3</span><span class="f-txt">57 hollow MPOs: <strong>64.4%</strong> of retail rewards. 414 hollow SPOs: <strong>31.1%</strong>. 41 balanced: 1.2%.</span><span class="f-ref">§4.4</span></div>
+      <div class="finding"><span class="f-id">F6.4</span><span class="f-txt"><strong>No single-pool operator</strong> earns a competitive wage. Median ~25,000 ₳/yr covers infrastructure, not 5&ndash;15 hrs/month of skilled work.</span><span class="f-ref">§4.5</span></div>
+    </div>
+  </div>
+  <div class="obs-card" data-stage="operator">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O7</div>
+      <div class="obs-body"><div class="obs-title">Delegation follows visibility, not return</div><div class="obs-meta">2 findings &middot; §4.4</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F7.1</span><span class="f-txt"><strong>65.9%</strong> of retail delegators in hollow MPO pools at 2.18%; SPO near-saturation offers 2.34% — 0.16pp more — holds only <strong>2.7%</strong>.</span><span class="f-ref">§4.4</span></div>
+      <div class="finding"><span class="f-id">F7.2</span><span class="f-txt">Pledge premium is <strong>negative</strong>: balanced 1.98% vs hollow 2.08%. Flat fee drag (1.06pp vs 0.47pp) overwhelms pledge benefit.</span><span class="f-ref">§4.4</span></div>
+    </div>
+  </div>
+
+  <div class="group-label"><span class="group-dot" style="background:var(--volt-yellow)"></span>Temporal trajectory</div>
+  <div class="obs-card" data-stage="operator">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O8</div>
+      <div class="obs-body"><div class="obs-title">The mechanism is on a structural clock</div><div class="obs-meta">4 findings &middot; §5</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F8.1</span><span class="f-txt">Yield: <strong>5.3% &rarr; 2.0%</strong> in 413 epochs, R&sup2; = 0.99. Sub-1.5% in ~1.7 yr, sub-1.0% in ~3.5 yr. <strong>Irreversible</strong> without protocol change.</span><span class="f-ref">§5.1</span></div>
+      <div class="finding"><span class="f-id">F8.2</span><span class="f-txt">At 2.0%, Cardano sits <strong>below the USD risk-free rate</strong> (4.3%) and at the bottom of the PoS landscape.</span><span class="f-ref">§5.2</span></div>
+      <div class="finding"><span class="f-id">F8.3</span><span class="f-txt">Confiscatory zone <strong>expands upward</strong> every epoch. At 1.0% base yield, the 0.39pp spread compresses to ~0.20pp — indistinguishable from noise.</span><span class="f-ref">§5.3</span></div>
+      <div class="finding"><span class="f-id">F8.4</span><span class="f-txt"><strong>Selection ratchet</strong>: yield compression &rarr; confiscatory expansion &rarr; SPO attrition &rarr; delegation migration &rarr; fleet concentration.</span><span class="f-ref">§5.3</span></div>
+    </div>
+  </div>
+  <div class="scope"><strong>Scope.</strong> O1&ndash;O2: extraction channels. O3&ndash;O4: custodial/retail boundary. O5&ndash;O7: double asymmetry. O8: temporal trajectory — the yield decline amplifies every structural failure in O1&ndash;O7.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- STAKING CENSUS                                             -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="sec-census" data-stage="census">
+  <div class="section-header">
+    <div class="section-title">Staking Census</div>
+    <div class="section-desc">A cross-cutting view of the staking population: pool landscape, delegation concentration, market maturity, behavioural patterns, and participation trajectory. Epoch 623.</div>
+  </div>
+  <div class="stats">
+    <div class="stat"><span class="stat-val">2,877</span><span class="stat-lbl">Registered pools</span></div>
+    <div class="stat"><span class="stat-val">~950</span><span class="stat-lbl">Productive pools</span></div>
+    <div class="stat"><span class="stat-val">1.35M</span><span class="stat-lbl">Delegators</span></div>
+    <div class="stat"><span class="stat-val">32 ₳</span><span class="stat-lbl">Median delegation</span></div>
+    <div class="stat"><span class="stat-val">0.976</span><span class="stat-lbl">Gini coefficient</span></div>
+    <div class="stat"><span class="stat-val">59%</span><span class="stat-lbl">Staking rate</span></div>
+  </div>
+
+  <div class="group-label"><span class="group-dot" style="background:var(--electric-blue)"></span>Supply side</div>
+  <div class="obs-card" data-stage="census">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O1</div>
+      <div class="obs-body"><div class="obs-title">The productive pool landscape is a stable oligopoly</div><div class="obs-meta">5 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F3.1</span><span class="f-txt"><strong>1,926 of 2,877</strong> registered pools sit below the production threshold — they hold 0.86% of stake.</span><span class="f-ref">§3.2</span></div>
+      <div class="finding"><span class="f-id">F3.2</span><span class="f-txt"><strong>73 named entities</strong> control 75.5% of productive stake through 464 pools.</span><span class="f-ref">§3.3</span></div>
+      <div class="finding"><span class="f-id">F3.3</span><span class="f-txt">Productive set is a quasi-equilibrium at <strong>~950 pools</strong> since epoch 300, with 1.7% turnover/epoch.</span><span class="f-ref">§3.5</span></div>
+      <div class="finding"><span class="f-id">F3.5</span><span class="f-txt">Heavy-tailed: <strong>12 entities with 11+ pools</strong> control 40.4% of productive stake.</span><span class="f-ref">§3.4</span></div>
+      <div class="finding"><span class="f-id">F3.6</span><span class="f-txt">CEX + IVaaS (10 entities, 181 pools) hold <strong>7.40B ADA — 34.3%</strong> at structurally zero pledge.</span><span class="f-ref">§3.4</span></div>
+    </div>
+  </div>
+  <div class="obs-card" data-stage="census">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O2</div>
+      <div class="obs-body"><div class="obs-title">Pool size variability is an institutional rebalancing phenomenon</div><div class="obs-meta">1 finding</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F3.4</span><span class="f-txt">Custodial-by-delegation pools: median CV <strong>19.3%</strong> (21% exceed 50%). Retail: <strong>8.4%</strong>. Extraction: <strong>6.6%</strong> (most inert).</span><span class="f-ref">§3.6</span></div>
+    </div>
+  </div>
+
+  <div class="group-label"><span class="group-dot" style="background:var(--acid-green)"></span>Demand side</div>
+  <div class="obs-card" data-stage="census">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O3</div>
+      <div class="obs-body"><div class="obs-title">Stake concentration among delegators is extreme and frozen</div><div class="obs-meta">3 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F4.1</span><span class="f-txt">Median: <strong>32 ADA</strong>. Mean: 16,055 ADA — a <strong>500&times;</strong> gap measuring power-law skewness.</span><span class="f-ref">§4.4</span></div>
+      <div class="finding"><span class="f-id">F4.2</span><span class="f-txt"><strong>1,000 delegators (0.07%)</strong> control 57% of staked ADA; top 10,000 (0.74%) control 79.2%. Gini = <strong>0.976</strong>.</span><span class="f-ref">§4.4</span></div>
+      <div class="finding"><span class="f-id">F4.3</span><span class="f-txt">Concentration <strong>crystallised by epoch 300</strong>. 9&times; growth in delegator count without affecting the top-1% share (78&ndash;82%).</span><span class="f-ref">§4.4</span></div>
+    </div>
+  </div>
+  <div class="obs-card" data-stage="census">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O4</div>
+      <div class="obs-body"><div class="obs-title">The delegation market has matured and crystallised</div><div class="obs-meta">3 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F4.4</span><span class="f-txt">Redelegation activity fell <strong>75%</strong> from 2,000&ndash;3,500/epoch (early Shelley) to 600&ndash;800 (current).</span><span class="f-ref">§4.6</span></div>
+      <div class="finding"><span class="f-id">F4.5</span><span class="f-txt">Bimodal base: <strong>42% loyal</strong> (201+ epochs), <strong>21% volatile</strong> (&le; 5 epochs), 37% moderate.</span><span class="f-ref">§4.6</span></div>
+      <div class="finding"><span class="f-id">F4.8</span><span class="f-txt">Custodial and private pools contribute negligible churn — churn is retail-only.</span><span class="f-ref">§4.6</span></div>
+    </div>
+  </div>
+
+  <div class="group-label"><span class="group-dot" style="background:var(--solar-amber)"></span>Behavioural patterns</div>
+  <div class="obs-card" data-stage="census">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O5</div>
+      <div class="obs-body"><div class="obs-title">Delegation size determines behaviour, not price</div><div class="obs-meta">2 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F4.6</span><span class="f-txt">Micro-delegators (&lt; 1K ADA): <strong>0.67</strong> lifetime switches. Whales (1M+): <strong>3.06</strong> — switching scales monotonically with size.</span><span class="f-ref">§4.6</span></div>
+      <div class="finding"><span class="f-id">F4.7</span><span class="f-txt">Whales hold 14.1B of 21.8B total, yet only <strong>38%</strong> of their stake sits in loyal delegations — capital is disproportionately mobile.</span><span class="f-ref">§4.6</span></div>
+    </div>
+  </div>
+  <div class="obs-card" data-stage="census">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O6</div>
+      <div class="obs-body"><div class="obs-title">Yield does not drive delegation decisions</div><div class="obs-meta">5 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F4.9</span><span class="f-txt"><strong>50.5%</strong> of switches produce zero yield change (&pm;5 bps); median ROS differential is +0.02 bps.</span><span class="f-ref">§4.7</span></div>
+      <div class="finding"><span class="f-id">F4.10</span><span class="f-txt">Operator take direction is symmetric: 30.8% lower / 37.7% similar / 31.5% higher — <strong>no optimisation pattern</strong>.</span><span class="f-ref">§4.7</span></div>
+      <div class="finding"><span class="f-id">F4.11</span><span class="f-txt">Pool size is the only asymmetric signal: moves to smaller pools accept higher take. <strong>Visibility over optimality.</strong></span><span class="f-ref">§4.7</span></div>
+      <div class="finding"><span class="f-id">F4.12</span><span class="f-txt"><strong>92.1%</strong> of loyal delegations sit in the 0&ndash;5% margin range — loyalty and low fees coexist, not trade off.</span><span class="f-ref">§4.7</span></div>
+      <div class="finding"><span class="f-id">F4.13</span><span class="f-txt"><strong>99.97%</strong> of delegations are key-based; script-based (399 addresses, 38M ADA) is negligible — DeFi operates outside delegation.</span><span class="f-ref">§4.8</span></div>
+    </div>
+  </div>
+
+  <div class="group-label"><span class="group-dot" style="background:var(--ember-orange)"></span>Participation trajectory</div>
+  <div class="obs-card" data-stage="census">
+    <div class="obs-head" onclick="toggle(this)">
+      <div class="obs-tag">O7</div>
+      <div class="obs-body"><div class="obs-title">The staking participation rate is structurally declining</div><div class="obs-meta">2 findings</div></div>
+      <svg class="obs-chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+    </div>
+    <div class="findings">
+      <div class="finding"><span class="f-id">F2.1</span><span class="f-txt">Staking rate has fallen from <strong>71%</strong> (epoch ~260) to <strong>59%</strong> (epoch 623) — supply growth outpacing stake inflows.</span><span class="f-ref">§2</span></div>
+      <div class="finding"><span class="f-id">F5.1</span><span class="f-txt"><strong>14.36B ADA (39.8%)</strong> does not participate; of this, only 134.6M (0.37%) is addressable — the remaining 14.2B has no stake credential.</span><span class="f-ref">§5</span></div>
+    </div>
+  </div>
+  <div class="scope"><strong>Scope.</strong> O1&ndash;O2: supply-side structure. O3&ndash;O4: demand-side concentration and market maturity. O5&ndash;O6: behavioural patterns — delegation follows size and visibility, not yield. O7: the participation trajectory that constrains everything upstream.</div>
+</div>
+
+<script>
+function toggle(el){el.closest('.obs-card').classList.toggle('open')}
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  document.querySelector('[onclick="show(\''+id+'\')"]').classList.add('active');
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='e'&&(e.metaKey||e.ctrlKey)){
+    e.preventDefault();
+    const sec=document.querySelector('.section.active');
+    const cards=sec.querySelectorAll('.obs-card');
+    const allOpen=[...cards].every(c=>c.classList.contains('open'));
+    cards.forEach(c=>c.classList.toggle('open',!allOpen));
+  }
+});
+</script>
+</body>
+</html>

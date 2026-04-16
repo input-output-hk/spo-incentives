@@ -873,41 +873,8 @@ TODO: same structure as CIP-0023, note the staged approach
 
 END SANDBOX -->
 
-# 4. Synthesis and CIP Evaluation
+# 4. Synthesis and CIP 
 
-## 4.1 The compound problem
-
-<!-- TODO: synthesise findings from §1 (reserve sustainability), §2 (pool-distribution divergence), and §3 (operator/delegator split distortions) into a single compound problem statement.
-Key threads to weave:
-  - The reserve is finite and fee revenue is negligible (§1) — the reward budget is shrinking
-  - The reward curve incentivises the wrong strategy at the pool level (§2) — the budget that exists is misallocated
-  - The fee structure may compound the misallocation at the split level (§3) — even correct pool-level incentives can be distorted downstream
-  - The participation gap (§1 O3, §2 O4) is the binding constraint on everything — and any formula change that improves incentive alignment may also affect participation, feeding back into §1
--->
-
-## 4.2 CIP evaluation against the compound problem
-
-The four CIPs proposed as solutions to incentive-layer problems operate across two pipeline stages. CIP-0050 (Pledge Leverage Cap) and CIP-0037 (Dynamic Pledge-Linked Saturation) modify the pool-level reward curve (§2). CIP-0023 (Fair Min Fees) and CIP-0082 (Improved Rewards Scheme) modify the operator/delegator split (§3). No existing CIP targets the epoch-budget layer (§1).
-
-Evaluating them in isolation — as each proposal's own documentation does — misses the cross-layer interactions. A reward-curve change that correctly incentivises balanced pools at the §2 level can be undermined by a fee structure at the §3 level that erases the yield signal. Conversely, a fee-structure fix that makes small pools viable at the §3 level cannot help if the reward curve at the §2 level still drives operators toward hollow. The evaluation must be joint.
-
-<!-- TODO: for each CIP, evaluate against the compound problem:
-  1. Mechanism summary (one paragraph)
-  2. Which layers does it touch? (§2 only, §3 only, or both?)
-  3. Which threads of the compound problem does it address?
-  4. Which threads does it leave untouched or worsen?
-  5. Cross-layer interactions with the other CIPs
-  6. Does it move the equilibrium toward balanced?
-  7. Open questions and parameter sensitivity
-
-### 4.2.1 CIP-0050 — Pledge Leverage Cap
-
-### 4.2.2 CIP-0037 — Dynamic Pledge-Linked Saturation
-
-### 4.2.3 CIP-0023 — Fair Min Fees
-
-### 4.2.4 CIP-0082 — Improved Rewards Scheme
--->
 
 ## 4.3 What a revised mechanism needs to achieve
 

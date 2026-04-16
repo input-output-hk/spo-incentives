@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Intended Game — SPO Incentives</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
+<style>
+:root {
+  --accent:#A700FF;
+  --infared:#E52321;--dawn:#EC641D;--black:#1a1a1a;--white:#fff;
+  --electric-blue:#16E9D8;--acid-green:#06FF89;--volt-yellow:#F2FF58;
+  --cobalt-pulse:#2C4FFA;--ultraviolet:#A700FF;
+  --bg:#ffffff;--bg-warm:#faf9f7;--bg-panel:#f5f4f2;--bg-code:#f0efed;
+  --text-primary:#1a1a1a;--text-body:#3a3a3a;--text-secondary:#6b6b6b;--text-muted:#999;
+  --border:#e2e0dc;--border-light:#eceae6;
+}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;background:var(--bg-warm);color:var(--text-body);line-height:1.78;-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+.site-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto;display:flex;gap:0;white-space:nowrap}
+.site-nav a{padding:13px 16px;font:500 12.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;flex-shrink:0}
+.site-nav a:hover{color:var(--text-body)}
+.site-nav a.active{color:var(--text-primary);border-bottom-color:var(--accent)}
+
+/* ── HERO ── */
+.hero{position:relative;overflow:hidden;padding:52px 40px 44px;background:#111;border-bottom:3px solid var(--accent)}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#000 0%,#3a0a09 40%,#8b1a0e 70%,#c44b10 100%);opacity:.9;pointer-events:none}
+.hero-inner{position:relative;max-width:1400px;margin:0 auto}
+.hero-label{font-size:11px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:12px}
+.hero h1{font-size:28px;font-weight:600;color:#fff;margin-bottom:4px}
+.hero .sub{font-size:14px;font-weight:300;color:rgba(255,255,255,.5)}
+
+/* ── CONTENT ── */
+.content{max-width:1400px;margin:0 auto;padding:40px 56px 100px;background:var(--bg);border-left:1px solid var(--border-light);border-right:1px solid var(--border-light);min-height:80vh}
+.content h1{font-size:24px;font-weight:600;color:var(--text-primary);margin:52px 0 16px;padding-top:20px;border-top:1px solid var(--border)}
+.content h1:first-child{border-top:none;margin-top:0}
+.content h2{font-size:20px;font-weight:700;color:var(--infared);margin:44px 0 14px;padding:10px 0 10px 28px;border-left:4px solid var(--infared);background:linear-gradient(90deg,rgba(229,35,33,.06) 0%,transparent 60%);position:relative}
+.content h3{font-size:16.5px;font-weight:600;color:var(--text-primary);margin:32px 0 10px;padding:6px 0 6px 28px;border-left:3px solid var(--dawn);background:linear-gradient(90deg,rgba(236,100,29,.05) 0%,transparent 50%);position:relative}
+.content h4{font-size:14.5px;font-weight:600;color:var(--text-secondary);margin:24px 0 8px;padding:4px 0 4px 28px;border-left:2px solid var(--border-strong,#bbb);position:relative}
+.content h5,.content h6{font-size:14px;font-weight:600;color:var(--text-secondary);margin:20px 0 8px}
+.content p{margin:0 0 14px;font-size:15px;color:var(--text-body)}
+.content p strong{color:var(--text-primary);font-weight:600}
+.content a{color:var(--infared);text-decoration:none;border-bottom:1px solid rgba(229,35,33,.25)}
+.content a:hover{border-bottom-color:var(--infared)}
+
+/* Lists */
+.content ul,.content ol{margin:0 0 14px 20px;font-size:15px;color:var(--text-body)}
+.content li{margin-bottom:6px}
+.content li strong{color:var(--text-primary);font-weight:600}
+
+/* Tables */
+.content table{width:100%;border-collapse:collapse;margin:20px 0;font-size:12.5px;table-layout:auto}
+.content thead{position:sticky;top:0}
+.content th{background:var(--bg-panel);color:var(--text-primary);font-weight:600;text-align:left;padding:7px 9px;border:1px solid var(--border)}
+.content td{padding:7px 9px;border:1px solid var(--border);color:var(--text-body);vertical-align:top}
+.content th,.content td{word-break:break-word;overflow-wrap:break-word}
+.content tr:hover td{background:var(--bg-warm)}
+
+/* Blockquotes */
+.content blockquote{border-left:3px solid var(--accent);padding:12px 18px;margin:16px 0;background:var(--bg-panel);border-radius:0 6px 6px 0}
+.content blockquote p{margin:0;font-size:14px;color:var(--text-body)}
+.content blockquote strong{color:var(--text-primary)}
+
+/* Code */
+.content code{font-family:'SF Mono','Fira Code',monospace;font-size:13px;background:var(--bg-code);padding:2px 6px;border-radius:4px;color:#b33a1a}
+.content pre{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:16px 20px;overflow-x:auto;margin:16px 0}
+.content pre code{background:none;padding:0;font-size:13px;color:var(--text-body)}
+
+/* Images / figures */
+.content img{max-width:100%;height:auto;border-radius:6px;margin:16px 0;display:block;border:1px solid var(--border-light)}
+
+/* HR */
+.content hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+
+/* Emphasis / italic */
+.content em{color:var(--text-secondary);font-style:italic}
+
+/* MathJax */
+mjx-container{color:var(--text-primary)!important;overflow-x:auto;overflow-y:visible;max-width:100%;display:block!important}
+mjx-container[display=true]{margin:20px auto!important;text-align:center}
+.content{overflow-x:auto}
+
+/* TOC inside content */
+.content .toc{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin:20px 0}
+.content .toc ul{list-style:none;margin:0;padding:0}
+.content .toc li{margin:4px 0}
+.content .toc a{border-bottom:none;font-size:14px}
+
+/* TOC nav — visual hierarchy per depth level */
+.toc-nav{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:20px 28px;margin:20px 0}
+.toc-nav ul{list-style:none;padding-left:0;margin:0}
+.toc-nav > ul > li{margin-bottom:6px}
+/* Level 1: big, bold — section titles */
+.toc-nav > ul > li{margin-bottom:8px}
+.toc-nav > ul > li > a,.toc-nav > ul > li > .toc-num{font-weight:600;font-size:16px;color:var(--text-primary)}
+/* Level 2: bold, slightly smaller */
+.toc-nav ul ul{padding-left:20px;margin-top:4px;border-left:2px solid var(--border)}
+.toc-nav ul ul > li{margin-bottom:4px}
+.toc-nav ul ul > li > a,.toc-nav ul ul > li > .toc-num{font-weight:600;font-size:14.5px;color:var(--text-body)}
+/* Level 3: medium weight, smaller still */
+.toc-nav ul ul ul{padding-left:18px;border-left-color:var(--border-light)}
+.toc-nav ul ul ul > li{margin-bottom:3px}
+.toc-nav ul ul ul > li > a,.toc-nav ul ul ul > li > .toc-num{font-weight:400;font-size:13.5px;color:var(--text-secondary)}
+/* Level 4+: light, small */
+.toc-nav ul ul ul ul > li > a,.toc-nav ul ul ul ul > li > .toc-num{font-weight:300;font-size:13px;color:var(--text-muted)}
+.toc-nav a{border-bottom:none;color:inherit;text-decoration:none}
+.toc-nav a:hover{color:var(--infared)}
+.toc-nav .toc-num{display:inline-block;min-width:2.2em;font-variant-numeric:tabular-nums}
+
+/* ── Observation cards ── */
+.obs-cards{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+.obs-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg)}
+.obs-card-header{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;user-select:none;background:var(--bg-panel);transition:background .15s}
+.obs-card-header:hover{background:var(--bg-code)}
+.obs-card-num{font-weight:700;font-size:13px;color:var(--infared);min-width:28px}
+.obs-card-title{flex:1;font-weight:600;font-size:14.5px;color:var(--text-primary);line-height:1.4}
+.obs-card-arrow{font-size:14px;color:var(--text-muted);transition:transform .2s}
+.obs-card.collapsed .obs-card-arrow{transform:rotate(-90deg)}
+.obs-card-count{font-size:11px;color:var(--text-muted);background:var(--bg-warm);border:1px solid var(--border-light);border-radius:10px;padding:1px 8px;white-space:nowrap}
+.obs-card-body{padding:0 18px 14px;display:flex;flex-direction:column;gap:8px;padding-top:10px}
+.obs-card.collapsed .obs-card-body{display:none}
+.obs-finding{display:flex;align-items:baseline;gap:10px;padding:8px 12px;border-radius:6px;background:var(--bg-warm);font-size:13.5px;line-height:1.55}
+.obs-finding:hover{background:var(--bg-panel)}
+.obs-fid{font-weight:600;font-size:12px;color:var(--text-muted);min-width:36px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.obs-ftext{flex:1;color:var(--text-body)}
+.obs-ftext strong{color:var(--text-primary)}
+.obs-tag{font-size:10.5px;letter-spacing:.3px;text-transform:uppercase;border:1px solid;border-radius:4px;padding:1px 7px;white-space:nowrap;flex-shrink:0;font-weight:500}
+.obs-link[data-section]{cursor:pointer}
+.obs-link[data-section]:hover{background:var(--bg-panel);box-shadow:inset 3px 0 0 var(--infared)}
+.obs-link[data-section] .obs-fid{color:var(--infared)}
+
+/* ── Reading progress bar ── */
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--infared),var(--dawn));z-index:200;transition:width .1s linear;width:0}
+
+/* ── Collapsible sections ── */
+.section-toggle{cursor:pointer;user-select:none}
+.section-toggle::before{content:'▾';position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--text-muted);transition:transform .2s;width:16px;text-align:center}
+.section-toggle.collapsed::before{transform:translateY(-50%) rotate(-90deg)}
+.section-body{overflow:hidden;transition:max-height .35s ease, opacity .25s ease;opacity:1}
+.section-body.collapsed{max-height:0!important;opacity:0;margin:0;padding:0}
+
+/* ── Collapsible TOC sub-lists ── */
+.toc-nav li{padding-left:18px;position:relative}
+.toc-nav .toc-toggle{cursor:pointer}
+.toc-nav .toc-toggle::before{content:'▾';position:absolute;left:0;top:1px;width:16px;font-size:13px;color:var(--text-secondary);transition:transform .2s;text-align:center}
+.toc-nav > ul > li.has-children > .toc-toggle::before{font-size:15px}
+.toc-nav .toc-toggle.collapsed::before{transform:rotate(-90deg)}
+.toc-nav ul.toc-collapsed{display:none}
+
+/* ── Image lightbox ── */
+.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;cursor:zoom-out}
+.lightbox-overlay.active{opacity:1;pointer-events:auto}
+.lightbox-overlay img{max-width:92vw;max-height:90vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5);object-fit:contain}
+.content img{cursor:zoom-in;transition:transform .2s, box-shadow .2s}
+.content img:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+
+/* ── Table wrapper ── */
+.table-wrap{position:relative;overflow:hidden;margin:20px 0;border:1px solid var(--border);border-radius:8px}
+.table-wrap table{margin:0;border:none;display:table;width:100%}
+.table-wrap th:first-child,.table-wrap td:first-child{border-left:none}
+.table-wrap th:last-child,.table-wrap td:last-child{border-right:none}
+.table-wrap tr:first-child th{border-top:none}
+.table-wrap tr:last-child td{border-bottom:none}
+
+/* ── Back to top ── */
+.back-top{position:fixed;bottom:24px;right:24px;width:40px;height:40px;border-radius:50%;background:var(--bg);border:1px solid var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity .3s;font-size:18px;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.back-top.visible{opacity:1}
+.back-top:hover{color:var(--infared);border-color:var(--infared)}
+
+/* Footer strip */
+.site-footer{background:#111;color:rgba(255,255,255,.4);font-size:12px;letter-spacing:.5px;text-transform:uppercase;text-align:center;padding:18px 20px}
+
+@media(max-width:720px){
+  .hero{padding:32px 20px 28px} .content{padding:24px 20px 60px;border:none}
+  .content table{font-size:11px} .content th,.content td{padding:6px 7px}
+}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav class="site-nav"><a href="index.html">Main Report</a>
+<a href="intended-game.html" class="active">The Intended Game</a>
+<a href="treasury.html">§1 Treasury</a>
+<a href="pools.html">§2 Pools</a>
+<a href="operator.html">§3 Operator</a>
+<a href="census.html">Census</a></nav>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Input Output &middot; IO Research</div>
+    <h1>The Intended Game</h1>
+    <div class="sub">A Narrative Description of the Consensus Incentive Mechanism</div>
+  </div>
+</div>
+<div class="content"><h3 id="a-narrative-description-of-the-consensus-incentive-mechanism">A Narrative Description of the Consensus Incentive Mechanism</h3>
+<blockquote>
+<p><strong>Status:</strong> Working document — companion to the main <a href="../README.md">Cardano Reward Pipeline</a> analysis (§1.2) and the CPS <a href="../sub-flows/pools-distribution/cps/README.md"><em>Closing the Consensus Incentive Gap</em></a>.</p>
+</blockquote>
+<p><br></p>
+<h2 id="contents">Contents</h2>
+<nav class="toc-nav">
+<ul>
+<li><a href="#what-this-document-is-for">What this document is for</a>
+</li>
+<li><span class="toc-num">1.</span> <a href="#1-the-design-objective">The design objective</a>
+</li>
+<li><span class="toc-num">2.</span> <a href="#2-the-players">The players</a>
+<ul>
+<li><span class="toc-num">2.1</span> <a href="#21-transaction-submitters--the-source-of-economic-demand">Transaction submitters — the source of economic demand</a>
+<ul>
+<li><span class="toc-num">2.1.1</span> <a href="#211-why-they-matter">Why they matter</a>
+</li>
+<li><span class="toc-num">2.1.2</span> <a href="#212-how-they-feed-the-game">How they feed the game</a>
+</li>
+<li><span class="toc-num">2.1.3</span> <a href="#213-a-latent-constraint--marginal-today-existential-tomorrow">A latent constraint — marginal today, existential tomorrow</a>
+</li>
+</ul>
+</li>
+<li><span class="toc-num">2.2</span> <a href="#22-operators--capital-at-risk">Operators — capital at risk</a>
+<ul>
+<li><span class="toc-num">2.2.1</span> <a href="#221-an-open-seat-at-the-deflationary-table">An open seat at the deflationary table</a>
+</li>
+<li><span class="toc-num">2.2.2</span> <a href="#222-the-participation-constraint">The participation constraint</a>
+</li>
+<li><span class="toc-num">2.2.3</span> <a href="#223-pledge-as-the-primary-instrument">Pledge as the primary instrument</a>
+</li>
+<li><span class="toc-num">2.2.4</span> <a href="#224-the-arc-from-newcomer-to-pillar">The arc from newcomer to pillar</a>
+</li>
+</ul>
+</li>
+<li><span class="toc-num">2.3</span> <a href="#23-delegators--the-oversight-layer">Delegators — the oversight layer</a>
+<ul>
+<li><span class="toc-num">2.3.1</span> <a href="#231-yield-seeking-with-minimal-effort">Yield-seeking with minimal effort</a>
+</li>
+<li><span class="toc-num">2.3.2</span> <a href="#232-liquid-delegation-as-continuous-approval">Liquid delegation as continuous approval</a>
+</li>
+<li><span class="toc-num">2.3.3</span> <a href="#233-the-delegator-as-ethical-arbiter">The delegator as ethical arbiter</a>
+</li>
+<li><span class="toc-num">2.3.4</span> <a href="#234-myopic-and-non-myopic-delegation">Myopic and non-myopic delegation</a>
+</li>
+</ul>
+</li>
+<li><span class="toc-num">2.4</span> <a href="#24-the-dependency-chain">The dependency chain</a>
+</li>
+</ul>
+</li>
+<li><span class="toc-num">3.</span> <a href="#3-the-progression">The progression</a>
+<ul>
+<li><span class="toc-num">3.1</span> <a href="#31-transaction-submitters--from-subsidy-to-self-sufficiency">Transaction submitters — from subsidy to self-sufficiency</a>
+</li>
+<li><span class="toc-num">3.2</span> <a href="#32-operators--from-first-pledge-to-full-commitment">Operators — from first pledge to full commitment</a>
+</li>
+<li><span class="toc-num">3.3</span> <a href="#33-delegators--from-passive-yield-to-active-oversight">Delegators — from passive yield to active oversight</a>
+</li>
+<li><span class="toc-num">3.4</span> <a href="#34-the-security-properties-the-equilibrium-must-satisfy">The security properties the equilibrium must satisfy</a>
+<ul>
+<li><span class="toc-num">3.4.1</span> <a href="#341-accountability--the-bond-and-the-enforcer">Accountability — the bond and the enforcer</a>
+</li>
+<li><span class="toc-num">3.4.2</span> <a href="#342-delegation-as-counter-power--the-protocols-substitute-for-governance">Delegation as counter-power — the protocol's substitute for governance</a>
+</li>
+<li><span class="toc-num">3.4.3</span> <a href="#343-sybil-resistance--making-fragmentation-expensive">Sybil resistance — making fragmentation expensive</a>
+</li>
+<li><span class="toc-num">3.4.4</span> <a href="#344-decentralisation--more-than-a-pool-count">Decentralisation — more than a pool count</a>
+</li>
+<li><span class="toc-num">3.4.5</span> <a href="#345-the-properties-are-not-independent">The properties are not independent</a>
+</li>
+<li><span class="toc-num">3.4.6</span> <a href="#346-the-structural-requirement">The structural requirement</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><span class="toc-num">4.</span> <a href="#4-the-aligned-dynamics--the-virtuous-cycle">The aligned dynamics — the virtuous cycle</a>
+</li>
+</ul>
+</nav>
+<h2 id="what-this-document-is-for">What this document is for</h2>
+<p>The formal game-theoretic properties of the Cardano reward curve were established in <em>Reward Sharing Schemes for Stake Pools</em> (Brünjes, Kiayias et al., 2020, EuroS&amp;P), which proves that <em>k</em> pools is a Nash equilibrium under certain assumptions. The engineering specification <em>SL-D1</em> (Kant, Brünjes &amp; Coutts, 2019) translates those results into protocol-level formulas and parameters.</p>
+<blockquote>
+<p>[!IMPORTANT]
+What neither document provides is a <strong>narrative description of the game as it should play out</strong> — the players, their motivations, how they enter and progress, and the equilibrium they should converge toward.</p>
+</blockquote>
+<p>This matters because evaluating whether the mechanism <em>works</em> requires a clear picture of what <em>working</em> looks like — not as a mathematical proof, but as a readable account that the community and CIP authors can reason about.</p>
+<p>This document produces that missing description.</p>
+<p><br></p>
+<h2 id="1-the-design-objective">1. The design objective</h2>
+<p>The protocol needs a specific set of properties at the consensus layer: a sufficiently large number of independent block producers, each with meaningful personal capital at risk (<strong>Sybil resistance</strong>), subject to continuous community oversight (<strong>accountability</strong>), with no single entity able to capture a dominant share of consensus power (<strong>decentralisation</strong>).</p>
+<p>These are not aspirational qualities — they are the security invariants that the consensus layer depends on.</p>
+<p>Cardano cannot enforce these properties by fiat. It has no licensing authority, no operator selection committee, no means of compelling participation. It must instead rely on <strong>mechanism design</strong>: defining a set of economic rules — the reward curve — such that rational, self-interested participants, each optimising their own payoff, collectively produce and maintain the desired system properties.</p>
+<p>The reward curve <em>is</em> the mechanism. Its success or failure is measured by a single criterion: does the <em>equilibrium</em> — the stable state toward which rational play converges — exhibit the security invariants above?</p>
+<p>For this to work, two conditions must hold:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Individual rationality</strong></td>
+<td>Each player must be better off entering the game than staying out.</td>
+</tr>
+<tr>
+<td><strong>Incentive compatibility</strong></td>
+<td>The strategy that maximises each player's individual reward must also be the strategy that reinforces the system's security properties.</td>
+</tr>
+</tbody>
+</table>
+<p>When these conditions hold, the protocol does not need to trust its participants — it only needs them to be rational.</p>
+<p><br></p>
+<h2 id="2-the-players">2. The players</h2>
+<p>The mechanism operates through three distinct classes of participant. Each has a different <em>motivation</em> for entering the game, a different set of <em>actions</em> (in mechanism-design terms, a different <em>strategy space</em>), and a different <em>trajectory</em> — the way their participation evolves as the system matures. Understanding all three is necessary before evaluating whether the reward curve aligns them correctly.</p>
+<table>
+<thead>
+<tr>
+<th>Player</th>
+<th>Role</th>
+<th>Strategic instrument</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Transaction submitters</strong></td>
+<td>Source of economic demand</td>
+<td>Fee payments — revealed-preference signal for network value</td>
+</tr>
+<tr>
+<td><strong>Operators</strong></td>
+<td>Block production and network security</td>
+<td><strong>Pledge</strong> — personal capital locked as a commitment bond</td>
+</tr>
+<tr>
+<td><strong>Delegators</strong></td>
+<td>Capital allocation and operator oversight</td>
+<td><strong>Liquid delegation</strong> — continuous, revocable approval signal</td>
+</tr>
+</tbody>
+</table>
+<h3 id="21-transaction-submitters-the-source-of-economic-demand">2.1 Transaction submitters — the source of economic demand</h3>
+<h4 id="211-why-they-matter">2.1.1 Why they matter</h4>
+<p>Transaction submitters need reliable, censorship-resistant settlement. They do not participate in the staking game directly — they are <em>users</em> of the service that the game produces. Their willingness to pay fees is a revealed-preference signal: it measures the real-world value the network delivers.</p>
+<h4 id="212-how-they-feed-the-game">2.1.2 How they feed the game</h4>
+<p>They submit transactions and pay fees. Those fees — together with the monetary expansion draw from the reserve — fund the epoch pot that the reward pipeline distributes (§1.1). Transaction submitters are the reason the system exists: without them, there is no economic activity to secure, and no sustainable revenue to fund the operators who secure it.</p>
+<h4 id="213-a-latent-constraint-marginal-today-existential-tomorrow">2.1.3 A latent constraint — marginal today, existential tomorrow</h4>
+<p>In the current regime, transaction fees are negligible (~0.19% of the epoch pot — §1.1.2 O1). The game is almost entirely funded by monetary expansion from a depleting reserve.</p>
+<p>As the reserve crosses its half-life and expansion shrinks (§1.1.2 O2), the system's economic viability progressively shifts onto fee revenue.</p>
+<blockquote>
+<p>[!NOTE]
+Transaction submitters are a <strong>latent constraint</strong>: marginal today, existential tomorrow. Their long-term participation is what makes the staking game <em>sustainably worth playing</em> for every other participant.</p>
+</blockquote>
+<h3 id="22-operators-capital-at-risk">2.2 Operators — capital at risk</h3>
+<h4 id="221-an-open-seat-at-the-deflationary-table">2.2.1 An open seat at the deflationary table</h4>
+<p>A prospective operator believes in Cardano. ADA has a capped supply and a depleting reserve — it is structurally deflationary.</p>
+<p>From this perspective, the consensus game looks like an investment thesis, not a job offer: by operating a pool, an operator continuously accumulates an asset whose scarcity increases mechanically over time. The nominal yield in ADA, compounded by the deflationary trajectory of the asset itself, makes the expected real return deeply attractive on a long horizon.</p>
+<p>And critically, the entry should be <em>accessible</em> — the mechanism is supposed to let anyone with conviction and a realistic initial stake begin building this position. Not an exclusive club; an open, meritocratic game where commitment is the competitive edge.</p>
+<blockquote>
+<p>This is the narrative that attracts operators: a credible, long-term capital accumulation path anchored in consensus participation, open to anyone who believes in the technology.</p>
+</blockquote>
+<h4 id="222-the-participation-constraint">2.2.2 The participation constraint</h4>
+<p>Operators seek a return on two forms of capital: the ADA they pledge and the infrastructure they maintain. A rational operator enters the game when the expected reward — block production fees, pool margin, and stake-proportional share — exceeds the combined opportunity cost of pledged capital and operational expenses. In mechanism-design terms, the <em>participation constraint</em> must be satisfied: the operator must be better off running a pool than simply delegating the same ADA.</p>
+<h4 id="223-pledge-as-the-primary-instrument">2.2.3 Pledge as the primary instrument</h4>
+<p>The operator's primary strategic instrument is <strong>pledge</strong>: personal capital locked into the pool.</p>
+<p>Pledge serves as the protocol's <em>commitment mechanism</em> — the signal through which an operator demonstrates alignment with the network's interests. An operator who pledges significant ADA has more to lose from protocol failure or malicious behaviour than one who pledges nothing. This "skin in the game" is the protocol's primary defence against Sybil attacks.</p>
+<p>Operators also set a <em>margin</em> (their fee) and maintain infrastructure quality (uptime, latency) — but the reward curve at this layer is primarily sensitive to pledge and total stake, not operational quality.</p>
+<h4 id="224-the-arc-from-newcomer-to-pillar">2.2.4 The arc from newcomer to pillar</h4>
+<p>A new operator starts with a small pledge, minimal delegation, and sub-viable block production. Over time, the intended trajectory is one of <em>increasing commitment</em>: as the operator builds reputation and attracts delegation, they pledge more, their pool grows, and they earn a larger share of the pools pot. The mechanism should make each step up in pledge produce a measurable competitive advantage — visible to delegators and economically meaningful to the operator — so that the progression from "new pool" to "established pool" to "fully committed pool" is a legible arc that both players can follow.</p>
+<h3 id="23-delegators-the-oversight-layer">2.3 Delegators — the oversight layer</h3>
+<h4 id="231-yield-seeking-with-minimal-effort">2.3.1 Yield-seeking with minimal effort</h4>
+<p>Delegators seek yield on their ADA holdings with minimal effort and risk. They do not produce blocks and bear no operational cost. Their entire strategic space reduces to a single decision: <em>which pool to delegate to</em>. A rational delegator maximises risk-adjusted return, favouring pools with high expected yield, reliable performance, and trustworthy operators.</p>
+<p>The natural selection metric is the <strong>annualised return on stake (ROS)</strong> — the single number that aggregates pool performance, operator fees, and saturation into a comparable yield figure. But the formula's structure ensures that the yield spread between well-run pools is narrow — a few tenths of a percent. This narrow spread is a design consequence, not an accident: it means that yield alone cannot meaningfully differentiate most of the pool landscape. A second criterion enters — one the formula does not price but that the mechanism depends on.</p>
+<h4 id="232-liquid-delegation-as-continuous-approval">2.3.2 Liquid delegation as continuous approval</h4>
+<p>Their strategic instrument is <strong>liquid delegation</strong>: the ability to freely choose a pool — and freely withdraw at any time.</p>
+<p>This makes delegation a <em>continuous approval signal</em>. No operator can capture stake permanently; an operator who underperforms or behaves badly faces immediate capital flight.</p>
+<blockquote>
+<p>[!IMPORTANT]
+Liquid delegation is the protocol's <strong>accountability mechanism</strong> and its primary anti-monopoly tool. But this mechanism only functions if pools <em>need</em> delegators — if operators depend on community-sourced stake to reach their optimal reward. Without this dependency, delegators have no leverage and the accountability channel collapses.</p>
+</blockquote>
+<h4 id="233-the-delegator-as-ethical-arbiter">2.3.3 The delegator as ethical arbiter</h4>
+<p>Because the yield spread between well-run pools is narrow, the delegator's choice is not purely economic — it is partly an expression of values. Two pools that offer identical ROS may differ in ways the formula does not capture but that matter to the delegator and to the network:</p>
+<p><strong>Commitment.</strong> A pool where the operator has pledged meaningful personal capital is structurally more aligned with the delegator's interest than one where the operator pledges nothing. The operator has more to lose, the accountability channel is active, and the pool is less likely to change strategy abruptly.</p>
+<p><strong>Independence.</strong> Delegating to an independent single-pool operator contributes to decentralisation in a way that delegating to the tenth pool of a large multi-pool operator (MPO) fleet does not. The protocol does not distinguish between the two — the formula treats every pool identically — but the delegator who values a decentralised network may deliberately choose the independent operator.</p>
+<p><strong>Transparency and conduct.</strong> Operators differ in how they communicate fee changes, maintain infrastructure, and engage with the community. These are reputational signals that the protocol does not encode but that delegators can observe and act on. A delegator who exits a pool after a surprise margin increase is exercising the accountability mechanism — even if the formal yield difference is negligible.</p>
+<p>The delegator, in this sense, acts as an <strong>ethical arbiter</strong> of the pool landscape. Where the formula is indifferent, the delegator is not. The mechanism's long-term health depends on enough delegators treating this ethical dimension as part of their decision — supporting commitment, independence, and transparency beyond what yield alone would justify.</p>
+<h4 id="234-myopic-and-non-myopic-delegation">2.3.4 Myopic and non-myopic delegation</h4>
+<p>The formal literature distinguishes two delegator models that map directly onto the yield-vs-ethics tension above.</p>
+<p>A <strong>myopic</strong> delegator optimises for the <em>current epoch</em>. The decision is purely backward-looking: which pool delivered the highest ROS last epoch? The myopic delegator treats delegation as a spot market — move to the best-yielding pool, every epoch, ignoring second-order effects. Under this model, delegation flows toward the largest, most reliable, lowest-fee pools. The myopic delegator has no reason to consider pledge, operator commitment, or network-level properties: none of these affect the per-ADA yield in the next five days.</p>
+<p>A <strong>non-myopic</strong> delegator anticipates the <em>downstream effects</em> of delegation decisions. This delegator recognises that moving stake into a pool changes the pool's size, affects its yield through saturation dynamics, and — in aggregate — shapes the pool landscape. Brünjes &amp; Kiayias (2020) prove that the <em>k</em>-pool equilibrium holds under non-myopic play: delegators who factor in the long-term consequences of their delegation converge on a distribution of <em>k</em> pools.</p>
+<p>The non-myopic delegator is the one for whom the ethical dimension of pool selection is not a luxury but a rational strategy: supporting committed, independent operators produces a more decentralised, more accountable network — which is a more valuable network — which sustains the yield the delegator depends on.</p>
+<blockquote>
+<p>[!IMPORTANT]
+The mechanism implicitly <em>assumes</em> non-myopic delegation. The equilibrium results in the formal literature require delegators who look past the current epoch. But the information environment the mechanism creates — where yield differences between pools are negligible, where pledge is invisible, where pool size is the dominant signal — rewards myopic behaviour. The mechanism needs non-myopic delegators to reach its intended equilibrium, but it provides myopic delegators with no reason to become non-myopic.</p>
+</blockquote>
+<p>This is the core tension in the delegator's role. The ethical arbitration that the mechanism depends on operates <em>outside</em> the formula, sustained only by the delegator's understanding that the network they help shape is the network they depend on.</p>
+<h3 id="24-the-dependency-chain">2.4 The dependency chain</h3>
+<p>These three roles form a dependency chain:</p>
+<pre><code>Transaction submitters          Operators                    Delegators
+  generate economic    ──▶    commit capital &amp;     ──▶    select &amp; police
+  value that funds             infrastructure to           the operators
+  the game                     secure the network
+</code></pre>
+<p>The mechanism's task is to make each link <em>individually rational</em> and <em>incentive-compatible</em> — so that the chain holds without requiring trust between participants.</p>
+<p>At this layer (pool distribution), the reward curve directly governs the operator–delegator relationship. Neither player alone should be able to maximise rewards — the mechanism deliberately requires both.</p>
+<p>This <strong>interdependence</strong> is the core of the design: operators need delegators for scale, delegators need operators for block production, and the reward curve should make their partnership the individually rational path for both.</p>
+<p>Transaction submitters are upstream — their contribution is mediated through the epoch pot (§1.1) — but they set the ultimate economic boundary within which the operator–delegator game plays out.</p>
+<p><br></p>
+<h2 id="3-the-progression">3. The progression</h2>
+<p>Each player class experiences the game through its own trajectory — entry, progression, and endgame. A well-designed mechanism makes each trajectory <em>individually rational</em> at every stage, so that no player has a reason to drop out or deviate.</p>
+<h3 id="31-transaction-submitters-from-subsidy-to-self-sufficiency">3.1 Transaction submitters — from subsidy to self-sufficiency</h3>
+<p><strong>Entry.</strong> Early adopters use the network for basic settlement. Transaction volume is low, and fees contribute negligibly to the epoch pot. The game is almost entirely funded by monetary expansion from the reserve — a bootstrap subsidy that makes staking rewards viable before organic demand exists.</p>
+<p><strong>Progression.</strong> As the network matures, transaction volume and diversity grow. Fee revenue increases, gradually reducing dependence on the reserve. The ratio of fees to expansion becomes a measure of the system's economic maturity.</p>
+<p><strong>Endgame.</strong> Fee revenue fully replaces monetary expansion as the primary funding source for the epoch pot. The staking game is self-sustaining: operators and delegators are paid by the economic activity they secure, not by a depleting reserve. The protocol has achieved <em>economic self-sufficiency</em>.</p>
+<h3 id="32-operators-from-first-pledge-to-full-commitment">3.2 Operators — from first pledge to full commitment</h3>
+<p><strong>Entry.</strong> A new operator registers a pool, pledges an initial amount, and begins attracting delegation. The mechanism must make this <em>individually rational</em>: the expected payoff should offer a credible path forward — not just survival, but growth — so that the <em>participation constraint</em> is met from the start.</p>
+<p><strong>Progression.</strong> As the operator builds reputation and delegation, the mechanism should reward increasing pledge commitment. Each step up in pledge should produce a measurable competitive advantage — visible to delegators, economically meaningful to the operator. The progression from "new pool" to "established pool" to "fully committed pool" should be a legible arc that both operators and delegators can follow.</p>
+<p><strong>Endgame.</strong> The operator has committed deeply (high pledge) and earned broad delegation. Their pool captures the maximum reward the protocol offers. This state should require <em>both</em> high pledge and high delegation to reach — it cannot be attained by capital alone or by delegation alone.</p>
+<h3 id="33-delegators-from-passive-yield-to-active-oversight">3.3 Delegators — from passive yield to active oversight</h3>
+<p><strong>Entry.</strong> A new delegator selects a pool and allocates stake. Early on, differentiation between pools is low — delegation may be driven by brand, community ties, or social signals rather than on-chain metrics. The mechanism must still make participation <em>individually rational</em>: delegation yield should exceed the opportunity cost of holding idle ADA.</p>
+<p><strong>Progression.</strong> As the pool landscape matures and the mechanism produces legible differences between pools, delegators increasingly differentiate on <em>commitment-based criteria</em>: pledge level, track record, margin policy. Delegation flows toward the most committed operators and away from uncommitted ones. The accountability mechanism becomes active — delegators are now <em>policing</em> operator behaviour through capital reallocation.</p>
+<p><strong>Endgame.</strong> Delegators act as an efficient market for operator commitment — and as ethical arbiters of the pool landscape (§2.3.3). Capital moves fluidly to the pools that best combine commitment and performance, and exits quickly from those that fall short. The accountability mechanism operates at full power: no operator can sustain high rewards without continuous community approval. This endgame requires non-myopic delegation (§2.3.4): delegators who factor in commitment, independence, and network health — not only current-epoch yield — into their allocation decisions.</p>
+<h3 id="34-the-security-properties-the-equilibrium-must-satisfy">3.4 The security properties the equilibrium must satisfy</h3>
+<p>The three trajectories above describe individual paths. But the protocol does not care which path any single operator or delegator takes — it cares whether the <em>equilibrium</em> that emerges from the aggregate of all rational choices preserves the security invariants defined in <a href="#1-the-design-objective">§1</a>.</p>
+<p>The formal literature — <em>Reward Sharing Schemes for Stake Pools</em> (Brünjes, Kiayias et al., 2020) and the SL-D1 engineering specification (Kant, Brünjes &amp; Coutts, 2019) — defines these invariants implicitly through the constraints the reward function must satisfy: the equilibrium must exhibit <em>k</em> independent block producers, each bearing a non-trivial personal cost, subject to continuous community oversight, with no single entity able to capture a dominant share of consensus power. Four properties encode these invariants. They are not a menu of desirable features — they are load-bearing elements of the security argument. Losing any one degrades the model; losing two or more can break it.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>What it secures</th>
+<th>Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Accountability</strong></td>
+<td>Operators are identifiable and have something to lose</td>
+<td>Pledge (static bond) + delegation (dynamic discipline)</td>
+</tr>
+<tr>
+<td><strong>Delegation as counter-power</strong></td>
+<td>Community oversight substitutes for governance</td>
+<td>Revocable staking rights create a credible exit threat</td>
+</tr>
+<tr>
+<td><strong>Sybil resistance</strong></td>
+<td><em>k</em> pools represent <em>k</em> independent entities</td>
+<td>Pledge bonus makes fragmentation economically dominated</td>
+</tr>
+<tr>
+<td><strong>Decentralisation</strong></td>
+<td>No single actor dominates block production</td>
+<td>Calibrated entry barrier: commitment, not wealth alone</td>
+</tr>
+</tbody>
+</table>
+<h4 id="341-accountability-the-bond-and-the-enforcer">3.4.1 Accountability — the bond and the enforcer</h4>
+<p>The Ouroboros security model assumes that block producers are <em>identifiable</em> and have <em>something to lose</em>. Accountability is the property that connects a block-producing identity to a real economic cost: if the operator misbehaves — equivocates, censors, goes offline — there must exist a mechanism through which that behaviour imposes a loss on the operator that is proportional to the damage it causes.</p>
+<p>Cardano's consensus layer does not implement slashing. Unlike protocols that destroy a validator's deposit upon detectable misbehaviour, Ouroboros relies on an indirect accountability structure built from two components that operate at different time-scales:</p>
+<p><strong>Pledge as a static bond.</strong> Capital registered in the pool certificate creates a visible, on-chain commitment. It is not locked in the custodial sense — the operator retains the keys — but it is <em>declared</em>: the protocol observes it at every epoch boundary, and failure to maintain the declared amount triggers a total reward wipe for that epoch (the pledge-unmet penalty). This bond serves a signalling function: an operator who has pledged substantial capital has an observable, verifiable stake in the pool's continued operation. The cost of abandoning or sabotaging the pool includes forfeiting the competitive position that pledge confers.</p>
+<p><strong>Delegation as a dynamic discipline.</strong> Delegators can revoke their delegation unilaterally, at any epoch boundary, without the operator's consent (SL-D1 §3.4.6). This is the protocol's primary enforcement mechanism: an operator who degrades performance, raises fees exploitatively, or behaves dishonestly faces capital flight. The pool shrinks, rewards drop, and the operator's income falls — not because the protocol punished them, but because the community withdrew its approval.</p>
+<p>These two components are not redundant. The static bond ensures that the operator has a <em>minimum</em> cost of entry and a <em>minimum</em> exposure to the pool's fate — it exists even when no delegator is watching. The dynamic discipline ensures that the operator faces <em>continuous</em> pressure to maintain performance — it operates even when the bond is too small to matter on its own.</p>
+<blockquote>
+<p>A system that relies on only one component is fragile. Pledge without delegation produces accountability that is entirely self-referential: the operator answers to no one but themselves. Delegation without pledge produces accountability without cost: the operator can walk away from a misbehaving pool and register a new one at zero loss. The security model requires both — a floor of personal exposure <em>and</em> a continuous external check.</p>
+</blockquote>
+<h4 id="342-delegation-as-counter-power-the-protocols-substitute-for-governance">3.4.2 Delegation as counter-power — the protocol's substitute for governance</h4>
+<p>Delegation in the SL-D1 design is not merely a capital-routing mechanism. It is the protocol's substitute for the governance layer that Cardano does not have at the consensus level.</p>
+<p>The formal design separates control over <em>funds</em> (payment keys) from rights in the <em>PoS protocol</em> (staking keys). A delegator who assigns their staking key to a pool does not transfer custody — they grant a revocable licence to include their stake in the pool's block-production weight. The revocation is non-consensual: the protocol processes it without requiring the operator's approval. This makes delegation a <em>continuous approval signal</em> rather than a one-time capital commitment.</p>
+<p>The disciplinary power of this mechanism depends on a structural condition: <strong>the operator must need delegators more than delegators need the operator.</strong> If a pool is filled entirely with the operator's own capital, delegator exit is irrelevant — there are no delegators to leave. If a pool is filled entirely by external delegation, delegator exit destroys the operator's income — but only if the operator has something at stake that makes rebuilding costly. The ratio between owner stake and delegated stake determines the <em>leverage</em> delegators have over the operator.</p>
+<blockquote>
+<p>[!NOTE]
+The pledge/delegation ratio is not an accounting detail — it defines the <strong>power structure</strong> within the pool. For the credible exit threat to function, both parties must have real stakes: the operator cannot be replaced without cost (their pledge and infrastructure matter), and the delegators cannot be ignored without cost (their departure shrinks the pool materially). This mutual dependency is the structural condition the mechanism must produce.</p>
+</blockquote>
+<h4 id="343-sybil-resistance-making-fragmentation-expensive">3.4.3 Sybil resistance — making fragmentation expensive</h4>
+<p>The <em>k</em>-pool target assumes that <em>k</em> pools represent <em>k</em> <em>independent</em> block-producing entities. Sybil resistance is the property that makes this assumption defensible: creating additional block-producing identities must carry a cost high enough that fragmentation is economically dominated by honest, single-pool operation.</p>
+<p>Brünjes &amp; Kiayias (2020, §4) formalise this through the pledge parameter <em>a₀</em>. The reward function <em>r(σ, λ)</em> includes a pledge-sensitive component — the <em>λ_max · A(π, ν)</em> term — designed so that splitting capital across <em>n</em> pools dilutes the pledge bonus per pool. An attacker who fragments into <em>n</em> identities must commit capital linearly: each pool requires its own pledge to earn the bonus. The intended cost of a Sybil attack scales as <em>O(n)</em> in committed capital.</p>
+<p>This defence has a quantitative precondition: <strong>the pledge bonus must be large enough that forfeiting it is costly.</strong> If the bonus is negligible, the Sybil tax approaches zero — an attacker who registers additional pools forgoes a bonus that was worth nothing to begin with. The formal mechanism exists; whether its economic bite is sufficient is a question of parameter calibration.</p>
+<p>There is a subtlety in <em>how</em> the Sybil cost operates. When the cost comes from the pledge mechanism itself — forfeiting a meaningful bonus by fragmenting — it is the <em>design</em> that provides the defence. When the cost comes from raw capital requirements alone — an attacker simply running out of money — the defence is incidental, not engineered. The mechanism should ensure that the Sybil cost operates through the reward structure, not merely through wealth constraints that exist independently of the protocol.</p>
+<h4 id="344-decentralisation-more-than-a-pool-count">3.4.4 Decentralisation — more than a pool count</h4>
+<p>Decentralisation is the property that the <em>k</em>-pool target is supposed to produce: consensus power distributed across many independent entities, with no single actor or coordinated group able to dominate block production.</p>
+<p>This requires more than a count of pools. A network with 500 pool certificates but a handful of controlling entities is not decentralised in any security-relevant sense — it merely <em>appears</em> decentralised at the certificate level while concentrating power at the entity level. Decentralisation requires that pools be operated by <em>distinct, economically independent</em> actors.</p>
+<p>The entry barrier determines who can participate. If the barrier is too high — requiring enormous personal capital per pool — the operator set shrinks to a small, wealthy elite, and block production becomes permissioned by wealth. If the barrier is too low — requiring no meaningful commitment — entry is cheap, but competitive dynamics drive concentration through brand, convenience, and scale rather than through commitment. In both cases, the resulting equilibrium fails the decentralisation test, though for different structural reasons.</p>
+<p>The mechanism must calibrate the barrier so that <em>commitment</em> — not wealth alone and not zero-cost entry — determines who can participate. The entry requirement should be high enough to be meaningful but low enough that operators of moderate means can enter, with delegation providing the growth path beyond the initial commitment.</p>
+<h4 id="345-the-properties-are-not-independent">3.4.5 The properties are not independent</h4>
+<p>These four properties interact, and the interactions constrain the design space.</p>
+<p><strong>Accountability × delegation-as-counter-power</strong> are two faces of the same disciplinary structure. In a system without slashing, the <em>only</em> continuous enforcement mechanism is delegator exit. Pledge creates the <em>precondition</em> for that mechanism to have force — the operator must have something at stake — but delegation creates the <em>mechanism itself</em>. Accountability without delegation is a bond with no enforcer. Delegation without accountability is a vote with no consequence. Neither alone produces the discipline the protocol requires; together, they form a closed feedback loop.</p>
+<p><strong>Sybil resistance × decentralisation</strong> are in tension. A higher Sybil cost (requiring more pledge per pool) raises the entry barrier, which can reduce the number of independent operators. A lower Sybil cost (requiring less pledge) lowers the barrier but makes fragmentation cheap. The mechanism must find a calibration where the pledge requirement is high enough to impose a real cost on fragmentation but low enough — with delegation providing the remaining stake — that operators of moderate means can still enter and compete.</p>
+<p><strong>Decentralisation × delegation-as-counter-power</strong> reinforce each other when the equilibrium satisfies both. More independent operators means more choices for delegators, which strengthens the exit threat, which improves accountability, which makes the operator landscape more trustworthy, which attracts more delegation to committed pools. This is the virtuous cycle that §4 describes. It requires all four properties to be present simultaneously — remove any one, and the cycle breaks.</p>
+<h4 id="346-the-structural-requirement">3.4.6 The structural requirement</h4>
+<p>Taken together, the four properties impose a specific structural requirement on the equilibrium the mechanism must produce:</p>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>Each pool must combine meaningful operator commitment with meaningful external delegation.</strong></p>
+<p>Operator commitment (pledge) is required for accountability and Sybil resistance — it creates the bond that makes misbehaviour costly and fragmentation expensive. External delegation is required for counter-power and decentralisation — it creates the oversight mechanism and ensures that the entry barrier does not exclude operators of moderate means.</p>
+</blockquote>
+<p>An equilibrium where operators fund pools entirely from their own capital satisfies accountability in a narrow sense but eliminates delegation's disciplinary role and restricts participation to the capital-rich. An equilibrium where operators commit nothing satisfies no property — the bond is absent, the Sybil defence is gone, and concentration emerges through market dynamics unchecked by any commitment signal.</p>
+<p>The design's target is an equilibrium where the pledge/delegation ratio within each pool reflects genuine <em>interdependence</em> between operator and community — where neither party can be absent without degrading the security properties the consensus layer depends on. This is the benchmark against which any evaluation of the mechanism's actual performance must be measured.</p>
+<p><br></p>
+<h2 id="4-the-aligned-dynamics-the-virtuous-cycle">4. The aligned dynamics — the virtuous cycle</h2>
+<p>When all three trajectories function as intended, they form a self-reinforcing cycle:</p>
+<pre><code>              ┌─────────────────────────────────────────┐
+              │                                         │
+              ▼                                         │
+     Transaction demand                                 │
+     funds the epoch pot                                │
+              │                                         │
+              ▼                                         │
+     Rewards sustain                             A more secure,
+     operator &amp; delegator  ──▶  Committed    ──▶ decentralised network
+     participation              operators        is a more valuable
+              │                 compete on       network
+              │                 pledge                  │
+              ▼                    │                     │
+     Delegators reward             │                    │
+     the most committed  ◀────────┘                     │
+     operators                                          │
+              │                                         │
+              └─────────────────────────────────────────┘
+</code></pre>
+<p>Transaction submitters generate economic demand that funds the epoch pot. The epoch pot rewards operators and delegators, making participation <em>individually rational</em> for both.</p>
+<p>Operators compete on pledge commitment because the mechanism makes pledge the primary competitive dimension. Delegators reward the most committed operators because the mechanism makes commitment observable and economically meaningful.</p>
+<p>This selective pressure produces an operator landscape that is decentralised (many independent, committed pools), accountable (delegators can exit at any time), and Sybil-resistant (pledge is costly to fake).</p>
+<p>A more secure, decentralised network is a more valuable network — which attracts more transaction demand, which grows fee revenue, which funds better rewards, which sustains the cycle.</p>
+<blockquote>
+<p>[!NOTE]
+This is the <strong>incentive-compatible equilibrium</strong> the mechanism should converge toward: a state where each player, pursuing their own rational self-interest, reinforces the system's security properties — and where no player can improve their payoff by deviating.</p>
+</blockquote>
+<p>The reward curve's success or failure is measured against this target.</p>
+<blockquote>
+<p><strong>Next:</strong> The divergence analysis — examining what actually happens when each player class tries to play this game — has been moved to the <a href="../README.md#2-the-divergence--when-the-optimal-move-breaks-the-game">main report §2</a>.</p>
+</blockquote></div>
+<footer class="site-footer">Input Output Group &middot; IO Research</footer>
+<div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
+<a href="#" class="back-top" id="btt">&uarr;</a>
+<script>
+(function(){
+  /* ── Progress bar ── */
+  const bar=document.getElementById('progress');
+  function updateProgress(){
+    const h=document.documentElement.scrollHeight-window.innerHeight;
+    bar.style.width=h>0?((window.scrollY/h)*100)+'%':'0%';
+  }
+
+  /* ── Back to top ── */
+  const btt=document.getElementById('btt');
+  function updateBtt(){ btt.classList.toggle('visible',window.scrollY>400); }
+
+  window.addEventListener('scroll',function(){ updateProgress(); updateBtt(); },{passive:true});
+  updateProgress();
+
+  /* ── Smooth scroll for anchor links ── */
+  document.addEventListener('click',function(e){
+    const a=e.target.closest('a[href^="#"]');
+    if(!a) return;
+    const id=a.getAttribute('href').slice(1);
+    const el=document.getElementById(id);
+    if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth',block:'start'}); history.pushState(null,null,'#'+id); }
+  });
+
+  /* ── Collapsible TOC sub-lists (all levels) ── */
+  document.querySelectorAll('.toc-nav li').forEach(function(li){
+    var sub=li.querySelector(':scope > ul');
+    if(!sub) return;
+    li.classList.add('has-children');
+    var toggle=li.querySelector(':scope > .toc-num')||li.querySelector(':scope > a');
+    if(!toggle) return;
+    toggle.classList.add('toc-toggle');
+    toggle.addEventListener('click',function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      toggle.classList.toggle('collapsed');
+      sub.classList.toggle('toc-collapsed');
+    });
+  });
+
+  /* ── Collapsible content sections (h2, h3, h4) ── */
+  function makeCollapsible(heading, stopTags){
+    if(/^contents$|^objective$/i.test(heading.textContent.trim())) return;
+    heading.classList.add('section-toggle');
+    var wrapper=document.createElement('div');
+    wrapper.className='section-body';
+    var sib=heading.nextElementSibling;
+    var nodes=[];
+    while(sib && stopTags.indexOf(sib.tagName)===-1){
+      nodes.push(sib);
+      sib=sib.nextElementSibling;
+    }
+    if(nodes.length===0){ heading.classList.remove('section-toggle'); return; }
+    heading.after(wrapper);
+    nodes.forEach(function(n){ wrapper.appendChild(n); });
+    wrapper.style.maxHeight=wrapper.scrollHeight+'px';
+    heading.addEventListener('click',function(){
+      heading.classList.toggle('collapsed');
+      if(wrapper.classList.contains('collapsed')){
+        wrapper.style.maxHeight=wrapper.scrollHeight+'px';
+        wrapper.classList.remove('collapsed');
+      } else {
+        wrapper.style.maxHeight=wrapper.scrollHeight+'px';
+        requestAnimationFrame(function(){ wrapper.style.maxHeight='0px'; wrapper.classList.add('collapsed'); });
+      }
+    });
+    wrapper.querySelectorAll('[id]').forEach(function(el){
+      window.addEventListener('hashchange',function(){
+        if(window.location.hash==='#'+el.id && wrapper.classList.contains('collapsed')){
+          heading.click();
+        }
+      });
+    });
+  }
+  /* Apply bottom-up: h4 first, then h3, then h2 (so inner wrappers exist before outer ones) */
+  document.querySelectorAll('.content h4[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3','H4']); });
+  document.querySelectorAll('.content h3[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3']); });
+  document.querySelectorAll('.content h2[id]').forEach(function(h){ makeCollapsible(h,['H1','H2']); });
+
+  /* ── Wrap tables in scroll containers ── */
+  document.querySelectorAll('.content table').forEach(function(tbl){
+    if(tbl.parentElement.classList.contains('table-wrap')) return;
+    var wrap=document.createElement('div');
+    wrap.className='table-wrap';
+    tbl.parentNode.insertBefore(wrap,tbl);
+    wrap.appendChild(tbl);
+  });
+
+  /* ── Image lightbox ── */
+  const overlay=document.getElementById('lightbox');
+  const lbImg=document.getElementById('lb-img');
+  document.querySelectorAll('.content img').forEach(function(img){
+    img.addEventListener('click',function(){
+      lbImg.src=img.src;
+      lbImg.alt=img.alt||'';
+      overlay.classList.add('active');
+    });
+  });
+  overlay.addEventListener('click',function(){ overlay.classList.remove('active'); lbImg.src=''; });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape' && overlay.classList.contains('active')){
+      overlay.classList.remove('active'); lbImg.src='';
+    }
+  });
+
+  /* ── Observation findings → navigate to section ── */
+  document.querySelectorAll('.obs-link[data-section]').forEach(function(el){
+    el.addEventListener('click',function(){
+      var sec=el.getAttribute('data-section');
+      /* Find heading whose id starts with the section number */
+      var target=document.querySelector('h2[id^="'+sec+'-"],h3[id^="'+sec+'-"],h4[id^="'+sec+'-"],h5[id^="'+sec+'-"]');
+      if(!target) target=document.getElementById(sec);
+      if(target){
+        /* Expand collapsed parent section if needed */
+        var body=target.closest('.section-body.collapsed');
+        if(body){
+          var toggle=body.previousElementSibling;
+          if(toggle && toggle.classList.contains('section-toggle')) toggle.click();
+        }
+        setTimeout(function(){ target.scrollIntoView({behavior:'smooth',block:'start'}); },150);
+      }
+    });
+  });
+
+  /* ── Expand collapsed section on direct anchor navigation ── */
+  if(window.location.hash){
+    var target=document.querySelector(window.location.hash);
+    if(target){
+      var body=target.closest('.section-body.collapsed');
+      if(body){
+        var toggle=body.previousElementSibling;
+        if(toggle && toggle.classList.contains('section-toggle')) toggle.click();
+      }
+      setTimeout(function(){ target.scrollIntoView({block:'start'}); },100);
+    }
+  }
+})();
+</script>
+</body>
+</html>

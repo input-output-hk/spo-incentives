@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treasury & Pool Pots Distribution — SPO Incentives</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
+<style>
+:root {
+  --accent:#E52321;
+  --infared:#E52321;--dawn:#EC641D;--black:#1a1a1a;--white:#fff;
+  --electric-blue:#16E9D8;--acid-green:#06FF89;--volt-yellow:#F2FF58;
+  --cobalt-pulse:#2C4FFA;--ultraviolet:#A700FF;
+  --bg:#ffffff;--bg-warm:#faf9f7;--bg-panel:#f5f4f2;--bg-code:#f0efed;
+  --text-primary:#1a1a1a;--text-body:#3a3a3a;--text-secondary:#6b6b6b;--text-muted:#999;
+  --border:#e2e0dc;--border-light:#eceae6;
+}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;background:var(--bg-warm);color:var(--text-body);line-height:1.78;-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+.site-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto;display:flex;gap:0;white-space:nowrap}
+.site-nav a{padding:13px 16px;font:500 12.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;flex-shrink:0}
+.site-nav a:hover{color:var(--text-body)}
+.site-nav a.active{color:var(--text-primary);border-bottom-color:var(--accent)}
+
+/* ── HERO ── */
+.hero{position:relative;overflow:hidden;padding:52px 40px 44px;background:#111;border-bottom:3px solid var(--accent)}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#000 0%,#3a0a09 40%,#8b1a0e 70%,#c44b10 100%);opacity:.9;pointer-events:none}
+.hero-inner{position:relative;max-width:1400px;margin:0 auto}
+.hero-label{font-size:11px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:12px}
+.hero h1{font-size:28px;font-weight:600;color:#fff;margin-bottom:4px}
+.hero .sub{font-size:14px;font-weight:300;color:rgba(255,255,255,.5)}
+
+/* ── CONTENT ── */
+.content{max-width:1400px;margin:0 auto;padding:40px 56px 100px;background:var(--bg);border-left:1px solid var(--border-light);border-right:1px solid var(--border-light);min-height:80vh}
+.content h1{font-size:24px;font-weight:600;color:var(--text-primary);margin:52px 0 16px;padding-top:20px;border-top:1px solid var(--border)}
+.content h1:first-child{border-top:none;margin-top:0}
+.content h2{font-size:20px;font-weight:700;color:var(--infared);margin:44px 0 14px;padding:10px 0 10px 28px;border-left:4px solid var(--infared);background:linear-gradient(90deg,rgba(229,35,33,.06) 0%,transparent 60%);position:relative}
+.content h3{font-size:16.5px;font-weight:600;color:var(--text-primary);margin:32px 0 10px;padding:6px 0 6px 28px;border-left:3px solid var(--dawn);background:linear-gradient(90deg,rgba(236,100,29,.05) 0%,transparent 50%);position:relative}
+.content h4{font-size:14.5px;font-weight:600;color:var(--text-secondary);margin:24px 0 8px;padding:4px 0 4px 28px;border-left:2px solid var(--border-strong,#bbb);position:relative}
+.content h5,.content h6{font-size:14px;font-weight:600;color:var(--text-secondary);margin:20px 0 8px}
+.content p{margin:0 0 14px;font-size:15px;color:var(--text-body)}
+.content p strong{color:var(--text-primary);font-weight:600}
+.content a{color:var(--infared);text-decoration:none;border-bottom:1px solid rgba(229,35,33,.25)}
+.content a:hover{border-bottom-color:var(--infared)}
+
+/* Lists */
+.content ul,.content ol{margin:0 0 14px 20px;font-size:15px;color:var(--text-body)}
+.content li{margin-bottom:6px}
+.content li strong{color:var(--text-primary);font-weight:600}
+
+/* Tables */
+.content table{width:100%;border-collapse:collapse;margin:20px 0;font-size:12.5px;table-layout:auto}
+.content thead{position:sticky;top:0}
+.content th{background:var(--bg-panel);color:var(--text-primary);font-weight:600;text-align:left;padding:7px 9px;border:1px solid var(--border)}
+.content td{padding:7px 9px;border:1px solid var(--border);color:var(--text-body);vertical-align:top}
+.content th,.content td{word-break:break-word;overflow-wrap:break-word}
+.content tr:hover td{background:var(--bg-warm)}
+
+/* Blockquotes */
+.content blockquote{border-left:3px solid var(--accent);padding:12px 18px;margin:16px 0;background:var(--bg-panel);border-radius:0 6px 6px 0}
+.content blockquote p{margin:0;font-size:14px;color:var(--text-body)}
+.content blockquote strong{color:var(--text-primary)}
+
+/* Code */
+.content code{font-family:'SF Mono','Fira Code',monospace;font-size:13px;background:var(--bg-code);padding:2px 6px;border-radius:4px;color:#b33a1a}
+.content pre{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:16px 20px;overflow-x:auto;margin:16px 0}
+.content pre code{background:none;padding:0;font-size:13px;color:var(--text-body)}
+
+/* Images / figures */
+.content img{max-width:100%;height:auto;border-radius:6px;margin:16px 0;display:block;border:1px solid var(--border-light)}
+
+/* HR */
+.content hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+
+/* Emphasis / italic */
+.content em{color:var(--text-secondary);font-style:italic}
+
+/* MathJax */
+mjx-container{color:var(--text-primary)!important;overflow-x:auto;overflow-y:visible;max-width:100%;display:block!important}
+mjx-container[display=true]{margin:20px auto!important;text-align:center}
+.content{overflow-x:auto}
+
+/* TOC inside content */
+.content .toc{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin:20px 0}
+.content .toc ul{list-style:none;margin:0;padding:0}
+.content .toc li{margin:4px 0}
+.content .toc a{border-bottom:none;font-size:14px}
+
+/* TOC nav — visual hierarchy per depth level */
+.toc-nav{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:20px 28px;margin:20px 0}
+.toc-nav ul{list-style:none;padding-left:0;margin:0}
+.toc-nav > ul > li{margin-bottom:6px}
+/* Level 1: big, bold — section titles */
+.toc-nav > ul > li{margin-bottom:8px}
+.toc-nav > ul > li > a,.toc-nav > ul > li > .toc-num{font-weight:600;font-size:16px;color:var(--text-primary)}
+/* Level 2: bold, slightly smaller */
+.toc-nav ul ul{padding-left:20px;margin-top:4px;border-left:2px solid var(--border)}
+.toc-nav ul ul > li{margin-bottom:4px}
+.toc-nav ul ul > li > a,.toc-nav ul ul > li > .toc-num{font-weight:600;font-size:14.5px;color:var(--text-body)}
+/* Level 3: medium weight, smaller still */
+.toc-nav ul ul ul{padding-left:18px;border-left-color:var(--border-light)}
+.toc-nav ul ul ul > li{margin-bottom:3px}
+.toc-nav ul ul ul > li > a,.toc-nav ul ul ul > li > .toc-num{font-weight:400;font-size:13.5px;color:var(--text-secondary)}
+/* Level 4+: light, small */
+.toc-nav ul ul ul ul > li > a,.toc-nav ul ul ul ul > li > .toc-num{font-weight:300;font-size:13px;color:var(--text-muted)}
+.toc-nav a{border-bottom:none;color:inherit;text-decoration:none}
+.toc-nav a:hover{color:var(--infared)}
+.toc-nav .toc-num{display:inline-block;min-width:2.2em;font-variant-numeric:tabular-nums}
+
+/* ── Observation cards ── */
+.obs-cards{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+.obs-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg)}
+.obs-card-header{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;user-select:none;background:var(--bg-panel);transition:background .15s}
+.obs-card-header:hover{background:var(--bg-code)}
+.obs-card-num{font-weight:700;font-size:13px;color:var(--infared);min-width:28px}
+.obs-card-title{flex:1;font-weight:600;font-size:14.5px;color:var(--text-primary);line-height:1.4}
+.obs-card-arrow{font-size:14px;color:var(--text-muted);transition:transform .2s}
+.obs-card.collapsed .obs-card-arrow{transform:rotate(-90deg)}
+.obs-card-count{font-size:11px;color:var(--text-muted);background:var(--bg-warm);border:1px solid var(--border-light);border-radius:10px;padding:1px 8px;white-space:nowrap}
+.obs-card-body{padding:0 18px 14px;display:flex;flex-direction:column;gap:8px;padding-top:10px}
+.obs-card.collapsed .obs-card-body{display:none}
+.obs-finding{display:flex;align-items:baseline;gap:10px;padding:8px 12px;border-radius:6px;background:var(--bg-warm);font-size:13.5px;line-height:1.55}
+.obs-finding:hover{background:var(--bg-panel)}
+.obs-fid{font-weight:600;font-size:12px;color:var(--text-muted);min-width:36px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.obs-ftext{flex:1;color:var(--text-body)}
+.obs-ftext strong{color:var(--text-primary)}
+.obs-tag{font-size:10.5px;letter-spacing:.3px;text-transform:uppercase;border:1px solid;border-radius:4px;padding:1px 7px;white-space:nowrap;flex-shrink:0;font-weight:500}
+.obs-link[data-section]{cursor:pointer}
+.obs-link[data-section]:hover{background:var(--bg-panel);box-shadow:inset 3px 0 0 var(--infared)}
+.obs-link[data-section] .obs-fid{color:var(--infared)}
+
+/* ── Reading progress bar ── */
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--infared),var(--dawn));z-index:200;transition:width .1s linear;width:0}
+
+/* ── Collapsible sections ── */
+.section-toggle{cursor:pointer;user-select:none}
+.section-toggle::before{content:'▾';position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--text-muted);transition:transform .2s;width:16px;text-align:center}
+.section-toggle.collapsed::before{transform:translateY(-50%) rotate(-90deg)}
+.section-body{overflow:hidden;transition:max-height .35s ease, opacity .25s ease;opacity:1}
+.section-body.collapsed{max-height:0!important;opacity:0;margin:0;padding:0}
+
+/* ── Collapsible TOC sub-lists ── */
+.toc-nav li{padding-left:18px;position:relative}
+.toc-nav .toc-toggle{cursor:pointer}
+.toc-nav .toc-toggle::before{content:'▾';position:absolute;left:0;top:1px;width:16px;font-size:13px;color:var(--text-secondary);transition:transform .2s;text-align:center}
+.toc-nav > ul > li.has-children > .toc-toggle::before{font-size:15px}
+.toc-nav .toc-toggle.collapsed::before{transform:rotate(-90deg)}
+.toc-nav ul.toc-collapsed{display:none}
+
+/* ── Image lightbox ── */
+.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;cursor:zoom-out}
+.lightbox-overlay.active{opacity:1;pointer-events:auto}
+.lightbox-overlay img{max-width:92vw;max-height:90vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5);object-fit:contain}
+.content img{cursor:zoom-in;transition:transform .2s, box-shadow .2s}
+.content img:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+
+/* ── Table wrapper ── */
+.table-wrap{position:relative;overflow:hidden;margin:20px 0;border:1px solid var(--border);border-radius:8px}
+.table-wrap table{margin:0;border:none;display:table;width:100%}
+.table-wrap th:first-child,.table-wrap td:first-child{border-left:none}
+.table-wrap th:last-child,.table-wrap td:last-child{border-right:none}
+.table-wrap tr:first-child th{border-top:none}
+.table-wrap tr:last-child td{border-bottom:none}
+
+/* ── Back to top ── */
+.back-top{position:fixed;bottom:24px;right:24px;width:40px;height:40px;border-radius:50%;background:var(--bg);border:1px solid var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity .3s;font-size:18px;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.back-top.visible{opacity:1}
+.back-top:hover{color:var(--infared);border-color:var(--infared)}
+
+/* Footer strip */
+.site-footer{background:#111;color:rgba(255,255,255,.4);font-size:12px;letter-spacing:.5px;text-transform:uppercase;text-align:center;padding:18px 20px}
+
+@media(max-width:720px){
+  .hero{padding:32px 20px 28px} .content{padding:24px 20px 60px;border:none}
+  .content table{font-size:11px} .content th,.content td{padding:6px 7px}
+}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav class="site-nav"><a href="index.html">Main Report</a>
+<a href="intended-game.html">The Intended Game</a>
+<a href="treasury.html" class="active">§1 Treasury</a>
+<a href="pools.html">§2 Pools</a>
+<a href="operator.html">§3 Operator</a>
+<a href="census.html">Census</a></nav>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Input Output &middot; IO Research</div>
+    <h1>Treasury & Pool Pots Distribution</h1>
+    <div class="sub">Mainnet Analysis — Stage 1</div>
+  </div>
+</div>
+<div class="content"><p><em>Built on 2026/03/17 from mainnet data at epoch <code>618</code> plus historical analysis from epoch <code>208</code> (Shelley inception).</em></p>
+<h2 id="objective">Objective</h2>
+<p>This report documents the <strong>epoch-level reward budget</strong> — the first stage of Cardano's reward pipeline — and traces the structural forces that shape the budget before any individual pool receives a single lovelace. It extends the empirical baseline established in the <a href="https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf"><em>Analysis of Cardano's Incentive Mechanism</em></a> (Lopez de Lara, 2025; hereafter the <em>Incentive Mechanism Analysis</em>).</p>
+<p>Every epoch, the protocol assembles a reward pot from three on-chain sources, then splits it between the <strong>treasury</strong> (20%) and the <strong>pools pot</strong> (80%). At epoch 616, the gross pot stood at ~19.4M ADA — but only <strong>6.8M ADA</strong> ultimately reached operators and delegators. This report asks <em>where the rest goes</em>, and follows the answer upstream.</p>
+<p>The argument proceeds in five steps:</p>
+<ol>
+<li>
+<p><strong>The initial design</strong> (§2). The epoch-pot assembly formula — from the original SL-D1 specification through a reader-friendly rewrite to mainnet parameterization. This establishes the mechanism whose behaviour the rest of the report diagnoses.</p>
+</li>
+<li>
+<p><strong>Current snapshot</strong> (§3). The epoch-budget pipeline at a single point in time — reserve stock, expansion draw, fee contribution, treasury/pools split, and the gap between allocation and distribution.</p>
+</li>
+<li>
+<p><strong>Historical analysis</strong> (§4). Seven time-series decompositions covering epochs 208–617: pot composition (§4.1), reserve trajectory (§4.2), fee volatility (§4.3), deposit obligations (§4.4), block-production reliability (§4.5), treasury inflow (§4.6), and the return-to-reserve mechanism (§4.7) that has extended the reserve's life by ~4.55B ADA.</p>
+</li>
+<li>
+<p><strong>Forward-looking</strong> (§5). Reserve depletion trajectory, the conditions for fee self-sufficiency, and the upcoming events — Leios, governance activation, parameter governance — that will reshape this budget layer.</p>
+</li>
+<li>
+<p><strong>Scope boundary.</strong> Observations O1–O4 are structural to the epoch-budget layer and fall <strong>outside the scope of the four CIPs</strong> under evaluation (CIP-0023, CIP-0037, CIP-0050, CIP-0082). They document the sustainability context within which all CIP proposals operate. The pool-level distribution analysis continues in the companion report <a href="../../pools-distribution/mainnet-analysis/"><em>The Pools Pot Distribution Gaps</em></a>.</p>
+</li>
+</ol>
+<p>All counts and amounts use the latest complete epoch with reward data (<strong>epoch 616</strong>, ending 2026/03/05) unless stated otherwise. The latest available pool snapshot is <strong>epoch 618</strong>.
+Source dataset: <code>data/reward_epoch_pools_mainnet.csv</code> (Koios).</p>
+<h2 id="contents">Contents</h2>
+<nav class="toc-nav">
+<ul>
+<li><span class="toc-num">1</span> <a href="#1-mainnet-observations">Mainnet Observations</a>
+</li>
+<li><span class="toc-num">2</span> <a href="#2-the-initial-design">The initial design</a>
+<ul>
+<li><span class="toc-num">2.1</span> <a href="#21-formulas">Formulas</a>
+<ul>
+<li><span class="toc-num">2.1.1</span> <a href="#211-sl-d1-original">SL-D1 (Original)</a>
+</li>
+<li><span class="toc-num">2.1.2</span> <a href="#212-reader-friendly-epoch-pot-formula">Reader-friendly epoch pot formula</a>
+</li>
+<li><span class="toc-num">2.1.3</span> <a href="#213-mainnet-parameterization">Mainnet parameterization</a>
+</li>
+<li><span class="toc-num">2.1.4</span> <a href="#214-concept-glossary">Concept glossary</a>
+</li>
+</ul>
+</li>
+<li><span class="toc-num">2.2</span> <a href="#22-design-choices">Design choices</a>
+</li>
+<li><span class="toc-num">2.3</span> <a href="#23-downstream-where-the-pools-pot-goes-next">Downstream: where the pools pot goes next</a>
+</li>
+</ul>
+</li>
+<li><span class="toc-num">3</span> <a href="#3-current-snapshot">Current snapshot</a>
+</li>
+<li><span class="toc-num">4</span> <a href="#4-historical">Historical</a>
+<ul>
+<li><span class="toc-num">4.1</span> <a href="#41-epoch-pot-composition">Epoch pot composition</a>
+</li>
+<li><span class="toc-num">4.2</span> <a href="#42-reserve-stock-and-monetary-expansion">Reserve stock and monetary expansion</a>
+</li>
+<li><span class="toc-num">4.3</span> <a href="#43-transaction-fees">Transaction fees</a>
+</li>
+<li><span class="toc-num">4.4</span> <a href="#44-deposit-obligations">Deposit obligations</a>
+</li>
+<li><span class="toc-num">4.5</span> <a href="#45-block-production-ratio-η">Block-production ratio (η)</a>
+</li>
+<li><span class="toc-num">4.6</span> <a href="#46-treasury-inflow-decomposition">Treasury inflow decomposition</a>
+</li>
+<li><span class="toc-num">4.7</span> <a href="#47-return-to-reserve">Return to reserve</a>
+</li>
+<li><span class="toc-num">4.8</span> <a href="#48-protocol-parameters">Protocol parameters</a>
+</li>
+</ul>
+</li>
+<li><span class="toc-num">5</span> <a href="#5-forward-looking">Forward-looking</a>
+<ul>
+<li><span class="toc-num">5.1</span> <a href="#51-reserve-depletion-trajectory">Reserve depletion trajectory</a>
+</li>
+<li><span class="toc-num">5.2</span> <a href="#52-fee-to-expansion-crossover">Fee-to-expansion crossover</a>
+</li>
+<li><span class="toc-num">5.3</span> <a href="#53-upcoming-events-and-risks">Upcoming events and risks</a>
+</li>
+</ul>
+</li>
+<li><span class="toc-num">6</span> <a href="#6-reproduction">Reproduction</a>
+<ul>
+<li><span class="toc-num">6.1</span> <a href="#61-full-rebuild">Full rebuild</a>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+<hr />
+<h2 id="1-mainnet-observations">1. Mainnet Observations</h2>
+<div class="obs-cards">
+<div class="obs-card"><div class="obs-card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span class="obs-card-num">O1</span><span class="obs-card-title">The epoch pot is a single-source budget</span><span class="obs-card-arrow">▾</span><span class="obs-card-count">4</span></div><div class="obs-card-body">
+<div class="obs-finding obs-link" data-section="41"><span class="obs-fid">F1.1</span><span class="obs-ftext">Monetary expansion dominates the epoch pot (~99.8%)</span><span class="obs-tag" style="border-color:#2C4FFA;color:#2C4FFA">Structural — unchanged since Shelley</span></div>
+<div class="obs-finding obs-link" data-section="43"><span class="obs-fid">F1.2</span><span class="obs-ftext">Fee revenue is structurally insufficient — even at full capacity, fees cover ~1.3% of expansion</span><span class="obs-tag" style="border-color:#2C4FFA;color:#2C4FFA">Structural — 12–16× capacity gap</span></div>
+<div class="obs-finding obs-link" data-section="44"><span class="obs-fid">F1.3</span><span class="obs-ftext">Deposit contribution is small and unmeasurable at epoch granularity</span><span class="obs-tag" style="border-color:#999;color:#999">Data limitation — Koios coverage</span></div>
+<div class="obs-finding obs-link" data-section="45"><span class="obs-fid">F1.4</span><span class="obs-ftext">SPOs produce ~97% of their assigned blocks — the pot assembles reliably</span><span class="obs-tag" style="border-color:#2C4FFA;color:#2C4FFA">Structural — avg η = 0.977</span></div>
+</div></div>
+<div class="obs-card"><div class="obs-card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span class="obs-card-num">O2</span><span class="obs-card-title">The reserve has crossed its half-life</span><span class="obs-card-arrow">▾</span><span class="obs-card-count">2</span></div><div class="obs-card-body">
+<div class="obs-finding obs-link" data-section="42"><span class="obs-fid">F2.1</span><span class="obs-ftext">Reserve is half-depleted (−50.95%) in 5.5 years</span><span class="obs-tag" style="border-color:#2C4FFA;color:#2C4FFA">Structural — exponential decay</span></div>
+<div class="obs-finding obs-link" data-section="51"><span class="obs-fid">F2.2</span><span class="obs-ftext">Significant reward pressure expected at epochs 1000–1200</span><span class="obs-tag" style="border-color:#999;color:#999">Projected — ~2028–2029</span></div>
+</div></div>
+<div class="obs-card"><div class="obs-card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span class="obs-card-num">O3</span><span class="obs-card-title">The reward mechanism operates at ~44% of its potential</span><span class="obs-card-arrow">▾</span><span class="obs-card-count">3</span></div><div class="obs-card-body">
+<div class="obs-finding obs-link" data-section="47"><span class="obs-fid">F3.1</span><span class="obs-ftext">Only ~44% of the pools pot is distributed to operators and delegators — the rest returns to the reserve</span><span class="obs-tag" style="border-color:#16E9D8;color:#16E9D8">Epoch 616 — 6.8M of 15.5M ADA</span></div>
+<div class="obs-finding obs-link" data-section="47"><span class="obs-fid">F3.2</span><span class="obs-ftext">4.55B ADA cumulative (~70% of current reserve) exists because of undistributed rewards</span><span class="obs-tag" style="border-color:#2C4FFA;color:#2C4FFA">Structural — side-effect, not design</span></div>
+<div class="obs-finding obs-link" data-section="47"><span class="obs-fid">F3.3</span><span class="obs-ftext">The primary driver is inactive stake — ~17B ADA (~44%) does not participate in delegation</span><span class="obs-tag" style="border-color:#A700FF;color:#A700FF">Upstream — outside formula control</span></div>
+</div></div>
+<div class="obs-card"><div class="obs-card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span class="obs-card-num">O4</span><span class="obs-card-title">Reward parameters have never been adjusted</span><span class="obs-card-arrow">▾</span><span class="obs-card-count">1</span></div><div class="obs-card-body">
+<div class="obs-finding obs-link" data-section="48"><span class="obs-fid">F4.1</span><span class="obs-ftext">Treasury split and expansion rate never adjusted since Shelley</span><span class="obs-tag" style="border-color:#999;color:#999">Governance — τ = 20%, ρ = 0.3% constant</span></div>
+</div></div>
+</div>
+<h3 id="the-big-picture">The big picture</h3>
+<p>Five and a half years after Shelley, the epoch-budget stage tells a clear story: <strong>the system works, but it runs on a finite fuel supply that is now half-spent.</strong></p>
+<h3 id="o1-the-epoch-pot-is-a-single-source-budget">O1 — The epoch pot is a single-source budget</h3>
+<p>The protocol assembles the epoch reward pot from three sources: monetary expansion, transaction fees, and deposit flows. In practice only one matters.</p>
+<p><strong>Monetary expansion: ~99.8% of the pot</strong> (F1.1). Every epoch, 0.3% of the reserve is drawn. This has dominated the pot in every single epoch since Shelley — fees have never crossed 3%, even during peak NFT/DeFi activity.</p>
+<p><strong>Transaction fees: ~0.19% of the pot</strong> (F1.2). At current levels, fees are negligible. Even at full realistic network capacity (3.1 TPS, ~1.34M tx/epoch), fee revenue would reach only ~254K ADA/epoch — barely 1.3% of the reserve expansion term. Reaching fee self-sufficiency would require <strong>12–16× today's realistic maximum throughput</strong>: both a capacity upgrade (Leios) and a fundamental shift in transaction demand.</p>
+<p><strong>Deposits: unmeasurable at epoch granularity</strong> (F1.3). The non-refundable deposit flow is not directly available in the Koios dataset. Cross-validation shows a median gap of only ~49K ADA against treasury stock deltas — a rounding error.</p>
+<p><strong>Block production: the pot assembles reliably</strong> (F1.4). SPOs produce ~97% of their assigned blocks on average (η = 0.977). The pot assembly mechanism works as intended — block production is not a bottleneck.</p>
+<h3 id="o2-the-reserve-has-crossed-its-half-life">O2 — The reserve has crossed its half-life</h3>
+<p>The reserve has gone from <strong>13.29B to 6.53B ADA</strong> — half depleted in ~5.5 years (F2.1). The decline is exponential: each epoch draws 0.3% of whatever remains, so the absolute draw shrinks over time. The nominal expansion has already halved, from ~39.9M to ~19.5M ADA/epoch.</p>
+<p><strong>Projected timeline</strong> (F2.2). At current parameters and participation levels, the reserve reaches ~2B ADA around epochs 1000–1200 (~2028–2029) — at which point per-epoch rewards drop significantly. Full depletion is projected around epoch 3500 (~2040s).</p>
+<h3 id="o3-the-reward-mechanism-operates-at-44-of-its-potential">O3 — The reward mechanism operates at ~44% of its potential</h3>
+<p>Every epoch, the protocol allocates ~15.5M ADA to the pools pot. Only <strong>~6.8M ADA (~44%) is actually distributed as rewards</strong> to operators and delegators — the remaining ~8.7M returns to the reserve (F3.1).</p>
+<p>This is not a small leak. Over 400+ epochs, <strong>4.55B ADA</strong> has flowed back to the reserve through this mechanism — roughly <strong>70% of the current reserve stock</strong> exists because rewards were not fully distributed (F3.2). It is the single biggest reason the reserve has lasted as long as it has.</p>
+<p>The root cause is straightforward: <strong>the staking mechanism is half-utilised</strong> (F3.3). Out of ~38.5B ADA in circulation, only ~21.6B (~56%) participates in delegation. The remaining ~17B ADA sits outside the system entirely — it earns no rewards, but it still dilutes the distribution. If that inactive stake were to enter consensus — through governance incentives, exchange staking changes, or new delegation products — this buffer would shrink and reserve depletion would accelerate.</p>
+<p>This creates a paradox: the return-to-reserve mechanism slows depletion, but it is a side effect of low participation, not a design feature. Greater adoption — normally desirable — would remove this safety margin.</p>
+<h3 id="o4-reward-parameters-have-never-been-adjusted">O4 — Reward parameters have never been adjusted</h3>
+<p>The two parameters that shape this entire pipeline — the monetary expansion rate ($\rho = 0.3\%$) and the treasury rate ($\tau = 20\%$) — have <strong>never been adjusted</strong> since Shelley inception (F4.1). The decentralisation parameter $d$ was gradually reduced to 0 and $k$ was raised from 150 to 500, but the reward-level parameters remain at their day-one values. Neither has been the subject of a formal governance proposal.</p>
+<blockquote>
+<p><strong>Scope note.</strong> Observations O1–O4 are structural to the epoch-budget layer and fall <strong>outside the scope of the four CIPs</strong> under evaluation (CIP-0023, CIP-0037, CIP-0050, CIP-0082). They document the sustainability context within which all CIP proposals operate, and distinguish them from the problems the CIPs actually target — at the pool-distribution and operator/delegator layers downstream.</p>
+</blockquote>
+<hr />
+<h2 id="2-the-initial-design">2. The initial design</h2>
+<p>The epoch-pot assembly and treasury/pools split analysed in this report were specified in <a href="https://github.com/IntersectMBO/cardano-ledger/releases/latest/download/shelley-delegation.pdf"><em>Design Specification for Delegation and Incentives in Cardano</em></a> (Kant, Brünjes &amp; Coutts, IOHK, 2019 — deliverable <strong>SL-D1</strong>). The mechanism has been operational on mainnet since the Shelley hard fork on 2020/07/29 and its governing parameters ($\rho$, $\tau$) have never been modified since.</p>
+<p>This section presents the formula in three layers — the original SL-D1 notation, a reader-friendly rewrite, and the mainnet-parameterized form — then identifies the two design choices that matter most for the empirical analysis that follows.</p>
+<h3 id="21-formulas">2.1 Formulas</h3>
+<h4 id="211-sl-d1-original">2.1.1 SL-D1 (Original)</h4>
+<p>The design spec defines the <strong>gross epoch pot</strong> — the total ADA entering the reward pipeline each epoch:</p>
+<p>$$
+Pot^{\text{epoch}}
+:=
+F + D + \min(\eta,1)\,\rho\,(T_{\infty}-T)
+$$</p>
+<p>Then, the <strong>treasury/pools split</strong> — a single parameter $\tau$ determines how the pot is divided:</p>
+<p>$$
+R
+:=
+(1-\tau)\,Pot^{\text{epoch}}
+$$</p>
+<p>$$
+TreasuryPot^{\text{epoch}}
+:=
+\tau\,Pot^{\text{epoch}}
+$$</p>
+<blockquote>
+<p><strong>Reading note.</strong> $F$ = transaction fees, $D$ = non-refundable deposits, $\eta$ = block-production ratio ($Blocks_{\text{produced}}/Blocks_{\text{expected}}$), $\rho$ = monetary expansion rate, $(T_{\infty}-T)$ = remaining reserve. The full mapping to reader-friendly names is in the glossary (§2.1.4).</p>
+</blockquote>
+<h4 id="212-reader-friendly-epoch-pot-formula">2.1.2 Reader-friendly epoch pot formula</h4>
+<p>Same logic, with self-documenting names. The epoch pot aggregates <strong>three inputs</strong> — fees, deposits, and a reserve draw gated by the block-production ratio:</p>
+<p>$$
+Pot^{\text{epoch}}
+= Fee^{\text{epoch}}_{\text{tx}}
++
+Deposit^{\text{epoch}}_{\text{nonRefundable}}
++
+\min\left(\frac{Blocks^{\text{epoch}}_{\text{produced}}}{Blocks^{\text{epoch}}_{\text{expected}}},1\right)\rho^{\text{monetaryExpansion}}_{\text{rate}}\left(Supply^{\text{system}}_{\text{total}}-Supply^{\text{system}}_{\text{circulating}}\right)
+$$</p>
+<p>The split is then purely multiplicative — no pool-level logic is involved:</p>
+<p>$$
+PoolsPot^{\text{epoch}}
+:=
+(1-\tau^{\text{treasury}}_{\text{rate}})\,Pot^{\text{epoch}}
+$$</p>
+<p>$$
+TreasuryPot^{\text{epoch}}
+:=
+\tau^{\text{treasury}}_{\text{rate}}\,Pot^{\text{epoch}}
+$$</p>
+<p>Conservation — the split is exhaustive, nothing is lost:</p>
+<p>$$
+PoolsPot^{\text{epoch}} + TreasuryPot^{\text{epoch}}
+= Pot^{\text{epoch}}
+$$</p>
+<h4 id="213-mainnet-parameterization">2.1.3 Mainnet parameterization</h4>
+<p>Substituting the current mainnet protocol parameters ($\rho = 0.3\%$, $\tau = 20\%$, 21,600 expected blocks per epoch, 45 billion max supply):</p>
+<p>$$
+Pot^{\text{epoch}}
+= Fee^{\text{epoch}}_{\text{tx}}
++
+Deposit^{\text{epoch}}_{\text{nonRefundable}}
++
+\min\left(\frac{Blocks^{\text{epoch}}_{\text{produced}}}{21{,}600},1\right)\cdot 0.3\% \cdot \left(45\,\text{billion} - Supply^{\text{system}}_{\text{circulating}}\right)
+$$</p>
+<p>$$
+PoolsPot^{\text{epoch}}
+:=
+80\% \cdot Pot^{\text{epoch}}
+$$</p>
+<p>$$
+TreasuryPot^{\text{epoch}}
+:=
+20\% \cdot Pot^{\text{epoch}}
+$$</p>
+<p>At epoch 616, this produces:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th style="text-align: right;">Value</th>
+<th style="text-align: right;">Share of pot</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reserve-sourced expansion ($\rho \times \text{Reserve}$)</td>
+<td style="text-align: right;">19.38M ADA</td>
+<td style="text-align: right;">99.81%</td>
+</tr>
+<tr>
+<td>Transaction fees</td>
+<td style="text-align: right;">36,978 ADA</td>
+<td style="text-align: right;">0.19%</td>
+</tr>
+<tr>
+<td>Deposits</td>
+<td style="text-align: right;">unmeasurable</td>
+<td style="text-align: right;">~0%</td>
+</tr>
+<tr>
+<td><strong>Gross epoch pot</strong></td>
+<td style="text-align: right;"><strong>~19.42M ADA</strong></td>
+<td style="text-align: right;"><strong>100%</strong></td>
+</tr>
+<tr>
+<td>Treasury cut ($\tau = 20\%$)</td>
+<td style="text-align: right;">3.88M ADA</td>
+<td style="text-align: right;">20%</td>
+</tr>
+<tr>
+<td><strong>Pools pot</strong> ($1-\tau = 80\%$)</td>
+<td style="text-align: right;"><strong>15.53M ADA</strong></td>
+<td style="text-align: right;"><strong>80%</strong></td>
+</tr>
+</tbody>
+</table>
+<h4 id="214-concept-glossary">2.1.4 Concept glossary</h4>
+<table>
+<thead>
+<tr>
+<th>SL-D1</th>
+<th>Reader-Friendly</th>
+<th>Meaning</th>
+<th>Mainnet baseline</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$F$</td>
+<td>$Fee^{\text{epoch}}_{\text{tx}}$</td>
+<td>Epoch transaction fees</td>
+<td>Dynamic</td>
+</tr>
+<tr>
+<td>$D$</td>
+<td>$Deposit^{\text{epoch}}_{\text{nonRefundable}}$</td>
+<td>Epoch non-refundable deposits</td>
+<td>Dynamic</td>
+</tr>
+<tr>
+<td>$\eta$</td>
+<td>$\frac{Blocks^{\text{epoch}}_{\text{produced}}}{Blocks^{\text{epoch}}_{\text{expected}}}$</td>
+<td>Epoch block-production ratio</td>
+<td>$Blocks^{\text{epoch}}_{\text{expected}}=21{,}600$</td>
+</tr>
+<tr>
+<td>$\rho$</td>
+<td>$\rho^{\text{monetaryExpansion}}_{\text{rate}}$</td>
+<td>Monetary expansion rate</td>
+<td>$0.3\%$</td>
+</tr>
+<tr>
+<td>$T_{\infty}-T$</td>
+<td>$Supply^{\text{system}}_{\text{total}}-Supply^{\text{system}}_{\text{circulating}}$</td>
+<td>Reserve entering the monetary-expansion term</td>
+<td>$45\,\text{billion} - Supply^{\text{system}}_{\text{circulating}}$</td>
+</tr>
+<tr>
+<td>$\tau$</td>
+<td>$\tau^{\text{treasury}}_{\text{rate}}$</td>
+<td>Treasury take rate</td>
+<td>$20\%$ treasury / $80\%$ pools</td>
+</tr>
+<tr>
+<td>$R$</td>
+<td>$PoolsPot^{\text{epoch}}$</td>
+<td>Pool-side share of the epoch pot</td>
+<td>$80\% \cdot Pot^{\text{epoch}}$</td>
+</tr>
+<tr>
+<td>n/a</td>
+<td>$TreasuryPot^{\text{epoch}}$</td>
+<td>Treasury-side share of the epoch pot</td>
+<td>$20\% \cdot Pot^{\text{epoch}}$</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-design-choices">2.2 Design choices</h3>
+<p>Two design choices embedded at this stage matter for the rest of the analysis:</p>
+<ul>
+<li>
+<p><strong>Cooperative-behavior gate.</strong> The monetary expansion draw is scaled by $\min(\eta, 1)$ — the ratio of blocks actually produced to blocks expected. If pools collectively miss slots, the entire epoch pot shrinks. This discourages sabotage but also means the pot depends on aggregate network health. On mainnet, $\eta$ has averaged 0.977 since Shelley — the gate is satisfied but never binding (§4.5).</p>
+</li>
+<li>
+<p><strong>Fixed split rule.</strong> The treasury/pools ratio is a protocol constant ($\tau$), not a function of network activity or reserve level. It does not adapt as the balance between fees and expansion shifts over time. Both $\rho$ and $\tau$ have been unchanged since Shelley (§4.8).</p>
+</li>
+</ul>
+<p>A third property is structural rather than a parameter choice:</p>
+<ul>
+<li><strong>Single-source dominance.</strong> Although the formula admits three inputs, monetary expansion accounts for ~99.8% of the epoch pot on mainnet (§4.1). The pot's trajectory is therefore determined almost entirely by the reserve stock and $\rho$. Transaction fees and deposits are second-order corrections — a condition that will only change when fee revenue grows by at least an order of magnitude (§5.2).</li>
+</ul>
+<h3 id="23-downstream-where-the-pools-pot-goes-next">2.3 Downstream: where the pools pot goes next</h3>
+<p>The pools pot ($PoolsPot^{\text{epoch}}$) produced by this stage is the <strong>total budget</strong> entering the pool-level reward formula. That formula — specified in the same SL-D1 document — distributes the budget across individual pools based on their stake, pledge, and block performance. Any rewards not distributed return to the reserve.</p>
+<p>The companion report <a href="../../pools-distribution/mainnet-analysis/"><em>The Pools Pot Distribution Gaps</em></a> analyses the pool-distribution stage in full, including the SL-D1 reward curve, its normalized rewrite, and the efficiency and behavioural analysis of mainnet outcomes.</p>
+<p>At epoch 616, of the 15.53M ADA entering the pool-distribution stage, only <strong>6.79M ADA (43.7%) was distributed</strong> to operators and delegators. The rest returned to the reserve — primarily because ~43.5% of circulating ADA does not participate in delegation. This return-to-reserve mechanism is analysed in §4.7 and its implications for reserve sustainability in §5.1.</p>
+<hr />
+<h2 id="3-current-snapshot">3. Current snapshot</h2>
+<p>Reference epoch: <strong>616</strong> (2026/02/28 – 2026/03/05), latest complete epoch with reward data. The formulas in §2 produce the values below.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reserve stock</td>
+<td><strong>6.53B ADA</strong> (down 50.87% from Shelley inception)</td>
+</tr>
+<tr>
+<td>Monetary expansion rate ($\rho$)</td>
+<td><strong>0.3%</strong></td>
+</tr>
+<tr>
+<td>Treasury rate ($\tau$)</td>
+<td><strong>20%</strong></td>
+</tr>
+<tr>
+<td>Block-production ratio (η)</td>
+<td><strong>0.990</strong> (epoch 616) · <strong>0.977</strong> historical average</td>
+</tr>
+<tr>
+<td>Gross epoch pot proxy</td>
+<td><strong>19.42M ADA</strong></td>
+</tr>
+<tr>
+<td>— Reserve-sourced expansion</td>
+<td>19.38M ADA (<strong>99.81%</strong>)</td>
+</tr>
+<tr>
+<td>— Transaction fees</td>
+<td>36,978 ADA (<strong>0.19%</strong>)</td>
+</tr>
+<tr>
+<td>Treasury cut (20%)</td>
+<td><strong>3.88M ADA</strong></td>
+</tr>
+<tr>
+<td>Pools pot (80%)</td>
+<td><strong>15.53M ADA</strong></td>
+</tr>
+<tr>
+<td>Observed paid rewards</td>
+<td><strong>6.79M ADA</strong></td>
+</tr>
+<tr>
+<td>Return to reserve (this epoch)</td>
+<td><strong>8.75M ADA</strong> (undistributed)</td>
+</tr>
+<tr>
+<td>30-day average fees (epochs 611–616)</td>
+<td><strong>44,022 ADA/epoch</strong></td>
+</tr>
+<tr>
+<td>Median return to reserve (epochs 211–616)</td>
+<td><strong>10.32M ADA/epoch</strong></td>
+</tr>
+<tr>
+<td>Cumulative return to reserve (epochs 211–616)</td>
+<td><strong>4.55B ADA</strong> (~70% of current reserve)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-historical">4. Historical</h2>
+<h3 id="41-epoch-pot-composition">4.1 Epoch pot composition</h3>
+<p><img alt="General Reward Pot" src="sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/figures/general_reward_pot_mainnet.png" /></p>
+<p>The top panel decomposes the gross epoch pot into its two measurable sources — <strong>reserve-sourced monetary expansion</strong> and <strong>transaction fees</strong> — since Shelley (epoch 208). Monetary expansion has dominated in every single epoch; fees have never exceeded 3% of the pot, even during peak activity (epoch 304, ~308K ADA).</p>
+<p>The middle panel shows the resulting <strong>treasury / pools split</strong> ($\tau = 20\%$). Both tracks decline in parallel, reflecting the shrinking reserve.</p>
+<p>The bottom panel compares the <strong>pool-side pot proxy</strong> to <strong>observed paid rewards</strong>. The persistent gap (~10.3M ADA/epoch median) represents rewards that were not distributed and returned to the reserve — see §4.7.</p>
+<h3 id="42-reserve-stock-and-monetary-expansion">4.2 Reserve stock and monetary expansion</h3>
+<p><img alt="Monetary Expansion Reserve History" src="sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/figures/monetary_expansion_reserve_history_mainnet.png" /></p>
+<p><strong>Reserve stock</strong> (top panel).
+The reserve has fallen from <strong>13.29B ADA</strong> (epoch 209) to <strong>6.52B ADA</strong> (epoch 617) — a decline of <strong>−50.95%</strong> over ~5.5 years.</p>
+<p><strong>Nominal draw</strong> (middle panel).
+The nominal monetary expansion ($\rho \times \text{Reserve}$) has decreased from ~39.9M ADA/epoch to ~19.5M ADA/epoch, tracking the reserve decline mechanically.</p>
+<p><strong>Pool-side contribution</strong> (bottom panel).
+After applying the treasury cut, decentralisation gate \$g(d)\$, and block-production ratio, the pool-side reserve term peaked at <strong>31.7M ADA/epoch</strong> (epoch 215, 2020/09/02) and currently sits at ~15.2M ADA/epoch.</p>
+<p>The declining trajectory is structural: each epoch draws from a smaller reserve, producing a smaller pot. The monetary expansion rate $\rho = 0.3\%$ has remained constant since Shelley.</p>
+<h3 id="43-transaction-fees">4.3 Transaction fees</h3>
+<p><img alt="Fee Epoch Tx History" src="sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/figures/fee_epoch_tx_history_mainnet.png" /></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Coverage</td>
+<td>Epochs 208–617</td>
+</tr>
+<tr>
+<td>30-day average (epochs 611–616)</td>
+<td><strong>44,022 ADA/epoch</strong></td>
+</tr>
+<tr>
+<td>All-time minimum</td>
+<td>3,914 ADA (epoch 221, 2020/10/02)</td>
+</tr>
+<tr>
+<td>All-time maximum</td>
+<td>308,294 ADA (epoch 304, 2021/11/21)</td>
+</tr>
+</tbody>
+</table>
+<p>Fee revenue is volatile and tracks network activity spikes (NFT minting, DeFi waves), but the structural baseline sits around <strong>30–50K ADA/epoch</strong>.</p>
+<p>The <strong>realistic capacity ceiling</strong> (red dashed line on the visual) estimates the maximum fee revenue if the network operated at full realistic throughput: <strong>~254K ADA/epoch</strong> (3.1 TPS × 432,000 s × 0.19 ADA avg fee). Even at this theoretical maximum, fees would cover only <strong>~1.3% of the reserve expansion term</strong> (19.4M ADA at epoch 616). The all-time peak (epoch 304, 308K ADA) briefly exceeded this ceiling during exceptional NFT/DeFi activity.</p>
+<p>The <em>Analysis of Cardano's Incentive Mechanism</em> (Lopez de Lara, 2025; hereafter the <em>Incentive Mechanism Analysis</em>, §4.8) estimates the network would need to process <strong>12–16× more transactions</strong> than its current realistic maximum capacity to fund rewards through fees alone — requiring both a throughput upgrade (Leios) and a fundamental shift in network utilization.</p>
+<h3 id="44-deposit-obligations">4.4 Deposit obligations</h3>
+<p><img alt="Deposit Obligation History" src="sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/figures/deposit_obligation_history_mainnet.png" /></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Coverage</td>
+<td>Epochs 209–617</td>
+</tr>
+<tr>
+<td>30-day average obligation</td>
+<td>~5.26M ADA</td>
+</tr>
+<tr>
+<td>Minimum</td>
+<td>441K ADA</td>
+</tr>
+<tr>
+<td>Maximum</td>
+<td>9.26M ADA</td>
+</tr>
+</tbody>
+</table>
+<p>The deposit obligation (stake key, DRep, proposal deposits) is tracked as a <strong>stock-level proxy</strong> because the true epoch-level non-refundable deposit flow ($Deposit^{\text{epoch}}_{\text{nonRefundable}}$) is not directly available in the Koios dataset. The actual per-epoch contribution to the epoch pot is likely small and irregular.</p>
+<p>The <code>general_reward_pot</code> proxy omits deposits entirely, and the resulting median verification gap (~49K ADA against treasury stock deltas) suggests this omission is acceptable for analysis purposes.</p>
+<h3 id="45-block-production-ratio">4.5 Block-production ratio (η)</h3>
+<p><img alt="Eta History" src="sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/figures/eta_history_mainnet.png" /></p>
+<p>The block-production ratio $\eta = \frac{\text{Blocks produced}}{\text{Blocks expected}}$ acts as the <strong>cooperative-behavior gate</strong> in the epoch pot formula: $\min(\eta, 1)$ scales the monetary expansion draw.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Average η (complete epochs)</td>
+<td><strong>0.977</strong></td>
+</tr>
+<tr>
+<td>Minimum η</td>
+<td>0.896 (epoch 347, 2022/06/24)</td>
+</tr>
+<tr>
+<td>Maximum η</td>
+<td>1.006 (epoch 606, 2026/01/09)</td>
+</tr>
+<tr>
+<td>Epochs with η &gt; 1 (clipped)</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+<p>The network has consistently filled ~97% of available slots since Shelley.
+The $\min(\eta, 1)$ clamp has been activated in only 7 epochs.
+The cooperative incentive is <strong>satisfied but never binding</strong>.</p>
+<p>Even at the lowest observed η (0.896, epoch 347 — infrastructure stress), the impact on the epoch pot was a ~10% reduction, not a system-level event.</p>
+<h3 id="46-treasury-inflow-decomposition">4.6 Treasury inflow decomposition</h3>
+<p><img alt="Treasury Epoch Source" src="sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/figures/treasury_epoch_source_mainnet.png" /></p>
+<p>This visual decomposes the treasury inflow into its two observable components: the <strong>fee-side cut</strong> ($\tau \times Fee^{\text{epoch}}_{\text{tx}}$) and the <strong>reserve-side cut</strong> ($\tau \times g(d)\,\min(\eta,1)\,\rho \times \text{Reserve}$).</p>
+<p>The top panel shows total treasury inflow since Shelley — the declining slope mirrors the reserve depletion.
+The middle panel zooms on the fee-side contribution in recent epochs.
+The bottom panel verifies the proxy against observed treasury stock deltas.</p>
+<p><strong>Verification.</strong> On epochs 211–616, the median absolute gap between the proxy and observed treasury stock delta is <strong>48,792 ADA</strong>. 325 out of 406 epochs fall within 100K ADA. The 13 epochs with negative stock deltas correspond to treasury outflows (governance disbursements).</p>
+<h3 id="47-return-to-reserve">4.7 Return to reserve</h3>
+<p><img alt="Return to Reserve Impact" src="sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/figures/return_to_reserve_impact_mainnet.png" /></p>
+<p>Not all of the pool-side pot is distributed as rewards. The difference between the pool-side pot proxy and observed paid rewards <strong>returns to the reserve</strong> — a mechanism that significantly slows reserve depletion.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Analysis window</td>
+<td>Epochs 211–616</td>
+</tr>
+<tr>
+<td>Median per-epoch return</td>
+<td><strong>10.32M ADA</strong></td>
+</tr>
+<tr>
+<td>Cumulative return</td>
+<td><strong>4.55B ADA</strong></td>
+</tr>
+<tr>
+<td>Largest single-epoch return</td>
+<td>24.19M ADA (epoch 211)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Reserve impact.</strong>
+At epoch 616, the actual reserve stood at <strong>6.53B ADA</strong>. Without the return-to-reserve mechanism, the counterfactual reserve would be only <strong>1.98B ADA</strong> — meaning approximately <strong>4.55B ADA</strong> (~70% of the current reserve) exists because rewards were not fully distributed.</p>
+<p>The primary driver is <strong>inactive stake</strong> — the ~16B ADA not participating in consensus. The gap decomposition analysis attributes ~70.9% of the cumulative return to inactive/non-eligible stake.</p>
+<h3 id="48-protocol-parameters">4.8 Protocol parameters</h3>
+<p>Three protocol parameters directly govern the epoch-pot assembly and treasury/pools split. All three have been constant since they reached their current value.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Symbol</th>
+<th>Value</th>
+<th>History</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Monetary expansion rate</td>
+<td>$\rho$</td>
+<td>0.3% (0.003)</td>
+<td>Set at Shelley (epoch 208), <strong>never changed</strong></td>
+</tr>
+<tr>
+<td>Treasury growth rate</td>
+<td>$\tau$</td>
+<td>20% (0.2)</td>
+<td>Set at Shelley (epoch 208), <strong>never changed</strong></td>
+</tr>
+<tr>
+<td>Decentralisation</td>
+<td>$d$</td>
+<td>0</td>
+<td>Reduced from 1.0 to 0.0 over epochs 208–257, <strong>inert since</strong></td>
+</tr>
+</tbody>
+</table>
+<p>$\rho$ controls how much of the reserve is drawn each epoch. At 0.3%, the current draw is ~19.5M ADA/epoch. This rate has never been the subject of a governance proposal, despite the reserve crossing its half-life.</p>
+<p>$\tau$ sets the treasury/pools split. At 20%, the treasury receives ~3.9M ADA/epoch and the pools pot receives ~15.5M ADA/epoch. This ratio has likewise never been reviewed.</p>
+<p>$d$ affected the epoch pot during the Shelley-to-decentralisation transition through the gate function \$g(d)\$. It reached 0 at epoch 257 and has been inert since — included here only for completeness.</p>
+<hr />
+<h2 id="5-forward-looking">5. Forward-looking</h2>
+<h3 id="51-reserve-depletion-trajectory">5.1 Reserve depletion trajectory</h3>
+<p>The reserve has lost 50.95% of its initial value in ~5.5 years. The depletion is not linear — it follows an exponential decay driven by $\rho \times \text{Reserve}$, meaning each epoch draws a smaller absolute amount.</p>
+<p>The <em>Incentive Mechanism Analysis</em> (§4.8, Figure 19) projects:</p>
+<table>
+<thead>
+<tr>
+<th>Horizon</th>
+<th>Reserve estimate</th>
+<th>Implication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Epochs 1000–1200</strong> (~2028–2029)</td>
+<td>~2B ADA</td>
+<td>Significant pressure on reward levels begins</td>
+</tr>
+<tr>
+<td><strong>~Epoch 3500</strong> (~2040s)</td>
+<td>near-zero</td>
+<td>Full reserve depletion at current parameters</td>
+</tr>
+</tbody>
+</table>
+<p>The return-to-reserve mechanism (§4.7) is currently extending the reserve's life by returning ~10.3M ADA/epoch. However, if inactive stake were to enter consensus (e.g. through governance incentives or exchange staking changes), this buffer would shrink, accelerating depletion.</p>
+<h3 id="52-fee-to-expansion-crossover">5.2 Fee-to-expansion crossover</h3>
+<p>For the reward system to become self-sustaining, fees must eventually replace monetary expansion as the dominant input to the epoch pot.</p>
+<p><strong>Current gap.</strong> Fees represent ~0.19% of the epoch pot. Closing this gap requires a combination of:</p>
+<table>
+<thead>
+<tr>
+<th>Lever</th>
+<th>Current</th>
+<th>Required for fee self-sufficiency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network utilization</td>
+<td>~234K tx/epoch (~13% of realistic capacity)</td>
+<td>12–16× current realistic max</td>
+</tr>
+<tr>
+<td>Fee per transaction</td>
+<td>~0.19 ADA avg</td>
+<td>Higher value through tiered pricing or congestion</td>
+</tr>
+<tr>
+<td>Network capacity</td>
+<td>~1.34M tx/epoch (3.1 TPS realistic)</td>
+<td>Leios upgrade (higher throughput)</td>
+</tr>
+</tbody>
+</table>
+<p>No single lever is sufficient. The report recommends a multi-pronged approach: capacity expansion (Leios), tiered fee models (Kiayias et al., 2023), and ecosystem growth to drive transaction volume.</p>
+<h3 id="53-upcoming-events-and-risks">5.3 Upcoming events and risks</h3>
+<p><strong>Leios upgrade.</strong> Designed to substantially increase network throughput. This is a necessary precondition for fee growth, but does not guarantee traffic. "Leios provides the highway — it does not guarantee the traffic" (Lopez de Lara, 2025, §5).</p>
+<p><strong>Governance activation of latent stake.</strong> If a significant portion of the ~16B ADA currently outside consensus enters staking — through governance incentives, exchange policy changes, or new delegation products — the return-to-reserve buffer shrinks, the pool-side pot gets distributed more fully, and reserve depletion accelerates. This is a double-edged dynamic: more participation strengthens decentralization but increases sustainability pressure.</p>
+<p><strong>Parameter governance.</strong> The monetary expansion rate $\rho$ and treasury rate $\tau$ are currently fixed constants. The report recommends they be treated as dynamic parameters subject to periodic governance review. A reduction in $\rho$ would slow reserve depletion but also reduce per-epoch rewards, affecting operator viability. A change in $\tau$ would shift the treasury/pools balance. Neither has been adjusted since Shelley.</p>
+<hr />
+<h2 id="6-reproduction">6. Reproduction</h2>
+<h3 id="61-full-rebuild">6.1 Full rebuild</h3>
+<p>All figures and data summaries can be regenerated from the source dataset in a single pass:</p>
+<pre><code class="language-bash">cd scripts/
+bash build_all.sh
+</code></pre>
+<p>Or individually:</p>
+<pre><code class="language-bash">cd scripts/
+python3 build_general_reward_pot_visual.py        # → figures/general_reward_pot_mainnet.png + data/general_reward_pot_mainnet.md
+python3 build_monetary_expansion_reserve_history.py # → figures/monetary_expansion_reserve_history_mainnet.png + data/*.md + data/*.csv
+python3 build_fee_epoch_tx_history_visual.py       # → figures/fee_epoch_tx_history_mainnet.png + data/fee_epoch_tx_history_mainnet.md
+python3 build_treasury_epoch_source_visual.py      # → figures/treasury_epoch_source_mainnet.png + data/treasury_epoch_source_mainnet.md
+python3 build_deposit_obligation_history_visual.py # → figures/deposit_obligation_history_mainnet.png + data/deposit_obligation_history_mainnet.md
+python3 build_return_to_reserve_impact_visual.py   # → figures/return_to_reserve_impact_mainnet.png + data/return_to_reserve_impact_mainnet.md
+python3 build_eta_history_visual.py                # → figures/eta_history_mainnet.png + data/eta_history_mainnet.md
+</code></pre>
+<p><strong>Requirements:</strong> Python 3.9+, <code>matplotlib</code>, <code>numpy</code>. No other dependencies.</p>
+<p><strong>Input data</strong> (self-contained in <code>data/</code>, no network required):
+- <code>reward_epoch_pools_mainnet.csv</code> — Koios epoch-level export (epochs 208–618): block counts, fees, reserves, treasury, deposits, stake levels, and reward parameters</p>
+<p><strong>Generated data summaries</strong> (produced by scripts, checked in for offline reference):
+- <code>general_reward_pot_mainnet.md</code> — gross pot proxy breakdown (expansion vs fees)
+- <code>monetary_expansion_reserve_history_mainnet.md</code> — reserve trajectory and draw mechanics
+- <code>monetary_expansion_reserve_history_mainnet.csv</code> — reserve history with nominal/adjusted draws
+- <code>fee_epoch_tx_history_mainnet.md</code> — fee volatility metrics and capacity ceiling estimates
+- <code>treasury_epoch_source_mainnet.md</code> — treasury decomposition and stock delta validation
+- <code>deposit_obligation_history_mainnet.md</code> — deposit obligation stock proxy
+- <code>return_to_reserve_impact_mainnet.md</code> — undistributed rewards and counterfactual reserve
+- <code>eta_history_mainnet.md</code> — block-production ratio statistics</p>
+<hr />
+<p><em>Last updated: 2026/03/25</em></p></div>
+<footer class="site-footer">Input Output Group &middot; IO Research</footer>
+<div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
+<a href="#" class="back-top" id="btt">&uarr;</a>
+<script>
+(function(){
+  /* ── Progress bar ── */
+  const bar=document.getElementById('progress');
+  function updateProgress(){
+    const h=document.documentElement.scrollHeight-window.innerHeight;
+    bar.style.width=h>0?((window.scrollY/h)*100)+'%':'0%';
+  }
+
+  /* ── Back to top ── */
+  const btt=document.getElementById('btt');
+  function updateBtt(){ btt.classList.toggle('visible',window.scrollY>400); }
+
+  window.addEventListener('scroll',function(){ updateProgress(); updateBtt(); },{passive:true});
+  updateProgress();
+
+  /* ── Smooth scroll for anchor links ── */
+  document.addEventListener('click',function(e){
+    const a=e.target.closest('a[href^="#"]');
+    if(!a) return;
+    const id=a.getAttribute('href').slice(1);
+    const el=document.getElementById(id);
+    if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth',block:'start'}); history.pushState(null,null,'#'+id); }
+  });
+
+  /* ── Collapsible TOC sub-lists (all levels) ── */
+  document.querySelectorAll('.toc-nav li').forEach(function(li){
+    var sub=li.querySelector(':scope > ul');
+    if(!sub) return;
+    li.classList.add('has-children');
+    var toggle=li.querySelector(':scope > .toc-num')||li.querySelector(':scope > a');
+    if(!toggle) return;
+    toggle.classList.add('toc-toggle');
+    toggle.addEventListener('click',function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      toggle.classList.toggle('collapsed');
+      sub.classList.toggle('toc-collapsed');
+    });
+  });
+
+  /* ── Collapsible content sections (h2, h3, h4) ── */
+  function makeCollapsible(heading, stopTags){
+    if(/^contents$|^objective$/i.test(heading.textContent.trim())) return;
+    heading.classList.add('section-toggle');
+    var wrapper=document.createElement('div');
+    wrapper.className='section-body';
+    var sib=heading.nextElementSibling;
+    var nodes=[];
+    while(sib && stopTags.indexOf(sib.tagName)===-1){
+      nodes.push(sib);
+      sib=sib.nextElementSibling;
+    }
+    if(nodes.length===0){ heading.classList.remove('section-toggle'); return; }
+    heading.after(wrapper);
+    nodes.forEach(function(n){ wrapper.appendChild(n); });
+    wrapper.style.maxHeight=wrapper.scrollHeight+'px';
+    heading.addEventListener('click',function(){
+      heading.classList.toggle('collapsed');
+      if(wrapper.classList.contains('collapsed')){
+        wrapper.style.maxHeight=wrapper.scrollHeight+'px';
+        wrapper.classList.remove('collapsed');
+      } else {
+        wrapper.style.maxHeight=wrapper.scrollHeight+'px';
+        requestAnimationFrame(function(){ wrapper.style.maxHeight='0px'; wrapper.classList.add('collapsed'); });
+      }
+    });
+    wrapper.querySelectorAll('[id]').forEach(function(el){
+      window.addEventListener('hashchange',function(){
+        if(window.location.hash==='#'+el.id && wrapper.classList.contains('collapsed')){
+          heading.click();
+        }
+      });
+    });
+  }
+  /* Apply bottom-up: h4 first, then h3, then h2 (so inner wrappers exist before outer ones) */
+  document.querySelectorAll('.content h4[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3','H4']); });
+  document.querySelectorAll('.content h3[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3']); });
+  document.querySelectorAll('.content h2[id]').forEach(function(h){ makeCollapsible(h,['H1','H2']); });
+
+  /* ── Wrap tables in scroll containers ── */
+  document.querySelectorAll('.content table').forEach(function(tbl){
+    if(tbl.parentElement.classList.contains('table-wrap')) return;
+    var wrap=document.createElement('div');
+    wrap.className='table-wrap';
+    tbl.parentNode.insertBefore(wrap,tbl);
+    wrap.appendChild(tbl);
+  });
+
+  /* ── Image lightbox ── */
+  const overlay=document.getElementById('lightbox');
+  const lbImg=document.getElementById('lb-img');
+  document.querySelectorAll('.content img').forEach(function(img){
+    img.addEventListener('click',function(){
+      lbImg.src=img.src;
+      lbImg.alt=img.alt||'';
+      overlay.classList.add('active');
+    });
+  });
+  overlay.addEventListener('click',function(){ overlay.classList.remove('active'); lbImg.src=''; });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape' && overlay.classList.contains('active')){
+      overlay.classList.remove('active'); lbImg.src='';
+    }
+  });
+
+  /* ── Observation findings → navigate to section ── */
+  document.querySelectorAll('.obs-link[data-section]').forEach(function(el){
+    el.addEventListener('click',function(){
+      var sec=el.getAttribute('data-section');
+      /* Find heading whose id starts with the section number */
+      var target=document.querySelector('h2[id^="'+sec+'-"],h3[id^="'+sec+'-"],h4[id^="'+sec+'-"],h5[id^="'+sec+'-"]');
+      if(!target) target=document.getElementById(sec);
+      if(target){
+        /* Expand collapsed parent section if needed */
+        var body=target.closest('.section-body.collapsed');
+        if(body){
+          var toggle=body.previousElementSibling;
+          if(toggle && toggle.classList.contains('section-toggle')) toggle.click();
+        }
+        setTimeout(function(){ target.scrollIntoView({behavior:'smooth',block:'start'}); },150);
+      }
+    });
+  });
+
+  /* ── Expand collapsed section on direct anchor navigation ── */
+  if(window.location.hash){
+    var target=document.querySelector(window.location.hash);
+    if(target){
+      var body=target.closest('.section-body.collapsed');
+      if(body){
+        var toggle=body.previousElementSibling;
+        if(toggle && toggle.classList.contains('section-toggle')) toggle.click();
+      }
+      setTimeout(function(){ target.scrollIntoView({block:'start'}); },100);
+    }
+  }
+})();
+</script>
+</body>
+</html>

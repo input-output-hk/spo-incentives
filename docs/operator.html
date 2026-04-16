@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Operator's Cut — SPO Incentives</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
+<style>
+:root {
+  --accent:#EC641D;
+  --infared:#E52321;--dawn:#EC641D;--black:#1a1a1a;--white:#fff;
+  --electric-blue:#16E9D8;--acid-green:#06FF89;--volt-yellow:#F2FF58;
+  --cobalt-pulse:#2C4FFA;--ultraviolet:#A700FF;
+  --bg:#ffffff;--bg-warm:#faf9f7;--bg-panel:#f5f4f2;--bg-code:#f0efed;
+  --text-primary:#1a1a1a;--text-body:#3a3a3a;--text-secondary:#6b6b6b;--text-muted:#999;
+  --border:#e2e0dc;--border-light:#eceae6;
+}
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;background:var(--bg-warm);color:var(--text-body);line-height:1.78;-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+.site-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto;display:flex;gap:0;white-space:nowrap}
+.site-nav a{padding:13px 16px;font:500 12.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;flex-shrink:0}
+.site-nav a:hover{color:var(--text-body)}
+.site-nav a.active{color:var(--text-primary);border-bottom-color:var(--accent)}
+
+/* ── HERO ── */
+.hero{position:relative;overflow:hidden;padding:52px 40px 44px;background:#111;border-bottom:3px solid var(--accent)}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#000 0%,#3a0a09 40%,#8b1a0e 70%,#c44b10 100%);opacity:.9;pointer-events:none}
+.hero-inner{position:relative;max-width:1400px;margin:0 auto}
+.hero-label{font-size:11px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:12px}
+.hero h1{font-size:28px;font-weight:600;color:#fff;margin-bottom:4px}
+.hero .sub{font-size:14px;font-weight:300;color:rgba(255,255,255,.5)}
+
+/* ── CONTENT ── */
+.content{max-width:1400px;margin:0 auto;padding:40px 56px 100px;background:var(--bg);border-left:1px solid var(--border-light);border-right:1px solid var(--border-light);min-height:80vh}
+.content h1{font-size:24px;font-weight:600;color:var(--text-primary);margin:52px 0 16px;padding-top:20px;border-top:1px solid var(--border)}
+.content h1:first-child{border-top:none;margin-top:0}
+.content h2{font-size:20px;font-weight:700;color:var(--infared);margin:44px 0 14px;padding:10px 0 10px 28px;border-left:4px solid var(--infared);background:linear-gradient(90deg,rgba(229,35,33,.06) 0%,transparent 60%);position:relative}
+.content h3{font-size:16.5px;font-weight:600;color:var(--text-primary);margin:32px 0 10px;padding:6px 0 6px 28px;border-left:3px solid var(--dawn);background:linear-gradient(90deg,rgba(236,100,29,.05) 0%,transparent 50%);position:relative}
+.content h4{font-size:14.5px;font-weight:600;color:var(--text-secondary);margin:24px 0 8px;padding:4px 0 4px 28px;border-left:2px solid var(--border-strong,#bbb);position:relative}
+.content h5,.content h6{font-size:14px;font-weight:600;color:var(--text-secondary);margin:20px 0 8px}
+.content p{margin:0 0 14px;font-size:15px;color:var(--text-body)}
+.content p strong{color:var(--text-primary);font-weight:600}
+.content a{color:var(--infared);text-decoration:none;border-bottom:1px solid rgba(229,35,33,.25)}
+.content a:hover{border-bottom-color:var(--infared)}
+
+/* Lists */
+.content ul,.content ol{margin:0 0 14px 20px;font-size:15px;color:var(--text-body)}
+.content li{margin-bottom:6px}
+.content li strong{color:var(--text-primary);font-weight:600}
+
+/* Tables */
+.content table{width:100%;border-collapse:collapse;margin:20px 0;font-size:12.5px;table-layout:auto}
+.content thead{position:sticky;top:0}
+.content th{background:var(--bg-panel);color:var(--text-primary);font-weight:600;text-align:left;padding:7px 9px;border:1px solid var(--border)}
+.content td{padding:7px 9px;border:1px solid var(--border);color:var(--text-body);vertical-align:top}
+.content th,.content td{word-break:break-word;overflow-wrap:break-word}
+.content tr:hover td{background:var(--bg-warm)}
+
+/* Blockquotes */
+.content blockquote{border-left:3px solid var(--accent);padding:12px 18px;margin:16px 0;background:var(--bg-panel);border-radius:0 6px 6px 0}
+.content blockquote p{margin:0;font-size:14px;color:var(--text-body)}
+.content blockquote strong{color:var(--text-primary)}
+
+/* Code */
+.content code{font-family:'SF Mono','Fira Code',monospace;font-size:13px;background:var(--bg-code);padding:2px 6px;border-radius:4px;color:#b33a1a}
+.content pre{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:16px 20px;overflow-x:auto;margin:16px 0}
+.content pre code{background:none;padding:0;font-size:13px;color:var(--text-body)}
+
+/* Images / figures */
+.content img{max-width:100%;height:auto;border-radius:6px;margin:16px 0;display:block;border:1px solid var(--border-light)}
+
+/* HR */
+.content hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+
+/* Emphasis / italic */
+.content em{color:var(--text-secondary);font-style:italic}
+
+/* MathJax */
+mjx-container{color:var(--text-primary)!important;overflow-x:auto;overflow-y:visible;max-width:100%;display:block!important}
+mjx-container[display=true]{margin:20px auto!important;text-align:center}
+.content{overflow-x:auto}
+
+/* TOC inside content */
+.content .toc{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin:20px 0}
+.content .toc ul{list-style:none;margin:0;padding:0}
+.content .toc li{margin:4px 0}
+.content .toc a{border-bottom:none;font-size:14px}
+
+/* TOC nav — visual hierarchy per depth level */
+.toc-nav{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:20px 28px;margin:20px 0}
+.toc-nav ul{list-style:none;padding-left:0;margin:0}
+.toc-nav > ul > li{margin-bottom:6px}
+/* Level 1: big, bold — section titles */
+.toc-nav > ul > li{margin-bottom:8px}
+.toc-nav > ul > li > a,.toc-nav > ul > li > .toc-num{font-weight:600;font-size:16px;color:var(--text-primary)}
+/* Level 2: bold, slightly smaller */
+.toc-nav ul ul{padding-left:20px;margin-top:4px;border-left:2px solid var(--border)}
+.toc-nav ul ul > li{margin-bottom:4px}
+.toc-nav ul ul > li > a,.toc-nav ul ul > li > .toc-num{font-weight:600;font-size:14.5px;color:var(--text-body)}
+/* Level 3: medium weight, smaller still */
+.toc-nav ul ul ul{padding-left:18px;border-left-color:var(--border-light)}
+.toc-nav ul ul ul > li{margin-bottom:3px}
+.toc-nav ul ul ul > li > a,.toc-nav ul ul ul > li > .toc-num{font-weight:400;font-size:13.5px;color:var(--text-secondary)}
+/* Level 4+: light, small */
+.toc-nav ul ul ul ul > li > a,.toc-nav ul ul ul ul > li > .toc-num{font-weight:300;font-size:13px;color:var(--text-muted)}
+.toc-nav a{border-bottom:none;color:inherit;text-decoration:none}
+.toc-nav a:hover{color:var(--infared)}
+.toc-nav .toc-num{display:inline-block;min-width:2.2em;font-variant-numeric:tabular-nums}
+
+/* ── Observation cards ── */
+.obs-cards{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+.obs-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg)}
+.obs-card-header{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;user-select:none;background:var(--bg-panel);transition:background .15s}
+.obs-card-header:hover{background:var(--bg-code)}
+.obs-card-num{font-weight:700;font-size:13px;color:var(--infared);min-width:28px}
+.obs-card-title{flex:1;font-weight:600;font-size:14.5px;color:var(--text-primary);line-height:1.4}
+.obs-card-arrow{font-size:14px;color:var(--text-muted);transition:transform .2s}
+.obs-card.collapsed .obs-card-arrow{transform:rotate(-90deg)}
+.obs-card-count{font-size:11px;color:var(--text-muted);background:var(--bg-warm);border:1px solid var(--border-light);border-radius:10px;padding:1px 8px;white-space:nowrap}
+.obs-card-body{padding:0 18px 14px;display:flex;flex-direction:column;gap:8px;padding-top:10px}
+.obs-card.collapsed .obs-card-body{display:none}
+.obs-finding{display:flex;align-items:baseline;gap:10px;padding:8px 12px;border-radius:6px;background:var(--bg-warm);font-size:13.5px;line-height:1.55}
+.obs-finding:hover{background:var(--bg-panel)}
+.obs-fid{font-weight:600;font-size:12px;color:var(--text-muted);min-width:36px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.obs-ftext{flex:1;color:var(--text-body)}
+.obs-ftext strong{color:var(--text-primary)}
+.obs-tag{font-size:10.5px;letter-spacing:.3px;text-transform:uppercase;border:1px solid;border-radius:4px;padding:1px 7px;white-space:nowrap;flex-shrink:0;font-weight:500}
+.obs-link[data-section]{cursor:pointer}
+.obs-link[data-section]:hover{background:var(--bg-panel);box-shadow:inset 3px 0 0 var(--infared)}
+.obs-link[data-section] .obs-fid{color:var(--infared)}
+
+/* ── Reading progress bar ── */
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--infared),var(--dawn));z-index:200;transition:width .1s linear;width:0}
+
+/* ── Collapsible sections ── */
+.section-toggle{cursor:pointer;user-select:none}
+.section-toggle::before{content:'▾';position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--text-muted);transition:transform .2s;width:16px;text-align:center}
+.section-toggle.collapsed::before{transform:translateY(-50%) rotate(-90deg)}
+.section-body{overflow:hidden;transition:max-height .35s ease, opacity .25s ease;opacity:1}
+.section-body.collapsed{max-height:0!important;opacity:0;margin:0;padding:0}
+
+/* ── Collapsible TOC sub-lists ── */
+.toc-nav li{padding-left:18px;position:relative}
+.toc-nav .toc-toggle{cursor:pointer}
+.toc-nav .toc-toggle::before{content:'▾';position:absolute;left:0;top:1px;width:16px;font-size:13px;color:var(--text-secondary);transition:transform .2s;text-align:center}
+.toc-nav > ul > li.has-children > .toc-toggle::before{font-size:15px}
+.toc-nav .toc-toggle.collapsed::before{transform:rotate(-90deg)}
+.toc-nav ul.toc-collapsed{display:none}
+
+/* ── Image lightbox ── */
+.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;cursor:zoom-out}
+.lightbox-overlay.active{opacity:1;pointer-events:auto}
+.lightbox-overlay img{max-width:92vw;max-height:90vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5);object-fit:contain}
+.content img{cursor:zoom-in;transition:transform .2s, box-shadow .2s}
+.content img:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+
+/* ── Table wrapper ── */
+.table-wrap{position:relative;overflow:hidden;margin:20px 0;border:1px solid var(--border);border-radius:8px}
+.table-wrap table{margin:0;border:none;display:table;width:100%}
+.table-wrap th:first-child,.table-wrap td:first-child{border-left:none}
+.table-wrap th:last-child,.table-wrap td:last-child{border-right:none}
+.table-wrap tr:first-child th{border-top:none}
+.table-wrap tr:last-child td{border-bottom:none}
+
+/* ── Back to top ── */
+.back-top{position:fixed;bottom:24px;right:24px;width:40px;height:40px;border-radius:50%;background:var(--bg);border:1px solid var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity .3s;font-size:18px;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.back-top.visible{opacity:1}
+.back-top:hover{color:var(--infared);border-color:var(--infared)}
+
+/* Footer strip */
+.site-footer{background:#111;color:rgba(255,255,255,.4);font-size:12px;letter-spacing:.5px;text-transform:uppercase;text-align:center;padding:18px 20px}
+
+@media(max-width:720px){
+  .hero{padding:32px 20px 28px} .content{padding:24px 20px 60px;border:none}
+  .content table{font-size:11px} .content th,.content td{padding:6px 7px}
+}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav class="site-nav"><a href="index.html">Main Report</a>
+<a href="intended-game.html">The Intended Game</a>
+<a href="treasury.html">§1 Treasury</a>
+<a href="pools.html">§2 Pools</a>
+<a href="operator.html" class="active">§3 Operator</a>
+<a href="census.html">Census</a></nav>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Input Output &middot; IO Research</div>
+    <h1>The Operator's Cut</h1>
+    <div class="sub">Mainnet Analysis — Stage 3</div>
+  </div>
+</div>
+<div class="content"><p><em>Built on 2026/04/14 from mainnet data at epoch <code>623</code> plus historical analysis from epoch <code>211</code> (413 epochs).</em></p>
+<h2 id="objective">Objective</h2>
+<p>This report analyses the <strong>intra-pool reward split</strong> — the third and final stage of Cardano's reward pipeline — and traces the structural forces that determine how much of each pool's reward reaches delegators versus operators. It extends the empirical baseline established in the <a href="https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf"><em>Analysis of Cardano's Incentive Mechanism</em></a> (Lopez de Lara, 2025; hereafter the <em>Incentive Mechanism Analysis</em>) and operates downstream of the companion reports <a href="../../treasury-and-pool-pots-distribution/mainnet-analysis/"><em>Treasury &amp; Pool Pots Distribution</em></a> (stage 1) and <a href="../../pools-distribution/mainnet-analysis/"><em>The Pools Pot Distribution Gaps</em></a> (stage 2).</p>
+<p>Every epoch, once the reward curve assigns a total reward to each pool, a second mechanism activates: the <strong>intra-pool split</strong>. The pool operator extracts a <strong>flat fee</strong> (a fixed ₳ amount) and a <strong>commission</strong> (a proportional share); the remainder is distributed pro-rata among all delegators (including the operator's own stake). Together the flat fee and commission compose the operator's <strong>pricing plan</strong>; their sum — the <strong>effective price</strong> — is the fraction of pool reward that never reaches delegators. At epoch 623, 952 productive pools process 21.57B ADA of staked capital. After filtering the 21% of stake that is custodial (where the operator controls delegation addresses), the retail market consists of 809 pools, 516 entities, 17.02B ADA, and 1,272,836 delegators — with a median delegation of 87 ₳.</p>
+<p>The central finding is a double asymmetry. Delegators in sub-viable pools pay 48.3% effective price for 2.04% net return; delegators in near-saturation pools pay 2.7% for 2.34% — 18× the price for 0.30 percentage points of return. On the operator side, the sub-viable operator absorbs 48.3% of pool rewards but earns 24,820 ₳/yr; an 11+ pool MPO absorbs 7.7% but earns 1,035,496 ₳/yr — 42× more revenue at 6× less price. The flat fee — a mechanism unique to Cardano — penalises small-pool delegators without compensating small-pool operators, and the return signal it produces is too narrow to drive delegation decisions. This challenges the incentive mechanism's core assumption: that delegators can differentiate pools by return.</p>
+<p>The argument proceeds in four parts:</p>
+<ol>
+<li>
+<p><strong>The formula</strong> (§2). The SL-D1 intra-pool reward-sharing specification — from the original design through a residual-split decomposition to a reader-friendly rewrite and mainnet parameterisation. The mechanism is sequential: flat fee first, commission on the remainder, then pro-rata distribution.</p>
+</li>
+<li>
+<p><strong>The productive and viable populations</strong> (§3). The scope and epoch: 952 productive pools (≥ 1M ADA) carrying 99.1% of stake and 95.6% of delegations. The operator and delegator sides of the population, from raw certificates to the viable threshold.</p>
+</li>
+<li>
+<p><strong>The pricing plan landscape</strong> (§4). The flat fee, the commission, the custodial/retail boundary (using per-pool median delegation from db-sync), and the retail effective price. The operator's profitability versus the delegator's return.</p>
+</li>
+<li>
+<p><strong>The delegator yield</strong> (§5). The yield trajectory (5.3% → 2.0% in 5.5 years), cross-chain and cross-asset comparison, and the structural compression that makes the yield spread too narrow to drive delegation decisions — and will make it narrower still as the reserve depletes.</p>
+</li>
+</ol>
+<p>All counts and amounts use epoch <strong>623</strong>. Source data: <code>pool_choice_quality_623.csv</code>, <code>pool_median_delegation_623.csv</code> (db-sync <code>epoch_stake</code>), <code>reward_split_snapshot_623.csv</code> (synthetic, estimated from epoch 614 reward rate), <code>koios_pool_history_mainnet.csv</code>, <code>mpo_entity_pool_mapping_mainnet.csv</code>.</p>
+<h2 id="contents">Contents</h2>
+<nav class="toc-nav">
+<ul>
+<li><span class="toc-num">1</span> <a href="#1-mainnet-observations">Mainnet Observations</a>
+</li>
+<li><span class="toc-num">2</span> <a href="#2-the-formula--intra-pool-reward-sharing">The formula — intra-pool reward sharing</a>
+<ul>
+<li><span class="toc-num">2.1</span> <a href="#21-sl-d1-original">SL-D1 (Original)</a>
+</li>
+<li><span class="toc-num">2.2</span> <a href="#22-residual-split-decomposition">Residual split decomposition</a>
+</li>
+<li><span class="toc-num">2.3</span> <a href="#23-reader-friendly-formulation">Reader-friendly formulation</a>
+</li>
+<li><span class="toc-num">2.4</span> <a href="#24-mainnet-parameterization">Mainnet parameterization</a>
+</li>
+<li><span class="toc-num">2.5</span> <a href="#25-concept-glossary">Concept glossary</a>
+</li>
+</ul>
+</li>
+<li><span class="toc-num">3</span> <a href="#3-the-productive-and-viable-populations">The productive and viable populations</a>
+<ul>
+<li><span class="toc-num">3.1</span> <a href="#31-operators">Operators</a>
+<ul>
+<li><span class="toc-num">3.1.1</span> <a href="#311-from-raw-to-productive">From raw to productive</a>
+</li>
+<li><span class="toc-num">3.1.2</span> <a href="#312-from-productive-to-viable">From productive to viable</a>
+</li>
+</ul>
+</li>
+<li><span class="toc-num">3.2</span> <a href="#32-delegators">Delegators</a>
+<ul>
+<li><span class="toc-num">3.2.1</span> <a href="#321-from-raw-to-productive">From raw to productive</a>
+</li>
+<li><span class="toc-num">3.2.2</span> <a href="#322-from-productive-to-viable">From productive to viable</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><span class="toc-num">4</span> <a href="#4-the-pricing-plan-landscape">The pricing plan landscape</a>
+<ul>
+<li><span class="toc-num">4.1</span> <a href="#41-the-flat-fee-fixed-cost">The flat fee (fixed cost)</a>
+</li>
+<li><span class="toc-num">4.2</span> <a href="#42-the-commission-margin">The commission (margin)</a>
+</li>
+<li><span class="toc-num">4.3</span> <a href="#43-custodial-versus-retail">Custodial versus retail</a>
+<ul>
+<li><span class="toc-num">4.3.1</span> <a href="#431-clear-custodial--by-pledge-and-by-extraction">Clear custodial — by pledge and by extraction</a>
+</li>
+<li><span class="toc-num">4.3.2</span> <a href="#432-custodial-by-delegation--the-high-concentration-signal">Custodial by delegation — the high-concentration signal</a>
+</li>
+<li><span class="toc-num">4.3.3</span> <a href="#433-summary">Summary</a>
+</li>
+</ul>
+</li>
+<li><span class="toc-num">4.4</span> <a href="#44-operator-profitability-versus-delegator-return">Operator profitability versus delegator return</a>
+</li>
+<li><span class="toc-num">4.5</span> <a href="#45-is-operator-revenue-competitive--a-market-benchmark">Is operator revenue competitive? — a market benchmark</a>
+<ul>
+<li><span class="toc-num">4.5.1</span> <a href="#451-the-cost-of-operating-a-pool--infrastructure-and-labour">The cost of operating a pool — infrastructure and labour</a>
+</li>
+<li><span class="toc-num">4.5.2</span> <a href="#452-revenue-versus-cost--a-price-sensitivity-view">Revenue versus cost — a price-sensitivity view</a>
+</li>
+<li><span class="toc-num">4.5.3</span> <a href="#453-cross-chain-comparison--the-validator-cost-spectrum">Cross-chain comparison — the validator cost spectrum</a>
+</li>
+<li><span class="toc-num">4.5.4</span> <a href="#454-implications">Implications</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><span class="toc-num">5</span> <a href="#5-the-delegator-yield--trajectory-context-and-structural-compression">The delegator yield — trajectory, context, and structural compression</a>
+<ul>
+<li><span class="toc-num">5.1</span> <a href="#51-the-yield-trajectory--level-and-decline">The yield trajectory — level and decline</a>
+</li>
+<li><span class="toc-num">5.2</span> <a href="#52-the-yield-in-context--cross-chain-and-cross-asset-comparison">The yield in context — cross-chain and cross-asset comparison</a>
+</li>
+<li><span class="toc-num">5.3</span> <a href="#53-the-yield-spread--structural-compression">The yield spread — structural compression</a>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+<h2 id="1-mainnet-observations">1. Mainnet Observations</h2>
+<p><em>Terminology note.</em> The protocol uses "fixed cost" and "margin" for the two extraction channels. This report adopts pricing-plan terminology: the fixed cost is the <strong>flat fee</strong> (a fixed ₳/epoch amount), the margin is the <strong>commission</strong> (a proportional share), and their sum — the operator take — is the <strong>effective price</strong> the delegator faces. The on-chain parameter names appear in §2 (the formula) and at first use in §4. Everywhere else, the pricing-plan terms apply.</p>
+<div class="obs-cards">
+<div class="obs-card"><div class="obs-card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span class="obs-card-num">O1</span><span class="obs-card-title">The flat fee dominates operator revenue but operators do not actively set it</span><span class="obs-card-arrow">▾</span><span class="obs-card-count">4</span></div><div class="obs-card-body">
+<div class="obs-finding obs-link" data-section="44"><span class="obs-fid">F1.1</span><span class="obs-ftext">The flat fee accounts for 60% of all operator revenue in the retail market; the commission accounts for 40%</span><span class="obs-tag" style="border-color:#2C4FFA;color:#2C4FFA">Structural — the passive channel dominates the active one</span></div>
+<div class="obs-finding obs-link" data-section="41"><span class="obs-fid">F1.2</span><span class="obs-ftext">64% of pools still declare the former floor (340 ₳) — 178 epochs after a governance action halved it to 170 ₳</span><span class="obs-tag" style="border-color:#999;color:#999">Governance inertia — driven by the largest entities</span></div>
+<div class="obs-finding obs-link" data-section="41"><span class="obs-fid">F1.3</span><span class="obs-ftext">89.5% of pools declare one of two floor values (170 or 340 ₳); "custom" values are mostly near-floor inertia (Binance 345, Everstake 400) or extraction</span><span class="obs-tag" style="border-color:#999;color:#999">The flat fee is a binary choice, not a pricing parameter</span></div>
+<div class="obs-finding obs-link" data-section="41"><span class="obs-fid">F1.4</span><span class="obs-ftext">The flat fee follows a $1/\sigma$ hyperbola: 47.5% of pool reward at the sub-viable tier, 1.5% at near-saturation. No other major PoS protocol uses a flat fee</span><span class="obs-tag" style="border-color:#FFBA36;color:#FFBA36">Unique to Cardano — regressive by design</span></div>
+</div></div>
+<div class="obs-card"><div class="obs-card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span class="obs-card-num">O2</span><span class="obs-card-title">The commission market is bimodal with an empty middle</span><span class="obs-card-arrow">▾</span><span class="obs-card-count">2</span></div><div class="obs-card-body">
+<div class="obs-finding obs-link" data-section="42"><span class="obs-fid">F2.1</span><span class="obs-ftext">87% of pools set a commission at or below 10%; 12% set ≥ 99% (privatisation). The 89pp range between 10% and 99% contains 12 pools</span><span class="obs-tag" style="border-color:#999;color:#999">No man's land — no economic attractor exists between pricing and extraction</span></div>
+<div class="obs-finding obs-link" data-section="42"><span class="obs-fid">F2.2</span><span class="obs-ftext">Four bands: no-commission (170 pools, 17.9%), competitive (658, 69.1%), no man's land (12, 1.3%), privatisation (112, 11.8%)</span><span class="obs-tag" style="border-color:#999;color:#999">The market self-organises into discrete tiers</span></div>
+</div></div>
+<div class="obs-card"><div class="obs-card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span class="obs-card-num">O3</span><span class="obs-card-title">21% of productive stake is custodial — three mechanisms, three economics</span><span class="obs-card-arrow">▾</span><span class="obs-card-count">3</span></div><div class="obs-card-body">
+<div class="obs-finding obs-link" data-section="43"><span class="obs-fid">F3.1</span><span class="obs-ftext">79 entities operating 143 pools (4.55B, 21.1%) are custodial: by pledge (10 entities, 36 pools, 1.59B), by extraction (57 entities, 79 pools, 2.04B), by delegation (15 entities, 28 pools, 0.92B)</span><span class="obs-tag" style="border-color:#999;color:#999">Three distinct mechanisms — each detectable from on-chain observables</span></div>
+<div class="obs-finding obs-link" data-section="432"><span class="obs-fid">F3.2</span><span class="obs-ftext">Custodial-by-delegation uses the per-pool <strong>median</strong> delegation (db-sync <code>epoch_stake</code>) ≥ 100K ₳ — the amount held by the typical delegator. A delegation of 50K ₳ is already in the top 1.5% of the network</span><span class="obs-tag" style="border-color:#999;color:#999">The median measures the delegator's experience, not capital concentration</span></div>
+<div class="obs-finding obs-link" data-section="433"><span class="obs-fid">F3.3</span><span class="obs-ftext">Custodial-by-pledge entities earn 1,759,252 ₳/yr median — they capture 100% of rewards on self-funded pools. Custodial-by-extraction entities earn 281,831 ₳/yr — privatisation commission on pools with inert delegators. Custodial-by-delegation entities earn 29,329 ₳/yr — small whale pools, not revenue machines</span><span class="obs-tag" style="border-color:#999;color:#999">Each custodial mechanism produces a different economic outcome</span></div>
+</div></div>
+<div class="obs-card"><div class="obs-card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span class="obs-card-num">O4</span><span class="obs-card-title">The retail market is 79% of stake and the typical delegator holds 87 ₳</span><span class="obs-card-arrow">▾</span><span class="obs-card-count">2</span></div><div class="obs-card-body">
+<div class="obs-finding obs-link" data-section="433"><span class="obs-fid">F4.1</span><span class="obs-ftext">809 retail pools, 516 entities, 17.02B ADA, 1,272,836 delegators. This includes institutional operators (Coinbase, Binance, Kiln) — retail by median delegation</span><span class="obs-tag" style="border-color:#999;color:#999">The retail market is larger than the mean-based estimate suggested</span></div>
+<div class="obs-finding obs-link" data-section="44"><span class="obs-fid">F4.2</span><span class="obs-ftext">The median retail delegation is 87 ₳ — remarkably uniform across operator types (45–962 ₳ range)</span><span class="obs-tag" style="border-color:#999;color:#999">Retail delegators are small and homogeneous</span></div>
+</div></div>
+<div class="obs-card"><div class="obs-card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span class="obs-card-num">O5</span><span class="obs-card-title">Delegators pay 18× more for the same return</span><span class="obs-card-arrow">▾</span><span class="obs-card-count">2</span></div><div class="obs-card-body">
+<div class="obs-finding obs-link" data-section="44"><span class="obs-fid">F5.1</span><span class="obs-ftext">A delegator in a sub-viable pool pays 48.3% effective price and receives 2.04% net return. A delegator in a near-saturation pool pays 2.7% and receives 2.34%. 18× more for 0.30pp of return</span><span class="obs-tag" style="border-color:#999;color:#999">The effective price is a mechanical artefact of pool size, not a market signal</span></div>
+<div class="obs-finding obs-link" data-section="44"><span class="obs-fid">F5.2</span><span class="obs-ftext">Net return converges to 1.95–2.34% across the entire retail market regardless of effective price, operator type, or pool size</span><span class="obs-tag" style="border-color:#999;color:#999">The return signal is too weak to drive delegation</span></div>
+</div></div>
+<div class="obs-card"><div class="obs-card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span class="obs-card-num">O6</span><span class="obs-card-title">Stake pool operator profitability ranges from 24K to 1M ₳/yr — operators who charge the most earn the least</span><span class="obs-card-arrow">▾</span><span class="obs-card-count">4</span></div><div class="obs-card-body">
+<div class="obs-finding obs-link" data-section="44"><span class="obs-fid">F6.1</span><span class="obs-ftext">A sub-viable single-pool operator absorbs 48.3% of pool rewards but earns 24,820 ₳/yr. An 11+ pool MPO absorbs 7.7% but earns 1,035,496 ₳/yr — 42× more at 6× less effective price</span><span class="obs-tag" style="border-color:#999;color:#999">The flat fee penalises small-pool delegators without compensating small-pool operators</span></div>
+<div class="obs-finding obs-link" data-section="44"><span class="obs-fid">F6.2</span><span class="obs-ftext">MPO revenue scales horizontally (more pools) not vertically (higher price). The 11+ pool bracket captures 26.5% of retail rewards through 7 entities</span><span class="obs-tag" style="border-color:#999;color:#999">Fleet size, not pricing, drives operator economics</span></div>
+<div class="obs-finding obs-link" data-section="44"><span class="obs-fid">F6.3</span><span class="obs-ftext">57 hollow MPOs operate on 64.4% of retail rewards; 414 hollow single-pool operators share 31.1%; 41 balanced operators share 1.2%</span><span class="obs-tag" style="border-color:#2C4FFA;color:#2C4FFA">Structural concentration</span></div>
+<div class="obs-finding obs-link" data-section="45"><span class="obs-fid">F6.4</span><span class="obs-ftext">No single-pool operator in the retail market earns a competitive wage for their labour. The median single-pool revenue of ~25,000 ₳/yr (\$6,250 at \$0.25/ADA) covers infrastructure but not the 5–15 hrs/month of skilled work. Competitive compensation begins at the 2-pool MPO tier (~68,700 ₳/yr)</span><span class="obs-tag" style="border-color:#999;color:#999">The single-pool operator subsidises the network</span></div>
+</div></div>
+<div class="obs-card"><div class="obs-card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span class="obs-card-num">O7</span><span class="obs-card-title">Delegation follows visibility, not return</span><span class="obs-card-arrow">▾</span><span class="obs-card-count">2</span></div><div class="obs-card-body">
+<div class="obs-finding obs-link" data-section="44"><span class="obs-fid">F7.1</span><span class="obs-ftext">65.9% of retail delegators sit in hollow MPO pools at 2.18% net return; hollow single-pool near-saturation pools offer 2.34% — 0.16pp more — and hold 2.7% of delegators</span><span class="obs-tag" style="border-color:#999;color:#999">The return signal does not drive delegation</span></div>
+<div class="obs-finding obs-link" data-section="44"><span class="obs-fid">F7.2</span><span class="obs-ftext">The pledge premium is negative in the retail data: balanced median net return 1.98% vs hollow 2.08%. The flat fee drag (1.06pp for balanced vs 0.47pp for hollow single-pool operators) overwhelms the pledge benefit</span><span class="obs-tag" style="border-color:#999;color:#999">The incentive mechanism's core assumption fails</span></div>
+</div></div>
+<div class="obs-card"><div class="obs-card-header" onclick="this.parentElement.classList.toggle('collapsed')"><span class="obs-card-num">O8</span><span class="obs-card-title">The mechanism is on a structural clock: reserve depletion compresses yield, widens the confiscatory zone, and erodes the signal every epoch</span><span class="obs-card-arrow">▾</span><span class="obs-card-count">4</span></div><div class="obs-card-body">
+<div class="obs-finding obs-link" data-section="51"><span class="obs-fid">F8.1</span><span class="obs-ftext">The delegator yield has fallen from 5.3% to 2.0% in 413 epochs (5.5 years), tracking reserve depletion with $R^2 = 0.99$. Projection: sub-1.5% within ~1.7 years, sub-1.0% within ~3.5 years. The decline is irreversible without protocol-level intervention — it is built into the monetary expansion formula</span><span class="obs-tag" style="border-color:#999;color:#999">The entire yield surface descends as a unit; no pool-level strategy can offset the macro trajectory</span></div>
+<div class="obs-finding obs-link" data-section="52"><span class="obs-fid">F8.2</span><span class="obs-ftext">At 2.0%, Cardano sits below the USD risk-free rate (4.3%) and at the bottom of the PoS landscape. No other major chain combines this low a yield with liquid, non-custodial, slashing-free design. The low return is the cost of that design — delegation is a conviction bet on ADA, not a yield-seeking decision</span><span class="obs-tag" style="border-color:#999;color:#999">The mechanism assumes yield-sensitive delegators, but the yield regime no longer supports that assumption</span></div>
+<div class="obs-finding obs-link" data-section="53"><span class="obs-fid">F8.3</span><span class="obs-ftext">As the epoch pot shrinks, the flat fee (fixed at 170/340 ₳) consumes a growing share of pool rewards — the confiscatory zone identified in §4.1 expands upward. The 0.39pp retail yield spread compresses proportionally: at 1.0% base yield (~3.5 years), the same relative dispersion produces ~0.20pp — indistinguishable from block-production noise. Pools that are viable today will cross the sub-viable threshold</span><span class="obs-tag" style="border-color:#16E9D8;color:#16E9D8">The failures documented in §4 are not static — they degrade every epoch</span></div>
+<div class="obs-finding obs-link" data-section="53"><span class="obs-fid">F8.4</span><span class="obs-ftext">The declining yield acts as a selection ratchet against small independent operators. The flat fee is fixed in absolute terms while the epoch pot shrinks — the confiscatory zone expands upward every epoch. Single-pool operators bear the full drag with no fleet to amortise it; multi-pool operators are insulated by horizontal scaling. The structural feedback loop (yield compression → confiscatory expansion → single-pool attrition → delegation migration → fleet concentration) drives the centralisation the mechanism was designed to prevent</span><span class="obs-tag" style="border-color:#999;color:#999">The mechanism selects against its smallest operators and reinforces its largest</span></div>
+</div></div>
+</div>
+<p><strong>Scope note.</strong> O1 describes the flat fee channel (§4.1). O2 describes the commission channel (§4.2). O3 establishes the custodial/retail boundary and custodial economics (§4.3). O4–O6 characterise the retail market economics and operator viability (§4.4–4.5). O7 addresses delegation behaviour (§4.4). O8 places the mechanism on its temporal trajectory: the yield decline is not a separate problem — it amplifies every structural failure documented in §4 (§5).</p>
+<h3 id="the-big-picture">The big picture</h3>
+<p><strong>How operators price.</strong> The protocol gives operators two extraction channels: a flat fee (a fixed ₳/epoch amount deducted first) and a commission (a proportional share of the remainder). Together they compose the operator's pricing plan; their sum — the effective price — is the fraction of pool rewards that never reaches delegators. §4 analyses the pricing plan landscape and its consequences.</p>
+<p><strong>The retail market.</strong> After filtering custodial pools (21.1% of stake where the operator controls delegation addresses), the retail market consists of 809 pools, 516 entities, 17.02B ADA, and 1,272,836 delegators. The median delegation is 87 ₳. This is the population where the pricing plan produces a genuine market outcome.</p>
+<p><strong>The disconnect.</strong> The central finding is a double asymmetry. On the delegator side: a delegator in a sub-viable pool pays 48.3% effective price for 2.04% net return; a delegator in a near-saturation pool pays 2.7% for 2.34% — 18× the price for 0.30pp of return difference. On the operator side: the sub-viable operator absorbs 48.3% of pool rewards but earns 24,820 ₳/yr; an 11+ pool MPO absorbs 7.7% but earns 1,035,496 ₳/yr — 42× more revenue at 6× less effective price. The pricing plan penalises small-pool delegators without compensating small-pool operators, and the return signal it produces (0.39pp spread across the entire retail market) is too weak to drive delegation decisions. This challenges the incentive mechanism's core assumption: that delegators can differentiate pools by return and thereby discipline operator pricing.</p>
+<h2 id="2-the-formula-intra-pool-reward-sharing">2. The formula — intra-pool reward sharing</h2>
+<p>These formulas define how a pool's realized allocation is split between the operator and the rest of the pool participants. The split happens only after the pool-level reward has already been computed and adjusted by apparent performance.</p>
+<p>The distribution logic is sequential:</p>
+<ul>
+<li>first, the operator <strong>flat fee</strong> (on-chain: <code>fixed_cost</code>, denoted $c$) is deducted — a fixed ₳ amount per epoch</li>
+<li>second, the operator <strong>commission</strong> (on-chain: <code>margin</code>, denoted $m$) is applied to the remaining amount — a proportional share</li>
+<li>finally, the residual reward is distributed proportionally across all stake holders</li>
+</ul>
+<p>The sum of flat fee and commission is the <strong>effective price</strong> (on-chain: <code>pool_fees</code>) — the fraction of pool reward that never reaches delegators.</p>
+<p>In this final step, the operator still receives a stake-proportional share through the pledge held inside the pool, while delegators receive the complementary share.</p>
+<p>The intra-pool split was specified in <a href="https://github.com/IntersectMBO/cardano-ledger/releases/latest/download/shelley-delegation.pdf"><em>Design Specification for Delegation and Incentives in Cardano</em></a> (Kant, Brünjes &amp; Coutts, IOHK, 2019 — deliverable <strong>SL-D1</strong>, §4.5.4). The mechanism has been operational on mainnet since the Shelley hard fork on 2020/07/29. The split logic itself has never been modified; the only governance action affecting the intra-pool split was the reduction of <code>minPoolCost</code> from 340 to 170 ADA at epoch 445 (2023/10/27).</p>
+<h3 id="21-sl-d1-original">2.1 SL-D1 (Original)</h3>
+<p>The operator and member rewards are two complementary views of the same split rule applied to the realized pool allocation.
+Once the pool-level reward has been computed, the split follows the same sequence:</p>
+<ul>
+<li>cover the operator fixed cost first</li>
+<li>apply the operator margin to the remaining amount</li>
+<li>distribute the residual proportionally across stake holders</li>
+</ul>
+<p>Under this rule, the operator receives both the explicit operator share and the stake-proportional share attached to the pledge held inside the pool, while each member receives a stake-proportional share of the residual amount.</p>
+<p>Operator reward, using the operator stake-share ratio $\frac{s}{\sigma}$ as a single input:</p>
+<p>$$
+r_{\text{operator}}\left(\hat f,c,m,\frac{s}{\sigma}\right)=
+\begin{cases}
+\hat f, & \hat f \le c \\
+ c + (\hat f-c)\left(m + (1-m)\frac{s}{\sigma}\right), & \hat f > c
+\end{cases}
+$$</p>
+<p>Member reward, using the member stake-share ratio $\frac{t}{\sigma}$ as a single input:</p>
+<p>$$
+r_{\text{member}}\left(\hat f,c,m,\frac{t}{\sigma}\right)=
+\begin{cases}
+0, & \hat f \le c \\
+(\hat f-c)(1-m)\frac{t}{\sigma}, & \hat f > c
+\end{cases}
+$$</p>
+<h3 id="22-residual-split-decomposition">2.2 Residual split decomposition</h3>
+<p>Before switching to reader-friendly variable names, it is useful to separate the split rule into the two regimes induced by the fixed operator cost $c$. Let</p>
+<p>$$
+\rho_{\text{operator}} = \frac{s}{\sigma}, \qquad
+\rho_{\text{member}} = \frac{t}{\sigma}
+$$</p>
+<p>denote the operator and member pool-share ratios.</p>
+<p>If the realized pool allocation does not cover the fixed cost,</p>
+<p>$$
+\hat f \le c
+$$</p>
+<p>then the operator absorbs the full realized reward and members receive nothing:</p>
+<p>$$
+r_{\text{operator}}(\hat f,c,m,\rho_{\text{operator}}) = \hat f,
+\qquad
+r_{\text{member}}(\hat f,c,m,\rho_{\text{member}}) = 0
+$$</p>
+<p>If instead the realized pool allocation is large enough to cover the fixed cost,</p>
+<p>$$
+\hat f > c
+$$</p>
+<p>let</p>
+<p>$$
+\mu(\hat f,c,m) := m(\hat f-c),
+\qquad
+\psi(\hat f,c,m) := (1-m)(\hat f-c)
+$$</p>
+<p>where $\mu(\hat f,c,m)$ is the operator margin extracted from the residual reward and $\psi(\hat f,c,m)$ is the remaining amount to be shared proportionally across stake holders.</p>
+<p>The split then becomes</p>
+<p>$$
+r_{\text{operator}}(\hat f,c,m,\rho_{\text{operator}})
+= c + \mu(\hat f,c,m) + \psi(\hat f,c,m)\,\rho_{\text{operator}}
+$$</p>
+<p>$$
+r_{\text{member}}(\hat f,c,m,\rho_{\text{member}})
+= \psi(\hat f,c,m)\,\rho_{\text{member}}
+$$</p>
+<p>This makes the three-layer structure explicit: fixed cost first, operator margin second, proportional sharing of the remainder third.</p>
+<h3 id="23-reader-friendly-formulation">2.3 Reader-friendly formulation</h3>
+<p>Let the operator and member pool-share ratios be defined as:</p>
+<p>$$
+\rho^{\text{operator}}_{i} := \frac{\pi^{\text{pledged}}_{i}}{\sigma^{\text{totalStaked}}_{i}},
+\qquad
+\rho^{\text{member}}_{i} := \frac{\sigma^{\text{poolMember}}_{\text{delegated},i}}{\sigma^{\text{totalStaked}}_{i}}
+$$</p>
+<p>If the realized pool allocation does not cover the fixed cost,</p>
+<p>$$
+PoolPot^{\text{actual}}_{i} \le Cost^{\text{operator}}_{\text{fixed}}
+$$</p>
+<p>then the operator absorbs the full realized reward and members receive nothing:</p>
+<p>$$
+Reward^{\text{operator}} = PoolPot^{\text{actual}}_{i}
+$$</p>
+<p>$$
+Reward^{\text{member}} = 0
+$$</p>
+<p>If instead the realized pool allocation is large enough to cover the fixed cost, define the three layers of the split directly as:</p>
+<p>$$
+Cost := Cost^{\text{operator}}_{\text{fixed}}
+$$</p>
+<p>$$
+Margin := \mu^{\text{operator}}
+\left(
+PoolPot^{\text{actual}}_{i}-Cost^{\text{operator}}_{\text{fixed}}
+\right)
+$$</p>
+<p>$$
+Share := \left(1-\mu^{\text{operator}}\right)
+\left(
+PoolPot^{\text{actual}}_{i}-Cost^{\text{operator}}_{\text{fixed}}
+\right)
+$$</p>
+<p>Then the split becomes:</p>
+<p>$$
+Reward^{\text{operator}} = Cost + Margin + Share\,\rho^{\text{operator}}_{i}
+$$</p>
+<p>$$
+Reward^{\text{member}} = Share\,\rho^{\text{member}}_{i}
+$$</p>
+<p>This makes the split easy to read: fixed cost first, operator margin second, and proportional sharing of the remainder third.</p>
+<p>A fundamental property becomes visible in this form. The operator's reward has two structurally distinct components:</p>
+<p>$$
+Reward^{\text{operator}} = \underbrace{Cost + Margin}_{\text{extracted from the pool's total reward}} + \underbrace{Share\,\rho^{\text{operator}}_{i}}_{\text{earned exactly as a delegator would}}
+$$</p>
+<p>The third term — $Share\,\rho^{\text{operator}}_{i}$ — is identical in form to any member's reward: a pro-rata share of the residual, proportional to the stake contributed. For the capital the operator pledges into the pool, the protocol treats the operator <em>exactly</em> as it treats a delegator. There is no special reward channel for pledge at this stage — the operator earns the same per-ADA yield as every other participant in the pool.</p>
+<p>What distinguishes the operator from a delegator is the first two terms: \$Cost\$ and \$Margin\$. These are the only channels through which the operator can redirect part of the reward flow that is generated by <em>other participants' stake</em>. The fixed cost is a flat extraction; the margin is a proportional extraction. Both apply to the pool's total reward before pro-rata distribution, and both reduce the yield that delegators receive.</p>
+<p>In other words: the operator's <em>own</em> capital is rewarded identically to delegated capital. The operator's <em>privilege</em> — the compensation for running infrastructure, bearing the pledge risk, and maintaining the pool — is expressed entirely through cost and margin. The split formula does not reward the operator <em>for pledging</em>; it rewards the operator <em>for operating</em>. The pledge mechanism that makes commitment economically significant lives upstream, in the reward curve (§2 of the <a href="../../../README.md#2-pools-distribution">main report</a>), not in the intra-pool split.</p>
+<h3 id="24-mainnet-parameterization">2.4 Mainnet parameterization</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+<th>Set by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>minPoolCost</code> ($c_{\min}$)</td>
+<td>170 ADA (reduced from 340 at epoch 445)</td>
+<td>Protocol parameter (governance)</td>
+</tr>
+<tr>
+<td>Fixed cost ($c$)</td>
+<td>Operator-declared, $\geq c_{\min}$</td>
+<td>Pool registration certificate</td>
+</tr>
+<tr>
+<td>Margin ($m$)</td>
+<td>Operator-declared, $\in [0, 1]$</td>
+<td>Pool registration certificate</td>
+</tr>
+</tbody>
+</table>
+<p>At epoch 623 (hollow-strategy pools): the majority of rewarded hollow-strategy pools declare $c = 340$ ADA (the former minimum). The median declared margin is 2.0%; the entity-level median is 1.0% and the stake-weighted mean is 3.8%.</p>
+<h3 id="25-concept-glossary">2.5 Concept glossary</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Name</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$\hat{f}$</td>
+<td>Actual pool reward</td>
+<td>Performance-adjusted output of the reward curve (stage 2)</td>
+</tr>
+<tr>
+<td>$c$</td>
+<td>Declared fixed cost</td>
+<td>Operator-declared flat ADA, $\geq c_{\min}$</td>
+</tr>
+<tr>
+<td>$c_{\text{eff}}$</td>
+<td>Effective fixed cost</td>
+<td>$\min(c, \hat{f})$ — the actual ADA deducted</td>
+</tr>
+<tr>
+<td>$m$</td>
+<td>Margin</td>
+<td>Operator's declared share of reward after cost deduction</td>
+</tr>
+<tr>
+<td>$c_{\min}$</td>
+<td>Minimum pool cost</td>
+<td>Protocol-enforced floor on $c$ (currently 170 ADA; formerly 340 ADA)</td>
+</tr>
+<tr>
+<td>Operator take</td>
+<td>$c_{\text{eff}} + m(\hat{f} - c_{\text{eff}})$</td>
+<td>Total declared-fee extraction (= on-chain <code>pool_fees</code>)</td>
+</tr>
+<tr>
+<td>Delegator pot</td>
+<td>$(1-m)(\hat{f} - c_{\text{eff}})$</td>
+<td>Amount entering pro-rata distribution</td>
+</tr>
+<tr>
+<td>Effective tax</td>
+<td>Operator take / $\hat{f}$</td>
+<td>Fraction of pool reward extracted before pro-rata</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-the-productive-and-viable-populations">3. The productive and viable populations</h2>
+<p>All analysis from §4 onwards operates on the <strong>productive population</strong> at epoch <strong>623</strong> — the subset of pools, operators, and delegations that clear the production threshold and generate meaningful rewards. Two thresholds filter the raw population. The <strong>production threshold</strong> (~1M ADA) is the minimum stake a pool needs to expect at least one block per epoch. The <strong>viable threshold</strong> (~3M ADA) separates pools that produce blocks but cannot absorb the flat fee from those where the fee structure produces meaningful delegator returns. This section establishes both populations for the two sides of the market.</p>
+<p><img alt="Population Funnel — Epoch 623" src="sub-flows/operator-delegator-distribution/mainnet-analysis/figures/population_funnel.png" /></p>
+<h3 id="31-operators">3.1 Operators</h3>
+<h4 id="311-from-raw-to-productive">3.1.1 From raw to productive</h4>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Entities</th>
+<th style="text-align: right;">Pools</th>
+<th style="text-align: right;">Stake</th>
+<th style="text-align: right;">Share</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Raw total (<code>epoch_stake</code>)</strong></td>
+<td style="text-align: right;"><strong>2,302</strong></td>
+<td style="text-align: right;"><strong>2,877</strong></td>
+<td style="text-align: right;"><strong>21.75B</strong></td>
+<td style="text-align: right;"><strong>100%</strong></td>
+</tr>
+<tr>
+<td>Below production threshold (noise)</td>
+<td style="text-align: right;">1,742</td>
+<td style="text-align: right;">1,925</td>
+<td style="text-align: right;">0.19B</td>
+<td style="text-align: right;">0.9%</td>
+</tr>
+<tr>
+<td><strong>Productive total</strong></td>
+<td style="text-align: right;"><strong>582</strong></td>
+<td style="text-align: right;"><strong>952</strong></td>
+<td style="text-align: right;"><strong>21.57B</strong></td>
+<td style="text-align: right;"><strong>99.1%</strong></td>
+</tr>
+<tr>
+<td><em>of which:</em></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>Identified entities</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">453</td>
+<td style="text-align: right;">15.73B</td>
+<td style="text-align: right;">72.3%</td>
+</tr>
+<tr>
+<td>— multiple productive pools</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: right;">443</td>
+<td style="text-align: right;">15.27B</td>
+<td style="text-align: right;">70.2%</td>
+</tr>
+<tr>
+<td>— single productive pool</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.46B</td>
+<td style="text-align: right;">2.1%</td>
+</tr>
+<tr>
+<td>Independent single-pool operators</td>
+<td style="text-align: right;">499</td>
+<td style="text-align: right;">499</td>
+<td style="text-align: right;">5.83B</td>
+<td style="text-align: right;">26.8%</td>
+</tr>
+</tbody>
+</table>
+<p>Entity attribution is a lower bound — operators using entirely separate infrastructure and branding for each pool remain invisible.</p>
+<h4 id="312-from-productive-to-viable">3.1.2 From productive to viable</h4>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Entities</th>
+<th style="text-align: right;">Pools</th>
+<th style="text-align: right;">Stake</th>
+<th style="text-align: right;">Share</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Productive total</strong></td>
+<td style="text-align: right;"><strong>582</strong></td>
+<td style="text-align: right;"><strong>952</strong></td>
+<td style="text-align: right;"><strong>21.57B</strong></td>
+<td style="text-align: right;"><strong>100%</strong></td>
+</tr>
+<tr>
+<td>Sub-viable (1M–3M ADA)</td>
+<td style="text-align: right;">213</td>
+<td style="text-align: right;">219</td>
+<td style="text-align: right;">0.39B</td>
+<td style="text-align: right;">1.8%</td>
+</tr>
+<tr>
+<td><strong>Viable total (≥3M ADA)</strong></td>
+<td style="text-align: right;"><strong>383</strong></td>
+<td style="text-align: right;"><strong>733</strong></td>
+<td style="text-align: right;"><strong>21.18B</strong></td>
+<td style="text-align: right;"><strong>98.2%</strong></td>
+</tr>
+<tr>
+<td><em>of which:</em></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>Identified entities</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">433</td>
+<td style="text-align: right;">15.70B</td>
+<td style="text-align: right;">72.8%</td>
+</tr>
+<tr>
+<td>— multiple viable pools</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">421</td>
+<td style="text-align: right;">15.20B</td>
+<td style="text-align: right;">70.5%</td>
+</tr>
+<tr>
+<td>— single viable pool</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">0.50B</td>
+<td style="text-align: right;">2.3%</td>
+</tr>
+<tr>
+<td>Independent single-pool operators</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">5.48B</td>
+<td style="text-align: right;">25.4%</td>
+</tr>
+</tbody>
+</table>
+<p>The 219 sub-viable pools are productive but economically marginal: 91% are independent single-pool operators, 117 still declare 340 ₳ flat fee, and 9 reach 100% effective price — the flat fee alone consumes the entire pool reward. The 733 viable pools carry 98.2% of productive stake.</p>
+<h3 id="32-delegators">3.2 Delegators</h3>
+<p>The delegation pipeline starts from 1.85M raw delegation certificates and removes two layers of noise: zero-balance certificates (27% of raw — delegation records with no ADA behind them) and delegations to non-productive pools.</p>
+<h4 id="321-from-raw-to-productive">3.2.1 From raw to productive</h4>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Delegations</th>
+<th style="text-align: right;">Stake</th>
+<th style="text-align: right;">Share</th>
+<th style="text-align: right;">Pools</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Raw (delegation certificates)</strong></td>
+<td style="text-align: right;"><strong>1,847,713</strong></td>
+<td style="text-align: right;"><strong>—</strong></td>
+<td style="text-align: right;"><strong>—</strong></td>
+<td style="text-align: right;"><strong>3,190</strong></td>
+</tr>
+<tr>
+<td>Zero-balance certificates (noise)</td>
+<td style="text-align: right;">492,678</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">313</td>
+</tr>
+<tr>
+<td><strong><code>epoch_stake</code> total</strong></td>
+<td style="text-align: right;"><strong>1,355,035</strong></td>
+<td style="text-align: right;"><strong>21.75B</strong></td>
+<td style="text-align: right;"><strong>100%</strong></td>
+<td style="text-align: right;"><strong>2,877</strong></td>
+</tr>
+<tr>
+<td>Non-productive pool delegations (noise)</td>
+<td style="text-align: right;">59,937</td>
+<td style="text-align: right;">0.19B</td>
+<td style="text-align: right;">0.9%</td>
+<td style="text-align: right;">1,925</td>
+</tr>
+<tr>
+<td><strong>Productive pool delegations</strong></td>
+<td style="text-align: right;"><strong>1,295,098</strong></td>
+<td style="text-align: right;"><strong>21.57B</strong></td>
+<td style="text-align: right;"><strong>99.1%</strong></td>
+<td style="text-align: right;"><strong>952</strong></td>
+</tr>
+<tr>
+<td><em>of which:</em></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>Identified entity pools</td>
+<td style="text-align: right;">910,509</td>
+<td style="text-align: right;">15.73B</td>
+<td style="text-align: right;">72.3%</td>
+<td style="text-align: right;">453</td>
+</tr>
+<tr>
+<td>Independent single-pool operators</td>
+<td style="text-align: right;">384,589</td>
+<td style="text-align: right;">5.83B</td>
+<td style="text-align: right;">26.8%</td>
+<td style="text-align: right;">499</td>
+</tr>
+</tbody>
+</table>
+<h4 id="322-from-productive-to-viable">3.2.2 From productive to viable</h4>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Delegations</th>
+<th style="text-align: right;">Stake</th>
+<th style="text-align: right;">Share</th>
+<th style="text-align: right;">Pools</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Productive pool delegations</strong></td>
+<td style="text-align: right;"><strong>1,295,098</strong></td>
+<td style="text-align: right;"><strong>21.57B</strong></td>
+<td style="text-align: right;"><strong>100%</strong></td>
+<td style="text-align: right;"><strong>952</strong></td>
+</tr>
+<tr>
+<td>Sub-viable pool delegations (1M–3M)</td>
+<td style="text-align: right;">67,817</td>
+<td style="text-align: right;">0.39B</td>
+<td style="text-align: right;">1.8%</td>
+<td style="text-align: right;">219</td>
+</tr>
+<tr>
+<td><strong>Viable pool delegations (≥3M)</strong></td>
+<td style="text-align: right;"><strong>1,227,281</strong></td>
+<td style="text-align: right;"><strong>21.18B</strong></td>
+<td style="text-align: right;"><strong>98.2%</strong></td>
+<td style="text-align: right;"><strong>733</strong></td>
+</tr>
+<tr>
+<td><em>of which:</em></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td>Identified entity pools</td>
+<td style="text-align: right;">904,850</td>
+<td style="text-align: right;">15.70B</td>
+<td style="text-align: right;">72.8%</td>
+<td style="text-align: right;">433</td>
+</tr>
+<tr>
+<td>Independent single-pool operators</td>
+<td style="text-align: right;">322,431</td>
+<td style="text-align: right;">5.48B</td>
+<td style="text-align: right;">25.4%</td>
+<td style="text-align: right;">300</td>
+</tr>
+</tbody>
+</table>
+<p>67,817 delegations (5.2% of productive) sit in sub-viable pools where the flat fee's regressive geometry erodes most or all delegator returns — 92% of those land in independent single-pool operators. The <strong>1,227,281 delegations</strong> in viable pools are where the pricing plan produces meaningful outcomes. The downstream analysis (§4.3) decomposes the productive population into operator self-stake, custodial, and retail segments.</p>
+<p>The companion <a href="../../census/mainnet-analysis/"><em>Staking Census</em></a> documents the full cleaning pipeline. All counts and amounts reference epoch <strong>623</strong> unless otherwise noted.</p>
+<h2 id="4-the-pricing-plan-landscape">4. The pricing plan landscape</h2>
+<p>The formula gives operators two extraction channels: a fixed cost $c$ (on-chain: <code>fixed_cost</code>, constrained by protocol parameter <code>minPoolCost</code>) and a proportional margin $m$ (on-chain parameter <code>margin</code>). In pricing terms, the fixed cost functions as a <strong>flat fee</strong> — a fixed ADA amount per epoch, independent of pool size — and the margin functions as a <strong>commission</strong> — a proportional share of the reward after the flat fee is deducted. Together they compose the operator's pricing plan; their sum, the <strong>operator take</strong>, is the effective price the delegator faces. This section categorises the pool population along each pricing channel; §4.3 classifies the delegation side (custodial versus retail); and §4.4 crosses both to measure operator profitability against delegator return.</p>
+<h3 id="41-the-flat-fee-fixed-cost">4.1 The flat fee (fixed cost)</h3>
+<p>The flat fee is the ADA amount deducted from every pool's reward before commission and pro-rata distribution (on-chain: declared <code>fixed_cost</code> $c$, constrained by protocol parameter <code>minPoolCost</code>). It is constrained by the protocol floor $c_{\min}$, currently 170 ₳ (reduced from 340 ₳ at epoch 445, on 2023/10/27). No other major PoS protocol uses a flat fee — Cosmos, Solana, Polkadot, Ethereum, and Tezos all use either a single proportional commission or no protocol-level fee at all. The flat fee is unique to Cardano and its economic weight follows a $1/\sigma$ hyperbola: confiscatory for small pools, invisible for large ones.</p>
+<p>At epoch 623, 89.5% of the 952 productive pools declare one of the two floor values — 170 ₳ or 340 ₳. The remaining 10.5% (100 pools) declare other values. Decomposing this population reveals that the "custom" label conceals three structurally distinct behaviours: near-floor inertia (Binance at 345 ₳, Everstake at 400 ₳, OCEAN at 500 ₳), extraction (11 pools with FC &gt; 500 ₳ and commission ≥ 99%), and a handful of independent operators at intermediate values.</p>
+<table>
+<thead>
+<tr>
+<th>Flat-fee strategy</th>
+<th>Definition</th>
+<th style="text-align: right;">Pools</th>
+<th style="text-align: right;">Share</th>
+<th style="text-align: right;">Entities</th>
+<th style="text-align: right;">Stake (B)</th>
+<th style="text-align: right;">Stake share</th>
+<th style="text-align: right;">Delegators</th>
+<th style="text-align: right;">Del. share</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Adopted</strong></td>
+<td>$c = 170$ ₳ (current floor)</td>
+<td style="text-align: right;">244</td>
+<td style="text-align: right;">25.6%</td>
+<td style="text-align: right;">186</td>
+<td style="text-align: right;">5.13</td>
+<td style="text-align: right;">23.8%</td>
+<td style="text-align: right;">223,419</td>
+<td style="text-align: right;">17.2%</td>
+</tr>
+<tr>
+<td><strong>Legacy</strong></td>
+<td>$c = 340$ ₳ (former floor)</td>
+<td style="text-align: right;">608</td>
+<td style="text-align: right;">63.9%</td>
+<td style="text-align: right;">350</td>
+<td style="text-align: right;">14.38</td>
+<td style="text-align: right;">66.7%</td>
+<td style="text-align: right;">679,158</td>
+<td style="text-align: right;">52.4%</td>
+</tr>
+<tr>
+<td><strong>Near-floor</strong></td>
+<td>$171 < c \leq 500$, $c \neq 170, 340$</td>
+<td style="text-align: right;">84</td>
+<td style="text-align: right;">8.8%</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">1.82</td>
+<td style="text-align: right;">8.4%</td>
+<td style="text-align: right;">381,652</td>
+<td style="text-align: right;">29.5%</td>
+</tr>
+<tr>
+<td><strong>Extraction</strong></td>
+<td>$c > 500$</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">1.7%</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">1.1%</td>
+<td style="text-align: right;">10,869</td>
+<td style="text-align: right;">0.8%</td>
+</tr>
+</tbody>
+</table>
+<p>The inertia is structural: 70% of floor-declaring stake remains at 340 ₳, 178 epochs after the reduction, driven by the largest entities (Coinbase, Kiln, Upbit, eToro, Wave) which have not updated.</p>
+<p><img alt="The Regressive Geometry of Flat Fees" src="sub-flows/operator-delegator-distribution/mainnet-analysis/figures/flat_fee_hyperbole.png" /></p>
+<blockquote>
+<p><strong>Finding F1.2 — 64% of pools still declare the former floor (340 ₳) — 178 epochs after the governance action halved it.</strong> The inertia is not transient. It is driven by the largest entities and reflects a structural feature of the network: the flat fee is a set-and-forget parameter for most operators. Among the 219 sub-viable pools (1M–3M ADA), the distribution mirrors the productive population (84 adopted, 117 legacy) — but the economic meaning is different. At this tier, a 170 ₳ flat fee absorbs ~27% of pool reward and a 340 ₳ fee absorbs ~54%. The adopted/legacy distinction, which is a governance-responsiveness signal for viable pools, becomes a confiscation-severity signal for sub-viable ones.</p>
+</blockquote>
+<h3 id="42-the-commission-margin">4.2 The commission (margin)</h3>
+<p>The commission is the operator's proportional share of the reward after the flat fee is deducted (on-chain: <code>margin</code> $m \in [0, 1]$). Unlike the flat fee, which clusters at two protocol-floor values, the commission is continuously variable and has no enforced floor or ceiling. It is the only fully unconstrained parameter in the intra-pool split, and the one that most directly expresses the operator's pricing intent.</p>
+<p>The commission distribution is bimodal: the median is 2.0% and has been stable for over 400 epochs. The distribution clusters at round values — 1%, 2%, 3%, 5%, 10% account for the bulk of the competitive band.</p>
+<table>
+<thead>
+<tr>
+<th>Band</th>
+<th>Range</th>
+<th style="text-align: right;">Pools</th>
+<th style="text-align: right;">Share</th>
+<th style="text-align: right;">Stake (B)</th>
+<th style="text-align: right;">Stake share</th>
+<th style="text-align: right;">Delegators</th>
+<th style="text-align: right;">Del. share</th>
+<th>Economic logic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>No-commission</strong></td>
+<td>$m = 0\%$</td>
+<td style="text-align: right;">170</td>
+<td style="text-align: right;">17.9%</td>
+<td style="text-align: right;">2.70</td>
+<td style="text-align: right;">12.5%</td>
+<td style="text-align: right;">146,931</td>
+<td style="text-align: right;">11.3%</td>
+<td>Flat-fee-only pricing — the operator earns through the flat fee and pro-rata owner share only</td>
+</tr>
+<tr>
+<td><strong>Competitive</strong></td>
+<td>$0 < m \leq 10\%$</td>
+<td style="text-align: right;">658</td>
+<td style="text-align: right;">69.1%</td>
+<td style="text-align: right;">15.23</td>
+<td style="text-align: right;">70.6%</td>
+<td style="text-align: right;">1,125,795</td>
+<td style="text-align: right;">86.9%</td>
+<td>The market norm — operators blend flat fee and commission. The upper end (6–10%) includes institutional operators: Binance, Figment, Blockdaemon, Kiln</td>
+</tr>
+<tr>
+<td><strong>No man's land</strong></td>
+<td>$10\% < m < 99\%$</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">1.3%</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">0.4%</td>
+<td style="text-align: right;">331</td>
+<td style="text-align: right;">&lt;0.1%</td>
+<td>Structurally empty — 12 isolated pools scattered across an 89pp range</td>
+</tr>
+<tr>
+<td><strong>Privatisation</strong></td>
+<td>$m \geq 99\%$</td>
+<td style="text-align: right;">112</td>
+<td style="text-align: right;">11.8%</td>
+<td style="text-align: right;">3.55</td>
+<td style="text-align: right;">16.5%</td>
+<td style="text-align: right;">22,041</td>
+<td style="text-align: right;">1.7%</td>
+<td>Total extraction — de facto private operation. Top entities: CHUCK BUX, Upbit, eToro</td>
+</tr>
+</tbody>
+</table>
+<p>87% of pools price at or below 10%; density drops to near zero above 10% and resurfaces only at 99–100%. No man's land makes the bimodality explicit: the 89pp gap between competitive pricing and privatisation is a desert — an operator pricing above 10% is either extracting (and would go to 99%+) or running a niche service (and would not need more than 10%).</p>
+<blockquote>
+<p><strong>Finding F2.1 — The commission distribution is bimodal with an 89pp structural gap.</strong> 87% of pools sit at or below 10%; 12% sit at ≥ 99%. The range between 10% and 99% contains 12 pools. No economic attractor exists between competitive pricing and total extraction.</p>
+</blockquote>
+<p><img alt="Commission Distribution — Epoch 623" src="sub-flows/operator-delegator-distribution/mainnet-analysis/figures/commission_histogram.png" /></p>
+<p><strong>Commission bands × owner-stake strategy.</strong> The bands cross-cut the three owner-stake strategies. The hollow segment fills all four bands. Balanced pools concentrate in no-commission and competitive with marginal presence in privatisation. Private pools occupy only competitive (3 pools — Wave and one anonymous) and privatisation — private × no-commission is empty because an operator who funds the pool has no reason to set commission to zero.</p>
+<h3 id="43-custodial-versus-retail">4.3 Custodial versus retail</h3>
+<p>Not all staked ADA is delegated by independent participants choosing a pool on the open market. A significant share is <strong>custodial</strong> — controlled by operators rather than by the on-chain delegators themselves. Identifying these pools is necessary before the profitability analysis (§4.4) can isolate the genuine pricing market.</p>
+<h4 id="431-clear-custodial-by-pledge-and-by-extraction">4.3.1 Clear custodial — by pledge and by extraction</h4>
+<p>Two mechanisms produce unambiguous custodial outcomes, detectable from a single on-chain observable.</p>
+<p><strong>Custodial by pledge</strong> — private-strategy entities (owner-stake ≥ 95%) that fund their pools with their own capital. The operator <em>is</em> the delegator. The commission (typically 100%) is self-directed — it never leaves the operator's control.</p>
+<p><strong>Custodial by extraction</strong> — non-private pools that declare a privatisation commission (≥ 99%). The operator does not fund the pool but captures virtually all rewards through the commission. Delegators earn near-zero yield; whether they remain through inertia, ignorance, or institutional constraint, their delegation is not a meaningful market signal.</p>
+<h4 id="432-custodial-by-delegation-the-median-delegation-signal">4.3.2 Custodial by delegation — the median delegation signal</h4>
+<p>The third mechanism is more subtle. Some pools appear hollow to the protocol (low owner-stake, competitive commission) but their delegation is concentrated in few, large addresses — the hallmark of operator-routed capital.</p>
+<p>The signal is the <strong>median delegation</strong> per pool, computed from the full <code>epoch_stake</code> distribution (db-sync, epoch 623). The median measures the amount held by the typical delegator in the pool. When it exceeds 100K ADA — meaning the typical delegator holds more than 100K — the pool is genuinely non-retail. A delegation of 50K ₳ is already in the top 1.5% of the network; a median above 100K indicates that the majority of addresses in the pool hold capital well above any retail threshold.</p>
+<p>At epoch 623, <strong>28 pools</strong> (across 15 entities) exceed this threshold, carrying 0.92B ADA and 158 delegators. They split into two sub-populations:</p>
+<table>
+<thead>
+<tr>
+<th>Sub-type</th>
+<th style="text-align: right;">Entities</th>
+<th style="text-align: right;">Pools</th>
+<th style="text-align: right;">Stake (B)</th>
+<th style="text-align: right;">Delegators</th>
+<th>Profile</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Median ≥ 1M ₳</strong></td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">68</td>
+<td>Whale self-delegation pools with 2–6 delegators each holding millions. Pure capital parking</td>
+</tr>
+<tr>
+<td><strong>Median 100K–1M ₳</strong></td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">90</td>
+<td>Smaller pools where the typical delegator holds 100K–1M — a mix of high-net-worth self-delegation and small custodial arrangements</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Median Delegation vs Pool Stake — Epoch 623" src="sub-flows/operator-delegator-distribution/mainnet-analysis/figures/median_delegation_scatter.png" /></p>
+<h4 id="433-summary">4.3.3 Summary</h4>
+<p>The table below continues the population decomposition from §3:</p>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th style="text-align: right;">Entities</th>
+<th style="text-align: right;">Pools</th>
+<th style="text-align: right;">Share</th>
+<th style="text-align: right;">Stake (B)</th>
+<th style="text-align: right;">Stake share</th>
+<th style="text-align: right;">Delegations</th>
+<th style="text-align: right;">Del. share</th>
+<th style="text-align: right;">Median deleg. (₳)</th>
+<th style="text-align: right;">Med. entity revenue (₳/yr)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Productive total</strong></td>
+<td style="text-align: right;"><strong>582</strong></td>
+<td style="text-align: right;"><strong>952</strong></td>
+<td style="text-align: right;"><strong>100%</strong></td>
+<td style="text-align: right;"><strong>21.57</strong></td>
+<td style="text-align: right;"><strong>100%</strong></td>
+<td style="text-align: right;"><strong>1,295,098</strong></td>
+<td style="text-align: right;"><strong>100%</strong></td>
+<td style="text-align: right;"><strong>116</strong></td>
+<td style="text-align: right;"><strong>25,763</strong></td>
+</tr>
+<tr>
+<td>Custodial by pledge</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">3.8%</td>
+<td style="text-align: right;">1.59</td>
+<td style="text-align: right;">7.4%</td>
+<td style="text-align: right;">122</td>
+<td style="text-align: right;">&lt;0.1%</td>
+<td style="text-align: right;">35,579,368</td>
+<td style="text-align: right;">1,759,252</td>
+</tr>
+<tr>
+<td>Custodial by extraction</td>
+<td style="text-align: right;">57</td>
+<td style="text-align: right;">79</td>
+<td style="text-align: right;">8.3%</td>
+<td style="text-align: right;">2.04</td>
+<td style="text-align: right;">9.5%</td>
+<td style="text-align: right;">21,982</td>
+<td style="text-align: right;">1.7%</td>
+<td style="text-align: right;">9,009</td>
+<td style="text-align: right;">281,831</td>
+</tr>
+<tr>
+<td>Custodial by delegation (median ≥ 100K)</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">2.9%</td>
+<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">4.3%</td>
+<td style="text-align: right;">158</td>
+<td style="text-align: right;">&lt;0.1%</td>
+<td style="text-align: right;">3,008,028</td>
+<td style="text-align: right;">29,329</td>
+</tr>
+<tr>
+<td>↳ Median ≥ 1M ₳</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">2.1%</td>
+<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">3.9%</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">&lt;0.1%</td>
+<td style="text-align: right;">12,489,163</td>
+<td style="text-align: right;">55,704</td>
+</tr>
+<tr>
+<td>↳ Median 100K–1M ₳</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.8%</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">0.4%</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">&lt;0.1%</td>
+<td style="text-align: right;">176,666</td>
+<td style="text-align: right;">25,023</td>
+</tr>
+<tr>
+<td><strong>Total custodial</strong></td>
+<td style="text-align: right;"><strong>79</strong></td>
+<td style="text-align: right;"><strong>143</strong></td>
+<td style="text-align: right;"><strong>15.0%</strong></td>
+<td style="text-align: right;"><strong>4.55</strong></td>
+<td style="text-align: right;"><strong>21.1%</strong></td>
+<td style="text-align: right;"><strong>22,262</strong></td>
+<td style="text-align: right;"><strong>1.7%</strong></td>
+<td style="text-align: right;"><strong>1,038,234</strong></td>
+<td style="text-align: right;"><strong>151,744</strong></td>
+</tr>
+<tr>
+<td><strong>Retail market</strong></td>
+<td style="text-align: right;"><strong>516</strong></td>
+<td style="text-align: right;"><strong>809</strong></td>
+<td style="text-align: right;"><strong>85.0%</strong></td>
+<td style="text-align: right;"><strong>17.02</strong></td>
+<td style="text-align: right;"><strong>78.9%</strong></td>
+<td style="text-align: right;"><strong>1,272,836</strong></td>
+<td style="text-align: right;"><strong>98.3%</strong></td>
+<td style="text-align: right;"><strong>87</strong></td>
+<td style="text-align: right;"><strong>25,235</strong></td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Custodial vs Retail — Stake Distribution (Epoch 623)" src="sub-flows/operator-delegator-distribution/mainnet-analysis/figures/custodial_retail_treemap.png" /></p>
+<p>The custodial segment is smaller than the mean-APD estimate suggested — 21.1% of stake, not 49.9% — because most institutional pools (Coinbase, Binance, Kiln, YUTA) are retail by their delegation median. They route large capital through few addresses, but the majority of their delegators are small retail wallets. The retail market — <strong>809 pools, 516 entities, 17.02B ADA, 1,272,836 delegators</strong> — encompasses 78.9% of productive stake and 98.3% of delegation relationships.</p>
+<blockquote>
+<p><strong>Finding F3.2 — The median delegation separates custodial from retail by four orders of magnitude.</strong> Custodial pools: 1,038,234 ₳ median. Retail pools: 87 ₳ median. A delegation of 50K ₳ is already in the top 1.5% of all delegations on the network.</p>
+<p><strong>Finding F3.3 — Each custodial mechanism produces a different economic outcome.</strong> Custodial-by-pledge entities earn 1,759,252 ₳/yr median — they fund their own pools and capture 100% of rewards. Custodial-by-extraction entities earn 281,831 ₳/yr — privatisation commission extracts from pools whose delegators have not re-delegated. Custodial-by-delegation entities earn 29,329 ₳/yr — these are small whale pools, not institutional revenue engines. The three mechanisms share the label "custodial" but produce economics that span two orders of magnitude.</p>
+</blockquote>
+<h3 id="44-operator-profitability-versus-delegator-return">4.4 Operator profitability versus delegator return</h3>
+<p>The effective price is only meaningful in the retail market — where the operator does not control the delegator addresses. In custodial pools, the "price" is an internal transfer; it carries no information about market competition. This section analyses the <strong>809 retail pools</strong> (516 entities, 17.02B ADA, 1,272,836 delegators) identified in §4.3.</p>
+<p>The central question is what the pricing plan produces for each side of the market. The operator earns a revenue (the operator take, annualised in ₳/year); the delegator receives a return (the net ROS, after fees). If the mechanism worked as intended, these two quantities would be linked: operators who charge more would earn more, and delegators would see a meaningful ROS difference that informs their delegation choice. The table below tests this assumption.</p>
+<table>
+<thead>
+<tr>
+<th>Operator type</th>
+<th style="text-align: right;">Entities</th>
+<th style="text-align: right;">Pools</th>
+<th style="text-align: right;">Delegators</th>
+<th style="text-align: right;">Del. share</th>
+<th style="text-align: right;">Stake (B)</th>
+<th style="text-align: right;">Median deleg. (₳)</th>
+<th style="text-align: right;">Flat fee</th>
+<th style="text-align: right;">Commission</th>
+<th style="text-align: right;">Effective price</th>
+<th style="text-align: right;">Gross ROS</th>
+<th style="text-align: right;">Net ROS</th>
+<th style="text-align: right;">Med. entity revenue (₳/yr)</th>
+<th style="text-align: right;">Drag (pp)</th>
+<th style="text-align: right;">Reward share</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hollow single-pool</strong></td>
+<td style="text-align: right;"><strong>414</strong></td>
+<td style="text-align: right;"><strong>414</strong></td>
+<td style="text-align: right;"><strong>399,089</strong></td>
+<td style="text-align: right;"><strong>31.4%</strong></td>
+<td style="text-align: right;"><strong>5.29</strong></td>
+<td style="text-align: right;"><strong>78</strong></td>
+<td style="text-align: right;"><strong>7.0%</strong></td>
+<td style="text-align: right;"><strong>2.1%</strong></td>
+<td style="text-align: right;"><strong>9.1%</strong></td>
+<td style="text-align: right;"><strong>2.48%</strong></td>
+<td style="text-align: right;"><strong>2.08%</strong></td>
+<td style="text-align: right;"><strong>24,965</strong></td>
+<td style="text-align: right;"><strong>0.47pp</strong></td>
+<td style="text-align: right;"><strong>31.1%</strong></td>
+</tr>
+<tr>
+<td>↳ Sub-viable (&lt;3M)</td>
+<td style="text-align: right;">155</td>
+<td style="text-align: right;">155</td>
+<td style="text-align: right;">52,557</td>
+<td style="text-align: right;">4.1%</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">47.5%</td>
+<td style="text-align: right;">0.8%</td>
+<td style="text-align: right;">48.3%</td>
+<td style="text-align: right;">3.89%</td>
+<td style="text-align: right;">2.04%</td>
+<td style="text-align: right;">24,820</td>
+<td style="text-align: right;">1.59pp</td>
+<td style="text-align: right;">1.6%</td>
+</tr>
+<tr>
+<td>↳ Healthy (3–38.5M)</td>
+<td style="text-align: right;">214</td>
+<td style="text-align: right;">214</td>
+<td style="text-align: right;">221,279</td>
+<td style="text-align: right;">17.4%</td>
+<td style="text-align: right;">2.44</td>
+<td style="text-align: right;">74</td>
+<td style="text-align: right;">8.3%</td>
+<td style="text-align: right;">2.9%</td>
+<td style="text-align: right;">11.2%</td>
+<td style="text-align: right;">2.35%</td>
+<td style="text-align: right;">2.03%</td>
+<td style="text-align: right;">26,652</td>
+<td style="text-align: right;">0.32pp</td>
+<td style="text-align: right;">14.3%</td>
+</tr>
+<tr>
+<td>↳ Large healthy (38.5–62M)</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">91,238</td>
+<td style="text-align: right;">7.2%</td>
+<td style="text-align: right;">1.47</td>
+<td style="text-align: right;">125</td>
+<td style="text-align: right;">1.7%</td>
+<td style="text-align: right;">1.4%</td>
+<td style="text-align: right;">3.0%</td>
+<td style="text-align: right;">2.37%</td>
+<td style="text-align: right;">2.31%</td>
+<td style="text-align: right;">31,757</td>
+<td style="text-align: right;">0.06pp</td>
+<td style="text-align: right;">8.7%</td>
+</tr>
+<tr>
+<td>↳ Near-saturation (62–77M)</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">34,015</td>
+<td style="text-align: right;">2.7%</td>
+<td style="text-align: right;">1.11</td>
+<td style="text-align: right;">962</td>
+<td style="text-align: right;">1.2%</td>
+<td style="text-align: right;">1.5%</td>
+<td style="text-align: right;">2.7%</td>
+<td style="text-align: right;">2.40%</td>
+<td style="text-align: right;">2.34%</td>
+<td style="text-align: right;">27,244</td>
+<td style="text-align: right;">0.04pp</td>
+<td style="text-align: right;">6.5%</td>
+</tr>
+<tr>
+<td><strong>Hollow MPO</strong></td>
+<td style="text-align: right;"><strong>57</strong></td>
+<td style="text-align: right;"><strong>330</strong></td>
+<td style="text-align: right;"><strong>838,593</strong></td>
+<td style="text-align: right;"><strong>65.9%</strong></td>
+<td style="text-align: right;"><strong>10.95</strong></td>
+<td style="text-align: right;"><strong>107</strong></td>
+<td style="text-align: right;"><strong>3.0%</strong></td>
+<td style="text-align: right;"><strong>3.3%</strong></td>
+<td style="text-align: right;"><strong>6.3%</strong></td>
+<td style="text-align: right;"><strong>2.33%</strong></td>
+<td style="text-align: right;"><strong>2.18%</strong></td>
+<td style="text-align: right;"><strong>124,100</strong></td>
+<td style="text-align: right;"><strong>0.14pp</strong></td>
+<td style="text-align: right;"><strong>64.4%</strong></td>
+</tr>
+<tr>
+<td>↳ 2-pool</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">102,253</td>
+<td style="text-align: right;">8.0%</td>
+<td style="text-align: right;">1.30</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">2.5%</td>
+<td style="text-align: right;">1.3%</td>
+<td style="text-align: right;">3.9%</td>
+<td style="text-align: right;">2.27%</td>
+<td style="text-align: right;">2.19%</td>
+<td style="text-align: right;">68,667</td>
+<td style="text-align: right;">0.10pp</td>
+<td style="text-align: right;">7.7%</td>
+</tr>
+<tr>
+<td>↳ 3–5 pool</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">94</td>
+<td style="text-align: right;">271,460</td>
+<td style="text-align: right;">21.3%</td>
+<td style="text-align: right;">2.77</td>
+<td style="text-align: right;">78</td>
+<td style="text-align: right;">3.3%</td>
+<td style="text-align: right;">1.6%</td>
+<td style="text-align: right;">5.0%</td>
+<td style="text-align: right;">2.33%</td>
+<td style="text-align: right;">2.19%</td>
+<td style="text-align: right;">132,851</td>
+<td style="text-align: right;">0.14pp</td>
+<td style="text-align: right;">16.3%</td>
+</tr>
+<tr>
+<td>↳ 6–10 pool</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">112,454</td>
+<td style="text-align: right;">8.8%</td>
+<td style="text-align: right;">2.37</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">2.7%</td>
+<td style="text-align: right;">3.8%</td>
+<td style="text-align: right;">6.5%</td>
+<td style="text-align: right;">2.38%</td>
+<td style="text-align: right;">2.18%</td>
+<td style="text-align: right;">263,959</td>
+<td style="text-align: right;">0.15pp</td>
+<td style="text-align: right;">13.9%</td>
+</tr>
+<tr>
+<td>↳ 11+ pool</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">135</td>
+<td style="text-align: right;">352,426</td>
+<td style="text-align: right;">27.7%</td>
+<td style="text-align: right;">4.51</td>
+<td style="text-align: right;">292</td>
+<td style="text-align: right;">3.0%</td>
+<td style="text-align: right;">4.7%</td>
+<td style="text-align: right;">7.7%</td>
+<td style="text-align: right;">2.31%</td>
+<td style="text-align: right;">2.15%</td>
+<td style="text-align: right;">1,035,496</td>
+<td style="text-align: right;">0.20pp</td>
+<td style="text-align: right;">26.5%</td>
+</tr>
+<tr>
+<td><strong>Balanced</strong></td>
+<td style="text-align: right;"><strong>41</strong></td>
+<td style="text-align: right;"><strong>42</strong></td>
+<td style="text-align: right;"><strong>15,844</strong></td>
+<td style="text-align: right;"><strong>1.2%</strong></td>
+<td style="text-align: right;"><strong>0.20</strong></td>
+<td style="text-align: right;"><strong>45</strong></td>
+<td style="text-align: right;"><strong>17.8%</strong></td>
+<td style="text-align: right;"><strong>1.4%</strong></td>
+<td style="text-align: right;"><strong>19.2%</strong></td>
+<td style="text-align: right;"><strong>3.06%</strong></td>
+<td style="text-align: right;"><strong>1.98%</strong></td>
+<td style="text-align: right;"><strong>23,513</strong></td>
+<td style="text-align: right;"><strong>1.06pp</strong></td>
+<td style="text-align: right;"><strong>1.2%</strong></td>
+</tr>
+<tr>
+<td>↳ Single-pool sub-viable (&lt;3M)</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">5,041</td>
+<td style="text-align: right;">0.4%</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">49.4%</td>
+<td style="text-align: right;">1.0%</td>
+<td style="text-align: right;">50.4%</td>
+<td style="text-align: right;">3.70%</td>
+<td style="text-align: right;">1.95%</td>
+<td style="text-align: right;">23,513</td>
+<td style="text-align: right;">2.19pp</td>
+<td style="text-align: right;">0.3%</td>
+</tr>
+<tr>
+<td>↳ Single-pool healthy (≥3M)</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">4,051</td>
+<td style="text-align: right;">0.3%</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">11.2%</td>
+<td style="text-align: right;">1.1%</td>
+<td style="text-align: right;">12.3%</td>
+<td style="text-align: right;">2.41%</td>
+<td style="text-align: right;">2.14%</td>
+<td style="text-align: right;">17,199</td>
+<td style="text-align: right;">0.43pp</td>
+<td style="text-align: right;">0.6%</td>
+</tr>
+<tr>
+<td>↳ MPO</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">6,752</td>
+<td style="text-align: right;">0.5%</td>
+<td style="text-align: right;">0.06</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">5.2%</td>
+<td style="text-align: right;">2.0%</td>
+<td style="text-align: right;">7.2%</td>
+<td style="text-align: right;">2.40%</td>
+<td style="text-align: right;">2.22%</td>
+<td style="text-align: right;">101,849</td>
+<td style="text-align: right;">0.17pp</td>
+<td style="text-align: right;">0.4%</td>
+</tr>
+<tr>
+<td><strong>Retail total</strong></td>
+<td style="text-align: right;"><strong>516</strong></td>
+<td style="text-align: right;"><strong>809</strong></td>
+<td style="text-align: right;"><strong>1,272,836</strong></td>
+<td style="text-align: right;"><strong>100%</strong></td>
+<td style="text-align: right;"><strong>17.02</strong></td>
+<td style="text-align: right;"><strong>87</strong></td>
+<td style="text-align: right;"><strong>4.4%</strong></td>
+<td style="text-align: right;"><strong>2.9%</strong></td>
+<td style="text-align: right;"><strong>7.4%</strong></td>
+<td style="text-align: right;"><strong>2.45%</strong></td>
+<td style="text-align: right;"><strong>2.11%</strong></td>
+<td style="text-align: right;"><strong>25,235</strong></td>
+<td style="text-align: right;"><strong>0.41pp</strong></td>
+<td style="text-align: right;"><strong>100%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The table reads left to right: operator type → population → pricing channels (flat fee + commission as % of pool reward) → what the pool produces (gross ROS) → what the delegator receives (net ROS) → what the operator earns (median entity revenue annualised) → the cost to the delegator (Drag (pp)) → share of total retail pool rewards.</p>
+<p>Three observations emerge from this decomposition.</p>
+<p><strong>Delegators pay 18× more for the same return — and operators who charge the most earn the least.</strong> A delegator in a sub-viable pool pays 48.3% effective price for 2.04% net return; a delegator in a near-saturation pool pays 2.7% for 2.34%. The price differs by 18×; the return by 0.30pp. On the operator side, the sub-viable operator absorbs 48.3% of pool rewards but earns 24,820 ₳/yr; an 11+ pool MPO absorbs 7.7% but earns 1,035,496 ₳/yr — 42× more revenue at 6× less effective price.</p>
+<blockquote>
+<p><strong>Finding F5.1 — Delegators pay 18× more for the same return.</strong> A delegator in a sub-viable pool pays 48.3% effective price and receives 2.04% net return. A delegator in a near-saturation pool pays 2.7% and receives 2.34%. The effective price varies by 18× across pool tiers; the return varies by 0.30 percentage points. The pricing plan does not produce a signal that delegators can act on.</p>
+<p><strong>Finding F6.1 — Operators who charge the most earn the least.</strong> A sub-viable single-pool operator absorbs 48.3% of pool rewards but earns 24,820 ₳/yr. An 11+ pool MPO absorbs 7.7% but earns 1,035,496 ₳/yr — 42× more revenue at 6× less effective price. The flat fee penalises small-pool delegators without compensating the operators who run those pools.</p>
+</blockquote>
+<p>155 sub-viable single-pool operators absorb 48.3% of their pools' output as effective price but operate on just 1.6% of total retail rewards. Meanwhile, hollow MPOs earn 3–42× more (69k–1M ₳/yr) at a lower effective price (3.9–7.7%) — the scaling is horizontal (more pools) rather than vertical (higher extraction). The reward share column makes the structural imbalance explicit: 57 hollow MPOs operate on 64.4% of the retail economy; 414 hollow single-pool operators share 31.1%; 41 balanced operators share 1.2%.</p>
+<p><strong>Delegator returns are near-identical regardless of operator type.</strong> Net ROS ranges from 1.95% (balanced single-pool sub-viable) to 2.34% (hollow single-pool near-saturation) — a 0.39 percentage-point spread across the entire retail market. The flat fee creates large differences in effective price without producing corresponding differences in delegator return. Sub-viable pools generate the highest gross ROS (3.70–3.89% — the reward curve is generous per ADA at small pool sizes) but the flat fee erases the surplus: 1.59–2.19pp of drag. Above the viable threshold, drag collapses to 0.04–0.43pp. For MPOs, drag rises gently with fleet size (0.10–0.20pp) as the commission channel takes over from the flat fee. The delegator cannot meaningfully distinguish operators by return.</p>
+<p><strong>Delegation concentration does not follow return.</strong> 65.9% of retail delegators sit in hollow MPO pools at 2.18% net ROS, while hollow single-pool near-saturation pools offer 2.34% — 0.16pp more — and hold only 2.7% of delegators. The 11+ pool MPOs concentrate 27.7% of all retail delegators (352,426) on 26.5% of rewards. This concentration reflects visibility and wallet-integration defaults, not yield optimisation.</p>
+<blockquote>
+<p><strong>Finding F7.1 — Delegation follows visibility, not return.</strong> 65.9% of retail delegators sit in hollow MPO pools despite hollow single-pool near-saturation pools offering 0.16pp more. The return spread across the retail market (0.39 percentage points) is too narrow to inform delegation decisions.</p>
+<p><strong>Finding F7.2 — The pledge premium is negative in the retail data.</strong> Balanced pools (genuine pledge commitment) deliver 1.98% median net return vs 2.08% for hollow. The flat fee drag (1.06pp for balanced vs 0.47pp for hollow single-pool operators) overwhelms the pledge benefit from the reward curve. The incentive mechanism's core assumption — that pledge commitment translates to better delegator outcomes — does not hold.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Type</th>
+<th style="text-align: right;">Pools</th>
+<th style="text-align: right;">Delegators</th>
+<th style="text-align: right;">Stake (M)</th>
+<th style="text-align: right;">Effective price</th>
+<th style="text-align: right;">Net ROS</th>
+<th style="text-align: right;">Drag (pp)</th>
+<th style="text-align: right;">Revenue (₳/yr)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Everstake</td>
+<td>11p-MPO</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">264,997</td>
+<td style="text-align: right;">566.6</td>
+<td style="text-align: right;">5.4%</td>
+<td style="text-align: right;">2.17%</td>
+<td style="text-align: right;">0.13pp</td>
+<td style="text-align: right;">717,323</td>
+</tr>
+<tr>
+<td>AWP / Atomic Wallet</td>
+<td>3p-MPO</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">83,802</td>
+<td style="text-align: right;">47.5</td>
+<td style="text-align: right;">11.5%</td>
+<td style="text-align: right;">2.06%</td>
+<td style="text-align: right;">0.27pp</td>
+<td style="text-align: right;">127,112</td>
+</tr>
+<tr>
+<td>BERRY</td>
+<td>single-pool</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">22,053</td>
+<td style="text-align: right;">32.9</td>
+<td style="text-align: right;">4.7%</td>
+<td style="text-align: right;">2.48%</td>
+<td style="text-align: right;">0.12pp</td>
+<td style="text-align: right;">35,941</td>
+</tr>
+<tr>
+<td>Emurgo</td>
+<td>8p-MPO</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">15,334</td>
+<td style="text-align: right;">269.4</td>
+<td style="text-align: right;">3.3%</td>
+<td style="text-align: right;">2.31%</td>
+<td style="text-align: right;">0.08pp</td>
+<td style="text-align: right;">210,097</td>
+</tr>
+</tbody>
+</table>
+<p>Everstake dominates the retail market: 264,997 delegators (21% of retail) across 11 pools at 5.4% effective price — a competitive deal. AWP / Atomic Wallet shows the wallet-integration effect: 83,802 delegators routed by the app into 3 pools at 11.5% effective price and the lowest net ROS among top entities (2.06%). BERRY is the counter-example — a single-pool operator that attracts 22,053 delegators at the highest net ROS in the table (2.48%) through community visibility rather than platform integration. The three entities illustrate three delegation mechanisms: institutional routing (Everstake), app defaults (AWP), and community reputation (BERRY).</p>
+<p><strong>The figures below synthesise the retail market economics.</strong></p>
+<p><img alt="Entity Revenue vs Delegator Return — Epoch 623" src="sub-flows/operator-delegator-distribution/mainnet-analysis/figures/entity_revenue_vs_ros.png" /></p>
+<p>Panel A shows the full retail market. The x-axis is entity revenue (₳/year, log scale); the y-axis is net ROS (%). Two vertical clusters are visible at 12,410 ₳/yr and 24,820 ₳/yr — these are the two flat fee floor values (170 ₳ and 340 ₳) annualised (× 73 epochs). Sub-viable operators (red) are pinned to these floor values: their revenue is almost entirely the flat fee, and the commission adds negligible income. The scatter tail below 2% ROS is exclusively sub-viable — these are pools where the flat fee absorbs so much of the reward that delegator return degrades visibly.</p>
+<p>Panel B removes the sub-viable population and zooms to the viable market (≥3M ADA). The picture sharpens: net ROS sits in a tight band between 2.0% and 2.5% across the entire revenue range from 25K to 1.3M ₳/yr — a 52× spread in operator revenue for a 0.5 percentage-point spread in delegator return. The pricing plan is invisible to the delegator in the viable market.</p>
+<p><strong>The full profitability distribution.</strong> The figure below shows the entity-level revenue distribution across all operator types — custodial and retail — on a logarithmic scale. Each box spans the interquartile range (P25–P75); whiskers extend to P5–P95; dots are outliers.</p>
+<p><img alt="Stake Pool Operator Profitability by Operator Type — Epoch 623" src="sub-flows/operator-delegator-distribution/mainnet-analysis/figures/operator_profitability_by_type.png" /></p>
+<p>The visual makes three patterns immediately legible. First, the custodial segment spans three orders of magnitude internally: custodial-by-pledge entities (n=10) earn 1.8M ₳/yr median with a range up to 16.9M, while custodial-by-delegation (n=15) clusters near the retail baseline at 32K. Second, single-pool retail operators (sub-viable, healthy, large+) are compressed into a narrow band around 25K ₳/yr — regardless of pool size, the revenue barely moves. Third, MPO revenue scales with fleet size: 2–5 pool MPOs earn ~94K, 6+ pool MPOs earn ~402K. The jump from single-pool to 2-pool is the most significant transition in operator economics — it roughly triples entity revenue.</p>
+<h3 id="45-is-operator-revenue-competitive-a-market-benchmark">4.5 Is operator revenue competitive? — a market benchmark</h3>
+<p>§4.4 quantifies what operators earn; this section asks whether those earnings are <em>competitive</em> — whether they compensate for the real resources consumed. A reward mechanism that underpays its operators relative to their costs and opportunity cost will eventually lose them. A mechanism that overpays has room to optimise. The question is where Cardano's operator economics sit on that spectrum.</p>
+<h4 id="451-the-cost-of-operating-a-pool-infrastructure-and-labour">4.5.1 The cost of operating a pool — infrastructure and labour</h4>
+<p>A Cardano stake pool requires, at minimum, one block-producing node and two relay nodes, each running 24/7 with adequate CPU, RAM (16–32 GB), NVMe storage, and bandwidth (~1 GB/hour). The operator is responsible for uptime, security patching, key rotation, and monitoring. The typical deployment uses either bare-metal servers or cloud VPS instances across geographically distinct locations.</p>
+<table>
+<thead>
+<tr>
+<th>Cost component</th>
+<th style="text-align: right;">Monthly estimate (USD)</th>
+<th style="text-align: right;">Annual estimate (USD)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Block producer (VPS or bare metal)</td>
+<td style="text-align: right;">\$40–80</td>
+<td style="text-align: right;">\$480–960</td>
+</tr>
+<tr>
+<td>Relay nodes (×2, geographically separated)</td>
+<td style="text-align: right;">\$60–160</td>
+<td style="text-align: right;">\$720–1,920</td>
+</tr>
+<tr>
+<td>Monitoring, DNS, backups</td>
+<td style="text-align: right;">\$10–30</td>
+<td style="text-align: right;">\$120–360</td>
+</tr>
+<tr>
+<td><strong>Infrastructure total</strong></td>
+<td style="text-align: right;"><strong>\$110–270</strong></td>
+<td style="text-align: right;"><strong>\$1,320–3,240</strong></td>
+</tr>
+</tbody>
+</table>
+<p><em>Estimates based on common VPS providers (Hetzner, OVH, Contabo, AWS Lightsail) as of Q1 2026. Bare-metal setups at the lower end; multi-region cloud at the upper end. Excludes operator labour.</em></p>
+<p>At ADA ≈ \$0.25 (April 2026), the infrastructure floor translates to approximately <strong>5,300–13,000 ₳/year</strong>. This is the minimum a pool must generate to avoid operating at a cash loss — before any compensation for the operator's time.</p>
+<p>Infrastructure is the smaller cost. The binding constraint is the operator's time. Running a pool is not passive income: it demands monitoring, upgrades (node releases, hard forks), security management, community engagement, and — increasingly — governance participation (DRep voting, parameter discussions). The workload varies, but a conscientious single-pool operator reports 5–15 hours per month in steady state, with spikes during hard forks or incidents.</p>
+<p>The relevant benchmark is the market rate for comparable skills. A stake pool operator performs a subset of what the industry calls DevOps or Site Reliability Engineering (SRE): infrastructure provisioning, monitoring, incident response, and system upgrades on Linux servers running a blockchain node.</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th style="text-align: right;">Hourly rate (USD)</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DevOps / System Administrator</td>
+<td style="text-align: right;">\$43–67</td>
+<td>ZipRecruiter, Salary.com (2026)</td>
+</tr>
+<tr>
+<td>SRE / DevOps Engineer</td>
+<td style="text-align: right;">\$64–78</td>
+<td>ZipRecruiter, PayScale (2026)</td>
+</tr>
+<tr>
+<td>Senior DevOps Engineer</td>
+<td style="text-align: right;">\$72–86</td>
+<td>Salary.com (2026)</td>
+</tr>
+</tbody>
+</table>
+<p>Even at the lower end of the range (\$43/hr for a junior DevOps role), 10 hours per month of operator labour is worth \$430/month or <strong>\$5,160/year</strong> — approximately <strong>20,600 ₳/year</strong> at current prices.</p>
+<p>Combining infrastructure and a conservative labour estimate:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th style="text-align: right;">Annual cost (₳, at \$0.25)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Infrastructure (mid-range)</td>
+<td style="text-align: right;">~8,000</td>
+</tr>
+<tr>
+<td>Operator labour (10 hrs/mo × \$43/hr)</td>
+<td style="text-align: right;">~20,600</td>
+</tr>
+<tr>
+<td><strong>Total cost floor</strong></td>
+<td style="text-align: right;"><strong>~28,600</strong></td>
+</tr>
+</tbody>
+</table>
+<p>This is a <em>lower bound</em>. It assumes the cheapest infrastructure tier, the lowest market rate for the relevant skillset, and minimal monthly hours. An operator running redundant infrastructure across multiple regions, maintaining a community presence, and participating in governance easily exceeds 20 hours per month — doubling the labour component.</p>
+<h4 id="452-revenue-versus-cost-a-price-sensitivity-view">4.5.2 Revenue versus cost — a price-sensitivity view</h4>
+<p>Infrastructure and labour are denominated in fiat; operator revenue is denominated in ADA. The economic viability of pool operation is therefore a function of two variables: the ₳ revenue (set by the mechanism) and the ADA/USD exchange rate (set by the market). The §4.4 revenue data maps directly onto this cost framework. The table below holds the first constant — each tier's median ₳/yr from §4.4 — and varies the second across five price points spanning a 40× range.</p>
+<table>
+<thead>
+<tr>
+<th>Operator tier</th>
+<th style="text-align: right;">Revenue (₳/yr)</th>
+<th style="text-align: right;">@\$0.25</th>
+<th style="text-align: right;">@\$0.50</th>
+<th style="text-align: right;">@\$1.00</th>
+<th style="text-align: right;">@\$5.00</th>
+<th style="text-align: right;">@\$10.00</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sub-viable single-pool</td>
+<td style="text-align: right;">24,820</td>
+<td style="text-align: right;">\$6,205</td>
+<td style="text-align: right;">\$12,410</td>
+<td style="text-align: right;">\$24,820</td>
+<td style="text-align: right;">\$124,100</td>
+<td style="text-align: right;">\$248,200</td>
+</tr>
+<tr>
+<td>Healthy single-pool (3–38.5M)</td>
+<td style="text-align: right;">26,652</td>
+<td style="text-align: right;">\$6,663</td>
+<td style="text-align: right;">\$13,326</td>
+<td style="text-align: right;">\$26,652</td>
+<td style="text-align: right;">\$133,260</td>
+<td style="text-align: right;">\$266,520</td>
+</tr>
+<tr>
+<td>Large healthy single-pool (38.5–62M)</td>
+<td style="text-align: right;">31,757</td>
+<td style="text-align: right;">\$7,939</td>
+<td style="text-align: right;">\$15,879</td>
+<td style="text-align: right;">\$31,757</td>
+<td style="text-align: right;">\$158,785</td>
+<td style="text-align: right;">\$317,570</td>
+</tr>
+<tr>
+<td>Near-saturation single-pool (62–77M)</td>
+<td style="text-align: right;">27,244</td>
+<td style="text-align: right;">\$6,811</td>
+<td style="text-align: right;">\$13,622</td>
+<td style="text-align: right;">\$27,244</td>
+<td style="text-align: right;">\$136,220</td>
+<td style="text-align: right;">\$272,440</td>
+</tr>
+<tr>
+<td>2-pool MPO</td>
+<td style="text-align: right;">68,667</td>
+<td style="text-align: right;">\$17,167</td>
+<td style="text-align: right;">\$34,334</td>
+<td style="text-align: right;">\$68,667</td>
+<td style="text-align: right;">\$343,335</td>
+<td style="text-align: right;">\$686,670</td>
+</tr>
+<tr>
+<td>3–5 pool MPO</td>
+<td style="text-align: right;">132,851</td>
+<td style="text-align: right;">\$33,213</td>
+<td style="text-align: right;">\$66,426</td>
+<td style="text-align: right;">\$132,851</td>
+<td style="text-align: right;">\$664,255</td>
+<td style="text-align: right;">\$1,328,510</td>
+</tr>
+<tr>
+<td>6–10 pool MPO</td>
+<td style="text-align: right;">263,959</td>
+<td style="text-align: right;">\$65,990</td>
+<td style="text-align: right;">\$131,980</td>
+<td style="text-align: right;">\$263,959</td>
+<td style="text-align: right;">\$1,319,795</td>
+<td style="text-align: right;">\$2,639,590</td>
+</tr>
+<tr>
+<td>11+ pool MPO</td>
+<td style="text-align: right;">1,035,496</td>
+<td style="text-align: right;">\$258,874</td>
+<td style="text-align: right;">\$517,748</td>
+<td style="text-align: right;">\$1,035,496</td>
+<td style="text-align: right;">\$5,177,480</td>
+<td style="text-align: right;">\$10,354,960</td>
+</tr>
+</tbody>
+</table>
+<p><em>Reference cost floor: ~\$2,000/yr infrastructure (mid-range) + ~\$5,160/yr labour (10 hrs/mo × $43/hr) = **~$7,160/yr**. An operator is competitive when revenue covers this floor with meaningful surplus.</em></p>
+<p>The table reveals that the mechanism's economic story changes entirely depending on which column the reader inhabits.</p>
+<p><strong>At \$0.25</strong> (April 2026 spot), no single-pool operator covers the cost floor. The median single-pool revenue of ~\$6,500 falls short of the conservative \$7,160 estimate — the operator works at a net loss before accounting for any return on time beyond the bare minimum. The 2-pool MPO tier (\$17,200) is the first to clear the threshold with margin, but the income remains modest. Only the 6+ pool MPOs earn what would qualify as a professional income.</p>
+<p><strong>At \$0.50</strong>, single-pool operators cross the cost floor comfortably (~\$12,500) but the surplus (~\$5,300 above costs) compensates roughly 10 hours per month at \$43/hr — the operator breaks even on the minimum estimate but earns nothing beyond it. The 2-pool MPO tier (\$34,300) begins to look like a viable part-time income. The 3–5 pool tier (\$66,400) reaches a full-time junior-engineer salary in most markets.</p>
+<p><strong>At \$1.00</strong>, the picture inverts. Single-pool revenue (~\$25,000) covers costs and leaves ~\$18,000 of surplus — a meaningful part-time income or a modest full-time salary in lower-cost markets. The 2-pool MPO (\$68,700) earns a comfortable full-time salary. The 3–5 pool tier (\$132,900) reaches senior-engineer compensation. Pool operation becomes an economically rational activity at every tier.</p>
+<p><strong>At \$5.00</strong>, single-pool operation pays ~\$124,000 — a senior professional salary in most geographies. The 2-pool MPO earns \$343,000. The economics are no longer about survival but about whether the mechanism overpays relative to the work required. At this price, the incentive design functions as intended: operators are well compensated, and the market can afford to compete on service quality rather than subsistence.</p>
+<p><strong>At \$10.00</strong>, even the sub-viable single-pool tier earns \$248,000 — more than enough to fund a dedicated operations team. The 11+ pool MPO generates over \$10M/yr. The mechanism's revenue distribution remains structurally flat (the sub-viable pool still earns 24× less than the 11+ pool MPO), but the absolute level renders the flatness tolerable: every tier is profitable, and the question shifts from "can the operator survive?" to "is the mechanism's rent distribution equitable?"</p>
+<p>The pattern across columns is stark. <strong>At current prices, no single-pool operator in the retail market earns a competitive wage for their labour.</strong> The break-even point for competitive compensation sits at the 2-pool MPO tier — and even there, the income is modest. But the mechanism itself is not structurally broken; it is structurally <em>contingent</em>. The same ₳ revenue that produces a net loss at \$0.25 produces a professional salary at \$1.00 and a generous one at \$5.00. The protocol's operator economics are hostage to a single exogenous variable.</p>
+<h4 id="453-cross-chain-comparison-the-validator-cost-spectrum">4.5.3 Cross-chain comparison — the validator cost spectrum</h4>
+<p>Cardano's operator economics are unusually lean relative to other PoS networks. The comparison is instructive because it reveals, chain by chain, that the small-operator viability problem is universal — but the <em>binding constraint</em> differs in each design, and so does the structural response.</p>
+<table>
+<thead>
+<tr>
+<th>Network</th>
+<th style="text-align: right;">Infra cost (USD/yr)</th>
+<th>Capital / entry requirement</th>
+<th>Ongoing fixed costs</th>
+<th>Typical small-operator revenue</th>
+<th>Viable?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cardano</strong> (single pool)</td>
+<td style="text-align: right;">\$1,300–3,200</td>
+<td>None (pledge optional)</td>
+<td>None</td>
+<td>~\$6,250/yr (25K ₳ at \$0.25)</td>
+<td>No — labour uncompensated</td>
+</tr>
+<tr>
+<td><strong>Cardano</strong> (3–5 pool MPO)</td>
+<td style="text-align: right;">\$4,000–10,000</td>
+<td>None</td>
+<td>None</td>
+<td>~\$33,200/yr (133K ₳)</td>
+<td>Marginal — part-time</td>
+</tr>
+<tr>
+<td><strong>Ethereum</strong> (solo validator)</td>
+<td style="text-align: right;">\$500–2,000</td>
+<td>32 ETH locked (~\$64,000)</td>
+<td>None</td>
+<td>~\$2,000–2,500/yr (yield on 32 ETH)</td>
+<td>No — capital-intensive, low return</td>
+</tr>
+<tr>
+<td><strong>Solana</strong> (validator)</td>
+<td style="text-align: right;">\$10,000–18,000</td>
+<td>Stake account recommended</td>
+<td>Vote tx ~400 SOL/yr (~\$32,000)</td>
+<td>Variable, commission-dependent</td>
+<td>Marginal — high fixed costs</td>
+</tr>
+<tr>
+<td><strong>Polkadot</strong> (validator)</td>
+<td style="text-align: right;">\$3,000–6,000</td>
+<td>10,000 DOT self-stake (~\$40,000)</td>
+<td>None</td>
+<td>10% min commission on nominated stake</td>
+<td>Yes — if nominated into active set</td>
+</tr>
+<tr>
+<td><strong>Cosmos Hub</strong> (validator)</td>
+<td style="text-align: right;">\$2,000–5,000</td>
+<td>Self-delegation required</td>
+<td>None (but multi-chain is de facto)</td>
+<td>5–10% commission on delegated stake</td>
+<td>Marginal mono-chain; viable multi-chain</td>
+</tr>
+</tbody>
+</table>
+<p><em>Prices: ADA = $0.25; ETH = $2,000; SOL = $80; DOT = $4; ATOM = \$5. Infrastructure from Cherry Servers, Everstake, Hetzner benchmarks (Q1 2026). Capital requirements are protocol-enforced minimums; effective requirements are higher.</em></p>
+<p>The summary table captures the cost structure, but the economics of each chain require a closer reading.</p>
+<p><strong>Ethereum — the most capital-intensive, the least infra-intensive.</strong> A solo validator needs 32 ETH (~\$64,000) locked in the beacon chain and earns ~2.9–3.3% on that capital — approximately \$1,900–2,100/yr in base yield. Infrastructure is trivial: a consumer-grade NUC or a \$40/month VPS is sufficient. The economics are therefore dominated by the opportunity cost of locked capital, not by operational expense. At a 4.3% Treasury yield, the 32 ETH earn less staked than they would in a risk-free USD instrument — the solo validator is paying a premium for the privilege of securing the network. The market's response has been industrialisation: over 93% of staked ETH flows through liquid staking protocols (Lido, Rocket Pool) or institutional custodians (Coinbase, Kiln) that spread operational costs across thousands of validators. MEV-boost tips can add \$500–2,000/yr depending on block proposals, but this is variable and skewed toward large operators with sophisticated relay infrastructure. Solo validating Ethereum is, like solo Cardano operation, an act of civic participation rather than economic rationality.</p>
+<p><strong>Solana — the most expensive to operate, the most punishing at the bottom.</strong> Solana validators require high-performance hardware (128–256 GB RAM, enterprise NVMe, 10 Gbps bandwidth), translating to \$10,000–18,000/yr in infrastructure alone — 5–10× Cardano's cost floor. On top of this, every validator must submit vote transactions each slot, costing approximately 1.1 SOL/day or ~400 SOL/yr (~\$32,000 at \$80/SOL). This vote cost is a <em>fixed</em> expense regardless of delegated stake, creating a structural break-even point: a validator must attract enough delegation for their commission share to exceed ~\$50,000/yr in combined costs. Small validators who fail to attract delegation are structurally unprofitable. The Solana Foundation's delegation programme mitigates this by bootstrapping new validators with Foundation stake, but the programme is discretionary and creates a dependency: Foundation-delegated validators that lose their allocation often shut down. The result is a validator set that is economically viable at the top (large commission on large delegation) and structurally hostile at the bottom — more hostile than Cardano's, because the cost floor is an order of magnitude higher.</p>
+<p><strong>Polkadot — the most "corrected" design, post-reform.</strong> The Pi Day overhaul (2026/03/14) addressed several of the problems visible in other chains. The protocol-enforced 10% minimum commission prevents the race-to-zero that compresses Cardano operator margins (median commission 2%). The 10,000 DOT minimum self-stake (~\$40,000 at \$4/DOT) creates a capital barrier to entry, but in exchange, validators who enter the active set (~297 slots) receive a meaningful share of era rewards. The reduction of unbonding from 28 days to 24–48 hours removed the largest friction for delegators (called <em>nominators</em> in Polkadot's NPoS model). The result is a system where the binding constraint is <em>selection</em> rather than <em>revenue</em>: a validator who secures enough nominations to enter the active set is generally well compensated, but the limited set size means many candidates are excluded entirely. The viability question is therefore binary (in the set or not) rather than graduated (more stake = slightly more revenue, as in Cardano).</p>
+<p><strong>Cosmos Hub — viable only through multi-chain aggregation.</strong> The Cosmos Hub limits its active validator set to 180 slots. Commission rates typically sit at 5–10%, and revenue depends on the ATOM delegated to the validator plus the prevailing inflation rate (7–10% post-Proposal 848). A mono-chain Cosmos validator with modest delegation earns \$5,000–15,000/yr — similar to Cardano's single-pool range and often insufficient to cover infrastructure plus labour. The structural response is multi-chain operation: most professional Cosmos validators run nodes on 10–30 IBC-connected chains (Osmosis, Celestia, dYdX, Injective, etc.), aggregating commission revenue across the ecosystem. A validator operating on 15 chains at \$8,000/yr average earns ~\$120,000 — comparable to Cardano's 3–5 pool MPO tier. The Cosmos model thus mirrors Cardano's MPO economics: fleet operation (across chains rather than across pools) is the path to viability, and mono-chain operators are structurally subsidising the network.</p>
+<p><strong>The binding constraint differs, but the outcome converges.</strong></p>
+<p>Every chain underpays its smallest operators. The table below distils the structural pattern.</p>
+<table>
+<thead>
+<tr>
+<th>Chain</th>
+<th>Binding constraint</th>
+<th>What the small operator lacks</th>
+<th>Structural response</th>
+<th>Cardano analogue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cardano</td>
+<td>Revenue flatness (flat fee)</td>
+<td>Differentiation — revenue barely scales with stake</td>
+<td>MPO fleet operation</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Ethereum</td>
+<td>Capital lock-up (32 ETH)</td>
+<td>Return on capital — yield &lt; risk-free rate</td>
+<td>Liquid staking pools (Lido, etc.)</td>
+<td>Custodial-by-pledge entities</td>
+</tr>
+<tr>
+<td>Solana</td>
+<td>Fixed costs (infra + vote tx)</td>
+<td>Delegation volume to cover \$50K/yr floor</td>
+<td>Foundation delegation programme</td>
+<td>No equivalent — Cardano's cost floor is 10× lower</td>
+</tr>
+<tr>
+<td>Polkadot</td>
+<td>Active set selection (297 slots)</td>
+<td>Nominations to enter the set</td>
+<td>NPoS election algorithm; lobbying nominators</td>
+<td>Saturation cap (but inverted: Cardano limits the top, Polkadot limits the bottom)</td>
+</tr>
+<tr>
+<td>Cosmos</td>
+<td>Chain fragmentation</td>
+<td>Revenue on a single chain</td>
+<td>Multi-chain validator operation</td>
+<td>MPO fleet operation (pools ↔ chains)</td>
+</tr>
+</tbody>
+</table>
+<p>The distinguishing feature of Cardano is that the barrier to <em>entry</em> is the lowest in the peer set (no capital, no heavy hardware, no vote costs, no set-size limit), but the barrier to <em>viability</em> is reached later (the 2-pool MPO tier). Other chains set the entry barrier higher but reward those who clear it more generously. This is a design trade-off between access and compensation — Cardano maximises the first at the expense of the second.</p>
+<p>A second distinguishing feature is the <em>flatness</em> of the single-pool revenue band. Whether a Cardano single-pool operator manages 2M or 60M of delegated stake, their revenue barely moves (24,800–31,800 ₳/yr). The flat fee compresses revenue at the bottom; the commission is too low (median 2%) and the pool reward too similar to create meaningful differentiation at the top. The operator's pricing plan is not a functioning market — it is a mechanical artefact of pool size, and the artefact produces the same answer for almost everyone: approximately 25,000 ₳/yr. No other chain exhibits this degree of revenue compression across a 30× range of delegated stake.</p>
+<h4 id="454-implications">4.5.4 Implications</h4>
+<p>Three implications follow from this benchmarking.</p>
+<p><strong>The single-pool operator is subsidising the network.</strong> At current prices, the median single-pool operator donates approximately 8–10 months of skilled labour per year to the Cardano network. This is not sustainable as a market equilibrium — it is sustained by non-economic motivations (community identity, ideological commitment, ADA appreciation thesis). Any mechanism change that aims to retain single-pool operators must close this gap, either by increasing their revenue or by reducing the labour burden through better tooling and automation.</p>
+<p><strong>The MPO model is the only economically rational structure.</strong> Fleet economics — spreading fixed infrastructure costs and operator time across multiple pools — is the only path to competitive compensation under the current mechanism. This is not a market failure in the narrow sense (MPOs <em>are</em> efficient), but it concentrates operational control in fewer entities and works against the decentralisation goal that motivated the incentive design.</p>
+<p><strong>ADA price is the dominant variable.</strong> The price-sensitivity table above makes this visible at a glance: the same 25,000 ₳/yr that produces a net loss at \$0.25 funds a part-time salary at \$1.00 and a senior professional income at \$5.00. The mechanism's viability is hostage to the fiat price of ADA — a variable entirely outside the protocol's control. This price dependency is a structural fragility: Cardano's operator economics can swing from unviable to comfortable without any change in protocol parameters, pool performance, or operator behaviour. It also means that any assessment of "is the mechanism working?" is inseparable from "what is the ADA price?" — a question no protocol designer can answer in advance.</p>
+<blockquote>
+<p><strong>Finding F6.4 — No single-pool operator in the retail market earns a competitive wage for their labour.</strong> The median single-pool revenue of ~25,000 ₳/yr (\$6,250 at \$0.25/ADA) covers infrastructure but not the 5–15 hours per month of skilled work required to operate a pool. Competitive compensation begins at the 2-pool MPO tier (~68,700 ₳/yr). The single-pool operator is economically subsidising the network — sustained by non-economic motivations, not by the reward mechanism.</p>
+</blockquote>
+<h2 id="5-the-delegator-yield-trajectory-context-and-structural-compression">5. The delegator yield — trajectory, context, and structural compression</h2>
+<p>The pricing plan landscape (§4) establishes what the delegator pays; this section examines what the delegator receives. The annualised return on stake (ROS) — the single metric that aggregates pool performance, operator fees, and pool size — is the delegator's natural selection criterion and the mechanism's intended signal. If the yield spread across pools is wide enough, delegators can differentiate operators and the accountability loop closes. If it is not, the mechanism's core assumption fails regardless of how prices are set.</p>
+<h3 id="51-the-yield-trajectory-level-and-decline">5.1 The yield trajectory — level and decline</h3>
+<p>At epoch 623, a delegator in the retail hollow market earns a stake-weighted annualised yield of approximately 2.0%. A delegation of 10,000 ADA produces ~200 ADA/year, or ~2.7 ADA per epoch.</p>
+<p>This yield has been declining since the Shelley launch (epoch 211), mechanically tracking the depletion of the monetary expansion reserve. The reserve feeds the epoch pot at a fixed draw rate ($\rho = 0.003$); each draw reduces the remaining reserve, which reduces the next draw. The yield compresses over time regardless of pool selection — the entire yield surface descends together. A calibrated model (yield $\propto$ reserve) fits the historical data with $R^2 = 0.99$.</p>
+<p>Over the observed window (epochs 211–615, approximately 5.5 years), the hollow-market delegator yield has fallen from 5.3% to 2.0% — a 63% decline. The projection, assuming constant active stake and no governance action, places the continuation on a roughly exponential path:</p>
+<table>
+<thead>
+<tr>
+<th>Threshold</th>
+<th>Approximate time from epoch 623</th>
+<th>Context</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Below 2.0%</td>
+<td>~0.4 years</td>
+<td>Current level</td>
+</tr>
+<tr>
+<td>Below 1.5%</td>
+<td>~1.7 years</td>
+<td>Below S&amp;P 500 dividend yield</td>
+</tr>
+<tr>
+<td>Below 1.0%</td>
+<td>~3.5 years</td>
+<td>Approaching negligibility for retail delegators</td>
+</tr>
+<tr>
+<td>Below 0.5%</td>
+<td>~6.7 years</td>
+<td>Delegation premium becomes symbolic</td>
+</tr>
+</tbody>
+</table>
+<p>Both assumptions will eventually break — active stake may decline as yield compresses, and the community may revise protocol parameters before the yield reaches negligibility. But the trajectory establishes the default path: absent intervention, the native staking yield halves roughly every 3 years, reaching sub-1% within a single governance cycle.</p>
+<p>The declining yield also tightens the participation constraint for operators: as the epoch pot shrinks, the operator's flat fee and commission revenue shrinks proportionally. At some point, operating a pool becomes unprofitable at any price the delegation market will bear. This is the downstream dependency that the <em>Incentive Mechanism Analysis</em> (§2.4.4.4) identifies.</p>
+<p><img alt="Delegator Yield — Historical Trajectory and Projection" src="sub-flows/operator-delegator-distribution/mainnet-analysis/figures/yield_trajectory_and_projection.png" /></p>
+<blockquote>
+<p><strong>Finding F8.1 — The yield has fallen from 5.3% to 2.0% in 413 epochs, tracking reserve depletion with $R^2 = 0.99$.</strong> Projection: sub-1.5% within ~1.7 years, sub-1.0% within ~3.5 years. The decline is irreversible without protocol-level intervention — it is built into the monetary expansion formula. No pool-level strategy can offset the macro trajectory.</p>
+</blockquote>
+<h3 id="52-the-yield-in-context-cross-chain-and-cross-asset-comparison">5.2 The yield in context — cross-chain and cross-asset comparison</h3>
+<p>At ~2.0% annualised, Cardano's native staking yield sits at the lower end of the PoS landscape and below the risk-free rate in traditional finance. Yet headline APY is one of the most misleading numbers in crypto-economics. A meaningful evaluation requires decomposing each network's yield into its constituent parts, adjusting for token-supply inflation, and comparing the result not only against peer blockchains but also against the traditional financial instruments with which institutional capital competes.</p>
+<h4 id="why-nominal-apy-is-insufficient">Why nominal APY is insufficient</h4>
+<p>Staking rewards on most PoS networks are funded, in whole or in part, by the creation of new tokens. When a protocol mints 10% more tokens per year and distributes them to stakers, the staker's nominal balance grows — but so does the total supply. The staker who does not participate is diluted; the staker who does participate merely preserves their share.</p>
+<p>The economically relevant quantity is the <strong>real yield</strong>: the nominal APY minus the network's effective inflation rate. A chain offering 15% APY with 12% inflation delivers roughly the same real return as a chain offering 3% APY with 0.5% inflation. The former merely obscures the dilution behind a larger headline number.</p>
+<p>This mechanism is analogous to money-printing in fiat economies. An investor who earns 5% on a bond while the central bank inflates the currency at 4% captures only 1% in real purchasing power. The same logic applies to token economies, with one additional asymmetry: in most PoS systems, non-stakers bear the full cost of inflation without receiving any compensation. High-APY networks thus embed a coercive element — stake or be diluted — that is often mistaken for generosity.</p>
+<h4 id="cross-chain-yield-decomposition">Cross-chain yield decomposition</h4>
+<p>The table below decomposes the staking economics of six major PoS networks as of Q1 2026. For each chain, the nominal APY is separated into its inflation component and the residual real yield. The table also captures two structural risk factors — lock-up duration and slashing exposure — that directly affect the risk-adjusted return.</p>
+<table>
+<thead>
+<tr>
+<th>Network</th>
+<th>Ticker</th>
+<th>Nominal APY</th>
+<th>Net inflation</th>
+<th><strong>Real yield</strong></th>
+<th>Lock-up</th>
+<th>Slashing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cardano</td>
+<td>ADA</td>
+<td>2–4%</td>
+<td>~1.5–2%</td>
+<td><strong>~1–2%</strong></td>
+<td>None</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Ethereum</td>
+<td>ETH</td>
+<td>2.9–3.3%</td>
+<td>~0.2%</td>
+<td><strong>~2.5–3%</strong></td>
+<td>None (post-Shanghai)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Solana</td>
+<td>SOL</td>
+<td>6–8%</td>
+<td>~4–5%</td>
+<td><strong>~0–3%</strong></td>
+<td>2–3 days</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Avalanche</td>
+<td>AVAX</td>
+<td>7–8%</td>
+<td>~5.5%</td>
+<td><strong>~1.5–2.5%</strong></td>
+<td>14 days</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Polkadot</td>
+<td>DOT</td>
+<td>9–12%</td>
+<td>~3.1%</td>
+<td><strong>~4–7%</strong></td>
+<td>24–48h</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Cosmos</td>
+<td>ATOM</td>
+<td>14–20%</td>
+<td>~7–10%</td>
+<td><strong>~2–8%</strong></td>
+<td>21 days</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p><em>Sources: Staking Rewards, CoinLaw, Spotted Crypto, Blocklr. Polkadot reflects the post-Pi-Day (2026/03/14) inflation reduction. Cosmos reflects Proposal 848 cap at 10% max inflation. Ranges reflect validator-commission variation and epoch-to-epoch fluctuation.</em></p>
+<p>Several observations emerge from this decomposition.</p>
+<p><strong>Cardano's real yield is honest but modest.</strong> At 1–2%, it ranks among the lowest in absolute terms. However, this figure reflects a design with no hidden subsidy: the rewards are drawn from a finite, declining reserve (§5.1), not from perpetual token issuance. The low inflation rate means that non-stakers suffer minimal dilution, and stakers capture nearly the full nominal return as genuine value. This transparency is a structural advantage.</p>
+<p><strong>Ethereum delivers the strongest risk-adjusted return.</strong> With net inflation near 0.2% (buoyed by the EIP-1559 burn mechanism, though reduced post-Dencun as L2 blob transactions lower mainnet gas pressure), nearly the entire 2.9–3.3% nominal APY translates into real yield. Combined with no lock-up (post-Shanghai) and the deepest institutional liquidity of any PoS chain, Ethereum represents the benchmark against which all other staking yields are measured.</p>
+<p><strong>Solana's yield is substantially overstated.</strong> The headline 6–8% APY masks an inflation rate of approximately 4–5% (following a 15% annual disinflation from an initial 8%, approaching a terminal floor of 1.5% around 2031). The resulting real yield of 0–3% is comparable to — or worse than — Cardano's, despite appearing nearly three times larger in nominal terms. A proposal to accelerate disinflation (SIMD-0411, doubling the annual reduction to 30%) has been debated but faces implementation delays. Non-staking SOL holders are diluted at 4–5% per year, creating a coercive incentive structure: stake or lose value.</p>
+<p><strong>Polkadot is a notable reformer.</strong> The "Pi Day" overhaul of 2026/03/14 halved inflation to approximately 3.1% through a hard supply cap of 2.1 billion DOT and a stepped disinflation schedule (13.14% reduction every two years). Combined with the reduction of the unbonding period from 28 days to 24–48 hours, Polkadot has materially improved its risk-adjusted profile. The resulting real yield of 4–7% is currently the highest in the peer set, though it remains to be seen whether the new equilibrium will hold as staking participation adjusts.</p>
+<p><strong>Cosmos illustrates the inflation illusion most starkly.</strong> An APY of 14–20% sounds extraordinary, but with inflation capped at 10% (Proposal 848, down from a previous 20% ceiling) and a 21-day unbonding period, the real yield compresses to 2–8% under significant illiquidity risk. The wide range reflects the dynamic inflation mechanism: ATOM inflation adjusts continuously to target a 67% bonding ratio, oscillating between 7% and 10% depending on participation. In low-activity periods, the real yield can fall below Cardano's while carrying substantially more risk.</p>
+<h4 id="inflation-funding-models-finite-stock-versus-perpetual-flow">Inflation funding models — finite stock versus perpetual flow</h4>
+<p>The divergence in real yields is rooted in fundamentally different monetary architectures. These can be grouped into three families.</p>
+<p><strong>Finite-reserve model (Cardano, partially Bitcoin).</strong> Rewards are drawn from a pre-allocated reserve that decays exponentially. Cardano's reserve of approximately 8 billion ADA (from a hard cap of 45 billion) is depleted at a rate governed by the monetary expansion parameter ρ = 0.003 per epoch. This creates a smooth, predictable disinflation curve — analogous to Bitcoin's halving schedule, but continuous rather than discrete. As §5.1 establishes, the reserve is projected to approach exhaustion around epoch 3500, at which point the network must be self-sustaining through transaction fees alone. The critical implication: Cardano's yield is structurally declining and will eventually converge to zero unless fee revenue scales proportionally.</p>
+<p><strong>Perpetual-issuance model with disinflation (Solana, Avalanche, Polkadot).</strong> New tokens are minted indefinitely, but at a decreasing rate. Solana targets a 1.5% terminal inflation floor; Polkadot's stepped schedule reduces issuance by 13.14% biennially. These models guarantee a permanent base yield at the cost of permanent dilution. The terminal inflation rate effectively sets a floor on the minimum real yield the network can offer — and a ceiling on the dilution non-stakers will perpetually endure.</p>
+<p><strong>Dynamic-inflation model (Cosmos).</strong> Inflation is a control variable that adjusts in real time to target a bonding ratio. This creates a feedback loop: if staking participation drops below the target, inflation rises to attract more stakers, increasing dilution for non-participants. If participation exceeds the target, inflation decreases. The system is self-correcting but volatile, and the real yield varies significantly across market cycles.</p>
+<p>Each architecture embeds a different bet. Cardano bets that on-chain activity will generate enough fee revenue to replace the declining reserve. Solana bets that perpetual low-level inflation is an acceptable cost for guaranteed validator compensation. Cosmos bets that a dynamic feedback mechanism can balance participation incentives in real time. None of these bets has been conclusively validated; all represent open economic experiments.</p>
+<h4 id="beyond-crypto-the-traditional-finance-yield-landscape">Beyond crypto — the traditional-finance yield landscape</h4>
+<p>A staking yield does not exist in isolation. Institutional allocators and retail investors alike evaluate it against the opportunity cost of traditional financial instruments. The table below places the major PoS real yields alongside conventional fixed-income and equity-income benchmarks as of April 2026.</p>
+<table>
+<thead>
+<tr>
+<th>Asset class</th>
+<th>Nominal yield</th>
+<th>Real yield (adj.)</th>
+<th>Key risk factor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>US 10-Year Treasury</td>
+<td>4.3%</td>
+<td>~2.0–2.5%</td>
+<td>Interest-rate / duration risk</td>
+</tr>
+<tr>
+<td>High-yield savings (USD)</td>
+<td>3.9–5.0%</td>
+<td>~1.5–2.5%</td>
+<td>Inflation erosion; FDIC cap</td>
+</tr>
+<tr>
+<td>S&amp;P 500 dividend yield</td>
+<td>1.1–1.3%</td>
+<td>~1.0%</td>
+<td>Equity market risk</td>
+</tr>
+<tr>
+<td>REITs (diversified)</td>
+<td>3.4–7.0%</td>
+<td>~2.0–5.0%</td>
+<td>Real-estate cycle; leverage</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Cardano (ADA staking)</td>
+<td>2–4%</td>
+<td>~1–2%</td>
+<td>Protocol risk; ADA price volatility</td>
+</tr>
+<tr>
+<td>Ethereum (ETH staking)</td>
+<td>2.9–3.3%</td>
+<td>~2.5–3%</td>
+<td>Slashing; smart-contract risk</td>
+</tr>
+<tr>
+<td>Polkadot (DOT staking)</td>
+<td>9–12%</td>
+<td>~4–7%</td>
+<td>Governance change; DOT price volatility</td>
+</tr>
+</tbody>
+</table>
+<p><em>Traditional-finance yields: US Treasury (TradingEconomics, April 2026); savings (Bankrate, April 2026); S&amp;P 500 dividend (Multpl.com); REITs (Commercial Property Executive, 2026). Real yields adjusted for US CPI inflation of ~2.0–2.5%. Crypto real yields adjusted for network-level token inflation per the cross-chain table above.</em></p>
+<p>The comparison reveals a striking convergence. Cardano's real staking yield of 1–2% falls within the same band as the S&amp;P 500 dividend yield and the lower end of high-yield savings accounts. Ethereum's 2.5–3% real yield competes directly with the US 10-Year Treasury. Only Polkadot, after its recent inflation reform, offers a meaningfully higher real yield than traditional fixed income — but at the cost of substantially higher volatility and protocol-governance risk.</p>
+<p>This convergence is not coincidental. As crypto staking matures and institutional capital enters through regulated vehicles, yields are being arbitraged toward traditional risk-adjusted benchmarks. A rational allocator choosing between a 4.3% Treasury and a 3% ETH staking yield must be compensated for the additional smart-contract risk, custody complexity, and price volatility — or the capital will not flow. The era of "free" double-digit yields as a crypto-native anomaly is largely over; what remains are instruments whose risk-return profiles must now compete on traditional terms.</p>
+<h4 id="the-etf-multiplier-how-lock-up-and-custody-reshape-yield-attractiveness">The ETF multiplier — how lock-up and custody reshape yield attractiveness</h4>
+<p>The emergence of staked-asset Exchange-Traded Funds introduces a new dimension to yield evaluation. In March 2026, BlackRock launched the iShares Staked Ethereum Trust ETF (ticker: ETHB), the first regulated vehicle to combine spot crypto exposure with on-chain staking yield. The fund debuted with \$107M in seed capital and approximately 80% of its ETH staked on-chain from day one, distributing the staking yield to shareholders as income.</p>
+<p>This precedent has immediate structural implications for how different PoS networks can participate in institutional capital flows. The core constraint is operational: an ETF must honour daily redemptions. Any lock-up period on the underlying staked asset creates a liquidity mismatch that the fund manager must buffer against.</p>
+<p><strong>Cardano is structurally ideal for staked ETFs.</strong> Delegated ADA is never locked, never leaves the delegator's wallet, and carries no slashing risk. A fund manager could stake 100% of the underlying ADA with zero liquidity buffer, zero unbonding delay, and zero risk of principal loss from validator misbehaviour. No other major PoS asset offers this combination.</p>
+<p><strong>Ethereum is workable but imperfect.</strong> Post-Shanghai, unstaking delays are typically hours to days depending on the exit queue. BlackRock's ETHB accommodates this with a partial liquidity reserve, staking approximately 80% rather than 100% of holdings. Slashing risk exists but is mitigated through institutional-grade validators. The result is a functional but not frictionless product.</p>
+<p><strong>Solana, Avalanche, and Cosmos face material friction.</strong> The 2–3 day (Solana), 14-day (Avalanche), and 21-day (Cosmos) unbonding periods require significant liquidity buffers that directly reduce the effective yield. A Cosmos ETF staking only 70% of its ATOM (to maintain a redemption buffer) would see its already-compressed real yield drop further. Slashing risk adds an additional actuarial cost.</p>
+<p><strong>Polkadot's recent reform improves its position.</strong> The reduction of unbonding from 28 days to 24–48 hours dramatically narrows the liquidity mismatch, making a staked DOT ETF operationally viable. However, the 10,000 DOT minimum self-stake for validators and fixed 10% commission structure introduce rigidities that differ from Cardano's permissionless delegation model.</p>
+<p>The broader implication is that <em>yield attractiveness is not determined by APY alone, but by the structural compatibility between a network's staking mechanics and the operational requirements of the vehicles through which capital is deployed</em>. Cardano's modest nominal yield, combined with zero lock-up and non-custodial delegation, creates an unusually clean institutional wrapper — an advantage that may prove more consequential than the headline APY gap suggests.</p>
+<h4 id="three-evaluation-frames">Three evaluation frames</h4>
+<p>The comparison invites three evaluation frames that depend on what the delegator holds and what alternatives are available.</p>
+<p><strong>Frame 1 — staking versus idle ADA (same-asset).</strong> A delegator who already holds ADA faces a simple decision: stake or not. The staking premium is unconditionally positive (~2.0%/year). Every ADA held idle is diluted by the monetary expansion that funds the epoch pot; every ADA staked captures a share of it. There is no threshold at which delegation becomes irrational in this frame — the premium is always positive.</p>
+<p><strong>Frame 2 — ADA staking versus risk-free alternatives (cross-asset, USD terms).</strong> A delegator choosing between ADA staking and a USD instrument faces a different calculus. To match a 4.3% Treasury yield, the delegator needs ADA to appreciate by at least +2.3%/year on top of the staking yield. In this frame, Cardano delegation is not a yield play — it is a conviction bet on the underlying asset. The yield is a bonus on top of a price thesis, not a substitute for one.</p>
+<p><strong>Frame 3 — native staking versus Cardano DeFi (same-asset, different risk).</strong> DeFi protocols within the Cardano ecosystem typically offer higher nominal yields but carry smart-contract risk, impermanent loss, and counterparty risk. Native staking is the risk-free rate of the ADA economy: the baseline that any higher-risk strategy must beat by a margin sufficient to compensate for the additional risk.</p>
+<p>What Cardano's delegation mechanism loses in yield, it gains in liquidity and simplicity: no lock-up, no unbonding delay, no slashing risk, no minimum threshold, no custodial transfer. No other major PoS chain offers this combination. The low yield is the price of a design that prioritises liquid, non-custodial participation — a deliberate trade-off, not an oversight.</p>
+<h4 id="toward-a-framework-for-attractive-yield">Toward a framework for "attractive" yield</h4>
+<p>The analysis above reveals that the question "is Cardano's yield competitive?" cannot be answered with a single number. Competitiveness depends on who is asking and what alternatives they face.</p>
+<p>For a <strong>retail staker</strong> already holding ADA, the relevant comparison is the opportunity cost of <em>not</em> staking. Since Cardano imposes no lock-up, no slashing, and no minimum, the cost of staking is effectively zero. Any positive yield — even 1% — is rational to capture. The real question for this cohort is not whether the yield is attractive in absolute terms, but whether it is sufficient to retain their ADA holdings against competing chains.</p>
+<p>For an <strong>institutional allocator</strong>, the relevant comparison is risk-adjusted return versus traditional benchmarks. At 1–2% real yield, Cardano staking underperforms the US 10-Year Treasury (real yield ~2%) and roughly matches the S&amp;P 500 dividend yield. The institutional case for ADA staking therefore cannot rest on yield alone — it must incorporate the appreciation thesis (token price upside), the governance-participation value (voting rights in Voltaire), and the structural advantages described above (ETF compatibility, non-custodial safety).</p>
+<p>For an <strong>ETF product designer</strong>, the relevant metric is <em>distributable income after operational friction</em>. On this metric, Cardano's zero-lock-up, zero-slashing architecture means that nearly 100% of the nominal yield is distributable, whereas competing chains lose a fraction to liquidity buffers, insurance provisions, and custody complexity. An ETF distributing 2.5% on ADA could be operationally cleaner than one distributing 4% on a chain with 21-day unbonding.</p>
+<p>§5.3 takes this framework to the intra-pool level: given that the absolute yield is modest and declining, is the <em>spread</em> between pools wide enough to drive delegation decisions?</p>
+<p><img alt="Cardano's Staking Yield in Context — Cross-Chain and Cross-Asset Comparison" src="sub-flows/operator-delegator-distribution/mainnet-analysis/figures/yield_cross_chain_comparison.png" /></p>
+<blockquote>
+<p><strong>Finding F8.2 — At 2.0%, Cardano sits below the USD risk-free rate (4.3%) and at the bottom of the PoS landscape.</strong> No other major chain combines this low a yield with liquid, non-custodial, slashing-free design. The low return is the cost of that design — delegation is a conviction bet on ADA, not a yield-seeking decision. The mechanism assumes yield-sensitive delegators, but the yield regime no longer supports that assumption.</p>
+</blockquote>
+<h3 id="53-the-yield-spread-structural-compression">5.3 The yield spread — structural compression</h3>
+<p>The more important question for the delegator is not the absolute level but the <em>spread</em> — how much yield varies across the pools available for delegation. §4.4 established that net ROS ranges from 1.95% to 2.34% across the entire retail market — a 0.39 percentage-point spread. This section places that spread in the context of the declining trajectory.</p>
+<p>The spread is narrow because the reward curve distributes rewards roughly proportional to stake. The flat fee hyperbola penalises only small pools (§4.1); commission competition has compressed fees in the large-pool regime (§4.2); block production is proportional to stake; and the single-pool/MPO distinction has no net yield effect (§4.4). The only pools that offer materially different returns are those the delegator should avoid: sub-viable pools (median 2.04%, but 48.3% effective price), oversaturated pools (0.5–0.9pp penalty), and dead pools that extract 100% of rewards.</p>
+<p>Among viable retail pools (≥3M ADA), the middle half of pools fall within ±0.25 percentage points of the median yield. The 30–77M band — where 70% of delegation lives — shows a middle-half spread of approximately 0.46pp at the single-epoch level, much of which is block-production luck that averages out over a trailing year. The structural spread that persists across epochs is an order of magnitude smaller than the single-epoch noise.</p>
+<p>As the reserve depletes, the spread compresses further. The yield surface is descending as a unit — the gap between the best and worst viable pools is shrinking in absolute terms even as it remains roughly constant in relative terms. A 0.39pp spread at 2.0% yield is 20% of the base rate; at 1.0% yield, the same relative spread would be 0.20pp — indistinguishable from measurement noise.</p>
+<blockquote>
+<p><strong>Finding F8.3 — The failures documented in §4 are not static — they degrade every epoch.</strong> As the epoch pot shrinks, the flat fee (fixed at 170/340 ₳) consumes a growing share of pool rewards — the confiscatory zone identified in §4.1 expands upward into currently viable tiers. The 0.39pp retail yield spread compresses proportionally: at 1.0% base yield (~3.5 years), the same relative dispersion produces ~0.20pp — indistinguishable from block-production noise. The mechanism was designed for a yield regime that no longer exists and will not return without protocol-level intervention.</p>
+</blockquote>
+<p>The combined effect is a selection pressure that operates asymmetrically across the operator population. Each epoch the yield surface descends, the confiscatory zone of the flat fee hyperbola extends upward (§4.1), and the viable-pool threshold rises. Single-pool independent operators are the first casualties: they cannot distribute the flat fee drag across a fleet, they cannot amortise infrastructure costs over multiple pools, and they have no margin buffer to absorb the compression. Multi-pool operators, by contrast, are structurally insulated — horizontal scaling lets them hold per-pool costs constant while the per-ADA fee drag falls with pool size. The mechanism therefore produces a ratchet: as yield declines, the population of sub-viable single-pool operators grows, their delegators migrate to larger fleets, and the concentration documented in §4.3 deepens. Each epoch, the system designed to incentivise decentralised participation selects against its smallest operators and reinforces the dominance of its largest.</p>
+<blockquote>
+<p><strong>Finding F8.4 — The declining yield regime acts as a selection ratchet: it eliminates small independent operators and concentrates stake in multi-pool fleets.</strong> The flat fee is fixed in absolute terms; the epoch pot is shrinking. The intersection moves upward every epoch — pools that are viable today cross the sub-viable threshold tomorrow. Single-pool operators bear the full weight of the flat fee drag and have no fleet over which to amortise it; multi-pool operators are insulated by horizontal scaling. The result is a structural feedback loop: yield compression → expanding confiscatory zone → single-pool attrition → delegation migration → fleet concentration → deeper centralisation. The mechanism's own parameters drive the outcome it was designed to prevent.</p>
+</blockquote></div>
+<footer class="site-footer">Input Output Group &middot; IO Research</footer>
+<div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
+<a href="#" class="back-top" id="btt">&uarr;</a>
+<script>
+(function(){
+  /* ── Progress bar ── */
+  const bar=document.getElementById('progress');
+  function updateProgress(){
+    const h=document.documentElement.scrollHeight-window.innerHeight;
+    bar.style.width=h>0?((window.scrollY/h)*100)+'%':'0%';
+  }
+
+  /* ── Back to top ── */
+  const btt=document.getElementById('btt');
+  function updateBtt(){ btt.classList.toggle('visible',window.scrollY>400); }
+
+  window.addEventListener('scroll',function(){ updateProgress(); updateBtt(); },{passive:true});
+  updateProgress();
+
+  /* ── Smooth scroll for anchor links ── */
+  document.addEventListener('click',function(e){
+    const a=e.target.closest('a[href^="#"]');
+    if(!a) return;
+    const id=a.getAttribute('href').slice(1);
+    const el=document.getElementById(id);
+    if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth',block:'start'}); history.pushState(null,null,'#'+id); }
+  });
+
+  /* ── Collapsible TOC sub-lists (all levels) ── */
+  document.querySelectorAll('.toc-nav li').forEach(function(li){
+    var sub=li.querySelector(':scope > ul');
+    if(!sub) return;
+    li.classList.add('has-children');
+    var toggle=li.querySelector(':scope > .toc-num')||li.querySelector(':scope > a');
+    if(!toggle) return;
+    toggle.classList.add('toc-toggle');
+    toggle.addEventListener('click',function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      toggle.classList.toggle('collapsed');
+      sub.classList.toggle('toc-collapsed');
+    });
+  });
+
+  /* ── Collapsible content sections (h2, h3, h4) ── */
+  function makeCollapsible(heading, stopTags){
+    if(/^contents$|^objective$/i.test(heading.textContent.trim())) return;
+    heading.classList.add('section-toggle');
+    var wrapper=document.createElement('div');
+    wrapper.className='section-body';
+    var sib=heading.nextElementSibling;
+    var nodes=[];
+    while(sib && stopTags.indexOf(sib.tagName)===-1){
+      nodes.push(sib);
+      sib=sib.nextElementSibling;
+    }
+    if(nodes.length===0){ heading.classList.remove('section-toggle'); return; }
+    heading.after(wrapper);
+    nodes.forEach(function(n){ wrapper.appendChild(n); });
+    wrapper.style.maxHeight=wrapper.scrollHeight+'px';
+    heading.addEventListener('click',function(){
+      heading.classList.toggle('collapsed');
+      if(wrapper.classList.contains('collapsed')){
+        wrapper.style.maxHeight=wrapper.scrollHeight+'px';
+        wrapper.classList.remove('collapsed');
+      } else {
+        wrapper.style.maxHeight=wrapper.scrollHeight+'px';
+        requestAnimationFrame(function(){ wrapper.style.maxHeight='0px'; wrapper.classList.add('collapsed'); });
+      }
+    });
+    wrapper.querySelectorAll('[id]').forEach(function(el){
+      window.addEventListener('hashchange',function(){
+        if(window.location.hash==='#'+el.id && wrapper.classList.contains('collapsed')){
+          heading.click();
+        }
+      });
+    });
+  }
+  /* Apply bottom-up: h4 first, then h3, then h2 (so inner wrappers exist before outer ones) */
+  document.querySelectorAll('.content h4[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3','H4']); });
+  document.querySelectorAll('.content h3[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3']); });
+  document.querySelectorAll('.content h2[id]').forEach(function(h){ makeCollapsible(h,['H1','H2']); });
+
+  /* ── Wrap tables in scroll containers ── */
+  document.querySelectorAll('.content table').forEach(function(tbl){
+    if(tbl.parentElement.classList.contains('table-wrap')) return;
+    var wrap=document.createElement('div');
+    wrap.className='table-wrap';
+    tbl.parentNode.insertBefore(wrap,tbl);
+    wrap.appendChild(tbl);
+  });
+
+  /* ── Image lightbox ── */
+  const overlay=document.getElementById('lightbox');
+  const lbImg=document.getElementById('lb-img');
+  document.querySelectorAll('.content img').forEach(function(img){
+    img.addEventListener('click',function(){
+      lbImg.src=img.src;
+      lbImg.alt=img.alt||'';
+      overlay.classList.add('active');
+    });
+  });
+  overlay.addEventListener('click',function(){ overlay.classList.remove('active'); lbImg.src=''; });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape' && overlay.classList.contains('active')){
+      overlay.classList.remove('active'); lbImg.src='';
+    }
+  });
+
+  /* ── Observation findings → navigate to section ── */
+  document.querySelectorAll('.obs-link[data-section]').forEach(function(el){
+    el.addEventListener('click',function(){
+      var sec=el.getAttribute('data-section');
+      /* Find heading whose id starts with the section number */
+      var target=document.querySelector('h2[id^="'+sec+'-"],h3[id^="'+sec+'-"],h4[id^="'+sec+'-"],h5[id^="'+sec+'-"]');
+      if(!target) target=document.getElementById(sec);
+      if(target){
+        /* Expand collapsed parent section if needed */
+        var body=target.closest('.section-body.collapsed');
+        if(body){
+          var toggle=body.previousElementSibling;
+          if(toggle && toggle.classList.contains('section-toggle')) toggle.click();
+        }
+        setTimeout(function(){ target.scrollIntoView({behavior:'smooth',block:'start'}); },150);
+      }
+    });
+  });
+
+  /* ── Expand collapsed section on direct anchor navigation ── */
+  if(window.location.hash){
+    var target=document.querySelector(window.location.hash);
+    if(target){
+      var body=target.closest('.section-body.collapsed');
+      if(body){
+        var toggle=body.previousElementSibling;
+        if(toggle && toggle.classList.contains('section-toggle')) toggle.click();
+      }
+      setTimeout(function(){ target.scrollIntoView({block:'start'}); },100);
+    }
+  }
+})();
+</script>
+</body>
+</html>
