@@ -130,6 +130,8 @@ services:
         max-size: "200k"
         max-file: "10"
 
+  # Instance A — pruned (staking tables only, no tx_out).
+  # Restored from IOG snapshot. Used for delegation/pool analysis.
   cardano-db-sync:
     platform: linux/amd64
     image: ghcr.io/intersectmbo/cardano-db-sync:13.6.0.4
@@ -137,7 +139,7 @@ services:
       - NETWORK=mainnet
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
-      - RESTORE_SNAPSHOT=${RESTORE_SNAPSHOT:-}
+      - RESTORE_SNAPSHOT=
       - RESTORE_RECREATE_DB=N
       - EXTRA_DB_SYNC_ARGS=${EXTRA_DB_SYNC_ARGS:---skip-fix}
     depends_on:
@@ -160,6 +162,80 @@ services:
         max-size: "200k"
         max-file: "10"
 
+  # Instance B — full (tx_out enabled). Syncs from genesis via the same node.
+  # Used for UTxO analysis (§5 Non-Participants).
+  # Port 5434 on host.
+  # Start with: docker compose up -d postgres-full cardano-db-sync-full
+  postgres-full:
+    image: postgres:17.2-alpine
+    shm_size: 4g
+    environment:
+      - POSTGRES_LOGGING=true
+      - POSTGRES_DB_FILE=/run/secrets/postgres_db
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+      - POSTGRES_USER_FILE=/run/secrets/postgres_user
+    secrets:
+      - postgres_password
+      - postgres_user
+      - postgres_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-data-full:/var/lib/postgresql/data
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command:
+      - -c
+      - maintenance_work_mem=1GB
+      - -c
+      - max_parallel_maintenance_workers=4
+      - -c
+      - work_mem=256MB
+      - -c
+      - shared_buffers=2GB
+      - -c
+      - effective_cache_size=4GB
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    profiles:
+      - full
+
+  cardano-db-sync-full:
+    platform: linux/amd64
+    image: ghcr.io/intersectmbo/cardano-db-sync:13.6.0.4
+    environment:
+      - NETWORK=mainnet
+      - POSTGRES_HOST=postgres-full
+      - POSTGRES_PORT=5432
+      - RESTORE_SNAPSHOT=
+      - RESTORE_RECREATE_DB=N
+      - EXTRA_DB_SYNC_ARGS=--skip-fix
+    depends_on:
+      postgres-full:
+        condition: service_healthy
+    secrets:
+      - postgres_password
+      - postgres_user
+      - postgres_db
+    volumes:
+      - db-sync-data-full:/var/lib/cexplorer
+      - node-ipc:/node-ipc
+    restart: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    profiles:
+      - full
+
 secrets:
   postgres_db:
     file: ./secrets/postgres_db
@@ -170,6 +246,8 @@ secrets:
 
 volumes:
   db-sync-data:
+  db-sync-data-full:
   postgres-data:
+  postgres-data-full:
   node-db:
   node-ipc:

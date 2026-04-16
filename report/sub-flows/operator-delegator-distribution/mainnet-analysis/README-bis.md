@@ -6,19 +6,19 @@ _Built on 2026/04/14 from mainnet data at epoch `623` plus historical analysis f
 
 This report analyses the **intra-pool reward split** — the third and final stage of Cardano's reward pipeline — and traces the structural forces that determine how much of each pool's reward reaches delegators versus operators. It extends the empirical baseline established in the [*Analysis of Cardano's Incentive Mechanism*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf) (Lopez de Lara, 2025; hereafter the *Incentive Mechanism Analysis*) and operates downstream of the companion reports [*Treasury & Pool Pots Distribution*](../../treasury-and-pool-pots-distribution/mainnet-analysis/) (stage 1) and [*The Pools Pot Distribution Gaps*](../../pools-distribution/mainnet-analysis/) (stage 2).
 
-Every epoch, once the reward curve assigns a total reward $\hat{f}$ to each pool, a second mechanism activates: the **intra-pool split**. The pool operator extracts a fixed cost $c$ and a proportional margin $m$; the remainder is distributed pro-rata among all delegators (including the operator's own stake). At epoch 614, this mechanism processed **6.75M ADA** across 875 rewarded pools — but the headline aggregate (24.3% operator take) conceals three radically different strategies. Adopting the Hollow–Private pledge spectrum from the upstream analysis ([§2.4.2](../../../README.md#242-progression--balanced-as-intended-but-private-by-design)), this report classifies entities by **owner-stake ratio** (owner active stake / pool active stake) across their pool fleets. Three strategies emerge along this spectrum: the **hollow strategy** (owner-stake ratio < 10%, 445 entities, 771 pools, 18.10B ADA, op_take=13.34%) where entities depend entirely on external delegation; the **balanced strategy** (10–95% owner-stake, 46 entities, 60 pools, 0.77B ADA, op_take=10.75%) where entities and delegators share capital with genuine alignment; and the **private strategy** (≥ 95% owner-stake, 11 entities, 44 pools, 2.29B ADA, op_take=99.97%) where entities are operator-funded. Remarkably, 495 of 502 entities (98.6%) apply a single pure strategy across all their pools, demonstrating high strategic consistency. Within hollow-strategy entities, a sub-population of 48 "functionally private" pools (margin ≥ 99.9%, typically exchanges and custodians) extract 100% via margin, leaving 723 genuine hollow pools at 7.7% operator take. The entity-level analysis reveals that margin competition is broadly active in the genuine hollow market (median entity margin 1.0%, stake-weighted 8.9%) but fixed cost, not margin, is the dominant extraction channel. Balanced-strategy entities form the smallest population but analytically most significant: they are where the pledge mechanism produces genuine alignment, with many pools carrying Material or High pledge tags and median owner-ratio 26.4%.
+Every epoch, once the reward curve assigns a total reward to each pool, a second mechanism activates: the **intra-pool split**. The pool operator extracts a **flat fee** (a fixed ₳ amount) and a **commission** (a proportional share); the remainder is distributed pro-rata among all delegators (including the operator's own stake). Together the flat fee and commission compose the operator's **pricing plan**; their sum — the **effective price** — is the fraction of pool reward that never reaches delegators. At epoch 623, 952 productive pools process 21.57B ADA of staked capital. After filtering the 21% of stake that is custodial (where the operator controls delegation addresses), the retail market consists of 809 pools, 516 entities, 17.02B ADA, and 1,272,836 delegators — with a median delegation of 87 ₳.
+
+The central finding is a double asymmetry. Delegators in sub-viable pools pay 48.3% effective price for 2.04% net return; delegators in near-saturation pools pay 2.7% for 2.34% — 18× the price for 0.30 percentage points of return. On the operator side, the sub-viable operator absorbs 48.3% of pool rewards but earns 24,820 ₳/yr; an 11+ pool MPO absorbs 7.7% but earns 1,035,496 ₳/yr — 42× more revenue at 6× less price. The flat fee — a mechanism unique to Cardano — penalises small-pool delegators without compensating small-pool operators, and the return signal it produces is too narrow to drive delegation decisions. This challenges the incentive mechanism's core assumption: that delegators can differentiate pools by return.
 
 The argument proceeds in four parts:
 
-1. **The formula** (§2). The SL-D1 intra-pool reward-sharing specification — from the original design through a residual-split decomposition to a reader-friendly rewrite and mainnet parameterization. The mechanism is sequential: fixed cost first, margin on the remainder, then pro-rata distribution. A critical protocol detail: when $\hat{f} < c$, the operator takes $\hat{f}$ (not $c$) — the effective fixed cost is $\min(c, \hat{f})$.
+1. **The formula** (§2). The SL-D1 intra-pool reward-sharing specification — from the original design through a residual-split decomposition to a reader-friendly rewrite and mainnet parameterisation. The mechanism is sequential: flat fee first, commission on the remainder, then pro-rata distribution.
 
-2. **Fee parameters** (§3). The fee-parameter landscape — fixed cost adoption and margin categorisation across 875 rewarded pools.
+2. **The productive and viable populations** (§3). The scope and epoch: 952 productive pools (≥ 1M ADA) carrying 99.1% of stake and 95.6% of delegations. The operator and delegator sides of the population, from raw certificates to the viable threshold.
 
-3. **The delegation landscape** (§4). Who are the 1.27M delegators? 80% of delegation relationships land in the hollow × competitive cell. 30% of stake is custodial — 12% custodial by pledge (private-strategy entities self-delegating their own capital) and 18% custodial by delegation (hollow-strategy entities routing client capital through operator-controlled addresses). Together, 35 entities control 6.42B ADA through 1,125 delegation addresses. The remaining 70% is retail, but concentrated: two entities (Everstake, Atomic Wallet) account for a quarter of all delegations through wallet integrations.
+3. **The pricing plan landscape** (§4). The flat fee, the commission, the custodial/retail boundary (using per-pool median delegation from db-sync), and the retail effective price. The operator's profitability versus the delegator's return.
 
-4. **The delegator's strategy** (§5). The delegator's action space reduces to a single decision — which pool — governed by two criteria: yield (annualised ROS) and the ethics of pool selection (commitment, independence, transparency). The yield trajectory is declining predictably (halving every ~3 years, R²=0.99 fit to reserve depletion), and Cardano's 2.01% sits below the risk-free rate and most PoS peers. Within the pool landscape, the yield surface is remarkably flat: the 30–77M bucket where 70% of delegation lives shows a middle-half spread of just 0.46pp, and the fixed-cost floor — not margin — is the dominant differentiator. When yield cannot meaningfully distinguish pools, the delegator's choice becomes partly an expression of values.
-
-All counts and amounts use epoch **614** (the latest settled epoch with complete reward data). Source data: `koios_pool_history_mainnet.csv`, `koios_pool_owner_history_mainnet.csv`, `koios_pool_list_mainnet.csv`, `mpo_entity_pool_mapping_mainnet.csv` (Koios + entity attribution from the [*pools-distribution*](../../pools-distribution/mainnet-analysis/) flow).
+All counts and amounts use epoch **623**. Source data: `pool_choice_quality_623.csv`, `pool_median_delegation_623.csv` (db-sync `epoch_stake`), `reward_split_snapshot_623.csv` (synthetic, estimated from epoch 614 reward rate), `koios_pool_history_mainnet.csv`, `mpo_entity_pool_mapping_mainnet.csv`.
 
 ## Contents
 
@@ -47,50 +47,57 @@ All counts and amounts use epoch **614** (the latest settled epoch with complete
 
 ## 1. Mainnet Observations
 
-| # | Observation | Summary |
-| --- | --- | --- |
-| O1 | **The fixed-cost floor exhibits striking inertia** | The protocol floor $c_{\min}$ was reduced from 340 to 170 ADA at epoch 445 (2023/10/27). 169 epochs later, 564 pools (64.5%) still declare 340 ADA — the former floor. Only 217 pools (24.8%) have adopted the current floor. 89.3% of pools sit at one of the two floor values; the remaining 10.7% range from 190 to 999,999 ADA. The inertia is consistent across all three strategy populations: operators overwhelmingly anchor to the floor (or the former floor), and the 564-pool residual has a material yield cost for small pools — a pool at 340 ADA pays double the minimum, eroding delegator yield by an amount that scales inversely with pool size. |
-| O2 | **Margin competition is active but masked by a high-margin tail** | Margin is bimodal: 50.7% of pools declare ≤ 2%, while 11.8% declare ≥ 99% (private + functionally private). The median margin has been stable at 2.0% for 405 epochs, but the stake-weighted mean has risen from 4.2% to 18.9% — driven by the growing weight of private and captive pools in the stake distribution, not by fee increases in the competitive market. Any analysis that relies on mean or stake-weighted margin without accounting for this bimodality will overstate the fee burden on the typical delegator. |
-| O3 | **Three disjoint strategies coexist on-chain with near-perfect consistency** | 445 entities follow the hollow strategy (771 pools, 18.10B ADA, < 10% owner-stake), 46 follow balanced (60 pools, 0.77B ADA, 10–95%), and 11 follow private (44 pools, 2.29B ADA, ≥ 95%). 98.6% of entities apply a single pure strategy across their entire fleet. 48 functionally private pools (exchanges, custodians at ≥ 99.9% margin) distort the hollow aggregate from 7.7% to 13.34% operator take. |
-| O4 | **In the genuine hollow market, fixed cost slightly exceeds margin** | Excluding 48 captive pools, the genuine hollow market (723 pools) operates at 7.7% operator take — fixed cost 4.4%, margin 3.6%. Delegators receive 4.89M ADA (87.3% of hollow rewards) for pro-rata distribution. Entity-level median margin is 1.0%; 56.4% of entities operate below 2%. Margin competition is broadly active. |
-| O5 | **The fixed cost is a regressive tax on small-pool delegators** | Effective tax ranges from ~4% (large low-margin pools) to 100% (sub-viable pools where $c \geq \hat{f}$). The fixed-cost share follows a $1/\sigma$ hyperbola. 88.8% of hollow pools declare the minimum cost — the floor is the norm. SPO pools bear a heavier effective tax (13.4% operator take) than MPO pools (12.5%) because scale dilutes the fixed-cost burden. |
-| O6 | **Balanced-strategy entities are analytically significant despite small share** | 46 entities (6.9% of pool count, median owner-ratio 26.4%) form the only population where the pledge mechanism produces meaningful alignment. Many carry Material or High pledge tags — genuine skin-in-the-game. Operator take is 12.8%, dominated by fixed cost because pools tend to be small; margins are low. |
-| O7 | **The delegator yield is declining on a predictable trajectory** | Stake-weighted hollow-market yield at epoch 614: 2.01% annualised (≈201 ADA/year per 10k ADA). Yield tracks reserve depletion with R²=0.99 and halves roughly every 3 years. Projected threshold crossings: < 2% in ~0.4yr, < 1.5% in ~1.7yr, < 1% in ~3.5yr, < 0.5% in ~6.7yr. The trajectory assumes constant active stake and no governance action. |
-| O8 | **Cardano's yield sits below the risk-free rate and most PoS peers** | Among major PoS chains, only the S&P 500 dividend yield sits below Cardano's staking return; Ethereum delivers 1.5–2×, higher-inflation chains 3–10×. Three evaluation frames apply: same-asset (always positive), cross-asset (requires ADA price appreciation to match Treasuries), and DeFi (native staking as the risk-free rate of the ADA economy). What Cardano loses in yield it gains in design: no lockup, no slashing, no minimum, no custodial transfer. |
-| O9 | **The yield spread between well-run pools is narrow** | Hollow and balanced yields correlate at 0.97 over 405 epochs — both strategies track reserve depletion in lockstep. The balanced-hollow trailing-year gap has fluctuated between 0.12pp and 0.36pp since epoch 365 — not a reliable premium. In the 30–77M bucket (70% of hollow delegation), the middle-half spread is just 0.46pp; 70.2% of delegated stake sits within ±0.5pp of the median. SPO vs MPO yield difference is negligible (2.05% vs 2.00%). |
-| O10 | **Fixed cost, not margin, is the dominant yield differentiator** | The fixed-cost floor acts as a regressive levy: 54.3% effective tax for sub-3M pools, collapsing to 4.7% in the 30–77M band. A counterfactual removing the floor flattens the yield surface entirely — median yield rises +1.0pp for < 3M pools but only +0.05pp for 30–77M pools. The aggregate fixed-cost share has tripled from 1.6% (epoch 250) to 4.9% (epoch 614). Among large pools, moving from 0% to 3% margin costs only 0.07pp; small pools charge *lower* margins than large ones, so margins attenuate the size gradient rather than reinforce it. |
-| O11 | **Block luck dominates single-epoch variance; structure emerges only over time** | Block-production luck explains R²=0.41 of single-epoch yield variance among large hollow pools. Over a full year, the structural spread is an order of magnitude smaller than single-epoch noise (hollow SW std dev: 0.10pp across 73 trailing epochs). Epoch-to-epoch movement is noise, not signal. |
+_Terminology note._ The protocol uses "fixed cost" and "margin" for the two extraction channels. This report adopts pricing-plan terminology: the fixed cost is the **flat fee** (a fixed ₳/epoch amount), the margin is the **commission** (a proportional share), and their sum — the operator take — is the **effective price** the delegator faces. The on-chain parameter names appear in §2 (the formula) and at first use in §4. Everywhere else, the pricing-plan terms apply.
 
-**Scope note.** O1–O2 cover fee parameter adoption (§3). O3–O6 are structural to the intra-pool split (§3.2.3–§3.2.4). O7–O11 characterise the delegator's yield landscape (§5).
+| # | Observation | Section | Nature |
+| --- | --- | --- | --- |
+| | **O1 — The flat fee dominates operator revenue but operators do not actively set it** | | |
+| F1.1 | The flat fee accounts for 60% of all operator revenue in the retail market; the commission accounts for 40% | §4.4 | Structural — the passive channel dominates the active one |
+| F1.2 | 64% of pools still declare the former floor (340 ₳) — 178 epochs after a governance action halved it to 170 ₳ | §4.1 | Governance inertia — driven by the largest entities |
+| F1.3 | 89.5% of pools declare one of two floor values (170 or 340 ₳); "custom" values are mostly near-floor inertia (Binance 345, Everstake 400) or extraction | §4.1 | The flat fee is a binary choice, not a pricing parameter |
+| F1.4 | The flat fee follows a $1/\sigma$ hyperbola: 47.5% of pool reward at the sub-viable tier, 1.5% at near-saturation. No other major PoS protocol uses a flat fee | §4.1 | Unique to Cardano — regressive by design |
+| | **O2 — The commission market is bimodal with an empty middle** | | |
+| F2.1 | 87% of pools set a commission at or below 10%; 12% set ≥ 99% (privatisation). The 89pp range between 10% and 99% contains 12 pools | §4.2 | No man's land — no economic attractor exists between pricing and extraction |
+| F2.2 | Four bands: no-commission (170 pools, 17.9%), competitive (658, 69.1%), no man's land (12, 1.3%), privatisation (112, 11.8%) | §4.2 | The market self-organises into discrete tiers |
+| | **O3 — 21% of productive stake is custodial — three mechanisms, three economics** | | |
+| F3.1 | 79 entities operating 143 pools (4.55B, 21.1%) are custodial: by pledge (10 entities, 36 pools, 1.59B), by extraction (57 entities, 79 pools, 2.04B), by delegation (15 entities, 28 pools, 0.92B) | §4.3 | Three distinct mechanisms — each detectable from on-chain observables |
+| F3.2 | Custodial-by-delegation uses the per-pool **median** delegation (db-sync `epoch_stake`) ≥ 100K ₳ — the amount held by the typical delegator. A delegation of 50K ₳ is already in the top 1.5% of the network | §4.3.2 | The median measures the delegator's experience, not capital concentration |
+| F3.3 | Custodial-by-pledge entities earn 1,759,252 ₳/yr median — they capture 100% of rewards on self-funded pools. Custodial-by-extraction entities earn 281,831 ₳/yr — privatisation commission on pools with inert delegators. Custodial-by-delegation entities earn 29,329 ₳/yr — small whale pools, not revenue machines | §4.3.3 | Each custodial mechanism produces a different economic outcome |
+| | **O4 — The retail market is 79% of stake and the typical delegator holds 87 ₳** | | |
+| F4.1 | 809 retail pools, 516 entities, 17.02B ADA, 1,272,836 delegators. This includes institutional operators (Coinbase, Binance, Kiln) — retail by median delegation | §4.3.3 | The retail market is larger than the mean-based estimate suggested |
+| F4.2 | The median retail delegation is 87 ₳ — remarkably uniform across operator types (45–962 ₳ range) | §4.4 | Retail delegators are small and homogeneous |
+| | **O5 — Delegators pay 18× more for the same return** | | |
+| F5.1 | A delegator in a sub-viable pool pays 48.3% effective price and receives 2.04% net return. A delegator in a near-saturation pool pays 2.7% and receives 2.34%. 18× more for 0.30pp of return | §4.4 | The effective price is a mechanical artefact of pool size, not a market signal |
+| F5.2 | Net return converges to 1.95–2.34% across the entire retail market regardless of effective price, operator type, or pool size | §4.4 | The return signal is too weak to drive delegation |
+| | **O6 — Stake pool operator profitability ranges from 24K to 1M ₳/yr — operators who charge the most earn the least** | | |
+| F6.1 | A sub-viable single-pool operator absorbs 48.3% of pool rewards but earns 24,820 ₳/yr. An 11+ pool MPO absorbs 7.7% but earns 1,035,496 ₳/yr — 42× more at 6× less effective price | §4.4 | The flat fee penalises small-pool delegators without compensating small-pool operators |
+| F6.2 | MPO revenue scales horizontally (more pools) not vertically (higher price). The 11+ pool bracket captures 26.5% of retail rewards through 7 entities | §4.4 | Fleet size, not pricing, drives operator economics |
+| F6.3 | 57 hollow MPOs operate on 64.4% of retail rewards; 414 hollow single-pool operators share 31.1%; 41 balanced operators share 1.2% | §4.4 | Structural concentration |
+| | **O7 — Delegation follows visibility, not return** | | |
+| F7.1 | 65.9% of retail delegators sit in hollow MPO pools at 2.18% net return; hollow single-pool near-saturation pools offer 2.34% — 0.16pp more — and hold 2.7% of delegators | §4.4 | The return signal does not drive delegation |
+| F7.2 | The pledge premium is negative in the retail data: balanced median net return 1.98% vs hollow 2.08%. The flat fee drag (1.06pp for balanced vs 0.47pp for hollow single-pool operators) overwhelms the pledge benefit | §4.4 | The incentive mechanism's core assumption fails |
+
+**Scope note.** O1 describes the flat fee channel (§4.1). O2 describes the commission channel (§4.2). O3 establishes the custodial/retail boundary and custodial economics (§4.3). O4–O7 characterise the retail market economics (§4.4).
 
 ### The big picture
 
-**What the formula does.** Once the reward curve assigns a total reward $\hat{f}$ to a pool, the intra-pool split extracts operator compensation in two steps: a **fixed cost** $\min(c, \hat{f})$ subtracted first, then a **proportional margin** $m$ applied to the remainder $\max(\hat{f} - c, 0)$. Everything left is distributed pro-rata among all pool members by stake share — including the operator's own stake.
+**How operators price.** The protocol gives operators two extraction channels: a flat fee (a fixed ₳/epoch amount deducted first) and a commission (a proportional share of the remainder). Together they compose the operator's pricing plan; their sum — the effective price — is the fraction of pool rewards that never reaches delegators. §4 analyses the pricing plan landscape and its consequences.
 
-**Three operator strategies.** At epoch 614, 502 entities operate rewarded pools — but they do not follow a single template. Following the Hollow–Private pledge spectrum from the upstream analysis, this report classifies entities by **dominant owner-stake ratio** across their fleet: the axis runs from hollow (external delegation dominates) through balanced (genuine capital-sharing) to private (operator-funded). 445 entities follow the hollow strategy (771 pools, 18.10B ADA), 46 follow the balanced strategy (60 pools, 0.77B ADA), and 11 follow the private strategy (44 pools, 2.29B ADA). Remarkably, 98.6% of entities apply a single pure strategy across their entire fleet. The pool-level heterogeneity is strategic consistency at the entity level.
+**The retail market.** After filtering custodial pools (21.1% of stake where the operator controls delegation addresses), the retail market consists of 809 pools, 516 entities, 17.02B ADA, and 1,272,836 delegators. The median delegation is 87 ₳. This is the population where the pricing plan produces a genuine market outcome.
 
-![Three Strategies — Entity-Level View](figures/three_strategies.png)
-
-**Strategy consistency.** Among 502 entities, 495 (98.6%) operate pools that all fall into the same strategy bin. Only 7 entities are hybrid (spanning multiple bins), and they cluster near threshold boundaries. This extraordinary consistency shows that entities choose a fundamental strategy and apply it coherently across their pool fleet. An entity does not run one hollow pool and one private pool — it commits to a strategy.
-
-**The hollow-strategy market — with a caveat.** Among entities following the hollow strategy, operator take is **13.34%** in aggregate (771 pools). But 48 of these pools are *functionally private* — exchanges and custodians that own almost none of their stake (mean owner-ratio 1.75%) yet set margin ≥ 99.9%, extracting everything. Excluding them, the genuine market (723 pools) operates at **7.7%** operator take — split between fixed cost (4.4%) and margin (3.6%). Fixed cost slightly exceeds margin, reflecting a population where 91.6% declare the minimum 340 ADA cost.
-
-**Entity-level analysis.** Counting by pool overcounts fee policies: entities operating many pools pursue a single (or a few) policy decisions per strategy, not one per pool. Across 491 distinct entities in the hollow market, the median margin is **1.0%** and 56.4% of entities operate below 2%. Margin competition is broadly active. The dominant extraction in the hollow market is the fixed-cost floor, not margin.
-
-**The balanced-strategy population.** The 46 entities following the balanced strategy (6.9% of pool count, 3.6% of stake, median owner-ratio 26.4%) form an analytically crucial segment where the pledge mechanism produces genuine alignment. Many carry Material or High pledge tags — genuine skin-in-the-game. They are the smallest segment but structurally important: they demonstrate that entities with real capital at stake behave differently and compete fiercely on fees.
-
-**Why it matters for mechanism design.** The two-regime structure reveals that the intra-pool split does not operate as a single, uniform mechanism. The fixed-cost floor creates a regressive tax that penalises small-pool delegators disproportionately, while margin competition functions effectively in the large-pool regime. Any revision to the fee structure should account for this bifurcation — the small-pool regime and the large-pool regime respond to different parameters and require distinct analytical treatment.
+**The disconnect.** The central finding is a double asymmetry. On the delegator side: a delegator in a sub-viable pool pays 48.3% effective price for 2.04% net return; a delegator in a near-saturation pool pays 2.7% for 2.34% — 18× the price for 0.30pp of return difference. On the operator side: the sub-viable operator absorbs 48.3% of pool rewards but earns 24,820 ₳/yr; an 11+ pool MPO absorbs 7.7% but earns 1,035,496 ₳/yr — 42× more revenue at 6× less effective price. The pricing plan penalises small-pool delegators without compensating small-pool operators, and the return signal it produces (0.39pp spread across the entire retail market) is too weak to drive delegation decisions. This challenges the incentive mechanism's core assumption: that delegators can differentiate pools by return and thereby discipline operator pricing.
 
 ## 2. The formula — intra-pool reward sharing
 
-These formulas define how a pool's realized allocation is split between the operator and the rest of the pool participants.
-The split happens only after the pool-level reward has already been computed and adjusted by apparent performance.
+These formulas define how a pool's realized allocation is split between the operator and the rest of the pool participants. The split happens only after the pool-level reward has already been computed and adjusted by apparent performance.
 
 The distribution logic is sequential:
 
-- first, the operator fixed cost is covered
-- second, the operator margin is applied to the remaining amount
-- finally, the residual reward is distributed proportionally across stake holders
+- first, the operator **flat fee** (on-chain: `fixed_cost`, denoted $c$) is deducted — a fixed ₳ amount per epoch
+- second, the operator **commission** (on-chain: `margin`, denoted $m$) is applied to the remaining amount — a proportional share
+- finally, the residual reward is distributed proportionally across all stake holders
+
+The sum of flat fee and commission is the **effective price** (on-chain: `pool_fees`) — the fraction of pool reward that never reaches delegators.
 
 In this final step, the operator still receives a stake-proportional share through the pledge held inside the pool, while delegators receive the complementary share.
 
@@ -360,7 +367,9 @@ At epoch 623, 89.5% of the 952 productive pools declare one of the two floor val
 | **Near-floor** | $171 < c \leq 500$, $c \neq 170, 340$ | 84 | 8.8% | 48 | 1.82 | 8.4% | 381,652 | 29.5% |
 | **Extraction** | $c > 500$ | 16 | 1.7% | 14 | 0.24 | 1.1% | 10,869 | 0.8% |
 
-The inertia is structural: 70% of floor-declaring stake remains at 340 ₳, 178 epochs after the reduction, driven by the largest entities (Coinbase, Kiln, Upbit, eToro, Wave) which have not updated. Among the 219 sub-viable pools (1M–3M ADA), the distribution mirrors the productive population (84 adopted, 117 legacy) — but the economic meaning is different. At this tier, a 170 ₳ flat fee absorbs ~27% of pool reward and a 340 ₳ fee absorbs ~54%. The adopted/legacy distinction, which is a governance-responsiveness signal for viable pools, becomes a confiscation-severity signal for sub-viable ones.
+The inertia is structural: 70% of floor-declaring stake remains at 340 ₳, 178 epochs after the reduction, driven by the largest entities (Coinbase, Kiln, Upbit, eToro, Wave) which have not updated.
+
+> **Finding F1.2 — 64% of pools still declare the former floor (340 ₳) — 178 epochs after the governance action halved it.** The inertia is not transient. It is driven by the largest entities and reflects a structural feature of the network: the flat fee is a set-and-forget parameter for most operators. Among the 219 sub-viable pools (1M–3M ADA), the distribution mirrors the productive population (84 adopted, 117 legacy) — but the economic meaning is different. At this tier, a 170 ₳ flat fee absorbs ~27% of pool reward and a 340 ₳ fee absorbs ~54%. The adopted/legacy distinction, which is a governance-responsiveness signal for viable pools, becomes a confiscation-severity signal for sub-viable ones.
 
 ### 4.2 The commission (margin)
 
@@ -377,6 +386,8 @@ The commission distribution is bimodal: the median is 2.0% and has been stable f
 
 87% of pools price at or below 10%; density drops to near zero above 10% and resurfaces only at 99–100%. No man's land makes the bimodality explicit: the 89pp gap between competitive pricing and privatisation is a desert — an operator pricing above 10% is either extracting (and would go to 99%+) or running a niche service (and would not need more than 10%).
 
+> **Finding F2.1 — The commission distribution is bimodal with an 89pp structural gap.** 87% of pools sit at or below 10%; 12% sit at ≥ 99%. The range between 10% and 99% contains 12 pools. No economic attractor exists between competitive pricing and total extraction.
+
 **Commission bands × owner-stake strategy.** The bands cross-cut the three owner-stake strategies. The hollow segment fills all four bands. Balanced pools concentrate in no-commission and competitive with marginal presence in privatisation. Private pools occupy only competitive (3 pools — Wave and one anonymous) and privatisation — private × no-commission is empty because an operator who funds the pool has no reason to set commission to zero.
 
 
@@ -392,77 +403,104 @@ Two mechanisms produce unambiguous custodial outcomes, detectable from a single 
 
 **Custodial by extraction** — non-private pools that declare a privatisation commission (≥ 99%). The operator does not fund the pool but captures virtually all rewards through the commission. Delegators earn near-zero yield; whether they remain through inertia, ignorance, or institutional constraint, their delegation is not a meaningful market signal.
 
-#### 4.3.2 Custodial by delegation — the high-concentration signal
+#### 4.3.2 Custodial by delegation — the median delegation signal
 
-The third mechanism is more subtle. Some pools appear hollow to the protocol (low owner-stake, competitive commission) but their delegation is concentrated in few, large addresses — the hallmark of operator-routed capital. The signal is the **ADA per delegation** (APD): when the average delegation in a pool exceeds 100K ADA, the capital is unlikely to be retail. A typical retail wallet holds well under 100K ADA; an APD above this threshold indicates exchange routing, institutional validators, or whale self-delegation.
+The third mechanism is more subtle. Some pools appear hollow to the protocol (low owner-stake, competitive commission) but their delegation is concentrated in few, large addresses — the hallmark of operator-routed capital.
 
-At epoch 623, 227 pools (across 106 entities) exceed 100K ADA per delegation. They split at the 1M ₳/delegation mark into two sub-populations:
+The signal is the **median delegation** per pool, computed from the full `epoch_stake` distribution (db-sync, epoch 623). The median measures the amount held by the typical delegator in the pool. When it exceeds 100K ADA — meaning the typical delegator holds more than 100K — the pool is genuinely non-retail. A delegation of 50K ₳ is already in the top 1.5% of the network; a median above 100K indicates that the majority of addresses in the pool hold capital well above any retail threshold.
+
+At epoch 623, **28 pools** (across 15 entities) exceed this threshold, carrying 0.92B ADA and 158 delegators. They split into two sub-populations:
 
 | Sub-type | Entities | Pools | Stake (B) | Delegators | Profile |
 |---|---:|---:|---:|---:|---|
-| **APD ≥ 1M ₳/d** | 26 | 105 | 4.77 | 1,087 | Exchanges and institutional validators routing client capital through few, large addresses. Top entities: Coinbase (41p, 5.8M/d), Blockdaemon (12p, 2.3M/d), Binance (17p, 744K/d), Kiln (7p, 1.4M/d), Figment (16p, 2.7M/d), NuFi (3p, 1.5M/d). Also includes whale SPOs with 2–16 delegators |
-| **APD 100K–1M ₳/d** | 88 | 122 | 2.37 | 10,389 | The concentration grey zone — pools where the average delegation exceeds what a typical retail wallet holds. Includes YUTA (18p, 173K/d), Wave (6p, 551K/d), and 74 single-pool operators with elevated APD from a mix of large delegators and partial self-delegation |
-
-The ≥1M sub-population is unambiguously custodial: 1,087 delegators for 4.77B ADA — an average of 4.4M per delegation address. The 100K–1M sub-population is the boundary layer between institutional routing and concentrated retail. Its inclusion in the custodial classification is conservative — some of these pools may serve a small number of genuine high-net-worth delegators — but the APD signal is strong enough to separate them from the retail market where delegation reflects independent choice.
+| **Median ≥ 1M ₳** | 8 | 20 | 0.84 | 68 | Whale self-delegation pools with 2–6 delegators each holding millions. Pure capital parking |
+| **Median 100K–1M ₳** | 8 | 8 | 0.08 | 90 | Smaller pools where the typical delegator holds 100K–1M — a mix of high-net-worth self-delegation and small custodial arrangements |
 
 #### 4.3.3 Summary
 
 The table below continues the population decomposition from §3:
 
-| Segment | Entities | Pools | Share | Stake (B) | Stake share | Delegations | Del. share |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| **Productive total** | **582** | **952** | **100%** | **21.57** | **100%** | **1,295,098** | **100%** |
-| Custodial by pledge | 10 | 36 | 3.8% | 1.59 | 7.4% | 122 | <0.1% |
-| Custodial by extraction | 57 | 79 | 8.3% | 2.04 | 9.5% | 21,982 | 1.7% |
-| Custodial by delegation (APD ≥ 100K) | 106 | 227 | 23.8% | 7.14 | 33.1% | 11,476 | 0.9% |
-|   ↳ APD ≥ 1M ₳/d | 26 | 105 | 11.0% | 4.77 | 22.1% | 1,087 | 0.1% |
-|   ↳ APD 100K–1M ₳/d | 88 | 122 | 12.8% | 2.37 | 11.0% | 10,389 | 0.8% |
-| **Total custodial** | **165** | **342** | **35.9%** | **10.77** | **49.9%** | **33,580** | **2.6%** |
-| **Retail market** | **435** | **610** | **64.1%** | **10.80** | **50.1%** | **1,261,518** | **97.4%** |
+| Segment | Entities | Pools | Share | Stake (B) | Stake share | Delegations | Del. share | Median deleg. (₳) | Med. entity revenue (₳/yr) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **Productive total** | **582** | **952** | **100%** | **21.57** | **100%** | **1,295,098** | **100%** | **116** | **25,763** |
+| Custodial by pledge | 10 | 36 | 3.8% | 1.59 | 7.4% | 122 | <0.1% | 35,579,368 | 1,759,252 |
+| Custodial by extraction | 57 | 79 | 8.3% | 2.04 | 9.5% | 21,982 | 1.7% | 9,009 | 281,831 |
+| Custodial by delegation (median ≥ 100K) | 15 | 28 | 2.9% | 0.92 | 4.3% | 158 | <0.1% | 3,008,028 | 29,329 |
+|   ↳ Median ≥ 1M ₳ | 8 | 20 | 2.1% | 0.84 | 3.9% | 68 | <0.1% | 12,489,163 | 55,704 |
+|   ↳ Median 100K–1M ₳ | 8 | 8 | 0.8% | 0.08 | 0.4% | 90 | <0.1% | 176,666 | 25,023 |
+| **Total custodial** | **79** | **143** | **15.0%** | **4.55** | **21.1%** | **22,262** | **1.7%** | **1,038,234** | **151,744** |
+| **Retail market** | **516** | **809** | **85.0%** | **17.02** | **78.9%** | **1,272,836** | **98.3%** | **87** | **25,235** |
 
-Half the productive stake is custodial. But the asymmetry is extreme: custodial pools hold 49.9% of stake through 2.6% of delegation relationships, while the retail market holds 50.1% of stake through 97.4% of delegations. The retail market — 610 pools, 435 entities, 10.80B ADA, 1,261,518 delegators — is the population where the pricing plan produces a genuine market outcome.
+The custodial segment is smaller than the mean-APD estimate suggested — 21.1% of stake, not 49.9% — because most institutional pools (Coinbase, Binance, Kiln, YUTA) are retail by their delegation median. They route large capital through few addresses, but the majority of their delegators are small retail wallets. The retail market — **809 pools, 516 entities, 17.02B ADA, 1,272,836 delegators** — encompasses 78.9% of productive stake and 98.3% of delegation relationships.
+
+> **Finding F3.3 — The median delegation separates custodial from retail by four orders of magnitude.** Custodial pools: 1,038,234 ₳ median. Retail pools: 87 ₳ median. A delegation of 50K ₳ is already in the top 1.5% of all delegations on the network.
+
+> **Finding F3.3 — Each custodial mechanism produces a different economic outcome.** Custodial-by-pledge entities earn 1,759,252 ₳/yr median — they fund their own pools and capture 100% of rewards. Custodial-by-extraction entities earn 281,831 ₳/yr — privatisation commission extracts from pools whose delegators have not re-delegated. Custodial-by-delegation entities earn 29,329 ₳/yr — these are small whale pools, not institutional revenue engines. The three mechanisms share the label "custodial" but produce economics that span two orders of magnitude.
 
 ### 4.4 Operator profitability versus delegator return
 
-The effective price is only meaningful in the retail market — where the operator does not control the delegator addresses. In custodial pools, the "price" is an internal transfer; it carries no information about market competition. This section analyses the **610 retail pools** (435 entities, 10.80B ADA, 1,261,518 delegators) identified in §4.3.
+The effective price is only meaningful in the retail market — where the operator does not control the delegator addresses. In custodial pools, the "price" is an internal transfer; it carries no information about market competition. This section analyses the **809 retail pools** (516 entities, 17.02B ADA, 1,272,836 delegators) identified in §4.3.
 
 The central question is what the pricing plan produces for each side of the market. The operator earns a revenue (the operator take, annualised in ₳/year); the delegator receives a return (the net ROS, after fees). If the mechanism worked as intended, these two quantities would be linked: operators who charge more would earn more, and delegators would see a meaningful ROS difference that informs their delegation choice. The table below tests this assumption.
 
-| Operator type | Entities | Pools | Delegators | Del. share | Stake (B) | Flat fee | Commission | Gross ROS | Net ROS | Med. entity revenue (₳/yr) | ROS drag | Reward share |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| **Hollow SPO** | **343** | **343** | **398,983** | **31.6%** | **4.34** | **7.0%** | **1.2%** | **2.51%** | **2.11%** | **24,884** | **48 bps** | **40.2%** |
-|   ↳ Sub-viable (<3M) | 143 | 143 | 52,452 | 4.2% | 0.25 | 47.8% | 0.7% | 3.96% | 2.04% | 24,820 | 167 bps | 2.3% |
-|   ↳ Healthy (3–38.5M) | 161 | 161 | 220,072 | 17.4% | 1.82 | 8.2% | 1.6% | 2.35% | 2.07% | 26,235 | 32 bps | 16.9% |
-|   ↳ Large healthy (38.5–62M) | 25 | 25 | 90,458 | 7.2% | 1.30 | 1.6% | 1.2% | 2.38% | 2.32% | 31,757 | 6 bps | 12.0% |
-|   ↳ Near-saturation (62–77M) | 14 | 14 | 36,001 | 2.9% | 0.96 | 1.3% | 0.3% | 2.33% | 2.29% | 27,244 | 4 bps | 8.9% |
-| **Hollow MPO** | **50** | **215** | **836,857** | **66.3%** | **6.17** | **3.4%** | **2.2%** | **2.33%** | **2.19%** | **112,980** | **14 bps** | **57.1%** |
-|   ↳ 2-pool | 15 | 30 | 101,533 | 8.0% | 1.09 | 2.5% | 1.2% | 2.27% | 2.20% | 66,836 | 10 bps | 10.1% |
-|   ↳ 3–5 pool | 26 | 102 | 345,579 | 27.4% | 2.98 | 3.4% | 2.4% | 2.33% | 2.18% | 132,851 | 15 bps | 27.6% |
-|   ↳ 6–10 pool | 6 | 39 | 73,866 | 5.9% | 1.04 | 3.5% | 2.4% | 2.40% | 2.26% | 227,186 | 16 bps | 9.6% |
-|   ↳ 11+ pool | 3 | 44 | 315,879 | 25.0% | 1.07 | 4.5% | 2.5% | 2.31% | 2.17% | 505,478 | 20 bps | 9.9% |
-| **Balanced** | **42** | **44** | **18,094** | **1.4%** | **0.20** | **19.1%** | **1.5%** | **3.08%** | **2.03%** | **24,820** | **107 bps** | **1.8%** |
-|   ↳ SPO sub-viable (<3M) | 27 | 27 | 5,041 | 0.4% | 0.04 | 49.4% | 1.0% | 3.70% | 1.95% | 23,513 | 219 bps | 0.4% |
-|   ↳ SPO healthy (≥3M) | 11 | 11 | 3,896 | 0.3% | 0.08 | 11.2% | 0.8% | 2.43% | 2.27% | 15,825 | 43 bps | 0.7% |
-|   ↳ MPO | 4 | 6 | 9,157 | 0.7% | 0.08 | 9.7% | 2.5% | 2.95% | 2.22% | 61,427 | 106 bps | 0.7% |
-| **Retail total** | **435** | **610** | **1,261,518** | **100%** | **10.80** | **5.2%** | **1.8%** | **2.47%** | **2.13%** | **25,006** | **43 bps** | **100%** |
+| Operator type | Entities | Pools | Delegators | Del. share | Stake (B) | Median deleg. (₳) | Flat fee | Commission | Effective price | Gross ROS | Net ROS | Med. entity revenue (₳/yr) | Drag (pp) | Reward share |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **Hollow single-pool** | **414** | **414** | **399,089** | **31.4%** | **5.29** | **78** | **7.0%** | **2.1%** | **9.1%** | **2.48%** | **2.08%** | **24,965** | **0.47pp** | **31.1%** |
+|   ↳ Sub-viable (<3M) | 155 | 155 | 52,557 | 4.1% | 0.28 | 72 | 47.5% | 0.8% | 48.3% | 3.89% | 2.04% | 24,820 | 1.59pp | 1.6% |
+|   ↳ Healthy (3–38.5M) | 214 | 214 | 221,279 | 17.4% | 2.44 | 74 | 8.3% | 2.9% | 11.2% | 2.35% | 2.03% | 26,652 | 0.32pp | 14.3% |
+|   ↳ Large healthy (38.5–62M) | 29 | 29 | 91,238 | 7.2% | 1.47 | 125 | 1.7% | 1.4% | 3.0% | 2.37% | 2.31% | 31,757 | 0.06pp | 8.7% |
+|   ↳ Near-saturation (62–77M) | 16 | 16 | 34,015 | 2.7% | 1.11 | 962 | 1.2% | 1.5% | 2.7% | 2.40% | 2.34% | 27,244 | 0.04pp | 6.5% |
+| **Hollow MPO** | **57** | **330** | **838,593** | **65.9%** | **10.95** | **107** | **3.0%** | **3.3%** | **6.3%** | **2.33%** | **2.18%** | **124,100** | **0.14pp** | **64.4%** |
+|   ↳ 2-pool | 17 | 34 | 102,253 | 8.0% | 1.30 | 91 | 2.5% | 1.3% | 3.9% | 2.27% | 2.19% | 68,667 | 0.10pp | 7.7% |
+|   ↳ 3–5 pool | 24 | 94 | 271,460 | 21.3% | 2.77 | 78 | 3.3% | 1.6% | 5.0% | 2.33% | 2.19% | 132,851 | 0.14pp | 16.3% |
+|   ↳ 6–10 pool | 9 | 67 | 112,454 | 8.8% | 2.37 | 67 | 2.7% | 3.8% | 6.5% | 2.38% | 2.18% | 263,959 | 0.15pp | 13.9% |
+|   ↳ 11+ pool | 7 | 135 | 352,426 | 27.7% | 4.51 | 292 | 3.0% | 4.7% | 7.7% | 2.31% | 2.15% | 1,035,496 | 0.20pp | 26.5% |
+| **Balanced** | **41** | **42** | **15,844** | **1.2%** | **0.20** | **45** | **17.8%** | **1.4%** | **19.2%** | **3.06%** | **1.98%** | **23,513** | **1.06pp** | **1.2%** |
+|   ↳ Single-pool sub-viable (<3M) | 27 | 27 | 5,041 | 0.4% | 0.04 | 45 | 49.4% | 1.0% | 50.4% | 3.70% | 1.95% | 23,513 | 2.19pp | 0.3% |
+|   ↳ Single-pool healthy (≥3M) | 13 | 13 | 4,051 | 0.3% | 0.10 | 56 | 11.2% | 1.1% | 12.3% | 2.41% | 2.14% | 17,199 | 0.43pp | 0.6% |
+|   ↳ MPO | 1 | 2 | 6,752 | 0.5% | 0.06 | 25 | 5.2% | 2.0% | 7.2% | 2.40% | 2.22% | 101,849 | 0.17pp | 0.4% |
+| **Retail total** | **516** | **809** | **1,272,836** | **100%** | **17.02** | **87** | **4.4%** | **2.9%** | **7.4%** | **2.45%** | **2.11%** | **25,235** | **0.41pp** | **100%** |
 
-The table reads left to right: operator type → population → pricing channels (flat fee + commission as % of pool reward) → what the pool produces (gross ROS) → what the delegator receives (net ROS) → what the operator earns (median entity revenue annualised) → the cost to the delegator (ROS drag) → share of total retail pool rewards.
+The table reads left to right: operator type → population → pricing channels (flat fee + commission as % of pool reward) → what the pool produces (gross ROS) → what the delegator receives (net ROS) → what the operator earns (median entity revenue annualised) → the cost to the delegator (Drag (pp)) → share of total retail pool rewards.
 
 Three observations emerge from this decomposition.
 
-**Operator revenue does not track the effective price.** Hollow SPOs charge between 1.3% and 47.8% effective price across tiers — a 37× spread — yet median revenue is flat at 24,820–31,757 ₳/yr. The flat fee inflates the effective price for sub-viable pools without generating proportionally more revenue: 143 sub-viable SPOs absorb 47.8% of their pools' output as fees but operate on just 2.3% of total retail rewards. Meanwhile, hollow MPOs earn 5–20× more (67k–505k ₳/yr) at a lower effective price (2.5–4.5%) — the scaling is horizontal (more pools) rather than vertical (higher extraction). The reward share column makes the structural imbalance explicit: 50 hollow MPOs operate on 57.1% of the retail economy; 343 hollow SPOs share 40.2%; 42 balanced operators share 1.8%.
+**Delegators pay 18× more for the same return — and operators who charge the most earn the least.** A delegator in a sub-viable pool pays 48.3% effective price for 2.04% net return; a delegator in a near-saturation pool pays 2.7% for 2.34%. The price differs by 18×; the return by 0.30pp. On the operator side, the sub-viable operator absorbs 48.3% of pool rewards but earns 24,820 ₳/yr; an 11+ pool MPO absorbs 7.7% but earns 1,035,496 ₳/yr — 42× more revenue at 6× less effective price.
 
-**Delegator returns are near-identical regardless of operator type.** Net ROS ranges from 1.95% (balanced SPO sub-viable) to 2.32% (hollow SPO large healthy) — a 37 bps spread across the entire retail market. The flat fee creates large differences in effective price without producing corresponding differences in delegator return. Sub-viable pools generate the highest gross ROS (3.70–3.96% — the reward curve is generous per ADA at small pool sizes) but the flat fee erases the surplus: 167–219 bps of drag. Above the viable threshold, drag collapses to 4–43 bps. For MPOs, drag rises gently with fleet size (10–20 bps) as the commission channel takes over from the flat fee. The delegator cannot meaningfully distinguish operators by return.
+> **Finding F5.1 — Delegators pay 18× more for the same return.** A delegator in a sub-viable pool pays 48.3% effective price and receives 2.04% net return. A delegator in a near-saturation pool pays 2.7% and receives 2.34%. The effective price varies by 18× across pool tiers; the return varies by 0.30 percentage points. The pricing plan does not produce a signal that delegators can act on.
 
-**Delegation concentration does not follow return.** 66.3% of retail delegators sit in hollow MPO pools at 2.19% net ROS, while hollow SPO near-saturation pools offer 2.29% — 10 bps more — and hold only 2.9% of delegators. The 3–5 pool MPOs alone concentrate 27.4% of all retail delegators (345,579) on 27.6% of rewards. This concentration reflects visibility and wallet-integration defaults, not yield optimisation.
+> **Finding F6.1 — Operators who charge the most earn the least.** A sub-viable single-pool operator absorbs 48.3% of pool rewards but earns 24,820 ₳/yr. An 11+ pool MPO absorbs 7.7% but earns 1,035,496 ₳/yr — 42× more revenue at 6× less effective price. The flat fee penalises small-pool delegators without compensating the operators who run those pools.
 
-| Entity | Type | Pools | Delegators | Stake (M) | Effective price | Net ROS | ROS drag | Revenue (₳/yr) |
+155 sub-viable single-pool operators absorb 48.3% of their pools' output as effective price but operate on just 1.6% of total retail rewards. Meanwhile, hollow MPOs earn 3–42× more (69k–1M ₳/yr) at a lower effective price (3.9–7.7%) — the scaling is horizontal (more pools) rather than vertical (higher extraction). The reward share column makes the structural imbalance explicit: 57 hollow MPOs operate on 64.4% of the retail economy; 414 hollow single-pool operators share 31.1%; 41 balanced operators share 1.2%.
+
+**Delegator returns are near-identical regardless of operator type.** Net ROS ranges from 1.95% (balanced single-pool sub-viable) to 2.34% (hollow single-pool near-saturation) — a 0.39 percentage-point spread across the entire retail market. The flat fee creates large differences in effective price without producing corresponding differences in delegator return. Sub-viable pools generate the highest gross ROS (3.70–3.89% — the reward curve is generous per ADA at small pool sizes) but the flat fee erases the surplus: 1.59–2.19pp of drag. Above the viable threshold, drag collapses to 0.04–0.43pp. For MPOs, drag rises gently with fleet size (0.10–0.20pp) as the commission channel takes over from the flat fee. The delegator cannot meaningfully distinguish operators by return.
+
+**Delegation concentration does not follow return.** 65.9% of retail delegators sit in hollow MPO pools at 2.18% net ROS, while hollow single-pool near-saturation pools offer 2.34% — 0.16pp more — and hold only 2.7% of delegators. The 11+ pool MPOs concentrate 27.7% of all retail delegators (352,426) on 26.5% of rewards. This concentration reflects visibility and wallet-integration defaults, not yield optimisation.
+
+> **Finding F7.1 — Delegation follows visibility, not return.** 65.9% of retail delegators sit in hollow MPO pools despite hollow single-pool near-saturation pools offering 0.16pp more. The return spread across the retail market (0.39 percentage points) is too narrow to inform delegation decisions.
+
+> **Finding F7.2 — The pledge premium is negative in the retail data.** Balanced pools (genuine pledge commitment) deliver 1.98% median net return vs 2.08% for hollow. The flat fee drag (1.06pp for balanced vs 0.47pp for hollow single-pool operators) overwhelms the pledge benefit from the reward curve. The incentive mechanism's core assumption — that pledge commitment translates to better delegator outcomes — does not hold.
+
+| Entity | Type | Pools | Delegators | Stake (M) | Effective price | Net ROS | Drag (pp) | Revenue (₳/yr) |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
-| Everstake | 11p-MPO | 11 | 264,997 | 566.6 | 5.4% | 2.17% | 13 bps | 717,323 |
-| AWP / Atomic Wallet | 3p-MPO | 3 | 83,802 | 47.5 | 11.5% | 2.06% | 27 bps | 127,112 |
-| BERRY | SPO | 1 | 22,053 | 32.9 | 4.7% | 2.48% | 12 bps | 35,941 |
-| Emurgo | 8p-MPO | 8 | 15,334 | 269.4 | 3.3% | 2.31% | 8 bps | 210,097 |
+| Everstake | 11p-MPO | 11 | 264,997 | 566.6 | 5.4% | 2.17% | 0.13pp | 717,323 |
+| AWP / Atomic Wallet | 3p-MPO | 3 | 83,802 | 47.5 | 11.5% | 2.06% | 0.27pp | 127,112 |
+| BERRY | single-pool | 1 | 22,053 | 32.9 | 4.7% | 2.48% | 0.12pp | 35,941 |
+| Emurgo | 8p-MPO | 8 | 15,334 | 269.4 | 3.3% | 2.31% | 0.08pp | 210,097 |
 
 Everstake dominates the retail market: 264,997 delegators (21% of retail) across 11 pools at 5.4% effective price — a competitive deal. AWP / Atomic Wallet shows the wallet-integration effect: 83,802 delegators routed by the app into 3 pools at 11.5% effective price and the lowest net ROS among top entities (2.06%). BERRY is the counter-example — a single-pool operator that attracts 22,053 delegators at the highest net ROS in the table (2.48%) through community visibility rather than platform integration. The three entities illustrate three delegation mechanisms: institutional routing (Everstake), app defaults (AWP), and community reputation (BERRY).
 
+**The figures below synthesise the retail market economics.**
 
+![Entity Revenue vs Delegator Return — Epoch 623](figures/entity_revenue_vs_ros.png)
+
+Panel A shows the full retail market. The x-axis is entity revenue (₳/year, log scale); the y-axis is net ROS (%). Two vertical clusters are visible at 12,410 ₳/yr and 24,820 ₳/yr — these are the two flat fee floor values (170 ₳ and 340 ₳) annualised (× 73 epochs). Sub-viable operators (red) are pinned to these floor values: their revenue is almost entirely the flat fee, and the commission adds negligible income. The scatter tail below 2% ROS is exclusively sub-viable — these are pools where the flat fee absorbs so much of the reward that delegator return degrades visibly.
+
+Panel B removes the sub-viable population and zooms to the viable market (≥3M ADA). The picture sharpens: net ROS sits in a tight band between 2.0% and 2.5% across the entire revenue range from 25K to 1.3M ₳/yr — a 52× spread in operator revenue for a 0.5 percentage-point spread in delegator return. The pricing plan is invisible to the delegator in the viable market.
+
+
+**The full profitability distribution.** The figure below shows the entity-level revenue distribution across all operator types — custodial and retail — on a logarithmic scale. Each box spans the interquartile range (P25–P75); whiskers extend to P5–P95; dots are outliers.
+
+![Stake Pool Operator Profitability by Operator Type — Epoch 623](figures/operator_profitability_by_type.png)
+
+The visual makes three patterns immediately legible. First, the custodial segment spans three orders of magnitude internally: custodial-by-pledge entities (n=10) earn 1.8M ₳/yr median with a range up to 16.9M, while custodial-by-delegation (n=15) clusters near the retail baseline at 32K. Second, single-pool retail operators (sub-viable, healthy, large+) are compressed into a narrow band around 25K ₳/yr — regardless of pool size, the revenue barely moves. Third, MPO revenue scales with fleet size: 2–5 pool MPOs earn ~94K, 6+ pool MPOs earn ~402K. The jump from single-pool to 2-pool is the most significant transition in operator economics — it roughly triples entity revenue.

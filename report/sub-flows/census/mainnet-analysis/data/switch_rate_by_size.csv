@@ -1,0 +1,6 @@
+size_bucket,delegator_count,total_stake_ada,avg_switches,pct_never_switched,pct_frequent_switcher
+<1K,1543513,105422403,0.67,69.9,7.5
+1K-10K,201797,679004419,0.95,62.0,11.5
+10K-100K,83307,2431591857,1.64,49.9,20.4
+100K-1M,17439,4487527187,2.65,40.0,31.4
+1M+,2244,14051141056,3.06,43.4,29.9

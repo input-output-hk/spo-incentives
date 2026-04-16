@@ -941,9 +941,9 @@ The canonical classification is in `../../census/mainnet-analysis/data/mpo_entit
 
 ##### 4.2.3.2 Current distribution
 
-![Current MPO entity distribution — stake share by archetype](../census/mainnet-analysis/figures/mpo_entity_current_distribution_chart_mainnet.png)
+![Current MPO entity distribution — stake share by archetype](../../census/mainnet-analysis/figures/mpo_entity_current_distribution_chart_mainnet.png)
 
-![Current MPO entity distribution — per-entity metrics](../census/mainnet-analysis/figures/mpo_entity_current_distribution_table_mainnet.png)
+![Current MPO entity distribution — per-entity metrics](../../census/mainnet-analysis/figures/mpo_entity_current_distribution_table_mainnet.png)
 
 The figure groups every entity with ≥0.01% of circulating supply by archetype. The bar chart shows their share of staked supply; the metrics table below it reports pool counts, pledge coverage, and average margin for each entity and archetype subtotal.
 
@@ -955,11 +955,11 @@ Per-entity descriptions including pledge-coverage ratios are in the annex: **[en
 
 The archetype-level composition has been remarkably stable across three years of Shelley operation. The aggregate MPO share has hovered around 42–43% of circulating supply since epoch 300 — the internal mix shifts, but the total barely moves.
 
-![Historical MPO composition by archetype](../census/mainnet-analysis/figures/mpo_entity_progression_stacked_mainnet.png)
+![Historical MPO composition by archetype](../../census/mainnet-analysis/figures/mpo_entity_progression_stacked_mainnet.png)
 
 That stability masks significant **entity-level rotation**:
 
-![Per-entity progression — share of circulating supply](../census/mainnet-analysis/figures/mpo_entity_progression_stacked_by_entity_mainnet.png)
+![Per-entity progression — share of circulating supply](../../census/mainnet-analysis/figures/mpo_entity_progression_stacked_by_entity_mainnet.png)
 
 | Movement | Epoch range | What happened |
 | --- | --- | --- |
@@ -1011,7 +1011,7 @@ The result is two-layered. First, **37 of 85 entities (1.74B ADA)** sit outside 
 
 The responsive middle is correspondingly thin. Only **two** capital-sufficient entities are truly **marginal** at the decision boundary, and only **three** are clearly **compliant** without already being near-fully self-funded. The exemplary pair — **Cardano Foundation** and **Adalite** — already capture almost the full premium and act more as a positive control than as a policy target.
 
-![MPO attributed stake — archetype vs pledge compliance](../census/mainnet-analysis/figures/mpo_entity_stance_distribution_mainnet.png)
+![MPO attributed stake — archetype vs pledge compliance](../../census/mainnet-analysis/figures/mpo_entity_stance_distribution_mainnet.png)
 
 The figure decomposes the same attributed stake two ways: top bar by structural archetype, bottom bar by pledge compliance. The key split is now explicit: **1.74B ADA sits in the ochre "Can't play" bucket**, while **12.00B ADA sits in capital-sufficient non-compliance**. The problem is therefore not a single low-pledge mass but a combination of structural inaccessibility and large-scale strategic non-response.
 
@@ -1157,11 +1157,11 @@ Crossing the pledge-compliance classification with the pool-size taxonomy (§4.1
 
 The entity-level breakdown below shows exactly who sits where — each sub-bar is one entity's pools within a tier × stance group:
 
-![MPO Tier × Stance × Entity](figures/mpo_tier_stance_entity_mainnet.png)
+![MPO Tier × Stance × Entity](../../census/mainnet-analysis/figures/mpo_tier_stance_entity_mainnet.png)
 
 A third view isolates only the **capital-sufficient non-compliant** entities and recolours the bars by **pool-size tier** rather than by stance. The left panel shows fleet composition; the right panel shows where the stake sits:
 
-![Non-compliant MPO entities by pool-size tier](figures/mpo_non_compliant_entity_tier_distribution_mainnet.png)
+![Non-compliant MPO entities by pool-size tier](../../census/mainnet-analysis/figures/mpo_non_compliant_entity_tier_distribution_mainnet.png)
 
 The most striking observation is that **capital-sufficient non-compliance is not a small-pool problem** — it is a *scale* phenomenon. Among capital-sufficient MPOs, non-compliant entities still dominate *every viable-and-above tier*, from Healthy through Oversaturated, accounting for **82.9% of capital-sufficient viable MPO stake**. Nearly all of the **12.00B ADA** held by these entities — **over 99%** — already sits in viable-and-above pools. The intuition that low-pledge MPOs are marginal, under-resourced operators is flatly contradicted by the data: the largest single non-compliant fleet, **Coinbase / bison.run** (2.45B ADA), is one of the most operationally successful entities on the network.
 

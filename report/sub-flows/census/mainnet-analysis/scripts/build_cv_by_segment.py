@@ -3,11 +3,11 @@
 Classify pools into the 4-segment taxonomy (Custodial by pledge, by delegation,
 by extraction, Retail) and compute CV distribution per segment.
 
-Classification logic (from Operator's Cut §4.3):
+Classification logic (from Operator's Cut §4.3, median-based):
 1. Custodial by pledge: pool_class == 'private'
 2. Custodial by extraction: NOT private AND margin >= 0.99
-3. Custodial by delegation: entity archetype in {cex, ivaas} AND hollow
-   AND NOT already captured by extraction
+3. Custodial by delegation: NOT private, NOT extraction, median delegation >= 100K ADA
+   (median computed from db-sync epoch_stake per pool)
 4. Retail: everything else
 """
 
@@ -43,28 +43,31 @@ def load_csv(path):
 def classify_pools():
     """Return dict: pool_id_bech32 -> segment label."""
 
-    # 1. Load reward_split_snapshot (epoch 614) for pool_class + margin + entity
-    snapshot = load_csv(os.path.join(OPCUT_DATA, 'reward_split_snapshot.csv'))
+    # 1. Load reward_split_snapshot_623 for pool_class + margin
+    snapshot_path = os.path.join(OPCUT_DATA, 'reward_split_snapshot_623.csv')
+    if not os.path.exists(snapshot_path):
+        snapshot_path = os.path.join(OPCUT_DATA, 'reward_split_snapshot.csv')
+    snapshot = load_csv(snapshot_path)
 
-    # 2. Load entity archetypes for custodial-by-delegation identification
-    archetypes = load_csv(os.path.join(CENSUS_DATA, 'mpo_entity_archetypes_updated.csv'))
-    custodial_entities = set()
-    for e in archetypes:
-        if e.get('archetype') in ('cex', 'ivaas'):
-            custodial_entities.add(e['entity_id'])
+    # 2. Load median delegation per pool (from db-sync epoch_stake)
+    median_path = os.path.join(OPCUT_DATA, 'pool_median_delegation_623.csv')
+    medians = {}
+    if os.path.exists(median_path):
+        for r in load_csv(median_path):
+            medians[r['pool_bech32']] = float(r['median_ada'])
 
     pool_segment = {}
     for p in snapshot:
         pid = p['pool_id_bech32']
         pool_class = p.get('pool_class', '').strip()
         margin = float(p.get('margin_rate', 0))
-        entity = p.get('eff_entity_id', '').strip()
+        dcnt = int(p.get('delegator_cnt', 0))
 
         if pool_class == 'private':
             pool_segment[pid] = 'Custodial by pledge'
         elif margin >= 0.99:
             pool_segment[pid] = 'Custodial by extraction'
-        elif entity in custodial_entities:
+        elif dcnt > 0 and medians.get(pid, 0) >= 100_000:
             pool_segment[pid] = 'Custodial by delegation'
         else:
             pool_segment[pid] = 'Retail'
