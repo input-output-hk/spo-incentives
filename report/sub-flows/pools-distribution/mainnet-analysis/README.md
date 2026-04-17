@@ -23,7 +23,7 @@ The argument proceeds in four steps:
 
 All counts and amounts use the latest available pool snapshot (**epoch 618**) and the latest complete epoch with reward data (**epoch 616**) unless stated otherwise.
 
-## Contents
+## Table of Contents
 
 1. [Mainnet Observations](#1-mainnet-observations)
 2. [The initial design](#2-the-initial-design)

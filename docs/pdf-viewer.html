@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document Viewer — SPO Incentives</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem('spo-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<style>
+:root {
+  --accent:#EC641D;
+  --infared:#E52321;--dawn:#EC641D;--black:#1a1a1a;--white:#fff;
+  --electric-blue:#16E9D8;--acid-green:#06FF89;--volt-yellow:#F2FF58;
+  --cobalt-pulse:#2C4FFA;--ultraviolet:#A700FF;
+  --bg:#ffffff;--bg-warm:#faf9f7;--bg-panel:#f5f4f2;--bg-code:#f0efed;
+  --text-primary:#1a1a1a;--text-body:#3a3a3a;--text-secondary:#6b6b6b;--text-muted:#999;
+  --border:#e2e0dc;--border-light:#eceae6;
+}
+[data-theme=dark]{
+  --bg:#0a0a0c;--bg-warm:#111113;--bg-panel:#1a1a1d;--bg-code:#242428;
+  --text-primary:#e4e4e7;--text-body:#a1a1aa;--text-secondary:#71717a;--text-muted:#52525b;
+  --border:#27272a;--border-light:#1f1f23;--black:#e4e4e7;--white:#0a0a0c;
+}
+[data-theme=dark] body{background:var(--bg-warm);color:var(--text-body)}
+[data-theme=dark] .nav-pages{background:var(--bg);border-bottom-color:var(--border)}
+[data-theme=dark] .nav-tab:hover{background:rgba(255,255,255,.06)}
+[data-theme=dark] .nav-tab.active{background:rgba(229,35,33,.12);color:var(--text-primary)}
+[data-theme=dark] .nav-col+.nav-col{border-left-color:var(--border)}
+[data-theme=dark] .nav-col-title{color:var(--infared)}
+[data-theme=dark] .nav-pdf-badge{background:rgba(229,35,33,.15)}
+[data-theme=dark] .pdf-toolbar{background:var(--bg);border-bottom-color:var(--border)}
+[data-theme=dark] .pdf-toolbar a{color:var(--text-body)}
+html,body{height:100%;margin:0;padding:0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;background:var(--bg-warm);color:var(--text-body);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;height:100vh}
+.site-nav{position:sticky;top:0;z-index:100;display:flex;flex-direction:column;flex-shrink:0}
+.nav-brand{background:#111;padding:0 28px;display:flex;align-items:center;min-height:36px;gap:12px}
+.nav-brand-home{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-brand-logo{height:18px;width:auto;opacity:.7;flex-shrink:0}
+.nav-brand-org{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.nav-brand-title{font:600 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.2px}
+.nav-brand-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+.theme-toggle{background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;cursor:pointer;padding:5px 8px;color:rgba(255,255,255,.5);font-size:14px;line-height:1;transition:color .15s,border-color .15s;display:flex;align-items:center}
+.theme-toggle:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.3)}
+.nav-dd-wrap{position:relative}
+.nav-dd-btn{background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;cursor:pointer;font:400 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.5px;color:rgba(255,255,255,.5);padding:6px 12px;transition:color .15s,border-color .15s;white-space:nowrap}
+.nav-dd-btn:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.3)}
+.nav-dd-wrap.open .nav-dd-btn{color:#fff;border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.08)}
+.nav-dd-panel{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#1a1a1a;border:1px solid rgba(255,255,255,.1);border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.4);padding:8px 0;min-width:340px;z-index:200}
+.nav-dd-wrap.open .nav-dd-panel{display:block}
+.nav-dd-item{display:block;padding:10px 16px;text-decoration:none;transition:background .1s}
+.nav-dd-item:hover{background:rgba(255,255,255,.06)}
+.nav-dd-title{display:block;font:500 13px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:rgba(255,255,255,.85);border-bottom:none}
+.nav-dd-meta{display:block;font:400 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:rgba(255,255,255,.35);margin-top:3px}
+.nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:stretch;padding:0;overflow-x:auto;white-space:nowrap}
+.nav-pages a{text-decoration:none;transition:color .15s,background .15s}
+.nav-col{display:flex;flex-direction:column;padding:8px 0 10px 20px;min-width:0}
+.nav-col+.nav-col{border-left:1px solid var(--border)}
+.nav-col-main{flex:1}
+.nav-col-title{font:700 9px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--infared);padding:2px 14px 6px 0;flex-shrink:0}
+.nav-col-title-link{text-decoration:none;cursor:pointer;transition:color .15s}
+.nav-col-title-link:hover{color:var(--dawn)}
+.nav-col-title-link.active{color:var(--dawn);border-bottom:none}
+.nav-col-links{display:flex;align-items:center;gap:0;white-space:nowrap}
+.nav-col-links-wrap{flex-wrap:wrap;gap:0}
+.nav-tab{display:flex;align-items:center;gap:5px;padding:4px 10px;font:500 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.3px;text-transform:uppercase;color:var(--text-muted);border-radius:4px}
+.nav-tab:hover{color:var(--text-primary);background:rgba(0,0,0,.04)}
+.nav-tab.active{color:var(--text-primary);font-weight:600;background:rgba(229,35,33,.06)}
+.nav-pdf{font-size:11px;color:var(--text-muted);opacity:.8}
+.nav-pdf:hover{opacity:1}
+.nav-pdf-badge{display:inline-block;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--infared);background:rgba(229,35,33,.08);border-radius:3px;padding:2px 4px;margin-left:4px;vertical-align:middle}
+.nav-flow-sep{width:1px;align-self:center;height:16px;background:var(--border);margin:0 6px;flex-shrink:0}
+.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.nav-arrow{font-size:11px;color:var(--dawn);opacity:.5;display:flex;align-items:center;padding:0 1px;flex-shrink:0}
+/* Toolbar above the PDF */
+.pdf-toolbar{display:flex;align-items:center;gap:16px;padding:10px 28px;background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0}
+.pdf-title{font:600 14px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-primary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pdf-toolbar a{font-size:12px;color:var(--text-secondary);text-decoration:none;border:1px solid var(--border);border-radius:4px;padding:5px 12px;transition:color .15s,border-color .15s;white-space:nowrap}
+.pdf-toolbar a:hover{color:var(--text-primary);border-color:var(--text-muted)}
+/* Full-bleed iframe */
+.pdf-frame{flex:1;width:100%;border:none;display:block;background:var(--bg-warm)}
+.pdf-error{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text-secondary);font-size:15px;padding:40px}
+.pdf-error a{color:var(--infared)}
+.site-footer{background:#111;color:rgba(255,255,255,.35);font-size:11px;letter-spacing:.5px;text-transform:uppercase;text-align:center;padding:12px 20px;display:flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0}
+.site-footer img{height:14px;opacity:.4}
+</style>
+</head>
+<body>
+<nav class="site-nav"><div class="nav-brand">
+<a href="index.html" class="nav-brand-home">
+<img src="assets/butterfly-white.png" alt="" class="nav-brand-logo">
+<span class="nav-brand-org">IO Research</span>
+<span class="nav-brand-title">Cardano Reward Pipeline</span>
+</a>
+<div class="nav-brand-right">
+<div class="nav-dd-wrap">
+<button class="nav-dd-btn" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')">Previous Analysis ▾</button>
+<div class="nav-dd-panel">
+<a href="pdf-viewer.html?file=references/spo-incentives-analysis_lopez-de-lara_2025.pdf" class="nav-dd-item"><span class="nav-dd-title">SPO Incentives Analysis</span><span class="nav-dd-meta">Lopez de Lara, 2025</span></a>
+</div></div>
+<div class="nav-dd-wrap">
+<button class="nav-dd-btn" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')">Research Papers ▾</button>
+<div class="nav-dd-panel">
+<a href="pdf-viewer.html?file=references/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf" class="nav-dd-item"><span class="nav-dd-title">Reward Sharing Schemes for Stake Pools</span><span class="nav-dd-meta">Brünjes, Kiayias et al., 2020</span></a>
+<a href="pdf-viewer.html?file=references/incentives-against-power-grabs_kiayias-et-al_2021.pdf" class="nav-dd-item"><span class="nav-dd-title">Stake Pool Incentives Against Power Grabs</span><span class="nav-dd-meta">Kiayias et al., 2021</span></a>
+<a href="pdf-viewer.html?file=references/removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf" class="nav-dd-item"><span class="nav-dd-title">Removing the Minimum Pool Cost</span><span class="nav-dd-meta">Stouka, Brünjes, Kiayias & Koutsoupias, 2022</span></a>
+<a href="pdf-viewer.html?file=references/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-item"><span class="nav-dd-title">Balancing Participation & Decentralization</span><span class="nav-dd-meta">Kiayias et al., 2024</span></a>
+</div></div>
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light theme" aria-label="Toggle theme">☀</button>
+</div>
+</div>
+<div class="nav-pages">
+<div class="nav-col">
+<span class="nav-col-title">Design</span>
+<div class="nav-col-links">
+<a href="intended-game.html" class="nav-tab">The Intended Game</a>
+<a href="pdf-viewer.html?file=references/delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf" class="nav-tab nav-pdf">Delegation & Incentives Design Spec<span class="nav-pdf-badge">PDF</span></a>
+</div></div>
+<div class="nav-col nav-col-main">
+<a href="observatory.html" class="nav-col-title nav-col-title-link">Mainnet Analysis</a>
+<div class="nav-col-links">
+<a href="census.html" class="nav-tab">Census</a>
+<span class="nav-flow-sep"></span>
+<a href="treasury.html" class="nav-tab"><span class="nav-dot" style="background:#E52321"></span>Monetary Reserve</a>
+<span class="nav-arrow">→</span>
+<a href="pools.html" class="nav-tab"><span class="nav-dot" style="background:#2C4FFA"></span>Pools</a>
+<span class="nav-arrow">→</span>
+<a href="operator.html" class="nav-tab"><span class="nav-dot" style="background:#EC641D"></span>Operators & Delegators</a>
+</div></div>
+</div></nav>
+<div class="pdf-toolbar" id="toolbar">
+  <span class="pdf-title" id="pdf-title">Loading document…</span>
+  <a id="pdf-download" href="#" download title="Download PDF">Download ↓</a>
+  <a id="pdf-newtab" href="#" target="_blank" title="Open in new tab">New tab ↗</a>
+</div>
+<iframe class="pdf-frame" id="pdf-frame"></iframe>
+<footer class="site-footer"><img src="assets/butterfly-white.png" alt="">Input Output &middot; IO Research</footer>
+<script>
+(function(){
+  /* Theme */
+  window.toggleTheme=function(){
+    var html=document.documentElement;
+    var next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+    html.setAttribute('data-theme',next);
+    try{ localStorage.setItem('spo-theme',next); }catch(e){}
+    var btn=document.querySelector('.theme-toggle');
+    if(btn){ btn.textContent=next==='dark'?'☀':'☾'; btn.title=next==='dark'?'Switch to light theme':'Switch to dark theme'; }
+  };
+  (function(){
+    var saved;try{ saved=localStorage.getItem('spo-theme'); }catch(e){}
+    if(saved) document.documentElement.setAttribute('data-theme',saved);
+    var btn=document.querySelector('.theme-toggle');
+    if(btn){ var d=document.documentElement.getAttribute('data-theme')==='dark'; btn.textContent=d?'☀':'☾'; btn.title=d?'Switch to light theme':'Switch to dark theme'; }
+  })();
+
+  /* Dropdowns */
+  window.closeAllDd=function(except){
+    document.querySelectorAll('.nav-dd-wrap.open').forEach(function(w){
+      if(!w.contains(except)) w.classList.remove('open');
+    });
+  };
+  document.addEventListener('click',function(){ closeAllDd(null); });
+
+  /* PDF title lookup */
+  var titles = {};
+  titles["delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf"] = "Delegation & Incentives Design Spec";
+  titles["reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf"] = "Reward Sharing Schemes for Stake Pools";
+  titles["incentives-against-power-grabs_kiayias-et-al_2021.pdf"] = "Stake Pool Incentives Against Power Grabs";
+  titles["removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf"] = "Removing the Minimum Pool Cost";
+  titles["balancing-participation-decentralization_kiayias-et-al_2024.pdf"] = "Balancing Participation & Decentralization";
+  titles["spo-incentives-analysis_lopez-de-lara_2025.pdf"] = "SPO Incentives Analysis";
+
+  /* Load PDF from query string */
+  var params=new URLSearchParams(window.location.search);
+  var file=params.get('file')||'';
+  if(file){
+    document.getElementById('pdf-frame').src=file;
+    document.getElementById('pdf-download').href=file;
+    document.getElementById('pdf-newtab').href=file;
+    /* Resolve title from known PDFs or from filename */
+    var basename=file.split('/').pop();
+    var title=titles[basename]||basename.replace(/\.pdf$/i,'').replace(/[-_]/g,' ');
+    document.getElementById('pdf-title').textContent=title;
+    document.title=title+' — SPO Incentives';
+  } else {
+    document.getElementById('toolbar').style.display='none';
+    document.getElementById('pdf-frame').style.display='none';
+    var err=document.createElement('div');
+    err.className='pdf-error';
+    err.innerHTML='<div>No document specified.</div><a href="index.html">← Back to report</a>';
+    document.body.insertBefore(err,document.querySelector('.site-footer'));
+  }
+})();
+</script>
+</body>
+</html>

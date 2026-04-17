@@ -1106,3 +1106,27 @@ CIP-specific extension variables:
 | $\sigma^{\text{protocol}}_{\text{saturationDynamic}}(\pi^{\text{pledged}})$ | Dynamic saturation threshold | Relative share | CIP-0037 pledge-dependent saturation |
 | $\sigma^{\text{owner}}_{\text{pledgeRef}}$ | Reference pledge level | Relative share | CIP-0037 normalization anchor |
 | $\epsilon^{\text{protocol}}_{\text{saturationFloor}}$ | Minimum floor for dynamic saturation scale | Fraction | Floor in $\phi^{\text{protocol}}_{\text{saturationScale}}$ |
+
+
+---
+
+## [SANDBOX] Synthesis and CIP Evaluation (moved from main doc 2026/04/17)
+
+> **Status:** Moved from main document §4 during structural reorganization. Contains the synthesis scaffolding and CIP evaluation framework to be developed.
+
+# 4. Synthesis and CIP 
+
+
+## 4.3 What a revised mechanism needs to achieve
+
+<!-- TODO: derive the requirements for any formula revision from the compound problem.
+Not a specific proposal — a set of constraints any solution must satisfy:
+  - Re-converge toward balanced as the incentivised equilibrium
+  - Make the pledge bonus overcome the inherent pledge/delegation asymmetry (§2.4.3.2)
+  - Operate at realistic capital scales, not only at saturation (§2.4.3.4)
+  - Not worsen the participation gap (§1 O3)
+  - Be robust to the fee-structure interactions at §3
+  - Preserve the security properties (§2.4.2.2)
+-->
+
+

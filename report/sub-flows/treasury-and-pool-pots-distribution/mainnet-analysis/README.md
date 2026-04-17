@@ -23,7 +23,7 @@ The argument proceeds in five steps:
 All counts and amounts use the latest complete epoch with reward data (**epoch 616**, ending 2026/03/05) unless stated otherwise. The latest available pool snapshot is **epoch 618**.
 Source dataset: `data/reward_epoch_pools_mainnet.csv` (Koios).
 
-## Contents
+## Table of Contents
 
 1. [Mainnet Observations](#1-mainnet-observations)
 2. [The initial design](#2-the-initial-design)

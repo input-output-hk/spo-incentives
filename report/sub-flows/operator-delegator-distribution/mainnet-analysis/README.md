@@ -22,7 +22,7 @@ The argument proceeds in four parts:
 
 All counts and amounts use epoch **623**. Source data: `pool_choice_quality_623.csv`, `pool_median_delegation_623.csv` (db-sync `epoch_stake`), `reward_split_snapshot_623.csv` (synthetic, estimated from epoch 614 reward rate), `koios_pool_history_mainnet.csv`, `mpo_entity_pool_mapping_mainnet.csv`.
 
-## Contents
+## Table of Contents
 
 1. [Mainnet Observations](#1-mainnet-observations)
 2. [The formula — intra-pool reward sharing](#2-the-formula--intra-pool-reward-sharing)
