@@ -1,7 +1,0 @@
-epoch_no,source,reconstructed_stake_b_ada,reconstructed_pct_supply,broad_pct_supply,top_reconstructed_groups
-220,local history,7.809,24.50,24.89,"IOG_Group (2.60B), 1percentpool.eu (1.26B), emurgo.io (0.68B)"
-250,local history,9.846,30.56,38.73,"BNP (2.53B), IOG_Group (1.67B), 1percentpool.eu (1.14B)"
-400,local history,9.784,27.49,32.75,"BNP (2.39B), bison.run (2.35B), WAV (0.87B)"
-410,local history,8.724,24.39,29.72,"bison.run (1.97B), BNP (1.31B), WAV (0.85B)"
-584,local history,7.406,19.43,29.94,"bison.run (2.18B), BNP (0.74B), WAV (0.61B)"
-617,live Koios,7.344,19.08,31.41,"bison.run (2.45B), WAV (0.61B), kiln.fi (0.57B)"

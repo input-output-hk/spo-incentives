@@ -1,0 +1,9 @@
+vintage,epoch_range,utxo_count,total_lovelace,total_ada,description
+null_vintage,,465,318200635000000,318200635,Byron-era outputs without epoch metadata
+pre_shelley,0-207,186214,609493344834410,609493345,Pre-Shelley outputs — likely dormant or lost
+shelley_allegra,208-250,11511,13628252273475,13628252,Shelley/Allegra era outputs
+mary,251-299,31316,37571220993130,37571221,Mary era outputs
+alonzo_early,300-349,426326,139473894483671,139473894,Early Alonzo — smart contract era begins
+alonzo_babbage,350-449,188670,127996008512094,127996009,Alonzo + Babbage era
+early_conway,450-549,308679,94006987500970,94006988,Early Conway era
+late_conway,550-623,224492,1110243191689782,1110243192,Late Conway era — recent activity

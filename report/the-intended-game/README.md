@@ -1,7 +1,7 @@
 # The Intended Game
 ### A Narrative Description of the Consensus Incentive Mechanism
 
-> **Status:** Working document — companion to the main [Cardano Reward Pipeline](../README.md) analysis (§1.2) and the CPS [*Closing the Consensus Incentive Gap*](../sub-flows/pools-distribution/cps/README.md).
+> **Status:** Working document — companion to the main [Cardano Reward Pipeline](../README.md) analysis ([§1.2](../README.md#12-pools-distribution)) and the CPS [*Closing the Consensus Incentive Gap*](../sub-flows/pools-distribution/cps/README.md).
 
 <br>
 
@@ -10,33 +10,33 @@
 - [What this document is for](#what-this-document-is-for)
 - [1. The design objective](#1-the-design-objective)
 - [2. The players](#2-the-players)
-  - [2.1 Transaction submitters — the source of economic demand](#21-transaction-submitters--the-source-of-economic-demand)
+  - [2.1 Transaction submitters — the source of economic demand](#21-transaction-submitters-the-source-of-economic-demand)
     - [2.1.1 Why they matter](#211-why-they-matter)
     - [2.1.2 How they feed the game](#212-how-they-feed-the-game)
-    - [2.1.3 A latent constraint — marginal today, existential tomorrow](#213-a-latent-constraint--marginal-today-existential-tomorrow)
-  - [2.2 Operators — capital at risk](#22-operators--capital-at-risk)
+    - [2.1.3 A latent constraint — marginal today, existential tomorrow](#213-a-latent-constraint-marginal-today-existential-tomorrow)
+  - [2.2 Operators — capital at risk](#22-operators-capital-at-risk)
     - [2.2.1 An open seat at the deflationary table](#221-an-open-seat-at-the-deflationary-table)
     - [2.2.2 The participation constraint](#222-the-participation-constraint)
     - [2.2.3 Pledge as the primary instrument](#223-pledge-as-the-primary-instrument)
     - [2.2.4 The arc from newcomer to pillar](#224-the-arc-from-newcomer-to-pillar)
-  - [2.3 Delegators — the oversight layer](#23-delegators--the-oversight-layer)
+  - [2.3 Delegators — the oversight layer](#23-delegators-the-oversight-layer)
     - [2.3.1 Yield-seeking with minimal effort](#231-yield-seeking-with-minimal-effort)
     - [2.3.2 Liquid delegation as continuous approval](#232-liquid-delegation-as-continuous-approval)
     - [2.3.3 The delegator as ethical arbiter](#233-the-delegator-as-ethical-arbiter)
     - [2.3.4 Myopic and non-myopic delegation](#234-myopic-and-non-myopic-delegation)
   - [2.4 The dependency chain](#24-the-dependency-chain)
 - [3. The progression](#3-the-progression)
-  - [3.1 Transaction submitters — from subsidy to self-sufficiency](#31-transaction-submitters--from-subsidy-to-self-sufficiency)
-  - [3.2 Operators — from first pledge to full commitment](#32-operators--from-first-pledge-to-full-commitment)
-  - [3.3 Delegators — from passive yield to active oversight](#33-delegators--from-passive-yield-to-active-oversight)
+  - [3.1 Transaction submitters — from subsidy to self-sufficiency](#31-transaction-submitters-from-subsidy-to-self-sufficiency)
+  - [3.2 Operators — from first pledge to full commitment](#32-operators-from-first-pledge-to-full-commitment)
+  - [3.3 Delegators — from passive yield to active oversight](#33-delegators-from-passive-yield-to-active-oversight)
   - [3.4 The security properties the equilibrium must satisfy](#34-the-security-properties-the-equilibrium-must-satisfy)
-    - [3.4.1 Accountability — the bond and the enforcer](#341-accountability--the-bond-and-the-enforcer)
-    - [3.4.2 Delegation as counter-power — the protocol's substitute for governance](#342-delegation-as-counter-power--the-protocols-substitute-for-governance)
-    - [3.4.3 Sybil resistance — making fragmentation expensive](#343-sybil-resistance--making-fragmentation-expensive)
-    - [3.4.4 Decentralisation — more than a pool count](#344-decentralisation--more-than-a-pool-count)
+    - [3.4.1 Accountability — the bond and the enforcer](#341-accountability-the-bond-and-the-enforcer)
+    - [3.4.2 Delegation as counter-power — the protocol's substitute for governance](#342-delegation-as-counter-power-the-protocols-substitute-for-governance)
+    - [3.4.3 Sybil resistance — making fragmentation expensive](#343-sybil-resistance-making-fragmentation-expensive)
+    - [3.4.4 Decentralisation — more than a pool count](#344-decentralisation-more-than-a-pool-count)
     - [3.4.5 The properties are not independent](#345-the-properties-are-not-independent)
     - [3.4.6 The structural requirement](#346-the-structural-requirement)
-- [4. The aligned dynamics — the virtuous cycle](#4-the-aligned-dynamics--the-virtuous-cycle)
+- [4. The aligned dynamics — the virtuous cycle](#4-the-aligned-dynamics-the-virtuous-cycle)
 
 <br>
 
@@ -92,13 +92,13 @@ Transaction submitters need reliable, censorship-resistant settlement. They do n
 
 #### 2.1.2 How they feed the game
 
-They submit transactions and pay fees. Those fees — together with the monetary expansion draw from the reserve — fund the epoch pot that the reward pipeline distributes (§1.1). Transaction submitters are the reason the system exists: without them, there is no economic activity to secure, and no sustainable revenue to fund the operators who secure it.
+They submit transactions and pay fees. Those fees — together with the monetary expansion draw from the reserve — fund the epoch pot that the reward pipeline distributes ([§1.1](../README.md#11-treasury-pool-pots-distribution)). Transaction submitters are the reason the system exists: without them, there is no economic activity to secure, and no sustainable revenue to fund the operators who secure it.
 
 #### 2.1.3 A latent constraint — marginal today, existential tomorrow
 
-In the current regime, transaction fees are negligible (~0.19% of the epoch pot — §1.1.2 O1). The game is almost entirely funded by monetary expansion from a depleting reserve.
+In the current regime, transaction fees are negligible (~0.19% of the epoch pot — [§1.1.2](../README.md#112-mainnet-observations) O1). The game is almost entirely funded by monetary expansion from a depleting reserve.
 
-As the reserve crosses its half-life and expansion shrinks (§1.1.2 O2), the system's economic viability progressively shifts onto fee revenue.
+As the reserve crosses its half-life and expansion shrinks ([§1.1.2](../README.md#112-mainnet-observations) O2), the system's economic viability progressively shifts onto fee revenue.
 
 > [!NOTE]
 > Transaction submitters are a **latent constraint**: marginal today, existential tomorrow. Their long-term participation is what makes the staking game *sustainably worth playing* for every other participant.
@@ -192,7 +192,7 @@ At this layer (pool distribution), the reward curve directly governs the operato
 
 This **interdependence** is the core of the design: operators need delegators for scale, delegators need operators for block production, and the reward curve should make their partnership the individually rational path for both.
 
-Transaction submitters are upstream — their contribution is mediated through the epoch pot (§1.1) — but they set the ultimate economic boundary within which the operator–delegator game plays out.
+Transaction submitters are upstream — their contribution is mediated through the epoch pot ([§1.1](../README.md#11-treasury-pool-pots-distribution)) — but they set the ultimate economic boundary within which the operator–delegator game plays out.
 
 <br>
 
@@ -222,7 +222,7 @@ Each player class experiences the game through its own trajectory — entry, pro
 
 **Progression.** As the pool landscape matures and the mechanism produces legible differences between pools, delegators increasingly differentiate on *commitment-based criteria*: pledge level, track record, margin policy. Delegation flows toward the most committed operators and away from uncommitted ones. The accountability mechanism becomes active — delegators are now *policing* operator behaviour through capital reallocation.
 
-**Endgame.** Delegators act as an efficient market for operator commitment — and as ethical arbiters of the pool landscape (§2.3.3). Capital moves fluidly to the pools that best combine commitment and performance, and exits quickly from those that fall short. The accountability mechanism operates at full power: no operator can sustain high rewards without continuous community approval. This endgame requires non-myopic delegation (§2.3.4): delegators who factor in commitment, independence, and network health — not only current-epoch yield — into their allocation decisions.
+**Endgame.** Delegators act as an efficient market for operator commitment — and as ethical arbiters of the pool landscape ([§2.3.3](#233-the-delegator-as-ethical-arbiter)). Capital moves fluidly to the pools that best combine commitment and performance, and exits quickly from those that fall short. The accountability mechanism operates at full power: no operator can sustain high rewards without continuous community approval. This endgame requires non-myopic delegation ([§2.3.4](#234-myopic-and-non-myopic-delegation)): delegators who factor in commitment, independence, and network health — not only current-epoch yield — into their allocation decisions.
 
 ### 3.4 The security properties the equilibrium must satisfy
 
@@ -245,7 +245,7 @@ Cardano's consensus layer does not implement slashing. Unlike protocols that des
 
 **Pledge as a static bond.** Capital registered in the pool certificate creates a visible, on-chain commitment. It is not locked in the custodial sense — the operator retains the keys — but it is *declared*: the protocol observes it at every epoch boundary, and failure to maintain the declared amount triggers a total reward wipe for that epoch (the pledge-unmet penalty). This bond serves a signalling function: an operator who has pledged substantial capital has an observable, verifiable stake in the pool's continued operation. The cost of abandoning or sabotaging the pool includes forfeiting the competitive position that pledge confers.
 
-**Delegation as a dynamic discipline.** Delegators can revoke their delegation unilaterally, at any epoch boundary, without the operator's consent (SL-D1 §3.4.6). This is the protocol's primary enforcement mechanism: an operator who degrades performance, raises fees exploitatively, or behaves dishonestly faces capital flight. The pool shrinks, rewards drop, and the operator's income falls — not because the protocol punished them, but because the community withdrew its approval.
+**Delegation as a dynamic discipline.** Delegators can revoke their delegation unilaterally, at any epoch boundary, without the operator's consent (SL-D1 [§3.4.6](#346-the-structural-requirement)). This is the protocol's primary enforcement mechanism: an operator who degrades performance, raises fees exploitatively, or behaves dishonestly faces capital flight. The pool shrinks, rewards drop, and the operator's income falls — not because the protocol punished them, but because the community withdrew its approval.
 
 These two components are not redundant. The static bond ensures that the operator has a *minimum* cost of entry and a *minimum* exposure to the pool's fate — it exists even when no delegator is watching. The dynamic discipline ensures that the operator faces *continuous* pressure to maintain performance — it operates even when the bond is too small to matter on its own.
 
@@ -345,4 +345,4 @@ A more secure, decentralised network is a more valuable network — which attrac
 
 The reward curve's success or failure is measured against this target.
 
-> **Next:** The divergence analysis — examining what actually happens when each player class tries to play this game — has been moved to the [main report §2](../README.md#2-the-divergence--when-the-optimal-move-breaks-the-game).
+> **Next:** The divergence analysis — examining what actually happens when each player class tries to play this game — has been moved to the [main report §2](../README.md#2-the-player-populations).

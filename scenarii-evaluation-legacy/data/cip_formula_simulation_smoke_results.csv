@@ -1,6 +1,0 @@
-Variant,Engine scheme,Equilibrium,Pool count,Operator count,Nakamoto,Pledge fraction,Output folder
-Status Quo,CardanoRSS,Yes,10,10,6,0.3375,11-doc-status-quo-smoke
-CIP-0023,CIP23RSS,Yes,10,10,6,0.3375,13-doc-cip23-smoke
-CIP-0037,CIP37RSS,Yes,10,10,6,0.3375,12-doc-cip37-smoke
-CIP-0050,CIP50RSS,Yes,10,10,6,0.3375,11-doc-cip50-smoke
-CIP-0082,CIP82RSS,Yes,10,10,6,0.3375,14-doc-cip82-smoke
