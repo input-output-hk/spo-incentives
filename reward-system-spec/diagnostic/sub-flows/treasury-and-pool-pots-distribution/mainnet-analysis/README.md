@@ -1,12 +1,14 @@
 # Treasury & Pool Pots Distribution — Mainnet Analysis
+(_Built on 2026/04/21 from mainnet data at epoch `623` plus historical analysis from epoch `208` (Shelley inception)._)
 
-_Built on 2026/03/17 from mainnet data at epoch `618` plus historical analysis from epoch `208` (Shelley inception)._
 
-## Objective
+This report documents the **epoch-level reward budget** — the first stage of Cardano's reward pipeline — and traces the structural forces that shape the budget **before any individual pool receives a single lovelace**.
 
-This report documents the **epoch-level reward budget** — the first stage of Cardano's reward pipeline — and traces the structural forces that shape the budget before any individual pool receives a single lovelace. It extends the empirical baseline established in the [*Analysis of Cardano's Incentive Mechanism*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf) (Lopez de Lara, 2025; hereafter the *Incentive Mechanism Analysis*).
+It extends the empirical baseline established in the [*Analysis of Cardano's Incentive Mechanism*](https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf) (Lopez de Lara, 2025; hereafter the *Incentive Mechanism Analysis*).
 
-Every epoch, the protocol assembles a reward pot from three on-chain sources, then splits it between the **treasury** (20%) and the **pools pot** (80%). At epoch 616, the gross pot stood at ~19.4M ADA — but only **6.8M ADA** ultimately reached operators and delegators. This report asks *where the rest goes*, and follows the answer upstream.
+Every epoch, the protocol assembles a reward pot from **three on-chain sources**, then splits it between the **treasury** (20%) and the **pools pot** (80%). At epoch 623, the gross pot stood at **~19.23M ADA** — but only **6.78M ADA** ultimately reached operators and delegators.
+
+*This report asks where the rest goes, and follows the answer upstream.*
 
 The argument proceeds in five steps:
 
@@ -14,13 +16,13 @@ The argument proceeds in five steps:
 
 2. **Current snapshot** (§3). The epoch-budget pipeline at a single point in time — reserve stock, expansion draw, fee contribution, treasury/pools split, and the gap between allocation and distribution.
 
-3. **Historical analysis** (§4). Seven time-series decompositions covering epochs 208–617: pot composition ([§1](../../../README.md#1-constitutional-framework)), reserve trajectory ([§2.1](../../../README.md#21-guarantee-operator-viability-across-the-entire-productive-population)), fee volatility ([§2.2](../../../README.md#22-restore-the-notion-of-pledge-among-operators)), deposit obligations ([§2.3](../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield)), block-production reliability ([§2.4](../../../README.md#24-reduce-the-concentration-effects-that-distort-both-populations)), treasury inflow ([§3.1](../../../README.md#31-the-staking-pot-must-survive-reserve-depletion)), and the return-to-reserve mechanism ([§3.2](../../../README.md#32-the-fee-generating-population-must-expand)) that has extended the reserve's life by ~4.55B ADA.
+3. **Historical analysis** (§4). Seven time-series decompositions covering epochs 208–623: pot composition ([§1](../../../README.md#1-constitutional-framework)), reserve trajectory ([§2.1](../../../README.md#21-guarantee-operator-viability-across-the-entire-productive-population)), fee volatility ([§2.2](../../../README.md#22-restore-the-notion-of-pledge-among-operators)), deposit obligations ([§2.3](../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield)), block-production reliability ([§2.4](../../../README.md#24-reduce-the-concentration-effects-that-distort-both-populations)), treasury inflow ([§3.1](../../../README.md#31-the-staking-pot-must-survive-reserve-depletion)), and the return-to-reserve mechanism ([§3.2](../../../README.md#32-the-fee-generating-population-must-expand)) that has extended the reserve's life by ~4.61B ADA.
 
 4. **Forward-looking** (§5). Reserve depletion trajectory, the conditions for fee self-sufficiency, and the upcoming events — Leios, governance activation, parameter governance — that will reshape this budget layer.
 
 5. **Scope boundary.** Observations O1–O4 are structural to the epoch-budget layer and fall **outside the scope of the four CIPs** under evaluation (CIP-0023, CIP-0037, CIP-0050, CIP-0082). They document the sustainability context within which all CIP proposals operate. The pool-level distribution analysis continues in the companion report [*The Pools Pot Distribution Gaps*](../../pools-distribution/mainnet-analysis/).
 
-All counts and amounts use the latest complete epoch with reward data (**epoch 616**, ending 2026/03/05) unless stated otherwise. The latest available pool snapshot is **epoch 618**.
+All counts and amounts use the latest complete epoch with reward data (**epoch 623**, ending 2026/04/09) unless stated otherwise.
 Source dataset: `data/reward_epoch_pools_mainnet.csv` (Koios).
 
 ## Table of Contents
@@ -63,50 +65,64 @@ Source dataset: `data/reward_epoch_pools_mainnet.csv` (Koios).
 | F1.3 | Deposit contribution is small and unmeasurable at epoch granularity | [§2.3](../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield) | Data limitation — Koios coverage |
 | F1.4 | SPOs produce ~97% of their assigned blocks — the pot assembles reliably | [§2.4](../../../README.md#24-reduce-the-concentration-effects-that-distort-both-populations) | Structural — avg η = 0.977 |
 | | **O2 — The reserve has crossed its half-life** | | |
-| F2.1 | Reserve is half-depleted (−50.95%) in 5.5 years | [§2.1](../../../README.md#21-guarantee-operator-viability-across-the-entire-productive-population) | Structural — exponential decay |
+| F2.1 | Reserve is half-depleted (−51.43%) in 5.7 years | [§2.1](../../../README.md#21-guarantee-operator-viability-across-the-entire-productive-population) | Structural — exponential decay |
 | F2.2 | Significant reward pressure expected at epochs 1000–1200 | [§5.1](#51-reserve-depletion-trajectory) | Projected — ~2028–2029 |
 | | **O3 — The reward mechanism operates at ~44% of its potential** | | |
-| F3.1 | Only ~44% of the pools pot is distributed to operators and delegators — the rest returns to the reserve | [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) | Epoch 616 — 6.8M of 15.5M ADA |
-| F3.2 | 4.55B ADA cumulative (~70% of current reserve) exists because of undistributed rewards | [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) | Structural — side-effect, not design |
-| F3.3 | The primary driver is inactive stake — ~17B ADA (~44%) does not participate in delegation | [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) | Upstream — outside formula control |
+| F3.1 | Only ~44% of the pools pot is distributed to operators and delegators — the rest returns to the reserve | [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) | Epoch 623 — 6.78M of 15.39M ADA |
+| F3.2 | 4.61B ADA cumulative (~71% of current reserve) exists because of undistributed rewards | [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) | Structural — side-effect, not design |
+| F3.3 | The primary driver is inactive stake — ~16.8B ADA (~43.6%) does not participate in delegation | [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) | Upstream — outside formula control |
 | | **O4 — Reward parameters have never been adjusted** | | |
 | F4.1 | Treasury split and expansion rate never adjusted since Shelley | [§3.3](../../../README.md#33-the-mechanism-must-function-across-a-range-of-ada-price-scenarios) | Governance — τ = 20%, ρ = 0.3% constant |
 
 ### The big picture
 
-Five and a half years after Shelley, the epoch-budget stage tells a clear story: **the system works, but it runs on a finite fuel supply that is now half-spent.**
+Nearly six years after Shelley, the epoch-budget stage tells a clear story: **the system works, but it runs on a finite fuel supply that is now half-spent.**
 
 ### O1 — The epoch pot is a single-source budget
 
-The protocol assembles the epoch reward pot from three sources: monetary expansion, transaction fees, and deposit flows. In practice only one matters.
+The protocol assembles the epoch reward pot from **three sources**: monetary expansion, transaction fees, and deposit flows.
 
-**Monetary expansion: ~99.8% of the pot** (F1.1). Every epoch, 0.3% of the reserve is drawn. This has dominated the pot in every single epoch since Shelley — fees have never crossed 3%, even during peak NFT/DeFi activity.
+*In practice only one matters.*
 
-**Transaction fees: ~0.19% of the pot** (F1.2). At current levels, fees are negligible. Even at full realistic network capacity (3.1 TPS, ~1.34M tx/epoch), fee revenue would reach only ~254K ADA/epoch — barely 1.3% of the reserve expansion term. Reaching fee self-sufficiency would require **12–16× today's realistic maximum throughput**: both a capacity upgrade (Leios) and a fundamental shift in transaction demand.
+**Monetary expansion: ~99.8% of the pot** (F1.1). Every epoch, **0.3% of the reserve** is drawn. This has dominated the pot in **every single epoch since Shelley** — outside a single recent anomaly at epoch 620 (~5% fee share; see [§4.3](#43-transaction-fees)), fees have never crossed 3%, even during peak NFT/DeFi activity.
 
-**Deposits: unmeasurable at epoch granularity** (F1.3). The non-refundable deposit flow is not directly available in the Koios dataset. Cross-validation shows a median gap of only ~49K ADA against treasury stock deltas — a rounding error.
+**Transaction fees: ~0.17% of the pot** (F1.2, epoch 623). At current levels, fees are **negligible**. Even at full realistic network capacity (3.1 TPS, ~1.34M tx/epoch), fee revenue would reach only **~254K ADA/epoch** — barely **1.3%** of the reserve expansion term.
 
-**Block production: the pot assembles reliably** (F1.4). SPOs produce ~97% of their assigned blocks on average (η = 0.977). The pot assembly mechanism works as intended — block production is not a bottleneck.
+Reaching fee self-sufficiency would require **12–16× today's realistic maximum throughput**: both a capacity upgrade (Leios) and a fundamental shift in transaction demand.
+
+**Deposits: unmeasurable at epoch granularity** (F1.3). The non-refundable deposit flow is not directly available in the Koios dataset. Cross-validation shows a median gap of only **~49K ADA** against treasury stock deltas over epochs 211–623 — *a rounding error*.
+
+**Block production: the pot assembles reliably** (F1.4). Stake pool operators produce **~97%** of their assigned blocks on average (η = 0.977). The pot assembly mechanism works as intended — block production is **not a bottleneck**.
 
 ### O2 — The reserve has crossed its half-life
 
-The reserve has gone from **13.29B to 6.53B ADA** — half depleted in ~5.5 years (F2.1). The decline is exponential: each epoch draws 0.3% of whatever remains, so the absolute draw shrinks over time. The nominal expansion has already halved, from ~39.9M to ~19.5M ADA/epoch.
+The reserve has gone from **13.29B to 6.45B ADA** — **half depleted** in ~5.7 years (F2.1). The decline is **exponential**: each epoch draws 0.3% of whatever remains, so the absolute draw shrinks over time.
 
-**Projected timeline** (F2.2). At current parameters and participation levels, the reserve reaches ~2B ADA around epochs 1000–1200 (~2028–2029) — at which point per-epoch rewards drop significantly. Full depletion is projected around epoch 3500 (~2040s).
+The nominal expansion has already halved, from **~39.9M to ~19.36M ADA/epoch**.
+
+**Projected timeline** (F2.2). At current parameters and participation levels, the reserve reaches **~2B ADA** around **epochs 1000–1200 (~2028–2029)** — at which point per-epoch rewards drop significantly. Full depletion is projected around **epoch 3500 (~2040s)**.
 
 ### O3 — The reward mechanism operates at ~44% of its potential
 
-Every epoch, the protocol allocates ~15.5M ADA to the pools pot. Only **~6.8M ADA (~44%) is actually distributed as rewards** to operators and delegators — the remaining ~8.7M returns to the reserve (F3.1).
+Every epoch, the protocol allocates **~15.39M ADA** to the pools pot. Only **~6.78M ADA (~44%) is actually distributed as rewards** to operators and delegators — the remaining **~8.61M returns to the reserve** (F3.1).
 
-This is not a small leak. Over 400+ epochs, **4.55B ADA** has flowed back to the reserve through this mechanism — roughly **70% of the current reserve stock** exists because rewards were not fully distributed (F3.2). It is the single biggest reason the reserve has lasted as long as it has.
+*This is not a small leak.*
 
-The root cause is straightforward: **the staking mechanism is half-utilised** (F3.3). Out of ~38.5B ADA in circulation, only ~21.6B (~56%) participates in delegation. The remaining ~17B ADA sits outside the system entirely — it earns no rewards, but it still dilutes the distribution. If that inactive stake were to enter consensus — through governance incentives, exchange staking changes, or new delegation products — this buffer would shrink and reserve depletion would accelerate.
+Over **413 epochs**, **4.61B ADA** has flowed back to the reserve through this mechanism — roughly **71% of the current reserve stock** exists because rewards were not fully distributed (F3.2). It is the **single biggest reason** the reserve has lasted as long as it has.
 
-This creates a paradox: the return-to-reserve mechanism slows depletion, but it is a side effect of low participation, not a design feature. Greater adoption — normally desirable — would remove this safety margin.
+The root cause is straightforward: **the staking mechanism is half-utilised** (F3.3).
+
+Out of **~38.55B ADA** in circulation, only **~21.75B (~56.4%)** participates in delegation. The remaining **~16.8B ADA** sits outside the system entirely — it earns no rewards, but it still dilutes the distribution.
+
+If that inactive stake were to enter consensus — through governance incentives, exchange staking changes, or new delegation products — this buffer would shrink and reserve depletion would accelerate.
+
+*This creates a paradox: the return-to-reserve mechanism slows depletion, but it is a side effect of low participation, not a design feature. Greater adoption — normally desirable — would remove this safety margin.*
 
 ### O4 — Reward parameters have never been adjusted
 
-The two parameters that shape this entire pipeline — the monetary expansion rate ($\rho = 0.3\%$) and the treasury rate ($\tau = 20\%$) — have **never been adjusted** since Shelley inception (F4.1). The decentralisation parameter $d$ was gradually reduced to 0 and $k$ was raised from 150 to 500, but the reward-level parameters remain at their day-one values. Neither has been the subject of a formal governance proposal.
+The two parameters that shape this entire pipeline — the monetary expansion rate ($\rho = 0.3\%$) and the treasury rate ($\tau = 20\%$) — have **never been adjusted** since Shelley inception (F4.1).
+
+The decentralisation parameter $d$ was gradually reduced to 0 and $k$ was raised from 150 to 500, but the reward-level parameters **remain at their day-one values**. Neither has been the subject of a formal governance proposal.
 
 > **Scope note.** Observations O1–O4 are structural to the epoch-budget layer and fall **outside the scope of the four CIPs** under evaluation (CIP-0023, CIP-0037, CIP-0050, CIP-0082). They document the sustainability context within which all CIP proposals operate, and distinguish them from the problems the CIPs actually target — at the pool-distribution and operator/delegator layers downstream.
 
@@ -205,16 +221,16 @@ TreasuryPot^{\text{epoch}}
 20\% \cdot Pot^{\text{epoch}}
 $$
 
-At epoch 616, this produces:
+At epoch 623, this produces:
 
 | Component | Value | Share of pot |
 | --- | ---: | ---: |
-| Reserve-sourced expansion ($\rho \times \text{Reserve}$) | 19.38M ADA | 99.81% |
-| Transaction fees | 36,978 ADA | 0.19% |
+| Reserve-sourced expansion ($\rho \times \text{Reserve}$) | 19.20M ADA | 99.83% |
+| Transaction fees | 32,892 ADA | 0.17% |
 | Deposits | unmeasurable | ~0% |
-| **Gross epoch pot** | **~19.42M ADA** | **100%** |
-| Treasury cut ($\tau = 20\%$) | 3.88M ADA | 20% |
-| **Pools pot** ($1-\tau = 80\%$) | **15.53M ADA** | **80%** |
+| **Gross epoch pot** | **~19.23M ADA** | **100%** |
+| Treasury cut ($\tau = 20\%$) | 3.85M ADA | 20% |
+| **Pools pot** ($1-\tau = 80\%$) | **15.39M ADA** | **80%** |
 
 #### 2.1.4 Concept glossary
 
@@ -247,30 +263,30 @@ The pools pot ($PoolsPot^{\text{epoch}}$) produced by this stage is the **total 
 
 The companion report [*The Pools Pot Distribution Gaps*](../../pools-distribution/mainnet-analysis/) analyses the pool-distribution stage in full, including the SL-D1 reward curve, its normalized rewrite, and the efficiency and behavioural analysis of mainnet outcomes.
 
-At epoch 616, of the 15.53M ADA entering the pool-distribution stage, only **6.79M ADA (43.7%) was distributed** to operators and delegators. The rest returned to the reserve — primarily because ~43.5% of circulating ADA does not participate in delegation. This return-to-reserve mechanism is analysed in [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) and its implications for reserve sustainability in [§5.1](#51-reserve-depletion-trajectory).
+At epoch 623, of the 15.39M ADA entering the pool-distribution stage, only **6.78M ADA (44.0%) was distributed** to operators and delegators. The rest returned to the reserve — primarily because ~43.6% of circulating ADA does not participate in delegation. This return-to-reserve mechanism is analysed in [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) and its implications for reserve sustainability in [§5.1](#51-reserve-depletion-trajectory).
 
 ---
 
 ## 3. Current snapshot
 
-Reference epoch: **616** (2026/02/28 – 2026/03/05), latest complete epoch with reward data. The formulas in §2 produce the values below.
+Reference epoch: **623** (2026/04/04 – 2026/04/09), latest complete epoch with reward data. The formulas in §2 produce the values below.
 
 | Metric | Value |
 | --- | --- |
-| Reserve stock | **6.53B ADA** (down 50.87% from Shelley inception) |
+| Reserve stock | **6.45B ADA** (down 51.43% from Shelley inception) |
 | Monetary expansion rate ($\rho$) | **0.3%** |
 | Treasury rate ($\tau$) | **20%** |
-| Block-production ratio (η) | **0.990** (epoch 616) · **0.977** historical average |
-| Gross epoch pot proxy | **19.42M ADA** |
-| — Reserve-sourced expansion | 19.38M ADA (**99.81%**) |
-| — Transaction fees | 36,978 ADA (**0.19%**) |
-| Treasury cut (20%) | **3.88M ADA** |
-| Pools pot (80%) | **15.53M ADA** |
-| Observed paid rewards | **6.79M ADA** |
-| Return to reserve (this epoch) | **8.75M ADA** (undistributed) |
-| 30-day average fees (epochs 611–616) | **44,022 ADA/epoch** |
-| Median return to reserve (epochs 211–616) | **10.32M ADA/epoch** |
-| Cumulative return to reserve (epochs 211–616) | **4.55B ADA** (~70% of current reserve) |
+| Block-production ratio (η) | **0.992** (epoch 623) · **0.977** historical average |
+| Gross epoch pot proxy | **19.23M ADA** |
+| — Reserve-sourced expansion | 19.20M ADA (**99.83%**) |
+| — Transaction fees | 32,892 ADA (**0.17%**) |
+| Treasury cut (20%) | **3.85M ADA** |
+| Pools pot (80%) | **15.39M ADA** |
+| Observed paid rewards | **6.78M ADA** |
+| Return to reserve (this epoch) | **8.61M ADA** (undistributed) |
+| 30-day average fees (epochs 618–623) | **200,240 ADA/epoch** (distorted by epoch 620 anomaly — see [§4.3](#43-transaction-fees)) |
+| Median return to reserve (epochs 211–623) | **10.31M ADA/epoch** |
+| Cumulative return to reserve (epochs 211–623) | **4.61B ADA** (~71% of current reserve) |
 
 ---
 
@@ -280,24 +296,24 @@ Reference epoch: **616** (2026/02/28 – 2026/03/05), latest complete epoch with
 
 ![General Reward Pot](figures/general_reward_pot_mainnet.png)
 
-The top panel decomposes the gross epoch pot into its two measurable sources — **reserve-sourced monetary expansion** and **transaction fees** — since Shelley (epoch 208). Monetary expansion has dominated in every single epoch; fees have never exceeded 3% of the pot, even during peak activity (epoch 304, ~308K ADA).
+The top panel decomposes the gross epoch pot into its two measurable sources — **reserve-sourced monetary expansion** and **transaction fees** — since Shelley (epoch 208). Monetary expansion has dominated in **every single epoch**; outside the epoch 620 anomaly (see [§4.3](#43-transaction-fees)), fees have **never exceeded 3%** of the pot, even during peak activity (epoch 304, ~308K ADA).
 
-The middle panel shows the resulting **treasury / pools split** ($\tau = 20\%$). Both tracks decline in parallel, reflecting the shrinking reserve.
+The middle panel shows the resulting **treasury / pools split** ($\tau = 20\%$). Both tracks decline in parallel, *reflecting the shrinking reserve*.
 
-The bottom panel compares the **pool-side pot proxy** to **observed paid rewards**. The persistent gap (~10.3M ADA/epoch median) represents rewards that were not distributed and returned to the reserve — see [§3.2](../../../README.md#32-the-fee-generating-population-must-expand).
+The bottom panel compares the **pool-side pot proxy** to **observed paid rewards**. The persistent gap (~**10.3M ADA/epoch** median) represents rewards that were not distributed and returned to the reserve — see [§3.2](../../../README.md#32-the-fee-generating-population-must-expand).
 
 ### 4.2 Reserve stock and monetary expansion
 
 ![Monetary Expansion Reserve History](figures/monetary_expansion_reserve_history_mainnet.png)
 
 **Reserve stock** (top panel).
-The reserve has fallen from **13.29B ADA** (epoch 209) to **6.52B ADA** (epoch 617) — a decline of **−50.95%** over ~5.5 years.
+The reserve has fallen from **13.29B ADA** (epoch 209) to **6.46B ADA** (epoch 622) — a decline of **−51.35%** over ~5.7 years.
 
 **Nominal draw** (middle panel).
-The nominal monetary expansion ($\rho \times \text{Reserve}$) has decreased from ~39.9M ADA/epoch to ~19.5M ADA/epoch, tracking the reserve decline mechanically.
+The nominal monetary expansion ($\rho \times \text{Reserve}$) has decreased from ~39.9M ADA/epoch to ~19.39M ADA/epoch, tracking the reserve decline mechanically.
 
 **Pool-side contribution** (bottom panel).
-After applying the treasury cut, decentralisation gate $g(d)$, and block-production ratio, the pool-side reserve term peaked at **31.7M ADA/epoch** (epoch 215, 2020/09/02) and currently sits at ~15.2M ADA/epoch.
+After applying the treasury cut, decentralisation gate $g(d)$, and block-production ratio, the pool-side reserve term peaked at **31.7M ADA/epoch** (epoch 215, 2020/09/02) and currently sits at ~15.43M ADA/epoch.
 
 The declining trajectory is structural: each epoch draws from a smaller reserve, producing a smaller pot. The monetary expansion rate $\rho = 0.3\%$ has remained constant since Shelley.
 
@@ -307,16 +323,21 @@ The declining trajectory is structural: each epoch draws from a smaller reserve,
 
 | Metric | Value |
 | --- | --- |
-| Coverage | Epochs 208–617 |
-| 30-day average (epochs 611–616) | **44,022 ADA/epoch** |
+| Coverage | Epochs 208–623 |
+| 30-day average (epochs 618–623) | **200,240 ADA/epoch** (distorted — see anomaly note below) |
+| Structural baseline (ex-anomalies) | **30–50K ADA/epoch** |
 | All-time minimum | 3,914 ADA (epoch 221, 2020/10/02) |
-| All-time maximum | 308,294 ADA (epoch 304, 2021/11/21) |
+| All-time maximum | 1,009,471 ADA (epoch 620, 2026/03/20) |
 
-Fee revenue is volatile and tracks network activity spikes (NFT minting, DeFi waves), but the structural baseline sits around **30–50K ADA/epoch**.
+Fee revenue is **volatile** and tracks network activity spikes (NFT minting, DeFi waves), but the structural baseline sits around **30–50K ADA/epoch**.
 
-The **realistic capacity ceiling** (red dashed line on the visual) estimates the maximum fee revenue if the network operated at full realistic throughput: **~254K ADA/epoch** (3.1 TPS × 432,000 s × 0.19 ADA avg fee). Even at this theoretical maximum, fees would cover only **~1.3% of the reserve expansion term** (19.4M ADA at epoch 616). The all-time peak (epoch 304, 308K ADA) briefly exceeded this ceiling during exceptional NFT/DeFi activity.
+**Epoch 620 anomaly.** Epoch 620 recorded **1.01M ADA in fees** — a **~30× jump** over the surrounding baseline, with normal block production (21,180 blocks, η = 0.981). This single epoch pulls the rolling 30-day average from ~32K ADA/epoch to the 200K figure above and displaces the prior all-time maximum (epoch 304, 308K ADA). The driver is upstream — large-transaction-volume event or governance-scale activity — and warrants follow-up in the next analysis pass. Downstream pot and return-to-reserve figures are **not materially affected**, since fees remain <1% of the pot even at this level.
 
-The *Analysis of Cardano's Incentive Mechanism* (Lopez de Lara, 2025; hereafter the *Incentive Mechanism Analysis*, [§3.3](../../../README.md#33-the-mechanism-must-function-across-a-range-of-ada-price-scenarios)) estimates the network would need to process **12–16× more transactions** than its current realistic maximum capacity to fund rewards through fees alone — requiring both a throughput upgrade (Leios) and a fundamental shift in network utilization.
+The **realistic capacity ceiling** (red dashed line on the visual) estimates the maximum fee revenue if the network operated at full realistic throughput: **~254K ADA/epoch** (3.1 TPS × 432,000 s × 0.19 ADA avg fee).
+
+Even at this theoretical maximum, fees would cover only **~1.3% of the reserve expansion term** (19.23M ADA at epoch 623). The epoch 620 anomaly briefly exceeded this ceiling during exceptional activity.
+
+The *Analysis of Cardano's Incentive Mechanism* (Lopez de Lara, 2025; hereafter the *Incentive Mechanism Analysis*, [§3.3](../../../README.md#33-the-mechanism-must-function-across-a-range-of-ada-price-scenarios)) estimates the network would need to process **12–16× more transactions** than its current realistic maximum capacity to fund rewards through fees alone — requiring **both** a throughput upgrade (Leios) **and** a fundamental shift in network utilization.
 
 ### 4.4 Deposit obligations
 
@@ -324,10 +345,10 @@ The *Analysis of Cardano's Incentive Mechanism* (Lopez de Lara, 2025; hereafter 
 
 | Metric | Value |
 | --- | --- |
-| Coverage | Epochs 209–617 |
-| 30-day average obligation | ~5.26M ADA |
-| Minimum | 441K ADA |
-| Maximum | 9.26M ADA |
+| Coverage | Epochs 209–623 |
+| 30-day average obligation (epochs 617–623) | ~5.44M ADA |
+| Minimum | 441K ADA (epoch 209, 2020/08/03) |
+| Maximum | 9.26M ADA (epoch 574, 2025/08/02) |
 
 The deposit obligation (stake key, DRep, proposal deposits) is tracked as a **stock-level proxy** because the true epoch-level non-refundable deposit flow ($Deposit^{\text{epoch}}_{\text{nonRefundable}}$) is not directly available in the Koios dataset. The actual per-epoch contribution to the epoch pot is likely small and irregular.
 
@@ -362,25 +383,25 @@ The top panel shows total treasury inflow since Shelley — the declining slope 
 The middle panel zooms on the fee-side contribution in recent epochs.
 The bottom panel verifies the proxy against observed treasury stock deltas.
 
-**Verification.** On epochs 211–616, the median absolute gap between the proxy and observed treasury stock delta is **48,792 ADA**. 325 out of 406 epochs fall within 100K ADA. The 13 epochs with negative stock deltas correspond to treasury outflows (governance disbursements).
+**Verification.** On epochs 211–623, the median absolute gap between the proxy and observed treasury stock delta is **48,846 ADA**. 329 out of 413 epochs fall within 100K ADA. The 14 epochs with negative stock deltas correspond to treasury outflows (governance disbursements).
 
 ### 4.7 Return to reserve
 
 ![Return to Reserve Impact](figures/return_to_reserve_impact_mainnet.png)
 
-Not all of the pool-side pot is distributed as rewards. The difference between the pool-side pot proxy and observed paid rewards **returns to the reserve** — a mechanism that significantly slows reserve depletion.
+Not all of the pool-side pot is distributed as rewards. The difference between the pool-side pot proxy and observed paid rewards **returns to the reserve** — *a mechanism that significantly slows reserve depletion*.
 
 | Metric | Value |
 | --- | --- |
-| Analysis window | Epochs 211–616 |
-| Median per-epoch return | **10.32M ADA** |
-| Cumulative return | **4.55B ADA** |
-| Largest single-epoch return | 24.19M ADA (epoch 211) |
+| Analysis window | Epochs 211–623 |
+| Median per-epoch return | **10.31M ADA** |
+| Cumulative return | **4.61B ADA** |
+| Largest single-epoch return | 24.19M ADA (epoch 211, 2020/08/13) |
 
 **Reserve impact.**
-At epoch 616, the actual reserve stood at **6.53B ADA**. Without the return-to-reserve mechanism, the counterfactual reserve would be only **1.98B ADA** — meaning approximately **4.55B ADA** (~70% of the current reserve) exists because rewards were not fully distributed.
+At epoch 623, the actual reserve stood at **6.45B ADA**. Without the return-to-reserve mechanism, the counterfactual reserve would be only **1.84B ADA** — meaning approximately **4.61B ADA** (**~71% of the current reserve**) exists because rewards were not fully distributed.
 
-The primary driver is **inactive stake** — the ~16B ADA not participating in consensus. The gap decomposition analysis attributes ~70.9% of the cumulative return to inactive/non-eligible stake.
+The primary driver is **inactive stake** — the **~16.8B ADA not participating in consensus**. The gap decomposition analysis attributes **~70.9%** of the cumulative return to inactive/non-eligible stake.
 
 ### 4.8 Protocol parameters
 
@@ -392,11 +413,11 @@ Three protocol parameters directly govern the epoch-pot assembly and treasury/po
 | Treasury growth rate | $\tau$ | 20% (0.2) | Set at Shelley (epoch 208), **never changed** |
 | Decentralisation | $d$ | 0 | Reduced from 1.0 to 0.0 over epochs 208–257, **inert since** |
 
-$\rho$ controls how much of the reserve is drawn each epoch. At 0.3%, the current draw is ~19.5M ADA/epoch. This rate has never been the subject of a governance proposal, despite the reserve crossing its half-life.
+$\rho$ controls how much of the reserve is drawn each epoch. At **0.3%**, the current draw is **~19.36M ADA/epoch**. This rate has **never been the subject of a governance proposal**, despite the reserve crossing its half-life.
 
-$\tau$ sets the treasury/pools split. At 20%, the treasury receives ~3.9M ADA/epoch and the pools pot receives ~15.5M ADA/epoch. This ratio has likewise never been reviewed.
+$\tau$ sets the treasury/pools split. At **20%**, the treasury receives **~3.85M ADA/epoch** and the pools pot receives **~15.39M ADA/epoch**. This ratio has likewise **never been reviewed**.
 
-$d$ affected the epoch pot during the Shelley-to-decentralisation transition through the gate function $g(d)$. It reached 0 at epoch 257 and has been inert since — included here only for completeness.
+$d$ affected the epoch pot during the Shelley-to-decentralisation transition through the gate function $g(d)$. It reached 0 at epoch 257 and has been **inert since** — included here only for completeness.
 
 ---
 
@@ -404,7 +425,7 @@ $d$ affected the epoch pot during the Shelley-to-decentralisation transition thr
 
 ### 5.1 Reserve depletion trajectory
 
-The reserve has lost 50.95% of its initial value in ~5.5 years. The depletion is not linear — it follows an exponential decay driven by $\rho \times \text{Reserve}$, meaning each epoch draws a smaller absolute amount.
+The reserve has lost **51.43%** of its initial value in ~5.7 years. The depletion is **not linear** — it follows an **exponential decay** driven by $\rho \times \text{Reserve}$, meaning each epoch draws a smaller absolute amount.
 
 The *Incentive Mechanism Analysis* ([§3.3](../../../README.md#33-the-mechanism-must-function-across-a-range-of-ada-price-scenarios), Figure 19) projects:
 
@@ -413,7 +434,7 @@ The *Incentive Mechanism Analysis* ([§3.3](../../../README.md#33-the-mechanism-
 | **Epochs 1000–1200** (~2028–2029) | ~2B ADA | Significant pressure on reward levels begins |
 | **~Epoch 3500** (~2040s) | near-zero | Full reserve depletion at current parameters |
 
-The return-to-reserve mechanism ([§3.2](../../../README.md#32-the-fee-generating-population-must-expand)) is currently extending the reserve's life by returning ~10.3M ADA/epoch. However, if inactive stake were to enter consensus (e.g. through governance incentives or exchange staking changes), this buffer would shrink, accelerating depletion.
+The return-to-reserve mechanism ([§3.2](../../../README.md#32-the-fee-generating-population-must-expand)) is currently extending the reserve's life by returning ~10.31M ADA/epoch. However, if inactive stake were to enter consensus (e.g. through governance incentives or exchange staking changes), this buffer would shrink, accelerating depletion.
 
 ### 5.2 Fee-to-expansion crossover
 
@@ -431,11 +452,15 @@ No single lever is sufficient. The report recommends a multi-pronged approach: c
 
 ### 5.3 Upcoming events and risks
 
-**Leios upgrade.** Designed to substantially increase network throughput. This is a necessary precondition for fee growth, but does not guarantee traffic. "Leios provides the highway — it does not guarantee the traffic" (Lopez de Lara, 2025, §5).
+**Leios upgrade.** Designed to substantially increase network throughput. This is a **necessary precondition for fee growth**, but does not guarantee traffic. *"Leios provides the highway — it does not guarantee the traffic"* (Lopez de Lara, 2025, §5).
 
-**Governance activation of latent stake.** If a significant portion of the ~16B ADA currently outside consensus enters staking — through governance incentives, exchange policy changes, or new delegation products — the return-to-reserve buffer shrinks, the pool-side pot gets distributed more fully, and reserve depletion accelerates. This is a double-edged dynamic: more participation strengthens decentralization but increases sustainability pressure.
+**Governance activation of latent stake.** If a significant portion of the **~16.8B ADA** currently outside consensus enters staking — through governance incentives, exchange policy changes, or new delegation products — the return-to-reserve buffer shrinks, the pool-side pot gets distributed more fully, and reserve depletion **accelerates**.
 
-**Parameter governance.** The monetary expansion rate $\rho$ and treasury rate $\tau$ are currently fixed constants. The report recommends they be treated as dynamic parameters subject to periodic governance review. A reduction in $\rho$ would slow reserve depletion but also reduce per-epoch rewards, affecting operator viability. A change in $\tau$ would shift the treasury/pools balance. Neither has been adjusted since Shelley.
+*This is a double-edged dynamic: more participation strengthens decentralization but increases sustainability pressure.*
+
+**Parameter governance.** The monetary expansion rate $\rho$ and treasury rate $\tau$ are currently **fixed constants**. The report recommends they be treated as **dynamic parameters** subject to periodic governance review.
+
+A reduction in $\rho$ would slow reserve depletion but also reduce per-epoch rewards, affecting operator viability. A change in $\tau$ would shift the treasury/pools balance. **Neither has been adjusted since Shelley.**
 
 ---
 
@@ -466,7 +491,7 @@ python3 build_eta_history_visual.py                # → figures/eta_history_mai
 **Requirements:** Python 3.9+, `matplotlib`, `numpy`. No other dependencies.
 
 **Input data** (self-contained in `data/`, no network required):
-- `reward_epoch_pools_mainnet.csv` — Koios epoch-level export (epochs 208–618): block counts, fees, reserves, treasury, deposits, stake levels, and reward parameters
+- `reward_epoch_pools_mainnet.csv` — Koios epoch-level export (epochs 208–623): block counts, fees, reserves, treasury, deposits, stake levels, and reward parameters
 
 **Generated data summaries** (produced by scripts, checked in for offline reference):
 - `general_reward_pot_mainnet.md` — gross pot proxy breakdown (expansion vs fees)
@@ -480,4 +505,4 @@ python3 build_eta_history_visual.py                # → figures/eta_history_mai
 
 ---
 
-_Last updated: 2026/03/25_
+_Last updated: 2026/04/21_

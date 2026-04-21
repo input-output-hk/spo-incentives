@@ -6,14 +6,17 @@
 
 ## The segment at a glance
 
-After extracting the 85 MPO entities (901 pools, 75.4% of stake), **2,097
-single-pool operators** remain. They hold **5.44B ADA** — 25.0% of active
-stake — and their share is declining (from 28.0% at epoch 583).
+After extracting the **85 MPO entities** (901 pools, **75.4% of stake**),
+**2,097 single-pool operators** remain.
 
-The headline figure of 741 "healthy pools" from the *Incentive Mechanism
+They hold **5.44B ADA** — **25.0% of active stake** — and their share is
+declining (from **28.0% at epoch 583**).
+
+The headline figure of **741 "healthy pools"** from the *Incentive Mechanism
 Analysis* collapses to **283 viable independents** once fleet members are
-removed. The competitive field is three times smaller than the headline
-suggests.
+removed.
+
+*The competitive field is three times smaller than the headline suggests.*
 
 **By tier (after MPO removal):**
 
@@ -26,9 +29,11 @@ suggests.
 
 **By pledge compliance:**
 
-78% of independent stake is non-compliant (pledge ratio < 2%). This is
-rational: at single-pool scale, the pledge bonus is economically negligible.
-The 561 marginal operators who partially pledge are the narrowest and
+**78% of independent stake is non-compliant** (pledge ratio < 2%). This is
+rational: at single-pool scale, the pledge bonus is economically
+**negligible**.
+
+The **561 marginal operators** who partially pledge are the narrowest and
 highest-return target for any incentive reform.
 
 ## Data
@@ -60,10 +65,11 @@ landscape analysis (§4.3):
 ## Deriving the SPO pool list
 
 There is no dedicated SPO listing file. The single-pool operator set is
-defined by exclusion: any pool in `koios_pool_list_mainnet.csv` that does
+**defined by exclusion**: any pool in `koios_pool_list_mainnet.csv` that does
 **not** appear in `entities/data/mpo_entity_pool_mapping_mainnet.csv` is a
-single-pool operator. This keeps the definition consistent and avoids
-duplication.
+single-pool operator.
+
+This keeps the definition consistent and avoids duplication.
 
 ```python
 import csv
@@ -84,17 +90,20 @@ print(f"Single-pool operators: {len(spo_pools)}")
 
 ## Relationship to the MPO entities
 
-The MPO entity analysis and the single-SPO segment are two sides of the same
-coin. Together they partition the full pool landscape. The split is
-operationally clean: MPO pools are **attributed** (matched to named entities
-by the attribution engine), and the remainder is the independent base.
+The MPO entity analysis and the single-SPO segment are **two sides of the same coin**.
+Together they partition the full pool landscape.
 
-The key analytical contrast: MPO entities operate in a multi-game environment
+The split is operationally clean: MPO pools are **attributed** (matched to
+named entities by the attribution engine), and the remainder is the
+**independent base**.
+
+The key analytical contrast: MPO entities operate in a **multi-game environment**
 where the pledge signal is one sub-game among many. Single-pool operators face
-the mechanism directly — but 78% still do not pledge, because the bonus is
-too small at their scale to matter. The 561 marginal operators who partially
-pledge constitute the narrow population where parameter reform could actually
-shift behaviour.
+the mechanism **directly** — but **78% still do not pledge**, because the
+bonus is too small at their scale to matter.
+
+*The 561 marginal operators who partially pledge constitute the narrow
+population where parameter reform could actually shift behaviour.*
 
 ## Next steps
 

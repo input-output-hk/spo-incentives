@@ -120,20 +120,62 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 /* Flow arrows */
 .nav-arrow{font-size:11px;color:var(--dawn);opacity:.5;display:flex;align-items:center;padding:0 1px;flex-shrink:0}
 
-/* ── HERO ── */
-.hero{position:relative;overflow:hidden;padding:52px 40px 44px;background:#111;border-bottom:3px solid var(--accent)}
-.hero::before{content:'';position:absolute;inset:0;background:url('assets/hero-bg.jpg') center/cover no-repeat;opacity:.45;pointer-events:none}
-.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.7) 0%,rgba(0,0,0,.3) 50%,rgba(0,0,0,.5) 100%);pointer-events:none}
-.hero-inner{position:relative;z-index:1;max-width:1400px;margin:0 auto}
-.hero-label{font-size:11px;font-weight:300;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:12px}
-.hero h1{font-size:28px;font-weight:600;color:#fff;margin-bottom:4px}
-.hero .sub{font-size:14px;font-weight:300;color:rgba(255,255,255,.5)}
+/* ── HERO — IOG Enlightenment gradient + discreet wallpaper + schematic overlay ── */
+.hero{position:relative;overflow:hidden;padding:28px 40px 56px;background:#000;border-bottom:none;isolation:isolate}
+/* Layer 1 (z=0): IOG wallpaper (fern arch, text-free crop) — full hero, cover */
+.hero::before{content:'';position:absolute;inset:0;z-index:0;
+  background:var(--hero-bg, url('iog-hero-bg.jpg')) center center / cover no-repeat;
+  opacity:.75;
+  pointer-events:none;
+  transition:opacity .4s ease}
+/* Layer 2 (z=0): soft left-side vignette to protect title readability, warm glow bottom-right */
+.hero::after{content:'';position:absolute;inset:0;z-index:0;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.6) 0%, rgba(0,0,0,.28) 28%, rgba(0,0,0,.05) 55%, transparent 75%),
+    radial-gradient(ellipse 60% 80% at 90% 110%, rgba(232,128,4,.22) 0%, transparent 60%);
+  pointer-events:none}
+.hero-schema{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:.9}
+.hero-topbar{position:relative;z-index:2;max-width:1400px;margin:0 auto 32px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.hero-full-logo{height:26px;width:auto;display:block;flex-shrink:0;filter:drop-shadow(0 0 12px rgba(229,35,33,.15))}
+.hero-division{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 12px;border:1px solid rgba(6,255,137,.35);border-radius:2px;background:rgba(0,0,0,.35);backdrop-filter:blur(2px)}
+.hero-division-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#06FF89;box-shadow:0 0 10px rgba(6,255,137,.8),0 0 3px #06FF89;flex-shrink:0}
+.hero-division-label{font-size:10px;font-weight:300;letter-spacing:2.8px;text-transform:uppercase;color:rgba(255,255,255,.88)}
+.hero-inner{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding-top:20px}
+.hero-eyebrow{font-size:10px;font-weight:300;letter-spacing:3.5px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:18px;padding-left:14px;border-left:2px solid var(--infared)}
+.hero h1{font-size:28px;font-weight:600;color:#fff;margin:0 0 8px;max-width:980px}
+.hero .sub{font-size:14px;font-weight:300;color:rgba(255,255,255,.55);max-width:880px}
+.hero-bottom-rule{position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent 0%,var(--infared) 8%,var(--dawn) 50%,var(--infared) 92%,transparent 100%);z-index:3}
+
+/* Footer — IOG corporate lock-up */
+.site-footer{background:#0a0a0a;color:rgba(255,255,255,.55);font-size:10px;font-weight:300;letter-spacing:2px;text-transform:uppercase;padding:22px 20px;display:flex;align-items:center;justify-content:center;gap:18px;border-top:1px solid rgba(229,35,33,.3)}
+.site-footer .footer-logo{height:16px;width:auto;opacity:.6}
+.site-footer .footer-division{display:inline-flex;align-items:center;color:rgba(255,255,255,.7)}
+
+/* ── CBU BRANDING — Cardano Business Unit dot (Engineering / Acid Green) ── */
+.cbu-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#06FF89;box-shadow:0 0 8px rgba(6,255,137,.7),0 0 2px rgba(6,255,137,1);vertical-align:middle;margin-right:6px;flex-shrink:0}
+
+/* ── NAV brand upgrade with IOG word marque ── */
+.nav-brand-wordmark{height:14px;width:auto;opacity:.85;flex-shrink:0}
+.nav-brand-sep-vr{display:inline-block;width:1px;height:14px;background:rgba(255,255,255,.18);margin:0 10px;flex-shrink:0}
 
 /* ── CONTENT ── */
-.content{max-width:1400px;margin:0 auto;padding:40px 56px 100px;background:var(--bg);border-left:1px solid var(--border-light);border-right:1px solid var(--border-light);min-height:80vh}
+.content{max-width:1400px;margin:0 auto;padding:40px 56px 100px;min-height:80vh;
+  border-left:1px solid var(--border-light);border-right:1px solid var(--border-light);
+  /* Subtle IOG wash: warm infared glow at top + soft dawn at bottom, no grid */
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(ellipse 1100px 350px at 50% 0%, rgba(229,35,33,.035), transparent 75%),
+    radial-gradient(ellipse 900px 400px at 50% 100%, rgba(236,100,29,.025), transparent 75%);
+  background-repeat:no-repeat}
+[data-theme=dark] .content{background-image:
+  radial-gradient(ellipse 1100px 350px at 50% 0%, rgba(229,35,33,.07), transparent 75%),
+  radial-gradient(ellipse 900px 400px at 50% 100%, rgba(236,100,29,.05), transparent 75%)}
 .content h1{font-size:24px;font-weight:600;color:var(--text-primary);margin:52px 0 16px;padding-top:20px;border-top:1px solid var(--border)}
 .content h1:first-child{border-top:none;margin-top:0}
-.content h2{font-size:20px;font-weight:700;color:var(--infared);margin:44px 0 14px;padding:10px 0 10px 28px;border-left:4px solid var(--infared);background:linear-gradient(90deg,rgba(229,35,33,.06) 0%,transparent 60%);position:relative}
+/* H2 — iog.io-style: title + thin rule extending to the right edge */
+.content h2{font-size:22px;font-weight:500;color:var(--text-primary);margin:52px 0 20px;padding:0;border:none;background:none;display:flex;align-items:center;gap:24px;letter-spacing:-.2px}
+.content h2::after{content:'';flex:1;height:1px;background:var(--border);min-width:60px}
+[data-theme=dark] .content h2::after{background:var(--border)}
 .content h3{font-size:16.5px;font-weight:600;color:var(--text-primary);margin:32px 0 10px;padding:6px 0 6px 28px;border-left:3px solid var(--dawn);background:linear-gradient(90deg,rgba(236,100,29,.05) 0%,transparent 50%);position:relative}
 .content h4{font-size:14.5px;font-weight:600;color:var(--text-secondary);margin:24px 0 8px;padding:4px 0 4px 28px;border-left:2px solid var(--border-strong,#bbb);position:relative}
 .content h5,.content h6{font-size:14px;font-weight:600;color:var(--text-secondary);margin:20px 0 8px}
@@ -356,6 +398,8 @@ mjx-container[display=true]{display:block!important;max-width:100%;margin:20px a
 .nav-breadcrumb-item{color:var(--text-secondary)}
 .nav-breadcrumb-current{color:var(--text-primary);font-weight:600}
 .nav-breadcrumb-sep{color:var(--text-muted);opacity:.55;font-size:13px;padding:0 2px}
+.nav-breadcrumb-desc-sep{color:var(--text-muted);opacity:.4;font-size:12px;padding:0 2px 0 6px}
+.nav-breadcrumb-desc{color:var(--text-muted);font-weight:400;font-style:italic;opacity:.88;letter-spacing:.15px}
 .nav-dd-wrap-light{position:relative}
 .nav-dd-btn-light{background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font:500 11.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--text-secondary);padding:8px 13px;transition:all .15s;white-space:nowrap}
 .nav-dd-btn-light:hover{color:var(--text-primary);border-color:var(--text-muted);background:rgba(0,0,0,.02)}
@@ -426,11 +470,30 @@ mjx-container[display=true]{display:block!important;max-width:100%;margin:20px a
 }
 
 /* ── Mermaid diagrams ─────────────────────────────────────── */
-.mermaid{margin:22px 0;padding:18px;background:var(--bg-panel);border:1px solid var(--border);border-radius:6px;text-align:center;overflow-x:auto}
+.mermaid{position:relative;margin:22px 0;padding:18px;background:var(--bg-panel);border:1px solid var(--border);border-radius:6px;text-align:center;overflow-x:auto}
+.mermaid.mm-ready{cursor:zoom-in}
 .mermaid svg{max-width:100%;height:auto;display:inline-block}
 .mermaid .node rect,.mermaid .node polygon,.mermaid .node circle{stroke:var(--border);fill:var(--bg)}
 .mermaid .cluster rect{fill:rgba(229,35,33,.03);stroke:rgba(229,35,33,.25)}
 [data-theme=dark] .mermaid{background:var(--bg);border-color:var(--border)}
+
+/* Mermaid expand button (click to zoom) */
+.mermaid-expand{position:absolute;top:10px;right:10px;z-index:2;display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text-secondary);font:500 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;text-transform:uppercase;cursor:pointer;opacity:.7;transition:opacity .15s ease,background .15s ease,color .15s ease}
+.mermaid:hover .mermaid-expand{opacity:1}
+.mermaid-expand:hover{background:var(--text-primary);color:var(--bg);border-color:var(--text-primary);opacity:1}
+.mermaid-expand svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* Mermaid zoom overlay */
+.mermaid-zoom-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;opacity:0;transition:opacity .18s ease}
+.mermaid-zoom-overlay.active{display:flex;opacity:1}
+.mermaid-zoom-stage{position:absolute;inset:0;overflow:hidden;cursor:grab;display:flex;align-items:center;justify-content:center}
+.mermaid-zoom-stage.dragging{cursor:grabbing}
+.mermaid-zoom-stage>svg{max-width:none;max-height:none;transform-origin:center center;user-select:none;pointer-events:none}
+.mermaid-zoom-controls{position:absolute;top:18px;right:18px;display:flex;gap:8px;z-index:2}
+.mermaid-zoom-btn{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;cursor:pointer;font-size:18px;line-height:1;transition:background .15s ease}
+.mermaid-zoom-btn:hover{background:rgba(255,255,255,.18)}
+.mermaid-zoom-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.mermaid-zoom-hint{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.55);font:400 11px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.5px;text-transform:uppercase;pointer-events:none}
 
 /* ── GitHub-style admonitions ─────────────────────────────── */
 .admon{margin:20px 0;padding:14px 18px 16px;border-radius:6px;border-left:4px solid var(--text-muted);background:var(--bg-panel);font-size:14px;line-height:1.65}
@@ -468,7 +531,7 @@ body.toc-open .toc-overlay{opacity:1;pointer-events:auto}
 [data-theme=dark] .toc-overlay{background:rgba(0,0,0,.55)}
 
 /* Side panel */
-.toc-panel{position:fixed;top:0;right:0;height:100vh;width:420px;max-width:92vw;
+.toc-panel{position:fixed;top:0;right:0;height:100vh;width:560px;max-width:92vw;
   background:var(--bg);border-left:1px solid var(--border);
   box-shadow:-8px 0 32px rgba(0,0,0,.12);z-index:500;
   transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);

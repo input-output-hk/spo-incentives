@@ -118,9 +118,9 @@ def main() -> None:
     d = np.array([np.nan if row.d is None else row.d for row in rows], dtype=float)
 
     # Filter out incomplete/current epoch (last epoch may have partial data)
-    if len(epochs) > 0 and epochs[-1] > 616:
+    if len(epochs) > 0 and epochs[-1] > 623:
         # Only keep up to the last complete epoch with reward data
-        mask_complete = epochs <= 616
+        mask_complete = epochs <= 623
         epochs = epochs[mask_complete]
         fee = fee[mask_complete]
         reserve = reserve[mask_complete]
@@ -129,7 +129,7 @@ def main() -> None:
         tau = tau[mask_complete]
         eta = eta[mask_complete]
         d = d[mask_complete]
-        rows = [row for i, row in enumerate(rows) if i < len(rows) and rows[i].epoch_no <= 616]
+        rows = [row for i, row in enumerate(rows) if i < len(rows) and rows[i].epoch_no <= 623]
 
     gate = np.where(np.isnan(d), np.nan, np.where(d >= 1.0, 0.0, 1.0))
     treasury_from_fee = tau * fee
@@ -147,7 +147,7 @@ def main() -> None:
 
     verification_mask = (
         (epochs >= 211)
-        & (epochs <= 616)
+        & (epochs <= 623)
         & ~np.isnan(treasury_total_proxy)
         & ~np.isnan(treasury_delta)
     )
@@ -312,7 +312,7 @@ def main() -> None:
     ax3.text(
         0.01,
         0.95,
-        f"Window: epochs 211–616 | Median error: {median_abs_error:,.0f} ADA | Within 100k ADA: {count_within_100k}/{total_verified} | Negative deltas: {negative_delta_epochs}",
+        f"Window: epochs 211–623 | Median error: {median_abs_error:,.0f} ADA | Within 100k ADA: {count_within_100k}/{total_verified} | Negative deltas: {negative_delta_epochs}",
         transform=ax3.transAxes,
         fontsize=10,
         va="top",
@@ -358,7 +358,7 @@ def main() -> None:
         "- Observed stock data used for the check: `Treasury_ada` from the timeseries.",
         "- Verification compares the source-based inflow proxy to the net stock delta between epochs.",
         "- They do not match exactly when treasury outflows happen and when the deposit flow is missing from inputs.",
-        f"- Window used: epochs **211..616**.",
+        f"- Window used: epochs **211..623**.",
         f"- Median absolute gap between proxy inflow and treasury stock delta: **{median_abs_error:,.2f} ADA**.",
         f"- Epochs within **100k ADA** of the stock delta: **{count_within_100k}/{total_verified}**.",
         f"- Epochs with negative treasury stock delta in that window: **{negative_delta_epochs}**.",

@@ -115,9 +115,9 @@ def main() -> None:
     eta = np.array([np.nan if row.eta_capped is None else row.eta_capped for row in rows], dtype=float)
 
     # Filter out incomplete/current epoch (last epoch may have partial data)
-    if len(epochs) > 0 and epochs[-1] > 616:
+    if len(epochs) > 0 and epochs[-1] > 623:
         # Only keep up to the last complete epoch with reward data
-        mask_complete = epochs <= 616
+        mask_complete = epochs <= 623
         epochs = epochs[mask_complete]
         observed_paid = observed_paid[mask_complete]
         fee = fee[mask_complete]
@@ -126,7 +126,7 @@ def main() -> None:
         tau = tau[mask_complete]
         d = d[mask_complete]
         eta = eta[mask_complete]
-        rows = [row for i, row in enumerate(rows) if i < len(rows) and rows[i].epoch_no <= 616]
+        rows = [row for i, row in enumerate(rows) if i < len(rows) and rows[i].epoch_no <= 623]
 
     gate = np.where(np.isnan(d), np.nan, np.where(d >= 1.0, 0.0, 1.0))
     gross_proxy = fee + gate * eta * rho * reserve
@@ -139,7 +139,7 @@ def main() -> None:
 
     analysis_mask = (
         (epochs >= 211)
-        & (epochs <= 616)
+        & (epochs <= 623)
         & ~np.isnan(return_to_reserve_proxy)
         & ~np.isnan(reserve)
     )

@@ -28,6 +28,7 @@ import html as _html
 import re
 import shutil
 import sys
+import time
 from pathlib import Path
 
 import markdown
@@ -46,9 +47,9 @@ PAGES = [
         "slug": "index",
         "md": "README.md",
         "html": "index.html",
-        "title": "Cardano Reward Pipeline — SPO Incentives",
-        "hero_h1": "Cardano Reward Pipeline",
-        "hero_sub": "From Design Intent to Mainnet Reality",
+        "title": "The Cardano Reward System V2 — Specification for a Sustainable Successor",
+        "hero_h1": "The Cardano Reward System V2",
+        "hero_sub": "Specification for a Sustainable Successor",
         "active_nav": "spec",
     },
     {
@@ -400,6 +401,7 @@ TEMPLATE = """<!DOCTYPE html>
 <title>{title}</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
 <script>try{{var t=localStorage.getItem('spo-theme');if(t)document.documentElement.setAttribute('data-theme',t)}}catch(e){{}}</script>
+<script>(function(){{var bgs=['iog-hero-bg-01.jpg','iog-hero-bg-02.jpg','iog-hero-bg-03.jpg'];var pick=bgs[Math.floor(Math.random()*bgs.length)];document.documentElement.style.setProperty('--hero-bg','url("'+pick+'")');}})();</script>
 <script>
 window.MathJax = {{
   tex: {{
@@ -413,17 +415,17 @@ window.MathJax = {{
 }};
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/site.css?v={asset_ver}">
 </head>
 <body>
 <div class="progress-bar" id="progress"></div>
 <nav class="site-nav"><div class="nav-brand">
 <a href="index.html" class="nav-brand-home">
-<img src="assets/butterfly-white.png" alt="" class="nav-brand-logo">
-<span class="nav-brand-org">IO Research</span>
+<img src="assets/iog-word-marque-white.png" alt="Input | Output Group" class="nav-brand-wordmark">
+<span class="nav-brand-sep-vr" aria-hidden="true"></span>
+<span class="nav-brand-org"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</span>
+<span class="nav-brand-sep" aria-hidden="true">/</span>
 <span class="nav-brand-title">Cardano Reward System V2</span>
-<span class="nav-brand-sep" aria-hidden="true">—</span>
-<span class="nav-brand-subtitle">Specification for a Sustainable Successor</span>
 </a>
 <div class="nav-brand-right">
 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light theme" aria-label="Toggle theme">☀</button>
@@ -453,7 +455,7 @@ window.MathJax = {{
       <span class="nav-dd-ref-cite">Synthesis of observations across the reward pipeline</span>
     </a>
     <a href="census.html" class="nav-dd-ref nav-dd-ref-sub{cls_census}">
-      <span class="nav-dd-ref-title">Populations<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-title">The Staking Census<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Who holds stake — capital, participation<span class="nav-dd-ref-stage">Evidence</span></span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Reward Flow</div>
@@ -547,14 +549,43 @@ window.MathJax = {{
 <div class="nav-breadcrumb">{breadcrumb_inner}</div>
 </nav>
 <div class="hero">
+  <svg class="hero-schema" viewBox="0 0 1400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <pattern id="heroGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,.06)" stroke-width=".5"/>
+      </pattern>
+    </defs>
+    <rect width="1400" height="400" fill="url(#heroGrid)"/>
+    <g class="hero-schema-marks" stroke="rgba(229,35,33,.5)" stroke-width=".8" fill="none">
+      <path d="M 0 60 L 120 60 L 140 80 L 260 80"/>
+      <path d="M 1400 320 L 1260 320 L 1240 300 L 1120 300"/>
+      <circle cx="140" cy="80" r="3" fill="#E52321"/>
+      <circle cx="1240" cy="300" r="3" fill="#E52321"/>
+    </g>
+    <g stroke="rgba(22,233,216,.28)" stroke-width=".6" fill="none">
+      <path d="M 40 340 L 180 340 L 200 320 L 320 320"/>
+      <circle cx="200" cy="320" r="2.5" fill="#16E9D8"/>
+    </g>
+  </svg>
+  <div class="hero-topbar">
+    <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="hero-full-logo">
+    <div class="hero-division">
+      <span class="hero-division-dot" aria-hidden="true"></span>
+      <span class="hero-division-label">Cardano Business Unit</span>
+    </div>
+  </div>
   <div class="hero-inner">
-    <div class="hero-label">Input Output &middot; IO Research</div>
+    <div class="hero-eyebrow">V2 Reward System &middot; Technical Specification</div>
     <h1>{hero_h1}</h1>
     <div class="sub">{hero_sub}</div>
   </div>
+  <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
 <div class="content">{content}</div>
-<footer class="site-footer"><img src="assets/butterfly-white.png" alt="">Input Output &middot; IO Research</footer>
+<footer class="site-footer">
+  <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="footer-logo">
+  <div class="footer-division"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</div>
+</footer>
 <div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
 <a href="#" class="back-top" id="btt">&uarr;</a>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
@@ -569,7 +600,7 @@ if (window.mermaid) {{
   }});
 }}
 </script>
-<script src="assets/site.js"></script>
+<script src="assets/site.js?v={asset_ver}"></script>
 </body>
 </html>
 """
@@ -585,14 +616,14 @@ BREADCRUMBS = {
     "spec": ["V2 Specification"],
     "intended-game": ["Design Support", "The Intended Game"],
     "observatory": ["Mainnet Diagnostic", "The Diagnostic"],
-    "census": ["Mainnet Diagnostic", "Reward Flow", "Populations"],
+    "census": ["Mainnet Diagnostic", "The Staking Census"],
     "treasury": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
     "pools": ["Mainnet Diagnostic", "Reward Flow", "Pools"],
     "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],
 }
 
 
-def _render_breadcrumb(active: str) -> str:
+def _render_breadcrumb(active: str, description: str = "") -> str:
     crumbs = BREADCRUMBS.get(active, [])
     if not crumbs:
         return ""
@@ -603,7 +634,13 @@ def _render_breadcrumb(active: str) -> str:
         if i == len(crumbs) - 1:
             cls += " nav-breadcrumb-current"
         parts.append(f'<span class="{cls}">{_html.escape(crumb)}</span>')
-    return sep.join(parts)
+    rendered = sep.join(parts)
+    if description:
+        rendered += (
+            '<span class="nav-breadcrumb-desc-sep" aria-hidden="true">—</span>'
+            f'<span class="nav-breadcrumb-desc">{_html.escape(description)}</span>'
+        )
+    return rendered
 
 
 def render_shell(page: dict, content_html: str) -> str:
@@ -626,7 +663,19 @@ def render_shell(page: dict, content_html: str) -> str:
         classes["cls_observatory_title"] = " parent-active"
     cls_diag_trigger = " active" if active in DIAG_ACTIVE else ""
     cls_design_trigger = " active" if active in DESIGN_ACTIVE else ""
-    breadcrumb_inner = _render_breadcrumb(active)
+    breadcrumb_inner = _render_breadcrumb(active, page.get("hero_sub", ""))
+    # Cache-bust CSS/JS using the max mtime of the two asset files so
+    # browsers pick up changes without a hard-refresh.
+    assets_dir = SITE_DIR / "assets"
+    try:
+        css_mt = int((assets_dir / "site.css").stat().st_mtime)
+    except OSError:
+        css_mt = 0
+    try:
+        js_mt = int((assets_dir / "site.js").stat().st_mtime)
+    except OSError:
+        js_mt = 0
+    asset_ver = str(max(css_mt, js_mt) or int(time.time()))
     return TEMPLATE.format(
         title=page["title"],
         hero_h1=page["hero_h1"],
@@ -635,6 +684,7 @@ def render_shell(page: dict, content_html: str) -> str:
         cls_diag_trigger=cls_diag_trigger,
         cls_design_trigger=cls_design_trigger,
         breadcrumb_inner=breadcrumb_inner,
+        asset_ver=asset_ver,
         **classes,
     )
 

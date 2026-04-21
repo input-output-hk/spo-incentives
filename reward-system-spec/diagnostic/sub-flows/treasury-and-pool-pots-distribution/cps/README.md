@@ -14,11 +14,15 @@ License: Apache-2.0
 
 ## Abstract
 
-Cardano's staking reward system is funded almost entirely by monetary expansion from a finite reserve. Transaction fees — the only sustainable long-term funding source — currently cover ~0.19% of the epoch pot. The reserve has crossed its half-life in 5.5 years, with significant reward pressure projected at epochs 1000–1200 (~2028–2029). Reaching fee self-sufficiency would require 12–16× today's realistic maximum throughput. The two parameters governing the draw ($\rho = 0.3\%$, $\tau = 20\%$) have never been adjusted since Shelley launch, and no governance process exists to review them.
+Cardano's staking reward system is funded **almost entirely by monetary expansion** from a finite reserve. Transaction fees — the only sustainable long-term funding source — currently cover **~0.17%** of the epoch pot (epoch 623).
 
-No protocol-level or governance-level mechanism currently manages the transition from reserve-funded to fee-funded rewards. The system is on a known depletion schedule with no scheduled response.
+The reserve has **crossed its half-life in ~5.7 years**, with significant reward pressure projected at **epochs 1000–1200 (~2028–2029)**. Reaching fee self-sufficiency would require **12–16× today's realistic maximum throughput**.
 
-This CPS formally defines the reward sustainability problem at the epoch-budget layer of the reward pipeline and invites the community to propose solutions through the CIP process.
+The two parameters governing the draw ($\rho = 0.3\%$, $\tau = 20\%$) have **never been adjusted** since Shelley launch, and **no governance process exists to review them**.
+
+*No protocol-level or governance-level mechanism currently manages the transition from reserve-funded to fee-funded rewards. The system is on a known depletion schedule with no scheduled response.*
+
+This CPS formally defines the **reward sustainability problem** at the epoch-budget layer of the reward pipeline and invites the community to propose solutions through the CIP process.
 
 ## Problem
 
@@ -32,25 +36,29 @@ The design was specified in *SL-D1* (Kant, Brünjes & Coutts, 2019) and has been
 
 ### Observations
 
-The [sub-report](../mainnet-analysis/README.md) documents four observations from mainnet data (epochs 208–617) at this pipeline stage:
+The [sub-report](../mainnet-analysis/README.md) documents four observations from mainnet data (epochs 208–623) at this pipeline stage:
 
-**O1 — The epoch pot is a single-source budget.** Monetary expansion provides ~99.8% of the pot. Transaction fees contribute ~0.19%; deposit flows are unmeasurable at epoch granularity. Block production is reliable (η ≈ 0.977) — the pot assembles as designed. The bottleneck is not operational; it is structural: the revenue mix is almost entirely dependent on a depleting resource.
+**O1 — The epoch pot is a single-source budget.** Monetary expansion provides ~99.83% of the pot. Transaction fees contribute ~0.17% (epoch 623); deposit flows are unmeasurable at epoch granularity. Block production is reliable (η ≈ 0.977) — the pot assembles as designed. The bottleneck is not operational; it is structural: the revenue mix is almost entirely dependent on a depleting resource.
 
-**O2 — The reserve has crossed its half-life.** The reserve has gone from 13.29B to 6.53B ADA — half depleted in 5.5 years. The decline is exponential: each epoch draws 0.3% of whatever remains, so the absolute draw shrinks over time. At current parameters and participation levels, the reserve reaches ~2B ADA around epochs 1000–1200 (~2028–2029), at which point per-epoch rewards drop significantly. Full depletion is projected around epoch 3500 (~2040s).
+**O2 — The reserve has crossed its half-life.** The reserve has gone from 13.29B to 6.45B ADA — half depleted in ~5.7 years. The decline is exponential: each epoch draws 0.3% of whatever remains, so the absolute draw shrinks over time. At current parameters and participation levels, the reserve reaches ~2B ADA around epochs 1000–1200 (~2028–2029), at which point per-epoch rewards drop significantly. Full depletion is projected around epoch 3500 (~2040s).
 
-**O3 — The reward mechanism operates at ~44% of its potential.** Only ~6.8M of ~15.5M ADA allocated to the pools pot actually reaches operators and delegators each epoch — the rest returns to the reserve. Cumulatively, 4.55B ADA (~70% of the current reserve stock) exists because rewards were not fully distributed. The root cause is that ~17B ADA (~44% of circulating supply) does not participate in delegation. This creates a paradox: the return-to-reserve mechanism slows depletion, but it is a side effect of low participation, not a design feature. Greater adoption — normally desirable — would remove this safety margin and accelerate reserve consumption.
+**O3 — The reward mechanism operates at ~44% of its potential.** Only ~6.78M of ~15.39M ADA allocated to the pools pot actually reaches operators and delegators each epoch — the rest returns to the reserve. Cumulatively, 4.61B ADA (~71% of the current reserve stock) exists because rewards were not fully distributed. The root cause is that ~16.8B ADA (~43.6% of circulating supply) does not participate in delegation. This creates a paradox: the return-to-reserve mechanism slows depletion, but it is a side effect of low participation, not a design feature. Greater adoption — normally desirable — would remove this safety margin and accelerate reserve consumption.
 
 **O4 — Reward parameters have never been adjusted.** The monetary expansion rate ($\rho = 0.3\%$) and the treasury rate ($\tau = 20\%$) are unchanged since Shelley. The decentralisation parameter $d$ was gradually reduced to 0 and $k$ was raised from 150 to 500, but the reward-level parameters remain at their day-one values. Neither has been the subject of a formal governance proposal.
 
 ### The problem
 
-These observations are individually informative, but their significance emerges when read together. Each constrains what the system can do; the combination reveals what it *cannot* do.
+These observations are individually informative, but their significance emerges **when read together**. Each constrains what the system can do; the combination reveals what it **cannot** do.
 
-The epoch pot depends almost entirely on a depleting resource (O1). That resource is already half-spent (O2). The only alternative funding source — transaction fees — covers ~0.19% of the pot today, and even at full realistic capacity would reach only ~1.3% (O1). Closing this gap requires 12–16× today's throughput, implying both a capacity upgrade (Leios) and a structural increase in transaction demand — neither of which is on a defined timeline. Meanwhile, the parameters governing the draw have never been reviewed (O4), and no governance process exists to do so.
+The epoch pot depends almost entirely on a **depleting resource** (O1). That resource is **already half-spent** (O2). The only alternative funding source — transaction fees — covers **~0.17%** of the pot today (epoch 623), and even at full realistic capacity would reach only **~1.3%** (O1).
 
-**The reward system has no viable path from reserve-funded to fee-funded sustainability.** The reserve is depleting on a known schedule, the only alternative revenue source is orders of magnitude too small, and the parameters governing the transition have never been subject to governance. This is not a failure of any individual parameter — it is a design gap at the epoch-budget layer.
+Closing this gap requires **12–16× today's throughput**, implying both a capacity upgrade (Leios) and a structural increase in transaction demand — **neither of which is on a defined timeline**. Meanwhile, the parameters governing the draw have **never been reviewed** (O4), and **no governance process exists to do so**.
 
-The ~44% distribution efficiency (O3) adds a further complication: activating inactive ADA would increase distribution efficiency but accelerate reserve consumption. Any sustainability strategy must account for this tension.
+**The reward system has no viable path from reserve-funded to fee-funded sustainability.** The reserve is depleting on a known schedule, the only alternative revenue source is **orders of magnitude too small**, and the parameters governing the transition have never been subject to governance.
+
+*This is not a failure of any individual parameter — it is a design gap at the epoch-budget layer.*
+
+The ~44% distribution efficiency (O3) adds a further complication: activating inactive ADA would **increase distribution efficiency but accelerate reserve consumption**. Any sustainability strategy must account for this tension.
 
 ## Use Cases
 

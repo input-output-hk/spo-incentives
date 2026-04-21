@@ -115,9 +115,9 @@ def main() -> None:
     observed_paid = np.array([np.nan if row.observed_paid_ada is None else row.observed_paid_ada for row in rows], dtype=float)
 
     # Filter out incomplete/current epoch (last epoch may have partial data)
-    if len(epochs) > 0 and epochs[-1] > 616:
+    if len(epochs) > 0 and epochs[-1] > 623:
         # Only keep up to the last complete epoch with reward data
-        mask_complete = epochs <= 616
+        mask_complete = epochs <= 623
         epochs = epochs[mask_complete]
         fee = fee[mask_complete]
         reserve = reserve[mask_complete]
@@ -126,7 +126,7 @@ def main() -> None:
         eta = eta[mask_complete]
         d = d[mask_complete]
         observed_paid = observed_paid[mask_complete]
-        rows = [row for i, row in enumerate(rows) if i < len(rows) and rows[i].epoch_no <= 616]
+        rows = [row for i, row in enumerate(rows) if i < len(rows) and rows[i].epoch_no <= 623]
 
     gate = np.where(np.isnan(d), np.nan, np.where(d >= 1.0, 0.0, 1.0))
     reserve_term = gate * eta * rho * reserve
@@ -149,7 +149,7 @@ def main() -> None:
 
     verification_mask = (
         (epochs >= 211)
-        & (epochs <= 616)
+        & (epochs <= 623)
         & ~np.isnan(pool_pot_proxy)
         & ~np.isnan(observed_paid)
     )
@@ -270,7 +270,7 @@ def main() -> None:
         "",
         "## Comparison to observed paid rewards",
         "- The pool-side proxy is expected to sit above observed paid rewards because it is still upstream of several loss / return-to-reserve mechanisms.",
-        f"- On epochs **211..616**, the median absolute gap between the pool-side proxy and observed paid rewards is **{median_gap:,.2f} ADA**.",
+        f"- On epochs **211..623**, the median absolute gap between the pool-side proxy and observed paid rewards is **{median_gap:,.2f} ADA**.",
     ]
     notes_path.write_text("\n".join(notes_lines) + "\n")
 

@@ -108,7 +108,7 @@ def main() -> None:
         and row.deposit_drep_ada is not None
         and row.deposit_proposal_ada is not None
         and row.start_time_utc is not None
-        and row.epoch_no <= 616  # Filter out incomplete epochs
+        and row.epoch_no <= 623  # Filter out incomplete epochs
     ]
     if not valid_rows:
         raise RuntimeError("No obligation-pot deposit rows found in the dataset.")

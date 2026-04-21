@@ -96,12 +96,12 @@ def main() -> None:
     fees = np.array([np.nan if row.fee_epoch_ada is None else row.fee_epoch_ada for row in rows], dtype=float)
 
     # Filter out incomplete/current epoch (last epoch may have partial data)
-    if len(epochs) > 0 and epochs[-1] > 616:
+    if len(epochs) > 0 and epochs[-1] > 623:
         # Only keep up to the last complete epoch with reward data
-        mask_complete_data = epochs <= 616
+        mask_complete_data = epochs <= 623
         epochs = epochs[mask_complete_data]
         fees = fees[mask_complete_data]
-        rows = [row for i, row in enumerate(rows) if i < len(rows) and rows[i].epoch_no <= 616]
+        rows = [row for i, row in enumerate(rows) if i < len(rows) and rows[i].epoch_no <= 623]
 
     complete_mask = np.array([row.has_total_rewards and row.fee_epoch_ada is not None for row in rows], dtype=bool)
     partial_mask = np.array([not row.has_total_rewards and row.fee_epoch_ada is not None for row in rows], dtype=bool)

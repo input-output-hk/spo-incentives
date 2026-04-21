@@ -15,9 +15,13 @@ License: Apache-2.0
 
 ## Abstract
 
-The SL-D1 pool reward curve is the protocol's only tool for shaping the operator ecosystem that secures consensus. Its design should produce an equilibrium of $k$ independent, well-pledged pools accountable to delegators. Five years of mainnet operation show a stable but sub-optimal equilibrium: the dominant strategy at every level — entry, progression, endgame — is to maximise delegation and minimise pledge, the opposite of what consensus security requires. The curve's theoretical optimum eliminates the delegator entirely, the pledge bonus is economically irrational, the progression is invisible, and the entry creates a viability cliff. Meanwhile, 43.5% of circulating ADA does not participate in delegation, constraining the playing field to roughly half the capital base the design assumed.
+The SL-D1 pool reward curve is the protocol's **only tool** for shaping the operator ecosystem that secures consensus. Its design should produce an equilibrium of $k$ **independent, well-pledged pools accountable to delegators**.
 
-This CPS formally defines the consensus incentive gap at the pool-distribution layer and invites the community to propose solutions through the CIP process.
+Five years of mainnet operation show a **stable but sub-optimal equilibrium**: the dominant strategy at every level — entry, progression, endgame — is to **maximise delegation and minimise pledge**, the opposite of what consensus security requires.
+
+The curve's theoretical optimum **eliminates the delegator entirely**, the pledge bonus is **economically irrational**, the progression is **invisible**, and the entry creates a **viability cliff**. Meanwhile, **43.5% of circulating ADA** does not participate in delegation, constraining the playing field to roughly **half the capital base** the design assumed.
+
+This CPS formally defines the **consensus incentive gap** at the pool-distribution layer and invites the community to propose solutions through the CIP process.
 
 ## Problem
 
@@ -69,17 +73,27 @@ The ~17B ADA outside delegation includes exchange-held ADA, governance-inactive 
 
 The SL-D1 reward curve fails at all three levels of the game:
 
-**The endgame eliminates the delegator entirely.** The reward function decomposes into a size fraction ($\lambda_{\min} \approx 76.9\%$) and a pledge fraction ($\lambda_{\max} \approx 23.1\%$). The formula's maximum ($P_{\max}$) is reached when $\pi = 1$ and $\nu = 1$: the operator pledges the full saturation amount *and* the pool is fully saturated. But since pledge counts as stake, an operator who pledges $z_0$ (currently 77M ADA) fills the entire pool with their own capital. There is no room for delegators. The "dream" the reward curve defines is a pool with no community participation — a private operation where the operator is both the sole funder and the sole beneficiary. The accountability mechanism is eliminated at the endgame.
+**The endgame eliminates the delegator entirely.** The reward function decomposes into a size fraction ($\lambda_{\min} \approx 76.9\%$) and a pledge fraction ($\lambda_{\max} \approx 23.1\%$). The formula's maximum ($P_{\max}$) is reached when $\pi = 1$ and $\nu = 1$: the operator pledges the full saturation amount *and* the pool is fully saturated.
 
-This means the reward curve's ideal state *contradicts the protocol's security model*. The mechanism designed to produce 500 pools anchored by community trust instead defines an optimum of 500 private pools with no delegator oversight.
+But since pledge counts as stake, an operator who pledges $z_0$ (currently **77M ADA**) fills the entire pool with their own capital. **There is no room for delegators.** The "dream" the reward curve defines is a pool with no community participation — a private operation where the operator is both the sole funder and the sole beneficiary.
 
-**The endgame is economically irrational.** Reaching $P_{\max}$ requires 77M ADA (~30M USD) of personal capital. The incremental reward is ~7.2K ADA/epoch ($\lambda_{\max} \cdot P_{\max}$), a yield of ~0.68%/yr. The same 77M ADA passively delegated would earn ~2.3%/yr — more than three times the return, with zero operational burden. The rational actor should never pledge. The curve presents a double failure: sub-economic yield *and* removal of the delegator accountability layer.
+*The accountability mechanism is eliminated at the endgame.*
 
-**The progression is invisible.** The pledge bonus is too small to be a competitive differentiator at any realistic scale (O1). Delegators comparing pool yields cannot detect it. An operator who pledges 1M ADA looks the same to delegators as one who pledges nothing. The delegator accountability mechanism cannot function because there is nothing for delegators to differentiate on.
+This means the reward curve's ideal state **contradicts the protocol's security model**. The mechanism designed to produce 500 pools anchored by community trust instead defines an optimum of **500 private pools with no delegator oversight**.
 
-**The entry creates a cliff, not a ramp.** 73% of pools sit below the viability threshold (O2). Below-viability pools owe 647K ADA/epoch in fixed costs but earn only 182K ADA — destroying value for delegators by 3.6×. New operators face a binary outcome: clear the viability cliff or operate at a loss with no visible competitive tool to distinguish themselves.
+**The endgame is economically irrational.** Reaching $P_{\max}$ requires **77M ADA (~30M USD)** of personal capital. The incremental reward is ~**7.2K ADA/epoch** ($\lambda_{\max} \cdot P_{\max}$), a yield of ~**0.68%/yr**.
 
-**The result on mainnet.** The dominant strategy at every level — entry, progression, endgame — is to maximise delegation and minimise pledge. This is the exact opposite of what the protocol needs for consensus security.
+The same 77M ADA passively delegated would earn **~2.3%/yr** — more than three times the return, with zero operational burden.
+
+*The rational actor should never pledge.*
+
+The curve presents a **double failure**: sub-economic yield **and** removal of the delegator accountability layer.
+
+**The progression is invisible.** The pledge bonus is **too small to be a competitive differentiator** at any realistic scale (O1). Delegators comparing pool yields cannot detect it. An operator who pledges 1M ADA looks the same to delegators as one who pledges nothing. *The delegator accountability mechanism cannot function because there is nothing for delegators to differentiate on.*
+
+**The entry creates a cliff, not a ramp.** **73% of pools** sit below the viability threshold (O2). Below-viability pools owe **647K ADA/epoch** in fixed costs but earn only **182K ADA** — **destroying value for delegators by 3.6×**. New operators face a binary outcome: *clear the viability cliff or operate at a loss with no visible competitive tool to distinguish themselves*.
+
+**The result on mainnet.** The dominant strategy at every level — entry, progression, endgame — is to **maximise delegation and minimise pledge**. *This is the exact opposite of what the protocol needs for consensus security.*
 
 The evidence confirms this at scale:
 

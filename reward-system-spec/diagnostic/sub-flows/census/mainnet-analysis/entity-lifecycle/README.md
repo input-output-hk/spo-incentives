@@ -28,9 +28,9 @@ _Sub-document of [The Staking Census](../README.md). Built on 2026/04/09 from db
 
 ## Objective
 
-The main census (§2.4) presents the operator landscape as a current-epoch snapshot. This companion document adds the temporal dimension: which identified entities have contracted, which have exited entirely, and what patterns of decline are visible across archetypes.
+The main census (§2.4) presents the operator landscape as a **current-epoch snapshot**. This companion document adds the **temporal dimension**: which identified entities have **contracted**, which have **exited entirely**, and what **patterns of decline** are visible across archetypes.
 
-The analysis tracks 85 identified entities — the same population attributed in §2.3 of the census — from their first appearance in `epoch_stake` through epoch 623.
+The analysis tracks **85 identified entities** — the same population attributed in §2.3 of the census — from their **first appearance** in `epoch_stake` through **epoch 623**.
 
 
 ## Data sources
@@ -44,7 +44,7 @@ The analysis tracks 85 identified entities — the same population attributed in
 
 ## 1. Lifecycle classification
 
-Each entity is classified into a lifecycle phase by comparing its current stake (epoch 623) to its all-time peak:
+Each entity is classified into a **lifecycle phase** by comparing its **current stake** (epoch 623) to its **all-time peak**:
 
 | Phase | Rule | Entities | Combined peak | Combined current |
 |---|---|---|---|---|
@@ -54,12 +54,14 @@ Each entity is classified into a lifecycle phase by comparing its current stake 
 | **Stable** | Current 50–90% of peak | 25 | — | — |
 | **Growing** | Current > 90% of peak | 18 | — | — |
 
-The declining and dead segments together account for 42 of 85 entities — roughly half of all identified operators are past their peak and contracting. The capital they have lost has not vanished: it migrated to growing entities (exchanges entering late, IVaaS providers scaling up) or dispersed into the independent single-pool operator tail.
+The declining and dead segments together account for **42 of 85 entities** — *roughly half of all identified operators are past their peak and contracting*.
+
+The capital they have lost has not vanished: it **migrated to growing entities** (exchanges entering late, IVaaS providers scaling up) or **dispersed into the independent single-pool operator tail**.
 
 
 ## 2. Dead entities
 
-Two entities have fallen below the production threshold across all their pools and no longer participate meaningfully in block production.
+**Two entities** have fallen below the production threshold across all their pools and no longer participate meaningfully in block production.
 
 ### 2.1 RockX
 
@@ -71,7 +73,9 @@ Two entities have fallen below the production threshold across all their pools a
 | Current stake | 0.2M ADA |
 | Decline ratio | 0.52% of peak |
 
-RockX is a multi-chain institutional staking provider (Ethereum, Cosmos, Solana, and others). Its Cardano presence was never large — 10 pools registered between epochs 450 and 500, peaking at 37.6M ADA across a handful of active pools. Stake drained steadily after the peak, consistent with a strategic withdrawal from Cardano rather than organic delegation loss. All 10 pools are now below the production threshold. The entity's infrastructure appears to remain registered but economically inert.
+RockX is a **multi-chain institutional staking provider** (Ethereum, Cosmos, Solana, and others). Its Cardano presence was **never large** — 10 pools registered between epochs 450 and 500, peaking at **37.6M ADA** across a handful of active pools.
+
+Stake drained steadily after the peak, consistent with a **strategic withdrawal** from Cardano rather than organic delegation loss. All 10 pools are now below the production threshold. The entity's infrastructure appears to **remain registered but economically inert**.
 
 ### 2.2 RAID
 
@@ -83,12 +87,14 @@ RockX is a multi-chain institutional staking provider (Ethereum, Cosmos, Solana,
 | Current stake | 0.4M ADA |
 | Decline ratio | 4.79% of peak |
 
-RAID is one of the earliest multi-pool operators, active from the Shelley launch (epoch 210). Its peak was modest — 8.5M ADA spread over 7 pools — and erosion began almost immediately. By epoch 300 its stake was already marginal. The entity never scaled and appears to have been an early experiment that was quietly abandoned rather than formally deregistered.
+RAID is **one of the earliest multi-pool operators**, active from the Shelley launch (epoch 210). Its peak was **modest** — **8.5M ADA** spread over 7 pools — and erosion began **almost immediately**.
+
+By epoch 300 its stake was already marginal. The entity **never scaled** and appears to have been an **early experiment** that was **quietly abandoned** rather than formally deregistered.
 
 
 ## 3. Severe decline — the large exits
 
-Eleven entities have lost more than 75% of their peak stake. Together they shed 8.4B ADA — a substantial redistribution of capital away from early and mid-era operators.
+**Eleven entities** have lost **more than 75%** of their peak stake. Together they shed **8.4B ADA** — a **substantial redistribution of capital** away from early and mid-era operators.
 
 ### 3.1 IOG — steward withdrawal
 
@@ -100,7 +106,11 @@ Eleven entities have lost more than 75% of their peak stake. Together they shed 
 | Current stake | 11.7M ADA |
 | Decline ratio | 0.44% of peak |
 
-Input Output's delegation was a bootstrapping mechanism: IOG ran ~20 pools in early Shelley to seed the network and incentivise participation. The withdrawal was deliberate and public — IOG progressively redelegated its stake to community pools as the ecosystem matured. The 65 registered pools are nearly all legacy registrations; only 2 are productive at epoch 623. This is not a failure but a completed lifecycle: the steward exited once the network no longer needed bootstrapping support.
+Input Output's delegation was a **bootstrapping mechanism**: IOG ran ~20 pools in early Shelley to **seed the network** and incentivise participation.
+
+The withdrawal was **deliberate and public** — IOG progressively redelegated its stake to community pools as the ecosystem matured. The **65 registered pools** are nearly all **legacy registrations**; only **2 are productive** at epoch 623.
+
+*This is not a failure but a completed lifecycle: the steward exited once the network no longer needed bootstrapping support.*
 
 ### 3.2 Binance — exchange retreat
 
@@ -112,7 +122,14 @@ Input Output's delegation was a bootstrapping mechanism: IOG ran ~20 pools in ea
 | Current stake | 692M ADA |
 | Decline ratio | 23.2% of peak |
 
-Binance's Cardano staking peaked around epoch 337 at nearly 3B ADA — roughly 14% of the entire staked supply at the time. The decline has been continuous and is consistent with two overlapping forces: (a) users withdrawing ADA from the exchange (general crypto exchange outflow trend) and (b) Binance potentially rebalancing its Cardano staking product. The 114 registered pools (only 20 productive) suggest aggressive pool scaling during the growth phase followed by no deregistration cleanup. The entity retains 692M ADA — still the second-largest identified entity by stake.
+Binance's Cardano staking peaked around epoch 337 at **nearly 3B ADA** — roughly **14% of the entire staked supply** at the time.
+
+The decline has been **continuous** and is consistent with **two overlapping forces**:
+
+- users **withdrawing ADA from the exchange** (general crypto exchange outflow trend);
+- Binance potentially **rebalancing its Cardano staking product**.
+
+The **114 registered pools** (only **20 productive**) suggest **aggressive pool scaling** during the growth phase followed by **no deregistration cleanup**. The entity retains **692M ADA** — still the **second-largest identified entity** by stake.
 
 ### 3.3 1PCT — independent fleet erosion
 
@@ -124,11 +141,15 @@ Binance's Cardano staking peaked around epoch 337 at nearly 3B ADA — roughly 1
 | Current stake | 275M ADA |
 | Decline ratio | 21.7% of peak |
 
-1PCT (One Percent Pool) was among the largest independent multi-pool operators in early Shelley, competing directly with IOG pools for delegations. Its decline mirrors the broader pattern of early large fleets losing share to later entrants and to the growing single-pool operator segment. The decline was steady rather than abrupt, suggesting gradual delegation churn rather than a single event.
+1PCT (One Percent Pool) was among the **largest independent multi-pool operators** in early Shelley, competing directly with IOG pools for delegations.
+
+Its decline mirrors the **broader pattern** of early large fleets **losing share** to later entrants and to the growing single-pool operator segment. The decline was **steady rather than abrupt**, suggesting **gradual delegation churn** rather than a single event.
 
 ### 3.4 AdaOcean, HOPE, BCSH, COOL
 
-These four entities share a similar profile: mid-size independent or community fleets that peaked between epoch 220 and 330 and have since lost 75–85% of their stake. Each held 400–800M ADA at peak; all now sit between 68M and 188M. The common pattern is a rapid growth phase during early Shelley, a plateau during the k=500 expansion, and a steady bleed thereafter. None show signs of active growth or strategic repositioning.
+These four entities share a **similar profile**: mid-size independent or community fleets that peaked between epoch 220 and 330 and have since **lost 75–85%** of their stake.
+
+Each held **400–800M ADA** at peak; all now sit between **68M and 188M**. The common pattern is a **rapid growth phase** during early Shelley, a **plateau** during the k=500 expansion, and a **steady bleed** thereafter. *None show signs of active growth or strategic repositioning.*
 
 | Entity | Archetype | Peak | Current | Decline |
 |---|---|---|---|---|
@@ -140,7 +161,7 @@ These four entities share a similar profile: mid-size independent or community f
 
 ## 4. Moderate decline — the long bleed
 
-Twenty-nine entities retain between 25% and 50% of their peak stake. This is the largest lifecycle segment and includes almost every archetype:
+**Twenty-nine entities** retain between **25% and 50%** of their peak stake. This is the **largest lifecycle segment** and includes **almost every archetype**:
 
 **Ecosystem stewards:** Emurgo (872M peak → 271M, −69%), the second founding entity after IOG. Unlike IOG's deliberate exit, Emurgo's decline appears to be a mix of strategic pool consolidation and organic delegation loss.
 
@@ -148,18 +169,20 @@ Twenty-nine entities retain between 25% and 50% of their peak stake. This is the
 
 **Platform/wallet:** NuFi (927M peak → 313M, −66%) — a wallet and staking platform whose decline tracks the broader wallet-switching trend as users migrated between wallet providers.
 
-**Community branded fleets:** This archetype dominates the declining segment. SPS, SIPO, NEDS, ONYX, RETIR, XSP, CNODE, STSH, ATLAS, STI, KAIZN, SUNNY, 4ADA, ELITE, and others — all community-run multi-pool operators that grew during the Shelley expansion and have been losing delegators steadily. The median decline ratio for community branded fleets in this segment is ~38%. The pattern is remarkably uniform: no single event explains the decline, just a slow, persistent outflow of delegations.
+**Community branded fleets:** This archetype **dominates the declining segment**. SPS, SIPO, NEDS, ONYX, RETIR, XSP, CNODE, STSH, ATLAS, STI, KAIZN, SUNNY, 4ADA, ELITE, and others — all community-run multi-pool operators that **grew during the Shelley expansion** and have been **losing delegators steadily**.
+
+The median decline ratio for community branded fleets in this segment is **~38%**. The pattern is **remarkably uniform**: *no single event explains the decline, just a slow, persistent outflow of delegations.*
 
 **Protocol/DeFi projects:** XRAY (in severe decline at 15.5% of peak) and DNEWS, Liqwid — projects that attracted delegations tied to token rewards or community incentive programs that have since wound down.
 
 
 ## 5. Growing entities — the capital recipients
 
-Eighteen entities are at or near their all-time peak (current stake > 90% of peak). They collectively control over 6.2B ADA — and their growth trajectories explain where much of the capital lost by declining entities has gone.
+**Eighteen entities** are at or near their all-time peak (current stake > 90% of peak). They collectively control **over 6.2B ADA** — and their growth trajectories **explain where much of the capital lost by declining entities has gone**.
 
 ### 5.1 Late institutional entrants
 
-The most striking growth stories belong to entities that entered Cardano staking well after the Shelley launch and scaled rapidly through institutional capital:
+The most striking growth stories belong to entities that **entered Cardano staking well after the Shelley launch** and scaled rapidly through **institutional capital**:
 
 | Entity | Archetype | First epoch | Peak | Current | Note |
 |---|---|---|---|---|---|
@@ -169,11 +192,15 @@ The most striking growth stories belong to entities that entered Cardano staking
 | Everstake | Institutional Validator (IVaaS) | e210 | 572M (e623) | 572M | At all-time high; one of the earliest IVaaS to enter Cardano, still growing |
 | Upbit | Exchange Custody | e398 | 575M (e623) | 575M | At all-time high; Korean exchange, entered late, still scaling |
 
-These five entities alone hold 5.0B ADA — more than the entire independent single-pool operator segment (5.28B). Their arrival and growth post-epoch 300 represents a structural shift in the operator landscape from community-run fleets toward institutional staking infrastructure.
+These **five entities alone** hold **5.0B ADA** — *more than the entire independent single-pool operator segment (5.28B)*.
+
+Their arrival and growth **post-epoch 300** represents a **structural shift** in the operator landscape from **community-run fleets** toward **institutional staking infrastructure**.
 
 ### 5.2 Exchanges holding ground
 
-Coinbase and Upbit contrast sharply with Binance's retreat. Coinbase entered at epoch 296, grew aggressively to 2.6B ADA by epoch 390, and has held most of that position since — the slight decline is well within the "growing" band. Upbit is a pure late entrant (epoch 398) still at its all-time high. The divergence between growing exchanges (Coinbase, Upbit) and declining ones (Binance, YUTA, eToro) appears to track each exchange's strategic commitment to Cardano staking as a product line rather than any protocol-level factor.
+**Coinbase and Upbit contrast sharply with Binance's retreat.** Coinbase entered at epoch 296, grew aggressively to **2.6B ADA** by epoch 390, and has held most of that position since — the slight decline is well within the "growing" band.
+
+Upbit is a **pure late entrant** (epoch 398) still at its all-time high. The divergence between **growing exchanges** (Coinbase, Upbit) and **declining ones** (Binance, YUTA, eToro) appears to track each exchange's **strategic commitment to Cardano staking as a product line** rather than any protocol-level factor.
 
 ### 5.3 Community operators that grew against the tide
 
@@ -187,14 +214,16 @@ Several community branded fleets have defied the archetype's general decline:
 | CAFE | e215 | 88M (e454) | 82M | 93.3% |
 | MUEN | e266 | 34M (e623) | 34M | 100% |
 
-ADV is the standout: a Shelley-launch operator that peaked just four epochs ago and remains essentially at its maximum. These entities share a pattern of late peaks (epoch 450–623) rather than the early-Shelley peaks characteristic of declining community fleets, suggesting they attracted second-wave delegators or successfully retained existing ones while peers bled.
+**ADV is the standout**: a Shelley-launch operator that peaked **just four epochs ago** and remains **essentially at its maximum**.
 
-CHUCK BUX (883M, peak at epoch 620) is classified as growing but its archetype is "opaque / unresolved" — the entity structure is unclear and the growth pattern is atypical, making it difficult to draw structural conclusions.
+These entities share a pattern of **late peaks (epoch 450–623)** rather than the early-Shelley peaks characteristic of declining community fleets, suggesting they attracted **second-wave delegators** or **successfully retained existing ones** while peers bled.
+
+**CHUCK BUX** (883M, peak at epoch 620) is classified as growing but its archetype is **"opaque / unresolved"** — the entity structure is **unclear** and the growth pattern is **atypical**, making it difficult to draw structural conclusions.
 
 
 ## 6. Stable entities — the plateau
 
-Twenty-five entities hold between 50% and 90% of their peak stake. This is the second-largest lifecycle segment and contains several notable names:
+**Twenty-five entities** hold between **50% and 90%** of their peak stake. This is the **second-largest lifecycle segment** and contains **several notable names**:
 
 | Entity | Archetype | Peak | Current | Ratio |
 |---|---|---|---|---|
@@ -204,20 +233,26 @@ Twenty-five entities hold between 50% and 90% of their peak stake. This is the s
 | Cardano Foundation | Ecosystem Steward | 456M (e617) | 396M | 86.7% |
 | SECUR | Community Branded Fleet | 309M (e480) | 231M | 74.9% |
 
-Kiln and the Cardano Foundation are recent entrants with late peaks — their "stable" classification reflects a slight pullback from a recent high rather than a long decline. Wave/Wavepool and eToro, by contrast, peaked early and have settled into a slow erosion pattern that has not yet crossed the 50% threshold. The stable phase may be a waypoint toward decline for some and a consolidation plateau for others — the trajectory over the next 50–100 epochs will reveal which.
+**Kiln** and the **Cardano Foundation** are **recent entrants with late peaks** — their "stable" classification reflects a **slight pullback** from a recent high rather than a long decline.
+
+**Wave/Wavepool** and **eToro**, by contrast, peaked early and have settled into a **slow erosion pattern** that has **not yet crossed the 50% threshold**. The stable phase may be a **waypoint toward decline** for some and a **consolidation plateau** for others — *the trajectory over the next 50–100 epochs will reveal which*.
 
 
 ## 7. Where the capital went
 
-The declining and dead entities collectively shed approximately 14.6B ADA from their peaks (9.9B severe decline + 5.2B moderate decline). This capital did not leave the staking ecosystem — the total staked ADA has grown from ~12B to ~21.8B over the same period. The capital redistributed along three channels:
+The declining and dead entities collectively shed **approximately 14.6B ADA** from their peaks (**9.9B** severe decline + **5.2B** moderate decline).
 
-**Toward institutional validators (IVaaS).** Figment, Blockdaemon, Everstake, and Kiln together hold 2.7B ADA, almost all of it accumulated after epoch 300. This capital came partly from exchanges reducing their staking exposure and partly from delegators seeking professional, multi-chain infrastructure.
+This capital **did not leave the staking ecosystem** — the total staked ADA has grown from **~12B to ~21.8B** over the same period. The capital redistributed along **three channels**:
 
-**Toward late-arriving exchanges.** Coinbase and Upbit entered after most community fleets had already peaked. They attracted fresh capital (ADA flowing onto exchanges for the first time) and captured some of the delegation that might otherwise have gone to established community operators.
+**Toward institutional validators (IVaaS).** Figment, Blockdaemon, Everstake, and Kiln together hold **2.7B ADA**, almost all of it accumulated **after epoch 300**. This capital came partly from **exchanges reducing their staking exposure** and partly from **delegators seeking professional, multi-chain infrastructure**.
 
-**Toward the independent single-pool operator tail.** The 477 unattributed single-pool operators hold 5.28B ADA at epoch 623. While the census cannot track this segment historically (individual single-pool operators are not attributed), the growth of total staked ADA alongside the decline of identified multi-pool entities implies that a significant portion of the redistributed capital flowed into the long tail. This is consistent with the Cardano community's strong cultural preference for single-pool delegation.
+**Toward late-arriving exchanges.** Coinbase and Upbit entered **after most community fleets had already peaked**. They attracted **fresh capital** (ADA flowing onto exchanges for the first time) and captured some of the delegation that might otherwise have gone to established community operators.
 
-**Observation:** the staking ecosystem is not shrinking — it is restructuring. Capital is moving from early community fleets and retreating exchanges toward institutional infrastructure and the independent operator segment. The entities that are growing tend to be either late institutional entrants with professional infrastructure or community operators that peaked late, suggesting that persistence and operational quality matter more than first-mover advantage in the long run.
+**Toward the independent single-pool operator tail.** The **477 unattributed single-pool operators** hold **5.28B ADA** at epoch 623. While the census cannot track this segment historically (individual single-pool operators are not attributed), the growth of total staked ADA alongside the decline of identified multi-pool entities implies that a **significant portion** of the redistributed capital flowed into the long tail. This is consistent with the Cardano community's **strong cultural preference for single-pool delegation**.
+
+> **Observation:** *the staking ecosystem is not shrinking — it is restructuring.*
+
+Capital is moving from **early community fleets** and **retreating exchanges** toward **institutional infrastructure** and the **independent operator segment**. The entities that are growing tend to be either **late institutional entrants** with professional infrastructure or **community operators that peaked late**, suggesting that **persistence and operational quality matter more than first-mover advantage** in the long run.
 
 
 ## 8. Visual summary
@@ -226,10 +261,12 @@ The declining and dead entities collectively shed approximately 14.6B ADA from t
 
 ![Entity lifecycle — declining and dead entities](../figures/entity_lifecycle_decline.png)
 
-Each panel shows the total stake history (in millions of ADA) of an entity classified as dead, severely declining, or declining. The inverted triangle marks the peak epoch. Colour encodes phase: red for dead, orange for severe decline, amber for moderate decline.
+Each panel shows the **total stake history** (in millions of ADA) of an entity classified as **dead, severely declining, or declining**. The inverted triangle marks the **peak epoch**. Colour encodes phase: **red** for dead, **orange** for severe decline, **amber** for moderate decline.
 
 ### Growing and stable entities
 
 ![Entity lifecycle — growing and stable entities](../figures/entity_lifecycle_growth.png)
 
-Same format as above. Green indicates growing entities (current > 90% of peak); blue indicates stable entities (50–90% of peak). The contrast with the decline chart is striking: growing entities show steep ascent curves with late peaks, while stable entities show early peaks followed by a long plateau.
+Same format as above. **Green** indicates growing entities (current > 90% of peak); **blue** indicates stable entities (50–90% of peak).
+
+The contrast with the decline chart is **striking**: growing entities show **steep ascent curves with late peaks**, while stable entities show **early peaks followed by a long plateau**.
