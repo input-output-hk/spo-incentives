@@ -61,10 +61,18 @@ flowchart TB
         SDL["<b>SD-L</b> · 2025<br/>Incentive Mechanism Analysis<br/><i>Lopez de Lara</i>"]
     end
 
+    subgraph EVIDENCE["🔬 Diagnostic evidence · sub-reports"]
+        direction TB
+        TPP["<b>Treasury &amp; Pool Pots</b><br/>epoch budget · reserve · fee composition<br/><i>F → O · backs §1.1</i>"]
+        PDG["<b>Pools Distribution Gaps</b><br/>reward curve · pledge · tier stratification<br/><i>F → O · backs §1.2</i>"]
+        OC["<b>The Operator's Cut</b><br/>intra-pool split · flat-fee hyperbola · commission<br/><i>F → O · backs §1.3</i>"]
+        SC["<b>The Staking Census</b><br/>populations · submitters · fee-base concentration<br/><i>F → O · backs §2.1–§2.2</i>"]
+    end
+
     subgraph COMPANION["✨ Companion documents · new"]
         direction TB
         IG["<b>The Intended Game</b><br/>normative baseline"]
-        DIAG["<b>The Diagnostic</b><br/>5-year mainnet audit"]
+        DIAG["<b>The Diagnostic</b><br/><i>problem induction layer</i><br/>5-year mainnet audit"]
     end
 
     SPEC(["<b>V2 Specification</b><br/>milestones · KPIs"])
@@ -72,6 +80,10 @@ flowchart TB
     SLD1 ==>|"defines what's intended"| IG
     RSS ==>|"formal grounding"| IG
     SDL ==>|"extended by"| DIAG
+    TPP ==> DIAG
+    PDG ==> DIAG
+    OC ==> DIAG
+    SC ==> DIAG
     IG ==>|"intended equilibrium"| SPEC
     DIAG ==>|"induced problems"| SPEC
     RELATED -.->|"informs framing"| SPEC
@@ -79,17 +91,19 @@ flowchart TB
     classDef direct fill:#FFE4E3,stroke:#E52321,stroke-width:2px,color:#000
     classDef related fill:#F5F5F5,stroke:#888,stroke-width:1px,color:#000
     classDef antecedent fill:#FFF4E6,stroke:#EC641D,stroke-width:2px,color:#000
+    classDef evidence fill:#FDFFE5,stroke:#B8C400,stroke-width:1.5px,color:#000
     classDef companion fill:#E6FBF9,stroke:#16E9D8,stroke-width:2px,color:#000
     classDef spec fill:#000,stroke:#E52321,stroke-width:3px,color:#fff
 
     class SLD1,RSS direct
     class IAPG,RMPC,BPD related
     class SDL antecedent
+    class TPP,PDG,OC,SC evidence
     class IG,DIAG companion
     class SPEC spec
 ```
 
-Solid arrows mark direct dependencies — the spec reasons from these documents. The dashed arrow marks inspiration only — the related literature is read for framing, not extended. The two companion documents sit between prior work and the spec: they consolidate what was inherited into what can be reasoned against.
+Solid arrows mark direct dependencies — the spec reasons from these documents. The dashed arrow marks inspiration only — the related literature is read for framing, not extended. The evidence band (Diagnostic sub-reports) sits upstream of the Diagnostic: each sub-report produces its own findings-and-observations output, which the Diagnostic then consolidates through problem induction. The two companion documents sit between prior work and the spec: together they convert what was inherited and what was measured into something the spec can reason against.
 
 ### 1.1 Prior work
 
