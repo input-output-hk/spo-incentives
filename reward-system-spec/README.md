@@ -15,20 +15,36 @@ A note on design versus specification. This document deliberately avoids prescri
 ## Table of Contents
 
 - [1. Foundations](#1-foundations)
-  - [1.1 Prior work](#11-prior-work)
-    - [1.1.1 Direct foundations — the normative reference](#111-direct-foundations--the-normative-reference)
-    - [1.1.2 Related theoretical literature — context, not direct extension](#112-related-theoretical-literature--context-not-direct-extension)
-    - [1.1.3 Community antecedent — the empirical precursor](#113-community-antecedent--the-empirical-precursor)
-  - [1.2 Companion documents — written for this spec](#12-companion-documents--written-for-this-spec)
-    - [1.2.1 The Intended Game — the normative baseline](#121-the-intended-game--the-normative-baseline)
-    - [1.2.2 The Diagnostic — the empirical evidence](#122-the-diagnostic--the-empirical-evidence)
-  - [1.3 How the pieces connect](#13-how-the-pieces-connect)
+  - [1.1 Design artefacts — what V2 reasons from](#11-design-artefacts--what-v2-reasons-from)
+  - [1.2 Research papers — adjacent inspiration only](#12-research-papers--adjacent-inspiration-only)
+  - [1.3 The Diagnostic — the empirical layer](#13-the-diagnostic--the-empirical-layer)
+    - [1.3.1 Starting point — Carlos's prior analysis](#131-starting-point--carloss-prior-analysis)
+    - [1.3.2 The holistic approach — two structural lenses](#132-the-holistic-approach--two-structural-lenses)
+    - [1.3.3 The methodology — findings, observations, problem induction](#133-the-methodology--findings-observations-problem-induction)
+  - [1.4 Governance — the Cardano Constitution](#14-governance--the-cardano-constitution)
+  - [1.5 How the pieces connect](#15-how-the-pieces-connect)
 - [2. Constitutional framework](#2-constitutional-framework)
 - [3. Microeconomics — participant incentives and market structure](#3-microeconomics--participant-incentives-and-market-structure)
   - [3.1 Guarantee operator viability across the entire productive population](#31-guarantee-operator-viability-across-the-entire-productive-population)
+    - [3.1.1 Problem statement](#311-problem-statement)
+      - [3.1.1.1 Evidence base](#3111-evidence-base)
+    - [3.1.2 Structural: enforce the production threshold](#312-structural-enforce-the-production-threshold)
+    - [3.1.3 Economic: every productive pool must be profitable](#313-economic-every-productive-pool-must-be-profitable)
   - [3.2 Restore the notion of pledge among operators](#32-restore-the-notion-of-pledge-among-operators)
+    - [3.2.1 Problem statement](#321-problem-statement)
+      - [3.2.1.1 Evidence base](#3211-evidence-base)
+    - [3.2.2 Specification](#322-specification)
   - [3.3 Maintain and diversify a competitive delegator yield](#33-maintain-and-diversify-a-competitive-delegator-yield)
+    - [3.3.1 Make the base yield competitive](#331-make-the-base-yield-competitive)
+    - [3.3.2 Make the yield reward operators who play the game](#332-make-the-yield-reward-operators-who-play-the-game)
+    - [3.3.3 Diversify the delegation offer](#333-diversify-the-delegation-offer)
   - [3.4 Reduce the concentration effects that distort both populations](#34-reduce-the-concentration-effects-that-distort-both-populations)
+    - [3.4.1 Problem statement](#341-problem-statement)
+      - [3.4.1.1 The operator side — multi-pool entity concentration](#3411-the-operator-side--multi-pool-entity-concentration)
+      - [3.4.1.2 The delegator side — titan delegators versus the micro-delegation tail](#3412-the-delegator-side--titan-delegators-versus-the-micro-delegation-tail)
+      - [3.4.1.3 Evidence base](#3413-evidence-base)
+    - [3.4.2 Entity-level awareness in reward distribution](#342-entity-level-awareness-in-reward-distribution)
+    - [3.4.3 Differentiated delegation incentives — titans versus micro-delegators](#343-differentiated-delegation-incentives--titans-versus-micro-delegators)
 - [4. Macroeconomics — a self-sustaining and governable mechanism](#4-macroeconomics--a-self-sustaining-and-governable-mechanism)
   - [4.1 The staking pot must survive reserve depletion](#41-the-staking-pot-must-survive-reserve-depletion)
   - [4.2 The fee-generating population must expand](#42-the-fee-generating-population-must-expand)
@@ -38,124 +54,126 @@ A note on design versus specification. This document deliberately avoids prescri
 
 ## 1. Foundations
 
-This specification does not start from scratch. It stands on six years of engineering, game-theoretic research, and community analysis — and on two new companion documents written alongside this spec to make that inheritance usable.
+This specification does not start from scratch. Two **design artefacts** define what the mechanism was intended to do — they are the normative reference every milestone measures divergence from. Four **research papers** sit around this subject as adjacent inspiration; the spec draws on them lightly but does not extend them. A prior **community analysis** gives the empirical work its starting point, and a new companion document — *The Diagnostic* — builds a holistic audit on top of it, grounded in four dedicated sub-reports. The **Cardano Constitution** sits alongside the spec as the active governance layer.
 
-The diagram below maps the eight documents that ground this work and how they relate to the specification.
+The diagram below maps these documents and how they feed into the specification.
 
 ```mermaid
 flowchart TB
-    subgraph DIRECT["🛠 Direct foundations"]
+    subgraph DESIGN["🛠 Design artefacts · what V2 reasons from"]
         direction TB
         SLD1["<b>SL-D1</b> · 2019<br/>Delegation Incentives Design Spec<br/><i>Kant · Brünjes · Coutts</i>"]
-        RSS["<b>RSS-2020</b><br/>Reward Sharing Schemes<br/><i>Brünjes · Kiayias et al.</i>"]
+        IG["★ <b>The Intended Game</b><br/>normative baseline<br/><i>written for this spec</i>"]
     end
 
-    subgraph RELATED["📚 Related literature · inspiration"]
+    subgraph RESEARCH["📚 Research papers · adjacent inspiration"]
         direction TB
+        RSS["<b>RSS-2020</b><br/>Reward Sharing Schemes<br/><i>Brünjes · Kiayias et al.</i>"]
         IAPG["<b>IAPG-2021</b><br/>Incentives Against Power Grabs"]
         RMPC["<b>RMPC-2022</b><br/>Removing min-pool-cost"]
         BPD["<b>BPD-2024</b><br/>Participation × Decentralization"]
     end
 
-    subgraph ANTECEDENT["🧭 Community antecedent"]
-        SDL["<b>SD-L</b> · 2025<br/>Incentive Mechanism Analysis<br/><i>Lopez de Lara</i>"]
+    subgraph ANTECEDENT["🧭 Community antecedent · starting point"]
+        SDL["<b>SD-L</b> · 2025<br/>Incentive Mechanism Analysis<br/><i>Carlos Lopez de Lara</i>"]
     end
 
-    subgraph EVIDENCE["🔬 Diagnostic evidence · sub-reports"]
+    subgraph EVIDENCE["🔬 Diagnostic sub-reports · findings → observations"]
         direction TB
-        TPP["<b>Treasury &amp; Pool Pots</b><br/>epoch budget · reserve · fee composition<br/><i>F → O · backs §1.1</i>"]
-        PDG["<b>Pools Distribution Gaps</b><br/>reward curve · pledge · tier stratification<br/><i>F → O · backs §1.2</i>"]
-        OC["<b>The Operator's Cut</b><br/>intra-pool split · flat-fee hyperbola · commission<br/><i>F → O · backs §1.3</i>"]
-        SC["<b>The Staking Census</b><br/>populations · submitters · fee-base concentration<br/><i>F → O · backs §2.1–§2.2</i>"]
+        TPP["<b>Treasury &amp; Pool Pots</b><br/>epoch budget · reserve · fees<br/><i>F → O · backs §1.1</i>"]
+        PDG["<b>Pools Distribution Gaps</b><br/>reward curve · pledge · tiers<br/><i>F → O · backs §1.2</i>"]
+        OC["<b>The Operator's Cut</b><br/>intra-pool split · commission<br/><i>F → O · backs §1.3</i>"]
+        SC["<b>The Staking Census</b><br/>populations · submitters<br/><i>F → O · backs §2.1–§2.2</i>"]
     end
 
-    subgraph COMPANION["✨ Companion documents · new"]
-        direction TB
-        IG["<b>The Intended Game</b><br/>normative baseline"]
-        DIAG["<b>The Diagnostic</b><br/><i>problem induction layer</i><br/>5-year mainnet audit"]
+    DIAG["★ <b>The Diagnostic</b><br/>holistic audit · <i>problem induction</i><br/><i>written for this spec</i>"]
+
+    subgraph GOVERNANCE["⚖ Governance · the rules the spec must respect"]
+        CONST["<b>Cardano Constitution v2</b><br/>tenets · parameter guardrails<br/><i>ratified epoch 609</i>"]
     end
 
     SPEC(["<b>V2 Specification</b><br/>milestones · KPIs"])
 
-    SLD1 ==>|"defines what's intended"| IG
-    RSS ==>|"formal grounding"| IG
-    SDL ==>|"extended by"| DIAG
+    SLD1 ==>|"original design"| SPEC
+    IG ==>|"intended equilibrium"| SPEC
+    SDL ==>|"starting point · extended by"| DIAG
     TPP ==> DIAG
     PDG ==> DIAG
     OC ==> DIAG
     SC ==> DIAG
-    IG ==>|"intended equilibrium"| SPEC
     DIAG ==>|"induced problems"| SPEC
-    RELATED -.->|"informs framing"| SPEC
+    CONST ==>|"tenets &amp; guardrails"| SPEC
+    RESEARCH -.->|"light inspiration"| SPEC
 
-    classDef direct fill:#FFE4E3,stroke:#E52321,stroke-width:2px,color:#000
-    classDef related fill:#F5F5F5,stroke:#888,stroke-width:1px,color:#000
+    click CONST "https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2" _blank
+
+    classDef design fill:#FFE4E3,stroke:#E52321,stroke-width:2px,color:#000
+    classDef research fill:#F5F5F5,stroke:#888,stroke-width:1px,color:#000
     classDef antecedent fill:#FFF4E6,stroke:#EC641D,stroke-width:2px,color:#000
     classDef evidence fill:#FDFFE5,stroke:#B8C400,stroke-width:1.5px,color:#000
-    classDef companion fill:#E6FBF9,stroke:#16E9D8,stroke-width:2px,color:#000
+    classDef diagnostic fill:#E6FBF9,stroke:#16E9D8,stroke-width:3px,color:#000
+    classDef governance fill:#EEF1FF,stroke:#2C4FFA,stroke-width:2px,color:#000
     classDef spec fill:#000,stroke:#E52321,stroke-width:3px,color:#fff
 
-    class SLD1,RSS direct
-    class IAPG,RMPC,BPD related
+    class SLD1,IG design
+    class RSS,IAPG,RMPC,BPD research
     class SDL antecedent
     class TPP,PDG,OC,SC evidence
-    class IG,DIAG companion
+    class DIAG diagnostic
+    class CONST governance
     class SPEC spec
 ```
 
-Solid arrows mark direct dependencies — the spec reasons from these documents. The dashed arrow marks inspiration only — the related literature is read for framing, not extended. The evidence band (Diagnostic sub-reports) sits upstream of the Diagnostic: each sub-report produces its own findings-and-observations output, which the Diagnostic then consolidates through problem induction. The two companion documents sit between prior work and the spec: together they convert what was inherited and what was measured into something the spec can reason against.
+Solid arrows mark substantive dependencies: SL-D1 and *The Intended Game* anchor what the mechanism was designed to do; Carlos's prior analysis gives the Diagnostic its empirical starting point, which the four sub-reports then extend with a systematic findings-and-observations output; the Diagnostic consolidates all of that through problem induction; the Constitution grounds and bounds the whole thing. The dashed arrow marks inspiration only — the four research papers frame questions this document also addresses but are not extended. The ★ marks the two novel documents written for this specification. A link to the [Cardano Constitution](https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2) is embedded in its node; the constitutional framework is developed in [§2](#2-constitutional-framework).
 
-### 1.1 Prior work
+### 1.1 Design artefacts — what V2 reasons from
 
-The spec inherits from three distinct strata of prior work, each with a different relationship to the current document.
-
-#### 1.1.1 Direct foundations — the normative reference
-
-Two artefacts form the backbone this spec reasons against: the engineering specification and the formal model it was built on.
+Two design artefacts form the normative backbone of this specification. They answer *what was the mechanism supposed to do?* — the anchor every milestone below measures divergence from.
 
 - **[SL-D1](references/design-specs/delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf) — *Delegation Incentives Design Specification*, Level 1** (Kant, Brünjes, Coutts, 2019). The original Shelley-era engineering artefact against which the reward mechanism was implemented. Every parameter in the current mechanism — $a_0$, $k$, $\rho$, $\tau$, $minPoolCost$ — has its canonical definition here.
-- **[RSS-2020](references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf) — *Reward Sharing Schemes for Stake Pools*** (Brünjes, Kiayias, et al., 2020). The formal model behind SL-D1: a non-cooperative game in which rational operators compete for saturating delegation under a reward curve parameterised by $a_0$. Establishes the $k$-pool equilibrium under a set of assumptions about operator rationality and delegator behaviour.
+- **★ [*The Intended Game*](the-intended-game/README.md) — normative baseline** *(written for this spec)*. The intended equilibrium was implicit in SL-D1 but nowhere stated as a coherent narrative. This companion document consolidates that implicit design into an explicit, testable baseline:
+  - the three player populations (operators, delegators, transaction submitters) and their motivations;
+  - the operator progression from first pledge to full commitment;
+  - the four security properties the equilibrium must satisfy (liveness, safety, Sybil resistance, non-triviality);
+  - the virtuous cycle aligned play is meant to produce.
 
-SL-D1 and RSS-2020 are the documents every milestone below is measured against.
+Without a codified baseline, "divergence" has no reference point — which is why *The Intended Game* had to be written before the spec could be. Together, SL-D1 and *The Intended Game* are the normative reference every milestone is measured against.
 
-#### 1.1.2 Related theoretical literature — context, not direct extension
+### 1.2 Research papers — adjacent inspiration only
 
-Three later papers revisit aspects of the original model. This spec draws on them as prior art in the adjacent problem space — they frame questions this document also addresses — but it does not extend their results or adopt their mechanisms.
+Four research papers sit around this specification's subject. The spec draws on them lightly as prior art in the adjacent problem space — they frame questions this document also addresses — but it does not extend their results or adopt their mechanisms as backbone.
 
+- **[RSS-2020](references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf) — *Reward Sharing Schemes for Stake Pools*** (Brünjes, Kiayias et al., 2020). The formal game-theoretic paper that accompanied SL-D1: a non-cooperative game in which rational operators compete for saturating delegation under a reward curve parameterised by $a_0$. Informs how SL-D1's parameters were derived; the V2 spec reasons against SL-D1 directly rather than re-deriving from the formal model.
 - **[IAPG-2021](references/research-papers/incentives-against-power-grabs_kiayias-et-al_2021.pdf) — *Incentives Against Power Grabs*** (Kiayias et al., 2021). Analyses the Sybil defence pledge is meant to provide and the conditions under which it fails.
 - **[RMPC-2022](references/research-papers/removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf) — *Removing the min-pool-cost floor*** (Stouka, Brünjes, Kiayias, Koutsoupias, 2022). Revisits $minPoolCost$ in light of early mainnet evidence of its distortionary effect on small operators.
 - **[BPD-2024](references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf) — *Balancing Participation and Decentralization*** (Kiayias et al., 2024). The most recent theoretical refinement of the original model, accounting for heterogeneous participation.
 
-These papers are cited where their framing informs a milestone. They are not constructive foundations this spec builds upon.
+These papers are cited where their framing informs a milestone. None of them is a constructive foundation this spec builds upon.
 
-#### 1.1.3 Community antecedent — the empirical precursor
+### 1.3 The Diagnostic — the empirical layer
 
-- **[SD-L](references/previous-analasys/spo-incentives-analysis_lopez-de-lara_2025.pdf) — *Analysis of Cardano's Incentive Mechanism*** (Lopez de Lara, 2025). The prior empirical analysis this project builds directly on. Established many of the observations — pledge dilution, fee-structure regressivity, delegator immobility — that the Diagnostic revisits, extends, and grounds in on-chain data.
+The second pillar of this specification is empirical, not normative: a measurement of what the mechanism actually produced over five years of mainnet operation. *[The Diagnostic](diagnostic/README.md)* — written for this spec — starts from a prior community analysis and extends it into a holistic, methodically structured audit.
 
-Taken together: SL-D1 and RSS-2020 describe what the mechanism was designed to be; SD-L is the community-side precursor this work extends; the related literature informs the problem space without providing its scaffolding. What none of these documents provide — and what makes them insufficient on their own as a foundation for a successor mechanism — is two-fold. The intended equilibrium is legible only to a reader willing to hold SL-D1 and RSS-2020 side-by-side; it has no standalone narrative statement. And the five-year mainnet record has never been audited stage-by-stage against that intended equilibrium. Closing these gaps is the purpose of the two companion documents below.
+#### 1.3.1 Starting point — Carlos's prior analysis
 
-### 1.2 Companion documents — written for this spec
+The empirical work begins where Carlos Lopez de Lara's community analysis left off:
 
-Two documents have been produced alongside this specification. Both are novel: neither existed before this project.
+- **[SD-L](references/previous-analasys/spo-incentives-analysis_lopez-de-lara_2025.pdf) — *Analysis of Cardano's Incentive Mechanism*** (Lopez de Lara, 2025). The prior community analysis this project builds directly upon. SD-L established many of the observations — pledge dilution, fee-structure regressivity, delegator immobility — that the Diagnostic revisits, systematises, and grounds in primary on-chain data.
 
-#### 1.2.1 The Intended Game — the normative baseline
+SD-L is the entry point. The Diagnostic extends it along two axes: a broader scope (a holistic view of the whole mechanism rather than targeted observations) and a systematic methodology (everything is decomposed into findings and observations that can be tracked, cited, and contested).
 
-This document did not exist before. The intended equilibrium it describes was implicit in SL-D1 and RSS-2020, but nowhere stated as a coherent narrative. [*The Intended Game*](the-intended-game/README.md) consolidates that implicit design into an explicit, testable baseline:
+#### 1.3.2 The holistic approach — two structural lenses
 
-- the three player populations (operators, delegators, transaction submitters) and their motivations;
-- the operator progression from first pledge to full commitment;
-- the four security properties the equilibrium must satisfy (liveness, safety, Sybil resistance, non-triviality);
-- the virtuous cycle aligned play is meant to produce.
+Rather than chasing isolated empirical questions, the Diagnostic audits the mechanism holistically through two structural lenses:
 
-Every milestone in this specification measures divergence from this baseline. Without a codified baseline, "divergence" has no reference point — which is why this document had to be written before the spec could be.
+- **The reward flow** — how ADA moves from the reserve, through protocol and transaction fees, into epoch budgets, into pool pots, and finally into operator and delegator rewards. Three stages: epoch-budget assembly ([§1.1](diagnostic/README.md#11-treasury-pool-pots-distribution)), pool-level distribution ([§1.2](diagnostic/README.md#12-pools-distribution)), and the operator/delegator split ([§1.3](diagnostic/README.md#13-operator-delegator-distribution)).
+- **The player populations** — the sub-populations on which the mechanism operates and how they have evolved: the staking populations (operators + delegators) ([§2.1](diagnostic/README.md#21-the-staking-populations)) and the transaction submitters that fund the fee component of the reward ([§2.2](diagnostic/README.md#22-transaction-submitters)).
 
-#### 1.2.2 The Diagnostic — the empirical evidence
+An additional stage audits the **ADA price constraint** that binds the whole mechanism to the exogenous economy ([§3](diagnostic/README.md#3-the-price-constraint)).
 
-[*The Diagnostic*](diagnostic/README.md) is a stage-by-stage audit of the current reward pipeline across five years of mainnet operation, built specifically for this spec. It decomposes the analysis into:
+The holistic view is what makes the diagnosis structural rather than anecdotal: each stage of the pipeline is audited end-to-end against the intended equilibrium from *The Intended Game*, and the populations are audited alongside the flow they participate in.
 
-- the **reward flow** — epoch-budget assembly ([§1.1](diagnostic/README.md#11-treasury-pool-pots-distribution)), pool-level distribution ([§1.2](diagnostic/README.md#12-pools-distribution)), and operator/delegator split ([§1.3](diagnostic/README.md#13-operator-delegator-distribution));
-- the **player populations** on which the pipeline operates ([§2](diagnostic/README.md#2-the-player-populations));
-- the **ADA price constraint** that binds the mechanism to the external economy ([§3](diagnostic/README.md#3-the-price-constraint)).
+#### 1.3.3 The methodology — findings, observations, problem induction
 
 **The evidence layer — the sub-reports.** The Diagnostic is not a single monolithic document. Each pipeline stage is backed by a dedicated sub-report: a self-contained analytical document with its own formulas, data, figures, and reproduction scripts. Four sub-reports carry the empirical weight:
 
@@ -167,28 +185,35 @@ Every milestone in this specification measures divergence from this baseline. Wi
 Each sub-report organises its empirical content as a two-level hierarchy:
 
 - **Findings** (F1.1, F1.2, …) — fine-grained empirical atoms. Each finding states a quantitative fact backed by on-chain data, cites its section and figures within the sub-report, and carries a one-line significance label.
-- **Observations** (O1, O2, …) — structural claims the findings authorise. An observation clusters a group of findings (F1.1–F1.4, F2.1–F2.3, …) into a single reader-scale statement about the mechanism's behaviour.
+- **Observations** (O1, O2, …) — structural claims the findings authorise. An observation clusters a group of findings (F1.1–F1.4, F2.1–F2.3, …) into a single reader-scale statement about mechanism behaviour.
 
-Findings are testable against the data; observations are the structural claims the findings substantiate.
+Findings are testable against the data; observations are the structural claims the findings substantiate. This two-level discipline is what makes the methodology systematic — no structural claim ever stands alone; each is backed by an explicit cluster of empirical atoms.
 
-**The induction layer — the Diagnostic itself.** The Diagnostic is the glue. It does not re-derive findings — it imports a condensed Observations table from each sub-report and performs the step the sub-reports stop short of: **problem induction**.
+**The induction layer — the Diagnostic itself.** [*The Diagnostic*](diagnostic/README.md) is the glue. It does not re-derive findings — it imports a condensed observations table from each sub-report and performs the step the sub-reports stop short of: **problem induction**.
 
 Each pipeline stage in the Diagnostic carries a dedicated *Problem Induction* subsection. These subsections read the observations against the normative baseline from *The Intended Game* and promote them from factual claims into structural problem statements — the problems each milestone in this specification then answers.
 
-The layering is one-directional:
-
-- the **sub-reports** produce findings, cluster them into observations, and stop there;
-- the **Diagnostic** aggregates observations across stages, reads them against the intended equilibrium, and elevates them into the structural problems this spec is built to address.
+The layering is one-directional: sub-reports produce findings, cluster them into observations, and stop there; the Diagnostic aggregates observations across stages, reads them against the intended equilibrium, and elevates them into the structural problems this spec is built to address.
 
 The infrastructure that powers these queries — a local cardano-node + cardano-db-sync stack — lives at [`mainnet-indexer/`](../mainnet-indexer/README.md) at the root of this repository and is the reproducibility layer behind every empirical claim.
 
-### 1.3 How the pieces connect
+### 1.4 Governance — the Cardano Constitution
 
-Each milestone below reads against all three layers:
+The [Cardano Constitution v2](https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2) (ratified at epoch 609) is the governance document the protocol currently operates under — and therefore the one this specification must comply with. Two practical consequences flow from this:
 
-- the **prior work** (SL-D1 and RSS-2020) fixes what the mechanism was intended to do;
-- the **Intended Game** translates that intent into a testable normative baseline;
-- the **Diagnostic** measures what the mechanism actually produced over five years of mainnet.
+- every milestone below has to be checked against the constitutional tenets that apply to it (fair compensation, fair treatment, monetary stability…);
+- every parameter change the milestones imply has to fit within the guardrails the Constitution defines (e.g., $a_0 \in [0.1, 1.0]$, $k \in [250, 2000]$, $minPoolCost \in [0, 500]$ ADA) and go through the governance process it prescribes.
+
+The constitutional framework is developed in full in [§2](#2-constitutional-framework).
+
+### 1.5 How the pieces connect
+
+Each milestone below reads against four layers:
+
+- the **design artefacts** (SL-D1 + *The Intended Game*) fix what the mechanism was intended to do;
+- the **Diagnostic**, grounded in its four sub-reports, measures what the mechanism actually produced over five years of mainnet;
+- the **research papers** inform framing without being extended;
+- the **Constitution** grounds the milestones in ratified tenets and bounds them by parameter guardrails.
 
 Where a tenet of the Constitution supports a milestone, it is cited. Where a guardrail constrains the parameter space, the bounds are noted. Where a gap exists between intent and reality, the Diagnostic quantifies it and the milestone specifies what a successor must restore.
 
@@ -229,7 +254,7 @@ Two structural gaps prevent it from doing so.
 
 **The operator growth path is not functioning as intended.** The census finds no trace of the designed growth trajectory on mainnet. The independent single-pool operator population peaked at 555 pools and 39.1% of productive stake around epoch 300, then contracted continuously to 291 pools and 24% at epoch 623 — a 48% loss in pool count and 15 percentage points in stake share ([*Staking Census* F3.7](diagnostic/sub-flows/census/mainnet-analysis/README.md#353-cohort-decomposition-who-holds-the-productive-set)). The replacement pools that sustain the ~950-pool total are entity-operated, not new independents: multi-pool entities grew from 23 to 85, their pool count from 135 to 660 ([*Staking Census* F3.8](diagnostic/sub-flows/census/mainnet-analysis/README.md#353-cohort-decomposition-who-holds-the-productive-set)). Capital flows from declining community fleets toward institutional entrants and exchanges — not toward the independent tail growing into established entities ([*Staking Census* F3.9](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-pipeline-what-the-mechanism-was-designed-to-produce)). The absence of evidence for the designed growth path is itself the diagnosis.
 
-##### Evidence base
+##### 3.1.1.1 Evidence base
 
 | Dimension | Key observation | Source |
 | --- | --- | --- |
@@ -302,7 +327,7 @@ Pledge is the mechanism's answer. Brünjes & Kiayias ([2020, §4](references/res
 
 The net result is a proof-of-stake system where the Sybil defence operates through incidental wealth constraints — not through the designed pledge mechanism — and where 85 entities operating 901 pools control 75.4% of staked supply with no protocol-level cost for having done so. $k = 500$ implies 500 independent entities sharing consensus power; the effective operator count is an order of magnitude below that target. The saturation cap has produced ~3,000 pool certificates — far more than $k$ — but the power behind those certificates is concentrated in fewer hands than the equilibrium requires. Pools have fragmented; power has not.
 
-##### Evidence base
+##### 3.2.1.1 Evidence base
 
 | Dimension | Key observation | Source |
 | --- | --- | --- |
@@ -410,7 +435,7 @@ The analysis documents concentration on two fronts. On the supply side, 85 multi
 
 #### 3.4.1 Problem statement
 
-##### The operator side — multi-pool entity concentration
+##### 3.4.1.1 The operator side — multi-pool entity concentration
 
 The reward formula evaluates pools independently — it does not know that twenty pools share the same controller. The saturation cap, intended to prevent concentration, fragments *pools* but not *entities*: an operator who saturates registers a new pool and continues growing, at negligible marginal cost ([§1.2.4.4.3](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures)).
 
@@ -418,7 +443,7 @@ The mechanism was designed for $k$ independent operators converging on a balance
 
 The deeper failure is that the formula's unit of accounting — the pool — is the wrong unit. Rewards, saturation caps, and pledge calculations all operate at the pool level. But the entity that controls the pools is the economic actor that makes strategic decisions. An entity operating twenty pools with negligible pledge in each is indistinguishable, at the formula level, from twenty independent operators. The mechanism does not merely fail to prevent concentration; it is structurally blind to it.
 
-##### The delegator side — titan delegators versus the micro-delegation tail
+##### 3.4.1.2 The delegator side — titan delegators versus the micro-delegation tail
 
 The demand side exhibits a concentration that mirrors the supply side. The median delegator holds 32 ADA; the mean holds 16,055 ADA — a 500× gap ([§2.1 O3](diagnostic/README.md#212-mainnet-observations)). This is not a transient distribution: concentration crystallised by epoch 300, and a subsequent 9× growth in delegator count produced no measurable change in the top-1% share ([Census §4.4.3](diagnostic/sub-flows/census/mainnet-analysis/README.md#443-historical-evolution--who-joined-and-where-is-the-capital)). The delegation market is structurally bimodal: 42% of delegators are loyal (201+ epochs), 21% volatile (≤ 5 epochs), with little in between ([§2.1 O4](diagnostic/README.md#212-mainnet-observations)).
 
@@ -426,7 +451,7 @@ Titan delegators — those holding 1M+ ADA — average 3.06 lifetime pool switch
 
 The mechanism treats a 32-ADA micro-delegation and a 50M-ADA titan delegation identically: both earn the same proportional return, both have the same governance weight per ADA, and neither receives any incentive differentiated by the scale or stability of commitment. The consequence is that the population with the power to discipline operators — titans — has no structured reason to exercise it, while the population that the protocol depends on for broad participation — micro-delegators — receives no signal that their commitment matters.
 
-##### Evidence base
+##### 3.4.1.3 Evidence base
 
 | Dimension | Key observation | Source |
 | --- | --- | --- |

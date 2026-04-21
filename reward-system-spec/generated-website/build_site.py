@@ -24,6 +24,7 @@ Per-page contract:
 from __future__ import annotations
 
 import hashlib
+import html as _html
 import re
 import shutil
 import sys
@@ -48,7 +49,7 @@ PAGES = [
         "title": "Cardano Reward Pipeline — SPO Incentives",
         "hero_h1": "Cardano Reward Pipeline",
         "hero_sub": "From Design Intent to Mainnet Reality",
-        "active_nav": None,
+        "active_nav": "spec",
     },
     {
         "slug": "intended-game",
@@ -63,8 +64,8 @@ PAGES = [
         "slug": "observatory",
         "md": "diagnostic/README.md",
         "html": "observatory.html",
-        "title": "Mainnet Observatory — SPO Incentives",
-        "hero_h1": "Mainnet Observatory",
+        "title": "The Diagnostic — Mainnet Observatory",
+        "hero_h1": "The Diagnostic — Mainnet Observatory",
         "hero_sub": "Synthesis of Observations Across the Reward Pipeline",
         "active_nav": "observatory",
     },
@@ -308,7 +309,27 @@ def md_to_html(md_text: str) -> str:
     )
     html_out = md.convert(md_text)
     html_out = restore_math(html_out, math_spans)
+    html_out = _mermaidize(html_out)
     return html_out
+
+
+# --- Mermaid: promote fenced ``` mermaid ``` to <div class="mermaid"> -----
+
+_MERMAID_RE = re.compile(
+    r'<pre><code class="(?:language-)?mermaid">([\s\S]*?)</code></pre>',
+    re.IGNORECASE,
+)
+
+
+def _mermaidize(html_out: str) -> str:
+    """Replace Mermaid code fences with divs so the client-side mermaid.js
+    library can render them as SVG. The code content is HTML-unescaped so the
+    original Mermaid source (including ``<b>`` and ``<br/>`` in node labels)
+    is handed to the renderer verbatim.
+    """
+    def _sub(m: "re.Match[str]") -> str:
+        return f'<div class="mermaid">{_html.unescape(m.group(1))}</div>'
+    return _MERMAID_RE.sub(_sub, html_out)
 
 
 # --- TOC wrapping (promote manual TOC to <nav class="toc-nav">) -----------
@@ -400,44 +421,131 @@ window.MathJax = {{
 <a href="index.html" class="nav-brand-home">
 <img src="assets/butterfly-white.png" alt="" class="nav-brand-logo">
 <span class="nav-brand-org">IO Research</span>
-<span class="nav-brand-title">Cardano Reward Pipeline</span>
+<span class="nav-brand-title">Cardano Reward System V2</span>
+<span class="nav-brand-sep" aria-hidden="true">—</span>
+<span class="nav-brand-subtitle">Specification for a Sustainable Successor</span>
 </a>
 <div class="nav-brand-right">
-<div class="nav-dd-wrap">
-<button class="nav-dd-btn" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')">Previous Analysis ▾</button>
-<div class="nav-dd-panel">
-<a href="pdf-viewer.html?file=references/spo-incentives-analysis_lopez-de-lara_2025.pdf" class="nav-dd-item"><span class="nav-dd-title">SPO Incentives Analysis</span><span class="nav-dd-meta">Lopez de Lara, 2025</span></a>
-</div></div>
-<div class="nav-dd-wrap">
-<button class="nav-dd-btn" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')">Research Papers ▾</button>
-<div class="nav-dd-panel">
-<a href="pdf-viewer.html?file=references/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf" class="nav-dd-item"><span class="nav-dd-title">Reward Sharing Schemes for Stake Pools</span><span class="nav-dd-meta">Brünjes, Kiayias et al., 2020</span></a>
-<a href="pdf-viewer.html?file=references/incentives-against-power-grabs_kiayias-et-al_2021.pdf" class="nav-dd-item"><span class="nav-dd-title">Stake Pool Incentives Against Power Grabs</span><span class="nav-dd-meta">Kiayias et al., 2021</span></a>
-<a href="pdf-viewer.html?file=references/removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf" class="nav-dd-item"><span class="nav-dd-title">Removing the Minimum Pool Cost</span><span class="nav-dd-meta">Stouka, Brünjes, Kiayias & Koutsoupias, 2022</span></a>
-<a href="pdf-viewer.html?file=references/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-item"><span class="nav-dd-title">Balancing Participation & Decentralization</span><span class="nav-dd-meta">Kiayias et al., 2024</span></a>
-</div></div>
 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light theme" aria-label="Toggle theme">☀</button>
 </div>
 </div>
 <div class="nav-pages">
-<div class="nav-col">
-<span class="nav-col-title">Design</span>
-<div class="nav-col-links">
-<a href="intended-game.html" class="nav-tab{cls_intended_game}">The Intended Game</a>
-<a href="pdf-viewer.html?file=references/delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf" class="nav-tab nav-pdf">Delegation & Incentives Design Spec<span class="nav-pdf-badge">PDF</span></a>
-</div></div>
-<div class="nav-col nav-col-main">
-<a href="observatory.html" class="nav-col-title nav-col-title-link{cls_observatory_title}">Mainnet Analysis</a>
-<div class="nav-col-links">
-<a href="census.html" class="nav-tab{cls_census}">Census</a>
-<span class="nav-flow-sep"></span>
-<a href="treasury.html" class="nav-tab{cls_treasury}"><span class="nav-dot" style="background:#E52321"></span>Monetary Reserve</a>
-<span class="nav-arrow">→</span>
-<a href="pools.html" class="nav-tab{cls_pools}"><span class="nav-dot" style="background:#2C4FFA"></span>Pools</a>
-<span class="nav-arrow">→</span>
-<a href="operator.html" class="nav-tab{cls_operator}"><span class="nav-dot" style="background:#EC641D"></span>Operators & Delegators</a>
-</div></div>
-</div></nav>
+
+<!-- Zone 1 (left anchor) — V2 Specification: the destination, not the conclusion -->
+<div class="nav-zone nav-zone-output">
+<a href="index.html" class="nav-tab-spec-big{cls_spec}">V2 Specification</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 2 — Mainnet Diagnostic (observed reality) -->
+<div class="nav-zone nav-zone-diag">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-diag{cls_diag_trigger}" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Mainnet Diagnostic ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-diag">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-diagnostic">Mainnet Diagnostic</span>
+      <span class="nav-dd-stratum-meta">What mainnet is actually doing — synthesis, Reward-Flow evidence, and the prior report</span>
+    </div>
+    <a href="observatory.html" class="nav-dd-ref{cls_observatory_title}">
+      <span class="nav-dd-ref-title">The Diagnostic<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Synthesis of observations across the reward pipeline</span>
+    </a>
+    <a href="census.html" class="nav-dd-ref nav-dd-ref-sub{cls_census}">
+      <span class="nav-dd-ref-title">Populations<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Who holds stake — capital, participation<span class="nav-dd-ref-stage">Evidence</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label">Reward Flow</div>
+    <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub{cls_treasury}">
+      <span class="nav-dd-ref-title">Reserves<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Treasury & pool-pot distribution<span class="nav-dd-ref-stage">Stage 1</span></span>
+    </a>
+    <a href="pools.html" class="nav-dd-ref nav-dd-ref-sub{cls_pools}">
+      <span class="nav-dd-ref-title">Pools<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Distribution gaps across the pool population<span class="nav-dd-ref-stage">Stage 2</span></span>
+    </a>
+    <a href="operator.html" class="nav-dd-ref nav-dd-ref-sub{cls_operator}">
+      <span class="nav-dd-ref-title">Operators/Delegators<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">The operator's cut versus the delegator share<span class="nav-dd-ref-stage">Stage 3</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label">Past Analysis</div>
+    <a href="pdf-viewer.html?file=references/previous-analasys/spo-incentives-analysis_lopez-de-lara_2025.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Nov 2025 — Analysis of Cardano's Incentive Mechanism</span>
+      <span class="nav-dd-ref-cite">Lopez de Lara · prior mainnet diagnostic<span class="nav-dd-ref-tag">SD-L</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 3 — Design Support (intended mechanism) -->
+<div class="nav-zone nav-zone-design">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-design{cls_design_trigger}" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Design Support ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-design">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-design">Design Support</span>
+      <span class="nav-dd-stratum-meta">The intended mechanism — formal spec + the narrative it never came with</span>
+    </div>
+    <a href="intended-game.html" class="nav-dd-ref{cls_intended_game}">
+      <span class="nav-dd-ref-title">The Intended Game<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Plain-prose companion to SL-D1 — fills the narrative gap the formal spec left open</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/design-specs/delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Delegation Incentives Design Specification</span>
+      <span class="nav-dd-ref-cite">Kant · Brünjes · Coutts — 2019<span class="nav-dd-ref-tag">SL-D1</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 4 — Research Papers (academic foundations) -->
+<div class="nav-zone nav-zone-research">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-research" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Research Papers ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-research">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-research">Research Papers</span>
+      <span class="nav-dd-stratum-meta">Academic antecedents and adjacent work on reward schemes</span>
+    </div>
+    <a href="pdf-viewer.html?file=references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Reward Sharing Schemes for Stake Pools</span>
+      <span class="nav-dd-ref-cite">Brünjes · Kiayias · Koutsoupias · Stouka — 2020<span class="nav-dd-ref-tag">RSS-2020</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/research-papers/incentives-against-power-grabs_kiayias-et-al_2021.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Incentives Against Power Grabs</span>
+      <span class="nav-dd-ref-cite">Kiayias et al. — 2021<span class="nav-dd-ref-tag">IAPG</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/research-papers/removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Removing the Minimum Pool Cost</span>
+      <span class="nav-dd-ref-cite">Stouka · Brünjes · Kiayias · Koutsoupias — 2022<span class="nav-dd-ref-tag">RMPC</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Balancing Participation & Decentralization</span>
+      <span class="nav-dd-ref-cite">Kiayias et al. — 2024<span class="nav-dd-ref-tag">BPD</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="nav-breadcrumb">{breadcrumb_inner}</div>
+</nav>
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-label">Input Output &middot; IO Research</div>
@@ -449,15 +557,59 @@ window.MathJax = {{
 <footer class="site-footer"><img src="assets/butterfly-white.png" alt="">Input Output &middot; IO Research</footer>
 <div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
 <a href="#" class="back-top" id="btt">&uarr;</a>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+<script>
+if (window.mermaid) {{
+  mermaid.initialize({{
+    startOnLoad: true,
+    theme: 'default',
+    securityLevel: 'loose',
+    themeVariables: {{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }},
+    flowchart: {{ useMaxWidth: true, htmlLabels: true, curve: 'basis' }}
+  }});
+}}
+</script>
 <script src="assets/site.js"></script>
 </body>
 </html>
 """
 
 
+# Which active-nav slugs fall under which top-level dropdown
+DIAG_ACTIVE = {"observatory", "census", "treasury", "pools", "operator"}
+DESIGN_ACTIVE = {"intended-game"}
+
+# Breadcrumb shown beneath the nav to convey hierarchical location.
+# Each entry: list of crumbs from most-general → most-specific.
+BREADCRUMBS = {
+    "spec": ["V2 Specification"],
+    "intended-game": ["Design Support", "The Intended Game"],
+    "observatory": ["Mainnet Diagnostic", "The Diagnostic"],
+    "census": ["Mainnet Diagnostic", "Reward Flow", "Populations"],
+    "treasury": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
+    "pools": ["Mainnet Diagnostic", "Reward Flow", "Pools"],
+    "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],
+}
+
+
+def _render_breadcrumb(active: str) -> str:
+    crumbs = BREADCRUMBS.get(active, [])
+    if not crumbs:
+        return ""
+    sep = '<span class="nav-breadcrumb-sep" aria-hidden="true">›</span>'
+    parts = []
+    for i, crumb in enumerate(crumbs):
+        cls = "nav-breadcrumb-item"
+        if i == len(crumbs) - 1:
+            cls += " nav-breadcrumb-current"
+        parts.append(f'<span class="{cls}">{_html.escape(crumb)}</span>')
+    return sep.join(parts)
+
+
 def render_shell(page: dict, content_html: str) -> str:
     active = page["active_nav"]
     nav_map = {
+        "spec": "cls_spec",
         "intended-game": "cls_intended_game",
         "observatory": "cls_observatory_title",
         "census": "cls_census",
@@ -468,11 +620,21 @@ def render_shell(page: dict, content_html: str) -> str:
     classes = {v: "" for v in nav_map.values()}
     if active in nav_map:
         classes[nav_map[active]] = " active"
+    # Sub-report pages light up the Diagnostic item as "parent-active" so the
+    # hierarchy (Diagnostic → sub-report) stays legible in the dropdown panel.
+    if active in {"census", "treasury", "pools", "operator"}:
+        classes["cls_observatory_title"] = " parent-active"
+    cls_diag_trigger = " active" if active in DIAG_ACTIVE else ""
+    cls_design_trigger = " active" if active in DESIGN_ACTIVE else ""
+    breadcrumb_inner = _render_breadcrumb(active)
     return TEMPLATE.format(
         title=page["title"],
         hero_h1=page["hero_h1"],
         hero_sub=page["hero_sub"],
         content=content_html,
+        cls_diag_trigger=cls_diag_trigger,
+        cls_design_trigger=cls_design_trigger,
+        breadcrumb_inner=breadcrumb_inner,
         **classes,
     )
 

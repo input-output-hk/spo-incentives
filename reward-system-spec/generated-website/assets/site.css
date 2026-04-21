@@ -62,6 +62,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .nav-brand-logo{height:18px;width:auto;opacity:.7;flex-shrink:0}
 .nav-brand-org{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4)}
 .nav-brand-title{font:600 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.2px}
+.nav-brand-sep{color:rgba(255,255,255,.28);font:300 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0 2px}
+.nav-brand-subtitle{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.55)}
+@media (max-width:900px){.nav-brand-sep,.nav-brand-subtitle{display:none}}
 
 /* Brand bar right: dropdowns + theme toggle */
 .nav-brand-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
@@ -313,6 +316,117 @@ mjx-container[display=true]{display:block!important;max-width:100%;margin:20px a
   .hero{padding:32px 20px 28px} .content{padding:24px 20px 60px;border:none}
   .content table{font-size:11px} .content th,.content td{padding:6px 7px}
 }
+
+/* ── OUTPUT ← INPUT nav (mirrors §1 Foundations diagram) ── */
+/* Flow (reading L→R): [V2 SPECIFICATION] ← Documents (Design / Diagnostic / Research) */
+.nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:10px 20px;overflow:visible;white-space:nowrap;gap:14px;position:relative;z-index:50}
+[data-theme=dark] .nav-pages{background:var(--bg)}
+.nav-zone{display:flex;align-items:center;gap:10px;flex-shrink:0}
+
+/* "OUTPUT ← INPUT" flow arrow — subtle, matches IOG's I/O directionality */
+.nav-flow-arrow{color:var(--text-muted);opacity:.4;font-size:15px;flex-shrink:0;padding:0 4px;user-select:none;font-weight:300}
+
+/* Small zone label above (inline with) each zone's content */
+.nav-zone-label{font:700 9px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);flex-shrink:0}
+.nav-zone-label-output{color:var(--infared);opacity:.9}
+
+/* ── Zones 2/3/4 · Mainnet Diagnostic ← Design Support ← Research Papers ── */
+/* Three distinct dropdowns, each with a single title; breadcrumb below conveys
+   the current location in the hierarchy so the dropdowns stay label-free.    */
+.nav-zone-diag,.nav-zone-design,.nav-zone-research{flex:0 0 auto}
+.nav-dd-btn-diag,.nav-dd-btn-design,.nav-dd-btn-research{min-width:0}
+/* Diagnostic = Dawn accent when the current page lives inside it */
+.nav-dd-btn-diag.active{color:var(--text-primary);border-color:rgba(236,100,29,.55);background:rgba(236,100,29,.08);font-weight:600}
+.nav-dd-wrap-light.open .nav-dd-btn-diag.active{border-color:rgba(236,100,29,.7);background:rgba(236,100,29,.14);color:var(--text-primary)}
+/* Design = Infared accent */
+.nav-dd-btn-design.active{color:var(--text-primary);border-color:rgba(229,35,33,.55);background:rgba(229,35,33,.08);font-weight:600}
+.nav-dd-wrap-light.open .nav-dd-btn-design.active{border-color:rgba(229,35,33,.7);background:rgba(229,35,33,.14);color:var(--text-primary)}
+/* Panels: diagnostic needs the most vertical space (The Diagnostic + Reward Flow sub-chain + SD-L) */
+.nav-dd-panel-diag{left:0;right:auto;min-width:500px;max-width:540px}
+.nav-dd-panel-design{left:0;right:auto;min-width:460px;max-width:500px}
+.nav-dd-panel-research{left:auto;right:0;min-width:460px;max-width:500px}
+
+/* Group label inside a dropdown panel (e.g., "Reward Flow" above the pipeline sub-items) */
+.nav-dd-ref-group-label{display:block;font:700 9.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-muted);padding:10px 10px 4px;margin-top:4px}
+
+/* ── Breadcrumb bar — single source of truth for "where am I" (lives inside .site-nav as its 3rd row) ── */
+.nav-breadcrumb{background:var(--bg-panel);border-bottom:1px solid var(--border);padding:7px 20px;font:400 11.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);display:flex;align-items:center;flex-wrap:wrap;gap:6px;letter-spacing:.1px}
+[data-theme=dark] .nav-breadcrumb{background:var(--bg)}
+.nav-breadcrumb:empty{display:none}
+.nav-breadcrumb-item{color:var(--text-secondary)}
+.nav-breadcrumb-current{color:var(--text-primary);font-weight:600}
+.nav-breadcrumb-sep{color:var(--text-muted);opacity:.55;font-size:13px;padding:0 2px}
+.nav-dd-wrap-light{position:relative}
+.nav-dd-btn-light{background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font:500 11.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--text-secondary);padding:8px 13px;transition:all .15s;white-space:nowrap}
+.nav-dd-btn-light:hover{color:var(--text-primary);border-color:var(--text-muted);background:rgba(0,0,0,.02)}
+[data-theme=dark] .nav-dd-btn-light:hover{background:rgba(255,255,255,.04)}
+.nav-dd-wrap-light.open .nav-dd-btn-light{color:var(--infared);border-color:rgba(229,35,33,.4);background:rgba(229,35,33,.05)}
+.nav-dd-panel-light{display:none;position:absolute;top:calc(100% + 8px);left:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;box-shadow:0 16px 48px rgba(0,0,0,.12);padding:10px 16px;min-width:460px;max-width:500px;z-index:200;white-space:normal}
+[data-theme=dark] .nav-dd-panel-light{background:var(--bg-panel);box-shadow:0 16px 48px rgba(0,0,0,.4)}
+.nav-dd-wrap-light.open .nav-dd-panel-light{display:block}
+.nav-dd-stratum{padding:10px 0}
+.nav-dd-stratum+.nav-dd-stratum{border-top:1px solid var(--border-light)}
+.nav-dd-stratum-head{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.nav-dd-stratum-badge{display:inline-block;padding:3px 8px;border-radius:4px;font:700 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.9px;text-transform:uppercase}
+.nav-dd-stratum-badge-design{color:var(--infared);background:rgba(229,35,33,.1)}
+.nav-dd-stratum-badge-research{color:#0b8478;background:rgba(22,233,216,.14)}
+[data-theme=dark] .nav-dd-stratum-badge-research{color:var(--electric-blue,#16E9D8);background:rgba(22,233,216,.12)}
+.nav-dd-stratum-meta{font:400 10.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);letter-spacing:.2px}
+
+/* Rich reference row inside the dropdown: title + citation on the left, PDF chip on the right */
+.nav-dd-ref{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:12px;align-items:center;padding:8px 10px;margin:2px -6px;border-radius:6px;text-decoration:none;transition:background .12s}
+.nav-dd-ref:hover{background:rgba(229,35,33,.04)}
+[data-theme=dark] .nav-dd-ref:hover{background:rgba(229,35,33,.09)}
+.nav-dd-ref-title{grid-column:1;grid-row:1;font:500 13px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-primary);letter-spacing:-.1px}
+.nav-dd-ref:hover .nav-dd-ref-title{color:var(--infared)}
+.nav-dd-ref-cite{grid-column:1;grid-row:2;font:400 11px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.nav-dd-ref-tag{display:inline-block;font:600 9.5px/1 -apple-system,sans-serif;letter-spacing:.4px;color:var(--text-secondary);background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:2px 5px}
+[data-theme=dark] .nav-dd-ref-tag{background:var(--bg);color:var(--text-body)}
+.nav-dd-ref-new{display:inline-block;margin-left:8px;font:700 9px/1 -apple-system,sans-serif;letter-spacing:.7px;color:#0a8a80;background:rgba(22,233,216,.14);border:1px solid rgba(22,233,216,.45);border-radius:3px;padding:2px 5px;text-transform:uppercase;vertical-align:1px}
+[data-theme=dark] .nav-dd-ref-new{color:#16E9D8;background:rgba(22,233,216,.1);border-color:rgba(22,233,216,.35)}
+.nav-dd-ref-pdf{grid-column:2;grid-row:1 / span 2;align-self:center;font:700 9.5px/1 -apple-system,sans-serif;letter-spacing:.6px;color:var(--infared);background:rgba(229,35,33,.08);padding:6px 9px;border-radius:4px;text-transform:uppercase}
+.nav-dd-ref:hover .nav-dd-ref-pdf{background:var(--infared);color:#fff}
+
+/* Diagnostic stratum badge — Dawn (mainnet observation colour) */
+.nav-dd-stratum-badge-diagnostic{color:var(--dawn);background:rgba(236,100,29,.12)}
+
+/* Sub-items (Evidence chain under The Diagnostic) — indented, lighter, stage tag on the right */
+.nav-dd-ref-sub{padding-left:22px;position:relative}
+.nav-dd-ref-sub::before{content:"";position:absolute;left:12px;top:16px;width:6px;height:1px;background:var(--border)}
+.nav-dd-ref-sub .nav-dd-ref-title{font-size:12.5px;font-weight:500}
+.nav-dd-ref-stage{display:inline-block;margin-left:8px;font:600 9.5px/1 -apple-system,sans-serif;letter-spacing:.4px;color:var(--text-secondary);background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:2px 5px;text-transform:uppercase}
+[data-theme=dark] .nav-dd-ref-stage{background:var(--bg)}
+
+/* Active / parent-active state on rich-list item */
+.nav-dd-ref.active{background:rgba(22,233,216,.09);box-shadow:inset 3px 0 0 rgba(22,233,216,.7)}
+.nav-dd-ref.active .nav-dd-ref-title{color:var(--text-primary);font-weight:600}
+.nav-dd-ref.parent-active{background:rgba(22,233,216,.04);box-shadow:inset 3px 0 0 rgba(22,233,216,.35)}
+[data-theme=dark] .nav-dd-ref.active{background:rgba(22,233,216,.14)}
+[data-theme=dark] .nav-dd-ref.parent-active{background:rgba(22,233,216,.06)}
+
+/* ── Zone 1 · Output (primary CTA, left-anchored) ── */
+.nav-zone-output{flex:0 0 auto;padding-right:4px}
+.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--infared);border:1px solid var(--infared);border-radius:6px;text-decoration:none;transition:all .15s;box-shadow:0 2px 6px rgba(229,35,33,.22);white-space:nowrap}
+.nav-tab-spec-big:hover{background:#c91e1c;border-color:#c91e1c;box-shadow:0 4px 12px rgba(229,35,33,.32);transform:translateY(-1px)}
+.nav-tab-spec-big.active{box-shadow:0 3px 10px rgba(229,35,33,.38);outline:2px solid rgba(229,35,33,.2);outline-offset:2px}
+
+/* Responsive: wrap zones below 1100px; stack fully on phone */
+@media (max-width:1100px){
+  .nav-pages{flex-wrap:wrap;padding:8px 14px}
+  .nav-flow-arrow{display:none}
+}
+@media (max-width:700px){
+  .nav-dd-panel-light,.nav-dd-panel-diag,.nav-dd-panel-design,.nav-dd-panel-research{position:fixed;left:8px;right:8px;min-width:0;max-width:none;top:auto}
+  .nav-evidence-sub{flex-wrap:wrap}
+  .nav-breadcrumb{padding:6px 14px;font-size:11px}
+}
+
+/* ── Mermaid diagrams ─────────────────────────────────────── */
+.mermaid{margin:22px 0;padding:18px;background:var(--bg-panel);border:1px solid var(--border);border-radius:6px;text-align:center;overflow-x:auto}
+.mermaid svg{max-width:100%;height:auto;display:inline-block}
+.mermaid .node rect,.mermaid .node polygon,.mermaid .node circle{stroke:var(--border);fill:var(--bg)}
+.mermaid .cluster rect{fill:rgba(229,35,33,.03);stroke:rgba(229,35,33,.25)}
+[data-theme=dark] .mermaid{background:var(--bg);border-color:var(--border)}
 
 /* ── GitHub-style admonitions ─────────────────────────────── */
 .admon{margin:20px 0;padding:14px 18px 16px;border-radius:6px;border-left:4px solid var(--text-muted);background:var(--bg-panel);font-size:14px;line-height:1.65}
