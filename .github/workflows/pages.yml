@@ -3,6 +3,7 @@ name: Deploy GitHub Pages
 on:
   push:
     branches:
+      - main
       - nhenin/report-cip-evaluation
     paths:
       - 'reward-system-spec/generated-website/**'

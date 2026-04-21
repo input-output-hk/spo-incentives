@@ -170,20 +170,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 [data-theme=dark] .content{background-image:
   radial-gradient(ellipse 1100px 350px at 50% 0%, rgba(229,35,33,.07), transparent 75%),
   radial-gradient(ellipse 900px 400px at 50% 100%, rgba(236,100,29,.05), transparent 75%)}
-/* Heading hierarchy — iog.io-inspired, Barlow for display, minimal decoration.
-   H1: typography only (page title). H2 (§X): the iog.io "title + rule" design.
-   H3 (§X.X): infared accent — colored title, no rule. H4+: quiet small labels. */
+/* Heading hierarchy — iog.io-inspired, Barlow for display.
+   H1: typography only (page title). H2 (§X): infared title + infared rule (full).
+   H3 (§X.X): dawn title + dawn rule (half length). H4+: plain small labels. */
 .content h1,.content h2,.content h3,.content h4,.content h5,.content h6{font-family:'Barlow',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.content h1{font-size:34px;font-weight:500;color:var(--text-primary);margin:0 0 28px;padding:0;border:none;background:none;letter-spacing:-.8px;line-height:1.15}
+.content h1{font-size:34px;font-weight:500;color:var(--text-primary);margin:0 0 28px;padding:0;border:none;background:none;letter-spacing:-.8px;line-height:1.15;position:relative}
 .content h1:first-child{margin-top:0}
-.content h2{font-size:24px;font-weight:500;color:var(--text-primary);margin:56px 0 22px;padding:0;border:none;background:none;display:flex;align-items:center;gap:24px;letter-spacing:-.4px;line-height:1.2}
-.content h2::after{content:'';flex:1;height:1px;background:var(--border);min-width:60px}
-[data-theme=dark] .content h2::after{background:var(--border)}
-.content h3{font-size:18px;font-weight:600;color:var(--infared);margin:40px 0 14px;padding:0;border:none;background:none;letter-spacing:-.2px;line-height:1.25}
+.content h2{font-size:24px;font-weight:500;color:var(--infared);margin:56px 0 22px;padding:0;border:none;background:none;display:flex;align-items:center;gap:24px;letter-spacing:-.4px;line-height:1.2;position:relative}
+.content h2::after{content:'';flex:1;height:1.5px;background:var(--infared);min-width:60px;opacity:.85}
+[data-theme=dark] .content h2{color:var(--infared)}
+[data-theme=dark] .content h2::after{background:var(--infared);opacity:.7}
+.content h3{font-size:18px;font-weight:600;color:var(--dawn,#EC641D);margin:40px 0 14px;padding:0;border:none;background:none;display:flex;align-items:center;gap:20px;letter-spacing:-.2px;line-height:1.25;position:relative}
+.content h3::after{content:'';flex:1;height:1px;background:var(--dawn,#EC641D);min-width:40px;opacity:.7}
 [data-theme=dark] .content h3{color:var(--dawn,#EC641D)}
-.content h4{font-size:15px;font-weight:600;color:var(--text-primary);margin:28px 0 10px;padding:0;border:none;background:none;letter-spacing:-.1px}
-.content h5{font-size:12.5px;font-weight:700;color:var(--text-secondary);margin:22px 0 8px;text-transform:uppercase;letter-spacing:1.2px}
-.content h6{font-size:13px;font-weight:600;color:var(--text-muted,var(--text-secondary));margin:20px 0 8px;font-style:italic}
+[data-theme=dark] .content h3::after{background:var(--dawn,#EC641D);opacity:.5}
+.content h4{font-size:15px;font-weight:600;color:var(--text-primary);margin:32px 0 12px;padding:0;border:none;background:none;display:flex;align-items:center;gap:16px;letter-spacing:-.1px;position:relative}
+.content h4::after{content:'';flex:1;height:1px;background:var(--border);min-width:40px;opacity:.9}
+[data-theme=dark] .content h4::after{background:var(--border)}
+.content h5{font-size:12.5px;font-weight:700;color:var(--text-secondary);margin:24px 0 10px;padding:0;border:none;background:none;display:flex;align-items:center;gap:14px;text-transform:uppercase;letter-spacing:1.2px;position:relative}
+.content h5::after{content:'';flex:1;height:1px;background:var(--border-light);min-width:40px}
+.content h6{font-size:13px;font-weight:600;color:var(--text-muted,var(--text-secondary));margin:20px 0 10px;padding:0;border:none;background:none;display:flex;align-items:center;gap:12px;font-style:italic;position:relative}
+.content h6::after{content:'';flex:1;height:1px;background:var(--border-light);min-width:40px;opacity:.6}
 .content p{margin:0 0 14px;font-size:15px;color:var(--text-body)}
 .content p strong{color:var(--text-primary);font-weight:600}
 .content a{color:var(--infared);text-decoration:none;border-bottom:1px solid rgba(229,35,33,.25)}
@@ -286,8 +293,12 @@ mjx-container[display=true]{display:block!important;max-width:100%;margin:20px a
 .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--infared),var(--dawn));z-index:200;transition:width .1s linear;width:0}
 
 /* ── Collapsible sections ── */
-.section-toggle{cursor:pointer;user-select:none}
-.section-toggle::before{content:'▾';position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--text-muted);transition:transform .2s;width:16px;text-align:center}
+/* Arrow lives in the left-gutter of the heading. Headings are already
+   position:relative, and have left padding to reserve the arrow lane. */
+.section-toggle{cursor:pointer;user-select:none;padding-left:22px!important}
+.section-toggle::before{content:'▾';position:absolute;left:0;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-muted);transition:transform .2s;width:16px;text-align:center;line-height:1;pointer-events:none}
+h2.section-toggle::before{color:var(--infared);opacity:.7}
+h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .section-toggle.collapsed::before{transform:translateY(-50%) rotate(-90deg)}
 .section-body{transition:max-height .35s ease, opacity .25s ease;opacity:1}
 .section-body.collapsed{max-height:0!important;opacity:0;margin:0;padding:0;overflow:hidden}
