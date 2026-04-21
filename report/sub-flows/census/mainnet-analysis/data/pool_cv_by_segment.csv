@@ -1,5 +1,0 @@
-segment,pool_count,mean_cv,median_cv,p25_cv,p75_cv,pct_below_10,pct_above_50
-Custodial by pledge,36,15.22,9.34,2.97,11.95,66.7,8.3
-Custodial by delegation,28,42.99,19.31,13.88,33.49,21.4,21.4
-Custodial by extraction,79,23.65,6.61,0.45,29.7,54.4,15.2
-Retail,809,19.23,8.43,3.4,22.03,55.3,9.9

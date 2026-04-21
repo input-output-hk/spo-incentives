@@ -1,7 +1,0 @@
-vintage,epoch_range,utxo_count,total_lovelace,total_ada,description
-pre_shelley,0-207,203903,808695579032086,808695579,Pre-Shelley outputs — likely dormant or lost
-shelley_allegra,208-250,17616,37296457272737,37296457,Shelley/Allegra era outputs
-mary,251-299,160292,947558065890540,947558066,Mary era outputs
-alonzo_early,300-349,802435,1182894416241652,1182894416,Early Alonzo — smart contract era begins
-alonzo_babbage,350-376,293664,1452995155390425,1452995155,Late Alonzo + early Babbage
-null_vintage,,465,318200635000000,318200635,Byron-era outputs without epoch metadata

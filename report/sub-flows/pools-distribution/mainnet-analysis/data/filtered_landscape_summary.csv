@@ -1,9 +1,0 @@
-tier,pools,stake_b_ada,pct_stake,exemplary_pct,compliant_pct,marginal_pct,non_compliant_pct,spo_pools,spo_stake_b,mpo_pools,mpo_stake_b
-Dormant,1276,0.013,0.2,16.2,19.9,32.2,31.7,1248,0.012,28,0.000
-Sub-production,395,0.164,2.1,2.5,11.9,49.9,35.7,371,0.154,24,0.010
-Sub-viable,203,0.369,4.7,0.9,5.2,35.1,58.8,195,0.352,8,0.017
-Healthy,276,3.037,38.5,1.7,0.5,29.4,68.4,242,2.519,34,0.518
-Large healthy,27,1.342,17.0,0.0,6.0,23.2,70.8,23,1.158,4,0.184
-Near-saturation,15,1.010,12.8,7.0,7.0,0.0,86.0,13,0.868,2,0.142
-Saturated,26,1.958,24.8,73.1,15.3,7.8,3.8,5,0.376,21,1.582
-Oversaturated,0,0.000,0.0,0,0,0,0,0,0.000,0,0.000

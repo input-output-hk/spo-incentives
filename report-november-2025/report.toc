@@ -1,0 +1,55 @@
+\babel@toc {english}{}\relax 
+\contentsline {section}{Contents}{2}{table.caption.1}%
+\contentsline {section}{\numberline {1}Introduction}{8}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Background and motivation}{8}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Scope and primary objectives}{8}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Methodology and report structure}{8}{subsection.1.3}%
+\contentsline {section}{\numberline {2}Foundational analysis: goals of the incentives design}{10}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Design goals}{10}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}The rewards calculation mechanism}{10}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Empirical analysis: on-chain outcomes vs design goals}{12}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Determining the economic viability threshold}{12}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Stake distribution}{14}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Stake distribution across pools}{14}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Wallet distribution and stake control}{16}{subsubsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.3}The four tiers of stake pool viability}{16}{subsection.3.3}%
+\contentsline {paragraph}{The inactive layer:}{17}{table.caption.6}%
+\contentsline {paragraph}{The active ecosystem: healthy, viable, and struggling pools:}{17}{table.caption.6}%
+\contentsline {subsection}{\numberline {3.4}System in equilibrium}{18}{subsection.3.4}%
+\contentsline {subsubsection}{\numberline {3.4.1}Network's state over a 36-epoch period}{18}{subsubsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.4.2}The impact of stake not participating in consensus}{19}{subsubsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.3}Registrations and retirements over time}{22}{subsubsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.5}Analysis of pool parameters}{23}{subsection.3.5}%
+\contentsline {subsubsection}{\numberline {3.5.1}Pool cost}{23}{subsubsection.3.5.1}%
+\contentsline {subsubsection}{\numberline {3.5.2}Pool margin}{24}{subsubsection.3.5.2}%
+\contentsline {paragraph}{The public market (0-10\% Margin)}{24}{figure.caption.13}%
+\contentsline {paragraph}{The 0\% margin strategy}{24}{figure.caption.13}%
+\contentsline {paragraph}{The ``Sweet Spot'' (1-5\%)}{24}{figure.caption.13}%
+\contentsline {paragraph}{The uncompetitive high-margin zone (5-10\%)}{24}{figure.caption.13}%
+\contentsline {subsubsection}{\numberline {3.5.3}Pool margin vs fixed cost}{25}{subsubsection.3.5.3}%
+\contentsline {subsubsection}{\numberline {3.5.4}Pledge}{25}{subsubsection.3.5.4}%
+\contentsline {subsubsection}{\numberline {3.5.5}Pledge in practice}{26}{subsubsection.3.5.5}%
+\contentsline {subsubsection}{\numberline {3.5.6}The influence of apparent performance}{28}{subsubsection.3.5.6}%
+\contentsline {subsection}{\numberline {3.6}Analysis of Multi-Pool Operators (MPOs)}{29}{subsection.3.6}%
+\contentsline {subsubsection}{\numberline {3.6.1}MPO stake evolution (Epoch 208-584)}{30}{subsubsection.3.6.1}%
+\contentsline {paragraph}{\% of circulating supply:}{30}{subsubsection.3.6.1}%
+\contentsline {paragraph}{Internal Composition:}{30}{figure.caption.21}%
+\contentsline {subsubsection}{\numberline {3.6.2}From the Edinburgh Decentralization Index}{31}{subsubsection.3.6.2}%
+\contentsline {paragraph}{Nakamoto Coefficient}{31}{subsubsection.3.6.2}%
+\contentsline {paragraph}{1-Concentration Ratio}{31}{figure.caption.22}%
+\contentsline {subsection}{\numberline {3.7}Automatic rewards distribution}{32}{subsection.3.7}%
+\contentsline {subsection}{\numberline {3.8}Network sustainability trends}{32}{subsection.3.8}%
+\contentsline {subsection}{\numberline {3.9}SPO focus group findings}{35}{subsection.3.9}%
+\contentsline {subsubsection}{\numberline {3.9.1}What motivates stake pool operators}{35}{subsubsection.3.9.1}%
+\contentsline {subsubsection}{\numberline {3.9.2}Key challenges and frustrations}{36}{subsubsection.3.9.2}%
+\contentsline {subsubsection}{\numberline {3.9.3}Ineffective protocol parameters}{36}{subsubsection.3.9.3}%
+\contentsline {subsubsection}{\numberline {3.9.4}Discussion of existing proposals}{36}{subsubsection.3.9.4}%
+\contentsline {section}{\numberline {4}Synthesis and evaluation}{37}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Evaluating the achievement of design goals}{37}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}Observed successes}{37}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.2}Divergences between model and reality}{37}{subsubsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.2}Determining the need for protocol changes}{38}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Conclusions and recommendations}{39}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Recommendations}{39}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}The yield in context---cross-chain and cross-asset comparison}{41}{subsection.5.2}%
+\contentsline {section}{References}{46}{table.caption.27}%

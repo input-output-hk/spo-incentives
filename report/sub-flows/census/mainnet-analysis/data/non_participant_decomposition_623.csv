@@ -1,7 +1,0 @@
-category,credential_type,account_count,total_lovelace,total_ada,pct_of_circulation,description
-delegated,key,1354636,21716638523671575,21716638524,60.1402,Standard stakers with key-based delegation
-delegated,script,399,38048398057268,38048398,0.1054,Smart-contract staking via script credentials
-registered_not_delegated,key,23074,23622518589469,23622519,0.0654,Registered key credential without delegation
-registered_not_delegated,script,1102,110983610040611,110983610,0.3073,Registered script credential without delegation
-deposits,mixed,,5522864000000,5522864,0.0153,Stake-key DRep and governance proposal deposits
-no_stake_credential,none,,14215204367698340,14215204368,39.3664,Enterprise + unregistered base + script-without-staking

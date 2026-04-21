@@ -1,6 +1,0 @@
-classification,utxo_count,total_lovelace,total_ada,pct_of_utxo,description
-has_stake_cred,9828271,34050739370748448,34050739371,93.30,Base/script address with staking credential (delegated or not)
-byron,377282,1320659326138193,1320659326,3.62,Byron-era bootstrap addresses (Ae2/DdzFF prefix)
-enterprise,309373,1037377830442200,1037377830,2.84,Enterprise address (addr1v) — no staking credential by design
-script_no_cred,689791,91165429503554,91165430,0.25,Script address (addr1w) without staking credential
-other,1227,1410949203585,1410949,0.00,Other address formats

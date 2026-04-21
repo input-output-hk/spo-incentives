@@ -1,6 +1,0 @@
-metric,ros_diff_bps,take_diff_pp
-mean,0.051,-2.164
-median,0.02,-0.001
-std,0.845,18.357
-p25,-0.47,-1.521
-p75,0.552,1.486

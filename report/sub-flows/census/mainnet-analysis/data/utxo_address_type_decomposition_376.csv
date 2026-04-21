@@ -1,6 +1,0 @@
-classification,utxo_count,total_lovelace,total_ada,pct_of_utxo,description
-base_delegated,,25272324130262677,25272324130,74.81,Base address with key staking credential delegated to a pool
-base_not_delegated,,3699029929256460,3699029929,10.95,Base address with staking credential not currently delegated
-enterprise,692503,4719326861288391,4719326861,13.97,Enterprise address — no staking credential by design
-script_delegated,207991,68337389613273,68337390,0.20,Script address with staking credential delegated
-script_no_staking_cred,785744,32624342806895,32624343,0.10,Script address without staking credential

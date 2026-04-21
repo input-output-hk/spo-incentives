@@ -1,5 +1,0 @@
-classification,utxo_count,total_lovelace,total_ada,pct_of_utxo,description
-has_stake_cred,9926059,30871917164554074,30871917165,87.47,Base/script address with staking credential (delegated or not)
-enterprise,310214,2679204949492183,2679204949,7.59,Enterprise address — no staking credential by design
-other,309535,1601982920898927,1601982921,4.54,Byron-era bootstrap addresses and other non-CIP-19 formats
-script_no_cred,677633,140625550806868,140625551,0.40,Script address without staking credential
