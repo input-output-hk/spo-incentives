@@ -456,16 +456,16 @@ window.MathJax = {{
       <span class="nav-dd-ref-title">Populations<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Who holds stake — capital, participation<span class="nav-dd-ref-stage">Evidence</span></span>
     </a>
-    <div class="nav-dd-ref-group-label">Reward Flow</div>
-    <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub{cls_treasury}">
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Reward Flow</div>
+    <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_treasury}">
       <span class="nav-dd-ref-title">Reserves<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Treasury & pool-pot distribution<span class="nav-dd-ref-stage">Stage 1</span></span>
     </a>
-    <a href="pools.html" class="nav-dd-ref nav-dd-ref-sub{cls_pools}">
+    <a href="pools.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_pools}">
       <span class="nav-dd-ref-title">Pools<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Distribution gaps across the pool population<span class="nav-dd-ref-stage">Stage 2</span></span>
     </a>
-    <a href="operator.html" class="nav-dd-ref nav-dd-ref-sub{cls_operator}">
+    <a href="operator.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_operator}">
       <span class="nav-dd-ref-title">Operators/Delegators<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">The operator's cut versus the delegator share<span class="nav-dd-ref-stage">Stage 3</span></span>
     </a>
@@ -985,6 +985,10 @@ def build_page(page: dict) -> Path:
 
     md_text = src_md.read_text()
     md_text = preprocess_md(md_text, src_md)
+    # Strip the first top-level H1 so the body doesn't duplicate the banner
+    # title rendered by render_shell. Keeps the README self-sufficient on
+    # GitHub while the website relies on the hero banner for the page title.
+    md_text = re.sub(r"\A(?:\s*\n)*#\s+[^\n]*\n+", "", md_text, count=1)
     content_html = md_to_html(md_text)
     content_html = wrap_manual_toc(content_html)
     content_html = promote_admonitions(content_html)

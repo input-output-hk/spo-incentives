@@ -62,16 +62,16 @@ window.MathJax = {
       <span class="nav-dd-ref-title">Populations<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Who holds stake — capital, participation<span class="nav-dd-ref-stage">Evidence</span></span>
     </a>
-    <div class="nav-dd-ref-group-label">Reward Flow</div>
-    <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub">
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Reward Flow</div>
+    <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
       <span class="nav-dd-ref-title">Reserves<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Treasury & pool-pot distribution<span class="nav-dd-ref-stage">Stage 1</span></span>
     </a>
-    <a href="pools.html" class="nav-dd-ref nav-dd-ref-sub">
+    <a href="pools.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
       <span class="nav-dd-ref-title">Pools<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Distribution gaps across the pool population<span class="nav-dd-ref-stage">Stage 2</span></span>
     </a>
-    <a href="operator.html" class="nav-dd-ref nav-dd-ref-sub active">
+    <a href="operator.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow active">
       <span class="nav-dd-ref-title">Operators/Delegators<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">The operator's cut versus the delegator share<span class="nav-dd-ref-stage">Stage 3</span></span>
     </a>
@@ -159,8 +159,7 @@ window.MathJax = {
     <div class="sub">Mainnet Analysis — Stage 3</div>
   </div>
 </div>
-<div class="content"><h1 id="the-operators-cut-a-mainnet-analysis-of-intra-pool-reward-sharing">The Operator's Cut — A Mainnet Analysis of Intra-Pool Reward Sharing</h1>
-<p><em>Built on 2026/04/14 from mainnet data at epoch <code>623</code> plus historical analysis from epoch <code>211</code> (413 epochs).</em></p>
+<div class="content"><p><em>Built on 2026/04/14 from mainnet data at epoch <code>623</code> plus historical analysis from epoch <code>211</code> (413 epochs).</em></p>
 <h2 id="objective">Objective</h2>
 <p>This report analyses the <strong>intra-pool reward split</strong> — the third and final stage of Cardano's reward pipeline — and traces the structural forces that determine how much of each pool's reward reaches delegators versus operators. It extends the empirical baseline established in the <a href="https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf"><em>Analysis of Cardano's Incentive Mechanism</em></a> (Lopez de Lara, 2025; hereafter the <em>Incentive Mechanism Analysis</em>) and operates downstream of the companion reports <a href="sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis"><em>Treasury &amp; Pool Pots Distribution</em></a> (stage 1) and <a href="sub-flows/pools-distribution/mainnet-analysis"><em>The Pools Pot Distribution Gaps</em></a> (stage 2).</p>
 <p>Every epoch, once the reward curve assigns a total reward to each pool, a second mechanism activates: the <strong>intra-pool split</strong>. The pool operator extracts a <strong>flat fee</strong> (a fixed ₳ amount) and a <strong>commission</strong> (a proportional share); the remainder is distributed pro-rata among all delegators (including the operator's own stake). Together the flat fee and commission compose the operator's <strong>pricing plan</strong>; their sum — the <strong>effective price</strong> — is the fraction of pool reward that never reaches delegators. At epoch 623, 952 productive pools process 21.57B ADA of staked capital. After filtering the 21% of stake that is custodial (where the operator controls delegation addresses), the retail market consists of 809 pools, 516 entities, 17.02B ADA, and 1,272,836 delegators — with a median delegation of 87 ₳.</p>

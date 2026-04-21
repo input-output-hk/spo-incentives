@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mainnet Observatory — SPO Incentives</title>
+<title>The Diagnostic — Mainnet Observatory</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
 <script>try{var t=localStorage.getItem('spo-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <script>
@@ -62,16 +62,16 @@ window.MathJax = {
       <span class="nav-dd-ref-title">Populations<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Who holds stake — capital, participation<span class="nav-dd-ref-stage">Evidence</span></span>
     </a>
-    <div class="nav-dd-ref-group-label">Reward Flow</div>
-    <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub">
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Reward Flow</div>
+    <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
       <span class="nav-dd-ref-title">Reserves<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Treasury & pool-pot distribution<span class="nav-dd-ref-stage">Stage 1</span></span>
     </a>
-    <a href="pools.html" class="nav-dd-ref nav-dd-ref-sub">
+    <a href="pools.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
       <span class="nav-dd-ref-title">Pools<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Distribution gaps across the pool population<span class="nav-dd-ref-stage">Stage 2</span></span>
     </a>
-    <a href="operator.html" class="nav-dd-ref nav-dd-ref-sub">
+    <a href="operator.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
       <span class="nav-dd-ref-title">Operators/Delegators<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">The operator's cut versus the delegator share<span class="nav-dd-ref-stage">Stage 3</span></span>
     </a>
@@ -155,12 +155,11 @@ window.MathJax = {
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-label">Input Output &middot; IO Research</div>
-    <h1>Mainnet Observatory</h1>
+    <h1>The Diagnostic — Mainnet Observatory</h1>
     <div class="sub">Synthesis of Observations Across the Reward Pipeline</div>
   </div>
 </div>
-<div class="content"><h1 id="cardano-reward-pipeline-from-design-intent-to-mainnet-reality">Cardano Reward Pipeline: From Design Intent to Mainnet Reality</h1>
-<h1 id="motivation">Motivation</h1>
+<div class="content"><h2 id="motivation">Motivation</h2>
 <p>The <em>Shelley-era Delegation and Incentives Design Specification</em> (SL-D1) defined the economic rules that were meant to guide Cardano toward a stable, decentralized equilibrium of $k$ well-funded stake pools.
 Five years of mainnet operation have exposed significant divergences between those design intentions and the on-chain reality.
 The <em>Analysis of Cardano's Incentive Mechanism</em> (Lopez de Lara, 2025; hereafter the <em>Incentive Mechanism Analysis</em>) documented the key findings empirically: a stratified equilibrium with 873 active operators below the 3M ADA viability threshold, a pledge mechanism that is functionally irrelevant for most pools, and a capital-constrained environment where ~16B ADA remains outside consensus.</p>

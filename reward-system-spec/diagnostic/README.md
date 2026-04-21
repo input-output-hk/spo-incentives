@@ -1,6 +1,6 @@
-# Cardano Reward Pipeline: From Design Intent to Mainnet Reality
+# The Diagnostic — Mainnet Observatory
 
-# Motivation
+## Motivation
 
 The *Shelley-era Delegation and Incentives Design Specification* (SL-D1) defined the economic rules that were meant to guide Cardano toward a stable, decentralized equilibrium of $k$ well-funded stake pools.
 Five years of mainnet operation have exposed significant divergences between those design intentions and the on-chain reality.

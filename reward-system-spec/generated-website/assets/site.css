@@ -393,6 +393,10 @@ mjx-container[display=true]{display:block!important;max-width:100%;margin:20px a
 /* Sub-items (Evidence chain under The Diagnostic) — indented, lighter, stage tag on the right */
 .nav-dd-ref-sub{padding-left:22px;position:relative}
 .nav-dd-ref-sub::before{content:"";position:absolute;left:12px;top:16px;width:6px;height:1px;background:var(--border)}
+/* Items inside the Reward-Flow group get a deeper indent so they read as children of the group label */
+.nav-dd-ref-group-label-flow{padding-left:16px}
+.nav-dd-ref-flow{padding-left:40px}
+.nav-dd-ref-flow::before{left:28px}
 .nav-dd-ref-sub .nav-dd-ref-title{font-size:12.5px;font-weight:500}
 .nav-dd-ref-stage{display:inline-block;margin-left:8px;font:600 9.5px/1 -apple-system,sans-serif;letter-spacing:.4px;color:var(--text-secondary);background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:2px 5px;text-transform:uppercase}
 [data-theme=dark] .nav-dd-ref-stage{background:var(--bg)}

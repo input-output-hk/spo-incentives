@@ -62,16 +62,16 @@ window.MathJax = {
       <span class="nav-dd-ref-title">Populations<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Who holds stake — capital, participation<span class="nav-dd-ref-stage">Evidence</span></span>
     </a>
-    <div class="nav-dd-ref-group-label">Reward Flow</div>
-    <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub active">
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Reward Flow</div>
+    <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow active">
       <span class="nav-dd-ref-title">Reserves<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Treasury & pool-pot distribution<span class="nav-dd-ref-stage">Stage 1</span></span>
     </a>
-    <a href="pools.html" class="nav-dd-ref nav-dd-ref-sub">
+    <a href="pools.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
       <span class="nav-dd-ref-title">Pools<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Distribution gaps across the pool population<span class="nav-dd-ref-stage">Stage 2</span></span>
     </a>
-    <a href="operator.html" class="nav-dd-ref nav-dd-ref-sub">
+    <a href="operator.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
       <span class="nav-dd-ref-title">Operators/Delegators<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">The operator's cut versus the delegator share<span class="nav-dd-ref-stage">Stage 3</span></span>
     </a>
@@ -159,8 +159,7 @@ window.MathJax = {
     <div class="sub">Mainnet Analysis — Stage 1</div>
   </div>
 </div>
-<div class="content"><h1 id="treasury-pool-pots-distribution-mainnet-analysis">Treasury &amp; Pool Pots Distribution — Mainnet Analysis</h1>
-<p><em>Built on 2026/03/17 from mainnet data at epoch <code>618</code> plus historical analysis from epoch <code>208</code> (Shelley inception).</em></p>
+<div class="content"><p><em>Built on 2026/03/17 from mainnet data at epoch <code>618</code> plus historical analysis from epoch <code>208</code> (Shelley inception).</em></p>
 <h2 id="objective">Objective</h2>
 <p>This report documents the <strong>epoch-level reward budget</strong> — the first stage of Cardano's reward pipeline — and traces the structural forces that shape the budget before any individual pool receives a single lovelace. It extends the empirical baseline established in the <a href="https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf"><em>Analysis of Cardano's Incentive Mechanism</em></a> (Lopez de Lara, 2025; hereafter the <em>Incentive Mechanism Analysis</em>).</p>
 <p>Every epoch, the protocol assembles a reward pot from three on-chain sources, then splits it between the <strong>treasury</strong> (20%) and the <strong>pools pot</strong> (80%). At epoch 616, the gross pot stood at ~19.4M ADA — but only <strong>6.8M ADA</strong> ultimately reached operators and delegators. This report asks <em>where the rest goes</em>, and follows the answer upstream.</p>
