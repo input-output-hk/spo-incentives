@@ -99,37 +99,37 @@ Each section therefore follows a **raw → clean** structure: the raw query resu
 
 | # | Observation | Section | Nature |
 | --- | --- | --- | --- |
-| | **O1 — The productive pool landscape is a stable oligopoly** | | |
-| F3.1 | Two-thirds of registered pools (1,926 of 2,877) sit below the production threshold (~1M ADA) — they hold 0.86% of stake and are economically irrelevant | [§3.2](../../../README.md#32-the-structural-requirement) | Structural threshold |
-| F3.2 | 73 named entities control 75.5% of productive stake through 464 pools — entity attribution is a lower bound | [§3.3](../../../README.md#33-problem-induction) | Concentration — supply side |
-| F3.3 | The productive set is a quasi-equilibrium at ~950 pools since epoch 300, with 1.7% turnover per epoch (3,497 entries vs 3,070 exits) | [§3.5](#35-population-dynamics-entries-exits-and-turnover) | Market maturity |
-| F3.5 | The n-MPO distribution is heavy-tailed: 12 entities with 11+ pools control 40.4% of productive stake | [§3.4](#34-operator-landscape) | Scale dominance |
-| F3.6 | CEX + IVaaS (10 entities, 181 pools) hold 7.40B ADA — 34.3% of productive stake at structurally zero pledge | [§3.4](#34-operator-landscape) | Custodial constraint |
-| F3.7 | Independent single-pool operators contracted from 555 pools / 39.1% of productive stake (epoch 300) to 291 pools / 24.4% (epoch 623) — a 48% loss in pool count and 15pp in stake share | [§3.5](#35-population-dynamics-entries-exits-and-turnover) | Structural decline |
-| F3.8 | Multi-pool entities grew from 23 (epoch 210) to 85 (epoch 623), expanding from 135 to 660 productive pools and from 65% to 75.6% of productive stake — mid-tier fleets (6–20 pools) tripled | [§3.5](#35-population-dynamics-entries-exits-and-turnover) | Entity expansion |
-| F3.9 | The designed operator progression path (entry → growth → established) has no observable expression: the independent segment is contracting, not graduating | [§3.5](#35-population-dynamics-entries-exits-and-turnover) | Pipeline failure |
-| | **O2 — Pool size variability is an institutional rebalancing phenomenon** | | |
-| F3.4 | Custodial-by-delegation pools (28 pools, median delegation ≥ 100K ₳) have median CV 19.3% and 21% exceed CV 50%; retail pools sit at median CV 8.4%; custodial-by-extraction are the most inert (median CV 6.6%) | [§3.6](#36-pool-size-variability-how-stable-is-a-pools-stake) | Segment-driven variance |
-| | **O3 — Stake concentration among delegators is extreme and frozen** | | |
-| F4.1 | The median delegator holds 32 ADA; the mean is 16,055 ADA — a 500× gap measuring power-law skewness | [§2.3](../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield) | Structural inequality |
-| F4.2 | 1,000 delegators (0.07%) control 57% of staked ADA; the top 10,000 (0.74%) control 79.2%; Gini = 0.976 | [§2.3](../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield) | Concentration — demand side |
-| F4.3 | Stake concentration crystallised by epoch 300 and has not moved since — 9× growth in delegator count without affecting the top-1% share (78–82%) | [§2.3](../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield) | Structural lock-in |
-| | **O4 — The delegation market has matured and crystallised** | | |
-| F4.4 | Redelegation activity fell 75% from 2,000–3,500/epoch (early Shelley) to 600–800 (current regime) | [§3.1](../../../README.md#31-the-staking-pot-must-survive-reserve-depletion) | Market maturity |
-| F4.5 | The delegator base is structurally bimodal: 42% loyal (201+ epochs), 21% volatile (≤ 5 epochs), 37% moderate | [§3.1](../../../README.md#31-the-staking-pot-must-survive-reserve-depletion) | Structural bimodality |
-| F4.8 | Custodial and private pools contribute negligible churn — retail-only filter produces identical aggregate metrics | [§3.1](../../../README.md#31-the-staking-pot-must-survive-reserve-depletion) | Churn is retail-only |
-| | **O5 — Delegation size determines behaviour, not price** | | |
-| F4.6 | Micro-delegators (< 1K ADA) average 0.67 lifetime switches; whales (1M+) average 3.06 — switching scales monotonically with stake size | [§3.1](../../../README.md#31-the-staking-pot-must-survive-reserve-depletion) | Size-driven behaviour |
-| F4.7 | Whales hold 14.1B of 21.8B staked total, yet only 38% of their stake sits in loyal delegations — capital is disproportionately mobile | [§3.1](../../../README.md#31-the-staking-pot-must-survive-reserve-depletion) | Capital instability |
-| | **O6 — Yield does not drive delegation decisions** | | |
-| F4.9 | Half of all switches (50.5%) produce zero yield change (±5 bps); the median ROS differential is +0.02 bps | [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) | Price signal invisible |
-| F4.10 | Operator take direction is symmetric: 30.8% lower / 37.7% similar / 31.5% higher — no optimisation pattern | [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) | No fee-chasing |
-| F4.11 | Pool size is the only asymmetric signal: moves to smaller pools accept higher take (21.5%), moves to larger pools are take-neutral (21.0%) | [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) | Visibility over optimality |
-| F4.12 | 92.1% of loyal delegations sit in the 0–5% margin range — loyalty and low fees coexist, not trade off | [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) | Entry filter, not trigger |
-| F4.13 | 99.97% of delegations and 99.83% of stake are key-based; script-based delegation (399 addresses, 38M ADA) is negligible — DeFi operates outside the delegation system | [§3.3](../../../README.md#33-the-mechanism-must-function-across-a-range-of-ada-price-scenarios) | No smart-contract staking |
-| | **O7 — The staking participation rate is structurally declining** | | |
-| F2.1 | Staking rate has fallen from 71% (epoch ~260) to 59% (epoch 623) — driven by supply growth outpacing stake inflows | §2 | Supply-side erosion |
-| F5.1 | 14.36B ADA (39.8%) does not participate; of this, only 134.6M (0.37%) is *addressable* (registered stake credential, not delegated) — the remaining 14.2B sits in addresses with no stake credential | §5 | Structural non-participation |
+| | **CEN.O1 — The productive pool landscape is a stable oligopoly** | | |
+| CEN.O1.F1 | Two-thirds of registered pools (1,926 of 2,877) sit below the production threshold (~1M ADA) — they hold 0.86% of stake and are economically irrelevant | [§3.2](../../../README.md#32-the-structural-requirement) | Structural threshold |
+| CEN.O1.F2 | 73 named entities control 75.5% of productive stake through 464 pools — entity attribution is a lower bound | [§3.3](../../../README.md#33-problem-induction) | Concentration — supply side |
+| CEN.O1.F3 | The productive set is a quasi-equilibrium at ~950 pools since epoch 300, with 1.7% turnover per epoch (3,497 entries vs 3,070 exits) | [§3.5](#35-population-dynamics-entries-exits-and-turnover) | Market maturity |
+| CEN.O1.F4 | The n-MPO distribution is heavy-tailed: 12 entities with 11+ pools control 40.4% of productive stake | [§3.4](#34-operator-landscape) | Scale dominance |
+| CEN.O1.F5 | CEX + IVaaS (10 entities, 181 pools) hold 7.40B ADA — 34.3% of productive stake at structurally zero pledge | [§3.4](#34-operator-landscape) | Custodial constraint |
+| CEN.O1.F6 | Independent single-pool operators contracted from 555 pools / 39.1% of productive stake (epoch 300) to 291 pools / 24.4% (epoch 623) — a 48% loss in pool count and 15pp in stake share | [§3.5](#35-population-dynamics-entries-exits-and-turnover) | Structural decline |
+| CEN.O1.F7 | Multi-pool entities grew from 23 (epoch 210) to 85 (epoch 623), expanding from 135 to 660 productive pools and from 65% to 75.6% of productive stake — mid-tier fleets (6–20 pools) tripled | [§3.5](#35-population-dynamics-entries-exits-and-turnover) | Entity expansion |
+| CEN.O1.F8 | The designed operator progression path (entry → growth → established) has no observable expression: the independent segment is contracting, not graduating | [§3.5](#35-population-dynamics-entries-exits-and-turnover) | Pipeline failure |
+| | **CEN.O2 — Pool size variability is an institutional rebalancing phenomenon** | | |
+| CEN.O2.F1 | Custodial-by-delegation pools (28 pools, median delegation ≥ 100K ₳) have median CV 19.3% and 21% exceed CV 50%; retail pools sit at median CV 8.4%; custodial-by-extraction are the most inert (median CV 6.6%) | [§3.6](#36-pool-size-variability-how-stable-is-a-pools-stake) | Segment-driven variance |
+| | **CEN.O3 — Stake concentration among delegators is extreme and frozen** | | |
+| CEN.O3.F1 | The median delegator holds 32 ADA; the mean is 16,055 ADA — a 500× gap measuring power-law skewness | [§2.3](../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield) | Structural inequality |
+| CEN.O3.F2 | 1,000 delegators (0.07%) control 57% of staked ADA; the top 10,000 (0.74%) control 79.2%; Gini = 0.976 | [§2.3](../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield) | Concentration — demand side |
+| CEN.O3.F3 | Stake concentration crystallised by epoch 300 and has not moved since — 9× growth in delegator count without affecting the top-1% share (78–82%) | [§2.3](../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield) | Structural lock-in |
+| | **CEN.O4 — The delegation market has matured and crystallised** | | |
+| CEN.O4.F1 | Redelegation activity fell 75% from 2,000–3,500/epoch (early Shelley) to 600–800 (current regime) | [§3.1](../../../README.md#31-the-staking-pot-must-survive-reserve-depletion) | Market maturity |
+| CEN.O4.F2 | The delegator base is structurally bimodal: 42% loyal (201+ epochs), 21% volatile (≤ 5 epochs), 37% moderate | [§3.1](../../../README.md#31-the-staking-pot-must-survive-reserve-depletion) | Structural bimodality |
+| CEN.O4.F3 | Custodial and private pools contribute negligible churn — retail-only filter produces identical aggregate metrics | [§3.1](../../../README.md#31-the-staking-pot-must-survive-reserve-depletion) | Churn is retail-only |
+| | **CEN.O5 — Delegation size determines behaviour, not price** | | |
+| CEN.O5.F1 | Micro-delegators (< 1K ADA) average 0.67 lifetime switches; whales (1M+) average 3.06 — switching scales monotonically with stake size | [§3.1](../../../README.md#31-the-staking-pot-must-survive-reserve-depletion) | Size-driven behaviour |
+| CEN.O5.F2 | Whales hold 14.1B of 21.8B staked total, yet only 38% of their stake sits in loyal delegations — capital is disproportionately mobile | [§3.1](../../../README.md#31-the-staking-pot-must-survive-reserve-depletion) | Capital instability |
+| | **CEN.O6 — Yield does not drive delegation decisions** | | |
+| CEN.O6.F1 | Half of all switches (50.5%) produce zero yield change (±5 bps); the median ROS differential is +0.02 bps | [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) | Price signal invisible |
+| CEN.O6.F2 | Operator take direction is symmetric: 30.8% lower / 37.7% similar / 31.5% higher — no optimisation pattern | [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) | No fee-chasing |
+| CEN.O6.F3 | Pool size is the only asymmetric signal: moves to smaller pools accept higher take (21.5%), moves to larger pools are take-neutral (21.0%) | [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) | Visibility over optimality |
+| CEN.O6.F4 | 92.1% of loyal delegations sit in the 0–5% margin range — loyalty and low fees coexist, not trade off | [§3.2](../../../README.md#32-the-fee-generating-population-must-expand) | Entry filter, not trigger |
+| CEN.O6.F5 | 99.97% of delegations and 99.83% of stake are key-based; script-based delegation (399 addresses, 38M ADA) is negligible — DeFi operates outside the delegation system | [§3.3](../../../README.md#33-the-mechanism-must-function-across-a-range-of-ada-price-scenarios) | No smart-contract staking |
+| | **CEN.O7 — The staking participation rate is structurally declining** | | |
+| CEN.O7.F1 | Staking rate has fallen from 71% (epoch ~260) to 59% (epoch 623) — driven by supply growth outpacing stake inflows | §2 | Supply-side erosion |
+| CEN.O7.F2 | 14.36B ADA (39.8%) does not participate; of this, only 134.6M (0.37%) is *addressable* (registered stake credential, not delegated) — the remaining 14.2B sits in addresses with no stake credential | §5 | Structural non-participation |
 
 ### The big picture
 
@@ -188,7 +188,7 @@ Of this, only **134.6M (0.37%)** has a registered stake credential without deleg
 
 The top panel shows the staked/unstaked decomposition of circulating supply with the staking rate (red line, right axis). The rate peaked near **71%** around epoch 260 and has been **declining gently**, driven by circulating supply growth outpacing new stake inflows.
 
-> **Finding F2.1 — The staking rate is structurally declining despite persistent net delegator inflows.** The rate has fallen from 71% (epoch ~260) to 59% (epoch 623) — a 12 pp loss over ~360 epochs. The decline is driven entirely by supply-side expansion: circulating ADA grew from ~32B to ~37B while staked ADA grew from ~23B to ~22B. The non-participant pool is growing faster than the staking pool.
+> **Finding CEN.O7.F1 — The staking rate is structurally declining despite persistent net delegator inflows.** The rate has fallen from 71% (epoch ~260) to 59% (epoch 623) — a 12 pp loss over ~360 epochs. The decline is driven entirely by supply-side expansion: circulating ADA grew from ~32B to ~37B while staked ADA grew from ~23B to ~22B. The non-participant pool is growing faster than the staking pool.
 
 
 ## 3. Pool Operators
@@ -250,7 +250,7 @@ The median below-threshold pool holds just **2,547 ADA**. Three quarters hold le
 
 **After cleaning:** the productive pool count drops from 2,877 to **951** — closer to, but still ~1.9× the protocol's k=500 target.
 
-> **Finding F3.1 — Two-thirds of pools are below the production threshold and carry 0.86% of stake.** The 1,926 sub-threshold pools are economically irrelevant to consensus but not to their 59,940 delegators, who earn intermittent rewards and would be better served by redelegating. The median sub-threshold pool holds 2,547 ADA.
+> **Finding CEN.O1.F1 — Two-thirds of pools are below the production threshold and carry 0.86% of stake.** The 1,926 sub-threshold pools are economically irrelevant to consensus but not to their 59,940 delegators, who earn intermittent rewards and would be better served by redelegating. The median sub-threshold pool holds 2,547 ADA.
 
 ### 3.3 Cleaning — entity attribution
 
@@ -271,7 +271,7 @@ Filtering to the 951 productive pools: 2 entities disappear entirely (RAID — 7
 
 The productive landscape splits almost evenly by pool count but is **heavily skewed by stake**: attributed entities control **three quarters of productive stake through half the pools**.
 
-> **Finding F3.2 — 73 named entities control 75.5% of productive stake through 464 pools.** The operator landscape is dominated by multi-pool entities whose economic weight far exceeds their pool count. The 477 unattributed single-pool operators are the numerical majority but hold only a quarter of productive stake. Entity attribution is a lower bound — operators using entirely separate infrastructure per pool remain invisible.
+> **Finding CEN.O1.F2 — 73 named entities control 75.5% of productive stake through 464 pools.** The operator landscape is dominated by multi-pool entities whose economic weight far exceeds their pool count. The 477 unattributed single-pool operators are the numerical majority but hold only a quarter of productive stake. Entity attribution is a lower bound — operators using entirely separate infrastructure per pool remain invisible.
 
 ![Stake attribution landscape](figures/entity_stake_landscape_623.png)
 
@@ -320,13 +320,13 @@ The **2–3 pool tier** is the most populated (35 entities) but each tier above 
 
 Three entities alone — **Coinbase (41p), Yuta (25p), and Binance (20p)** — operate **93 pools** and hold **3.71B ADA (17.2%)** of productive stake.
 
-> **Finding F3.5 — The n-MPO distribution is heavy-tailed: 12 entities with 11+ pools control 40.4% of productive stake.** The mid-range (2–10 pools, 61 entities) is the numerical majority but its aggregate weight (33.0%) is smaller than the concentrated top. Stake scales super-linearly with fleet size — a 21+ pool entity holds on average 1.24B, a 2–3 pool entity holds 0.07B.
+> **Finding CEN.O1.F4 — The n-MPO distribution is heavy-tailed: 12 entities with 11+ pools control 40.4% of productive stake.** The mid-range (2–10 pools, 61 entities) is the numerical majority but its aggregate weight (33.0%) is smaller than the concentrated top. Stake scales super-linearly with fleet size — a 21+ pool entity holds on average 1.24B, a 2–3 pool entity holds 0.07B.
 
 **Entity archetype composition** (panel B). Exchanges (**CEX**: 6 entities, 119 pools, 4.71B) and institutional validators (**IVaaS**: 4 entities, 62 pools, 2.69B) together account for **10 entities** but **45.4%** of attributed stake.
 
 Community-branded fleets (**43 entities**, 3.30B) are the most numerous archetype but hold **less stake than the exchange tier alone**. The remaining archetypes — independent MPOs, multi-brand fleets, opaque entities, ecosystem actors, and platforms — fill the long tail.
 
-> **Finding F3.6 — CEX + IVaaS (10 entities, 181 pools) hold 7.40B ADA — 34.3% of productive stake at structurally zero pledge.** These entities' delegation source — custodied retail balances and institutional client assets — makes pledge economically meaningless. Their dominance sets a floor on how much of the stake landscape is unreachable by pledge-based incentive mechanisms.
+> **Finding CEN.O1.F5 — CEX + IVaaS (10 entities, 181 pools) hold 7.40B ADA — 34.3% of productive stake at structurally zero pledge.** These entities' delegation source — custodied retail balances and institutional client assets — makes pledge economically meaningless. Their dominance sets a floor on how much of the stake landscape is unreachable by pledge-based incentive mechanisms.
 
 #### 3.4.3 Historical decomposition — productive vs sub-threshold pools
 
@@ -364,7 +364,7 @@ The stability of the stock alongside non-trivial per-epoch fluctuation implies a
 
 Tracking individual pool presence per epoch (`05_pool_population_dynamics.sql`) confirms this: over the full history the productive set recorded **3,497 entries** against **3,070 exits**, with an **average churn of ~15.9 pools per epoch**. The turnover rate (entries + exits as a share of the productive population) averages around **1.7% per epoch** — higher than the delegator-side turnover of **~0.5%**, reflecting the **greater fragility of pool economics near the production threshold**.
 
-> **Finding F3.3 — The productive pool set is a quasi-equilibrium: ~950 pools since epoch 300, with 1.7% turnover per epoch.** 3,497 entries against 3,070 exits balance to a near-zero net flow. The apparent stability of the aggregate conceals a replacement process where departing pools are continuously substituted by new entrants.
+> **Finding CEN.O1.F3 — The productive pool set is a quasi-equilibrium: ~950 pools since epoch 300, with 1.7% turnover per epoch.** 3,497 entries against 3,070 exits balance to a near-zero net flow. The apparent stability of the aggregate conceals a replacement process where departing pools are continuously substituted by new entrants.
 
 #### 3.5.2 Entity lifecycle
 
@@ -397,7 +397,7 @@ The independent population peaked at **555 pools** and **39.1%** of productive s
 
 The contraction **accelerated in the recent period**: **94 pools lost in 123 epochs**, with the stake share dropping **below 25% for the first time**. The independent population has lost **nearly half its pool count** (555 → 291) and **nearly 15 percentage points** of stake share since its peak.
 
-> **Finding F3.7 — The independent single-pool operator population has contracted from 555 pools (39.1% of productive stake) at epoch 300 to 291 pools (24.4%) at epoch 623 — a 48% loss in pool count and a 15pp loss in stake share.** The contraction is continuous and has accelerated in the most recent period (epochs 500–623). The quasi-equilibrium of [§3.5.1](#351-entries-and-exits) masks a composition shift: the replacement pools that maintain the ~950 total are increasingly entity-operated, not independent.
+> **Finding CEN.O1.F6 — The independent single-pool operator population has contracted from 555 pools (39.1% of productive stake) at epoch 300 to 291 pools (24.4%) at epoch 623 — a 48% loss in pool count and a 15pp loss in stake share.** The contraction is continuous and has accelerated in the most recent period (epochs 500–623). The quasi-equilibrium of [§3.5.1](#351-entries-and-exits) masks a composition shift: the replacement pools that maintain the ~950 total are increasingly entity-operated, not independent.
 
 **Identified entities expanded steadily.**
 
@@ -419,7 +419,7 @@ The 21+ tier declined in share (46.4% → 28.8%) as IOG and Binance contracted, 
 
 *Entity power is not merely growing — it is spreading across a broader fleet-size distribution.*
 
-> **Finding F3.8 — Multi-pool entities grew from 23 (epoch 210) to 85 (epoch 623), expanding from 135 to 660 productive pools and from 65% to 75.6% of productive stake.** The mid-tier fleets (6–20 pools) tripled their entity count and nearly doubled their stake share. The ~950-pool quasi-equilibrium is increasingly populated by entity-operated pools substituting for departing independents.
+> **Finding CEN.O1.F7 — Multi-pool entities grew from 23 (epoch 210) to 85 (epoch 623), expanding from 135 to 660 productive pools and from 65% to 75.6% of productive stake.** The mid-tier fleets (6–20 pools) tripled their entity count and nearly doubled their stake share. The ~950-pool quasi-equilibrium is increasingly populated by entity-operated pools substituting for departing independents.
 
 #### 3.5.4 The independent pipeline — what the mechanism was designed to produce
 
@@ -437,7 +437,7 @@ The absence of evidence for the designed growth path is **itself diagnostic**. I
 
 **It shows neither.** The pool count is falling and the stake share is falling faster, which means the independents that remain are also **losing average delegation**. The replacement process that maintains the ~950-pool total is driven by **entity fleet expansion**, not by new independent entrants.
 
-> **Finding F3.9 — The mechanism's designed progression path — from new independent operator to established entity — has no observable expression in the mainnet data.** The independent segment is contracting in both pool count and stake share, and the replacement pools that sustain the ~950-pool total are entity-operated. The growth path described in the formal design ([*The Intended Game* §3.2](../../../../the-intended-game/README.md#32-operators-from-first-pledge-to-full-commitment)) exists as a theoretical property of the intended equilibrium but not as an empirical feature of the observed one.
+> **Finding CEN.O1.F8 — The mechanism's designed progression path — from new independent operator to established entity — has no observable expression in the mainnet data.** The independent segment is contracting in both pool count and stake share, and the replacement pools that sustain the ~950-pool total are entity-operated. The growth path described in the formal design ([*The Intended Game* §3.2](../../../../the-intended-game/README.md#32-operators-from-first-pledge-to-full-commitment)) exists as a theoretical property of the intended equilibrium but not as an empirical feature of the observed one.
 
 ### 3.6 Pool size variability — how stable is a pool's stake?
 
@@ -477,7 +477,7 @@ The **retail market** (809 pools, median delegation below 100K ₳) lands at a m
 
 The **10% tail above 50%** in the retail segment captures pools that gained or lost a whale delegator — a single large address arriving or leaving a pool with hundreds of small delegators.
 
-> **Finding F3.4 — Stake variability is driven by delegation concentration, not market segment.** Pools where the typical delegator holds ≥ 100K ₳ (28 custodial-by-delegation pools) show a median coefficient of variation of 19.3% and a mean of 43.0% — whale movements dominate their variance. Retail pools (809 pools) are mostly stable at 8.4% median, but the 10% tail above 50% shows that even retail pools are vulnerable to single-whale shocks. Custodial-by-extraction pools are the most inert (6.6% median) — stagnation, not active management, keeps their stake steady.
+> **Finding CEN.O2.F1 — Stake variability is driven by delegation concentration, not market segment.** Pools where the typical delegator holds ≥ 100K ₳ (28 custodial-by-delegation pools) show a median coefficient of variation of 19.3% and a mean of 43.0% — whale movements dominate their variance. Retail pools (809 pools) are mostly stable at 8.4% median, but the 10% tail above 50% shows that even retail pools are vulnerable to single-whale shocks. Custodial-by-extraction pools are the most inert (6.6% median) — stagnation, not active management, keeps their stake steady.
 
 **Implications for delegators.** A pool's stake stability matters because it affects **block-production regularity** and, by extension, the **consistency of epoch rewards**.
 
@@ -556,7 +556,7 @@ The **1.36M delegations** carry **21.75B ADA** — but the distribution across i
 
 The bottom **59.1%** of delegators (under 100 ADA) collectively hold **0.05%** of stake — **less than any single delegation in the top tier**. The top **318 delegators (0.02%)** hold **44.8%** of all staked ADA.
 
-> **Finding F4.1 — The median delegator holds 32 ADA; the mean is 16,055 ADA.** The 500× gap between mean and median measures the skewness of the distribution. Half the delegator population stakes less than the cost of a single transaction fee at peak congestion. The distribution follows a power law — each tier above 10K ADA holds roughly 20% of total stake despite containing exponentially fewer delegators.
+> **Finding CEN.O3.F1 — The median delegator holds 32 ADA; the mean is 16,055 ADA.** The 500× gap between mean and median measures the skewness of the distribution. Half the delegator population stakes less than the cost of a single transaction fee at peak congestion. The distribution follows a power law — each tier above 10K ADA holds roughly 20% of total stake despite containing exponentially fewer delegators.
 
 **Concentration metrics:**
 
@@ -574,7 +574,7 @@ The Lorenz curve (panel B) is **nearly flat until the last few percent of delega
 
 At **Gini = 0.976**, the Cardano staking distribution is **more concentrated than the US wealth distribution** (~0.85) and comparable to the most unequal asset distributions observed in financial markets.
 
-> **Finding F4.2 — 1,000 delegators (0.07% of the population) control 57% of staked ADA.** The top 10,000 (0.74%) control 79.2%. The staking economy is effectively governed by the capital allocation decisions of a few thousand addresses — whose identity (individual whale, exchange hot wallet, institutional custodian) determines whether the protocol's delegation signal reflects genuine preference or operational logistics.
+> **Finding CEN.O3.F2 — 1,000 delegators (0.07% of the population) control 57% of staked ADA.** The top 10,000 (0.74%) control 79.2%. The staking economy is effectively governed by the capital allocation decisions of a few thousand addresses — whose identity (individual whale, exchange hot wallet, institutional custodian) determines whether the protocol's delegation signal reflects genuine preference or operational logistics.
 
 #### 4.4.3 Historical evolution — who joined and where is the capital?
 
@@ -596,7 +596,7 @@ The delegator count (dashed line) grew **9×** over the same period **without af
 
 *The mechanism is straightforward:* new entrants are overwhelmingly micro-delegators who add to the **denominator** without touching the **numerator** of the concentration ratio.
 
-> **Finding F4.3 — Stake concentration crystallised by epoch 300 and has not moved since.** The top-1% share has been stable at 78–82% for over 300 epochs, despite a 9× growth in delegator count. Growth since epoch 300 has come almost exclusively from the < 1K tier — 600K new micro-delegators who collectively added 0.06B ADA (0.3% of stake). The economic weight of the staking system was set in its first ~90 epochs. Concentration is now a structural feature, not a trend.
+> **Finding CEN.O3.F3 — Stake concentration crystallised by epoch 300 and has not moved since.** The top-1% share has been stable at 78–82% for over 300 epochs, despite a 9× growth in delegator count. Growth since epoch 300 has come almost exclusively from the < 1K tier — 600K new micro-delegators who collectively added 0.06B ADA (0.3% of stake). The economic weight of the staking system was set in its first ~90 epochs. Concentration is now a structural feature, not a trend.
 
 ### 4.5 Population dynamics — delegator entries and exits
 
@@ -645,7 +645,7 @@ The per-epoch pattern reveals **three regimes**:
 
 - **Mature regime (epoch 500+):** **600–800** redelegations per epoch — a stable market where most delegators have settled.
 
-> **Finding F4.4 — The delegation market has matured through three distinct regimes.** Redelegation activity fell from 2,000–3,500 per epoch in early Shelley to 600–800 in the current regime — a 75% decline that marks the transition from experimentation to a settled market.
+> **Finding CEN.O4.F1 — The delegation market has matured through three distinct regimes.** Redelegation activity fell from 2,000–3,500 per epoch in early Shelley to 600–800 in the current regime — a 75% decline that marks the transition from experimentation to a settled market.
 
 #### 4.6.2 Tenure distribution
 
@@ -657,7 +657,7 @@ The tenure distribution confirms a bimodal structure:
 | 6–200 epochs (25 days – 2.7 years) | 36.8% | Moderate — roughly uniform distribution across bands |
 | 0–5 epochs (≤ 25 days) | 21.0% | Rapid switchers — yield optimisation, pool retirement, or exchange rebalancing |
 
-> **Finding F4.5 — The delegator base is structurally bimodal.** 42% of delegations have persisted for over 2.7 years, while 21% last less than 25 days. The middle ground (37%) distributes roughly uniformly. The loyal majority anchors pool economics; the volatile tail generates most of the churn signal.
+> **Finding CEN.O4.F2 — The delegator base is structurally bimodal.** 42% of delegations have persisted for over 2.7 years, while 21% last less than 25 days. The middle ground (37%) distributes roughly uniformly. The loyal majority anchors pool economics; the volatile tail generates most of the churn signal.
 
 #### 4.6.3 Who switches? A size-stratified view
 
@@ -679,13 +679,13 @@ Crossing tenure with delegator stake size at epoch 623 reveals a **clear gradien
 
 *Small delegators delegate once and forget; large delegators actively manage their position.*
 
-> **Finding F4.6 — Delegation size predicts switching behaviour.** Micro-delegators (<1K ADA) average 0.67 lifetime switches and 70% have never moved. Whales (1M+) average 3.06 switches and only 43% have never moved. Switching intensity increases monotonically with stake size.
+> **Finding CEN.O5.F1 — Delegation size predicts switching behaviour.** Micro-delegators (<1K ADA) average 0.67 lifetime switches and 70% have never moved. Whales (1M+) average 3.06 switches and only 43% have never moved. Switching intensity increases monotonically with stake size.
 
 **Capital implications** (panel C). In the <1K cohort, **72%** of stake is held by loyal delegators. In the 1M+ cohort, only **38%** sits with loyals — the rest distributes across moderate and volatile tenures.
 
 Since whales hold the majority of staked ADA (**14.1B of 21.8B total**), a large share of the network's capital is in the hands of delegators who **move actively**.
 
-> **Finding F4.7 — The network's capital is disproportionately held by its most mobile delegators.** Whales (1M+ ADA) hold 14.1B of the 21.8B staked total, yet only 38% of their stake sits in loyal delegations. Pool operators who depend on a few large delegations face structurally higher stake instability than those with a broad base of small, loyal delegators.
+> **Finding CEN.O5.F2 — The network's capital is disproportionately held by its most mobile delegators.** Whales (1M+ ADA) hold 14.1B of the 21.8B staked total, yet only 38% of their stake sits in loyal delegations. Pool operators who depend on a few large delegations face structurally higher stake instability than those with a broad base of small, loyal delegators.
 
 #### 4.6.4 Flow corridors and retail lens
 
@@ -704,7 +704,7 @@ The top pool-to-pool flows (`data/delegation_flow_matrix.csv`) reveal that the *
 
 The private pool population (**47 pools, ~300 delegations**) generates **negligible churn**. *Essentially all observed switching behaviour originates in the retail delegation market.* The retail flow matrix is available at `data/retail_delegation_flow_matrix.csv`.
 
-> **Finding F4.8 — Custodial and private pools contribute negligible churn.** The retail-only filter produces near-identical aggregate metrics — 40.0% switch rate, 42.4% loyal tenure. Observed switching is a retail-market phenomenon.
+> **Finding CEN.O4.F3 — Custodial and private pools contribute negligible churn.** The retail-only filter produces near-identical aggregate metrics — 40.0% switch rate, 42.4% loyal tenure. Observed switching is a retail-market phenomenon.
 
 ### 4.7 Switch motivation and loyalty profiles
 
@@ -730,7 +730,7 @@ For each of the **top 500 pool-to-pool flow corridors** (**170,064 matched switc
 
 **Half of all switches** land in a pool with a **statistically indistinguishable net ROS**. The median ROS differential is **+0.02 bps** — effectively zero. The interquartile range spans −0.47 to +0.55 bps, **well below any threshold a delegator could observe or act on**.
 
-> **Finding F4.9 — Net ROS cannot explain switching: half of all switches produce zero yield change.** The median ROS differential between origin and destination pool is +0.02 bps. The signal is too weak to detect, let alone optimise — consistent with F3.10 of the Operator's Cut, which found that gross ROS varies by less than 3 bps across 90% of the non-custodial market.
+> **Finding CEN.O6.F1 — Net ROS cannot explain switching: half of all switches produce zero yield change.** The median ROS differential between origin and destination pool is +0.02 bps. The signal is too weak to detect, let alone optimise — consistent with F3.10 of the Operator's Cut, which found that gross ROS varies by less than 3 bps across 90% of the non-custodial market.
 
 #### 4.7.2 Operator take is symmetric
 
@@ -746,7 +746,7 @@ The three buckets are **near-equal**. *Delegators do not systematically move tow
 
 **The take × ROS matrix** (panel A) shows the mechanical coupling between the two metrics: the **diagonal dominates** (lower take → better ROS at 18.4%, similar → similar at 25.6%, higher → worse at 16.5%). The off-diagonal cells are sparse, confirming that take and ROS are **two views of the same signal** — and that signal is **too flat to drive behaviour**.
 
-> **Finding F4.10 — Operator take is equally balanced across switch directions.** 30.8% of switches go to a cheaper pool, 31.5% to a more expensive one, and 37.7% to a similar-take pool. No take-based optimisation pattern is detectable.
+> **Finding CEN.O6.F2 — Operator take is equally balanced across switch directions.** 30.8% of switches go to a cheaper pool, 31.5% to a more expensive one, and 37.7% to a similar-take pool. No take-based optimisation pattern is detectable.
 
 #### 4.7.3 Pool size is the only asymmetric signal
 
@@ -762,7 +762,7 @@ When delegators move to a **smaller pool**, they tend to **accept a higher opera
 
 The asymmetry suggests that moves toward smaller pools may be driven by **non-economic factors** (community affinity, pool retirement at origin, decentralisation preference) while moves toward larger pools follow a **path of least resistance**.
 
-> **Finding F4.11 — Pool size, not price, is the only asymmetric signal in switching behaviour.** Moves to smaller pools correlate with higher take acceptance (21.5%), while moves to larger pools correlate with take neutrality (21.0%). This is consistent with F3.11 of the Operator's Cut: delegation concentration is driven by pool visibility, not return optimisation.
+> **Finding CEN.O6.F3 — Pool size, not price, is the only asymmetric signal in switching behaviour.** Moves to smaller pools correlate with higher take acceptance (21.5%), while moves to larger pools correlate with take neutrality (21.0%). This is consistent with F3.11 of the Operator's Cut: delegation concentration is driven by pool visibility, not return optimisation.
 
 #### 4.7.4 Loyal delegators and their pools
 
@@ -778,7 +778,7 @@ The margin-band distribution across loyalty segments confirms that fee levels se
 
 Their stability reflects satisfaction with a combination of **competitive fees, predictable returns, and community trust** rather than an inability to switch.
 
-> **Finding F4.12 — Loyalty and low fees coexist rather than being traded off.** 92.1% of loyal delegations (201+ epochs) sit in the 0–5% margin range. The cheapest pools are the stickiest — loyalty is a consequence of initial pool selection into the competitive neighbourhood, not a barrier to leaving it.
+> **Finding CEN.O6.F4 — Loyalty and low fees coexist rather than being traded off.** 92.1% of loyal delegations (201+ epochs) sit in the 0–5% margin range. The cheapest pools are the stickiest — loyalty is a consequence of initial pool selection into the competitive neighbourhood, not a barrier to leaving it.
 
 **The top 20 pools by loyal-delegation count** (`data/loyal_delegator_pools.csv`) are **overwhelmingly single-pool operators** with margins of **2–4%** and fixed costs of **340–400 ADA**.
 
@@ -807,7 +807,7 @@ The key/script split does, however, confirm one structural observation: *the DeF
 
 If protocol changes were to mandate staking-capable script addresses in DeFi standards (cf. [§5.2](#52-anatomy-of-the-non-participant-population)), the script-based share could grow substantially — but **under current conditions it rounds to zero**.
 
-> **Finding F4.13 — 99.97% of delegations and 99.83% of stake are key-based.** Script-based delegation (smart contracts, multisig, governance) is negligible at 399 addresses and 38M ADA. The DeFi ecosystem operates almost entirely outside the delegation system. The credential type is the finest on-chain classification available but cannot distinguish custodial from retail capital — both present as key-based delegations.
+> **Finding CEN.O6.F5 — 99.97% of delegations and 99.83% of stake are key-based.** Script-based delegation (smart contracts, multisig, governance) is negligible at 399 addresses and 38M ADA. The DeFi ecosystem operates almost entirely outside the delegation system. The credential type is the finest on-chain classification available but cannot distinguish custodial from retail capital — both present as key-based delegations.
 
 _Data: `data/stake_account_census_623.csv`; per-pool credential breakdown in `operator-delegator-distribution/mainnet-analysis/data/delegator_credential_by_pool.csv`._
 
@@ -842,7 +842,7 @@ The staking rate stabilised around **59–62%** from epoch ~300 onward, meaning 
 
 The brief spike in unstaked share around epoch 365 coincides with the **Alonzo hard fork** and the initial wave of smart-contract deployments, which locked ADA in script addresses outside the delegation system.
 
-> **Finding F5.1 — 14.355B ADA (39.8% of circulating supply) does not participate in staking.** The non-participant pool has been stable at 36–39% for over 300 epochs. As [§5.2](#52-anatomy-of-the-non-participant-population) demonstrates, only 134.6M ADA (0.37% of circulation) is *addressable* by incentive changes — registered stake credentials that have not delegated. The remaining 14.2B has no stake credential and is structurally excluded from the delegation system without protocol-level changes.
+> **Finding CEN.O7.F2 — 14.355B ADA (39.8% of circulating supply) does not participate in staking.** The non-participant pool has been stable at 36–39% for over 300 epochs. As [§5.2](#52-anatomy-of-the-non-participant-population) demonstrates, only 134.6M ADA (0.37% of circulation) is *addressable* by incentive changes — registered stake credentials that have not delegated. The remaining 14.2B has no stake credential and is structurally excluded from the delegation system without protocol-level changes.
 
 ### 5.2 Anatomy of the non-participant population
 
@@ -879,7 +879,7 @@ The **overwhelming majority** of non-participant ADA (**14.215B, 39.4% of circul
 
 Separating these sub-categories requires a full UTxO dump (to read the CIP-19 header byte of each output), which is **deferred** until the cardano-ledger TxIx bug is resolved or Instance B's full db-sync completes.
 
-> **Finding F5.1 — The non-participant floor is structural, not behavioural.** Only 134.6M ADA (0.37% of circulation) belongs to registered stake credentials that have not delegated. The remaining 14.2B ADA in non-participant addresses has no stake credential at all. Incentive-mechanism changes (reward adjustments, fee-structure reforms) can at most shift the 0.37% addressable pool. Moving the other 39.4% requires structural protocol changes: enabling enterprise-address staking, mandating staking-capable script addresses in DeFi standards, or introducing delegation-by-default for newly minted base addresses.
+> **Finding CEN.O7.F2 — The non-participant floor is structural, not behavioural.** Only 134.6M ADA (0.37% of circulation) belongs to registered stake credentials that have not delegated. The remaining 14.2B ADA in non-participant addresses has no stake credential at all. Incentive-mechanism changes (reward adjustments, fee-structure reforms) can at most shift the 0.37% addressable pool. Moving the other 39.4% requires structural protocol changes: enabling enterprise-address staking, mandating staking-capable script addresses in DeFi standards, or introducing delegation-by-default for newly minted base addresses.
 
 ![Non-participant decomposition](figures/non_participant_decomposition.png)
 
@@ -997,7 +997,7 @@ If the fee base is dominated by enterprise addresses and script addresses that *
 
 **Growth trajectory.** Is the fee-generating population **expanding, contracting, or stable**? Is growth driven by **new addresses entering** (breadth) or by **higher activity from existing ones** (intensity)?
 
-Comparing submitter growth to the delegator growth curve ([§2.4](../../../README.md#24-reduce-the-concentration-effects-that-distort-both-populations)) and to the staking-rate decline (O7) establishes whether the two populations are **diverging** — and in which direction.
+Comparing submitter growth to the delegator growth curve ([§2.4](../../../README.md#24-reduce-the-concentration-effects-that-distort-both-populations)) and to the staking-rate decline (CEN.O7) establishes whether the two populations are **diverging** — and in which direction.
 
 ### 6.2 Data sources and methodology
 

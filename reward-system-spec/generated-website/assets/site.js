@@ -22,6 +22,52 @@
     updateThemeIcon();
   })();
 
+  /* ── PDF export: expand everything, then print.
+        beforeprint/afterprint also handle Ctrl+P so manual prints work too. ── */
+  window.printAsPdf=function(){
+    /* Expand all collapsed sections, obs-cards, TOC subtrees before printing.
+       A tiny delay lets MathJax / Mermaid / layout settle. */
+    window.print();
+  };
+  function expandAllForPrint(){
+    var restore=[];
+    document.querySelectorAll('.section-body.collapsed, .section-toggle.collapsed').forEach(function(el){
+      el.classList.remove('collapsed');
+      restore.push(el);
+    });
+    document.querySelectorAll('.section-body').forEach(function(el){
+      el.style.maxHeight='none';
+    });
+    document.querySelectorAll('.obs-card.collapsed').forEach(function(el){
+      el.classList.remove('collapsed');
+      restore.push(el);
+    });
+    document.querySelectorAll('.toc-collapsed').forEach(function(el){
+      el.classList.remove('toc-collapsed');
+      el.setAttribute('data-was-toc-collapsed','1');
+      restore.push(el);
+    });
+    document.querySelectorAll('.toc-toggle.collapsed').forEach(function(el){
+      el.classList.remove('collapsed');
+      el.setAttribute('data-was-toc-collapsed','1');
+      restore.push(el);
+    });
+    window._printRestore=restore;
+  }
+  function restoreAfterPrint(){
+    var restore=window._printRestore||[];
+    restore.forEach(function(el){
+      if(el.hasAttribute('data-was-toc-collapsed')){
+        el.removeAttribute('data-was-toc-collapsed');
+        if(el.classList.contains('toc-toggle')) el.classList.add('collapsed');
+        else el.classList.add('toc-collapsed');
+      }
+    });
+    window._printRestore=null;
+  }
+  window.addEventListener('beforeprint',expandAllForPrint);
+  window.addEventListener('afterprint',restoreAfterPrint);
+
   /* ── Dropdown helpers ── */
   window.closeAllDd=function(except){
     document.querySelectorAll('.nav-dd-wrap.open').forEach(function(w){
@@ -477,4 +523,368 @@
       setTimeout(function(){ target.scrollIntoView({block:'start'}); },100);
     }
   }
+
+  /* ── Observation overlay: hover tooltip + click side panel ── */
+  (function initObsOverlay(){
+    var refs=document.querySelectorAll('.obs-ref[data-obs]');
+    if(!refs.length) return;
+
+    /* Build an in-memory index from the on-page obs-cards so the overlay
+       can show title + summary without a network round-trip. */
+    var index={};
+    document.querySelectorAll('.obs-card[id]').forEach(function(card){
+      var id=card.getAttribute('id');
+      var num=(card.querySelector('.obs-card-num')||{}).textContent||'';
+      var title=(card.querySelector('.obs-card-title')||{}).textContent||'';
+      var summaryEl=card.querySelector('.obs-card-summary');
+      var summary=summaryEl?summaryEl.innerHTML:'';
+      var tier=card.getAttribute('data-tier')||'general';
+      var tierEl=card.querySelector('.obs-tier');
+      var tierLabel=tierEl?tierEl.textContent:tier;
+      var section=card.getAttribute('data-section')||'';
+      index[id]={num:num,title:title,summary:summary,tier:tier,tierLabel:tierLabel,section:section};
+    });
+
+    /* --- Tooltip (hover preview) --- */
+    var tip=document.createElement('div');
+    tip.className='obs-tooltip';
+    tip.setAttribute('role','tooltip');
+    document.body.appendChild(tip);
+    var tipTimer=null, tipActive=false;
+
+    function showTip(ref,x,y){
+      var id=ref.getAttribute('data-obs');
+      var data=index[id];
+      if(!data) return;
+      tip.innerHTML=
+        '<div class="obs-tooltip-head">'+
+          '<span class="obs-tooltip-num">'+data.num+'</span>'+
+          '<span class="obs-tooltip-section">§'+data.section+'</span>'+
+          '<span class="obs-tooltip-tier obs-tier obs-tier-'+data.tier+'">'+data.tierLabel+'</span>'+
+        '</div>'+
+        '<div class="obs-tooltip-title">'+data.title+'</div>'+
+        '<div class="obs-tooltip-summary">'+data.summary+'</div>'+
+        '<div class="obs-tooltip-hint">Click for full detail</div>';
+      /* Position after sizing */
+      tip.style.left='0px'; tip.style.top='0px';
+      tip.classList.add('visible');
+      positionTip(x,y);
+      tipActive=true;
+    }
+    function positionTip(x,y){
+      var r=tip.getBoundingClientRect();
+      var vw=window.innerWidth, vh=window.innerHeight;
+      var left=x+14, top=y+18;
+      if(left+r.width>vw-12) left=Math.max(8,x-r.width-14);
+      if(top+r.height>vh-12) top=Math.max(8,y-r.height-14);
+      tip.style.left=left+'px';
+      tip.style.top=top+'px';
+    }
+    function hideTip(){ tip.classList.remove('visible'); tipActive=false; }
+
+    refs.forEach(function(ref){
+      ref.addEventListener('mouseenter',function(e){
+        clearTimeout(tipTimer);
+        tipTimer=setTimeout(function(){ showTip(ref,e.clientX,e.clientY); },120);
+      });
+      ref.addEventListener('mousemove',function(e){
+        if(tipActive) positionTip(e.clientX,e.clientY);
+      });
+      ref.addEventListener('mouseleave',function(){
+        clearTimeout(tipTimer);
+        hideTip();
+      });
+    });
+
+    /* --- Side panel (click for full detail) --- */
+    var overlay=document.createElement('div');
+    overlay.className='obs-panel-overlay';
+    document.body.appendChild(overlay);
+
+    var panel=document.createElement('aside');
+    panel.className='obs-panel';
+    panel.setAttribute('role','dialog');
+    panel.setAttribute('aria-label','Observation detail');
+    panel.innerHTML=
+      '<div class="obs-panel-header">'+
+        '<span class="obs-panel-num"></span>'+
+        '<span class="obs-panel-section-id"></span>'+
+        '<span class="obs-panel-tier obs-tier"></span>'+
+        '<button type="button" class="obs-panel-close" aria-label="Close">'+
+          '<svg viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>'+
+        '</button>'+
+      '</div>'+
+      '<div class="obs-panel-body">'+
+        '<div class="obs-panel-title"></div>'+
+        '<div class="obs-panel-summary"></div>'+
+        '<div class="obs-panel-meta">'+
+          '<div class="obs-panel-meta-label">Source</div>'+
+          '<div class="obs-panel-meta-val obs-panel-source"></div>'+
+          '<a class="obs-panel-cta" href="#">'+
+            '<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'+
+            '<span>Jump to source</span>'+
+          '</a>'+
+        '</div>'+
+      '</div>';
+    document.body.appendChild(panel);
+
+    function openPanel(id){
+      var data=index[id];
+      if(!data) return;
+      panel.querySelector('.obs-panel-num').textContent=data.num;
+      panel.querySelector('.obs-panel-section-id').textContent='§'+data.section+' · Mainnet Observation';
+      var tierEl=panel.querySelector('.obs-panel-tier');
+      tierEl.className='obs-panel-tier obs-tier obs-tier-'+data.tier;
+      tierEl.textContent=data.tierLabel;
+      panel.querySelector('.obs-panel-title').textContent=data.title;
+      panel.querySelector('.obs-panel-summary').innerHTML=data.summary;
+      panel.querySelector('.obs-panel-source').innerHTML=
+        '<a href="#'+data.section.replace(/\./g,'')+'-mainnet-observations">§'+data.section+' Mainnet Observations</a>';
+      var cta=panel.querySelector('.obs-panel-cta');
+      cta.setAttribute('href','#'+id);
+      cta.onclick=function(e){
+        e.preventDefault();
+        closePanel();
+        var card=document.getElementById(id);
+        if(!card) return;
+        /* Expand any collapsed ancestor section */
+        var collapsed=card.closest('.section-body.collapsed');
+        if(collapsed){
+          var toggle=collapsed.previousElementSibling;
+          if(toggle&&toggle.classList.contains('section-toggle')) toggle.click();
+        }
+        setTimeout(function(){
+          card.scrollIntoView({behavior:'smooth',block:'center'});
+          card.classList.add('obs-card-highlight');
+          setTimeout(function(){ card.classList.remove('obs-card-highlight'); },1600);
+        },60);
+      };
+      document.body.classList.add('obs-panel-open');
+      panel.setAttribute('aria-hidden','false');
+    }
+    function closePanel(){
+      document.body.classList.remove('obs-panel-open');
+      panel.setAttribute('aria-hidden','true');
+    }
+    overlay.addEventListener('click',closePanel);
+    panel.querySelector('.obs-panel-close').addEventListener('click',closePanel);
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&document.body.classList.contains('obs-panel-open')) closePanel();
+    });
+
+    refs.forEach(function(ref){
+      ref.addEventListener('click',function(e){
+        e.preventDefault();
+        hideTip();
+        var id=ref.getAttribute('data-obs');
+        if(index[id]) openPanel(id);
+      });
+    });
+  })();
+
+  /* ── F# finding-ref overlay: hover tooltip + click side panel ──
+     Mirrors initObsOverlay but for `.finding-ref[data-finding]` links
+     produced on sub-report pages. Hydration reads the hidden
+     `.findings-registry` > `.finding-detail` cards. */
+  (function initFindingRefOverlay(){
+    var refs=document.querySelectorAll('.finding-ref[data-finding]');
+    if(!refs.length) return;
+    var index={};
+    document.querySelectorAll('.finding-detail[id]').forEach(function(card){
+      var id=(card.getAttribute('data-finding')||'');
+      if(!id) return;
+      var summary=(card.querySelector('.finding-detail-summary')||{}).innerHTML||'';
+      var insight=(card.querySelector('.finding-detail-insight')||{}).textContent||'';
+      var src=(card.querySelector('.finding-detail-src')||{}).textContent||'';
+      var group=card.getAttribute('data-group')||'';
+      var href=card.getAttribute('data-href')||'';
+      index[id]={id:id,summary:summary,insight:insight,src:src,group:group,href:href,domId:card.id};
+    });
+
+    var tip=document.createElement('div');
+    tip.className='finding-tooltip';
+    tip.setAttribute('role','tooltip');
+    document.body.appendChild(tip);
+    var tipTimer=null,tipActive=false;
+
+    function showTip(ref,x,y){
+      var id=ref.getAttribute('data-finding');
+      var data=index[id];
+      if(!data) return;
+      tip.innerHTML=
+        '<div class="finding-tooltip-head">'+
+          '<span class="finding-tooltip-id finding-group-'+data.group+'">'+data.id+'</span>'+
+          (data.src?'<span class="finding-tooltip-src">'+data.src+'</span>':'')+
+        '</div>'+
+        '<div class="finding-tooltip-summary">'+data.summary+'</div>'+
+        (data.insight?'<div class="finding-tooltip-insight">'+data.insight+'</div>':'')+
+        '<div class="finding-tooltip-hint">Click for full detail</div>';
+      tip.style.left='0px';tip.style.top='0px';
+      tip.classList.add('visible');
+      positionTip(x,y);
+      tipActive=true;
+    }
+    function positionTip(x,y){
+      var r=tip.getBoundingClientRect();
+      var vw=window.innerWidth,vh=window.innerHeight;
+      var left=x+14,top=y+18;
+      if(left+r.width>vw-12) left=Math.max(8,x-r.width-14);
+      if(top+r.height>vh-12) top=Math.max(8,y-r.height-14);
+      tip.style.left=left+'px';tip.style.top=top+'px';
+    }
+    function hideTip(){ tip.classList.remove('visible'); tipActive=false; }
+
+    refs.forEach(function(ref){
+      ref.addEventListener('mouseenter',function(e){
+        clearTimeout(tipTimer);
+        tipTimer=setTimeout(function(){ showTip(ref,e.clientX,e.clientY); },120);
+      });
+      ref.addEventListener('mousemove',function(e){ if(tipActive) positionTip(e.clientX,e.clientY); });
+      ref.addEventListener('mouseleave',function(){ clearTimeout(tipTimer); hideTip(); });
+    });
+
+    var overlay=document.createElement('div');
+    overlay.className='finding-panel-overlay';
+    document.body.appendChild(overlay);
+
+    var panel=document.createElement('aside');
+    panel.className='finding-panel';
+    panel.setAttribute('role','dialog');
+    panel.setAttribute('aria-label','Finding detail');
+    panel.innerHTML=
+      '<div class="finding-panel-header">'+
+        '<span class="finding-panel-id"></span>'+
+        '<span class="finding-panel-src"></span>'+
+        '<button type="button" class="finding-panel-close" aria-label="Close">'+
+          '<svg viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>'+
+        '</button>'+
+      '</div>'+
+      '<div class="finding-panel-body">'+
+        '<div class="finding-panel-summary"></div>'+
+        '<div class="finding-panel-insight-wrap">'+
+          '<div class="finding-panel-insight-label">Insight</div>'+
+          '<div class="finding-panel-insight"></div>'+
+        '</div>'+
+        '<a class="finding-panel-cta" href="#">'+
+          '<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'+
+          '<span>Jump to source</span>'+
+        '</a>'+
+      '</div>';
+    document.body.appendChild(panel);
+
+    function openPanel(id){
+      var data=index[id];
+      if(!data) return;
+      var idEl=panel.querySelector('.finding-panel-id');
+      idEl.textContent=data.id;
+      idEl.className='finding-panel-id finding-group-'+data.group;
+      panel.querySelector('.finding-panel-src').textContent=data.src||'';
+      panel.querySelector('.finding-panel-summary').innerHTML=data.summary;
+      var insightEl=panel.querySelector('.finding-panel-insight');
+      var insightWrap=panel.querySelector('.finding-panel-insight-wrap');
+      if(data.insight){
+        insightEl.textContent=data.insight;
+        insightWrap.style.display='';
+      } else {
+        insightWrap.style.display='none';
+      }
+      var cta=panel.querySelector('.finding-panel-cta');
+      if(data.href){
+        cta.style.display='';
+        cta.setAttribute('href',data.href);
+        cta.onclick=function(e){
+          e.preventDefault();
+          closePanel();
+          var target=document.querySelector(data.href);
+          if(!target) return;
+          var collapsed=target.closest && target.closest('.section-body.collapsed');
+          if(collapsed){
+            var toggle=collapsed.previousElementSibling;
+            if(toggle&&toggle.classList.contains('section-toggle')) toggle.click();
+          }
+          setTimeout(function(){
+            target.scrollIntoView({behavior:'smooth',block:'start'});
+          },60);
+        };
+      } else {
+        cta.style.display='none';
+      }
+      document.body.classList.add('finding-panel-open');
+      panel.setAttribute('aria-hidden','false');
+    }
+    function closePanel(){
+      document.body.classList.remove('finding-panel-open');
+      panel.setAttribute('aria-hidden','true');
+    }
+    overlay.addEventListener('click',closePanel);
+    panel.querySelector('.finding-panel-close').addEventListener('click',closePanel);
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&document.body.classList.contains('finding-panel-open')) closePanel();
+    });
+
+    refs.forEach(function(ref){
+      ref.addEventListener('click',function(e){
+        e.preventDefault();
+        hideTip();
+        var id=ref.getAttribute('data-finding');
+        if(index[id]) openPanel(id);
+      });
+    });
+  })();
+
+  /* Findings page filter / search. Only wires up if the page markup
+     is present — otherwise it's a no-op. */
+  (function initFindingsPage(){
+    var page=document.querySelector('.findings-page');
+    if(!page) return;
+    var chips=page.querySelectorAll('.findings-chip');
+    var search=page.querySelector('.findings-search');
+    var cards=page.querySelectorAll('.finding-card');
+    var sections=page.querySelectorAll('.findings-section');
+    var state={tier:'*',query:''};
+
+    function norm(s){ return (s||'').toLowerCase(); }
+    function cardMatches(card){
+      var t=state.tier;
+      var q=state.query;
+      if(t!=='*'){
+        var chipMatch=card.querySelector('.finding-obs-chip[data-tier="'+t+'"], .obs-card[data-tier="'+t+'"]');
+        if(!chipMatch) return false;
+      }
+      if(q){
+        var text=norm(card.textContent);
+        if(text.indexOf(q)<0) return false;
+      }
+      return true;
+    }
+    function apply(){
+      cards.forEach(function(card){
+        if(cardMatches(card)) card.classList.remove('hidden');
+        else card.classList.add('hidden');
+      });
+      sections.forEach(function(sec){
+        var visible=sec.querySelectorAll('.finding-card:not(.hidden)').length;
+        sec.style.display = visible ? '' : 'none';
+      });
+    }
+
+    chips.forEach(function(chip){
+      chip.addEventListener('click',function(){
+        chips.forEach(function(c){ c.classList.remove('active'); });
+        chip.classList.add('active');
+        state.tier=chip.getAttribute('data-tier');
+        apply();
+      });
+    });
+    if(search){
+      var deb;
+      search.addEventListener('input',function(){
+        clearTimeout(deb);
+        deb=setTimeout(function(){
+          state.query=norm(search.value.trim());
+          apply();
+        },120);
+      });
+    }
+  })();
 })();

@@ -72,6 +72,7 @@ PAGES = [
     },
     {
         "slug": "census",
+        "code": "CEN",
         "md": "diagnostic/sub-flows/census/mainnet-analysis/README.md",
         "html": "census.html",
         "title": "The Staking Census — SPO Incentives",
@@ -81,6 +82,7 @@ PAGES = [
     },
     {
         "slug": "treasury",
+        "code": "TRE",
         "md": "diagnostic/sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md",
         "html": "treasury.html",
         "title": "Treasury & Pool Pots Distribution — SPO Incentives",
@@ -90,6 +92,7 @@ PAGES = [
     },
     {
         "slug": "pools",
+        "code": "POL",
         "md": "diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md",
         "html": "pools.html",
         "title": "The Pools Pot Distribution Gaps — SPO Incentives",
@@ -99,6 +102,7 @@ PAGES = [
     },
     {
         "slug": "operator",
+        "code": "OPE",
         "md": "diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md",
         "html": "operator.html",
         "title": "The Operator's Cut — SPO Incentives",
@@ -107,6 +111,13 @@ PAGES = [
         "active_nav": "operator",
     },
 ]
+
+# Sub-report 3-letter code lookup. Pages without `code` are not sub-reports
+# (e.g., the V2 spec or the intended-game narrative).
+SUBREPORT_CODES = {p["slug"]: p["code"] for p in PAGES if p.get("code")}
+# Reverse mapping for V2-doc cross-page overlays:
+# code → page dict (so we can resolve POL.O1.F1 → pools.html#…).
+PAGE_BY_CODE = {p["code"]: p for p in PAGES if p.get("code")}
 
 # MD path (relative to REPO_ROOT) → output HTML filename
 MD_TO_HTML_MAP = {p["md"]: p["html"] for p in PAGES}
@@ -119,23 +130,37 @@ _MATH_PLACEHOLDER = "@@MATH{idx}@@"
 
 def protect_math(text: str) -> tuple[str, list[str]]:
     """Replace $...$ and $$...$$ spans with placeholders to keep markdown
-    from interpreting underscores, asterisks, etc. inside them.
+    from interpreting underscores, asterisks, etc. inside them. Also
+    disambiguate currency $ (e.g. ``$6,500``) from inline math delimiters.
+
+    Strategy:
+        1. Protect ``$$...$$`` display math (most specific).
+        2. Protect inline math ``$...$`` whose content contains a LaTeX
+           command (``\\pi``, ``\\frac``, etc.) — strong math signal.
+        3. Protect *very short* inline math spans (1–4 non-space chars)
+           like ``$i$``, ``$x+y$``, ``$0.5$``. These are unambiguous math.
+        4. Escape any remaining ``$`` that is immediately followed by a
+           digit as HTML-encoded ``\\$`` (``&#92;$``), so MathJax
+           ``processEscapes:true`` ignores it. This prevents two currency
+           ``$`` in the same paragraph from being paired as math.
 
     Returns (text_with_placeholders, list_of_original_spans).
     """
     spans: list[str] = []
 
-    # Display math ($$...$$) first (so it's not captured by inline).
     def _store(match: re.Match) -> str:
         idx = len(spans)
         spans.append(match.group(0))
         return _MATH_PLACEHOLDER.format(idx=idx)
 
-    text = re.sub(r"\$\$(.+?)\$\$", _store, text, flags=re.DOTALL)
-    # Inline math — exclude cases where $ is preceded/followed by digit/letter
-    # without space (currency-style). Keep it permissive: any paired $...$ on
-    # a single line, with no $ inside.
-    text = re.sub(r"(?<!\\)\$([^\$\n]+?)\$", _store, text)
+    # 1. Display math
+    text = re.sub(r"\$\$([\s\S]+?)\$\$", _store, text)
+    # 2. Inline math whose body contains a LaTeX control sequence (backslash).
+    text = re.sub(r"(?<!\\)\$([^\$\n]*\\[^\$\n]*)\$", _store, text)
+    # 3. Short inline math with no whitespace — $i$, $x+y$, $1/2$, $0.5$.
+    text = re.sub(r"(?<!\\)\$([^\$\n\s]{1,4})\$", _store, text)
+    # 4. Remaining $<digit> is prose currency — escape so MathJax skips it.
+    text = re.sub(r"(?<!\\)\$(?=\d)", r"&#92;$", text)
     return text, spans
 
 
@@ -280,6 +305,104 @@ def preprocess_md(md_text: str, src_md: Path) -> str:
 
     md_text = link_re.sub(_link_sub, md_text)
     return md_text
+
+
+# --- Section-reference auto-decoration ------------------------------------
+
+# After conversion, bare "§X.X.X" link texts are expanded to "§X.X.X — Title"
+# using the heading map of the target page. The index is built once per build
+# from the PAGES MD sources, using python-markdown's own TOC slugifier so the
+# anchors match the rendered HTML without any guessing.
+
+_TITLE_INDEX: dict[str, dict[str, str]] = {}  # html_name → {slug: display_title}
+
+_SECNUM_PREFIX_RE = re.compile(r"^\d+(?:\.\d+)*\.?\s+")
+
+
+def _strip_section_number(title: str) -> str:
+    """Remove leading section numbers like '1.2.4.2 ' or '1.3. ' from a heading display."""
+    return _SECNUM_PREFIX_RE.sub("", title).strip()
+
+
+def _walk_toc_tokens(tokens: list, out: dict[str, str]) -> None:
+    for t in tokens:
+        out[t["id"]] = _strip_section_number(t["name"])
+        _walk_toc_tokens(t.get("children", []), out)
+
+
+def build_title_index() -> None:
+    """Populate _TITLE_INDEX with a slug→title map for each output page.
+
+    Runs python-markdown in TOC-only mode on each MD source. The resulting
+    tokens expose ``id`` (slug) and ``name`` (visible heading text); those are
+    the exact anchors that the real conversion produces, so no reinvention of
+    slugification rules is needed.
+    """
+    _TITLE_INDEX.clear()
+    for page in PAGES:
+        src_md = REPO_ROOT / page["md"]
+        if not src_md.exists():
+            continue
+        md_text = src_md.read_text()
+        md_text, _ = protect_math(md_text)
+        md = markdown.Markdown(
+            extensions=["toc"],
+            extension_configs={"toc": {"permalink": False, "anchorlink": False}},
+        )
+        md.convert(md_text)
+        title_map: dict[str, str] = {}
+        _walk_toc_tokens(getattr(md, "toc_tokens", []), title_map)
+        _TITLE_INDEX[page["html"]] = title_map
+
+
+_HREF_RE = re.compile(r'href="([^"]*)"', re.IGNORECASE)
+_SECNUM_LINK_RE = re.compile(
+    r"<a(\s+[^>]*?)>\s*§\s*(\d+(?:\.\d+)+)\s*</a>",
+    re.IGNORECASE,
+)
+
+# Cap long titles in the decoration so they don't blow up line length.
+_TITLE_MAX_LEN = 80
+
+
+def decorate_section_references(html_body: str, this_page_html: str) -> str:
+    """Rewrite ``<a href="...">§X.X</a>`` → ``<a ...>§X.X — Title</a>``.
+
+    Only link texts that are *exactly* a section number are touched, so any
+    manually-written decoration like ``[*The Intended Game* §1.3.2](...)`` is
+    left alone. If the anchor is unknown (cross-file to an unmapped .md, a
+    missing target, a fragment that doesn't exist), the link is kept as-is.
+    """
+
+    def _sub(m: re.Match) -> str:
+        attrs = m.group(1)
+        secnum = m.group(2)
+        href_m = _HREF_RE.search(attrs)
+        if not href_m:
+            return m.group(0)
+        href = href_m.group(1)
+        if "#" in href:
+            path, _, fragment = href.partition("#")
+        else:
+            path, fragment = href, ""
+        if not fragment:
+            return m.group(0)
+        target_html = path or this_page_html
+        titles = _TITLE_INDEX.get(target_html)
+        if titles is None:
+            return m.group(0)
+        title = titles.get(fragment)
+        if not title:
+            return m.group(0)
+        # TOC tokens may already contain HTML entities (e.g. "&amp;" for "&").
+        # Unescape first so we don't double-escape when we re-encode below.
+        title = _html.unescape(title)
+        if len(title) > _TITLE_MAX_LEN:
+            title = title[: _TITLE_MAX_LEN - 1].rstrip() + "…"
+        new_text = f"§{secnum} — {_html.escape(title)}"
+        return f"<a{attrs}>{new_text}</a>"
+
+    return _SECNUM_LINK_RE.sub(_sub, html_body)
 
 
 # --- Markdown → HTML ------------------------------------------------------
@@ -428,6 +551,7 @@ window.MathJax = {{
 <span class="nav-brand-title">Cardano Reward System V2</span>
 </a>
 <div class="nav-brand-right">
+<button class="pdf-export" onclick="printAsPdf()" title="Save this page as PDF" aria-label="Save as PDF">PDF</button>
 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light theme" aria-label="Toggle theme">☀</button>
 </div>
 </div>
@@ -450,9 +574,13 @@ window.MathJax = {{
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-diagnostic">Mainnet Diagnostic</span>
       <span class="nav-dd-stratum-meta">What mainnet is actually doing — synthesis, Reward-Flow evidence, and the prior report</span>
     </div>
+    <a href="findings.html" class="nav-dd-ref nav-dd-ref-hero{cls_findings}">
+      <span class="nav-dd-ref-title">Findings &amp; Observations<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Every diagnostic finding paired with its mainnet evidence — one-page synthesis</span>
+    </a>
     <a href="observatory.html" class="nav-dd-ref{cls_observatory_title}">
-      <span class="nav-dd-ref-title">The Diagnostic<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">Synthesis of observations across the reward pipeline</span>
+      <span class="nav-dd-ref-title">The Diagnostic</span>
+      <span class="nav-dd-ref-cite">Full narrative — observations, problem induction, and sub-report links</span>
     </a>
     <a href="census.html" class="nav-dd-ref nav-dd-ref-sub{cls_census}">
       <span class="nav-dd-ref-title">The Staking Census<span class="nav-dd-ref-new">New</span></span>
@@ -607,7 +735,7 @@ if (window.mermaid) {{
 
 
 # Which active-nav slugs fall under which top-level dropdown
-DIAG_ACTIVE = {"observatory", "census", "treasury", "pools", "operator"}
+DIAG_ACTIVE = {"findings", "observatory", "census", "treasury", "pools", "operator"}
 DESIGN_ACTIVE = {"intended-game"}
 
 # Breadcrumb shown beneath the nav to convey hierarchical location.
@@ -615,6 +743,7 @@ DESIGN_ACTIVE = {"intended-game"}
 BREADCRUMBS = {
     "spec": ["V2 Specification"],
     "intended-game": ["Design Support", "The Intended Game"],
+    "findings": ["Mainnet Diagnostic", "Findings & Observations"],
     "observatory": ["Mainnet Diagnostic", "The Diagnostic"],
     "census": ["Mainnet Diagnostic", "The Staking Census"],
     "treasury": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
@@ -648,6 +777,7 @@ def render_shell(page: dict, content_html: str) -> str:
     nav_map = {
         "spec": "cls_spec",
         "intended-game": "cls_intended_game",
+        "findings": "cls_findings",
         "observatory": "cls_observatory_title",
         "census": "cls_census",
         "treasury": "cls_treasury",
@@ -1005,6 +1135,686 @@ def sync_references() -> None:
 # --- Main -----------------------------------------------------------------
 
 
+# --- Observation extraction + rendering -----------------------------------
+
+# Diagnostic-wide indexing convention:
+#   section_id  "1.3.2"    (from "### 1.3.2 Mainnet Observations")
+#   parent      "1.3"      (binds inline (O#) citations)
+#   local_id    "O1"
+#   global_id   "obs-132-1"  (page-scoped DOM id)
+#
+# A tier is derived from lightweight keyword heuristics against the
+# observation body. The classification is explanatory, not statistical.
+
+_OBS_HEADING_RE = re.compile(
+    r"^###\s+(\d+(?:\.\d+){1,2})\s+Mainnet Observations\s*$",
+    re.MULTILINE,
+)
+_OBS_ROW_RE = re.compile(
+    r"^\|\s*\*\*O(\d+)\*\*\s*\|\s*\*\*(.+?)\*\*\s*\|\s*(.+?)\s*\|\s*$",
+    re.MULTILINE,
+)
+_SCOPE_NOTE_RE = re.compile(
+    r"^>\s+\*\*Scope note\.\*\*\s+(.+?)$",
+    re.MULTILINE | re.DOTALL,
+)
+
+
+def _slug_for_section(section_id: str) -> str:
+    """'1.3.2' → '132'  (matches python-markdown's TOC slug convention)."""
+    return section_id.replace(".", "")
+
+
+def _parent_section(section_id: str) -> str:
+    """'1.3.2' → '1.3'."""
+    parts = section_id.split(".")
+    return ".".join(parts[:-1]) if len(parts) > 1 else section_id
+
+
+def _classify_tier(summary: str, title: str) -> tuple[str, str]:
+    """Return (tier_slug, tier_label) from keyword signals in the summary/title.
+
+    Tiers are intentionally coarse — they sort observations visually, not
+    diagnostically. Order of checks matters: first match wins.
+    """
+    blob = (title + " " + summary).lower()
+    if any(k in blob for k in ("pledge", "saturation", "reward curve", "bonus")):
+        return ("mechanism", "Mechanism")
+    if any(k in blob for k in ("custodial", "cex", "ivaas", "mpo", "multi-pool", "concentration", "gini", "concentrated")):
+        return ("concentration", "Concentration")
+    if any(k in blob for k in ("delegator", "retail", "loyal", "switch", "churn", "redelegation")):
+        return ("demand", "Demand")
+    if any(k in blob for k in ("fee", "submitter", "transaction", "script", "enterprise")):
+        return ("fees", "Fees")
+    if any(k in blob for k in ("reserve", "depletion", "half-life", "trajectory", "decline", "clock")):
+        return ("sustainability", "Sustainability")
+    if any(k in blob for k in ("viability", "threshold", "tier", "production", "below-viability", "operator")):
+        return ("structure", "Structure")
+    return ("general", "General")
+
+
+def extract_observations_from_md(md_text: str) -> list[dict]:
+    """Parse ``### X.Y.Z Mainnet Observations`` sections + their tables.
+
+    Returns a list of observation dicts, in document order::
+
+        {
+            "section_id":  "1.3.2",
+            "parent":      "1.3",
+            "section_slug":"132",
+            "parent_slug": "13",
+            "local_id":    "O1",
+            "global_id":   "obs-132-1",
+            "title":       "...",
+            "summary":     "...",
+            "tier":        "mechanism",
+            "tier_label":  "Mechanism",
+            "scope_note":  "...",    (optional)
+        }
+    """
+    observations: list[dict] = []
+    headings = list(_OBS_HEADING_RE.finditer(md_text))
+    for idx, h_match in enumerate(headings):
+        section_id = h_match.group(1)
+        slug = _slug_for_section(section_id)
+        parent = _parent_section(section_id)
+        parent_slug = _slug_for_section(parent)
+        # Slice from end of heading to next heading-line (# or ##).
+        section_start = h_match.end()
+        next_h = re.search(r"^#{1,3}\s", md_text[section_start:], re.MULTILINE)
+        section_end = section_start + next_h.start() if next_h else len(md_text)
+        section_text = md_text[section_start:section_end]
+
+        scope_m = _SCOPE_NOTE_RE.search(section_text)
+        scope_note = scope_m.group(1).strip() if scope_m else ""
+        # Scope note paragraph can wrap to multiple lines — keep just the first.
+        scope_note = re.split(r"\n\s*\n", scope_note, maxsplit=1)[0].replace("\n", " ").strip()
+
+        for row in _OBS_ROW_RE.finditer(section_text):
+            num = int(row.group(1))
+            title = row.group(2).strip()
+            summary = row.group(3).strip()
+            # De-emphasize stray markdown escape artefacts in title.
+            tier, tier_label = _classify_tier(summary, title)
+            observations.append({
+                "section_id": section_id,
+                "parent": parent,
+                "section_slug": slug,
+                "parent_slug": parent_slug,
+                "local_id": f"O{num}",
+                "local_num": num,
+                "global_id": f"obs-{slug}-{num}",
+                "title": title,
+                "summary": summary,
+                "tier": tier,
+                "tier_label": tier_label,
+                "scope_note": scope_note,
+            })
+    return observations
+
+
+# Currency, percentages, multiplier, and pool-count patterns that deserve to
+# stand out inside an observation summary. The substitution happens on the
+# rendered HTML (so we don't interfere with markdown's own parsing).
+_METRIC_PATTERNS = [
+    # Percentages: 54%, 0.19%, 12.6 pp, 500×
+    re.compile(r"\b\d+(?:\.\d+)?\s*(?:%|pp)\b"),
+    re.compile(r"\b\d+(?:\.\d+)?×\b"),
+    # ADA amounts: 13.29B, 6.53B, 2.04M ADA, 77M ADA, 4.91M ADA/epoch
+    re.compile(r"\b\d+(?:\.\d+)?\s*(?:B|M|K)?\s*(?:ADA|₳)(?:/epoch|/yr)?\b"),
+    # Dollar currency: $6,500, $0.25
+    re.compile(r"&#92;\$\d[\d,]*(?:\.\d+)?"),
+    # Pool/entity counts: 78 pools, 2,877 pools, 1,000 delegators, 73 entities
+    re.compile(r"\b\d{1,3}(?:,\d{3})*\s+(?:pools?|entities|delegators?|epochs?)\b"),
+    # Epoch numbers when qualified: epoch 300, epoch 623
+    re.compile(r"\bepoch\s+\d+\b", re.IGNORECASE),
+]
+
+
+def _highlight_metrics(fragment_html: str) -> str:
+    """Wrap noteworthy numeric fragments in ``<span class="metric">``.
+
+    Applied on already-rendered HTML so placeholders from ``<a>``, ``<strong>``,
+    etc. stay intact. Matches only bare text segments (outside tags) to avoid
+    double-wrapping things like ``<strong>54%</strong>`` — the <strong> gets
+    a metric class added instead.
+    """
+    # Walk tag-aware: apply pattern only to text between `>` and `<`.
+    out: list[str] = []
+    i = 0
+    length = len(fragment_html)
+    while i < length:
+        if fragment_html[i] == "<":
+            end = fragment_html.find(">", i)
+            if end < 0:
+                out.append(fragment_html[i:])
+                break
+            out.append(fragment_html[i:end + 1])
+            i = end + 1
+            continue
+        next_tag = fragment_html.find("<", i)
+        text_end = length if next_tag < 0 else next_tag
+        segment = fragment_html[i:text_end]
+        for pat in _METRIC_PATTERNS:
+            segment = pat.sub(lambda m: f'<span class="metric">{m.group(0)}</span>', segment)
+        out.append(segment)
+        i = text_end
+    return "".join(out)
+
+
+def _render_obs_card(obs: dict) -> str:
+    """Render a single observation as a foldable card."""
+    summary_html = _highlight_metrics(_html.escape(obs["summary"]))
+    # Re-hydrate the asterisks-to-italic markdown inside summaries where the
+    # source used *emphasis*; this is cheap and safe because we've escaped
+    # everything else.
+    summary_html = re.sub(r"\*([^*\n]+?)\*", r"<em>\1</em>", summary_html)
+    return (
+        f'<div class="obs-card" id="{obs["global_id"]}" '
+        f'data-tier="{obs["tier"]}" data-section="{obs["section_id"]}" '
+        f'data-local="{obs["local_id"]}">'
+        f'<div class="obs-card-header">'
+        f'<span class="obs-card-num">{obs["local_id"]}</span>'
+        f'<span class="obs-card-title">{_html.escape(obs["title"])}</span>'
+        f'<span class="obs-tier obs-tier-{obs["tier"]}">{obs["tier_label"]}</span>'
+        f'<span class="obs-card-arrow">▾</span>'
+        f'</div>'
+        f'<div class="obs-card-body">'
+        f'<p class="obs-card-summary">{summary_html}</p>'
+        f'</div>'
+        f'</div>'
+    )
+
+
+# After markdown → HTML, replace the table that follows each Mainnet
+# Observations heading with a cards container.
+_H3_MAINNET_OBS_RE = re.compile(
+    r'(<h3\s+id="(\d+)-mainnet-observations"[^>]*>.*?</h3>)',
+    re.IGNORECASE | re.DOTALL,
+)
+_TABLE_RE = re.compile(r'<table[\s\S]*?</table>', re.IGNORECASE)
+
+
+def transform_observation_tables(html_body: str, observations: list[dict]) -> str:
+    """Swap each Mainnet-Observations ``<table>`` for an ``<div class="obs-cards">``.
+
+    Uses the pre-parsed observation list (from the same MD source) so the
+    cards carry real IDs, titles and summaries — not a re-parse of the HTML.
+    """
+    # Index observations by section_slug (e.g. "132") → list
+    by_slug: dict[str, list[dict]] = {}
+    for obs in observations:
+        by_slug.setdefault(obs["section_slug"], []).append(obs)
+
+    def _replace(match: re.Match) -> str:
+        heading = match.group(1)
+        slug = match.group(2)
+        obs_list = by_slug.get(slug, [])
+        if not obs_list:
+            return heading
+        # Find the next <table> after this heading and replace it with cards.
+        after = html_body[match.end():]
+        tbl = _TABLE_RE.search(after)
+        if not tbl:
+            return heading
+        cards_html = (
+            '<div class="obs-cards" data-obs-section="' + obs_list[0]["section_id"] + '">'
+            + "\n".join(_render_obs_card(o) for o in obs_list)
+            + '</div>'
+        )
+        # Substitute just this table in the original string via a sentinel.
+        span_start = match.end() + tbl.start()
+        span_end = match.end() + tbl.end()
+        # We mutate ``html_body`` via a closure around the outer function.
+        nonlocal mutated
+        mutated.append((span_start, span_end, cards_html))
+        return heading  # heading itself is unchanged
+
+    mutated: list[tuple[int, int, str]] = []
+    _H3_MAINNET_OBS_RE.sub(_replace, html_body)
+    # Apply substitutions back-to-front so earlier offsets stay valid.
+    for start, end, replacement in sorted(mutated, key=lambda t: -t[0]):
+        html_body = html_body[:start] + replacement + html_body[end:]
+    return html_body
+
+
+# --- Inline (O#) citation rewriter ----------------------------------------
+
+# Matches (O1), (O12), (O1–O3), (O1-O3), (O1, O4), (O1 and O4).
+_CITATION_RE = re.compile(
+    r"\(\s*O(\d+)(?:\s*[–\-]\s*O(\d+))?(?:(?:\s*(?:,|and)\s*O\d+)+)?\s*\)"
+)
+_CITATION_FULL_RE = re.compile(
+    r"\(\s*O\d+(?:\s*[–\-]\s*O\d+)?(?:\s*(?:,|and)\s*O\d+)*\s*\)"
+)
+
+
+def rewrite_obs_citations(html_body: str, observations: list[dict]) -> str:
+    """Replace ``(O#)``, ``(O#–O#)``, ``(O#, O#)`` with overlay-capable links.
+
+    The binding rule: within a top-level section ``<h2 id="XY-...">``, a
+    citation ``(O#)`` refers to observation ``O#`` of section ``XY2`` (i.e.
+    the Mainnet Observations sub-section that belongs to the same h2).
+
+    The function walks the HTML once, tracking the current h2 scope, and
+    rewrites citations only when a matching observation exists.
+    """
+    # Build lookup: parent_slug → {local_num: obs}
+    by_parent: dict[str, dict[int, dict]] = {}
+    for obs in observations:
+        by_parent.setdefault(obs["parent_slug"], {})[obs["local_num"]] = obs
+
+    # Split the body by h2 boundaries to establish scope per segment.
+    h2_re = re.compile(r'<h2\s+id="(\d+)-[^"]*"[^>]*>', re.IGNORECASE)
+    pieces: list[tuple[int, str]] = []  # (piece_start, current_parent_slug)
+    last_end = 0
+    current_slug = ""
+    boundaries: list[tuple[int, str]] = [(0, "")]
+    for m in h2_re.finditer(html_body):
+        boundaries.append((m.start(), m.group(1)))
+    boundaries.append((len(html_body), ""))
+
+    segments: list[str] = []
+    for i, (pos, slug) in enumerate(boundaries[:-1]):
+        next_pos = boundaries[i + 1][0]
+        segment = html_body[pos:next_pos]
+        scope = by_parent.get(slug, {}) if slug else {}
+        if scope:
+            segment = _rewrite_citations_in_segment(segment, scope)
+        segments.append(segment)
+    return "".join(segments)
+
+
+def _rewrite_citations_in_segment(segment: str, scope: dict[int, dict]) -> str:
+    """Rewrite ``(O#)`` and ranges inside a single scope-bound segment.
+
+    Walks the HTML tag-by-tag: text nodes outside any ``<div class="obs-cards">``
+    (where the observation table has been replaced by cards) are eligible for
+    substitution. Everything inside the cards block is left untouched.
+    """
+    out: list[str] = []
+    pos = 0
+    in_cards = False
+    div_depth = 0
+    tag_re = re.compile(r"<[^>]+>")
+    for m in tag_re.finditer(segment):
+        text = segment[pos:m.start()]
+        tag = m.group(0)
+        if not in_cards:
+            text = _apply_citation_substitution(text, scope)
+        out.append(text)
+        out.append(tag)
+        tlow = tag.lower()
+        if not in_cards:
+            if 'class="obs-cards"' in tag or "class='obs-cards'" in tag:
+                in_cards = True
+                div_depth = 1  # opening <div> for the cards block
+        else:
+            if tlow.startswith("<div"):
+                div_depth += 1
+            elif tlow.startswith("</div"):
+                div_depth -= 1
+                if div_depth == 0:
+                    in_cards = False
+        pos = m.end()
+    tail = segment[pos:]
+    if not in_cards:
+        tail = _apply_citation_substitution(tail, scope)
+    out.append(tail)
+    return "".join(out)
+
+
+def _apply_citation_substitution(text: str, scope: dict[int, dict]) -> str:
+    """Rewrite every well-formed citation token inside plain text."""
+
+    def _sub(m: re.Match) -> str:
+        raw = m.group(0)
+        # Pull every O# number from the token (handles ranges + commas + "and").
+        nums = [int(n) for n in re.findall(r"O(\d+)", raw)]
+        if not nums:
+            return raw
+        # Range form (O1–O3): expand if possible.
+        if "–" in raw or "-" in raw and len(nums) == 2:
+            lo, hi = min(nums), max(nums)
+            nums = list(range(lo, hi + 1))
+        links = []
+        for n in nums:
+            obs = scope.get(n)
+            if not obs:
+                return raw  # unknown → leave as-is
+            links.append(obs)
+        # Single-link form
+        if len(links) == 1:
+            obs = links[0]
+            return (
+                f'<a class="obs-ref" href="#{obs["global_id"]}" '
+                f'data-obs="{obs["global_id"]}" '
+                f'data-tier="{obs["tier"]}">({obs["local_id"]})</a>'
+            )
+        # Range / list form: emit one link per observation, preserving the paren pair.
+        range_data = ",".join(o["global_id"] for o in links)
+        ids_display = "–".join(o["local_id"] for o in (links[0], links[-1])) if (
+            "–" in raw or "-" in raw
+        ) else ", ".join(o["local_id"] for o in links)
+        return (
+            f'<a class="obs-ref obs-ref-range" href="#{links[0]["global_id"]}" '
+            f'data-obs="{links[0]["global_id"]}" '
+            f'data-obs-range="{range_data}" '
+            f'data-tier="{links[0]["tier"]}">({ids_display})</a>'
+        )
+
+    return _CITATION_FULL_RE.sub(_sub, text)
+
+
+# --- Findings extraction (for findings.html synthesis page) --------------
+
+# Matches `### X.Y.Z Problem Induction …` headings. The number of levels
+# mirrors the Mainnet Observations regex (2 or 3 dot-separated levels).
+_FINDING_HEADING_RE = re.compile(
+    r"^###\s+(\d+(?:\.\d+){1,2})\s+Problem Induction\s*(?:→\s*(.+?))?\s*$",
+    re.MULTILINE,
+)
+
+# Matches parent headings (## X.Y. Title) used to label finding groups.
+_PARENT_HEADING_RE = re.compile(
+    r"^##\s+(\d+(?:\.\d+)?)\.?\s+(.+?)\s*$",
+    re.MULTILINE,
+)
+
+
+def extract_findings_from_md(md_text: str) -> list[dict]:
+    """Extract ``### X.Y.Z Problem Induction`` sections as *finding* records.
+
+    Each finding corresponds to the synthesis paragraph(s) that follow the
+    Mainnet Observations for a given topic. We capture:
+
+    - ``section_id`` — the ``X.Y.Z`` heading number
+    - ``parent`` / ``parent_slug`` — the enclosing ``X.Y`` topic
+    - ``parent_title`` — the ``## X.Y. Title`` heading text (if available)
+    - ``finding_title`` — the optional ``→ …`` tail of the heading
+    - ``summary`` — the first 1–2 paragraphs of prose, stripped of markdown
+    - ``anchor`` — the HTML id used by python-markdown's TOC slugifier
+    """
+    # Build a lookup of parent headings so each finding can be labelled.
+    parents: dict[str, str] = {}
+    for pm in _PARENT_HEADING_RE.finditer(md_text):
+        parent_id = pm.group(1)
+        parents[parent_id] = pm.group(2).strip()
+
+    findings: list[dict] = []
+    matches = list(_FINDING_HEADING_RE.finditer(md_text))
+    for idx, m in enumerate(matches):
+        section_id = m.group(1)
+        finding_title = (m.group(2) or "").strip()
+        parent = _parent_section(section_id)
+        parent_slug = _slug_for_section(parent)
+        parent_title = parents.get(parent, "")
+        section_start = m.end()
+        next_h = re.search(r"^#{1,3}\s", md_text[section_start:], re.MULTILINE)
+        section_end = section_start + next_h.start() if next_h else len(md_text)
+        section_body = md_text[section_start:section_end].strip()
+
+        # Pull the first 1–2 paragraphs (double-newline separated) as the
+        # synthesis blurb for the card. Keeps the page scannable; the full
+        # finding lives on observatory.html.
+        paras = [p.strip() for p in re.split(r"\n\s*\n", section_body) if p.strip()]
+        # Skip opening boilerplate "The observations above…" lines if too short.
+        body_paras: list[str] = []
+        for p in paras[:4]:
+            if p.startswith(("####", "---", "<!--")):
+                break
+            if len(p) > 20:
+                body_paras.append(p)
+            if len(body_paras) >= 2:
+                break
+        summary = "\n\n".join(body_paras)
+
+        # Python-markdown slugifies `X.Y.Z Problem Induction → Foo Bar`
+        # to `xyz-problem-induction-foo-bar` (numbers collapse, arrow drops).
+        slug_title = f"problem-induction"
+        if finding_title:
+            # Clean title for slug: lowercase, collapse non-alphanumeric → "-"
+            cleaned = re.sub(r"[^a-z0-9]+", "-", finding_title.lower()).strip("-")
+            slug_title = f"problem-induction-{cleaned}" if cleaned else slug_title
+        anchor = f"{_slug_for_section(section_id)}-{slug_title}"
+
+        findings.append({
+            "section_id": section_id,
+            "parent": parent,
+            "parent_slug": parent_slug,
+            "parent_title": parent_title,
+            "finding_title": finding_title,
+            "summary": summary,
+            "anchor": anchor,
+            "order": idx,
+        })
+    return findings
+
+
+def _md_snippet_to_html(md_snippet: str) -> str:
+    """Convert a small markdown fragment to inline HTML.
+
+    Used for the finding summary — we don't want the full md pipeline
+    (no toc, no admon). Runs the same math-protection guard and
+    link-rewrite pass so cross-refs remain useful.
+    """
+    protected, spans = protect_math(md_snippet)
+    html = markdown.markdown(
+        protected,
+        extensions=["extra"],
+        output_format="html5",
+    )
+    html = restore_math(html, spans)
+    return html
+
+
+def _render_finding_card(finding: dict, obs_for_section: list[dict]) -> str:
+    """Render a single finding as a prominent card with linked observations."""
+    title = finding["finding_title"] or "Problem Induction"
+    parent_title = finding["parent_title"]
+    parent_label = (
+        f"§{finding['parent']} · {_html.escape(parent_title)}"
+        if parent_title
+        else f"§{finding['parent']}"
+    )
+    summary_html = _md_snippet_to_html(finding["summary"])
+    # Scope-bound (O#) citation rewrite: any reference in the finding prose
+    # maps to an observation from the same parent section, which makes the
+    # hover/click overlay work identically to the Observatory page.
+    scope = {o["local_num"]: o for o in obs_for_section}
+    if scope:
+        summary_html = _apply_citation_substitution(summary_html, scope)
+    # Apply the same metric highlighting we use on observation cards so the
+    # statistics pop on the synthesis page too.
+    summary_html = _highlight_metrics(summary_html)
+
+    obs_refs = "".join(
+        f'<a class="finding-obs-chip obs-ref" href="#{o["global_id"]}" '
+        f'data-obs="{o["global_id"]}" data-tier="{o["tier"]}" '
+        f'title="Hover for full text · click for detail">'
+        f'<span class="finding-obs-chip-num">{o["local_id"]}</span>'
+        f'<span class="finding-obs-chip-title">{_html.escape(o["title"])}</span>'
+        f'</a>'
+        for o in obs_for_section
+    )
+
+    jump_link = (
+        f'<a class="finding-jump" '
+        f'href="observatory.html#{finding["anchor"]}" '
+        f'title="Open full finding on the Observatory">'
+        f'Read full finding on Observatory →</a>'
+    )
+
+    return (
+        f'<article class="finding-card" data-section="{finding["section_id"]}" '
+        f'data-parent="{finding["parent"]}">'
+        f'<header class="finding-card-head">'
+        f'<span class="finding-card-parent">{parent_label}</span>'
+        f'<span class="finding-card-badge">Finding</span>'
+        f'</header>'
+        f'<h3 class="finding-card-title">{_html.escape(title)}</h3>'
+        f'<div class="finding-card-body">{summary_html}</div>'
+        f'<div class="finding-card-obs">'
+        f'<div class="finding-card-obs-label">Supported by observations</div>'
+        f'<div class="finding-card-obs-list">{obs_refs or "<em>No tabulated observations in this section.</em>"}</div>'
+        f'</div>'
+        f'<footer class="finding-card-foot">{jump_link}</footer>'
+        f'</article>'
+    )
+
+
+def _group_obs_by_parent(observations: list[dict]) -> dict[str, list[dict]]:
+    groups: dict[str, list[dict]] = {}
+    for o in observations:
+        groups.setdefault(o["parent"], []).append(o)
+    return groups
+
+
+def _render_findings_content(findings: list[dict], observations: list[dict]) -> str:
+    """Produce the body HTML for findings.html."""
+    by_parent_obs = _group_obs_by_parent(observations)
+    all_tiers: dict[str, str] = {}
+    for o in observations:
+        all_tiers[o["tier"]] = o["tier_label"]
+
+    # Filter chips — one per tier actually in use, plus an "All" default.
+    chip_html = '<button class="findings-chip active" data-tier="*">All</button>'
+    tier_order = ["mechanism", "concentration", "structure", "demand", "fees", "sustainability", "general"]
+    for t in tier_order:
+        if t in all_tiers:
+            chip_html += (
+                f'<button class="findings-chip findings-chip-{t}" data-tier="{t}">'
+                f'<span class="findings-chip-dot"></span>{all_tiers[t]}'
+                f'</button>'
+            )
+
+    intro = (
+        '<div class="findings-intro">'
+        '<p>This page consolidates every <strong>finding</strong> (a problem '
+        'statement induced from evidence) together with the <strong>observations</strong> '
+        'that support it. Each finding links back to the full reasoning on '
+        '<a href="observatory.html">The Diagnostic — Mainnet Observatory</a>; each '
+        'observation can be clicked for its full text.</p>'
+        '</div>'
+    )
+
+    controls = (
+        '<div class="findings-controls">'
+        '<input type="search" class="findings-search" placeholder="Search findings and observations…" aria-label="Search">'
+        f'<div class="findings-chips" role="toolbar" aria-label="Filter by tier">{chip_html}</div>'
+        '</div>'
+    )
+
+    # Stats strip.
+    stats = (
+        '<div class="findings-stats">'
+        f'<div class="findings-stat"><span class="findings-stat-num">{len(findings)}</span>'
+        f'<span class="findings-stat-lbl">findings</span></div>'
+        f'<div class="findings-stat"><span class="findings-stat-num">{len(observations)}</span>'
+        f'<span class="findings-stat-lbl">mainnet observations</span></div>'
+        f'<div class="findings-stat"><span class="findings-stat-num">{len(by_parent_obs)}</span>'
+        f'<span class="findings-stat-lbl">pipeline sections</span></div>'
+        '</div>'
+    )
+
+    # Group findings/observations by top-level (1, 2, 3) then by parent.
+    def top_of(parent: str) -> str:
+        return parent.split(".")[0]
+
+    grouped: dict[str, list[dict]] = {}
+    for f in findings:
+        grouped.setdefault(top_of(f["parent"]), []).append(f)
+
+    top_titles = {
+        "1": ("The Reward Flow", "Reserve → Pools → Operators/Delegators"),
+        "2": ("The Player Populations", "Staking populations & transaction submitters"),
+        "3": ("The Price Constraint", "Fees, monetary policy, and the clock"),
+    }
+
+    sections_html = []
+    for top in sorted(grouped.keys()):
+        title, tagline = top_titles.get(top, (f"§{top}", ""))
+        top_findings = grouped[top]
+        cards_html = []
+        for f in top_findings:
+            obs_for_section = [
+                o for o in observations
+                if o["parent"] == f["parent"]
+            ]
+            cards_html.append(_render_finding_card(f, obs_for_section))
+        # Also surface standalone observation groups under this topic that
+        # are not paired with a finding in this top-level bucket.
+        paired_parents = {f["parent"] for f in top_findings}
+        for parent, obs_group in sorted(by_parent_obs.items()):
+            if top_of(parent) != top or parent in paired_parents:
+                continue
+            obs_cards_html = "".join(_render_obs_card(o) for o in obs_group)
+            cards_html.append(
+                f'<article class="finding-card finding-card-obs-only" '
+                f'data-section="{parent}" data-parent="{parent}">'
+                f'<header class="finding-card-head">'
+                f'<span class="finding-card-parent">§{parent}</span>'
+                f'<span class="finding-card-badge">Observations only</span>'
+                f'</header>'
+                f'<div class="obs-cards">{obs_cards_html}</div>'
+                f'</article>'
+            )
+        section_html = (
+            f'<section class="findings-section" data-top="{top}">'
+            f'<header class="findings-section-head">'
+            f'<span class="findings-section-num">§{top}</span>'
+            f'<h2 class="findings-section-title">{_html.escape(title)}</h2>'
+            f'<span class="findings-section-tagline">{_html.escape(tagline)}</span>'
+            f'</header>'
+            f'<div class="findings-section-body">{"".join(cards_html)}</div>'
+            f'</section>'
+        )
+        sections_html.append(section_html)
+
+    # Render all observation cards as a hidden registry so the overlay JS
+    # (which reads .obs-card DOM) can hydrate details on chip hover/click.
+    registry_cards = "".join(_render_obs_card(o) for o in observations)
+
+    body = (
+        '<div class="findings-page">'
+        + intro
+        + stats
+        + controls
+        + "".join(sections_html)
+        + f'<div class="findings-obs-registry" hidden aria-hidden="true">{registry_cards}</div>'
+        + '</div>'
+    )
+    return body
+
+
+def build_findings_page() -> Path:
+    """Assemble findings.html from diagnostic/README.md.
+
+    Aggregates observations + findings and renders them into the shared
+    page shell. The nav highlights ``observatory`` as parent-active.
+    """
+    src_md = REPO_ROOT / "diagnostic/README.md"
+    md_text = src_md.read_text()
+    observations = extract_observations_from_md(md_text)
+    findings = extract_findings_from_md(md_text)
+
+    content_html = _render_findings_content(findings, observations)
+
+    page = {
+        "slug": "findings",
+        "md": "diagnostic/README.md",
+        "html": "findings.html",
+        "title": "Findings & Observations — The Diagnostic Synthesis",
+        "hero_h1": "Findings & Observations",
+        "hero_sub": "Every diagnostic finding paired with its mainnet evidence",
+        "active_nav": "findings",
+    }
+    full = render_shell(page, content_html)
+    out = SITE_DIR / "findings.html"
+    out.write_text(full)
+    return out
+
+
 # GitHub-style admonitions: `> [!TYPE]\n> body` becomes a styled callout.
 _ADMON_RE = re.compile(
     r'<blockquote>\s*<p>\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*(.*?)</p>\s*(.*?)</blockquote>',
@@ -1028,12 +1838,749 @@ def promote_admonitions(html_body: str) -> str:
     return _ADMON_RE.sub(_sub, html_body)
 
 
+# --- F# findings extraction + overlay (sub-reports) ----------------------
+
+# Findings tables in sub-report READMEs use the form:
+#   | F1.1 | <summary> | <anchor ref> | <insight> |
+# The anchor column is either a markdown link `[§3.6.1](#...)` or plain text
+# like "Epoch 616" (in which case we derive no anchor).
+_F_TABLE_ROW_RE = re.compile(
+    r"^\|\s*(F\d+\.\d+)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*(?:\|\s*(.+?)\s*)?\|",
+    re.MULTILINE,
+)
+
+# Captures an `F#.#` token anywhere in prose. Used for inline citation rewrite.
+_F_TOKEN_RE = re.compile(r"\bF(\d+)\.(\d+)\b")
+
+# Matches a markdown-style link in a table cell: `[§3.6.1](#361-current-snapshot)`.
+_MD_LINK_IN_CELL = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
+
+# Canonical XXX.OY[.FZ] tokens (e.g. POL.O1, POL.O1.F1, OPE.O3). The 3-letter
+# code is constrained to one of the defined sub-report codes; we resolve the
+# match against PAGE_BY_CODE rather than admitting any uppercase trigram.
+_CANON_TOKEN_RE = re.compile(
+    r"\(?([A-Z]{3})\.O(\d+)(?:\.F(\d+))?\)?"
+)
+
+
+def _canon_finding_id(code: str, f_id: str) -> str:
+    """Build the canonical ``XXX.O{O}.F{F}`` form from a row id like ``F1.1``.
+
+    ``F1.1`` decodes as observation 1, finding 1, so for code ``POL`` it
+    becomes ``POL.O1.F1``. The leading ``F`` and dot are dropped on purpose:
+    this id is the one shown to users and embedded in URLs.
+    """
+    o_part, f_part = f_id[1:].split(".", 1)
+    return f"{code}.O{o_part}.F{f_part}"
+
+
+def _canon_obs_id(code: str, o_num: int) -> str:
+    return f"{code}.O{o_num}"
+
+
+def _canon_slug(canon_id: str) -> str:
+    """URL-safe DOM id derived from a canonical id (``POL.O1.F1`` → ``pol-o1-f1``)."""
+    return canon_id.replace(".", "-").lower()
+
+
+def extract_f_findings_from_md(md_text: str, code: str = "", page_html: str = "") -> list[dict]:
+    """Pull ``F#.#`` findings out of the sub-report ``## Findings`` tables.
+
+    Returns a list of records in document order. Each record carries:
+
+    - ``id``         — short row id (``"F1.1"``) as written in the source MD
+    - ``canon_id``   — globally unique ``XXX.OY.FZ`` (e.g. ``POL.O1.F1``);
+                       falls back to ``id`` when no code is provided
+    - ``slug``       — DOM-safe id derived from canon_id (``pol-o1-f1``)
+    - ``summary``    — cell 2 (short sentence)
+    - ``anchor_label`` / ``anchor_href`` — parsed markdown link from cell 3
+    - ``page_html``  — owning page (e.g. ``"pools.html"``); empty when local
+    - ``jump_href``  — fully-qualified jump-to-source URL when ``page_html`` is set
+    - ``insight``    — cell 4 (short tag / cost insight), may be empty
+    - ``group``      — ``1`` from ``F1.1``, used for the finding-group colour hint
+    - ``code``       — owning sub-report code (e.g. ``POL``)
+    - ``o_num``      — the parent observation number (``1`` for ``F1.1``)
+    """
+    findings: list[dict] = []
+    seen: set[str] = set()
+    for m in _F_TABLE_ROW_RE.finditer(md_text):
+        fid = m.group(1)
+        if fid in seen:
+            continue
+        seen.add(fid)
+        summary = m.group(2).strip()
+        anchor_cell = (m.group(3) or "").strip()
+        insight = (m.group(4) or "").strip()
+        link_m = _MD_LINK_IN_CELL.search(anchor_cell)
+        anchor_label = ""
+        anchor_href = ""
+        if link_m:
+            anchor_label = link_m.group(1).strip()
+            anchor_href = link_m.group(2).strip()
+        major = int(fid.split(".")[0][1:])
+        canon_id = _canon_finding_id(code, fid) if code else fid
+        # Build the cross-page jump URL: prefix the local fragment with the
+        # owning page's html name. If the source markdown didn't supply an
+        # anchor, fall back to the ``## 1. Mainnet Observations`` table on
+        # the same page (still better than no jump).
+        local_anchor = anchor_href if anchor_href else "#1-mainnet-observations"
+        if page_html:
+            if local_anchor.startswith("#"):
+                jump_href = f"{page_html}{local_anchor}"
+            else:
+                jump_href = local_anchor  # already qualified
+        else:
+            jump_href = local_anchor
+        findings.append({
+            "id": fid,
+            "canon_id": canon_id,
+            "slug": _canon_slug(canon_id) if code else fid.replace(".", "").lower(),
+            "summary": summary,
+            "anchor_label": anchor_label,
+            "anchor_href": anchor_href,
+            "jump_href": jump_href,
+            "page_html": page_html,
+            "insight": insight,
+            "group": major,
+            "code": code,
+            "o_num": major,
+        })
+    return findings
+
+
+# Detect a "defining section" for O#: a heading whose text leads with `O1 — …`
+# (or O1 - / O1: / O1.). When present, we prefer this anchor over the generic
+# `#1-mainnet-observations` fallback for jump-to-source on (O#) overlays.
+_O_DEFINING_HEADING_RE = re.compile(
+    r"^(#{2,4})\s+O(\d+)\s*[—–\-:.\s]\s*(.+?)\s*$",
+    re.MULTILINE,
+)
+
+
+def detect_o_defining_sections(md_text: str) -> dict[int, str]:
+    """Return ``{O# → slug}`` for headings that *define* an observation.
+
+    Scans the markdown for headings like ``## O1 — Mass production at the cap``
+    or ``### O3: Below-viability concentration``. The slug returned matches
+    python-markdown's TOC slug conventions so it can be appended directly to
+    ``page.html#``.
+    """
+    out: dict[int, str] = {}
+    for m in _O_DEFINING_HEADING_RE.finditer(md_text):
+        o_num = int(m.group(2))
+        if o_num in out:
+            continue  # first occurrence wins (definition, not later refs)
+        title = m.group(3).strip()
+        # python-markdown slugifies "O1 — Mass production at the cap" to
+        # "o1-mass-production-at-the-cap". We mirror that locally so we don't
+        # have to round-trip through the renderer.
+        raw = f"O{o_num} {title}"
+        slug = re.sub(r"[^a-z0-9]+", "-", raw.lower()).strip("-")
+        out[o_num] = slug
+    return out
+
+
+def _render_finding_registry(findings: list[dict]) -> str:
+    """Hidden DOM block that the JS overlay reads to hydrate the tooltip.
+
+    Each finding gets a ``<div class="finding-detail" id="finding-<slug>">``
+    with the summary and insight as children. The registry is hidden via CSS
+    but lives in the DOM so the overlay has zero network cost.
+    """
+    if not findings:
+        return ""
+    cards: list[str] = []
+    for f in findings:
+        # Prefer the qualified jump_href so cross-page overlays land on the
+        # right page; the local anchor_href is the in-page fallback.
+        href = f.get("jump_href") or f.get("anchor_href") or ""
+        anchor_attr = (
+            f' data-href="{_html.escape(href)}"' if href else ""
+        )
+        page_attr = (
+            f' data-page="{_html.escape(f.get("page_html", ""))}"'
+            if f.get("page_html") else ""
+        )
+        anchor_label = (
+            f'<span class="finding-detail-src">{_html.escape(f["anchor_label"])}</span>'
+            if f["anchor_label"] else ""
+        )
+        insight_html = (
+            f'<div class="finding-detail-insight">{_html.escape(f["insight"])}</div>'
+            if f["insight"] else ""
+        )
+        # Summary may contain markdown — pass through a tiny md→HTML pass so
+        # any inline `**bold**` / links render. Strip block wrappers.
+        summary_html = _md_snippet_to_html(f["summary"]).strip()
+        if summary_html.startswith("<p>") and summary_html.endswith("</p>"):
+            summary_html = summary_html[3:-4]
+        canon = f.get("canon_id") or f["id"]
+        cards.append(
+            f'<div class="finding-detail" id="finding-{f["slug"]}" '
+            f'data-finding="{canon}" data-short="{f["id"]}" '
+            f'data-group="{f["group"]}"{page_attr}{anchor_attr}>'
+            f'<div class="finding-detail-id">{canon}</div>'
+            f'<div class="finding-detail-summary">{summary_html}</div>'
+            f'{insight_html}'
+            f'{anchor_label}'
+            f'</div>'
+        )
+    return (
+        '<div class="findings-registry" aria-hidden="true" hidden>'
+        + "".join(cards)
+        + "</div>"
+    )
+
+
+def _render_subreport_obs_registry(obs_groups: list[dict]) -> str:
+    """Hidden DOM block of ``XXX.OY`` observations from a sub-report.
+
+    Lets the canonical (XXX.OY) overlay hydrate from one source. The card
+    carries a tiny prose summary built from the joined finding evidences so
+    the tooltip is more than just the title.
+    """
+    if not obs_groups:
+        return ""
+    cards: list[str] = []
+    for g in obs_groups:
+        evid = " · ".join(
+            re.sub(r"\s+", " ", f["evidence_md"]).strip()
+            for f in g["findings"][:2]
+        )
+        evid_html = _md_snippet_to_html(evid).strip()
+        if evid_html.startswith("<p>") and evid_html.endswith("</p>"):
+            evid_html = evid_html[3:-4]
+        title_html = _sro_inline_md_to_html(g["o_title"])
+        href = g.get("jump_href", "")
+        anchor_attr = f' data-href="{_html.escape(href)}"' if href else ""
+        page_attr = (
+            f' data-page="{_html.escape(g.get("page_html", ""))}"'
+            if g.get("page_html") else ""
+        )
+        cards.append(
+            f'<div class="sro-obs-detail" id="srobs-{g["slug"]}" '
+            f'data-obs-canon="{g["canon_id"]}" data-short="{g["o_id"]}" '
+            f'data-group="{g["o_num"]}"{page_attr}{anchor_attr}>'
+            f'<div class="sro-obs-detail-id">{g["canon_id"]}</div>'
+            f'<div class="sro-obs-detail-title">{title_html}</div>'
+            f'<div class="sro-obs-detail-summary">{evid_html}</div>'
+            f'<div class="sro-obs-detail-count">{len(g["findings"])} '
+            f'{"findings" if len(g["findings"]) != 1 else "finding"}</div>'
+            f'</div>'
+        )
+    return (
+        '<div class="sro-obs-registry" aria-hidden="true" hidden>'
+        + "".join(cards)
+        + "</div>"
+    )
+
+
+# Canonical-only token re for V2 docs (matches POL.O1.F1, OPE.O3.F2 …).
+# Allows an optional surrounding paren pair (kept around the rewritten link
+# for visual continuity with the (O#) citation style used elsewhere).
+_CANON_F_TOKEN_RE = re.compile(r"\b([A-Z]{3})\.O(\d+)\.F(\d+)\b")
+_CANON_O_TOKEN_RE = re.compile(r"\b([A-Z]{3})\.O(\d+)(?!\.F)\b")
+
+
+def _is_skip_open(tag: str) -> str:
+    """Return a marker name when the tag opens a region we must NOT rewrite.
+
+    Recognised regions:
+
+    - ``<table>``                            — original markdown tables
+    - ``<section class="sro-list">``         — the new sub-report cards
+    - ``<div class="findings-registry">``    — hidden F# detail registry
+    - ``<div class="sro-obs-registry">``     — hidden O# detail registry
+    - ``<div class="obs-cards">``            — diagnostic observation cards
+    """
+    tlow = tag.lower()
+    if tlow.startswith("<table"):
+        return "table"
+    if tlow.startswith("<section") and 'class="sro-list"' in tag:
+        return "sro-list"
+    if tlow.startswith("<div"):
+        if 'class="findings-registry"' in tag:
+            return "findings-registry"
+        if 'class="sro-obs-registry"' in tag:
+            return "sro-obs-registry"
+        if 'class="obs-cards"' in tag:
+            return "obs-cards"
+    return ""
+
+
+def _is_skip_close(tag: str, region: str) -> bool:
+    tlow = tag.lower()
+    if region == "table":
+        return tlow.startswith("</table")
+    if region == "sro-list":
+        return tlow.startswith("</section")
+    if region in ("findings-registry", "sro-obs-registry", "obs-cards"):
+        return tlow.startswith("</div")
+    return False
+
+
+def _walk_html_skipping(
+    html_body: str,
+    text_transform,
+) -> str:
+    """Apply ``text_transform`` to text nodes that sit *outside* any defining
+    region (tables, sro-list cards, hidden registries). Tag depth is tracked
+    so nested ``<div>`` inside a registry doesn't leak.
+    """
+    out: list[str] = []
+    pos = 0
+    skip_stack: list[str] = []  # region names, innermost last
+    div_depth_in_region = 0
+    tag_re = re.compile(r"<(/?)(\w+)[^>]*>")
+    for m in tag_re.finditer(html_body):
+        text = html_body[pos:m.start()]
+        if not skip_stack:
+            text = text_transform(text)
+        out.append(text)
+        tag = m.group(0)
+        out.append(tag)
+        if not skip_stack:
+            region = _is_skip_open(tag)
+            if region:
+                skip_stack.append(region)
+                div_depth_in_region = 1 if region in ("findings-registry", "sro-obs-registry", "obs-cards") else 0
+        else:
+            current = skip_stack[-1]
+            if current in ("findings-registry", "sro-obs-registry", "obs-cards"):
+                tlow = tag.lower()
+                if tlow.startswith("<div"):
+                    div_depth_in_region += 1
+                elif tlow.startswith("</div"):
+                    div_depth_in_region -= 1
+                    if div_depth_in_region <= 0:
+                        skip_stack.pop()
+            elif _is_skip_close(tag, current):
+                skip_stack.pop()
+        pos = m.end()
+    tail = html_body[pos:]
+    if not skip_stack:
+        tail = text_transform(tail)
+    out.append(tail)
+    return "".join(out)
+
+
+def rewrite_finding_citations(
+    html_body: str,
+    findings: list[dict],
+    canonical_findings: list[dict] | None = None,
+) -> str:
+    """Turn inline F# tokens into hover-overlay anchors.
+
+    Two token forms are handled:
+
+    1. ``F#.#``           — short, page-local. Resolved against ``findings``
+       (the F-row records extracted from this page's ``## Findings`` table).
+    2. ``XXX.OY.FZ``      — canonical, cross-page. Resolved against the
+       optional ``canonical_findings`` list (typically all findings from all
+       sub-reports). Used on V2 docs.
+
+    The walker skips text inside ``<table>`` / ``<section class="sro-list">``
+    / ``<div class="findings-registry">`` so the *defining* renders are never
+    re-linked to themselves (which would be a circular overlay).
+    """
+    if not findings and not canonical_findings:
+        return html_body
+    short_index = {f["id"]: f for f in (findings or [])}
+    canon_index: dict[str, dict] = {}
+    for f in (canonical_findings or []):
+        canon_index[f["canon_id"]] = f
+    # Also let local F#.# tokens resolve to their canonical record (so the
+    # rewritten anchor displays the canonical id).
+    if findings:
+        for f in findings:
+            canon_index.setdefault(f["canon_id"], f)
+
+    def _sub_short(m: re.Match) -> str:
+        fid = f"F{m.group(1)}.{m.group(2)}"
+        f = short_index.get(fid)
+        if not f:
+            return m.group(0)
+        canon = f.get("canon_id") or fid
+        return (
+            f'<a class="finding-ref" href="#finding-{f["slug"]}" '
+            f'data-finding="{canon}" data-short="{fid}" '
+            f'data-group="{f["group"]}" '
+            f'title="{canon} · hover for summary, click for detail">'
+            f'{canon}</a>'
+        )
+
+    def _sub_canon(m: re.Match) -> str:
+        canon = f"{m.group(1)}.O{m.group(2)}.F{m.group(3)}"
+        f = canon_index.get(canon)
+        if not f:
+            return m.group(0)
+        return (
+            f'<a class="finding-ref" href="#finding-{f["slug"]}" '
+            f'data-finding="{canon}" data-short="{f["id"]}" '
+            f'data-group="{f["group"]}" '
+            f'title="{canon} · hover for summary, click for detail">'
+            f'{canon}</a>'
+        )
+
+    def _transform(text: str) -> str:
+        # Apply canonical first (longer match) so we don't double-rewrite the
+        # F# tail of POL.O1.F1.
+        text = _CANON_F_TOKEN_RE.sub(_sub_canon, text)
+        if short_index:
+            text = _F_TOKEN_RE.sub(_sub_short, text)
+        return text
+
+    return _walk_html_skipping(html_body, _transform)
+
+
+def rewrite_canonical_obs_citations(
+    html_body: str,
+    obs_groups: list[dict],
+) -> str:
+    """Turn ``XXX.OY`` tokens (without trailing ``.F#``) into overlay anchors.
+
+    Used on V2 docs where citations to a whole sub-report observation
+    (e.g. ``POL.O1``) should hydrate the observation tooltip rather than a
+    finding tooltip. Skips defining regions like the canonical F# rewriter.
+    """
+    if not obs_groups:
+        return html_body
+    index = {g["canon_id"]: g for g in obs_groups}
+
+    def _sub(m: re.Match) -> str:
+        canon = f"{m.group(1)}.O{m.group(2)}"
+        g = index.get(canon)
+        if not g:
+            return m.group(0)
+        return (
+            f'<a class="sro-obs-ref" href="#srobs-{g["slug"]}" '
+            f'data-obs-canon="{canon}" data-group="{g["o_num"]}" '
+            f'title="{canon} · hover for summary, click for detail">'
+            f'{canon}</a>'
+        )
+
+    def _transform(text: str) -> str:
+        return _CANON_O_TOKEN_RE.sub(_sub, text)
+
+    return _walk_html_skipping(html_body, _transform)
+
+
+# --- Sub-report Mainnet Observations: O# headers + F# rows --------------
+
+# Matches O-header rows:  | | **O1 — Title** | | |
+_SRO_OHDR_RE = re.compile(
+    r"^\|\s*\|\s*\*\*(O\d+)\s*[—–-]\s*(.+?)\*\*\s*\|\s*\|\s*\|\s*$",
+    re.MULTILINE,
+)
+# Matches F-rows: | F1.1 | evidence | section link | nature |
+_SRO_FROW_RE = re.compile(
+    r"^\|\s*(F\d+\.\d+)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*$",
+    re.MULTILINE,
+)
+
+
+def extract_subreport_observations(
+    md_text: str,
+    code: str = "",
+    page_html: str = "",
+    o_defining: dict[int, str] | None = None,
+    f_findings_by_id: dict[str, dict] | None = None,
+) -> list[dict]:
+    """Parse the ``## 1. Mainnet Observations`` section of a sub-report.
+
+    Returns an ordered list of O-groups. Each group carries:
+
+    - ``o_id``        — ``"O1"`` (raw in source MD)
+    - ``o_num``       — integer (``1``)
+    - ``canon_id``    — ``XXX.OY`` form (``POL.O1``) when ``code`` provided
+    - ``slug``        — DOM-safe id (``pol-o1``)
+    - ``o_title``     — the observation title after ``O1 —``
+    - ``defining_anchor`` — slug of the H2/H3 ``O1 — Title`` heading if found
+    - ``jump_href``   — fully-qualified jump-to-source URL
+    - ``findings``    — ordered list of finding dicts with their own canon_ids
+    - ``code`` / ``page_html``
+
+    ``f_findings_by_id`` (optional) provides the rich F# records extracted
+    earlier from ``## Findings`` (including evidence anchor links). When the
+    same F# id is encountered in the observation table, we splice the richer
+    fields (``anchor_label`` / ``anchor_href``) onto the row so the card can
+    render the diagnostic anchor as a proper link.
+    """
+    o_defining = o_defining or {}
+    f_findings_by_id = f_findings_by_id or {}
+
+    # Narrow to the Mainnet Observations section (between `## 1. …` and next `##`).
+    sec_m = re.search(
+        r"^##\s+1\.\s+Mainnet Observations\s*$",
+        md_text, re.MULTILINE,
+    )
+    if not sec_m:
+        return []
+    start = sec_m.end()
+    next_m = re.search(r"^##\s", md_text[start:], re.MULTILINE)
+    end = start + next_m.start() if next_m else len(md_text)
+    section_md = md_text[start:end]
+
+    # Walk the section line by line, grouping F-rows under the last O-header.
+    groups: list[dict] = []
+    current: dict | None = None
+    for raw_line in section_md.splitlines():
+        line = raw_line.rstrip()
+        oh = _SRO_OHDR_RE.match(line)
+        if oh:
+            o_num = int(oh.group(1)[1:])
+            o_id = oh.group(1)
+            o_title = oh.group(2).strip()
+            canon = _canon_obs_id(code, o_num) if code else o_id
+            defining = o_defining.get(o_num, "")
+            if page_html:
+                if defining:
+                    jump_href = f"{page_html}#{defining}"
+                else:
+                    jump_href = f"{page_html}#1-mainnet-observations"
+            else:
+                jump_href = f"#{defining}" if defining else "#1-mainnet-observations"
+            current = {
+                "o_id": o_id,
+                "o_num": o_num,
+                "canon_id": canon,
+                "slug": _canon_slug(canon) if code else o_id.lower(),
+                "o_title": o_title,
+                "defining_anchor": defining,
+                "jump_href": jump_href,
+                "code": code,
+                "page_html": page_html,
+                "findings": [],
+            }
+            groups.append(current)
+            continue
+        fr = _SRO_FROW_RE.match(line)
+        if fr and current is not None:
+            fid = fr.group(1)
+            f_canon = _canon_finding_id(code, fid) if code else fid
+            extra = f_findings_by_id.get(fid, {})
+            current["findings"].append({
+                "f_id": fid,
+                "canon_id": f_canon,
+                "slug": _canon_slug(f_canon) if code else fid.replace(".", "").lower(),
+                "f_group": int(fid.split(".")[0][1:]),
+                "evidence_md": fr.group(2).strip(),
+                "section_md": fr.group(3).strip(),
+                "nature_md": fr.group(4).strip(),
+                "anchor_href": extra.get("anchor_href", ""),
+                "jump_href": extra.get("jump_href", ""),
+                "code": code,
+                "page_html": page_html,
+            })
+    return groups
+
+
+def _sro_inline_md_to_html(md_inline: str) -> str:
+    """Render a single table cell's markdown to inline HTML.
+
+    Strips the wrapping ``<p>…</p>`` emitted by python-markdown so the cell
+    renders as a pure inline fragment. Keeps math protection so ``$a_0$``
+    survives the round-trip.
+    """
+    if not md_inline:
+        return ""
+    html = _md_snippet_to_html(md_inline).strip()
+    if html.startswith("<p>") and html.endswith("</p>"):
+        html = html[3:-4]
+    return html
+
+
+def _render_subreport_observations(groups: list[dict]) -> str:
+    """Build the cards block that replaces the flat observations table.
+
+    Each card displays canonical IDs (``POL.O1``, ``POL.O1.F1``) so the
+    Mainnet Observations table reads as a global atlas of findings rather
+    than a per-page F-numbering. The card itself is the *defining* render
+    of each observation and finding; overlay rewrites must skip it.
+    """
+    if not groups:
+        return ""
+    out: list[str] = [
+        '<section class="sro-list" aria-label="Mainnet observations">',
+    ]
+    for g in groups:
+        o_title_html = _sro_inline_md_to_html(g["o_title"])
+        canon = g["canon_id"]
+        o_short = g["o_id"]  # legacy short label, e.g. "O1"
+        out.append(
+            f'<article class="sro-card" id="{g["slug"]}" '
+            f'data-obs="{canon}" data-group="{g["o_num"]}">'
+            f'<header class="sro-head">'
+            f'<span class="sro-badge sro-group-{g["o_num"]}" '
+            f'title="{canon} · {o_short}">{canon}</span>'
+            f'<h3 class="sro-title">{o_title_html}</h3>'
+            f'<span class="sro-count">{len(g["findings"])} '
+            f'{"findings" if len(g["findings"]) != 1 else "finding"}</span>'
+            f'</header>'
+            f'<ol class="sro-findings">'
+        )
+        for f in g["findings"]:
+            ev_html = _sro_inline_md_to_html(f["evidence_md"])
+            ev_html = _highlight_metrics(ev_html)
+            sec_html = _sro_inline_md_to_html(f["section_md"])
+            nature_html = _sro_inline_md_to_html(f["nature_md"])
+            out.append(
+                f'<li class="sro-finding" id="{f["slug"]}" '
+                f'data-finding="{f["canon_id"]}" data-group="{f["f_group"]}">'
+                f'<span class="sro-fid sro-group-{f["f_group"]}" '
+                f'title="{f["canon_id"]} · was {f["f_id"]}">{f["canon_id"]}</span>'
+                f'<div class="sro-body">'
+                f'<div class="sro-evidence">{ev_html}</div>'
+                f'<div class="sro-meta">'
+                f'<span class="sro-anchor">{sec_html}</span>'
+                f'<span class="sro-nature">{nature_html}</span>'
+                f'</div>'
+                f'</div>'
+                f'</li>'
+            )
+        out.append('</ol></article>')
+    out.append('</section>')
+    return "".join(out)
+
+
+# --- Synthesis observation canonical IDs (DIA.X.Y.O#) -----------------
+
+# Code for the diagnostic synthesis itself.
+DIAG_CODE = "DIA"
+# Page that hosts the canonical defining tables for synthesis observations.
+DIAG_SYNTH_PAGE = "observatory.html"
+
+
+def _enrich_synth_obs(obs_list: list[dict]) -> list[dict]:
+    """Tag every diagnostic-synthesis observation with canonical id + jump href.
+
+    Mutates the dicts in place (and returns them) so downstream consumers
+    (cards, overlay registry, V2-doc rewriter) all see the same fields.
+    """
+    for o in obs_list:
+        # Canonical id mirrors the source citation form (§<parent> O<n>) so
+        # readers can mentally back-reference. parent is already X.Y or X.Y.Z.
+        o["canon_id"] = f"{DIAG_CODE}.{o['parent']}.{o['local_id']}"
+        o["slug_canon"] = re.sub(r"[^a-z0-9]+", "-", o["canon_id"].lower()).strip("-")
+        # The defining anchor: the heading of the X.Y.Z Mainnet Observations
+        # section, which is where extract_observations_from_md found this row.
+        o["jump_href"] = f"{DIAG_SYNTH_PAGE}#{o['section_slug']}-mainnet-observations"
+        o["page_html"] = DIAG_SYNTH_PAGE
+    return obs_list
+
+
+# Citation token that appears in V2 docs: `(§1.3 O1)`, `(§1.2 O6)`, …
+# The parent path can have 2 or 3 dot-separated levels. Whitespace is
+# tolerated between the `§…` and the `O#`.
+_SYNTH_O_TOKEN_RE = re.compile(
+    r"\(\s*§\s*(\d+(?:\.\d+){1,2})\s+O(\d+)\s*\)"
+)
+
+
+def _render_synth_obs_registry(obs_list: list[dict]) -> str:
+    """Hidden DOM block of synthesis observations, keyed by canonical id."""
+    if not obs_list:
+        return ""
+    cards: list[str] = []
+    for o in obs_list:
+        summary_html = _highlight_metrics(_html.escape(o["summary"]))
+        summary_html = re.sub(r"\*([^*\n]+?)\*", r"<em>\1</em>", summary_html)
+        cards.append(
+            f'<div class="synth-obs-detail" id="dia-{o["slug_canon"]}" '
+            f'data-obs-canon="{o["canon_id"]}" data-short="{o["local_id"]}" '
+            f'data-tier="{o["tier"]}" data-page="{DIAG_SYNTH_PAGE}" '
+            f'data-href="{_html.escape(o["jump_href"])}">'
+            f'<div class="synth-obs-detail-id">{o["canon_id"]}</div>'
+            f'<div class="synth-obs-detail-tier obs-tier obs-tier-{o["tier"]}">{o["tier_label"]}</div>'
+            f'<div class="synth-obs-detail-title">{_html.escape(o["title"])}</div>'
+            f'<div class="synth-obs-detail-summary">{summary_html}</div>'
+            f'</div>'
+        )
+    return (
+        '<div class="synth-obs-registry" aria-hidden="true" hidden>'
+        + "".join(cards)
+        + "</div>"
+    )
+
+
+def rewrite_synthesis_obs_citations(html_body: str, synth_obs: list[dict]) -> str:
+    """Turn ``(§X.Y O#)`` tokens into overlay anchors with canonical labels.
+
+    Lookup is done by *parent* (X.Y) first, then by *section* (X.Y.Z) since
+    citations in prose can refer either to the parent topic or to a specific
+    sub-section. Tokens that don't resolve are left untouched.
+    """
+    if not synth_obs:
+        return html_body
+    by_parent: dict[str, dict[int, dict]] = {}
+    by_section: dict[str, dict[int, dict]] = {}
+    for o in synth_obs:
+        by_parent.setdefault(o["parent"], {})[o["local_num"]] = o
+        by_section.setdefault(o["section_id"], {})[o["local_num"]] = o
+
+    def _sub(m: re.Match) -> str:
+        path = m.group(1)
+        num = int(m.group(2))
+        scope = by_parent.get(path) or by_section.get(path)
+        if not scope:
+            return m.group(0)
+        o = scope.get(num)
+        if not o:
+            return m.group(0)
+        return (
+            f'<a class="synth-obs-ref obs-ref" href="#dia-{o["slug_canon"]}" '
+            f'data-obs-canon="{o["canon_id"]}" data-tier="{o["tier"]}" '
+            f'title="{o["canon_id"]} · hover for summary, click for detail">'
+            f'{o["canon_id"]}</a>'
+        )
+
+    def _transform(text: str) -> str:
+        return _SYNTH_O_TOKEN_RE.sub(_sub, text)
+
+    return _walk_html_skipping(html_body, _transform)
+
+
+def transform_subreport_observation_table(html_body: str, groups: list[dict]) -> str:
+    """Swap the raw ``<table>`` that follows ``# 1. Mainnet Observations`` for cards.
+
+    The target is always the first ``<table>…</table>`` immediately after
+    ``<h2 id="1-mainnet-observations">``. Everything else on the page is
+    untouched.
+    """
+    if not groups:
+        return html_body
+    h2_re = re.compile(
+        r'<h2[^>]*id="1-mainnet-observations"[^>]*>.*?</h2>',
+        re.DOTALL | re.IGNORECASE,
+    )
+    m = h2_re.search(html_body)
+    if not m:
+        return html_body
+    after = html_body[m.end():]
+    tbl_re = re.compile(r"<table>.*?</table>", re.DOTALL | re.IGNORECASE)
+    t = tbl_re.search(after)
+    if not t:
+        return html_body
+    new_block = _render_subreport_observations(groups)
+    start = m.end() + t.start()
+    end = m.end() + t.end()
+    return html_body[:start] + new_block + html_body[end:]
+
+
 def build_page(page: dict) -> Path:
     src_md = REPO_ROOT / page["md"]
     if not src_md.exists():
         raise FileNotFoundError(f"Source MD not found: {src_md}")
 
     md_text = src_md.read_text()
+    # Observations are extracted from the *raw* MD so tier/summary text is
+    # canonical; the cards built here are injected into the rendered HTML
+    # below, replacing the default table rendering.
+    observations = extract_observations_from_md(md_text)
+    # F# findings live in sub-reports (the table forms like `| F1.1 | … |`).
+    # Extract before preprocess_md touches links / anchors.
+    f_findings = extract_f_findings_from_md(md_text)
+
     md_text = preprocess_md(md_text, src_md)
     # Strip the first top-level H1 so the body doesn't duplicate the banner
     # title rendered by render_shell. Keeps the README self-sufficient on
@@ -1043,6 +2590,16 @@ def build_page(page: dict) -> Path:
     content_html = wrap_manual_toc(content_html)
     content_html = promote_admonitions(content_html)
 
+    if observations:
+        content_html = transform_observation_tables(content_html, observations)
+        content_html = rewrite_obs_citations(content_html, observations)
+
+    if f_findings:
+        content_html = rewrite_finding_citations(content_html, f_findings)
+        content_html += _render_finding_registry(f_findings)
+
+    content_html = decorate_section_references(content_html, page["html"])
+
     full = render_shell(page, content_html)
     out = SITE_DIR / page["html"]
     out.write_text(full)
@@ -1051,11 +2608,13 @@ def build_page(page: dict) -> Path:
 
 def main(argv: list[str]) -> int:
     slugs = [a for a in argv[1:] if not a.startswith("-")]
+    valid_slugs = {p["slug"] for p in PAGES} | {"findings"}
     wanted = PAGES if not slugs else [p for p in PAGES if p["slug"] in slugs]
-    if slugs and len(wanted) != len(slugs):
-        missing = set(slugs) - {p["slug"] for p in wanted}
-        print(f"Unknown slugs: {sorted(missing)}", file=sys.stderr)
-        return 2
+    if slugs:
+        missing = set(slugs) - valid_slugs
+        if missing:
+            print(f"Unknown slugs: {sorted(missing)}", file=sys.stderr)
+            return 2
 
     print("Extracting shared assets (one-off)…")
     extract_shared_assets()
@@ -1064,11 +2623,21 @@ def main(argv: list[str]) -> int:
     print("Syncing reference PDFs…")
     sync_references()
 
+    print("Building section-title index…")
+    build_title_index()
+
     print(f"Building {len(wanted)} page(s)…")
     for page in wanted:
         print(f"  {page['slug']:16s} ← {page['md']}")
         out = build_page(page)
         print(f"  {' ':16s}  → {out.relative_to(SITE_DIR)}")
+
+    # Synthesis page — derived from diagnostic/README.md, no standalone MD.
+    # Always regenerated when all pages are built, or on explicit `findings` slug.
+    if not slugs or "findings" in slugs:
+        print(f"  {'findings':16s} ← diagnostic/README.md (synthesis)")
+        findings_out = build_findings_page()
+        print(f"  {' ':16s}  → {findings_out.relative_to(SITE_DIR)}")
     print("Done.")
     return 0
 

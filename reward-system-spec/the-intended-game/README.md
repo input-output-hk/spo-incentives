@@ -96,9 +96,9 @@ They submit transactions and pay fees. Those fees — together with the monetary
 
 #### 2.1.3 A latent constraint — marginal today, existential tomorrow
 
-In the current regime, transaction fees are negligible (~0.19% of the epoch pot — [§1.1.2](../diagnostic/README.md#112-mainnet-observations) O1). The game is almost entirely funded by monetary expansion from a depleting reserve.
+In the current regime, transaction fees are negligible (~0.19% of the epoch pot — [§1.1.2](../diagnostic/README.md#112-mainnet-observations) (DIA.1.1.O1)). The game is almost entirely funded by monetary expansion from a depleting reserve.
 
-As the reserve crosses its half-life and expansion shrinks ([§1.1.2](../diagnostic/README.md#112-mainnet-observations) O2), the system's economic viability progressively shifts onto fee revenue.
+As the reserve crosses its half-life and expansion shrinks ([§1.1.2](../diagnostic/README.md#112-mainnet-observations) (DIA.1.1.O2)), the system's economic viability progressively shifts onto fee revenue.
 
 > [!NOTE]
 > Transaction submitters are a **latent constraint**: marginal today, existential tomorrow. Their long-term participation is what makes the staking game *sustainably worth playing* for every other participant.
