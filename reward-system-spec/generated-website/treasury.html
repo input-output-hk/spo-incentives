@@ -20,7 +20,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1776861984">
+<link rel="stylesheet" href="assets/site.css?v=1776864239">
 </head>
 <body>
 <div class="progress-bar" id="progress"></div>
@@ -258,102 +258,7 @@ Source dataset: <code>data/reward_epoch_pools_mainnet.csv</code> (Koios).</p>
 </nav>
 <hr>
 <h2 id="1-mainnet-observations">1. Mainnet Observations</h2>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Observation</th>
-<th>Section</th>
-<th>Nature</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-<td><strong>TRE.O1 — The epoch pot is a single-source budget</strong></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>TRE.O1.F1</td>
-<td>Monetary expansion dominates the epoch pot (~99.8%)</td>
-<td><a href="observatory.html#1-constitutional-framework">§1</a></td>
-<td>Structural — unchanged since Shelley</td>
-</tr>
-<tr>
-<td>TRE.O1.F2</td>
-<td>Fee revenue is structurally insufficient — even at full capacity, fees cover ~1.3% of expansion</td>
-<td><a href="observatory.html#22-restore-the-notion-of-pledge-among-operators">§2.2</a>, <a href="#52-fee-to-expansion-crossover">§5.2 — Fee-to-expansion crossover</a></td>
-<td>Structural — 12–16× capacity gap</td>
-</tr>
-<tr>
-<td>TRE.O1.F3</td>
-<td>Deposit contribution is small and unmeasurable at epoch granularity</td>
-<td><a href="observatory.html#23-maintain-and-diversify-a-competitive-delegator-yield">§2.3</a></td>
-<td>Data limitation — Koios coverage</td>
-</tr>
-<tr>
-<td>TRE.O1.F4</td>
-<td>SPOs produce ~97% of their assigned blocks — the pot assembles reliably</td>
-<td><a href="observatory.html#24-reduce-the-concentration-effects-that-distort-both-populations">§2.4</a></td>
-<td>Structural — avg η = 0.977</td>
-</tr>
-<tr>
-<td></td>
-<td><strong>TRE.O2 — The reserve has crossed its half-life</strong></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>TRE.O2.F1</td>
-<td>Reserve is half-depleted (−51.43%) in 5.7 years</td>
-<td><a href="observatory.html#21-guarantee-operator-viability-across-the-entire-productive-population">§2.1</a></td>
-<td>Structural — exponential decay</td>
-</tr>
-<tr>
-<td>TRE.O2.F2</td>
-<td>Significant reward pressure expected at epochs 1000–1200</td>
-<td><a href="#51-reserve-depletion-trajectory">§5.1 — Reserve depletion trajectory</a></td>
-<td>Projected — ~2028–2029</td>
-</tr>
-<tr>
-<td></td>
-<td><strong>TRE.O3 — The reward mechanism operates at ~44% of its potential</strong></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>TRE.O3.F1</td>
-<td>Only ~44% of the pools pot is distributed to operators and delegators — the rest returns to the reserve</td>
-<td><a href="observatory.html#32-the-fee-generating-population-must-expand">§3.2</a></td>
-<td>Epoch 623 — 6.78M of 15.39M ADA</td>
-</tr>
-<tr>
-<td>TRE.O3.F2</td>
-<td>4.61B ADA cumulative (~71% of current reserve) exists because of undistributed rewards</td>
-<td><a href="observatory.html#32-the-fee-generating-population-must-expand">§3.2</a></td>
-<td>Structural — side-effect, not design</td>
-</tr>
-<tr>
-<td>TRE.O3.F3</td>
-<td>The primary driver is inactive stake — ~16.8B ADA (~43.6%) does not participate in delegation</td>
-<td><a href="observatory.html#32-the-fee-generating-population-must-expand">§3.2</a></td>
-<td>Upstream — outside formula control</td>
-</tr>
-<tr>
-<td></td>
-<td><strong>TRE.O4 — Reward parameters have never been adjusted</strong></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>TRE.O4.F1</td>
-<td>Treasury split and expansion rate never adjusted since Shelley</td>
-<td><a href="observatory.html#33-the-mechanism-must-function-across-a-range-of-ada-price-scenarios">§3.3</a></td>
-<td>Governance — τ = 20%, ρ = 0.3% constant</td>
-</tr>
-</tbody>
-</table>
+<section class="sro-list" aria-label="Mainnet observations"><article class="sro-card" id="tre-o1" data-obs="TRE.O1" data-group="1"><header class="sro-head"><span class="sro-badge sro-group-1" title="TRE.O1 · O1">TRE.O1</span><h3 class="sro-title">The epoch pot is a single-source budget</h3><span class="sro-count">4 findings</span></header><ol class="sro-findings"><li class="sro-finding" id="tre-o1-f1" data-finding="TRE.O1.F1" data-group="1"><span class="sro-fid sro-group-1" title="TRE.O1.F1 · was F1.1">TRE.O1.F1</span><div class="sro-body"><div class="sro-evidence">Monetary expansion dominates the epoch pot (~99.8%)</div><div class="sro-meta"><span class="sro-anchor"><a href="observatory.html#1-constitutional-framework">§1</a></span><span class="sro-nature">Structural — unchanged since Shelley</span></div></div></li><li class="sro-finding" id="tre-o1-f2" data-finding="TRE.O1.F2" data-group="1"><span class="sro-fid sro-group-1" title="TRE.O1.F2 · was F1.2">TRE.O1.F2</span><div class="sro-body"><div class="sro-evidence">Fee revenue is structurally insufficient — even at full capacity, fees cover ~1.3% of expansion</div><div class="sro-meta"><span class="sro-anchor"><a href="observatory.html#22-restore-the-notion-of-pledge-among-operators">§2.2</a>, <a href="#52-fee-to-expansion-crossover">§5.2 — Fee-to-expansion crossover</a></span><span class="sro-nature">Structural — 12–16× capacity gap</span></div></div></li><li class="sro-finding" id="tre-o1-f3" data-finding="TRE.O1.F3" data-group="1"><span class="sro-fid sro-group-1" title="TRE.O1.F3 · was F1.3">TRE.O1.F3</span><div class="sro-body"><div class="sro-evidence">Deposit contribution is small and unmeasurable at epoch granularity</div><div class="sro-meta"><span class="sro-anchor"><a href="observatory.html#23-maintain-and-diversify-a-competitive-delegator-yield">§2.3</a></span><span class="sro-nature">Data limitation — Koios coverage</span></div></div></li><li class="sro-finding" id="tre-o1-f4" data-finding="TRE.O1.F4" data-group="1"><span class="sro-fid sro-group-1" title="TRE.O1.F4 · was F1.4">TRE.O1.F4</span><div class="sro-body"><div class="sro-evidence">SPOs produce ~97% of their assigned blocks — the pot assembles reliably</div><div class="sro-meta"><span class="sro-anchor"><a href="observatory.html#24-reduce-the-concentration-effects-that-distort-both-populations">§2.4</a></span><span class="sro-nature">Structural — avg η = 0.977</span></div></div></li></ol></article><article class="sro-card" id="tre-o2" data-obs="TRE.O2" data-group="2"><header class="sro-head"><span class="sro-badge sro-group-2" title="TRE.O2 · O2">TRE.O2</span><h3 class="sro-title">The reserve has crossed its half-life</h3><span class="sro-count">2 findings</span></header><ol class="sro-findings"><li class="sro-finding" id="tre-o2-f1" data-finding="TRE.O2.F1" data-group="2"><span class="sro-fid sro-group-2" title="TRE.O2.F1 · was F2.1">TRE.O2.F1</span><div class="sro-body"><div class="sro-evidence">Reserve is half-depleted (−51.43%) in 5.7 years</div><div class="sro-meta"><span class="sro-anchor"><a href="observatory.html#21-guarantee-operator-viability-across-the-entire-productive-population">§2.1</a></span><span class="sro-nature">Structural — exponential decay</span></div></div></li><li class="sro-finding" id="tre-o2-f2" data-finding="TRE.O2.F2" data-group="2"><span class="sro-fid sro-group-2" title="TRE.O2.F2 · was F2.2">TRE.O2.F2</span><div class="sro-body"><div class="sro-evidence">Significant reward pressure expected at epochs 1000–1200</div><div class="sro-meta"><span class="sro-anchor"><a href="#51-reserve-depletion-trajectory">§5.1 — Reserve depletion trajectory</a></span><span class="sro-nature">Projected — ~2028–2029</span></div></div></li></ol></article><article class="sro-card" id="tre-o3" data-obs="TRE.O3" data-group="3"><header class="sro-head"><span class="sro-badge sro-group-3" title="TRE.O3 · O3">TRE.O3</span><h3 class="sro-title">The reward mechanism operates at ~44% of its potential</h3><span class="sro-count">3 findings</span></header><ol class="sro-findings"><li class="sro-finding" id="tre-o3-f1" data-finding="TRE.O3.F1" data-group="3"><span class="sro-fid sro-group-3" title="TRE.O3.F1 · was F3.1">TRE.O3.F1</span><div class="sro-body"><div class="sro-evidence">Only ~44% of the pools pot is distributed to operators and delegators — the rest returns to the reserve</div><div class="sro-meta"><span class="sro-anchor"><a href="observatory.html#32-the-fee-generating-population-must-expand">§3.2</a></span><span class="sro-nature">Epoch 623 — 6.78M of 15.39M ADA</span></div></div></li><li class="sro-finding" id="tre-o3-f2" data-finding="TRE.O3.F2" data-group="3"><span class="sro-fid sro-group-3" title="TRE.O3.F2 · was F3.2">TRE.O3.F2</span><div class="sro-body"><div class="sro-evidence"><span class="metric">4.61B ADA</span> cumulative (~71% of current reserve) exists because of undistributed rewards</div><div class="sro-meta"><span class="sro-anchor"><a href="observatory.html#32-the-fee-generating-population-must-expand">§3.2</a></span><span class="sro-nature">Structural — side-effect, not design</span></div></div></li><li class="sro-finding" id="tre-o3-f3" data-finding="TRE.O3.F3" data-group="3"><span class="sro-fid sro-group-3" title="TRE.O3.F3 · was F3.3">TRE.O3.F3</span><div class="sro-body"><div class="sro-evidence">The primary driver is inactive stake — ~<span class="metric">16.8B ADA</span> (~43.6%) does not participate in delegation</div><div class="sro-meta"><span class="sro-anchor"><a href="observatory.html#32-the-fee-generating-population-must-expand">§3.2</a></span><span class="sro-nature">Upstream — outside formula control</span></div></div></li></ol></article><article class="sro-card" id="tre-o4" data-obs="TRE.O4" data-group="4"><header class="sro-head"><span class="sro-badge sro-group-4" title="TRE.O4 · O4">TRE.O4</span><h3 class="sro-title">Reward parameters have never been adjusted</h3><span class="sro-count">1 finding</span></header><ol class="sro-findings"><li class="sro-finding" id="tre-o4-f1" data-finding="TRE.O4.F1" data-group="4"><span class="sro-fid sro-group-4" title="TRE.O4.F1 · was F4.1">TRE.O4.F1</span><div class="sro-body"><div class="sro-evidence">Treasury split and expansion rate never adjusted since Shelley</div><div class="sro-meta"><span class="sro-anchor"><a href="observatory.html#33-the-mechanism-must-function-across-a-range-of-ada-price-scenarios">§3.3</a></span><span class="sro-nature">Governance — τ = 20%, ρ = 0.3% constant</span></div></div></li></ol></article></section>
 <h3 id="the-big-picture">The big picture</h3>
 <p>Nearly six years after Shelley, the epoch-budget stage tells a clear story: <strong>the system works, but it runs on a finite fuel supply that is now half-spent.</strong></p>
 <h3 id="treo1-the-epoch-pot-is-a-single-source-budget">TRE.O1 — The epoch pot is a single-source budget</h3>
@@ -946,6 +851,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1776861984"></script>
+<script src="assets/site.js?v=1776864239"></script>
 </body>
 </html>

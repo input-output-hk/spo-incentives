@@ -904,12 +904,15 @@
       var canon=card.getAttribute('data-obs-canon');
       var title=(card.querySelector('.sro-obs-detail-title')||{}).innerHTML||'';
       var summary=(card.querySelector('.sro-obs-detail-summary')||{}).innerHTML||'';
+      var abstractEl=card.querySelector('.sro-obs-detail-abstract');
+      var abstractHtml=abstractEl?abstractEl.innerHTML:'';
       var count=(card.querySelector('.sro-obs-detail-count')||{}).textContent||'';
       var page=card.getAttribute('data-page')||'';
       var href=card.getAttribute('data-href')||'';
       var findingIds=(card.getAttribute('data-findings')||'').split(',')
         .map(function(s){return s.trim();}).filter(Boolean);
-      srcIndex[canon]={canon:canon,title:title,summary:summary,count:count,
+      srcIndex[canon]={canon:canon,title:title,summary:summary,
+        abstract:abstractHtml,count:count,
         page:page,href:href,findingIds:findingIds};
     });
     if(!Object.keys(srcIndex).length) return;
@@ -993,6 +996,7 @@
       '</div>'+
       '<div class="obs-panel-body">'+
         '<div class="obs-panel-title"></div>'+
+        '<div class="obs-panel-abstract"></div>'+
         '<div class="obs-panel-summary"></div>'+
         '<div class="obs-panel-findings-wrap">'+
           '<div class="obs-panel-findings-head">'+
@@ -1030,7 +1034,29 @@
       panel.querySelector('.obs-panel-num').textContent=data.canon;
       panel.querySelector('.obs-panel-section-id').textContent='Source sub-report';
       panel.querySelector('.obs-panel-title').innerHTML=data.title;
-      panel.querySelector('.obs-panel-summary').innerHTML=data.summary;
+      /* Abstract: an editorially-written reader-facing gloss of the whole
+         observation. When present it replaces the auto-built summary. */
+      var absEl=panel.querySelector('.obs-panel-abstract');
+      if(data.abstract){
+        absEl.style.display='';
+        absEl.innerHTML=data.abstract;
+      } else {
+        absEl.style.display='none';
+        absEl.innerHTML='';
+      }
+      /* The card summary is the first two findings concatenated — redundant
+         with the findings list (or the abstract) when the panel is open.
+         Keep the element for tooltip parity, but hide it here whenever we
+         already have a richer source of signal. */
+      var sumEl=panel.querySelector('.obs-panel-summary');
+      var hasFindings=data.findingIds && data.findingIds.length;
+      if(hasFindings || data.abstract){
+        sumEl.innerHTML='';
+        sumEl.style.display='none';
+      } else {
+        sumEl.style.display='';
+        sumEl.innerHTML=data.summary;
+      }
       panel.querySelector('.obs-panel-source').innerHTML=
         '<a href="'+data.href+'">'+pageLabel(data.page)+'</a>';
 

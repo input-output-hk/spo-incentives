@@ -6,6 +6,7 @@
 
 - **Purpose.** Evaluate each candidate CIP against the V2 milestones on its own merits, then check how candidates combine: two CIPs on the *same* layer (fee or stake-cap) compete — pick one; a fee-layer CIP plus a stake-cap CIP compose cleanly.
 - **Core question.** *Given the V2 milestones and their dependency chain, what does this proposal actually deliver, and what does it leave unresolved or worsen?*
+- **Validation framework.** Each per-CIP §3 rests on a six-gate framework separating analytical facts from predictive claims. Verdicts require G1 (analytical properties) + G2 (mainnet counterfactual arithmetic); simulation is G6 — supplementary, never load-bearing. Full specification in [`methodology.md`](methodology.md).
 - **Folder layout.** Two independent layers of the reward pipeline — fee layer in [`operator-delegator/`](operator-delegator/README.md), stake-cap layer in [`pools-distribution/`](pools-distribution/README.md) — plus transversal protocol parameters at root.
 - **Synthesis.** Cross-CIP comparison and recommended package: [`synthesis.md`](synthesis.md).
 
@@ -28,13 +29,22 @@ Every candidate is assessed along five axes. The first four are lifted from V2 �
 
 **Dependency order is enforced.** A candidate targeting §3.4 without first satisfying §3.1, §3.2, §3.3 is flagged as *building on a foundation that does not exist*.
 
-### 1.2 Simulation against current mainnet state
+### 1.2 Validation
 
-| Requirement | Source |
-| --- | --- |
-| Initialise from actual population structure at a recent epoch (not a clean-slate $k$-pool equilibrium) | [`../diagnostic/sub-flows/census/mainnet-analysis/`](../diagnostic/sub-flows/census/mainnet-analysis/README.md), [`../diagnostic/sub-flows/pools-distribution/mainnet-analysis/`](../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md) |
-| Run under ≥3 ADA-price scenarios (stress, stable, appreciating) | V2 §4.3 |
-| Simulator | [`../../../Rewards-Sharing-Simulation-Engine/`](../../../Rewards-Sharing-Simulation-Engine/) |
+The validation of each candidate follows the six-gate framework defined in [`methodology.md`](methodology.md). Summary of gate purposes and trust levels:
+
+| Gate | Purpose | Trust | Role in verdict |
+| --- | --- | --- | --- |
+| G1 — Analytical properties | Theorems derived from the formula itself | High | Required |
+| G2 — Mainnet snapshot counterfactual | Arithmetic on a recent-epoch snapshot at fixed behaviour | High | Required |
+| G3 — Historical analogies | Prior parameter moves (e.g., `k: 150 → 500`) | Medium | Supporting |
+| G4 — Game-theoretic best responses | Per-population reasoning, assumptions labelled as such | Medium-low | Supporting |
+| G5 — Governance ramp and rollback | Production contract: stages, triggers, reversibility | — | Required for deployment |
+| G6 — Exploratory simulation | Scenario ablations | Low | Never load-bearing |
+
+**Inputs to G2.** Actual population structure at a recent epoch (not a clean-slate $k$-pool equilibrium), from [`../diagnostic/sub-flows/census/mainnet-analysis/`](../diagnostic/sub-flows/census/mainnet-analysis/README.md) and [`../diagnostic/sub-flows/pools-distribution/mainnet-analysis/`](../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md). Price-scenario coverage (stress, stable, appreciating) per V2 §4.3.
+
+**G6 simulator.** [`../../../simulator/`](../../../simulator/) — under active improvement 2026. Supplementary only.
 
 ### 1.3 Transition path from V1
 
@@ -94,7 +104,7 @@ Each per-CIP file follows a five-section structure mirroring §1:
 | --- | --- | --- |
 | 1 | Mechanism | Canonical formulation, author's stated objective, exact parameter surface |
 | 2 | Milestone coverage | V2 milestones addressed, with diagnostic evidence where the instrument bites |
-| 3 | Simulation plan | Initial state, scenarios, KPI targets, population segments to watch |
+| 3 | Validation plan | Six-gate structure (G1–G6) — see [`methodology.md`](methodology.md). Subsections 3.1–3.6 map one-to-one to gates |
 | 4 | Transition and governance | Parameter path, CIP approval route, risk of off-chain dependencies |
 | 5 | Interaction audit | Same-layer precedence questions, cross-layer composition, dependency-chain ordering |
 
@@ -115,7 +125,7 @@ Per-CIP and synthesis docs follow a **visual-first** pattern: TL;DR block at top
 - **V2 specification:** [`../README.md`](../README.md) §2 grid, §5 evaluation framework, §4.4 governability criteria, §2 constitutional framework.
 - **Diagnostic evidence:** [`../diagnostic/README.md`](../diagnostic/README.md).
 - **Mechanism-intent narrative:** [`../the-intended-game/README.md`](../the-intended-game/README.md).
-- **Simulator:** [`../../../Rewards-Sharing-Simulation-Engine/`](../../../Rewards-Sharing-Simulation-Engine/).
+- **Simulator:** [`../../../simulator/`](../../../simulator/).
 - **Governance recommendation context:** [`../../../Context/cip-analysis/governance-cip-recommendation-package.md`](../../../Context/cip-analysis/governance-cip-recommendation-package.md).
 - **CIP local copies:** [`../../../Context/CIPs-repo/`](../../../Context/CIPs-repo/).
 - **Subfolders:** [`operator-delegator/README.md`](operator-delegator/README.md), [`pools-distribution/README.md`](pools-distribution/README.md).

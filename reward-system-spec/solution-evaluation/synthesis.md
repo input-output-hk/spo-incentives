@@ -120,17 +120,19 @@ Cross-layer pairings (one fee-layer + one stake-cap-layer) compose cleanly. Four
 | Viability-first egalitarianism (**house position**) | Steps 1–3, CIP-0050 at step 3 | Respected |
 | Security-first skin-in-the-game | Step 3 first, then 1–2 | Violated — collapses the viability band before widening it |
 
-## 6. Simulation-level cross-checks
+## 6. Validation cross-checks
 
-Non-optional before any go/no-go at any step:
+Non-optional before any go/no-go at any step. Gate framework per [`methodology.md`](methodology.md) — G1 + G2 are required, G5 carries the production contract, G6 is supplementary.
 
-| Check | Minimum readout |
-| --- | --- |
-| Per-step delta KPIs | Pool count, Nakamoto coefficient, entity-level HHI, sub-threshold pool share, independent-SPO share, MPO fleet size — all vs initial state |
-| Viability-band dynamics | Operator-tier viability rate; explicit readout on the 116 sub-threshold pools, the 283 viable independent single-pool operators, and the MPO fleet |
-| Joint price stress | Every step under stress / stable / appreciating ADA-price scenarios (V2 §4.3) |
-| Transition timing | ≥ 6 months between stake-cap activation and first `k` raise; ≥ 3 months between `k` raises |
-| Gap readout | §4.1 (pot survival) and §4.2 (fee-gen) not closed by any step — separate workstream required |
+| Gate | Cross-check | Minimum readout |
+| --- | --- | --- |
+| G1 | Per-step analytical property holds at new parameters | Monotonicity / price-coupling / governance-surface count re-derived from the formula |
+| G2 | Per-step mainnet counterfactual arithmetic | Pool count, Nakamoto coefficient, entity-level HHI, sub-threshold pool share, independent-SPO share, MPO fleet size — all vs initial state |
+| G3 | Historical reference check | `k: 150→500` or CIP-0050 k-sweep record contradicts the step? If so, treat as rollback trigger |
+| G4 | Per-population response assumptions made explicit | Best-response table for MPO / CEX / small-op / delegator populations, labelled assumption-not-prediction |
+| G5 | Production ramp | ≥ 10 epochs observation between stages; rollback triggers active; ≥ 6 months between stake-cap activation and first `k` raise; ≥ 3 months between `k` raises |
+| G6 | Exploratory sim ablations | Every step under stress / stable / appreciating ADA-price scenarios (V2 §4.3); sensitivity sweeps on key parameters; flagged low-trust |
+| Gap readout | Out of bundle | §4.1 (pot survival) and §4.2 (fee-gen) not closed by any step — separate workstream required |
 
 ## 7. Bottom line
 
@@ -159,7 +161,7 @@ The active bundle is a **partial but coherent redesign of the pre-depletion rewa
 
 - V2 spec — [`../README.md`](../README.md). Diagnostic — [`../diagnostic/README.md`](../diagnostic/README.md). Mainnet census — [`../diagnostic/sub-flows/census/mainnet-analysis/`](../diagnostic/sub-flows/census/mainnet-analysis/README.md).
 - Governance package — [`../../../Context/cip-analysis/governance-cip-recommendation-package.md`](../../../Context/cip-analysis/governance-cip-recommendation-package.md).
-- Simulator — [`../../../Rewards-Sharing-Simulation-Engine/`](../../../Rewards-Sharing-Simulation-Engine/).
+- Simulator — [`../../../simulator/`](../../../simulator/).
 - Joint-composition analysis — [`../../../CIP-0050-vs-0037-detailed.md`](../../../CIP-0050-vs-0037-detailed.md).
 
 **Constraints.** All recommendations respect the [Cardano Constitution](https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2). Python 3.9 compatibility is preserved in simulation work. Dates use `YYYY/MM/DD`.

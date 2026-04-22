@@ -181,6 +181,158 @@ def restore_math(html: str, spans: list[str]) -> str:
     return html
 
 
+# --- Inline math → Unicode ------------------------------------------------
+#
+# MathJax is loaded on the main page body but does NOT re-typeset content
+# hydrated later into the cross-page side panel or the overlay tooltip. For
+# those compact contexts we swap ``$…$`` inline math for a Unicode
+# approximation that reads cleanly without a math renderer.
+#
+# This pass is intentionally narrow:
+# - only single-dollar inline spans are rewritten (no display math, no
+#   escaped ``\$`` currency)
+# - handles the tokens actually used in the report: Greek letters, hats,
+#   super/subscripts, \frac, and a handful of symbols
+# - falls back to the stripped raw body when a token is unrecognised — the
+#   panel stays readable even if a symbol escapes the table
+
+_GREEK_LOWER = {
+    "alpha": "α", "beta": "β", "gamma": "γ", "delta": "δ",
+    "epsilon": "ε", "zeta": "ζ", "eta": "η", "theta": "θ",
+    "iota": "ι", "kappa": "κ", "lambda": "λ", "mu": "μ",
+    "nu": "ν", "xi": "ξ", "omicron": "ο", "pi": "π",
+    "rho": "ρ", "sigma": "σ", "tau": "τ", "upsilon": "υ",
+    "phi": "φ", "chi": "χ", "psi": "ψ", "omega": "ω",
+}
+_GREEK_UPPER = {
+    "Gamma": "Γ", "Delta": "Δ", "Theta": "Θ", "Lambda": "Λ",
+    "Xi": "Ξ", "Pi": "Π", "Sigma": "Σ", "Phi": "Φ",
+    "Psi": "Ψ", "Omega": "Ω",
+}
+_MATH_SYMBOLS = {
+    "times": "×", "cdot": "·", "pm": "±", "mp": "∓",
+    "leq": "≤", "geq": "≥", "neq": "≠", "approx": "≈",
+    "sim": "∼", "simeq": "≃", "equiv": "≡",
+    "infty": "∞", "partial": "∂", "nabla": "∇",
+    "to": "→", "rightarrow": "→", "leftarrow": "←",
+    "Rightarrow": "⇒", "Leftarrow": "⇐",
+    "sum": "∑", "prod": "∏", "int": "∫",
+    "forall": "∀", "exists": "∃", "in": "∈", "notin": "∉",
+    "subset": "⊂", "supset": "⊃", "cup": "∪", "cap": "∩",
+    "ldots": "…", "cdots": "⋯",
+}
+
+_SUP_DIGITS = str.maketrans("0123456789+-=()", "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾")
+_SUB_DIGITS = str.maketrans("0123456789+-=()", "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎")
+
+
+def _strip_braces(s: str) -> str:
+    """Remove a single layer of ``{…}`` grouping."""
+    s = s.strip()
+    if s.startswith("{") and s.endswith("}"):
+        return s[1:-1]
+    return s
+
+
+def _inline_math_to_unicode_body(body: str) -> str:
+    """Translate the inside of a ``$…$`` span to Unicode.
+
+    The substitutions run in a specific order: ``\\hat{f}`` must be handled
+    before ``\\hat`` and before generic brace-stripping; fractions expand
+    before their operands are rewritten.
+    """
+    s = body
+
+    # \hat{x} → x̂   (combining circumflex U+0302)
+    s = re.sub(r"\\hat\s*\{([^{}]+)\}", lambda m: m.group(1).strip() + "\u0302", s)
+    s = re.sub(r"\\hat\s+(\w)", lambda m: m.group(1) + "\u0302", s)
+    # \bar{x} → x̄
+    s = re.sub(r"\\bar\s*\{([^{}]+)\}", lambda m: m.group(1).strip() + "\u0304", s)
+    s = re.sub(r"\\bar\s+(\w)", lambda m: m.group(1) + "\u0304", s)
+    # \tilde{x} → x̃
+    s = re.sub(r"\\tilde\s*\{([^{}]+)\}", lambda m: m.group(1).strip() + "\u0303", s)
+    s = re.sub(r"\\tilde\s+(\w)", lambda m: m.group(1) + "\u0303", s)
+
+    # \frac{a}{b} → a/b   (non-nested, one level)
+    s = re.sub(
+        r"\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}",
+        lambda m: f"{m.group(1).strip()}/{m.group(2).strip()}",
+        s,
+    )
+    # \sqrt{x} → √x
+    s = re.sub(r"\\sqrt\s*\{([^{}]+)\}", lambda m: f"√{m.group(1).strip()}", s)
+    s = re.sub(r"\\sqrt\s+(\w)", lambda m: f"√{m.group(1)}", s)
+
+    # Greek and symbol tokens — longest first inside each group so
+    # ``\sim`` is not stripped before ``\simeq``.
+    def _sub_word(m: re.Match) -> str:
+        name = m.group(1)
+        if name in _GREEK_LOWER:
+            return _GREEK_LOWER[name]
+        if name in _GREEK_UPPER:
+            return _GREEK_UPPER[name]
+        if name in _MATH_SYMBOLS:
+            return _MATH_SYMBOLS[name]
+        return m.group(0)
+    s = re.sub(r"\\([A-Za-z]+)", _sub_word, s)
+
+    # Superscripts — ``x^2``, ``x^{10}``, ``R^2``.
+    def _sup(m: re.Match) -> str:
+        base = m.group(1)
+        exp = _strip_braces(m.group(2))
+        if all(c in "0123456789+-=()" for c in exp):
+            return base + exp.translate(_SUP_DIGITS)
+        # Unrepresentable: keep raw notation as a fallback.
+        return f"{base}^{exp}"
+    s = re.sub(r"(\w)\^\{([^{}]+)\}", _sup, s)
+    s = re.sub(r"(\w)\^(\w)", lambda m: _sup(m), s)
+
+    # Subscripts
+    def _sub_idx(m: re.Match) -> str:
+        base = m.group(1)
+        idx = _strip_braces(m.group(2))
+        if all(c in "0123456789+-=()" for c in idx):
+            return base + idx.translate(_SUB_DIGITS)
+        return f"{base}_{idx}"
+    s = re.sub(r"(\w)_\{([^{}]+)\}", _sub_idx, s)
+    s = re.sub(r"(\w)_(\w)", lambda m: _sub_idx(m), s)
+
+    # Collapse remaining single-level braces around plain content.
+    s = re.sub(r"\{([^{}]*)\}", lambda m: m.group(1), s)
+
+    # Clean up stray whitespace introduced by the substitutions.
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
+
+_INLINE_MATH_RE = re.compile(r"(?<!\\)\$([^\$\n]+?)\$")
+
+
+def inline_math_to_unicode(text: str) -> str:
+    """Replace every ``$…$`` inline math span with a Unicode rendering.
+
+    Display math (``$$…$$``) and escaped currency (``\\$12``) are left
+    alone. Intended for contexts where MathJax is not re-run (side panel,
+    overlay tooltip, tooltip previews).
+    """
+    if "$" not in text:
+        return text
+    # Protect display math so it is not chewed by the inline regex.
+    display_spans: list[str] = []
+
+    def _stash(m: re.Match) -> str:
+        display_spans.append(m.group(0))
+        return f"@@DISPMATH{len(display_spans) - 1}@@"
+    text = re.sub(r"\$\$[\s\S]+?\$\$", _stash, text)
+    text = _INLINE_MATH_RE.sub(
+        lambda m: _inline_math_to_unicode_body(m.group(1)),
+        text,
+    )
+    for i, span in enumerate(display_spans):
+        text = text.replace(f"@@DISPMATH{i}@@", span)
+    return text
+
+
 # --- Link & image rewriting -----------------------------------------------
 
 
@@ -1124,6 +1276,21 @@ _CROSS_OBS_CSS = """
   color:var(--text-muted);margin-top:2px}
 .obs-panel-source-xpage strong{color:var(--text-primary);font-weight:600}
 
+/* Observation abstract — editorially-written gloss that reads as a single
+   lead paragraph above the findings list. Uses a left rule accent so it
+   clearly frames the observation rather than mimicking a finding. */
+.obs-panel-abstract{margin:12px 0 4px;padding:10px 14px;
+  border-left:3px solid var(--infared);
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--infared) 8%, transparent),
+    transparent 60%);
+  font:400 13.5px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary);border-radius:0 4px 4px 0}
+.obs-panel-abstract p{margin:0}
+.obs-panel-abstract p + p{margin-top:6px}
+.obs-panel-abstract strong{font-weight:700;color:var(--text-primary);
+  font-variant-numeric:tabular-nums}
+
 /* Source-panel findings list — hydrated from the bundled findings-registry.
    One row per finding with the canonical id, its summary, and a small
    cross-page jump arrow. The list sits between the obs summary and the
@@ -1159,6 +1326,12 @@ _CROSS_OBS_CSS = """
   color:var(--text-primary)}
 .obs-panel-finding-summary p{margin:0}
 .obs-panel-finding-summary p + p{margin-top:6px}
+/* Key numbers — bolded at the MD source, tinted and tabular-aligned here so
+   they scan as landmarks inside the short finding rows. */
+.obs-panel-finding-summary strong,
+.obs-panel-summary strong,
+.obs-panel-title strong{font-weight:700;color:var(--text-primary);
+  font-variant-numeric:tabular-nums}
 .obs-panel-finding-insight{margin-top:6px;padding-top:6px;
   border-top:1px dashed var(--border);
   font:400 12px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -1167,10 +1340,100 @@ _CROSS_OBS_CSS = """
 .obs-panel-finding-empty{border-style:dashed;color:var(--text-muted);
   font-style:italic;text-align:center}
 
+/* Sub-report Mainnet Observations — O-grouped finding cards.
+   Replaces the flat 4-column MD table with one card per observation.
+   The card separates O-level content (header band + abstract) from
+   F-level content (numbered finding rows) so the reader can tell the
+   structure at a glance. */
+.sro-list{list-style:none;padding:0;margin:20px 0 28px;
+  display:flex;flex-direction:column;gap:18px}
+.sro-card{border:1px solid var(--border);border-radius:10px;
+  background:var(--bg);overflow:hidden;
+  transition:border-color .15s,box-shadow .15s}
+.sro-card:hover{border-color:var(--infared);
+  box-shadow:0 2px 12px rgba(229,35,33,.07)}
+.sro-card:target{border-color:var(--infared);
+  box-shadow:0 0 0 3px rgba(229,35,33,.12)}
+
+/* Header band — canonical id on the left, title centred, count on the
+   right. Slight Infrared wash so the O-scope reads as a distinct zone
+   from the F-scope finding rows below. */
+.sro-head{display:flex;align-items:center;gap:12px;
+  padding:12px 16px;
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--infared) 6%, transparent),
+    transparent 70%);
+  border-bottom:1px solid var(--border)}
+.sro-badge{display:inline-flex;align-items:center;flex-shrink:0;
+  padding:4px 10px;border-radius:4px;
+  background:var(--infared);color:#fff;
+  font:600 11px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.05em;text-decoration:none}
+.sro-title{flex:1 1 auto;min-width:0;margin:0;
+  font:600 15px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.sro-title strong{font-weight:700;color:var(--text-primary);
+  font-variant-numeric:tabular-nums}
+.sro-count{flex-shrink:0;
+  font:500 11px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.04em;color:var(--text-muted);
+  padding:3px 8px;border-radius:3px;background:var(--bg-panel);
+  border:1px solid var(--border)}
+
+/* Abstract — single editorial lead under the title, matches the
+   cross-page overlay's `.obs-panel-abstract` styling so the two read as
+   the same artefact. */
+.sro-abstract{margin:0;padding:12px 16px 14px;
+  border-left:3px solid var(--infared);
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--infared) 8%, transparent),
+    transparent 60%);
+  font:400 13.5px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.sro-abstract strong{font-weight:700;color:var(--text-primary);
+  font-variant-numeric:tabular-nums}
+
+/* Findings list — one row per F#, visually subordinate to the header
+   band. Hairline separators; no heavy grid so the reader scans evidence
+   first and meta second. */
+.sro-findings{list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column}
+.sro-finding{display:flex;align-items:flex-start;gap:12px;
+  padding:12px 16px;border-top:1px solid var(--border)}
+.sro-finding:first-child{border-top:none}
+.sro-finding:target{background:color-mix(in srgb, var(--infared) 5%, transparent)}
+.sro-fid{flex-shrink:0;align-self:flex-start;margin-top:2px;
+  padding:3px 9px;border-radius:3px;
+  background:var(--bg-panel);border:1px solid var(--border);
+  font:600 10.5px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.04em;color:var(--infared);text-decoration:none}
+.sro-body{flex:1 1 auto;min-width:0;
+  display:flex;flex-direction:column;gap:6px}
+.sro-evidence{font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.sro-evidence p{margin:0}
+.sro-evidence p + p{margin-top:6px}
+.sro-evidence strong{font-weight:700;color:var(--text-primary);
+  font-variant-numeric:tabular-nums}
+.sro-meta{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;
+  font:400 11.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+.sro-anchor{font-weight:500;color:var(--text-secondary)}
+.sro-anchor a{color:inherit;text-decoration:none;
+  border-bottom:1px dashed var(--border)}
+.sro-anchor a:hover{color:var(--infared);border-bottom-color:var(--infared)}
+.sro-nature{font-style:italic;color:var(--text-muted)}
+.sro-nature::before{content:"· ";color:var(--border);font-style:normal}
+
 /* Responsive */
 @media (max-width:720px){
   .dia-obs-row{padding:12px 14px}
   .dia-obs-head{gap:6px}
+  .sro-head{flex-wrap:wrap;gap:8px;padding:10px 12px}
+  .sro-title{flex:1 1 100%;order:3}
+  .sro-count{order:2}
+  .sro-abstract{padding:10px 12px 12px}
+  .sro-finding{padding:10px 12px;gap:10px}
 }
 /* ── /Cross-page DIA source overlay + compact §X.Y.2 view ── */
 """
@@ -1192,12 +1455,15 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
       var canon=card.getAttribute('data-obs-canon');
       var title=(card.querySelector('.sro-obs-detail-title')||{}).innerHTML||'';
       var summary=(card.querySelector('.sro-obs-detail-summary')||{}).innerHTML||'';
+      var abstractEl=card.querySelector('.sro-obs-detail-abstract');
+      var abstractHtml=abstractEl?abstractEl.innerHTML:'';
       var count=(card.querySelector('.sro-obs-detail-count')||{}).textContent||'';
       var page=card.getAttribute('data-page')||'';
       var href=card.getAttribute('data-href')||'';
       var findingIds=(card.getAttribute('data-findings')||'').split(',')
         .map(function(s){return s.trim();}).filter(Boolean);
-      srcIndex[canon]={canon:canon,title:title,summary:summary,count:count,
+      srcIndex[canon]={canon:canon,title:title,summary:summary,
+        abstract:abstractHtml,count:count,
         page:page,href:href,findingIds:findingIds};
     });
     if(!Object.keys(srcIndex).length) return;
@@ -1281,6 +1547,7 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
       '</div>'+
       '<div class="obs-panel-body">'+
         '<div class="obs-panel-title"></div>'+
+        '<div class="obs-panel-abstract"></div>'+
         '<div class="obs-panel-summary"></div>'+
         '<div class="obs-panel-findings-wrap">'+
           '<div class="obs-panel-findings-head">'+
@@ -1318,7 +1585,29 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
       panel.querySelector('.obs-panel-num').textContent=data.canon;
       panel.querySelector('.obs-panel-section-id').textContent='Source sub-report';
       panel.querySelector('.obs-panel-title').innerHTML=data.title;
-      panel.querySelector('.obs-panel-summary').innerHTML=data.summary;
+      /* Abstract: an editorially-written reader-facing gloss of the whole
+         observation. When present it replaces the auto-built summary. */
+      var absEl=panel.querySelector('.obs-panel-abstract');
+      if(data.abstract){
+        absEl.style.display='';
+        absEl.innerHTML=data.abstract;
+      } else {
+        absEl.style.display='none';
+        absEl.innerHTML='';
+      }
+      /* The card summary is the first two findings concatenated — redundant
+         with the findings list (or the abstract) when the panel is open.
+         Keep the element for tooltip parity, but hide it here whenever we
+         already have a richer source of signal. */
+      var sumEl=panel.querySelector('.obs-panel-summary');
+      var hasFindings=data.findingIds && data.findingIds.length;
+      if(hasFindings || data.abstract){
+        sumEl.innerHTML='';
+        sumEl.style.display='none';
+      } else {
+        sumEl.style.display='';
+        sumEl.innerHTML=data.summary;
+      }
       panel.querySelector('.obs-panel-source').innerHTML=
         '<a href="'+data.href+'">'+pageLabel(data.page)+'</a>';
 
@@ -2603,13 +2892,17 @@ def _render_finding_registry(findings: list[dict]) -> str:
             f'<span class="finding-detail-src">{_html.escape(f["anchor_label"])}</span>'
             if f["anchor_label"] else ""
         )
+        # The panel + tooltip live outside the body where MathJax runs, so
+        # inline math ``$…$`` would show as raw source. Normalise to Unicode
+        # before HTML-escaping / markdown-rendering.
+        insight_raw = inline_math_to_unicode(f["insight"]) if f["insight"] else ""
         insight_html = (
-            f'<div class="finding-detail-insight">{_html.escape(f["insight"])}</div>'
-            if f["insight"] else ""
+            f'<div class="finding-detail-insight">{_html.escape(insight_raw)}</div>'
+            if insight_raw else ""
         )
         # Summary may contain markdown — pass through a tiny md→HTML pass so
         # any inline `**bold**` / links render. Strip block wrappers.
-        summary_html = _md_snippet_to_html(f["summary"]).strip()
+        summary_html = _md_snippet_to_html(inline_math_to_unicode(f["summary"])).strip()
         if summary_html.startswith("<p>") and summary_html.endswith("</p>"):
             summary_html = summary_html[3:-4]
         canon = f.get("canon_id") or f["id"]
@@ -2645,10 +2938,20 @@ def _render_subreport_obs_registry(obs_groups: list[dict]) -> str:
             re.sub(r"\s+", " ", f["evidence_md"]).strip()
             for f in g["findings"][:2]
         )
-        evid_html = _md_snippet_to_html(evid).strip()
+        # Registry content is hydrated into the panel/tooltip without a
+        # MathJax re-typeset, so replace ``$…$`` with Unicode approximations.
+        evid_html = _md_snippet_to_html(inline_math_to_unicode(evid)).strip()
         if evid_html.startswith("<p>") and evid_html.endswith("</p>"):
             evid_html = evid_html[3:-4]
-        title_html = _sro_inline_md_to_html(g["o_title"])
+        title_html = _sro_inline_md_to_html(inline_math_to_unicode(g["o_title"]))
+        # Optional observation abstract (col 4 of the header row). When set
+        # it supersedes the `.sro-obs-detail-summary` in the panel — the
+        # summary is kept as a tooltip-side-dish only.
+        abstract_md = (g.get("abstract_md") or "").strip()
+        abstract_html = (
+            _sro_inline_md_to_html(inline_math_to_unicode(abstract_md))
+            if abstract_md else ""
+        )
         href = g.get("jump_href", "")
         anchor_attr = f' data-href="{_html.escape(href)}"' if href else ""
         page_attr = (
@@ -2665,12 +2968,17 @@ def _render_subreport_obs_registry(obs_groups: list[dict]) -> str:
             f' data-findings="{_html.escape(finding_canons)}"'
             if finding_canons else ""
         )
+        abstract_block = (
+            f'<div class="sro-obs-detail-abstract">{abstract_html}</div>'
+            if abstract_html else ""
+        )
         cards.append(
             f'<div class="sro-obs-detail" id="srobs-{g["slug"]}" '
             f'data-obs-canon="{g["canon_id"]}" data-short="{g["o_id"]}" '
             f'data-group="{g["o_num"]}"{page_attr}{anchor_attr}{findings_attr}>'
             f'<div class="sro-obs-detail-id">{g["canon_id"]}</div>'
             f'<div class="sro-obs-detail-title">{title_html}</div>'
+            f'{abstract_block}'
             f'<div class="sro-obs-detail-summary">{evid_html}</div>'
             f'<div class="sro-obs-detail-count">{len(g["findings"])} '
             f'{"findings" if len(g["findings"]) != 1 else "finding"}</div>'
@@ -2875,9 +3183,13 @@ def rewrite_canonical_obs_citations(
 
 # --- Sub-report Mainnet Observations: O# headers + F# rows --------------
 
-# Matches O-header rows:  | | **POL.O1 — Title** | | |  (canonical form).
+# Matches O-header rows:  | | **POL.O1 — Title** | | [optional abstract] |
+# Column 4 carries the *observation abstract* — a single-sentence reader-facing
+# gloss that replaces the auto-built "first two findings joined by ·" summary
+# in the cross-page side panel. Leave col 4 empty to fall back to the legacy
+# concatenation.
 _SRO_OHDR_RE = re.compile(
-    r"^\|\s*\|\s*\*\*([A-Z]{3})\.O(\d+)\s*[—–-]\s*(.+?)\*\*\s*\|\s*\|\s*\|\s*$",
+    r"^\|\s*\|\s*\*\*([A-Z]{3})\.O(\d+)\s*[—–-]\s*(.+?)\*\*\s*\|\s*\|\s*(.*?)\s*\|\s*$",
     re.MULTILINE,
 )
 # Matches F-rows: | POL.O1.F1 | evidence | section link | nature |  (canonical form).
@@ -2941,6 +3253,7 @@ def extract_subreport_observations(
             row_code = oh.group(1)
             o_num = int(oh.group(2))
             o_title = oh.group(3).strip()
+            abstract_md = (oh.group(4) or "").strip()
             o_id = f"O{o_num}"
             canon = f"{row_code}.O{o_num}"
             defining = o_defining.get(o_num, "")
@@ -2957,6 +3270,7 @@ def extract_subreport_observations(
                 "canon_id": canon,
                 "slug": _canon_slug(canon),
                 "o_title": o_title,
+                "abstract_md": abstract_md,
                 "defining_anchor": defining,
                 "jump_href": jump_href,
                 "code": row_code,
@@ -3022,6 +3336,14 @@ def _render_subreport_observations(groups: list[dict]) -> str:
         o_title_html = _sro_inline_md_to_html(g["o_title"])
         canon = g["canon_id"]
         o_short = g["o_id"]  # legacy short label, e.g. "O1"
+        abstract_md = (g.get("abstract_md") or "").strip()
+        abstract_html = (
+            _sro_inline_md_to_html(abstract_md) if abstract_md else ""
+        )
+        abstract_block = (
+            f'<p class="sro-abstract">{abstract_html}</p>'
+            if abstract_html else ""
+        )
         out.append(
             f'<article class="sro-card" id="{g["slug"]}" '
             f'data-obs="{canon}" data-group="{g["o_num"]}">'
@@ -3032,6 +3354,7 @@ def _render_subreport_observations(groups: list[dict]) -> str:
             f'<span class="sro-count">{len(g["findings"])} '
             f'{"findings" if len(g["findings"]) != 1 else "finding"}</span>'
             f'</header>'
+            f'{abstract_block}'
             f'<ol class="sro-findings">'
         )
         for f in g["findings"]:
@@ -3464,6 +3787,27 @@ def build_page(page: dict) -> Path:
         )
     elif observations:
         content_html = transform_observation_tables(content_html, observations)
+
+    # Sub-report pages render their Mainnet Observations as O-grouped cards
+    # (header + abstract + findings sub-table) instead of the flat 4-column
+    # MD table. Parse and swap the raw ``<table>`` that follows the
+    # ``## 1. Mainnet Observations`` heading.
+    if is_subreport:
+        code = page["code"]
+        o_defining = detect_o_defining_sections(md_text)
+        f_index = {f["canon_id"]: f for f in f_findings}
+        f_index.update({f["id"]: f for f in f_findings})
+        sro_groups = extract_subreport_observations(
+            md_text,
+            code=code,
+            page_html=page["html"],
+            o_defining=o_defining,
+            f_findings_by_id=f_index,
+        )
+        if sro_groups:
+            content_html = transform_subreport_observation_table(
+                content_html, sro_groups,
+            )
 
     # Rewrite inline ``(DIA.X.Y.O#)`` citations on every non-sub-report page.
     # Observatory resolves against its own observations (same MD); other

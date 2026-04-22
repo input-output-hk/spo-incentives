@@ -59,28 +59,82 @@ This is the **exact pathology CIP-0050 (via $L$) and CIP-0037 (via dynamic satur
 
 **Dependency-chain note.** A `k` increase in isolation is a §3.4 move applied *before* §3.1 and §3.2 have been secured — exactly what V2 §5 flags as *building on a foundation that does not exist*.
 
-## 3. Simulation plan
+## 3. Validation plan
 
-| Axis | Setting |
-| --- | --- |
-| Initial state | Recent-epoch population snapshot — initialise with full MPO-fleet structure. Mechanism of interest is MPO response, not equilibrium pool count |
-| Parameter sweep | `k ∈ {500, 650, 750, 1 000, 1 500, 2 000}` — 750/1 000 align with CIP-0082 stages 3–4; 2 000 stress-tests fleet-splitting |
-| Scenarios | Stress / stable / appreciating ADA price (V2 §4.3) — sharpest interaction with fixed-fee floor at low ADA price |
+The evaluation rests on the gate framework defined in [`methodology.md`](methodology.md). G1 (analytical properties) and G2 (mainnet counterfactual arithmetic) carry the verdict; G3 carries heavy weight here because the k:150→500 and k-sweep simulation records are the most informative evidence available.
 
-**KPI focus.**
+### 3.1 G1 — Analytical properties (high trust)
 
-- **Viability rate across operator tiers** — binding constraint at high `k`.
-- **HHI on entities** (not just pools) — catches the fleet-splitting response.
-- **Independent-SPO share of productive stake** — core §3.1 cross-check.
-- **Sub-threshold pool share** — does `k` expand or shrink the 116-pool subthreshold population?
+Proved directly from the saturation-size identity $\sigma_{\text{sat}} = 1/k$:
 
-**Populations to watch.**
-
-| Population | Size | Why it matters |
+| Property | Statement | Consequence |
 | --- | --- | --- |
-| Sub-threshold pools | 116 | Likely further suppressed by `k` rise |
-| Viable independent single-pool operators | 283 | Tail at risk from per-pool revenue drop |
-| MPO fleet entities | 85 | `k` raise expands delegation surface faster than current pledge mechanics tighten Sybil economics |
+| Per-pool revenue at saturation | $\propto 1/k$ | A `k` raise lowers the viability line |
+| Pool-count headline | Nominal target = $k$ | §3.4 pool-level metric rises mechanically |
+| Entity-level decoupling | Pool count is not a function of entity count | §3.4 entity-level not addressed |
+| Pledge-mechanics coupling | `k` does not change pledge-influence parameters | §3.1, §3.2 untouched structurally |
+| Layer | Neither fee nor stake-cap | Composes with all other CIPs; never precedes them in a dependency chain |
+| Governance surface | 1 integer parameter | Technically trivial — governance cost is not the same as mechanism quality |
+
+G1 alone rules out a `k` raise as a standalone reform instrument: the parameter moves no V2 milestone structurally and lowers the viability line mechanically.
+
+### 3.2 G2 — Mainnet snapshot counterfactual (high trust)
+
+Arithmetic on the recent-epoch snapshot for an isolated `k: 500 → 1000` move, holding all other parameters fixed.
+
+| Quantity | Pre (`k=500`) | Post (`k=1000`) | Immediate effect |
+| --- | --- | --- | --- |
+| Saturation per pool | ≈ 67.44 M ADA | ≈ 33.72 M ADA | Halved |
+| Per-pool revenue at saturation | baseline | ≈ baseline / 2 | Viability line rises by ≈ 2× in pledge-at-sat |
+| Sub-threshold pools | 116 | Strictly ≥ 116 | More pools cross the fixed-cost floor |
+| Viable independent 1-pool operators | 283 | Strictly ≤ 283 | Bottom of the viable band pinched out |
+| Fixed-fee regressivity | baseline | Worse | `minPoolCost` becomes a larger share of each pool's actual pot |
+| MPO fleet-expansion headroom | current | +500 pool slots | New capacity fillable by fleet expansion at ~500 ADA registration cost per pool |
+
+### 3.3 G3 — Historical analogies (medium–high trust, load-bearing here)
+
+Unlike other CIPs, `k` has direct precedents:
+
+| Analogue | Information content | Confidence |
+| --- | --- | --- |
+| `k: 150 → 500` (Cardano, Aug 2020) | Demonstrated that a `k` raise succeeds on the pool-count metric; did not address the emergent MPO fleet-splitting pattern that followed | High |
+| CIP-0050 motivation's `k: 1 000 → 2 000` simulation | Reported Nakamoto coefficient **142 → 116** under low $a_0$; isolates the pathology to weak-pledge regimes | Medium — cited in CIP-0050, tagged G3 here rather than G6 because it establishes a qualitative sign |
+
+The weak-pledge-regime sign is the load-bearing G3 claim: in the current regime, a standalone `k` raise regresses on the entity-level §3.4 metric it nominally serves.
+
+### 3.4 G4 — Game-theoretic best responses (assumptions, not predictions)
+
+Conditional on behaviour staying within the rational-yield assumption:
+
+| Population | Assumed response to isolated `k` raise | Confidence |
+| --- | --- | --- |
+| MPO fleets with fixed pledge budget | Expand pool count to absorb the new reward slots; pledge per pool dilutes further | Medium-high — ~500 ADA registration cost is negligible vs delegation revenue |
+| CEX / IVaaS with native pledge | Neutral — already at or above ceiling; entity-level share grows passively | Medium |
+| Viable independent 1-pool operators | Per-pool revenue compression; attrition at the bottom of the viable band | Medium — depends on delegator response |
+| Subthreshold pools | Pushed further below the fixed-cost floor | High — arithmetic from G2 |
+
+### 3.5 G5 — Governance ramp and rollback
+
+Production contract when `k` moves as a standalone action (outside the CIP-0082 embedding):
+
+| Stage | `k` | Duration | Rollback trigger |
+| --- | --- | --- | --- |
+| 0 | 500 (status quo) | — | — |
+| 1 | 750 | 10–20 epochs | Sub-threshold pool count grows, or MAV trends down |
+| 2 | 1000 | 10–20 epochs | Independent-SPO share of productive stake falls |
+
+**Ordering precondition.** Stages above are *only* coherent if a fee-layer instrument and a stake-cap instrument are active first. A standalone `k` raise without the preceding layers should not pass G5 — it is the pattern CIP-0050's motivation section documented as harmful.
+
+### 3.6 G6 — Exploratory simulation (low trust, supplementary)
+
+Simulator at [`../../../simulator/`](../../../simulator/) — under active improvement 2026. Ablations to characterise — not to certify — are:
+
+- `k ∈ {500, 650, 750, 1 000, 1 500, 2 000}` — recovery of the CIP-0050 motivation curve on the current snapshot.
+- Joint `(k, L)` sweep — CIP-0050's claim that $L$ converts a `k` raise into a decentralisation lever.
+- Joint `(k, e, \ell, p_{100\%})` sweep — CIP-0037's dependence on `orig_sat = supply / k`.
+- Price interaction — viability-line shift at low, stable, appreciating ADA price.
+
+None of these runs can by themselves reverse the G1 + G3 finding that a standalone `k` raise is the wrong first lever.
 
 ## 4. Transition and governance
 
@@ -150,4 +204,4 @@ Not a standalone reform.
 - **Reference doc:** <https://docs.cardano.org/about-cardano/learn/pledging-rewards>.
 - **V2 grid:** [`README.md`](README.md) §2. **Diagnostic anchors:** [`../diagnostic/README.md`](../diagnostic/README.md) §1.2 O4/O5/O8, §1.2.4.1.1, §1.2.4.4.3.
 - **Companion evaluations:** [`operator-delegator/cip-0023.md`](operator-delegator/cip-0023.md), [`operator-delegator/cip-0082.md`](operator-delegator/cip-0082.md), [`pools-distribution/cip-0050.md`](pools-distribution/cip-0050.md), [`pools-distribution/cip-0037.md`](pools-distribution/cip-0037.md).
-- **Simulator:** [`../../../Rewards-Sharing-Simulation-Engine/`](../../../Rewards-Sharing-Simulation-Engine/). **Mainnet inputs:** [`../diagnostic/sub-flows/census/mainnet-analysis/`](../diagnostic/sub-flows/census/mainnet-analysis/README.md), [`../diagnostic/sub-flows/pools-distribution/mainnet-analysis/`](../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md).
+- **Simulator:** [`../../../simulator/`](../../../simulator/). **Mainnet inputs:** [`../diagnostic/sub-flows/census/mainnet-analysis/`](../diagnostic/sub-flows/census/mainnet-analysis/README.md), [`../diagnostic/sub-flows/pools-distribution/mainnet-analysis/`](../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md).
