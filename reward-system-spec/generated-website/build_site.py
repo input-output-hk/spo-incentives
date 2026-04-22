@@ -119,6 +119,17 @@ SUBREPORT_CODES = {p["slug"]: p["code"] for p in PAGES if p.get("code")}
 # code → page dict (so we can resolve POL.O1.F1 → pools.html#…).
 PAGE_BY_CODE = {p["code"]: p for p in PAGES if p.get("code")}
 
+# Maps a diagnostic synthesis parent section (X.Y) to its source sub-report.
+# ``DIA.1.3.O7`` is the synthesis view of ``OPE.O7`` in the operator
+# sub-report; clicking the citation should open the source card directly.
+# ``2.2`` (tx submitters) has no sub-report — citations there stay local.
+DIA_SOURCE_MAP: dict[str, dict[str, str]] = {
+    "1.1": {"code": "TRE", "page": "treasury.html"},
+    "1.2": {"code": "POL", "page": "pools.html"},
+    "1.3": {"code": "OPE", "page": "operator.html"},
+    "2.1": {"code": "CEN", "page": "census.html"},
+}
+
 # MD path (relative to REPO_ROOT) → output HTML filename
 MD_TO_HTML_MAP = {p["md"]: p["html"] for p in PAGES}
 
@@ -1063,6 +1074,419 @@ def ensure_floating_toc_assets() -> None:
                 js_path.write_text(js_text2.replace(old_sel, new_sel))
             print(f"  injected floating TOC JS into {js_path.relative_to(SITE_DIR)}")
 
+    ensure_cross_obs_assets()
+
+
+# --- Cross-page DIA overlay + compact §X.Y.2 view assets -----------------
+
+_CROSS_OBS_CSS_MARKER = "/* ── Cross-page DIA source overlay + compact §X.Y.2 view ── */"
+_CROSS_OBS_CSS_END_MARKER = "/* ── /Cross-page DIA source overlay + compact §X.Y.2 view ── */"
+_CROSS_OBS_JS_MARKER = "/* ── Cross-page DIA source overlay ──"
+
+_CROSS_OBS_CSS = """
+/* ── Cross-page DIA source overlay + compact §X.Y.2 view ── */
+
+/* Compact list view: one row per DIA.X.Y.O# that defers to a sub-report */
+.dia-obs-compact{list-style:none;padding:0;margin:18px 0 24px;
+  display:flex;flex-direction:column;gap:10px}
+.dia-obs-row{border:1px solid var(--border);border-radius:8px;padding:14px 16px;
+  background:var(--bg);transition:border-color .15s,box-shadow .15s}
+.dia-obs-row:hover{border-color:var(--infared);box-shadow:0 2px 10px rgba(229,35,33,.06)}
+.dia-obs-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.dia-obs-canon{display:inline-flex;align-items:center;padding:3px 10px;border-radius:4px;
+  background:var(--bg-panel);border:1px solid var(--border);
+  font:600 11px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.05em;color:var(--infared);text-decoration:none;
+  transition:background .15s,border-color .15s,color .15s}
+.dia-obs-canon:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
+.dia-obs-title{font:600 14px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary);flex:1 1 auto;min-width:0}
+.dia-obs-summary{margin:4px 0 10px;font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-secondary)}
+.dia-obs-findings{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.dia-obs-f{display:inline-flex;align-items:center;padding:2px 8px;border-radius:3px;
+  background:var(--bg-panel);border:1px solid var(--border);
+  font:500 10.5px/1.5 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.03em;color:var(--text-secondary);text-decoration:none;
+  transition:background .15s,border-color .15s,color .15s}
+.dia-obs-f:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
+.dia-obs-source-link{display:inline-flex;align-items:center;gap:4px;
+  font:500 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);text-decoration:none;padding-top:4px;
+  border-top:1px dashed var(--border);margin-top:4px;padding-top:8px}
+.dia-obs-source-link:hover{color:var(--infared)}
+
+/* Cross-page source overlay — the DIA.X.Y.O# link shows the source sub-report
+   observation's content in the side panel, with a "Jump to source" CTA. */
+.obs-ref-src{border-bottom-style:dashed}
+.obs-panel-source-xpage{display:flex;align-items:center;gap:6px;
+  font:500 11.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);margin-top:2px}
+.obs-panel-source-xpage strong{color:var(--text-primary);font-weight:600}
+
+/* Source-panel findings list — hydrated from the bundled findings-registry.
+   One row per finding with the canonical id, its summary, and a small
+   cross-page jump arrow. The list sits between the obs summary and the
+   source meta row so the reader sees the concrete evidence next to the
+   high-level observation. */
+.obs-panel-findings-wrap{margin:18px 0 16px;
+  border-top:1px solid var(--border);padding-top:14px}
+.obs-panel-findings-head{display:flex;align-items:baseline;gap:8px;
+  margin-bottom:8px}
+.obs-panel-findings-label{font:600 10.5px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
+.obs-panel-findings-count{font:500 11px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--text-muted)}
+.obs-panel-findings{list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;gap:8px}
+.obs-panel-finding{border:1px solid var(--border);border-radius:6px;
+  padding:10px 12px;background:var(--bg-panel);
+  transition:border-color .15s}
+.obs-panel-finding:hover{border-color:var(--infared)}
+.obs-panel-finding-head{display:flex;align-items:center;gap:8px;
+  margin-bottom:4px}
+.obs-panel-finding-id{font:600 10.5px/1.3 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.04em;color:var(--infared);
+  padding:2px 7px;border-radius:3px;background:var(--bg);
+  border:1px solid var(--border)}
+.obs-panel-finding-jump{display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;border-radius:3px;color:var(--text-muted);
+  text-decoration:none;margin-left:auto;transition:color .15s,background .15s}
+.obs-panel-finding-jump svg{fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+.obs-panel-finding-jump:hover{color:var(--infared);background:var(--bg)}
+.obs-panel-finding-summary{font:400 12.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.obs-panel-finding-summary p{margin:0}
+.obs-panel-finding-summary p + p{margin-top:6px}
+.obs-panel-finding-insight{margin-top:6px;padding-top:6px;
+  border-top:1px dashed var(--border);
+  font:400 12px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-secondary);font-style:italic}
+.obs-panel-finding-missing{color:var(--text-muted);font-style:italic}
+.obs-panel-finding-empty{border-style:dashed;color:var(--text-muted);
+  font-style:italic;text-align:center}
+
+/* Responsive */
+@media (max-width:720px){
+  .dia-obs-row{padding:12px 14px}
+  .dia-obs-head{gap:6px}
+}
+/* ── /Cross-page DIA source overlay + compact §X.Y.2 view ── */
+"""
+
+_CROSS_OBS_JS_END_MARKER = "/* ── /Cross-page DIA source overlay ── */"
+
+_CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
+     When an `.obs-ref` anchor carries `data-obs-src`, hydrate the overlay
+     from the bundled `.sro-obs-detail` registry (the source card on the
+     sub-report page) rather than from the local `.obs-card`. The panel
+     CTA navigates cross-page via `data-obs-href`. */
+  (function initCrossObsSource(){
+    var refs=document.querySelectorAll('.obs-ref[data-obs-src]');
+    if(!refs.length) return;
+
+    /* Index by source canonical id (e.g. "OPE.O7"). */
+    var srcIndex={};
+    document.querySelectorAll('.sro-obs-detail[data-obs-canon]').forEach(function(card){
+      var canon=card.getAttribute('data-obs-canon');
+      var title=(card.querySelector('.sro-obs-detail-title')||{}).innerHTML||'';
+      var summary=(card.querySelector('.sro-obs-detail-summary')||{}).innerHTML||'';
+      var count=(card.querySelector('.sro-obs-detail-count')||{}).textContent||'';
+      var page=card.getAttribute('data-page')||'';
+      var href=card.getAttribute('data-href')||'';
+      var findingIds=(card.getAttribute('data-findings')||'').split(',')
+        .map(function(s){return s.trim();}).filter(Boolean);
+      srcIndex[canon]={canon:canon,title:title,summary:summary,count:count,
+        page:page,href:href,findingIds:findingIds};
+    });
+    if(!Object.keys(srcIndex).length) return;
+
+    /* Findings registry — index per canonical finding id (e.g. "OPE.O1.F1").
+       We reuse the bundled .finding-detail cards on non-subreport pages so
+       the source panel can list finding details inline rather than a count. */
+    var findingsIndex={};
+    document.querySelectorAll('.finding-detail[data-finding]').forEach(function(card){
+      var canon=card.getAttribute('data-finding');
+      var summary=(card.querySelector('.finding-detail-summary')||{}).innerHTML||'';
+      var insight=(card.querySelector('.finding-detail-insight')||{}).innerHTML||'';
+      var href=card.getAttribute('data-href')||'';
+      var page=card.getAttribute('data-page')||'';
+      findingsIndex[canon]={canon:canon,summary:summary,insight:insight,href:href,page:page};
+    });
+
+    /* Tooltip — mirrors the obs-tooltip styling but sources from srcIndex */
+    var tip=document.createElement('div');
+    tip.className='obs-tooltip obs-tooltip-src';
+    tip.setAttribute('role','tooltip');
+    document.body.appendChild(tip);
+    var tipTimer=null,tipActive=false;
+
+    function showTip(ref,x,y){
+      var canon=ref.getAttribute('data-obs-src');
+      var data=srcIndex[canon];
+      if(!data) return;
+      tip.innerHTML=
+        '<div class="obs-tooltip-head">'+
+          '<span class="obs-tooltip-num">'+data.canon+'</span>'+
+          '<span class="obs-tooltip-section">source sub-report</span>'+
+        '</div>'+
+        '<div class="obs-tooltip-title">'+data.title+'</div>'+
+        '<div class="obs-tooltip-summary">'+data.summary+'</div>'+
+        '<div class="obs-tooltip-hint">'+data.count+' · click for detail</div>';
+      tip.style.left='0px';tip.style.top='0px';
+      tip.classList.add('visible');
+      positionTip(x,y);
+      tipActive=true;
+    }
+    function positionTip(x,y){
+      var r=tip.getBoundingClientRect();
+      var vw=window.innerWidth,vh=window.innerHeight;
+      var left=x+14,top=y+18;
+      if(left+r.width>vw-12) left=Math.max(8,x-r.width-14);
+      if(top+r.height>vh-12) top=Math.max(8,y-r.height-14);
+      tip.style.left=left+'px';tip.style.top=top+'px';
+    }
+    function hideTip(){ tip.classList.remove('visible'); tipActive=false; }
+
+    refs.forEach(function(ref){
+      ref.addEventListener('mouseenter',function(e){
+        clearTimeout(tipTimer);
+        tipTimer=setTimeout(function(){ showTip(ref,e.clientX,e.clientY); },120);
+      });
+      ref.addEventListener('mousemove',function(e){ if(tipActive) positionTip(e.clientX,e.clientY); });
+      ref.addEventListener('mouseleave',function(){ clearTimeout(tipTimer); hideTip(); });
+    });
+
+    /* --- Side panel (click for full detail) ---
+       Mirrors the local obs-panel but sources from the bundled source
+       registry so the reader sees the defining sub-report card without
+       navigating. The CTA then jumps cross-page to the source. */
+    var overlay=document.createElement('div');
+    overlay.className='obs-panel-overlay obs-panel-overlay-src';
+    document.body.appendChild(overlay);
+
+    var panel=document.createElement('aside');
+    panel.className='obs-panel obs-panel-src';
+    panel.setAttribute('role','dialog');
+    panel.setAttribute('aria-label','Source observation detail');
+    panel.setAttribute('aria-hidden','true');
+    panel.innerHTML=
+      '<div class="obs-panel-header">'+
+        '<span class="obs-panel-num"></span>'+
+        '<span class="obs-panel-section-id"></span>'+
+        '<button type="button" class="obs-panel-close" aria-label="Close">'+
+          '<svg viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>'+
+        '</button>'+
+      '</div>'+
+      '<div class="obs-panel-body">'+
+        '<div class="obs-panel-title"></div>'+
+        '<div class="obs-panel-summary"></div>'+
+        '<div class="obs-panel-findings-wrap">'+
+          '<div class="obs-panel-findings-head">'+
+            '<span class="obs-panel-findings-label">Findings</span>'+
+            '<span class="obs-panel-findings-count"></span>'+
+          '</div>'+
+          '<ol class="obs-panel-findings"></ol>'+
+        '</div>'+
+        '<div class="obs-panel-meta">'+
+          '<div class="obs-panel-meta-label">Source</div>'+
+          '<div class="obs-panel-meta-val obs-panel-source"></div>'+
+          '<a class="obs-panel-cta" href="#">'+
+            '<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'+
+            '<span>Jump to source</span>'+
+          '</a>'+
+        '</div>'+
+      '</div>';
+    document.body.appendChild(panel);
+
+    function pageLabel(page){
+      /* Turn "operator.html" → "The Operator's Cut". Falls back to the
+         filename if the human title hasn't been indexed yet. */
+      var map={
+        'operator.html':"The Operator's Cut",
+        'treasury.html':'Treasury & Pool Pots Distribution',
+        'pools.html':'The Pools Pot Distribution Gaps',
+        'census.html':'The Staking Census'
+      };
+      return map[page]||page;
+    }
+    function openPanel(ref){
+      var canon=ref.getAttribute('data-obs-src');
+      var data=srcIndex[canon];
+      if(!data) return;
+      panel.querySelector('.obs-panel-num').textContent=data.canon;
+      panel.querySelector('.obs-panel-section-id').textContent='Source sub-report';
+      panel.querySelector('.obs-panel-title').innerHTML=data.title;
+      panel.querySelector('.obs-panel-summary').innerHTML=data.summary;
+      panel.querySelector('.obs-panel-source').innerHTML=
+        '<a href="'+data.href+'">'+pageLabel(data.page)+'</a>';
+
+      /* Findings list: hydrate each finding from the bundled registry.
+         If the registry entry is missing we still list the canonical id
+         so the reader can see the coverage. */
+      var list=panel.querySelector('.obs-panel-findings');
+      list.innerHTML='';
+      var ids=data.findingIds||[];
+      panel.querySelector('.obs-panel-findings-count').textContent=
+        ids.length ? ('('+ids.length+')') : '';
+      if(!ids.length){
+        var empty=document.createElement('li');
+        empty.className='obs-panel-finding obs-panel-finding-empty';
+        empty.textContent='No findings indexed for this observation.';
+        list.appendChild(empty);
+      } else {
+        ids.forEach(function(fid){
+          var f=findingsIndex[fid];
+          var li=document.createElement('li');
+          li.className='obs-panel-finding';
+          var idEl='<span class="obs-panel-finding-id">'+fid+'</span>';
+          if(f){
+            var body='<div class="obs-panel-finding-body">'+
+              '<div class="obs-panel-finding-summary">'+f.summary+'</div>'+
+              (f.insight ? '<div class="obs-panel-finding-insight">'+f.insight+'</div>' : '')+
+            '</div>';
+            var head='<div class="obs-panel-finding-head">'+idEl;
+            if(f.href){
+              head+='<a class="obs-panel-finding-jump" href="'+f.href+'" '+
+                'aria-label="Jump to '+fid+'">'+
+                '<svg viewBox="0 0 24 24" width="12" height="12">'+
+                '<line x1="5" y1="12" x2="19" y2="12"/>'+
+                '<polyline points="12 5 19 12 12 19"/></svg></a>';
+            }
+            head+='</div>';
+            li.innerHTML=head+body;
+          } else {
+            li.innerHTML='<div class="obs-panel-finding-head">'+idEl+'</div>'+
+              '<div class="obs-panel-finding-body">'+
+              '<div class="obs-panel-finding-summary obs-panel-finding-missing">'+
+              'Detail not bundled on this page.</div></div>';
+          }
+          list.appendChild(li);
+        });
+      }
+
+      var cta=panel.querySelector('.obs-panel-cta');
+      cta.setAttribute('href',data.href);
+      document.body.classList.add('obs-panel-open');
+      panel.setAttribute('aria-hidden','false');
+    }
+    function closePanel(){
+      document.body.classList.remove('obs-panel-open');
+      panel.setAttribute('aria-hidden','true');
+    }
+    overlay.addEventListener('click',closePanel);
+    panel.querySelector('.obs-panel-close').addEventListener('click',closePanel);
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&document.body.classList.contains('obs-panel-open')) closePanel();
+    });
+
+    refs.forEach(function(ref){
+      ref.addEventListener('click',function(e){
+        e.preventDefault();
+        hideTip();
+        openPanel(ref);
+      });
+    });
+  })();
+  /* ── /Cross-page DIA source overlay ── */
+
+"""
+
+
+def ensure_cross_obs_assets() -> None:
+    """Append cross-page DIA overlay CSS/JS if missing (idempotent).
+
+    Also patches the initObsOverlay query selector so refs with
+    ``data-obs-src`` are delegated to the cross-page handler.
+    """
+    assets_dir = SITE_DIR / "assets"
+    css_path = assets_dir / "site.css"
+    js_path = assets_dir / "site.js"
+
+    if css_path.exists():
+        css_text = css_path.read_text()
+        # Collapse any legacy duplicates: older builds appended the block
+        # repeatedly because the marker constant didn't match the emitted
+        # text. Strip every occurrence and re-append once below.
+        legacy_header = "/* ── Cross-page DIA source overlay + compact §X.Y.2 view ── */"
+        if css_text.count(legacy_header) > 1:
+            # Drop everything from the first header through the last header's
+            # block (each block ends with a "/* Responsive */" media query).
+            first = css_text.find(legacy_header)
+            # End of last block is the close of the responsive media query
+            # that terminates the block: "  .dia-obs-head{gap:6px}\n}\n".
+            # Use a defensive search for the last occurrence of that closer
+            # AFTER the first header.
+            closer = "  .dia-obs-head{gap:6px}\n}\n"
+            last_close = css_text.rfind(closer)
+            if last_close != -1 and last_close > first:
+                end = last_close + len(closer)
+                css_text = css_text[:first].rstrip() + "\n" + css_text[end:].lstrip()
+                css_path.write_text(css_text)
+                print(f"  collapsed duplicate cross-page DIA overlay CSS blocks in {css_path.relative_to(SITE_DIR)}")
+
+        if _CROSS_OBS_CSS_MARKER in css_text:
+            start = css_text.find(_CROSS_OBS_CSS_MARKER)
+            head_ws = css_text.rfind("\n", 0, start) + 1
+            if _CROSS_OBS_CSS_END_MARKER in css_text:
+                end = css_text.find(_CROSS_OBS_CSS_END_MARKER) + len(_CROSS_OBS_CSS_END_MARKER)
+                tail = css_text[end:].lstrip()
+            else:
+                # Legacy (no end marker): strip to the end of the responsive
+                # media query that terminates the block.
+                closer = "  .dia-obs-head{gap:6px}\n}\n"
+                tail_idx = css_text.find(closer, start)
+                if tail_idx == -1:
+                    tail = ""
+                else:
+                    tail = css_text[tail_idx + len(closer):].lstrip()
+            css_text = css_text[:head_ws] + _CROSS_OBS_CSS.lstrip("\n") + tail
+            css_path.write_text(css_text)
+            print(f"  refreshed cross-page DIA overlay CSS in {css_path.relative_to(SITE_DIR)}")
+        else:
+            css_path.write_text(css_text.rstrip() + "\n" + _CROSS_OBS_CSS)
+            print(f"  appended cross-page DIA overlay CSS to {css_path.relative_to(SITE_DIR)}")
+
+    if js_path.exists():
+        js_text = js_path.read_text()
+        old_sel = "document.querySelectorAll('.obs-ref[data-obs]');"
+        new_sel = "document.querySelectorAll('.obs-ref[data-obs]:not([data-obs-src])');"
+        if old_sel in js_text:
+            js_text = js_text.replace(old_sel, new_sel)
+            js_path.write_text(js_text)
+            print(f"  patched initObsOverlay selector in {js_path.relative_to(SITE_DIR)}")
+        # Replace any existing cross-obs block so edits to _CROSS_OBS_JS
+        # propagate on rebuild. The block is delimited by the head marker
+        # and the paired ``/Cross-page DIA source overlay`` end marker.
+        if _CROSS_OBS_JS_MARKER in js_text:
+            start = js_text.find(_CROSS_OBS_JS_MARKER)
+            head_ws = js_text.rfind("\n", 0, start) + 1
+            if _CROSS_OBS_JS_END_MARKER in js_text:
+                end = js_text.find(_CROSS_OBS_JS_END_MARKER) + len(_CROSS_OBS_JS_END_MARKER)
+                tail = js_text[end:].lstrip()
+            else:
+                # Legacy block (no end marker): strip from the head marker
+                # through the trailing wrapper close of the old block. The
+                # old block always ended in an IIFE close followed by the
+                # outer wrapper's `})();`.
+                tail_idx = js_text.rfind("})();")
+                if tail_idx == -1 or tail_idx < start:
+                    tail = ""
+                else:
+                    tail = js_text[tail_idx:]
+            js_text = js_text[:head_ws] + _CROSS_OBS_JS.lstrip("\n") + tail
+            js_path.write_text(js_text)
+            print(f"  refreshed cross-page DIA overlay JS in {js_path.relative_to(SITE_DIR)}")
+        else:
+            closing = "\n})();"
+            idx = js_text.rfind(closing)
+            if idx == -1:
+                js_path.write_text(js_text + "\n" + _CROSS_OBS_JS)
+            else:
+                js_path.write_text(js_text[:idx] + "\n" + _CROSS_OBS_JS + js_text[idx:])
+            print(f"  injected cross-page DIA overlay JS into {js_path.relative_to(SITE_DIR)}")
+
 
 # --- Figure sync ----------------------------------------------------------
 
@@ -1151,7 +1575,7 @@ _OBS_HEADING_RE = re.compile(
     re.MULTILINE,
 )
 _OBS_ROW_RE = re.compile(
-    r"^\|\s*\*\*O(\d+)\*\*\s*\|\s*\*\*(.+?)\*\*\s*\|\s*(.+?)\s*\|\s*$",
+    r"^\|\s*\*\*DIA\.(\d+)\.(\d+)\.O(\d+)\*\*\s*\|\s*\*\*(.+?)\*\*\s*\|\s*(.+?)\s*\|\s*$",
     re.MULTILINE,
 )
 _SCOPE_NOTE_RE = re.compile(
@@ -1231,10 +1655,11 @@ def extract_observations_from_md(md_text: str) -> list[dict]:
         scope_note = re.split(r"\n\s*\n", scope_note, maxsplit=1)[0].replace("\n", " ").strip()
 
         for row in _OBS_ROW_RE.finditer(section_text):
-            num = int(row.group(1))
-            title = row.group(2).strip()
-            summary = row.group(3).strip()
-            # De-emphasize stray markdown escape artefacts in title.
+            # Canonical row: | **DIA.X.Y.O#** | **Title** | summary |
+            # Capture groups: (X, Y, O#, title, summary).
+            num = int(row.group(3))
+            title = row.group(4).strip()
+            summary = row.group(5).strip()
             tier, tier_label = _classify_tier(summary, title)
             observations.append({
                 "section_id": section_id,
@@ -1380,130 +1805,319 @@ def transform_observation_tables(html_body: str, observations: list[dict]) -> st
 
 # --- Inline (O#) citation rewriter ----------------------------------------
 
-# Matches (O1), (O12), (O1–O3), (O1-O3), (O1, O4), (O1 and O4).
-_CITATION_RE = re.compile(
-    r"\(\s*O(\d+)(?:\s*[–\-]\s*O(\d+))?(?:(?:\s*(?:,|and)\s*O\d+)+)?\s*\)"
-)
+# Matches parenthesised canonical observation citations like
+# ``(DIA.1.1.O1)``, ``(DIA.1.3.O6, DIA.1.3.O7, DIA.1.3.O8)``, and
+# ``(DIA.1.1.O1–DIA.1.1.O3)``.
 _CITATION_FULL_RE = re.compile(
-    r"\(\s*O\d+(?:\s*[–\-]\s*O\d+)?(?:\s*(?:,|and)\s*O\d+)*\s*\)"
+    r"\(\s*DIA\.\d+\.\d+\.O\d+"
+    r"(?:\s*(?:[–\-]|,|and|/)\s*DIA\.\d+\.\d+\.O\d+)*"
+    r"\s*\)"
 )
 
 
-def rewrite_obs_citations(html_body: str, observations: list[dict]) -> str:
-    """Replace ``(O#)``, ``(O#–O#)``, ``(O#, O#)`` with overlay-capable links.
+def rewrite_obs_citations(
+    html_body: str,
+    observations: list[dict],
+    source_lookup: dict[str, dict] | None = None,
+) -> str:
+    """Replace ``(DIA.X.Y.O#)`` and its list/range/slash variants with
+    overlay-capable links.
 
-    The binding rule: within a top-level section ``<h2 id="XY-...">``, a
-    citation ``(O#)`` refers to observation ``O#`` of section ``XY2`` (i.e.
-    the Mainnet Observations sub-section that belongs to the same h2).
-
-    The function walks the HTML once, tracking the current h2 scope, and
-    rewrites citations only when a matching observation exists.
+    Each canonical token carries its own scope (X.Y.O#), so no h2 tracking is
+    needed — we look up the target observation directly from the global
+    canonical-id index. When ``source_lookup`` is provided, every
+    ``DIA.X.Y.O#`` that maps to a sub-report observation (via
+    ``DIA_SOURCE_MAP``) is annotated with cross-page source fields so the
+    overlay hydrates the *source* card (e.g. ``OPE.O7``) rather than the
+    diagnostic synthesis card. DIA citations without a source stay local.
     """
-    # Build lookup: parent_slug → {local_num: obs}
-    by_parent: dict[str, dict[int, dict]] = {}
+    # Build lookup: canonical id → obs
+    by_canon: dict[str, dict] = {}
     for obs in observations:
-        by_parent.setdefault(obs["parent_slug"], {})[obs["local_num"]] = obs
+        canon = f"DIA.{obs['parent']}.{obs['local_id']}"
+        by_canon[canon] = obs
 
-    # Split the body by h2 boundaries to establish scope per segment.
-    h2_re = re.compile(r'<h2\s+id="(\d+)-[^"]*"[^>]*>', re.IGNORECASE)
-    pieces: list[tuple[int, str]] = []  # (piece_start, current_parent_slug)
-    last_end = 0
-    current_slug = ""
-    boundaries: list[tuple[int, str]] = [(0, "")]
-    for m in h2_re.finditer(html_body):
-        boundaries.append((m.start(), m.group(1)))
-    boundaries.append((len(html_body), ""))
-
-    segments: list[str] = []
-    for i, (pos, slug) in enumerate(boundaries[:-1]):
-        next_pos = boundaries[i + 1][0]
-        segment = html_body[pos:next_pos]
-        scope = by_parent.get(slug, {}) if slug else {}
-        if scope:
-            segment = _rewrite_citations_in_segment(segment, scope)
-        segments.append(segment)
-    return "".join(segments)
+    return _rewrite_citations_in_segment(html_body, by_canon, source_lookup or {})
 
 
-def _rewrite_citations_in_segment(segment: str, scope: dict[int, dict]) -> str:
-    """Rewrite ``(O#)`` and ranges inside a single scope-bound segment.
+def _rewrite_citations_in_segment(
+    segment: str,
+    by_canon: dict[str, dict],
+    source_lookup: dict[str, dict] | None = None,
+) -> str:
+    """Rewrite ``(DIA.X.Y.O#)`` tokens, skipping defining regions.
 
-    Walks the HTML tag-by-tag: text nodes outside any ``<div class="obs-cards">``
-    (where the observation table has been replaced by cards) are eligible for
-    substitution. Everything inside the cards block is left untouched.
+    The observation-cards block is the *defining* rendering for each
+    synthesis observation; rewriting canonical ids inside it would create
+    circular overlays pointing back to themselves. The ``.dia-obs-compact``
+    list used by the lighter §X.Y.2 view is also a defining region.
     """
+    source_lookup = source_lookup or {}
+    skip_classes = ("obs-cards", "dia-obs-compact")
     out: list[str] = []
     pos = 0
-    in_cards = False
+    in_skip = False
     div_depth = 0
     tag_re = re.compile(r"<[^>]+>")
     for m in tag_re.finditer(segment):
         text = segment[pos:m.start()]
         tag = m.group(0)
-        if not in_cards:
-            text = _apply_citation_substitution(text, scope)
+        if not in_skip:
+            text = _apply_citation_substitution(text, by_canon, source_lookup)
         out.append(text)
         out.append(tag)
         tlow = tag.lower()
-        if not in_cards:
-            if 'class="obs-cards"' in tag or "class='obs-cards'" in tag:
-                in_cards = True
-                div_depth = 1  # opening <div> for the cards block
+        if not in_skip:
+            matched = any(f'class="{c}"' in tag or f"class='{c}'" in tag for c in skip_classes)
+            if matched:
+                in_skip = True
+                div_depth = 1  # opening <div>/<section>/... for the skipped block
         else:
-            if tlow.startswith("<div"):
+            if tlow.startswith("<div") or tlow.startswith("<section") or tlow.startswith("<ul") or tlow.startswith("<ol"):
                 div_depth += 1
-            elif tlow.startswith("</div"):
+            elif tlow.startswith("</div") or tlow.startswith("</section") or tlow.startswith("</ul") or tlow.startswith("</ol"):
                 div_depth -= 1
                 if div_depth == 0:
-                    in_cards = False
+                    in_skip = False
         pos = m.end()
     tail = segment[pos:]
-    if not in_cards:
-        tail = _apply_citation_substitution(tail, scope)
+    if not in_skip:
+        tail = _apply_citation_substitution(tail, by_canon, source_lookup)
     out.append(tail)
     return "".join(out)
 
 
-def _apply_citation_substitution(text: str, scope: dict[int, dict]) -> str:
-    """Rewrite every well-formed citation token inside plain text."""
+_CANON_DIA_TOKEN_RE = re.compile(r"DIA\.(\d+)\.(\d+)\.O(\d+)")
+
+
+def _apply_citation_substitution(
+    text: str,
+    by_canon: dict[str, dict],
+    source_lookup: dict[str, dict] | None = None,
+) -> str:
+    """Rewrite every well-formed canonical citation token inside plain text.
+
+    When ``source_lookup`` maps a DIA canonical id to a sub-report observation
+    group, the rewritten ``<a>`` carries cross-page source attributes:
+
+    - ``data-obs-src``   the source canonical id (e.g. ``OPE.O7``)
+    - ``data-obs-page``  the source page html name (e.g. ``operator.html``)
+    - ``data-obs-href``  the cross-page jump URL (``operator.html#srobs-ope-o7``)
+
+    The overlay script can then hydrate from a bundled ``sro-obs-registry``
+    and wire the panel CTA to navigate to the source. DIA citations without
+    a mapped source (e.g. ``DIA.2.2.O#``) fall back to the local obs-card
+    anchor.
+    """
+    source_lookup = source_lookup or {}
+
+    def _src_attrs(canon: str, obs: dict) -> str:
+        src = source_lookup.get(canon)
+        if not src:
+            return ""
+        return (
+            f' data-obs-src="{_html.escape(src["canon_id"])}"'
+            f' data-obs-page="{_html.escape(src.get("page_html", ""))}"'
+            f' data-obs-href="{_html.escape(src.get("jump_href", ""))}"'
+        )
 
     def _sub(m: re.Match) -> str:
         raw = m.group(0)
-        # Pull every O# number from the token (handles ranges + commas + "and").
-        nums = [int(n) for n in re.findall(r"O(\d+)", raw)]
-        if not nums:
+        tokens = _CANON_DIA_TOKEN_RE.findall(raw)
+        if not tokens:
             return raw
-        # Range form (O1–O3): expand if possible.
-        if "–" in raw or "-" in raw and len(nums) == 2:
-            lo, hi = min(nums), max(nums)
-            nums = list(range(lo, hi + 1))
-        links = []
-        for n in nums:
-            obs = scope.get(n)
+        canons = [f"DIA.{x}.{y}.O{n}" for (x, y, n) in tokens]
+        # Range form ``DIA.X.Y.O1–DIA.X.Y.O3``: expand over O# when the two
+        # endpoints share a parent section.
+        if "–" in raw and len(tokens) == 2 and tokens[0][0:2] == tokens[1][0:2]:
+            x, y = tokens[0][0], tokens[0][1]
+            lo, hi = sorted((int(tokens[0][2]), int(tokens[1][2])))
+            canons = [f"DIA.{x}.{y}.O{n}" for n in range(lo, hi + 1)]
+        links: list[dict] = []
+        for c in canons:
+            obs = by_canon.get(c)
             if not obs:
-                return raw  # unknown → leave as-is
+                return raw  # unknown → leave token untouched
             links.append(obs)
-        # Single-link form
         if len(links) == 1:
             obs = links[0]
+            canon = canons[0]
+            src = source_lookup.get(canon)
+            if src:
+                # Cross-page source overlay: primary href navigates to the
+                # source sub-report card; the overlay shows the source's
+                # content. Display the source canonical id (e.g. ``OPE.O1``)
+                # rather than the DIA synthesis id so readers see the
+                # defining reference directly.
+                display_id = src["canon_id"]
+                return (
+                    f'<a class="obs-ref obs-ref-src" '
+                    f'href="{_html.escape(src["jump_href"])}" '
+                    f'data-obs="{obs["global_id"]}" '
+                    f'data-tier="{obs["tier"]}"'
+                    f'{_src_attrs(canon, obs)}>({display_id})</a>'
+                )
             return (
                 f'<a class="obs-ref" href="#{obs["global_id"]}" '
                 f'data-obs="{obs["global_id"]}" '
-                f'data-tier="{obs["tier"]}">({obs["local_id"]})</a>'
+                f'data-tier="{obs["tier"]}">({canon})</a>'
             )
-        # Range / list form: emit one link per observation, preserving the paren pair.
         range_data = ",".join(o["global_id"] for o in links)
-        ids_display = "–".join(o["local_id"] for o in (links[0], links[-1])) if (
-            "–" in raw or "-" in raw
-        ) else ", ".join(o["local_id"] for o in links)
+        # Prefer the source canonical id for display when available, falling
+        # back to the DIA synthesis id when no source mapping exists.
+        display_canons = [
+            (source_lookup[c]["canon_id"] if c in source_lookup else c)
+            for c in canons
+        ]
+        if "–" in raw:
+            ids_display = f"{display_canons[0]}–{display_canons[-1]}"
+        elif "/" in raw:
+            ids_display = "/".join(display_canons)
+        else:
+            ids_display = ", ".join(display_canons)
+        # Range/list form: route the primary link through the first canon's
+        # source when available, and pack all source canons for the overlay.
+        first_canon = canons[0]
+        first_src = source_lookup.get(first_canon)
+        src_range = ",".join(
+            source_lookup[c]["canon_id"] for c in canons if c in source_lookup
+        )
+        primary_href = (
+            first_src["jump_href"]
+            if first_src else f'#{links[0]["global_id"]}'
+        )
+        src_attrs = _src_attrs(first_canon, links[0]) if first_src else ""
+        src_range_attr = (
+            f' data-obs-src-range="{_html.escape(src_range)}"'
+            if src_range else ""
+        )
+        classes = "obs-ref obs-ref-range"
+        if first_src:
+            classes += " obs-ref-src"
         return (
-            f'<a class="obs-ref obs-ref-range" href="#{links[0]["global_id"]}" '
+            f'<a class="{classes}" href="{_html.escape(primary_href)}" '
             f'data-obs="{links[0]["global_id"]}" '
             f'data-obs-range="{range_data}" '
-            f'data-tier="{links[0]["tier"]}">({ids_display})</a>'
+            f'data-tier="{links[0]["tier"]}"'
+            f'{src_attrs}{src_range_attr}>({ids_display})</a>'
         )
 
     return _CITATION_FULL_RE.sub(_sub, text)
+
+
+# Matches an ``<a>`` whose visible text is one or more DIA canonical tokens
+# (single, comma-separated list, range with em-dash, or slash). Used to
+# rewrite pre-existing markdown links like ``[DIA.1.3.O1](diagnostic/...)``
+# into overlay anchors after ``md_to_html`` has already turned them into
+# HTML links.
+_DIA_ANCHOR_TEXT_RE = re.compile(
+    r"<a\b([^>]*)>\s*((?:DIA\.\d+\.\d+\.O\d+"
+    r"(?:\s*[,/–\-]\s*DIA\.\d+\.\d+\.O\d+)*))\s*</a>",
+    re.IGNORECASE,
+)
+
+
+def rewrite_dia_anchors(
+    html_body: str,
+    observations: list[dict],
+    source_lookup: dict[str, dict] | None = None,
+) -> str:
+    """Rewrite pre-existing ``<a>`` tags whose visible text is a DIA canonical
+    id (single, list, or range) into overlay-capable anchors.
+
+    This covers the case where the markdown source used an explicit link
+    (``[DIA.1.3.O1](diagnostic/README.md#...)``) rather than a plain-text
+    citation. The substitution:
+
+    - swaps the visible text for the source canon id (e.g. ``OPE.O1``) when
+      a ``DIA_SOURCE_MAP`` entry exists,
+    - repoints ``href`` at the source sub-report card,
+    - attaches the overlay class and ``data-obs-*`` attributes so the
+      existing hover/click UI fires.
+
+    Anchors whose DIA target has no source mapping (``DIA.2.2.O#``) still
+    pick up ``data-obs`` so the local overlay fires, while the visible text
+    stays as the DIA id.
+    """
+    source_lookup = source_lookup or {}
+    by_canon: dict[str, dict] = {}
+    for obs in observations:
+        canon = f"DIA.{obs['parent']}.{obs['local_id']}"
+        by_canon[canon] = obs
+
+    def _src_attrs(obs: dict, src: dict | None) -> str:
+        if not src:
+            return ""
+        return (
+            f' data-obs-src="{_html.escape(src["canon_id"])}"'
+            f' data-obs-page="{_html.escape(src.get("page_html", ""))}"'
+            f' data-obs-href="{_html.escape(src.get("jump_href", ""))}"'
+        )
+
+    def _sub(m: re.Match) -> str:
+        inner = m.group(2)
+        tokens = re.findall(r"DIA\.(\d+)\.(\d+)\.O(\d+)", inner)
+        if not tokens:
+            return m.group(0)
+        canons = [f"DIA.{x}.{y}.O{n}" for (x, y, n) in tokens]
+        obs_list = [by_canon.get(c) for c in canons]
+        if any(o is None for o in obs_list):
+            return m.group(0)
+        if len(canons) == 1:
+            obs = obs_list[0]
+            canon = canons[0]
+            src = source_lookup.get(canon)
+            display = src["canon_id"] if src else canon
+            if src:
+                return (
+                    f'<a class="obs-ref obs-ref-src" '
+                    f'href="{_html.escape(src["jump_href"])}" '
+                    f'data-obs="{obs["global_id"]}" '
+                    f'data-tier="{obs["tier"]}"'
+                    f'{_src_attrs(obs, src)}>{display}</a>'
+                )
+            return (
+                f'<a class="obs-ref" href="#{obs["global_id"]}" '
+                f'data-obs="{obs["global_id"]}" '
+                f'data-tier="{obs["tier"]}">{canon}</a>'
+            )
+        display_canons = [
+            (source_lookup[c]["canon_id"] if c in source_lookup else c)
+            for c in canons
+        ]
+        if "–" in inner:
+            ids_display = f"{display_canons[0]}–{display_canons[-1]}"
+        elif "/" in inner:
+            ids_display = "/".join(display_canons)
+        else:
+            ids_display = ", ".join(display_canons)
+        range_data = ",".join(o["global_id"] for o in obs_list)
+        first_canon = canons[0]
+        first_src = source_lookup.get(first_canon)
+        src_range = ",".join(
+            source_lookup[c]["canon_id"] for c in canons if c in source_lookup
+        )
+        primary_href = (
+            first_src["jump_href"]
+            if first_src else f'#{obs_list[0]["global_id"]}'
+        )
+        src_attrs = _src_attrs(obs_list[0], first_src) if first_src else ""
+        src_range_attr = (
+            f' data-obs-src-range="{_html.escape(src_range)}"'
+            if src_range else ""
+        )
+        classes = "obs-ref obs-ref-range"
+        if first_src:
+            classes += " obs-ref-src"
+        return (
+            f'<a class="{classes}" href="{_html.escape(primary_href)}" '
+            f'data-obs="{obs_list[0]["global_id"]}" '
+            f'data-obs-range="{range_data}" '
+            f'data-tier="{obs_list[0]["tier"]}"'
+            f'{src_attrs}{src_range_attr}>{ids_display}</a>'
+        )
+
+    return _DIA_ANCHOR_TEXT_RE.sub(_sub, html_body)
 
 
 # --- Findings extraction (for findings.html synthesis page) --------------
@@ -1840,12 +2454,12 @@ def promote_admonitions(html_body: str) -> str:
 
 # --- F# findings extraction + overlay (sub-reports) ----------------------
 
-# Findings tables in sub-report READMEs use the form:
-#   | F1.1 | <summary> | <anchor ref> | <insight> |
+# Findings tables in sub-report READMEs use the canonical form:
+#   | POL.O1.F1 | <summary> | <anchor ref> | <insight> |
 # The anchor column is either a markdown link `[§3.6.1](#...)` or plain text
 # like "Epoch 616" (in which case we derive no anchor).
 _F_TABLE_ROW_RE = re.compile(
-    r"^\|\s*(F\d+\.\d+)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*(?:\|\s*(.+?)\s*)?\|",
+    r"^\|\s*([A-Z]{3})\.O(\d+)\.F(\d+)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*(?:\|\s*(.+?)\s*)?\|",
     re.MULTILINE,
 )
 
@@ -1858,26 +2472,6 @@ _MD_LINK_IN_CELL = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 # Canonical XXX.OY[.FZ] tokens (e.g. POL.O1, POL.O1.F1, OPE.O3). The 3-letter
 # code is constrained to one of the defined sub-report codes; we resolve the
 # match against PAGE_BY_CODE rather than admitting any uppercase trigram.
-_CANON_TOKEN_RE = re.compile(
-    r"\(?([A-Z]{3})\.O(\d+)(?:\.F(\d+))?\)?"
-)
-
-
-def _canon_finding_id(code: str, f_id: str) -> str:
-    """Build the canonical ``XXX.O{O}.F{F}`` form from a row id like ``F1.1``.
-
-    ``F1.1`` decodes as observation 1, finding 1, so for code ``POL`` it
-    becomes ``POL.O1.F1``. The leading ``F`` and dot are dropped on purpose:
-    this id is the one shown to users and embedded in URLs.
-    """
-    o_part, f_part = f_id[1:].split(".", 1)
-    return f"{code}.O{o_part}.F{f_part}"
-
-
-def _canon_obs_id(code: str, o_num: int) -> str:
-    return f"{code}.O{o_num}"
-
-
 def _canon_slug(canon_id: str) -> str:
     """URL-safe DOM id derived from a canonical id (``POL.O1.F1`` → ``pol-o1-f1``)."""
     return canon_id.replace(".", "-").lower()
@@ -1904,21 +2498,25 @@ def extract_f_findings_from_md(md_text: str, code: str = "", page_html: str = ""
     findings: list[dict] = []
     seen: set[str] = set()
     for m in _F_TABLE_ROW_RE.finditer(md_text):
-        fid = m.group(1)
-        if fid in seen:
+        # Canonical row: | POL.O1.F1 | summary | anchor | insight |
+        row_code = m.group(1)
+        o_num = int(m.group(2))
+        f_num = int(m.group(3))
+        canon_id = f"{row_code}.O{o_num}.F{f_num}"
+        if canon_id in seen:
             continue
-        seen.add(fid)
-        summary = m.group(2).strip()
-        anchor_cell = (m.group(3) or "").strip()
-        insight = (m.group(4) or "").strip()
+        seen.add(canon_id)
+        # Legacy short id kept so callers that key by F#.# still work.
+        fid_short = f"F{o_num}.{f_num}"
+        summary = m.group(4).strip()
+        anchor_cell = (m.group(5) or "").strip()
+        insight = (m.group(6) or "").strip()
         link_m = _MD_LINK_IN_CELL.search(anchor_cell)
         anchor_label = ""
         anchor_href = ""
         if link_m:
             anchor_label = link_m.group(1).strip()
             anchor_href = link_m.group(2).strip()
-        major = int(fid.split(".")[0][1:])
-        canon_id = _canon_finding_id(code, fid) if code else fid
         # Build the cross-page jump URL: prefix the local fragment with the
         # owning page's html name. If the source markdown didn't supply an
         # anchor, fall back to the ``## 1. Mainnet Observations`` table on
@@ -1932,18 +2530,18 @@ def extract_f_findings_from_md(md_text: str, code: str = "", page_html: str = ""
         else:
             jump_href = local_anchor
         findings.append({
-            "id": fid,
+            "id": fid_short,
             "canon_id": canon_id,
-            "slug": _canon_slug(canon_id) if code else fid.replace(".", "").lower(),
+            "slug": _canon_slug(canon_id),
             "summary": summary,
             "anchor_label": anchor_label,
             "anchor_href": anchor_href,
             "jump_href": jump_href,
             "page_html": page_html,
             "insight": insight,
-            "group": major,
-            "code": code,
-            "o_num": major,
+            "group": o_num,
+            "code": row_code,
+            "o_num": o_num,
         })
     return findings
 
@@ -2057,10 +2655,20 @@ def _render_subreport_obs_registry(obs_groups: list[dict]) -> str:
             f' data-page="{_html.escape(g.get("page_html", ""))}"'
             if g.get("page_html") else ""
         )
+        # Comma-separated canonical finding ids (e.g. "OPE.O1.F1,OPE.O1.F2").
+        # The cross-page JS uses this to hydrate the side-panel findings list
+        # from the already-bundled findings-registry.
+        finding_canons = ",".join(
+            (f.get("canon_id") or f["id"]) for f in g["findings"]
+        )
+        findings_attr = (
+            f' data-findings="{_html.escape(finding_canons)}"'
+            if finding_canons else ""
+        )
         cards.append(
             f'<div class="sro-obs-detail" id="srobs-{g["slug"]}" '
             f'data-obs-canon="{g["canon_id"]}" data-short="{g["o_id"]}" '
-            f'data-group="{g["o_num"]}"{page_attr}{anchor_attr}>'
+            f'data-group="{g["o_num"]}"{page_attr}{anchor_attr}{findings_attr}>'
             f'<div class="sro-obs-detail-id">{g["canon_id"]}</div>'
             f'<div class="sro-obs-detail-title">{title_html}</div>'
             f'<div class="sro-obs-detail-summary">{evid_html}</div>'
@@ -2267,14 +2875,14 @@ def rewrite_canonical_obs_citations(
 
 # --- Sub-report Mainnet Observations: O# headers + F# rows --------------
 
-# Matches O-header rows:  | | **O1 — Title** | | |
+# Matches O-header rows:  | | **POL.O1 — Title** | | |  (canonical form).
 _SRO_OHDR_RE = re.compile(
-    r"^\|\s*\|\s*\*\*(O\d+)\s*[—–-]\s*(.+?)\*\*\s*\|\s*\|\s*\|\s*$",
+    r"^\|\s*\|\s*\*\*([A-Z]{3})\.O(\d+)\s*[—–-]\s*(.+?)\*\*\s*\|\s*\|\s*\|\s*$",
     re.MULTILINE,
 )
-# Matches F-rows: | F1.1 | evidence | section link | nature |
+# Matches F-rows: | POL.O1.F1 | evidence | section link | nature |  (canonical form).
 _SRO_FROW_RE = re.compile(
-    r"^\|\s*(F\d+\.\d+)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*$",
+    r"^\|\s*([A-Z]{3})\.O(\d+)\.F(\d+)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|\s*$",
     re.MULTILINE,
 )
 
@@ -2322,16 +2930,19 @@ def extract_subreport_observations(
     section_md = md_text[start:end]
 
     # Walk the section line by line, grouping F-rows under the last O-header.
+    # Row ids are canonical directly (POL.O1, POL.O1.F1). We read them as-is
+    # and trust the source MD — no code derivation here.
     groups: list[dict] = []
     current: dict | None = None
     for raw_line in section_md.splitlines():
         line = raw_line.rstrip()
         oh = _SRO_OHDR_RE.match(line)
         if oh:
-            o_num = int(oh.group(1)[1:])
-            o_id = oh.group(1)
-            o_title = oh.group(2).strip()
-            canon = _canon_obs_id(code, o_num) if code else o_id
+            row_code = oh.group(1)
+            o_num = int(oh.group(2))
+            o_title = oh.group(3).strip()
+            o_id = f"O{o_num}"
+            canon = f"{row_code}.O{o_num}"
             defining = o_defining.get(o_num, "")
             if page_html:
                 if defining:
@@ -2344,11 +2955,11 @@ def extract_subreport_observations(
                 "o_id": o_id,
                 "o_num": o_num,
                 "canon_id": canon,
-                "slug": _canon_slug(canon) if code else o_id.lower(),
+                "slug": _canon_slug(canon),
                 "o_title": o_title,
                 "defining_anchor": defining,
                 "jump_href": jump_href,
-                "code": code,
+                "code": row_code,
                 "page_html": page_html,
                 "findings": [],
             }
@@ -2356,20 +2967,24 @@ def extract_subreport_observations(
             continue
         fr = _SRO_FROW_RE.match(line)
         if fr and current is not None:
-            fid = fr.group(1)
-            f_canon = _canon_finding_id(code, fid) if code else fid
-            extra = f_findings_by_id.get(fid, {})
+            row_code = fr.group(1)
+            o_num = int(fr.group(2))
+            f_num = int(fr.group(3))
+            f_canon = f"{row_code}.O{o_num}.F{f_num}"
+            # Legacy short id kept for cross-indexing with ## Findings records.
+            fid_short = f"F{o_num}.{f_num}"
+            extra = f_findings_by_id.get(f_canon, {}) or f_findings_by_id.get(fid_short, {})
             current["findings"].append({
-                "f_id": fid,
+                "f_id": fid_short,
                 "canon_id": f_canon,
-                "slug": _canon_slug(f_canon) if code else fid.replace(".", "").lower(),
-                "f_group": int(fid.split(".")[0][1:]),
-                "evidence_md": fr.group(2).strip(),
-                "section_md": fr.group(3).strip(),
-                "nature_md": fr.group(4).strip(),
+                "slug": _canon_slug(f_canon),
+                "f_group": o_num,
+                "evidence_md": fr.group(4).strip(),
+                "section_md": fr.group(5).strip(),
+                "nature_md": fr.group(6).strip(),
                 "anchor_href": extra.get("anchor_href", ""),
                 "jump_href": extra.get("jump_href", ""),
-                "code": code,
+                "code": row_code,
                 "page_html": page_html,
             })
     return groups
@@ -2567,6 +3182,240 @@ def transform_subreport_observation_table(html_body: str, groups: list[dict]) ->
     return html_body[:start] + new_block + html_body[end:]
 
 
+# --- Cross-page source bundle (for observatory.html DIA overlays) --------
+
+# Cached so the observatory build path pays the parse cost once across the
+# full build run (all four sub-reports are loaded together).
+_SUBREPORT_BUNDLE: dict[str, object] | None = None
+
+
+def _load_all_subreport_data() -> dict[str, object]:
+    """Load every sub-report's obs_groups + findings, keyed by code.
+
+    Returned dict::
+
+        {
+            "obs_groups_by_code": {"TRE": [...], "POL": [...], ...},
+            "findings_by_code":   {"TRE": [...], "POL": [...], ...},
+        }
+
+    Each ``obs_group`` has its ``canon_id`` (``OPE.O7``), ``slug``
+    (``ope-o7``), ``jump_href`` (``operator.html#...``) — ready to paste into
+    cross-page source anchors or a bundled registry on observatory.html.
+    """
+    global _SUBREPORT_BUNDLE
+    if _SUBREPORT_BUNDLE is not None:
+        return _SUBREPORT_BUNDLE
+
+    obs_by_code: dict[str, list[dict]] = {}
+    f_by_code: dict[str, list[dict]] = {}
+    for p in PAGES:
+        code = p.get("code")
+        if not code:
+            continue
+        md_path = REPO_ROOT / p["md"]
+        if not md_path.exists():
+            continue
+        md = md_path.read_text()
+        o_defining = detect_o_defining_sections(md)
+        findings = extract_f_findings_from_md(md, code=code, page_html=p["html"])
+        f_by_code[code] = findings
+        f_index = {f["canon_id"]: f for f in findings}
+        f_index.update({f["id"]: f for f in findings})
+        obs_groups = extract_subreport_observations(
+            md,
+            code=code,
+            page_html=p["html"],
+            o_defining=o_defining,
+            f_findings_by_id=f_index,
+        )
+        obs_by_code[code] = obs_groups
+    _SUBREPORT_BUNDLE = {
+        "obs_groups_by_code": obs_by_code,
+        "findings_by_code": f_by_code,
+    }
+    return _SUBREPORT_BUNDLE
+
+
+# Cache the DIA synthesis observations so every non-observatory page can
+# rewrite inline ``(DIA.X.Y.O#)`` citations without re-parsing the diagnostic
+# markdown each time.
+_DIAG_OBSERVATIONS: list[dict] | None = None
+
+
+def _load_diagnostic_observations() -> list[dict]:
+    """Return the DIA observations defined in ``diagnostic/README.md``.
+
+    Shared by every page that may cite ``(DIA.X.Y.O#)`` inline so the rewrite
+    can resolve the canonical id even when the defining markdown lives on a
+    different page.
+    """
+    global _DIAG_OBSERVATIONS
+    if _DIAG_OBSERVATIONS is not None:
+        return _DIAG_OBSERVATIONS
+    md_path = REPO_ROOT / "diagnostic/README.md"
+    if not md_path.exists():
+        _DIAG_OBSERVATIONS = []
+        return _DIAG_OBSERVATIONS
+    _DIAG_OBSERVATIONS = extract_observations_from_md(md_path.read_text())
+    return _DIAG_OBSERVATIONS
+
+
+def _build_dia_source_lookup(
+    obs_groups_by_code: dict[str, list[dict]],
+) -> dict[str, dict]:
+    """Map ``DIA.X.Y.O#`` → the source sub-report obs_group dict.
+
+    Uses ``DIA_SOURCE_MAP`` to bridge between synthesis sections and
+    sub-report codes. DIA observations with no source (``2.2``) are simply
+    absent from the returned mapping so callers fall back to local anchors.
+    """
+    lookup: dict[str, dict] = {}
+    for parent, meta in DIA_SOURCE_MAP.items():
+        groups = obs_groups_by_code.get(meta["code"], [])
+        by_o_num = {g["o_num"]: g for g in groups}
+        # O# numbering is 1-to-1 between DIA.X.Y.O# and its source XXX.O#,
+        # so we index by o_num and build both directions.
+        for o_num, g in by_o_num.items():
+            canon = f"DIA.{parent}.O{o_num}"
+            lookup[canon] = g
+    return lookup
+
+
+def _render_dia_compact_obs(
+    section_obs: list[dict],
+    source_lookup: dict[str, dict],
+) -> str:
+    """Compact "lighter" view for §X.Y.2 Mainnet Observations.
+
+    Each row shows: source canonical id chip (e.g. ``OPE.O7``), title, 1-line
+    summary, row of F# badges, and a cross-page "Open in [sub-report]" link.
+    ``section_obs`` shares a common parent (the X.Y prefix), so we derive
+    the sub-report meta from the first observation.
+    """
+    if not section_obs:
+        return ""
+    parent = section_obs[0]["parent"]
+    meta = DIA_SOURCE_MAP.get(parent)
+    if not meta:
+        return ""
+    page_html = meta["page"]
+    # Human-readable sub-report name from the matching PAGES entry.
+    src_page = next((p for p in PAGES if p["html"] == page_html), None)
+    src_label = src_page["hero_h1"] if src_page else meta["code"]
+
+    rows: list[str] = []
+    for obs in section_obs:
+        src = source_lookup.get(
+            f"DIA.{obs['parent']}.{obs['local_id']}"
+        )
+        if src is None:
+            # Should not happen when the section has a DIA_SOURCE_MAP entry,
+            # but guard anyway so a missing canon doesn't break the section.
+            continue
+        canon = src["canon_id"]
+        summary_html = _highlight_metrics(_html.escape(obs["summary"]))
+        summary_html = re.sub(r"\*([^*\n]+?)\*", r"<em>\1</em>", summary_html)
+        findings_chips: list[str] = []
+        for f in src["findings"]:
+            fcanon = f["canon_id"]
+            fhref = (
+                f["jump_href"] if f.get("jump_href")
+                else f"{page_html}#finding-{f['slug']}"
+            )
+            findings_chips.append(
+                f'<a class="dia-obs-f finding-ref" '
+                f'href="{_html.escape(fhref)}" '
+                f'data-finding="{fcanon}" data-short="{f["f_id"]}" '
+                f'data-group="{f["f_group"]}" '
+                f'title="{fcanon} · hover for summary, click for detail">'
+                f'{fcanon}</a>'
+            )
+        findings_row = (
+            f'<div class="dia-obs-findings">{"".join(findings_chips)}</div>'
+            if findings_chips else ""
+        )
+        jump_href = src.get("jump_href") or f"{page_html}#srobs-{src['slug']}"
+        rows.append(
+            f'<li class="dia-obs-row" data-section="{obs["section_id"]}" '
+            f'data-local="{obs["local_id"]}">'
+            f'<div class="dia-obs-head">'
+            f'<a class="dia-obs-canon obs-ref obs-ref-src" '
+            f'href="{_html.escape(jump_href)}" '
+            f'data-obs="{obs["global_id"]}" data-tier="{obs["tier"]}" '
+            f'data-obs-src="{_html.escape(canon)}" '
+            f'data-obs-page="{_html.escape(page_html)}" '
+            f'data-obs-href="{_html.escape(jump_href)}" '
+            f'title="Overlay source {canon}">{canon}</a>'
+            f'<span class="dia-obs-title">{_html.escape(obs["title"])}</span>'
+            f'<span class="obs-tier obs-tier-{obs["tier"]}">{obs["tier_label"]}</span>'
+            f'</div>'
+            f'<p class="dia-obs-summary">{summary_html}</p>'
+            f'{findings_row}'
+            f'<a class="dia-obs-source-link" '
+            f'href="{_html.escape(jump_href)}" '
+            f'title="Open the defining card in the {_html.escape(src_label)} sub-report">'
+            f'Open in {_html.escape(src_label)} →</a>'
+            f'</li>'
+        )
+    return (
+        '<ul class="dia-obs-compact" data-obs-section="'
+        + section_obs[0]["section_id"] + '">'
+        + "".join(rows)
+        + '</ul>'
+    )
+
+
+def transform_observation_tables_with_sources(
+    html_body: str,
+    observations: list[dict],
+    source_lookup: dict[str, dict],
+) -> str:
+    """Lighter variant: sections with a DIA source render the compact list.
+
+    Sections whose parent has no mapping in ``DIA_SOURCE_MAP`` (currently
+    only ``2.2`` — tx submitters) keep the full card rendering since there
+    is no sub-report to defer to.
+    """
+    if not observations:
+        return html_body
+    by_slug: dict[str, list[dict]] = {}
+    for obs in observations:
+        by_slug.setdefault(obs["section_slug"], []).append(obs)
+
+    mutated: list[tuple[int, int, str]] = []
+
+    def _replace(match: re.Match) -> str:
+        heading = match.group(1)
+        slug = match.group(2)
+        obs_list = by_slug.get(slug, [])
+        if not obs_list:
+            return heading
+        after = html_body[match.end():]
+        tbl = _TABLE_RE.search(after)
+        if not tbl:
+            return heading
+        parent = obs_list[0]["parent"]
+        if parent in DIA_SOURCE_MAP and source_lookup:
+            new_block = _render_dia_compact_obs(obs_list, source_lookup)
+        else:
+            new_block = (
+                '<div class="obs-cards" data-obs-section="'
+                + obs_list[0]["section_id"] + '">'
+                + "\n".join(_render_obs_card(o) for o in obs_list)
+                + '</div>'
+            )
+        span_start = match.end() + tbl.start()
+        span_end = match.end() + tbl.end()
+        mutated.append((span_start, span_end, new_block))
+        return heading
+
+    _H3_MAINNET_OBS_RE.sub(_replace, html_body)
+    for start, end, replacement in sorted(mutated, key=lambda t: -t[0]):
+        html_body = html_body[:start] + replacement + html_body[end:]
+    return html_body
+
+
 def build_page(page: dict) -> Path:
     src_md = REPO_ROOT / page["md"]
     if not src_md.exists():
@@ -2590,13 +3439,61 @@ def build_page(page: dict) -> Path:
     content_html = wrap_manual_toc(content_html)
     content_html = promote_admonitions(content_html)
 
-    if observations:
+    # Any non-sub-report page may cite DIA synthesis observations inline.
+    # Sub-report pages (code="TRE"/"POL"/"OPE"/"CEN") define their own O#
+    # observations and do not reference DIA.X.Y.O# — so they skip the
+    # cross-page bundle.
+    is_observatory = page["slug"] == "observatory"
+    is_subreport = bool(page.get("code"))
+    source_lookup: dict[str, dict] = {}
+    cross_obs_groups: list[dict] = []
+    cross_findings: list[dict] = []
+    if not is_subreport:
+        bundle = _load_all_subreport_data()
+        obs_by_code = bundle["obs_groups_by_code"]  # type: ignore[assignment]
+        f_by_code = bundle["findings_by_code"]  # type: ignore[assignment]
+        source_lookup = _build_dia_source_lookup(obs_by_code)
+        for groups in obs_by_code.values():
+            cross_obs_groups.extend(groups)
+        for fs in f_by_code.values():
+            cross_findings.extend(fs)
+
+    if observations and is_observatory:
+        content_html = transform_observation_tables_with_sources(
+            content_html, observations, source_lookup,
+        )
+    elif observations:
         content_html = transform_observation_tables(content_html, observations)
-        content_html = rewrite_obs_citations(content_html, observations)
+
+    # Rewrite inline ``(DIA.X.Y.O#)`` citations on every non-sub-report page.
+    # Observatory resolves against its own observations (same MD); other
+    # pages resolve against the cached diagnostic observations.
+    rewrite_obs = observations if is_observatory else (
+        [] if is_subreport else _load_diagnostic_observations()
+    )
+    if rewrite_obs:
+        content_html = rewrite_obs_citations(
+            content_html, rewrite_obs, source_lookup,
+        )
+        # Cover the case where the markdown source used an explicit link
+        # (``[DIA.1.3.O1](diagnostic/README.md#...)``) — after ``md_to_html``
+        # these land as ``<a>DIA.1.3.O1</a>``, which the plain-text regex
+        # above doesn't match. Rewrite them to the same overlay form.
+        content_html = rewrite_dia_anchors(
+            content_html, rewrite_obs, source_lookup,
+        )
 
     if f_findings:
         content_html = rewrite_finding_citations(content_html, f_findings)
         content_html += _render_finding_registry(f_findings)
+
+    # Attach the merged cross-page registries so DIA overlays and F# badges
+    # hydrate locally (no network fetch). Sub-report pages already carry
+    # their own finding registry above and do not cite DIA ids.
+    if not is_subreport and cross_obs_groups:
+        content_html += _render_subreport_obs_registry(cross_obs_groups)
+    if not is_subreport and cross_findings:
+        content_html += _render_finding_registry(cross_findings)
 
     content_html = decorate_section_references(content_html, page["html"])
 

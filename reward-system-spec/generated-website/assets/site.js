@@ -526,7 +526,9 @@
 
   /* ── Observation overlay: hover tooltip + click side panel ── */
   (function initObsOverlay(){
-    var refs=document.querySelectorAll('.obs-ref[data-obs]');
+    /* Skip refs with data-obs-src — those carry a cross-page source
+       pointer handled by initCrossObsSource below. */
+    var refs=document.querySelectorAll('.obs-ref[data-obs]:not([data-obs-src])');
     if(!refs.length) return;
 
     /* Build an in-memory index from the on-page obs-cards so the overlay
@@ -887,4 +889,218 @@
       });
     }
   })();
+  /* ── Cross-page DIA source overlay ──
+     When an `.obs-ref` anchor carries `data-obs-src`, hydrate the overlay
+     from the bundled `.sro-obs-detail` registry (the source card on the
+     sub-report page) rather than from the local `.obs-card`. The panel
+     CTA navigates cross-page via `data-obs-href`. */
+  (function initCrossObsSource(){
+    var refs=document.querySelectorAll('.obs-ref[data-obs-src]');
+    if(!refs.length) return;
+
+    /* Index by source canonical id (e.g. "OPE.O7"). */
+    var srcIndex={};
+    document.querySelectorAll('.sro-obs-detail[data-obs-canon]').forEach(function(card){
+      var canon=card.getAttribute('data-obs-canon');
+      var title=(card.querySelector('.sro-obs-detail-title')||{}).innerHTML||'';
+      var summary=(card.querySelector('.sro-obs-detail-summary')||{}).innerHTML||'';
+      var count=(card.querySelector('.sro-obs-detail-count')||{}).textContent||'';
+      var page=card.getAttribute('data-page')||'';
+      var href=card.getAttribute('data-href')||'';
+      var findingIds=(card.getAttribute('data-findings')||'').split(',')
+        .map(function(s){return s.trim();}).filter(Boolean);
+      srcIndex[canon]={canon:canon,title:title,summary:summary,count:count,
+        page:page,href:href,findingIds:findingIds};
+    });
+    if(!Object.keys(srcIndex).length) return;
+
+    /* Findings registry — index per canonical finding id (e.g. "OPE.O1.F1").
+       We reuse the bundled .finding-detail cards on non-subreport pages so
+       the source panel can list finding details inline rather than a count. */
+    var findingsIndex={};
+    document.querySelectorAll('.finding-detail[data-finding]').forEach(function(card){
+      var canon=card.getAttribute('data-finding');
+      var summary=(card.querySelector('.finding-detail-summary')||{}).innerHTML||'';
+      var insight=(card.querySelector('.finding-detail-insight')||{}).innerHTML||'';
+      var href=card.getAttribute('data-href')||'';
+      var page=card.getAttribute('data-page')||'';
+      findingsIndex[canon]={canon:canon,summary:summary,insight:insight,href:href,page:page};
+    });
+
+    /* Tooltip — mirrors the obs-tooltip styling but sources from srcIndex */
+    var tip=document.createElement('div');
+    tip.className='obs-tooltip obs-tooltip-src';
+    tip.setAttribute('role','tooltip');
+    document.body.appendChild(tip);
+    var tipTimer=null,tipActive=false;
+
+    function showTip(ref,x,y){
+      var canon=ref.getAttribute('data-obs-src');
+      var data=srcIndex[canon];
+      if(!data) return;
+      tip.innerHTML=
+        '<div class="obs-tooltip-head">'+
+          '<span class="obs-tooltip-num">'+data.canon+'</span>'+
+          '<span class="obs-tooltip-section">source sub-report</span>'+
+        '</div>'+
+        '<div class="obs-tooltip-title">'+data.title+'</div>'+
+        '<div class="obs-tooltip-summary">'+data.summary+'</div>'+
+        '<div class="obs-tooltip-hint">'+data.count+' · click for detail</div>';
+      tip.style.left='0px';tip.style.top='0px';
+      tip.classList.add('visible');
+      positionTip(x,y);
+      tipActive=true;
+    }
+    function positionTip(x,y){
+      var r=tip.getBoundingClientRect();
+      var vw=window.innerWidth,vh=window.innerHeight;
+      var left=x+14,top=y+18;
+      if(left+r.width>vw-12) left=Math.max(8,x-r.width-14);
+      if(top+r.height>vh-12) top=Math.max(8,y-r.height-14);
+      tip.style.left=left+'px';tip.style.top=top+'px';
+    }
+    function hideTip(){ tip.classList.remove('visible'); tipActive=false; }
+
+    refs.forEach(function(ref){
+      ref.addEventListener('mouseenter',function(e){
+        clearTimeout(tipTimer);
+        tipTimer=setTimeout(function(){ showTip(ref,e.clientX,e.clientY); },120);
+      });
+      ref.addEventListener('mousemove',function(e){ if(tipActive) positionTip(e.clientX,e.clientY); });
+      ref.addEventListener('mouseleave',function(){ clearTimeout(tipTimer); hideTip(); });
+    });
+
+    /* --- Side panel (click for full detail) ---
+       Mirrors the local obs-panel but sources from the bundled source
+       registry so the reader sees the defining sub-report card without
+       navigating. The CTA then jumps cross-page to the source. */
+    var overlay=document.createElement('div');
+    overlay.className='obs-panel-overlay obs-panel-overlay-src';
+    document.body.appendChild(overlay);
+
+    var panel=document.createElement('aside');
+    panel.className='obs-panel obs-panel-src';
+    panel.setAttribute('role','dialog');
+    panel.setAttribute('aria-label','Source observation detail');
+    panel.setAttribute('aria-hidden','true');
+    panel.innerHTML=
+      '<div class="obs-panel-header">'+
+        '<span class="obs-panel-num"></span>'+
+        '<span class="obs-panel-section-id"></span>'+
+        '<button type="button" class="obs-panel-close" aria-label="Close">'+
+          '<svg viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>'+
+        '</button>'+
+      '</div>'+
+      '<div class="obs-panel-body">'+
+        '<div class="obs-panel-title"></div>'+
+        '<div class="obs-panel-summary"></div>'+
+        '<div class="obs-panel-findings-wrap">'+
+          '<div class="obs-panel-findings-head">'+
+            '<span class="obs-panel-findings-label">Findings</span>'+
+            '<span class="obs-panel-findings-count"></span>'+
+          '</div>'+
+          '<ol class="obs-panel-findings"></ol>'+
+        '</div>'+
+        '<div class="obs-panel-meta">'+
+          '<div class="obs-panel-meta-label">Source</div>'+
+          '<div class="obs-panel-meta-val obs-panel-source"></div>'+
+          '<a class="obs-panel-cta" href="#">'+
+            '<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'+
+            '<span>Jump to source</span>'+
+          '</a>'+
+        '</div>'+
+      '</div>';
+    document.body.appendChild(panel);
+
+    function pageLabel(page){
+      /* Turn "operator.html" → "The Operator's Cut". Falls back to the
+         filename if the human title hasn't been indexed yet. */
+      var map={
+        'operator.html':"The Operator's Cut",
+        'treasury.html':'Treasury & Pool Pots Distribution',
+        'pools.html':'The Pools Pot Distribution Gaps',
+        'census.html':'The Staking Census'
+      };
+      return map[page]||page;
+    }
+    function openPanel(ref){
+      var canon=ref.getAttribute('data-obs-src');
+      var data=srcIndex[canon];
+      if(!data) return;
+      panel.querySelector('.obs-panel-num').textContent=data.canon;
+      panel.querySelector('.obs-panel-section-id').textContent='Source sub-report';
+      panel.querySelector('.obs-panel-title').innerHTML=data.title;
+      panel.querySelector('.obs-panel-summary').innerHTML=data.summary;
+      panel.querySelector('.obs-panel-source').innerHTML=
+        '<a href="'+data.href+'">'+pageLabel(data.page)+'</a>';
+
+      /* Findings list: hydrate each finding from the bundled registry.
+         If the registry entry is missing we still list the canonical id
+         so the reader can see the coverage. */
+      var list=panel.querySelector('.obs-panel-findings');
+      list.innerHTML='';
+      var ids=data.findingIds||[];
+      panel.querySelector('.obs-panel-findings-count').textContent=
+        ids.length ? ('('+ids.length+')') : '';
+      if(!ids.length){
+        var empty=document.createElement('li');
+        empty.className='obs-panel-finding obs-panel-finding-empty';
+        empty.textContent='No findings indexed for this observation.';
+        list.appendChild(empty);
+      } else {
+        ids.forEach(function(fid){
+          var f=findingsIndex[fid];
+          var li=document.createElement('li');
+          li.className='obs-panel-finding';
+          var idEl='<span class="obs-panel-finding-id">'+fid+'</span>';
+          if(f){
+            var body='<div class="obs-panel-finding-body">'+
+              '<div class="obs-panel-finding-summary">'+f.summary+'</div>'+
+              (f.insight ? '<div class="obs-panel-finding-insight">'+f.insight+'</div>' : '')+
+            '</div>';
+            var head='<div class="obs-panel-finding-head">'+idEl;
+            if(f.href){
+              head+='<a class="obs-panel-finding-jump" href="'+f.href+'" '+
+                'aria-label="Jump to '+fid+'">'+
+                '<svg viewBox="0 0 24 24" width="12" height="12">'+
+                '<line x1="5" y1="12" x2="19" y2="12"/>'+
+                '<polyline points="12 5 19 12 12 19"/></svg></a>';
+            }
+            head+='</div>';
+            li.innerHTML=head+body;
+          } else {
+            li.innerHTML='<div class="obs-panel-finding-head">'+idEl+'</div>'+
+              '<div class="obs-panel-finding-body">'+
+              '<div class="obs-panel-finding-summary obs-panel-finding-missing">'+
+              'Detail not bundled on this page.</div></div>';
+          }
+          list.appendChild(li);
+        });
+      }
+
+      var cta=panel.querySelector('.obs-panel-cta');
+      cta.setAttribute('href',data.href);
+      document.body.classList.add('obs-panel-open');
+      panel.setAttribute('aria-hidden','false');
+    }
+    function closePanel(){
+      document.body.classList.remove('obs-panel-open');
+      panel.setAttribute('aria-hidden','true');
+    }
+    overlay.addEventListener('click',closePanel);
+    panel.querySelector('.obs-panel-close').addEventListener('click',closePanel);
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&document.body.classList.contains('obs-panel-open')) closePanel();
+    });
+
+    refs.forEach(function(ref){
+      ref.addEventListener('click',function(e){
+        e.preventDefault();
+        hideTip();
+        openPanel(ref);
+      });
+    });
+  })();
+  /* ── /Cross-page DIA source overlay ── */
+
 })();

@@ -185,7 +185,7 @@ For each pool $i$, the protocol performs three steps:
 
 3. **Performance adjustment.** The optimal allocation is scaled by apparent performance $\bar{p}_i$ to produce the *actual* allocation. Pools that miss blocks receive less. If the registered pledge is not met, the allocation is zeroed entirely.
 
-Any rewards not distributed (because $\sum_i \hat{f}_i < R$) **return to the reserve** — this is the mechanism behind DIA.1.2.O3 in [§1.1](#11-treasury-pool-pots-distribution).
+Any rewards not distributed (because $\sum_i \hat{f}_i < R$) **return to the reserve** — this is the mechanism behind DIA.1.1.O3 in [§1.1](#11-treasury-pool-pots-distribution).
 
 Two design choices matter for the rest of the analysis:
 
@@ -1245,7 +1245,7 @@ The Cardano staking ecosystem contains three populations defined by staking role
 
 *The delegation market crystallised by epoch 300 — subsequent 9× growth in delegator count produced no measurable change in the concentration profile.*
 
-**Non-participants** hold the remaining **14.355B ADA** (**39.8% of circulating supply**) outside the delegation system. This population is the single largest structural constraint on the reward pipeline: it accounts for the majority of the distribution-efficiency gap documented in [§1.1 DIA.2.1.O3](#112-mainnet-observations).
+**Non-participants** hold the remaining **14.355B ADA** (**39.8% of circulating supply**) outside the delegation system. This population is the single largest structural constraint on the reward pipeline: it accounts for the majority of the distribution-efficiency gap documented in [§1.1 DIA.1.1.O3](#112-mainnet-observations).
 
 The Census decomposes this population by credential status and finds that:
 
@@ -1374,7 +1374,7 @@ The submitter population peaked at approximately **512,000 unique addresses per 
 | **DIA.2.2.O10** | **Script transactions pay three times the per-tx rate and dominate fee peaks** | Post-Alonzo, script transactions represent 12.6% of count but 29.7% of fees. During high-DeFi epochs, the script share of fees exceeds 40%. (F6.7) |
 | **DIA.2.2.O11** | **Fee revenue is concentrated but less extreme than delegation stake** | The top 10 fee-paying addresses generate 30.5% of all fees; the top 500 generate 51.5%. The concentration is heavy-tailed but below the delegation Gini of 0.976. (F6.6) |
 
-> **Scope note.** DIA.2.2.O8–DIA.2.2.O11 characterise the fee-generating population. Together with DIA.2.2.O1–DIA.2.2.O7 ([§2.1](#21-the-staking-populations)), they define the complete population substrate on which the reward pipeline operates.
+> **Scope note.** DIA.2.2.O8–DIA.2.2.O11 characterise the fee-generating population. Together with DIA.2.1.O1–DIA.2.1.O7 ([§2.1](#21-the-staking-populations)), they define the complete population substrate on which the reward pipeline operates.
 
 ### 2.2.3 Problem Induction
 
@@ -1382,7 +1382,7 @@ The submitter population peaked at approximately **512,000 unique addresses per 
 
 The reward pipeline's long-term viability rests on a single assumption: *that transaction fees will eventually replace monetary expansion as the dominant source of the epoch pot.*
 
-Today, fees contribute approximately **0.19% of the pot** (DIA.2.2.O1, [§1.1](#11-treasury-pool-pots-distribution)). Reaching self-sufficiency — a fee-funded pot equivalent to the current expansion-funded one — would require a **12–16× increase in fee revenue** at current transaction volumes ([§1.1 DIA.2.2.O1](#112-mainnet-observations)).
+Today, fees contribute approximately **0.19% of the pot** (DIA.1.1.O1, [§1.1](#11-treasury-pool-pots-distribution)). Reaching self-sufficiency — a fee-funded pot equivalent to the current expansion-funded one — would require a **12–16× increase in fee revenue** at current transaction volumes ([§1.1 DIA.1.1.O1](#112-mainnet-observations)).
 
 **The submitter population is moving in the opposite direction.** The number of distinct fee-paying addresses has contracted from **~512,000 per epoch (epoch 300) to ~158,000 (epoch 384)** — a **69% decline** — while per-epoch transaction count has remained above 300K (DIA.2.2.O8). The fee base is not expanding; it is consolidating toward fewer, more active actors.
 

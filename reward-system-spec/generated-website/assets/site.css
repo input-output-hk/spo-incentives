@@ -928,3 +928,93 @@ body.finding-panel-open .finding-panel-overlay{opacity:1;pointer-events:auto}
 .finding-panel-cta svg{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none}
 [data-theme=dark] .finding-panel{background:var(--bg)}
 [data-theme=dark] .finding-panel-header{background:var(--bg-panel)}
+
+/* ── Cross-page DIA source overlay + compact §X.Y.2 view ── */
+
+/* Compact list view: one row per DIA.X.Y.O# that defers to a sub-report */
+.dia-obs-compact{list-style:none;padding:0;margin:18px 0 24px;
+  display:flex;flex-direction:column;gap:10px}
+.dia-obs-row{border:1px solid var(--border);border-radius:8px;padding:14px 16px;
+  background:var(--bg);transition:border-color .15s,box-shadow .15s}
+.dia-obs-row:hover{border-color:var(--infared);box-shadow:0 2px 10px rgba(229,35,33,.06)}
+.dia-obs-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.dia-obs-canon{display:inline-flex;align-items:center;padding:3px 10px;border-radius:4px;
+  background:var(--bg-panel);border:1px solid var(--border);
+  font:600 11px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.05em;color:var(--infared);text-decoration:none;
+  transition:background .15s,border-color .15s,color .15s}
+.dia-obs-canon:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
+.dia-obs-title{font:600 14px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary);flex:1 1 auto;min-width:0}
+.dia-obs-summary{margin:4px 0 10px;font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-secondary)}
+.dia-obs-findings{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.dia-obs-f{display:inline-flex;align-items:center;padding:2px 8px;border-radius:3px;
+  background:var(--bg-panel);border:1px solid var(--border);
+  font:500 10.5px/1.5 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.03em;color:var(--text-secondary);text-decoration:none;
+  transition:background .15s,border-color .15s,color .15s}
+.dia-obs-f:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
+.dia-obs-source-link{display:inline-flex;align-items:center;gap:4px;
+  font:500 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);text-decoration:none;padding-top:4px;
+  border-top:1px dashed var(--border);margin-top:4px;padding-top:8px}
+.dia-obs-source-link:hover{color:var(--infared)}
+
+/* Cross-page source overlay — the DIA.X.Y.O# link shows the source sub-report
+   observation's content in the side panel, with a "Jump to source" CTA. */
+.obs-ref-src{border-bottom-style:dashed}
+.obs-panel-source-xpage{display:flex;align-items:center;gap:6px;
+  font:500 11.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);margin-top:2px}
+.obs-panel-source-xpage strong{color:var(--text-primary);font-weight:600}
+
+/* Source-panel findings list — hydrated from the bundled findings-registry.
+   One row per finding with the canonical id, its summary, and a small
+   cross-page jump arrow. The list sits between the obs summary and the
+   source meta row so the reader sees the concrete evidence next to the
+   high-level observation. */
+.obs-panel-findings-wrap{margin:18px 0 16px;
+  border-top:1px solid var(--border);padding-top:14px}
+.obs-panel-findings-head{display:flex;align-items:baseline;gap:8px;
+  margin-bottom:8px}
+.obs-panel-findings-label{font:600 10.5px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
+.obs-panel-findings-count{font:500 11px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--text-muted)}
+.obs-panel-findings{list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;gap:8px}
+.obs-panel-finding{border:1px solid var(--border);border-radius:6px;
+  padding:10px 12px;background:var(--bg-panel);
+  transition:border-color .15s}
+.obs-panel-finding:hover{border-color:var(--infared)}
+.obs-panel-finding-head{display:flex;align-items:center;gap:8px;
+  margin-bottom:4px}
+.obs-panel-finding-id{font:600 10.5px/1.3 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.04em;color:var(--infared);
+  padding:2px 7px;border-radius:3px;background:var(--bg);
+  border:1px solid var(--border)}
+.obs-panel-finding-jump{display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;border-radius:3px;color:var(--text-muted);
+  text-decoration:none;margin-left:auto;transition:color .15s,background .15s}
+.obs-panel-finding-jump svg{fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+.obs-panel-finding-jump:hover{color:var(--infared);background:var(--bg)}
+.obs-panel-finding-summary{font:400 12.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.obs-panel-finding-summary p{margin:0}
+.obs-panel-finding-summary p + p{margin-top:6px}
+.obs-panel-finding-insight{margin-top:6px;padding-top:6px;
+  border-top:1px dashed var(--border);
+  font:400 12px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-secondary);font-style:italic}
+.obs-panel-finding-missing{color:var(--text-muted);font-style:italic}
+.obs-panel-finding-empty{border-style:dashed;color:var(--text-muted);
+  font-style:italic;text-align:center}
+
+/* Responsive */
+@media (max-width:720px){
+  .dia-obs-row{padding:12px 14px}
+  .dia-obs-head{gap:6px}
+}
+/* ── /Cross-page DIA source overlay + compact §X.Y.2 view ── */
