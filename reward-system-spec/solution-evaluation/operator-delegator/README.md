@@ -2,7 +2,7 @@
 
 > **Status:** Active 2026/04/22. Subfolder of [`../README.md`](../README.md). Candidates that act on the fee layer of the Cardano reward pipeline. Sources in §5.
 
-## TL;DR
+## Executive summary
 
 - **Scope.** Operator/member split *after* the per-pool allocation — the reward envelope produced by the SL-D1 formula is untouched; what changes is how it is divided.
 - **Primary V2 targets.** §3.1 operator viability and §3.3 competitive delegator yield. No effect on §3.2 / §3.4 — those need stake-cap reforms ([`../pools-distribution/`](../pools-distribution/README.md)).

@@ -2,7 +2,7 @@
 
 > **Status:** Active 2026/04/22. Subfolder of [`../README.md`](../README.md). Candidates that act on the stake-cap layer of the Cardano reward pipeline. Sources in §5.
 
-## TL;DR
+## Executive summary
 
 - **Scope.** Reward-eligible pool stake $\sigma'$ used inside the SL-D1 reward curve. The fee split that follows is untouched ([`../operator-delegator/`](../operator-delegator/README.md)); what changes is the allocation envelope itself.
 - **Primary V2 targets.** §3.2 (restore pledge as signal) and §3.4 (concentration reduction via entity-level Sybil cost).
@@ -31,7 +31,7 @@
 | CIP-0050 ⊕ CIP-0037 (same-layer) | **Not canonical** — both rewrite $\sigma'$. Technical $\min(\sigma, \sigma^{\text{dyn,sat}}(p), L\cdot p)$ is well-defined but requires explicit governance adoption |
 | Stake-cap layer ⊕ fee layer (cross-layer) | **Clean** — different pipeline stages, no precedence rule required |
 
-**Design decision.** Hard cap (CIP-0050 step function at $L\cdot p$) or smooth curve (CIP-0037 monotone function of pledge)? Both make pledge load-bearing again; they differ on how sharply they penalise under-pledged delegation. Head-to-head: [`../../../../CIP-0050-vs-0037-detailed.md`](../../../../CIP-0050-vs-0037-detailed.md).
+**Design decision.** Hard cap (CIP-0050 step function at $L\cdot p$) or smooth curve (CIP-0037 monotone function of pledge)? Both make pledge load-bearing again; they differ on how sharply they penalise under-pledged delegation. A head-to-head comparison is maintained as a separate working document.
 
 ## 4. Interaction with `k`
 
@@ -56,5 +56,5 @@ Stake-cap reforms tighten the viability envelope for undercapitalised independen
 - **Folder parent:** [`../README.md`](../README.md).
 - **Cross-layer subfolder:** [`../operator-delegator/README.md`](../operator-delegator/README.md).
 - **Transversal parameter:** [`../k-parameter.md`](../k-parameter.md).
-- **Head-to-head:** [`../../../../CIP-0050-vs-0037-detailed.md`](../../../../CIP-0050-vs-0037-detailed.md).
+- **Head-to-head:** CIP-0050-vs-0037 comparison maintained as a separate working document.
 - **Synthesis:** [`../synthesis.md`](../synthesis.md).

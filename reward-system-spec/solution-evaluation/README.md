@@ -2,7 +2,7 @@
 
 > **Status:** Active 2026/04/22. Working area for evaluating active CIPs and parameter-level proposals against the V2 specification. Sources in §6.
 
-## TL;DR
+## Executive summary
 
 - **Purpose.** Evaluate each candidate CIP against the V2 milestones on its own merits, then check how candidates combine: two CIPs on the *same* layer (fee or stake-cap) compete — pick one; a fee-layer CIP plus a stake-cap CIP compose cleanly.
 - **Core question.** *Given the V2 milestones and their dependency chain, what does this proposal actually deliver, and what does it leave unresolved or worsen?*
@@ -44,7 +44,7 @@ The validation of each candidate follows the six-gate framework defined in [`met
 
 **Inputs to G2.** Actual population structure at a recent epoch (not a clean-slate $k$-pool equilibrium), from [`../diagnostic/sub-flows/census/mainnet-analysis/`](../diagnostic/sub-flows/census/mainnet-analysis/README.md) and [`../diagnostic/sub-flows/pools-distribution/mainnet-analysis/`](../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md). Price-scenario coverage (stress, stable, appreciating) per V2 §4.3.
 
-**G6 simulator.** [`../../../simulator/`](../../../simulator/) — under active improvement 2026. Supplementary only.
+**G6 simulator.** Rewards-Sharing-Simulation-Engine (separate repository) — under active improvement 2026. Supplementary only.
 
 ### 1.3 Transition path from V1
 
@@ -94,7 +94,7 @@ Initial scope: the bundle at the centre of the current governance discussion.
 
 ### 2.4 Out of initial scope
 
-Candidates that extend the design space beyond parameter changes (e.g., pooling/CPD paths along the lines of [`../../../Context/CIPs-repo/CIP-0161/`](../../../Context/CIPs-repo/CIP-0161/) or [`../../../Context/CIPs-repo/CPS-0021/CPD/`](../../../Context/CIPs-repo/CPS-0021/CPD/)) sit naturally under the same framework, to be evaluated in a later iteration.
+Candidates that extend the design space beyond parameter changes — e.g., pooling/CPD paths along the lines of [CIP-0161](https://cips.cardano.org/cip/CIP-0161) or the CPD draft under [CPS-0021](https://github.com/cardano-foundation/CIPs/tree/master/CPS-0021) — sit naturally under the same framework, to be evaluated in a later iteration.
 
 ## 3. Method
 
@@ -125,8 +125,8 @@ Per-CIP and synthesis docs follow a **visual-first** pattern: TL;DR block at top
 - **V2 specification:** [`../README.md`](../README.md) §2 grid, §5 evaluation framework, §4.4 governability criteria, §2 constitutional framework.
 - **Diagnostic evidence:** [`../diagnostic/README.md`](../diagnostic/README.md).
 - **Mechanism-intent narrative:** [`../the-intended-game/README.md`](../the-intended-game/README.md).
-- **Simulator:** [`../../../simulator/`](../../../simulator/).
-- **Governance recommendation context:** [`../../../Context/cip-analysis/governance-cip-recommendation-package.md`](../../../Context/cip-analysis/governance-cip-recommendation-package.md).
-- **CIP local copies:** [`../../../Context/CIPs-repo/`](../../../Context/CIPs-repo/).
+- **Simulator:** Rewards-Sharing-Simulation-Engine (separate repository).
+- **Governance recommendation context:** referenced from a companion repository.
+- **Canonical CIP sources:** [cardano-foundation/CIPs](https://github.com/cardano-foundation/CIPs) on GitHub; per-CIP page at [cips.cardano.org](https://cips.cardano.org/).
 - **Subfolders:** [`operator-delegator/README.md`](operator-delegator/README.md), [`pools-distribution/README.md`](pools-distribution/README.md).
 - **Synthesis:** [`synthesis.md`](synthesis.md).

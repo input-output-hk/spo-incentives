@@ -2,7 +2,7 @@
 
 > **Status:** Active 2026/04/22. Orthogonal read across the four active CIPs and the `k` parameter lever. Anchored on V2 §2 grid and the house recommendation package (links in §8).
 
-## TL;DR
+## Executive summary
 
 - **Do.** Activate fee-layer reform first (CIP-0082 stages 1–2, or CIP-0023 as conservative fallback), then the stake-cap layer (CIP-0050 default; CIP-0037 as the calibrated-curve alternative), then `k` raises under observation gates.
 - **Don't.** Run `k` as a first lever; stack CIP-0050 and CIP-0037; stack CIP-0023 and CIP-0082 stage 2; or expect this bundle to close V2 §4.1 and §4.2 — it doesn't.
@@ -62,7 +62,7 @@ Both pairs of CIPs rewrite the same equation. Each pair requires an explicit pre
 | Governance surface | Narrow, low calibration error | Wide, more calibration error |
 | Simulation headline | Nakamoto ≈ 160 at $L = 100$ | Anchor-calibration-dependent |
 
-**Composition rule.** Joint activation double-caps $\sigma'$; there is no meaningful stack. Pick one. CIP-0050 maximises sharpness and anti-Sybil pressure; CIP-0037 preserves a reward floor and adds three governance knobs for future calibration. Detailed joint-composition analysis: `CIP-0050-vs-0037-detailed.md` at workspace root.
+**Composition rule.** Joint activation double-caps $\sigma'$; there is no meaningful stack. Pick one. CIP-0050 maximises sharpness and anti-Sybil pressure; CIP-0037 preserves a reward floor and adds three governance knobs for future calibration. A detailed joint-composition analysis is maintained as a separate working document.
 
 ## 3. Cross-layer composition
 
@@ -160,8 +160,8 @@ The active bundle is a **partial but coherent redesign of the pre-depletion rewa
 **Workspace references.**
 
 - V2 spec — [`../README.md`](../README.md). Diagnostic — [`../diagnostic/README.md`](../diagnostic/README.md). Mainnet census — [`../diagnostic/sub-flows/census/mainnet-analysis/`](../diagnostic/sub-flows/census/mainnet-analysis/README.md).
-- Governance package — [`../../../Context/cip-analysis/governance-cip-recommendation-package.md`](../../../Context/cip-analysis/governance-cip-recommendation-package.md).
-- Simulator — [`../../../simulator/`](../../../simulator/).
-- Joint-composition analysis — [`../../../CIP-0050-vs-0037-detailed.md`](../../../CIP-0050-vs-0037-detailed.md).
+- Governance package — referenced from a companion repository.
+- Simulator — Rewards-Sharing-Simulation-Engine (separate repository).
+- Joint-composition analysis (CIP-0050 vs CIP-0037) — maintained as a separate working document.
 
 **Constraints.** All recommendations respect the [Cardano Constitution](https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2). Python 3.9 compatibility is preserved in simulation work. Dates use `YYYY/MM/DD`.

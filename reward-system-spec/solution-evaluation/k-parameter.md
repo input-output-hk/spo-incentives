@@ -2,7 +2,7 @@
 
 > **Status:** Active 2026/04/22. Transversal parameter (no dedicated CIP). Evaluation against V2 §2 grid. Sources in §7.
 
-## TL;DR
+## Executive summary
 
 - **Verdict.** Wrong first lever. A standalone `k` raise addresses *no* V2 milestone directly and actively regresses on §3.1 and potentially §3.4.
 - **Ordering rule.** Belongs at **step 3** of a three-step sequence: fee-layer reform → stake-cap reform → `k` recalibration. Its embedding in CIP-0082 stages 3–4 respects this.
@@ -127,7 +127,7 @@ Production contract when `k` moves as a standalone action (outside the CIP-0082 
 
 ### 3.6 G6 — Exploratory simulation (low trust, supplementary)
 
-Simulator at [`../../../simulator/`](../../../simulator/) — under active improvement 2026. Ablations to characterise — not to certify — are:
+Simulator: Rewards-Sharing-Simulation-Engine (separate repository) — under active improvement 2026. Ablations to characterise — not to certify — are:
 
 - `k ∈ {500, 650, 750, 1 000, 1 500, 2 000}` — recovery of the CIP-0050 motivation curve on the current snapshot.
 - Joint `(k, L)` sweep — CIP-0050's claim that $L$ converts a `k` raise into a decentralisation lever.
@@ -204,4 +204,4 @@ Not a standalone reform.
 - **Reference doc:** <https://docs.cardano.org/about-cardano/learn/pledging-rewards>.
 - **V2 grid:** [`README.md`](README.md) §2. **Diagnostic anchors:** [`../diagnostic/README.md`](../diagnostic/README.md) §1.2 O4/O5/O8, §1.2.4.1.1, §1.2.4.4.3.
 - **Companion evaluations:** [`operator-delegator/cip-0023.md`](operator-delegator/cip-0023.md), [`operator-delegator/cip-0082.md`](operator-delegator/cip-0082.md), [`pools-distribution/cip-0050.md`](pools-distribution/cip-0050.md), [`pools-distribution/cip-0037.md`](pools-distribution/cip-0037.md).
-- **Simulator:** [`../../../simulator/`](../../../simulator/). **Mainnet inputs:** [`../diagnostic/sub-flows/census/mainnet-analysis/`](../diagnostic/sub-flows/census/mainnet-analysis/README.md), [`../diagnostic/sub-flows/pools-distribution/mainnet-analysis/`](../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md).
+- **Simulator:** Rewards-Sharing-Simulation-Engine (separate repository). **Mainnet inputs:** [`../diagnostic/sub-flows/census/mainnet-analysis/`](../diagnostic/sub-flows/census/mainnet-analysis/README.md), [`../diagnostic/sub-flows/pools-distribution/mainnet-analysis/`](../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md).

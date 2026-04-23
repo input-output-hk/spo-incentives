@@ -2,7 +2,7 @@
 
 > **Status:** Active 2026/04/23. Methodology for evaluating candidate CIPs against V2. Referenced by every per-CIP file in this folder. Sources in §4.
 
-## TL;DR
+## Executive summary
 
 - **Phases, not gates.** CIP evaluation is an inquiry in five ordered phases — what is claimed, whether the claim can structurally hold, how much the mechanism actually moves, what else it disturbs, and how to deploy safely. Each phase gates the next.
 - **V2 is the problem catalog.** V2 §3/§4 functions as the space's CPS catalog. Each sub-section carries its own *Problem statement*, *Evidence base*, and *Specification*. A CIP is evaluated against claims drawn from this catalog.
@@ -114,6 +114,6 @@ A CIP that passes Phases 2 + 3 but carries an unmitigated severe Phase 4 finding
 
 - **V2 specification (the problem catalog):** [`../README.md`](../README.md) §2 grid, §3–§4 per-problem pages, §5 evaluation framework.
 - **Diagnostic snapshots:** [`../diagnostic/README.md`](../diagnostic/README.md), [`../diagnostic/sub-flows/census/mainnet-analysis/`](../diagnostic/sub-flows/census/mainnet-analysis/README.md), [`../diagnostic/sub-flows/pools-distribution/mainnet-analysis/`](../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md).
-- **Simulator (Phase 3 supplementary tool):** [`../../../simulator/`](../../../simulator/).
+- **Simulator (Phase 3 supplementary tool):** Rewards-Sharing-Simulation-Engine (separate repository).
 - **Per-CIP evaluations applying this methodology:** [`operator-delegator/cip-0023.md`](operator-delegator/cip-0023.md), [`operator-delegator/cip-0082.md`](operator-delegator/cip-0082.md), [`pools-distribution/cip-0050.md`](pools-distribution/cip-0050.md), [`pools-distribution/cip-0037.md`](pools-distribution/cip-0037.md), [`k-parameter.md`](k-parameter.md).
 - **Synthesis:** [`synthesis.md`](synthesis.md).
