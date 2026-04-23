@@ -1,0 +1,8 @@
+definition,description,nakamoto,n_units,stake_ada
+D1,"Pool-level, no clustering, no threshold",163,2877,21754686922
+D2,"Pool-level, productive only (≥ production threshold)",161,951,21566509196
+D3,"Entity-clustered (curated MPO map), no threshold",19,2302,21754686922
+D4,"Entity-clustered, productive only — project status-quo",18,560,21566509196
+D5,"Entity-clustered, productive, exchange-custody removed",23,557,18592192894
+D6,"Entity-clustered, productive + sub-threshold coalition",19,561,21754686922
+D7,"Entity-clustered, all pools, exchange-custody removed",24,2299,18779476645

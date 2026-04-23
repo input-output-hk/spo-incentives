@@ -1,159 +1,119 @@
-# Methodology — Gated evaluation of reward-scheme CIPs
+# Methodology — Phased evaluation of reward-scheme CIPs
 
-> **Status:** Active 2026/04/22. Methodology for evaluating candidate CIPs against V2. Referenced by every per-CIP file in this folder. Sources in §5.
+> **Status:** Active 2026/04/23. Methodology for evaluating candidate CIPs against V2. Referenced by every per-CIP file in this folder. Sources in §4.
 
 ## TL;DR
 
-- **Why.** A single "does it work?" verdict is not actionable. Each CIP mixes claims of very different kinds — formula properties (provable), mainnet-snapshot counterfactuals (provable), historical analogies (base rates), game-theoretic arguments (plausible), and simulator outputs (dependent on assumptions).
-- **Gates.** Six validation gates, each with its own trust level. A verdict is built by checking which gates the candidate clears, not by running one simulation.
-- **Simulator.** Demoted to G6 — *exploratory*, not primary. A recommendation does not depend on G6.
-- **Actionable spine.** G1 + G2 (high-trust) as the backbone; G3 + G4 as directional evidence; G5 as the production-side safety net that replaces prediction with measurement.
+- **Phases, not gates.** CIP evaluation is an inquiry in five ordered phases — what is claimed, whether the claim can structurally hold, how much the mechanism actually moves, what else it disturbs, and how to deploy safely. Each phase gates the next.
+- **V2 is the problem catalog.** V2 §3/§4 functions as the space's CPS catalog. Each sub-section carries its own *Problem statement*, *Evidence base*, and *Specification*. A CIP is evaluated against claims drawn from this catalog.
+- **Evidence has a trust hierarchy.** Analytical theorems and snapshot arithmetic are high-trust. Best-response reasoning and historical analogies are medium. Exploratory simulation is low and supplementary.
+- **Side effects can overturn a positive verdict.** A gain on one milestone does not compensate a degradation on another. Phase 4 is the necessary brake on Phase 3.
 
-## 1. Why gates
+## 1. Why a phased inquiry
 
-A CIP evaluation mixes claims of very different epistemic status:
+A CIP evaluation mixes claims of different kinds — what the author says the instrument solves, whether the formula can structurally solve it, how much it moves on real data, what else it perturbs, and how to roll it out safely. Treating these as one "does it work?" question collapses the distinctions that matter.
 
-| Claim kind | Example | How it is known |
+The phased structure separates:
+
+- *What is claimed* from *whether the claim can structurally hold*
+- *Whether it can hold* from *how much it actually moves*
+- *What it moves on the claimed axis* from *what it moves elsewhere*
+- *What it does* from *what is needed to deploy it*
+
+Each phase produces an intermediate verdict that gates the next. A CIP that fails validity on its headline claim does not need quantification work. A CIP that passes validity and quantification but introduces a severe unmitigated side effect is still rejected.
+
+## 2. The five phases
+
+### 2.1 Phase 1 — Which problems does the CIP claim to address?
+
+The V2 specification §3/§4 acts as the space's problem catalog. Each sub-section (§3.1 operator viability, §3.2 pledge as signal, §3.3 delegator yield, §3.4 concentration, §4.1 pot survival, §4.2 fee-gen population, §4.3 price robustness, §4.4 governability) carries its own *Problem statement*, *Evidence base*, and *Specification*.
+
+Phase 1 collects, from the CIP text alone, which of these problems the author claims the instrument addresses.
+
+| Case | Meaning | Evaluator action |
 | --- | --- | --- |
-| Formula property | $L\cdot 0 = 0$ — zero pledge yields zero reward-eligible stake | Theorem — provable from the formula |
-| Mainnet-snapshot arithmetic | 473 zero-pledge pools, 2.74 B ADA → zero rewards under CIP-0050 at any $L$ | Direct substitution — provable from snapshot + formula |
-| Base-rate response | A `k` raise in weak-pledge regime elicits MPO fleet expansion | Historical — one prior instance (`k: 150 → 500`) |
-| Equilibrium argument | Under flat-yield stage-2 CIP-0082, delegators steer by brand / convenience | Qualitative game theory — plausible, not demonstrated |
-| Prediction | Nakamoto coefficient will reach ~160 at $L = 100$ under steady state | Simulation — depends on engine + behavioural assumptions |
+| Explicit claim | The CIP names the V2 problem (or an equivalent problem statement) | Cite the passage |
+| Implicit claim | The CIP describes a problem without mapping it to the catalog | Reconstruct the mapping; flag as *reconstructed framing* |
+| No claim | The CIP proposes a solution without stating the problem | Structural red flag — document before any further work |
 
-Treating all of these as evidence of equal weight is the failure mode. Separating them into **gates** lets a recommendation rest on the high-confidence gates and carry its residual uncertainty explicitly.
+Output of Phase 1: a sourced table *CIP ↔ V2 problems claimed*. Phase 1 records the claim; it does not test it.
 
-## 2. The six gates
+**Operational note.** Most of the CIPs in this evaluation do not cite a CPS or a V2 sub-section explicitly — the V2 specification post-dates them. The evaluator reconstructs the mapping and flags it. A CIP with *no* stated problem at all is a distinct and more serious case.
 
-| Gate | Question | Trust | What it can show | What it cannot show |
-| --- | --- | --- | --- | --- |
-| **G1** | Analytical properties | High | Hard breaks, monotonicity, price invariance, governance surface | Behavioural response, equilibria |
-| **G2** | Mainnet-snapshot counterfactual | High | Immediate impact on observed populations (zero-pledge, subthreshold, MPO fleet, CEX / IVaaS) | Dynamic response, second-order effects |
-| **G3** | Historical analogies | Medium | Base rates for MPO / delegator response | Anything outside the reference class |
-| **G4** | Game-theoretic reasoning | Medium–low | Plausible equilibria, dominant strategies, Sybil incentives | Point predictions |
-| **G5** | Governance ramp & rollback | N/A (production) | Measurement cadence, triggers, safe rollback paths | — (not a verdict; a production contract) |
-| **G6** | Exploratory simulation | Low | Ablation studies, parameter sensitivity, qualitative direction | Primary verdict |
+### 2.2 Phase 2 — Validity of the proposal
 
-### 2.1 G1 — Analytical properties
+For each claim collected in Phase 1, can the mechanism structurally satisfy the problem's *Specification*? This is a question about the *form* of the instrument, independent of parameter values.
 
-Things provable from the formula alone, without data.
-
-**What to check.**
-
-- Monotonicity in pledge — more pledge → weakly more capacity?
-- Hard breaks (e.g., $L\cdot 0 = 0$) or soft floors (e.g., CIP-0037's $e$)?
-- Price invariance — is the mechanism a ratio (invariant) or absolute ADA (price-coupled)?
-- Governance surface — how many governable knobs?
-- Pool-splitting response — revenue-neutral, revenue-decreasing, or revenue-increasing?
-
-**Worked example (CIP-0050).** $L\cdot 0 = 0$ — zero-pledge hard break is a theorem. Revenue-neutrality of pool splitting: $L\cdot p$ summed across $N$ pools sharing pledge $p/N$ each equals $L\cdot p$, identical to the single-pool cap. No simulation needed.
-
-### 2.2 G2 — Mainnet-snapshot counterfactual
-
-Apply the CIP formula to the current mainnet state. Which populations immediately cross a threshold?
-
-**What to check.**
-
-- Which pools lose eligible stake, and how much?
-- Which pools gain capacity?
-- Which populations (zero-pledge, subthreshold, MPO fleet, CEX / IVaaS) are structurally affected?
-- Quantify the *immediate* redistribution, before any behavioural response.
-
-**Worked example (CIP-0050 at $L = 100$, epoch 560).** 473 zero-pledge pools × 2.74 B ADA → zero reward-eligible stake. Subthreshold pools with pledge-to-stake ratio below 1 % → capped. Custodial pools with native ADA pledge ≫ 1 % of stake → unaffected. These are counterfactuals on snapshot data, not predictions.
-
-**Data sources.** Mainnet analysis at the V2 diagnostic anchor epoch, stratified by pledge ratio, MPO entity, custodial classification.
-
-### 2.3 G3 — Historical analogies
-
-Past parameter changes as a reference class.
-
-**Usable anchors.**
-
-| Anchor | Used for | Caveat |
+| Verdict | Meaning | Downstream |
 | --- | --- | --- |
-| `k: 150 → 500` (2020) | Weak-pledge `k` raises → MPO fleet expansion | One observation |
-| Fee-schedule updates 2020–2021 | Fee-layer response | Small sample |
-| `minPoolCost` era shifts | Subthreshold viability response | Small sample |
-| Pool-saturation events | Delegator response | Small sample |
+| **Valid** | Mechanism form fits the problem's acceptance criteria | Phase 3 quantifies magnitude |
+| **Contingent** | Validity conditional on another instrument delivering a prerequisite | Phase 3 proceeds under that condition; dependency-chain recorded |
+| **Invalid** | Mechanism form cannot satisfy the problem's criteria | Claim rejected — drop it, or reject the CIP on this milestone |
+| **Out of reach** | Problem outside the mechanism's structural perimeter | Claim rejected as misplaced |
 
-**Limits.** One observation per anchor. The reference class is small. Use as a base rate, not a point prediction.
+A CIP whose headline claim is *invalid* is rejected on that milestone regardless of downstream phases.
 
-### 2.4 G4 — Population best-response reasoning
+**Worked example (CIP-0050).** Claims §3.2 (pledge as signal) and §3.4 (concentration). §3.2 is valid — the $L\cdot p$ term couples reward-eligible stake to pledge, exactly the binding signal §3.2 requires. §3.4 is valid at the pool level (pool-splitting revenue-neutral, by theorem) and contingent at the entity level (custodial operators with large native pledge bypass any reasonable $L$). §3.1 is out of reach — the formula does not touch the fee split. Dependency: the §3.2 claim is contingent on §3.1 being delivered first by a fee-layer instrument, otherwise the sub-threshold tail is pushed into the structural floor.
 
-Qualitative analysis of how each population's best response shifts under the CIP. Not a prediction — an explicit *assumption set*, labelled as such.
+### 2.3 Phase 3 — Quantification of claimed effects
 
-| Population | Key variables | Typical response lever |
+For each claim that survives Phase 2, Phase 3 asks *how much* the mechanism moves on real data, using a stack of evidence tools with explicit trust levels.
+
+| Tool | What it quantifies | Trust |
 | --- | --- | --- |
-| Independent single-pool SPO | Viability, pledge capacity | Margin, pledge top-up, exit |
-| MPO fleet | Per-pool capacity, pledge budget | Split further, consolidate, exit |
-| CEX / IVaaS | Native ADA balance, brand pull | Adjust fees, create / retire pools |
-| Delegator | Yield, brand, convenience | Switch pool, switch CEX, unstake |
+| Analytical properties | Monotonicity, bounds, thresholds, invariances — theorems on the formula alone | High |
+| Mainnet-snapshot counterfactual | Immediate redistribution on observed populations, before any behavioural response | High |
+| Population best-response reasoning | Plausible effect once each population adapts — assumption set labelled | Medium |
+| Historical analogies | Base rates from comparable past parameter changes | Medium-low |
+| Exploratory simulation | Sensitivity analysis, ablation, qualitative joint direction — assumptions explicit | Low |
 
-**How to use.** Sketch the plausible best response per population. Flag which milestone it threatens if the response realises. Label conclusions *assumptions*, not predictions.
+**Composition rule inside Phase 3.** A claim cannot rest on simulation alone. At least one high-trust tool (analytical property or snapshot counterfactual) must carry the claim. Simulation is supplementary, never primary.
 
-### 2.5 G5 — Governance ramp and rollback
+Output of Phase 3: per claim, a table *tool × estimated magnitude × trust*. A claim is strongly supported when multiple high-trust tools converge, fragile when only low-trust tools carry it.
 
-Since G1–G4 cannot predict dynamic outcomes with certainty, a responsible package encodes **measurement and rollback** in the governance path itself.
+### 2.4 Phase 4 — Side-effect scan
 
-**What to specify per CIP.**
+A mechanism that delivers on its claimed problem can still introduce or amplify others. Phase 4 is a systematic scan of effects the CIP did *not* claim. Three sweeps, each with its own logic.
+
+**Off-target V2 effects.** Walk the V2 sub-sections the CIP does *not* claim. Does the mechanism touch them? In which direction? Example: CIP-0050 does not claim §3.1, but a low $L$ deployed without prior fee-layer reform pushes the weak-pledge sub-threshold tail against the structural floor — an amplification of §3.1.
+
+**Amplification of existing V2 problems.** For each V2 problem already on record as unresolved or partially addressed by the current system, does the CIP make it worse? This differs from the off-target sweep — it concerns pre-existing ground that V2 already acknowledges.
+
+**New problems outside the V2 catalog.** Expansion of governance surface, calibration fragility, new attack vectors, incompatibility with other in-flight CIPs, Conway-era compatibility regressions, operational burden on SPOs or wallet implementers — any problem the CIP introduces that neither V2 nor the current state records.
+
+Output of Phase 4: a table *effect type × axis affected × direction × severity*, each with a downstream consequence — *rejection / mitigation obligation in Phase 5 / dependency-chain flag*.
+
+**Composition with Phase 3.** A severe Phase 4 negative can overturn a positive Phase 3 verdict. The recommendation cannot claim a net gain when a material collateral loss is unmitigated.
+
+### 2.5 Phase 5 — Deployment contract
+
+Phases 1–4 evaluate the instrument. Phase 5 specifies the production contract — what is measured, when, with what rollback path.
 
 | Element | Content |
 | --- | --- |
 | Ramp schedule | Sequence of parameter values and epochs between steps |
-| Measurement cadence | Which KPIs are checked, at what frequency, with what rolling window |
+| Measurement cadence | Which KPIs, at what frequency, with what rolling window |
 | Rollback triggers | Explicit conditions that require pausing or reversing a step |
 | Pause mechanism | Standard Parameter Change, emergency halt, or none |
 | Decision authority | CC / SPO vote / dRep vote / HFC |
 
-G5 is not a verdict — it is a **production contract**. It replaces "will it work?" with "what do we measure, and when do we stop?".
+Phase 5 replaces "will it work?" with "what do we measure, and when do we stop?". Every Phase 4 risk that was not grounds for rejection must be addressed here as a named mitigation.
 
-### 2.6 G6 — Exploratory simulation (optional)
+## 3. How verdicts compose
 
-Explicitly demoted.
+A V2-compatible recommendation must:
 
-**Useful for.**
+1. **Pass Phase 2** on every claim it intends to carry. A claim that fails validity cannot be carried; drop it, or reject the CIP on that milestone.
+2. **Pass Phase 3** on each surviving claim with at least one high-trust tool supporting the effect magnitude.
+3. **Pass Phase 4** — no unmitigated severe side effect. A positive Phase 3 verdict that a severe Phase 4 finding overturns does not stand.
+4. **Specify Phase 5** — every surviving Phase 4 risk has a named mitigation in the deployment contract.
 
-- Ablation studies across parameter ranges.
-- Sensitivity of a G1 / G2 result to assumption perturbations.
-- Qualitative direction of joint movements (e.g., `k` + $L$ interaction).
+A CIP that passes Phases 2 + 3 but carries an unmitigated severe Phase 4 finding is *not recommendable*. A CIP that needs exploratory simulation to carry its main claim is *not yet ready*. A CIP that fails Phase 2 on its headline claim is rejected regardless of everything downstream.
 
-**Must not.**
+## 4. References
 
-- Produce a headline number quoted without caveats.
-- Be the primary justification for a recommendation.
-- Hide its modelling assumptions (agent behaviour, convergence criterion, starting state).
-
-**Engine.** [`../../../simulator/`](../../../simulator/). Under active improvement 2026. Any G6 output is provisional until the engine's behavioural assumptions are independently cross-checked.
-
-## 3. How to read a §3 block
-
-Each per-CIP file's §3 *Validation plan* maps directly to the six gates:
-
-| Subsection | Gate | Produces |
-| --- | --- | --- |
-| 3.1 | G1 | Formula-property table |
-| 3.2 | G2 | Snapshot counterfactual table |
-| 3.3 | G3 | Historical anchor table |
-| 3.4 | G4 | Per-population best-response table |
-| 3.5 | G5 | Ramp + rollback table |
-| 3.6 | G6 | Ablation questions (optional) |
-
-## 4. How verdicts compose
-
-A V2-compatible recommendation should:
-
-1. **Pass G1 + G2** on the core milestones it claims to address (§3.1, §3.2, §3.3, §3.4 as relevant).
-2. **Have at least one G3 analogy** that does not actively contradict the verdict.
-3. **Have a coherent G4 story** per affected population, with labelled assumptions.
-4. **Specify G5** — ramp, measurement, rollback triggers.
-5. G6 is *supplementary*, not load-bearing.
-
-A CIP that clears G1 + G2 but has a weak G4 can still be deployed — with a tight G5. A CIP that needs G6 to justify its main verdict is **not yet ready**.
-
-## 5. References
-
-- **V2 specification:** [`../README.md`](../README.md) §2 grid, §5 evaluation framework.
+- **V2 specification (the problem catalog):** [`../README.md`](../README.md) §2 grid, §3–§4 per-problem pages, §5 evaluation framework.
 - **Diagnostic snapshots:** [`../diagnostic/README.md`](../diagnostic/README.md), [`../diagnostic/sub-flows/census/mainnet-analysis/`](../diagnostic/sub-flows/census/mainnet-analysis/README.md), [`../diagnostic/sub-flows/pools-distribution/mainnet-analysis/`](../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md).
-- **Simulator (G6, exploratory):** [`../../../simulator/`](../../../simulator/).
+- **Simulator (Phase 3 supplementary tool):** [`../../../simulator/`](../../../simulator/).
 - **Per-CIP evaluations applying this methodology:** [`operator-delegator/cip-0023.md`](operator-delegator/cip-0023.md), [`operator-delegator/cip-0082.md`](operator-delegator/cip-0082.md), [`pools-distribution/cip-0050.md`](pools-distribution/cip-0050.md), [`pools-distribution/cip-0037.md`](pools-distribution/cip-0037.md), [`k-parameter.md`](k-parameter.md).
 - **Synthesis:** [`synthesis.md`](synthesis.md).
