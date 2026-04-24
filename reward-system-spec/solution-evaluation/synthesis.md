@@ -106,7 +106,7 @@ Cross-layer pairings (one fee-layer + one stake-cap-layer) compose cleanly. Four
 | CIP-0023 in place of CIP-0082 stages 1–2 | Governance declines the hard fork | Weaker viability effect; need separate `minPoolCost` reduction to approximate stage 2 |
 | CIP-0037 in place of CIP-0050 at step 3 | Governance prefers calibrated curve over hard cap | Retains 20 % reward floor at zero pledge; three post-activation knobs |
 
-**Gate criteria for `k` raises (steps 5–6).**
+**Preconditions for `k` raises (steps 5–6).**
 
 - No deterioration in entity-level decentralisation metrics.
 - Improvement in struggling-pool viability metrics.
@@ -122,17 +122,16 @@ Cross-layer pairings (one fee-layer + one stake-cap-layer) compose cleanly. Four
 
 ## 6. Validation cross-checks
 
-Non-optional before any go/no-go at any step. Gate framework per [`methodology.md`](methodology.md) — G1 + G2 are required, G5 carries the production contract, G6 is supplementary.
+Non-optional before any go/no-go at any step. Each step must be re-quantified on the canonical anchors before it ships.
 
-| Gate | Cross-check | Minimum readout |
-| --- | --- | --- |
-| G1 | Per-step analytical property holds at new parameters | Monotonicity / price-coupling / governance-surface count re-derived from the formula |
-| G2 | Per-step mainnet counterfactual arithmetic | Pool count, Nakamoto coefficient, entity-level HHI, sub-threshold pool share, independent-SPO share, MPO fleet size — all vs initial state |
-| G3 | Historical reference check | `k: 150→500` or CIP-0050 k-sweep record contradicts the step? If so, treat as rollback trigger |
-| G4 | Per-population response assumptions made explicit | Best-response table for MPO / CEX / small-op / delegator populations, labelled assumption-not-prediction |
-| G5 | Production ramp | ≥ 10 epochs observation between stages; rollback triggers active; ≥ 6 months between stake-cap activation and first `k` raise; ≥ 3 months between `k` raises |
-| G6 | Exploratory sim ablations | Every step under stress / stable / appreciating ADA-price scenarios (V2 §4.3); sensitivity sweeps on key parameters; flagged low-trust |
-| Gap readout | Out of bundle | §4.1 (pot survival) and §4.2 (fee-gen) not closed by any step — separate workstream required |
+| Check | Minimum readout |
+| --- | --- |
+| Analytical property holds at new parameters | Monotonicity / price-coupling / governance-surface count re-derived from the formula |
+| Mainnet counterfactual on canonical taxonomy | Pool-axis effect across the 9-tier taxonomy ([pools-distribution §4.1.3](../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#413-tier-definitions)); operator-axis effect across n-MPO brackets ([operator-delegator §4.4](../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#44-operator-profitability-versus-delegator-return)); entity-level HHI, sub-threshold pool share, independent-SPO share vs initial state |
+| Historical reference check | `k: 150→500` or CIP-0050 k-sweep record contradicts the step? If so, treat as rollback trigger |
+| Per-population response assumptions made explicit | Best-response table for MPO / CEX / small-op / delegator populations, labelled assumption-not-prediction |
+| Production ramp | ≥ 10 epochs observation between stages; rollback triggers active; ≥ 6 months between stake-cap activation and first `k` raise; ≥ 3 months between `k` raises |
+| Gap readout | §4.1 (pot survival) and §4.2 (fee-gen) not closed by any step — separate workstream required |
 
 ## 7. Bottom line
 
@@ -144,7 +143,7 @@ The active bundle is a **partial but coherent redesign of the pre-depletion rewa
 
 - Fee layer — [`operator-delegator/cip-0023.md`](operator-delegator/cip-0023.md), [`operator-delegator/cip-0082.md`](operator-delegator/cip-0082.md).
 - Stake-cap layer — [`pools-distribution/cip-0050.md`](pools-distribution/cip-0050.md), [`pools-distribution/cip-0037.md`](pools-distribution/cip-0037.md).
-- Transversal — [`k-parameter.md`](k-parameter.md).
+- Transversal `k` lever (filed under fee layer since the standalone analysis holds the pool-distribution formula fixed) — [`operator-delegator/k-parameter.md`](operator-delegator/k-parameter.md).
 - Candidate index and method — [`README.md`](README.md).
 
 **Canonical CIP sources.**

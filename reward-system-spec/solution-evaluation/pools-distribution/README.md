@@ -40,7 +40,7 @@ Stake-cap reforms and `k` are tightly coupled:
 - **CIP-0050.** Text explicitly argues that $L$ converts a `k` raise from a concentration risk into a decentralisation lever.
 - **CIP-0037.** Uses `orig_sat = supply / k` as reference scale. A `k` change *directly reshapes* the saturation curve; joint recalibration of $(e, \ell, p_{100\%})$ required.
 
-Analysis: [`../k-parameter.md`](../k-parameter.md) §5.3–5.4.
+*Important scope note.* Both CIP-0050 and CIP-0037 **change the pool-distribution part of the SL-D1 formula** (via $\sigma'$ clipping and a new saturation function respectively). The standalone `k`-lever analysis at [`../operator-delegator/k-parameter.md`](../operator-delegator/k-parameter.md) deliberately holds the formula fixed. Once either CIP-0050 or CIP-0037 is active, the standalone analysis no longer directly applies — joint evaluation with the stake-cap primitive is required.
 
 ## 5. V2 milestone interaction
 
@@ -55,6 +55,6 @@ Stake-cap reforms tighten the viability envelope for undercapitalised independen
 
 - **Folder parent:** [`../README.md`](../README.md).
 - **Cross-layer subfolder:** [`../operator-delegator/README.md`](../operator-delegator/README.md).
-- **Transversal parameter:** [`../k-parameter.md`](../k-parameter.md).
+- **Standalone `k`-lever analysis (held-formula-fixed assumption):** [`../operator-delegator/k-parameter.md`](../operator-delegator/k-parameter.md).
 - **Head-to-head:** CIP-0050-vs-0037 comparison maintained as a separate working document.
 - **Synthesis:** [`../synthesis.md`](../synthesis.md).

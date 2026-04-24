@@ -6,7 +6,7 @@
 
 - **Purpose.** Evaluate each candidate CIP against the V2 milestones on its own merits, then check how candidates combine: two CIPs on the *same* layer (fee or stake-cap) compete — pick one; a fee-layer CIP plus a stake-cap CIP compose cleanly.
 - **Core question.** *Given the V2 milestones and their dependency chain, what does this proposal actually deliver, and what does it leave unresolved or worsen?*
-- **Validation framework.** Each per-CIP §3 rests on a six-gate framework separating analytical facts from predictive claims. Verdicts require G1 (analytical properties) + G2 (mainnet counterfactual arithmetic); simulation is G6 — supplementary, never load-bearing. Full specification in [`methodology.md`](methodology.md).
+- **Evaluation pattern.** Each per-CIP file opens with an *Executive summary* (Verdict / Instrument / Structural issue / Blind spot), maps the CIP to its **Missing CPS** — the V2 §3 problem statement the CIP implicitly addresses — and quantifies the mechanism at current mainnet parameters along two axes: the canonical 9-tier pool-size taxonomy (pool axis) and the n-MPO operator-fleet brackets (operator axis), both sourced from the diagnostic sub-flows.
 - **Folder layout.** Two independent layers of the reward pipeline — fee layer in [`operator-delegator/`](operator-delegator/README.md), stake-cap layer in [`pools-distribution/`](pools-distribution/README.md) — plus transversal protocol parameters at root.
 - **Synthesis.** Cross-CIP comparison and recommended package: [`synthesis.md`](synthesis.md).
 
@@ -29,22 +29,18 @@ Every candidate is assessed along five axes. The first four are lifted from V2 �
 
 **Dependency order is enforced.** A candidate targeting §3.4 without first satisfying §3.1, §3.2, §3.3 is flagged as *building on a foundation that does not exist*.
 
-### 1.2 Validation
+### 1.2 Evaluation pattern per candidate
 
-The validation of each candidate follows the six-gate framework defined in [`methodology.md`](methodology.md). Summary of gate purposes and trust levels:
+Each per-CIP file follows the same structure:
 
-| Gate | Purpose | Trust | Role in verdict |
-| --- | --- | --- | --- |
-| G1 — Analytical properties | Theorems derived from the formula itself | High | Required |
-| G2 — Mainnet snapshot counterfactual | Arithmetic on a recent-epoch snapshot at fixed behaviour | High | Required |
-| G3 — Historical analogies | Prior parameter moves (e.g., `k: 150 → 500`) | Medium | Supporting |
-| G4 — Game-theoretic best responses | Per-population reasoning, assumptions labelled as such | Medium-low | Supporting |
-| G5 — Governance ramp and rollback | Production contract: stages, triggers, reversibility | — | Required for deployment |
-| G6 — Exploratory simulation | Scenario ablations | Low | Never load-bearing |
+| § | Contents |
+| --- | --- |
+| Executive summary | Four bullets: **Verdict** / **Instrument** / **Structural issue** / **Blind spot** |
+| §1 Introduction | Identity card, origin & context, related diagnostic findings (OPE.Ox.Fy taxonomy), missing CPS — mapping to V2 §3 |
+| §2 Mechanism | Formula and design surface, worked calibration from the CIP's own rationale, updated calibration at current mainnet parameters using the canonical 9-tier pool-size taxonomy |
+| §3 Limits as a standalone proposal | Functional redundancy against other live candidates, partial coverage of the missing CPS quantified on the **pool axis** (9-tier) **and the operator axis** (n-MPO brackets), references consolidated |
 
-**Inputs to G2.** Actual population structure at a recent epoch (not a clean-slate $k$-pool equilibrium), from [`../diagnostic/sub-flows/census/mainnet-analysis/`](../diagnostic/sub-flows/census/mainnet-analysis/README.md) and [`../diagnostic/sub-flows/pools-distribution/mainnet-analysis/`](../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md). Price-scenario coverage (stress, stable, appreciating) per V2 §4.3.
-
-**G6 simulator.** Rewards-Sharing-Simulation-Engine (separate repository) — under active improvement 2026. Supplementary only.
+**Quantification anchors.** The canonical 9-tier pool-size taxonomy comes from [`../diagnostic/sub-flows/pools-distribution/mainnet-analysis/`](../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#413-tier-definitions); the n-MPO brackets come from [`../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/`](../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#44-operator-profitability-versus-delegator-return). OPE.Ox.Fy findings are the evidence base for every Executive-summary structural claim.
 
 ### 1.3 Transition path from V1
 
@@ -56,7 +52,7 @@ Migration mechanics: which parameters change, in what sequence, with what govern
 | --- | --- | --- | --- |
 | **Fee layer** | Operator/member split after per-pool allocation | [`operator-delegator/`](operator-delegator/README.md) | CIP-0023 (`minPoolMargin`), CIP-0082 stages 1–2 (`minPoolCost` → `minPoolRate`) |
 | **Stake-cap layer** | Reward-eligible stake $\sigma'$ entering the reward curve | [`pools-distribution/`](pools-distribution/README.md) | CIP-0050 (`L`), CIP-0037 (dynamic saturation) |
-| **Transversal** | Underlying reward curve both layers compose with | [`k-parameter.md`](k-parameter.md) | `k` (`stakePoolTargetNum`) — embedded in CIP-0082 stages 3–4 |
+| **Transversal** | Underlying reward curve both layers compose with | [`operator-delegator/k-parameter.md`](operator-delegator/k-parameter.md) | `k` (`stakePoolTargetNum`) — filed under the fee-layer folder because the standalone analysis holds the pool-distribution formula fixed; embedded in CIP-0082 stages 3–4 |
 
 | Composition | Status |
 | --- | --- |
@@ -90,7 +86,7 @@ Initial scope: the bundle at the centre of the current governance discussion.
 
 | Candidate | Instrument | V2 primary | Evaluation | Source |
 | --- | --- | --- | --- | --- |
-| **`k` parameter** — target-pool count (standalone) | `stakePoolTargetNum` | §3.1, §3.4 | [`k-parameter.md`](k-parameter.md) | Protocol parameter — no dedicated CIP. [Pledging & rewards reference](https://docs.cardano.org/about-cardano/learn/pledging-rewards) |
+| **`k` parameter** — target-pool count (standalone) | `stakePoolTargetNum` | §3.1, §3.4 | [`operator-delegator/k-parameter.md`](operator-delegator/k-parameter.md) | Protocol parameter — no dedicated CIP. [Pledging & rewards reference](https://docs.cardano.org/about-cardano/learn/pledging-rewards) |
 
 ### 2.4 Out of initial scope
 
@@ -98,17 +94,7 @@ Candidates that extend the design space beyond parameter changes — e.g., pooli
 
 ## 3. Method
 
-Each per-CIP file follows a five-section structure mirroring §1:
-
-| § | Section | Content |
-| --- | --- | --- |
-| 1 | Mechanism | Canonical formulation, author's stated objective, exact parameter surface |
-| 2 | Milestone coverage | V2 milestones addressed, with diagnostic evidence where the instrument bites |
-| 3 | Validation plan | Six-gate structure (G1–G6) — see [`methodology.md`](methodology.md). Subsections 3.1–3.6 map one-to-one to gates |
-| 4 | Transition and governance | Parameter path, CIP approval route, risk of off-chain dependencies |
-| 5 | Interaction audit | Same-layer precedence questions, cross-layer composition, dependency-chain ordering |
-
-Cross-CIP comparison and mapping onto governance philosophies: [`synthesis.md`](synthesis.md).
+Per-CIP structure is defined in [§1.2](#12-evaluation-pattern-per-candidate). Cross-CIP comparison and mapping onto governance philosophies: [`synthesis.md`](synthesis.md).
 
 ## 4. Visual layout convention
 
