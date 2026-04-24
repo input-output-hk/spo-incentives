@@ -78,7 +78,7 @@ Cross-layer pairings (one fee-layer + one stake-cap-layer) compose cleanly. Four
 ### 3.1 Interaction edges
 
 - **Viability ↔ eligibility.** Fee reform *raises* the viability line; stake-cap reform *lowers* reward-eligible stake for under-pledged pools. Order: fee first (widen the band), stake-cap second (filter within the widened band).
-- **`k` interaction.** Both stake-cap CIPs reference $1/k$ inside their formula. A `k` raise applied *before* the stake-cap reform invites MPO fleet expansion (CIP-0050 simulation: Nakamoto coefficient drops 142 → 116 when `k` sweeps 1,000 → 2,000 at low $a_0$). Applied *after*, the same raise translates into new-operator entry. Sequencing `k` last is the headline argument.
+- **`k` interaction.** Both stake-cap CIPs reference $1/k$ inside their formula. A `k` raise applied *before* the stake-cap reform invites MPO fleet expansion (the documented 2020 `k: 150 → 500` pattern; CIP-0050's motivation cites a weak-pledge `k: 1000 → 2000` sweep showing a notable Nakamoto-coefficient regression). Applied *after*, the same raise translates into new-operator entry. Sequencing `k` last is the headline argument.
 
 ## 4. Recommended package
 
