@@ -266,7 +266,7 @@ The disciplinary power of this mechanism depends on a structural condition: **th
 
 The *k*-pool target assumes that *k* pools represent *k* *independent* block-producing entities. Sybil resistance is the property that makes this assumption defensible: creating additional block-producing identities must carry a cost high enough that fragmentation is economically dominated by honest, single-pool operation.
 
-Brünjes & Kiayias (2020, §4) formalise this through the pledge parameter *a₀*. The reward function *r(σ, λ)* includes a pledge-sensitive component — the *λ_max · A(π, ν)* term — designed so that splitting capital across *n* pools dilutes the pledge bonus per pool. An attacker who fragments into *n* identities must commit capital linearly: each pool requires its own pledge to earn the bonus. The intended cost of a Sybil attack scales as *O(n)* in committed capital.
+Brünjes & Kiayias (2020, §4) formalise this through the pledge parameter *a₀*. The reward function *r(σ, λ)* includes a pledge-sensitive component — the *λ_pledge · A(ν, π)* term — designed so that splitting capital across *n* pools dilutes the pledge bonus per pool. An attacker who fragments into *n* identities must commit capital linearly: each pool requires its own pledge to earn the bonus. The intended cost of a Sybil attack scales as *O(n)* in committed capital.
 
 This defence has a quantitative precondition: **the pledge bonus must be large enough that forfeiting it is costly.** If the bonus is negligible, the Sybil tax approaches zero — an attacker who registers additional pools forgoes a bonus that was worth nothing to begin with. The formal mechanism exists; whether its economic bite is sufficient is a question of parameter calibration.
 

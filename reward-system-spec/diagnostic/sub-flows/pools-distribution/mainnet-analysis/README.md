@@ -284,36 +284,36 @@ The original SL-D1 formula is correct, but awkward to analyze directly:
 - The pledge-sensitive part is harder to read than it needs to be. The term $\sigma' - s'\left(\frac{z_0-\sigma'}{z_0}\right)$ hides a quadratic dependence on pledge that only becomes obvious after expansion.
 - The most natural coordinates for analysis are not the raw stake shares $s$ and $\sigma$, but their positions relative to the saturation threshold $z_0$.
 
-#### 2.3.4 Normalized saturation coordinates
+#### 2.3.4 Normalized coordinates: pool size and pledge ratio
 
-In the **non-saturated regime** where clipping is inactive ($s' = s$, $\sigma' = \sigma$), we introduce two normalized coordinates measured relative to the saturation threshold $z_0$:
+In the **non-saturated regime** where clipping is inactive ($s' = s$, $\sigma' = \sigma$), we introduce two dimensionless coordinates that capture the two structurally independent degrees of freedom an operator controls:
 
 $$
-\pi := \frac{s}{z_0}
-\qquad\text{and}\qquad
 \nu := \frac{\sigma}{z_0}
+\qquad\text{and}\qquad
+\pi := \frac{s}{\sigma}
 $$
 
-Under $0 < s \le \sigma \le z_0$, these satisfy $0 < \pi \le \nu \le 1$.
+Under $0 < s \le \sigma \le z_0$, these satisfy $0 \le \nu \le 1$ and $0 \le \pi \le 1$. The pair $(\nu, \pi)$ ranges over the **unit square** $[0,1] \times [0,1]$.
 
 The variables have a direct interpretation:
 
-- $\pi$ is the **pledge saturation level** — what fraction of the saturation threshold is covered by operator pledge
-- $\nu$ is the **total-stake saturation level** — what fraction of the saturation threshold is covered by the pool's total stake
+- $\nu$ is the **stake saturation level** — what fraction of the saturation threshold is covered by the pool's total stake. $\nu = 1$ means the pool is fully saturated; $\nu = 0$ means it is empty.
+- $\pi$ is the **within-pool pledge ratio** — the fraction of the pool's stake that the operator commits as their own. $\pi = 0$ means a hollow pool (zero pledge); $\pi = 1$ means the operator owns 100 % of the pool (full self-pledge).
 
-An important structural property emerges: the allocation depends only on the **ratios of pledge and total stake relative to the saturation threshold**, not on their absolute values.
+An important structural property emerges: the allocation depends only on **how big the pool is relative to saturation** and on **the operator's commitment fraction** — not on absolute ADA values.
 
 The saturation threshold $z_0$ acts purely as a **scaling parameter**; the shape of the reward curve is governed by $a_0$ alone.
 
-Substituting $s = \pi z_0$ and $\sigma = \nu z_0$ into the non-saturated SL-D1 formula gives:
+Pledge in absolute terms recovers as $s = \pi \cdot \sigma = \pi \nu z_0$. Substituting $\sigma = \nu z_0$ and $s = \pi \nu z_0$ into the non-saturated SL-D1 formula gives:
 
 $$
-f(\pi z_0,\nu z_0)
-= z_0R
+f(\pi \nu z_0,\nu z_0)
+= z_0 R
 \left(
 \frac{1}{1+a_0}\nu
-+
-\frac{a_0}{1+a_0}\left(\pi\nu-\pi^2(1-\nu)\right)
+\;+\;
+\frac{a_0}{1+a_0}\,\pi\nu^2\bigl[1 - \pi(1-\nu)\bigr]
 \right)
 $$
 
@@ -321,15 +321,15 @@ This makes the structure explicit:
 
 - $z_0R$ — the **maximum reward scale of a fully saturated pool**
 - $\frac{1}{1+a_0}\nu$ — the **base stake component**
-- $\frac{a_0}{1+a_0}\left(\pi\nu-\pi^2(1-\nu)\right)$ — the **pledge-sensitive component**
+- $\frac{a_0}{1+a_0}\,\pi\nu^2\bigl[1 - \pi(1-\nu)\bigr]$ — the **pledge-sensitive component**
 
 The nonlinear pledge-sensitive part isolates as
 
 $$
-A(\pi,\nu) := \pi\nu - \pi^2(1-\nu)
+A(\nu, \pi) \;:=\; \nu^2 \cdot \pi \cdot \bigl[1 - \pi(1-\nu)\bigr]
 $$
 
-which we call the **pledge-bonus activation function**.
+which we call the **pledge-bonus activation function**. Its factorisation into an outer **size factor** $\nu^2$ and an inner **pledge-intensity factor** $\pi\bigl[1 - \pi(1-\nu)\bigr]$ is the load-bearing observation for the rest of the analysis: pool size and commitment intensity contribute to the bonus *multiplicatively*, with the size factor dominating at low $\nu$.
 
 #### 2.3.5 Reader-friendly reward function
 
@@ -338,52 +338,52 @@ Define three derived quantities:
 | Symbol | Name | Definition | Interpretation |
 | --- | --- | --- | --- |
 | $P_{\max}$ | **Reward ceiling** | $z_0R$ | Maximum any single pool can earn per epoch. In the ideal design, $k$ pools each earn $P_{\max}$ and the full pot is distributed. |
-| $\lambda_{\min}$ | **Size fraction** | $\frac{1}{1+a_0}$ | Share of $P_{\max}$ accessible through stake alone (zero pledge). Defines the **size ceiling**. |
-| $\lambda_{\max}$ | **Pledge fraction** | $\frac{a_0}{1+a_0}$ | Remaining share of $P_{\max}$ unlockable by pledge. The **commitment premium**. |
+| $\lambda_{\text{size}}$ | **Size fraction** | $\frac{1}{1+a_0}$ | Share of $P_{\max}$ accessible through stake alone (zero pledge). Defines the **size ceiling**. |
+| $\lambda_{\text{pledge}}$ | **Pledge fraction** | $\frac{a_0}{1+a_0}$ | Remaining share of $P_{\max}$ unlockable by pledge. The **commitment premium**. |
 
-These satisfy $\lambda_{\min} + \lambda_{\max} = 1$.
+These satisfy $\lambda_{\text{size}} + \lambda_{\text{pledge}} = 1$.
 
 The reward function becomes:
 
 $$
-f'(\pi,\nu)
+f'(\nu, \pi)
 = P_{\max}
 \left(
-\lambda_{\min}\nu
+\lambda_{\text{size}}\nu
 +
-\lambda_{\max}A(\pi,\nu)
+\lambda_{\text{pledge}}\,A(\nu, \pi)
 \right)
 $$
 
-This reads as: **ceiling** ($P_{\max}$) × **proportioning envelope** $E(\pi,\nu)$, where
+This reads as: **ceiling** ($P_{\max}$) × **proportioning envelope** $E(\nu, \pi)$, where
 
 $$
-E(\pi,\nu) = \lambda_{\min}\nu + \lambda_{\max}A(\pi,\nu)
+E(\nu, \pi) = \lambda_{\text{size}}\nu + \lambda_{\text{pledge}}\,A(\nu, \pi)
 $$
 
 The envelope determines what fraction of $P_{\max}$ the pool captures, and ranges from 0 to 1:
 
 | Tier | Envelope value | What it requires | Interpretation |
 | --- | --- | --- | --- |
-| Absolute ceiling | $E = 1$ | $\nu = 1, \pi = 1$ | Full saturation + full pledge → pool earns $P_{\max}$ |
-| Size ceiling | $E = \lambda_{\min}$ | $\nu = 1, \pi = 0$ | Full saturation, zero pledge → pool earns $\lambda_{\min} \times P_{\max}$ |
+| Absolute ceiling | $E = 1$ | $\nu = 1, \pi = 1$ | Full saturation + full self-pledge → pool earns $P_{\max}$ |
+| Size ceiling | $E = \lambda_{\text{size}}$ | $\nu = 1, \pi = 0$ | Full saturation, zero pledge → pool earns $\lambda_{\text{size}} \times P_{\max}$ |
 | Typical pool | $E \ll 1$ | $\nu \ll 1$ | Undersaturated → reward scales linearly with $\nu$ |
 
 Two structural properties of the envelope:
 
-- The **base term** $\lambda_{\min}\nu$ is **linear in $\nu$** — it depends only on total pool size relative to saturation. The distribution of stake across pools does not affect the aggregate base.
+- The **base term** $\lambda_{\text{size}}\nu$ is **linear in $\nu$** — it depends only on total pool size relative to saturation. The distribution of stake across pools does not affect the aggregate base.
 
-- The **bonus term** $\lambda_{\max}A(\pi,\nu)$ is **non-linear** — at maximum pledge ($\pi = \nu$) it reduces to $\lambda_{\max}\nu^3$. The cubic dependence means the bonus is structurally suppressed at low saturation levels and favours fewer, larger pools.
+- The **bonus term** $\lambda_{\text{pledge}}\,A(\nu, \pi)$ is **non-linear and asymmetric in its two inputs**. The outer factor $\nu^2$ imposes a **quadratic size penalty** that holds at *every* pledge ratio: even at the optimal $\pi$, a pool earns bonus proportional to $\nu^2$. At full self-pledge ($\pi = 1$) the inner factor degenerates and the bonus collapses to $\lambda_{\text{pledge}}\nu^3$ — the cubic that suppresses the bonus structurally for any pool below saturation and concentrates the reward signal in the largest pools.
 
 #### 2.3.6 Summary in normalized notation
 
 | Rule / function | Mathematical form | Interpretation |
 | --- | --- | --- |
-| Pledge-bonus activation | $A(\pi,\nu) := \pi\nu - \pi^2(1-\nu)$ | Nonlinear pledge-sensitive part of the reward curve |
-| Normalized optimal reward | $f'(\pi,\nu) = P_{\max}\left(\lambda_{\min}\nu + \lambda_{\max}A(\pi,\nu)\right)$ | Ceiling × envelope |
-| Performance-adjusted allocation | $\hat f'(\pi,\nu,\bar p) := \bar p \cdot f'(\pi,\nu)$ | Actual pool allocation |
-| Epoch consistency | $\sum_i \hat f'(\pi_i,\nu_i,\bar p_i) \le R$ | Total cannot exceed budget |
-| Undistributed remainder | $R - \sum_i \hat f'(\pi_i,\nu_i,\bar p_i)$ | Returns to reserve |
+| Pledge-bonus activation | $A(\nu, \pi) := \nu^2 \cdot \pi \cdot \bigl[1 - \pi(1-\nu)\bigr]$ | Nonlinear pledge-sensitive part of the reward curve |
+| Normalized optimal reward | $f'(\nu, \pi) = P_{\max}\left(\lambda_{\text{size}}\nu + \lambda_{\text{pledge}}\,A(\nu, \pi)\right)$ | Ceiling × envelope |
+| Performance-adjusted allocation | $\hat f'(\nu, \pi, \bar p) := \bar p \cdot f'(\nu, \pi)$ | Actual pool allocation |
+| Epoch consistency | $\sum_i \hat f'(\nu_i, \pi_i, \bar p_i) \le R$ | Total cannot exceed budget |
+| Undistributed remainder | $R - \sum_i \hat f'(\nu_i, \pi_i, \bar p_i)$ | Returns to reserve |
 | Pledge enforcement | if pledge not met → $\hat f' = 0$ | Pool allocation zeroed |
 
 #### 2.3.7 Mainnet parameterization
@@ -397,7 +397,7 @@ $$
 From which:
 
 $$
-\lambda_{\min} = \frac{1}{1.3} \approx 76.9\% \qquad \lambda_{\max} = \frac{0.3}{1.3} \approx 23.1\%
+\lambda_{\text{size}} = \frac{1}{1.3} \approx 76.9\% \qquad \lambda_{\text{pledge}} = \frac{0.3}{1.3} \approx 23.1\%
 $$
 
 $$
@@ -409,17 +409,17 @@ The three reward tiers under mainnet conditions (epoch 616, $R \approx 15.53\tex
 | Tier | Formula | Reward/epoch | Capital required |
 | --- | --- | --- | --- |
 | **Absolute ceiling** ($P_{\max}$) | $\frac{R}{k}$ | ~31K ADA | 77M ADA stake + 77M ADA pledge |
-| **Size ceiling** ($\lambda_{\min} P_{\max}$) | $\frac{R}{k} \cdot 76.9\%$ | ~23.9K ADA | 77M ADA stake, no pledge |
-| **Commitment premium** ($\lambda_{\max} P_{\max}$) | $\frac{R}{k} \cdot 23.1\%$ | ~7.2K ADA | Gap — requires 77M ADA personal pledge |
+| **Size ceiling** ($\lambda_{\text{size}} P_{\max}$) | $\frac{R}{k} \cdot 76.9\%$ | ~23.9K ADA | 77M ADA stake, no pledge |
+| **Commitment premium** ($\lambda_{\text{pledge}} P_{\max}$) | $\frac{R}{k} \cdot 23.1\%$ | ~7.2K ADA | Gap — requires 77M ADA personal pledge |
 
 The **size ceiling** is accessible to **any** saturated pool regardless of pledge. The **commitment premium** reserves **23.1%** of $P_{\max}$ for pledge activation — but unlocking it requires operator capital equal to the full saturation threshold.
 
-The implied yield on that capital ($\lambda_{\max} \cdot P_{\max}$ annualized / $z_0$ in ADA) is **substantially below the passive delegation yield**, making the pledge bonus economically weak as an incentive.
+The implied yield on that capital ($\lambda_{\text{pledge}} \cdot P_{\max}$ annualized / $z_0$ in ADA) is **substantially below the passive delegation yield**, making the pledge bonus economically weak as an incentive.
 
 The full formula including apparent performance reads as a cascade:
 
 $$
-\hat f'(\pi,\nu,\bar p) = \underbrace{\bar{p}}_{\text{performance}} \;\cdot\; \underbrace{P_{\max}}_{\text{ceiling}} \;\cdot\; \underbrace{E(\pi,\nu)}_{\text{envelope}}
+\hat f'(\nu, \pi, \bar p) = \underbrace{\bar{p}}_{\text{performance}} \;\cdot\; \underbrace{P_{\max}}_{\text{ceiling}} \;\cdot\; \underbrace{E(\nu, \pi)}_{\text{envelope}}
 $$
 
 Each factor acts as a **discount** from $P_{\max}$. When all three equal their ideal value, the pool earns the full ceiling. Every departure reduces the payout, and the difference **returns to the reserve**.
@@ -434,17 +434,17 @@ Each factor acts as a **discount** from $P_{\max}$. When all three equal their i
 | $a_0$ | $\alpha^{\text{protocol}}_{\text{skinInTheGame}}$ | Pledge-influence strength | 0.3 |
 | $z_0$ | $k^{\text{protocol}}_{\text{saturation}}$ | Saturation threshold per pool | 0.2% |
 | $\sigma$ | $\sigma^{\text{totalStaked}}_{i}$ | Total stake before clipping | Dynamic |
-| $s$ | $\pi^{\text{pledged}}_{i}$ | Pledge before clipping | Dynamic |
+| $s$ | $s^{\text{pledged}}_{i}$ | Pledge before clipping | Dynamic |
 | $f$ | $PoolPot^{\text{optimal}}_{i}$ | Optimal pool allocation | Dynamic |
 | $\bar p$ | $\bar p^{\text{pool}}_{\text{apparent},i}$ | Performance multiplier | ~1 |
 | $\hat f$ | $PoolPot^{\text{actual}}_{i}$ | Actual pool allocation | Dynamic |
-| — | $\pi$ | Normalized pledge ($s/z_0$) | $0 < \pi < 1$ |
-| — | $\nu$ | Normalized total stake ($\sigma/z_0$) | $0 < \nu < 1$ |
-| — | $A(\pi,\nu)$ | Pledge-bonus activation | $\pi\nu - \pi^2(1-\nu)$ |
+| — | $\nu$ | Stake saturation level ($\sigma/z_0$) | $0 \le \nu \le 1$ |
+| — | $\pi$ | Within-pool pledge ratio ($s/\sigma$) | $0 \le \pi \le 1$ |
+| — | $A(\nu, \pi)$ | Pledge-bonus activation | $\nu^2 \cdot \pi \cdot [1 - \pi(1-\nu)]$ |
 | — | $P_{\max}$ | Reward ceiling | $z_0 R$ |
-| — | $\lambda_{\min}$ | Size fraction | $1/(1+a_0)$ |
-| — | $\lambda_{\max}$ | Pledge fraction | $a_0/(1+a_0)$ |
-| — | $E(\pi,\nu)$ | Proportioning envelope | $\lambda_{\min}\nu + \lambda_{\max}A(\pi,\nu)$ |
+| — | $\lambda_{\text{size}}$ | Size fraction | $1/(1+a_0)$ |
+| — | $\lambda_{\text{pledge}}$ | Pledge fraction | $a_0/(1+a_0)$ |
+| — | $E(\nu, \pi)$ | Proportioning envelope | $\lambda_{\text{size}}\nu + \lambda_{\text{pledge}}\,A(\nu, \pi)$ |
 
 ---
 
@@ -490,7 +490,7 @@ The typical cause is **operational**: an operator moves ADA out of their pledge 
 
 Before going further down the waterfall, the formula that governs everything below this point must be opened. Each pool's reward is:
 
-$$\hat{f}'(\pi, \nu, \bar{p}) = \underbrace{\bar{p}}_{\text{performance}} \;\cdot\; \underbrace{P_{\max}}_{\text{ceiling}} \;\cdot\; \underbrace{\left( \lambda_{\min}\;\nu \;+\; \lambda_{\max}\;A(\pi, \nu) \right)}_{\text{proportioning envelope } E(\pi,\nu)}$$
+$$\hat{f}'(\nu, \pi, \bar{p}) = \underbrace{\bar{p}}_{\text{performance}} \;\cdot\; \underbrace{P_{\max}}_{\text{ceiling}} \;\cdot\; \underbrace{\left( \lambda_{\text{size}}\;\nu \;+\; \lambda_{\text{pledge}}\;A(\nu, \pi) \right)}_{\text{proportioning envelope } E(\nu, \pi)}$$
 
 **Three multiplicative factors.** When all three equal their maximum, the pool earns the full ceiling $P_{\max}$. Every departure from the ideal is a **multiplicative discount** — and the uncaptured fraction **returns to the reserve**.
 
@@ -498,7 +498,7 @@ $$\hat{f}'(\pi, \nu, \bar{p}) = \underbrace{\bar{p}}_{\text{performance}} \;\cdo
 | --- | --- | --- | --- |
 | Performance | $\bar{p}$ | Did the pool produce its assigned blocks? | 1.0 |
 | Ceiling | $P_{\max}$ | Maximum reward for any single pool per epoch | 31K ADA |
-| Proportioning envelope | $E(\pi,\nu)$ | How well is the pool sized and pledged? | 1.0 (ν=1, π=1) |
+| Proportioning envelope | $E(\nu, \pi)$ | How well is the pool sized and pledged? | 1.0 (ν=1, π=1) |
 
 The ceiling sets the scale:
 
@@ -519,12 +519,12 @@ The envelope $E$ splits into two additive components that explain where the rest
 
 | Component | Expression | Driven by | Range |
 | --- | --- | --- | --- |
-| **Base** | $\lambda_{\min} \cdot \nu = 76.923\% \cdot \nu$ | Pool size only | 0 → 76.923% |
-| **Pledge bonus** | $\lambda_{\max} \cdot A(\pi,\nu) = 23.077\% \cdot A$ | Size + pledge | 0 → 23.077% |
+| **Base** | $\lambda_{\text{size}} \cdot \nu = 76.923\% \cdot \nu$ | Pool size only | 0 → 76.923% |
+| **Pledge bonus** | $\lambda_{\text{pledge}} \cdot A(\nu, \pi) = 23.077\% \cdot A$ | Size + pledge | 0 → 23.077% |
 
 The base is **distribution-neutral**: 100M ADA in one pool earns exactly the same base as 100M split across ten pools.
 
-The bonus is **distribution-sensitive**: the activation function $A(\pi,\nu) = \pi\nu - \pi^2(1-\nu)$ is non-linear, and under full self-pledge $A(\nu,\nu) = \nu^3$ — cubing sub-unit values crushes them.
+The bonus is **distribution-sensitive**: the activation function $A(\nu, \pi) = \nu^2 \cdot \pi \cdot [1 - \pi(1-\nu)]$ is non-linear, with an outer factor $\nu^2$ that imposes a quadratic size penalty at every pledge ratio. Under full self-pledge ($\pi = 1$) the inner factor degenerates and the bonus collapses to $A(\nu, 1) = \nu^3$ — cubing sub-unit values crushes them.
 
 *This split — **76.9% for size, 23.1% for pledge** — is the key to understanding everything that follows.*
 
@@ -536,7 +536,7 @@ Within it, the single largest loss is the **unused pledge budget**.
 
 #### 3.4.1 Why pledge matters — and why this is not zero-sum
 
-The formula reserves $\lambda_{\max} = 23.1\%$ of the pot — **3.58M ADA every epoch** — as a bonus for operators who self-pledge. This is **not a reward optimisation**. It is the protocol's **primary Sybil-resistance mechanism**.
+The formula reserves $\lambda_{\text{pledge}} = 23.1\%$ of the pot — **3.58M ADA every epoch** — as a bonus for operators who self-pledge. This is **not a reward optimisation**. It is the protocol's **primary Sybil-resistance mechanism**.
 
 The design specification (Brünjes et al., 2020) is explicit: the pledge requirement exists so that "an adversary who wishes to increase his chances of being elected [must] split his stake among several stakepools, decreasing each pool's apparent pledge and therefore its attractiveness."
 
@@ -562,13 +562,13 @@ The [*Incentive Mechanism Analysis*](https://github.com/input-output-hk/spo-ince
 | **Size ceiling** — zero pledge | **23,898 ADA** | **1.74M ADA** | 77M ADA stake + $\bar{p}=1$. No pledge needed. |
 | **Pledge bonus** — the gap | **7,169 ADA** | **523K ADA** | The difference. Requires 77M ADA of *personal* capital pledged. |
 
-The size-only ceiling ($\lambda_{\min} \times P_{\max}$) is what **any** saturated pool earns regardless of pledge. It captures **76.9%** of $P_{\max}$. The remaining **23.1%** requires the operator to **pledge the entire saturation amount** (77M ADA).
+The size-only ceiling ($\lambda_{\text{size}} \times P_{\max}$) is what **any** saturated pool earns regardless of pledge. It captures **76.9%** of $P_{\max}$. The remaining **23.1%** requires the operator to **pledge the entire saturation amount** (77M ADA).
 
 The implied yield: $523\text{K ADA/yr} \div 77\text{M ADA} = \mathbf{0.68\%\text{/yr}}$ — **below the passive delegation yield** of ~2.3%/yr.
 
 **The bonus at every scale:**
 
-| Pool size | ν | Zero-pledge reward | Max pledge (π=ν) reward | Bonus | Relative uplift | Yield on pledge capital |
+| Pool size | ν | Zero-pledge reward | Full self-pledge (π=1) reward | Bonus | Relative uplift | Yield on pledge capital |
 | --- | --- | --- | --- | --- | --- | --- |
 | 3M ADA | 0.039 | 931 ADA/ep | 932 ADA/ep | **+0.4 ADA** | +0.05% | 0.001%/yr |
 | 10M ADA | 0.130 | 3,104 ADA/ep | 3,120 ADA/ep | **+16 ADA** | +0.5% | 0.011%/yr |
@@ -588,19 +588,19 @@ A typical healthy pool (30M ADA stake, 100K ADA pledge) gains **3.6 ADA/epoch** 
 
 The proportioning envelope determines what fraction of $P_{\max}$ the pool can capture:
 
-$$E(\pi, \nu) = \underbrace{\lambda_{\min} \cdot \nu}_{\text{base}} + \underbrace{\lambda_{\max} \cdot A(\pi, \nu)}_{\text{pledge bonus}}$$
+$$E(\nu, \pi) = \underbrace{\lambda_{\text{size}} \cdot \nu}_{\text{base}} + \underbrace{\lambda_{\text{pledge}} \cdot A(\nu, \pi)}_{\text{pledge bonus}}$$
 
-**The base.** A zero-pledge pool (π = 0) earns $E(0,\nu) = 76.923\% \cdot \nu$. Purely proportional to saturation, independent of pledge. At full saturation: **76.9% of $P_{\max}$**. The remaining **23.1% is structurally inaccessible** to it.
+**The base.** A zero-pledge pool (π = 0) earns $E(\nu, 0) = 76.923\% \cdot \nu$. Purely proportional to saturation, independent of pledge. At full saturation: **76.9% of $P_{\max}$**. The remaining **23.1% is structurally inaccessible** to it.
 
-**The pledge bonus.** The activation function $A(\pi,\nu) = \pi\nu - \pi^2(1-\nu)$ controls access to that remaining 23.1%. Under full self-pledge (π = ν):
+**The pledge bonus.** The activation function $A(\nu, \pi) = \nu^2 \cdot \pi \cdot [1 - \pi(1-\nu)]$ controls access to that remaining 23.1%. Under full self-pledge (π = 1) the inner factor degenerates and the bonus collapses to:
 
-$$A(\nu, \nu) = \nu^3 \qquad \Rightarrow \qquad \text{max bonus at } \nu = \lambda_{\max} \cdot \nu^3$$
+$$A(\nu, 1) = \nu^3 \qquad \Rightarrow \qquad \text{bonus at full self-pledge} = \lambda_{\text{pledge}} \cdot \nu^3$$
 
 The **cubic scaling** is the crux. At ν = 0.1 (a 7.7M pool), even with perfect pledge, the bonus is **0.023%** of $P_{\max}$.
 
 *The mechanism was designed for a world of 500 saturated pools; the actual landscape cannot activate it.*
 
-| Saturation (ν) | Max $A$ | Bonus (% of $P_{\max}$) | Total $E$ | Relative uplift over zero-pledge |
+| Saturation (ν) | $A(\nu, 1)$ | Bonus (% of $P_{\max}$) | Total $E$ | Relative uplift over zero-pledge |
 | --- | --- | --- | --- | --- |
 | 1.0 (full) | 1.000 | 23.077% | **100%** | **30.0%** |
 | 0.8 | 0.512 | 11.82% | 73.36% | 19.2% |
@@ -612,7 +612,7 @@ The **cubic scaling** is the crux. At ν = 0.1 (a 7.7M pool), even with perfect 
 
 Absolute pledge amounts are misleading — a 1M ADA pledge means something very different for a saturated pool (ν ≈ 1, π ≈ 0.013) than for a small one (ν ≈ 0.1, π ≈ 0.13).
 
-The relevant metric is the **pledge ratio**: declared pledge divided by active stake. This is what the formula actually prices through the $A(\pi, \nu)$ term.
+The relevant metric is the **pledge ratio**: declared pledge divided by active stake. This is what the formula actually prices through the $A(\nu, \pi)$ term.
 
 ![Pledge Ratio Distribution](figures/pledge_ratio_distribution_mainnet.png)
 
@@ -630,9 +630,9 @@ The **stake-weighted median pledge ratio is 0.07%** — meaning half of all stak
 
 The unweighted median (**0.73%**) is 10× higher, reflecting the many smaller community pools with genuine skin-in-the-game but little stake weight.
 
-> **Finding POL.O2.F1 — 78% of staked ADA sits in pools with pledge ratio < 1%; the stake-weighted median ratio is 0.07%.** Pledge is absent precisely where stake concentrates. The pools that dominate the network in economic terms operate with near-zero pledge ratios — for them, the $A(\pi, \nu)$ term contributes essentially nothing.
+> **Finding POL.O2.F1 — 78% of staked ADA sits in pools with pledge ratio < 1%; the stake-weighted median ratio is 0.07%.** Pledge is absent precisely where stake concentrates. The pools that dominate the network in economic terms operate with near-zero pledge ratios — for them, the $A(\nu, \pi)$ term contributes essentially nothing.
 
-This asymmetry is the **structural signature** of the pledge problem. At π = 0.001 and ν = 0.5, the bonus is **0.0006%** of $P_{\max}$.
+This asymmetry is the **structural signature** of the pledge problem. At π = 0.001 (pledge ratio 0.1 %) and ν = 0.5 (a half-saturated pool), the bonus is approximately **0.006 %** of $P_{\max}$ — and at the stake-weighted median π = 0.0007, even smaller still.
 
 *The anti-Sybil mechanism is present in the formula but absent from the economics.*
 
@@ -1185,10 +1185,10 @@ But the revised §3 framing shows that this is only a **partial cleanup**: a sec
 
 The pledge-compliance classification allows that waste to be **attributed to its sources**.
 
-For each MPO pool, three reward levels are computed under the current formula $\hat{f}'(\pi, \nu, \bar{p})$:
+For each MPO pool, three reward levels are computed under the current formula $\hat{f}'(\nu, \pi, \bar{p})$:
 
 - **Actual reward**: using the pool's current effective pledge ($\min(\text{declared}, \sigma \cdot S_{\text{active}})$)
-- **Maximum reward**: assuming full self-pledge ($\pi = \nu$) at the pool's current stake level
+- **Maximum reward**: assuming full self-pledge ($\pi = 1$) at the pool's current stake level
 - **Lost reward**: the difference — ADA that returns to the reserve instead of being distributed
 
 **MPO entities — reward loss by pledge compliance (epoch 618, all live pools >100 ADA):**
@@ -1241,7 +1241,7 @@ Within the **can't-play** bucket, the largest contributors are much smaller in a
 
 The "top five" table above understates the concentration: extending to ten entities captures **over half** of all MPO-attributable waste.
 
-The table below uses a per-pool bonus model — $\lambda_{\max} \cdot R \cdot \sigma \cdot \frac{s}{s + a_0(1-s)}$ where $s = \min(\text{pledge}/z_0,\,1)$ — applied to every pool of each entity.
+The table below uses a per-pool bonus model — $\lambda_{\text{pledge}} \cdot R \cdot \sigma \cdot \frac{s}{s + a_0(1-s)}$ where $s = \min(\text{pledge}/z_0,\,1)$ — applied to every pool of each entity.
 
 | Rank | Entity | Pools | Pledge (ADA) | Stake (ADA) | Ratio | Waste (₳/epoch) | Bonus capture |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |

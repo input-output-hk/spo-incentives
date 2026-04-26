@@ -33,7 +33,7 @@
 - [1. Stake-cap formulas](#1-stake-cap-formulas)
 - [2. Why a new instrument when V1 already has a pledge lever?](#2-why-a-new-instrument-when-v1-already-has-a-pledge-lever)
   - [2.1 The `a₀` lever rebalances, it doesn't tilt](#21-the-a-lever-rebalances-it-doesnt-tilt)
-  - [2.2 The deeper bottleneck — A(π, ν) itself](#22-the-deeper-bottleneck--aπ-ν-itself)
+  - [2.2 The deeper bottleneck — A(ν, π) itself](#22-the-deeper-bottleneck--aν-π-itself)
     - [2.2.1 Anatomy of the function — before any numbers](#221-anatomy-of-the-function--before-any-numbers)
     - [2.2.2 What A actually pays — three operators across three pledge levels](#222-what-a-actually-pays--three-operators-across-three-pledge-levels)
     - [2.2.3 The cubic ν³ — visualised](#223-the-cubic-ν³--visualised)
@@ -75,33 +75,30 @@ Panel (b) matches leverage at $\ell = L = 125$ to isolate the floor as the sole 
 
 V1 already exposes a pledge-incentive knob: the **pledge influence factor** $a_0$ (currently `0.3` on mainnet). It enters the SL-D1 reward envelope as the weight of the pledge-bonus term:
 
-$$E(\pi, \nu) \;=\; \underbrace{\lambda_{\min} \cdot \nu}_{\text{base — independent of pledge}} \;+\; \underbrace{\lambda_{\max} \cdot A(\pi, \nu)}_{\text{bonus — pledge-sensitive}}$$
+$$E(\nu, \pi) \;=\; \underbrace{\lambda_{\text{size}} \cdot \nu}_{\text{base — independent of pledge}} \;+\; \underbrace{\lambda_{\text{pledge}} \cdot A(\nu, \pi)}_{\text{bonus — pledge-sensitive}}$$
 
-with $\lambda_{\min} = 1/(1+a_0)$, $\lambda_{\max} = a_0/(1+a_0)$, and the **pledge-bonus activation function**
+with $\lambda_{\text{size}} = 1/(1+a_0)$, $\lambda_{\text{pledge}} = a_0/(1+a_0)$, and the **pledge-bonus activation function**
 
-$$A(\pi, \nu) \;:=\; \pi\nu \;-\; \pi^2(1-\nu)$$
+$$A(\nu, \pi) \;:=\; \nu^2 \cdot \pi \cdot \bigl[1 - \pi(1-\nu)\bigr]$$
 
-(Notation and derivation in [diagnostic / pools-distribution §2.3](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#235-reader-friendly-reward-function).)
+(Notation and derivation in [diagnostic / pools-distribution §2.3](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#234-normalized-coordinates-pool-size-and-pledge-ratio).)
 
-**What π and ν actually mean.** Both are **dimensionless ratios**, normalised by the V1 saturation cap $z_0 = 1/k$ (≈ **67.44 M ADA** at the mainnet `k = 500`). Think of $z_0$ as "the size of one fully-saturated pool" — the reference unit in which the formula expresses everything.
+**What ν and π actually mean.** Both are **dimensionless ratios** in $[0, 1]$ that capture the two structurally independent degrees of freedom an operator controls.
 
 | Symbol | Definition | Range | What it measures | Concrete example |
 |---|---|---:|---|---|
-| **ν**  | $\sigma / z_0$ | $[0, 1+]$ | **Stake saturation level** — what fraction of one full V1 pool your *total* stake represents | Healthy 15 M pool: $\nu = 15/67.44 = 0.222$.  Saturated pool: $\nu \approx 1$. |
-| **π**  | $p / z_0$ | $[0, \nu]$ | **Pledge saturation level** — what fraction of one full V1 pool your *self-pledge* represents | Pool with 100 k pledge: $\pi = 0.100/67.44 = 0.0015$.  Fully-pledged saturated pool: $\pi = 1$. |
+| **ν**  | $\sigma / z_0$ | $[0, 1]$ | **Stake saturation level** — what fraction of one fully-saturated V1 pool the *total* stake represents (with $z_0 = 1/k \approx$ 67.44 M ADA at mainnet $k=500$) | Healthy 15 M pool: $\nu = 15/67.44 = 0.222$.  Saturated pool: $\nu \approx 1$. |
+| **π**  | $s / \sigma$ | $[0, 1]$ | **Within-pool pledge ratio** — fraction of the pool's stake that the operator commits as their own | Pool with 10 % pledge ratio: $\pi = 0.10$.  Fully self-pledged pool: $\pi = 1$.  Mainnet stake-weighted median: $\pi \approx 0.07\,\%$ (POL.O2.F1). |
 
-Two structural constraints to internalise:
+ν and π are **structurally independent** — pool size and commitment fraction can vary freely, each on its own [0, 1] interval. The operating mainnet population sits very near the π = 0 axis: 78 % of staked ADA is in pools with π < 1 % (POL.O2.F1).
 
-- **π ≤ ν** by construction — your pledge is part of your total stake (you can't pledge more than the pool holds). The diagonal **π = ν** is the line of *full self-pledge* (no delegators, the operator owns 100 % of the pool).
-- The familiar **pledge ratio** (pledge as fraction of pool stake) you see in CIP discussions is exactly $\rho = p/\sigma = \pi/\nu$. Mainnet's stake-weighted median is $\rho \approx 0.07\,\%$ (POL.O2.F1) — operators sit very far below the diagonal.
-
-A reading shortcut: when you see **π** in the formula, think *"how much pledge is the operator putting in, expressed in V1-pool units"*. When you see **ν**, think *"how big is this pool, expressed in V1-pool units"*. Both are bounded by 1 in the design domain.
+A reading shortcut: when you see **ν** in the formula, think *"how big is the pool relative to one full V1 pool"*. When you see **π**, think *"how much of the pool is the operator's own ADA"*.
 
 The natural question is therefore: *why propose CIP-0050 / CIP-0037 instead of just raising `a₀`?* The answer requires looking at three nested layers — the lever's **shape**, the bonus function's **structure**, and what no proposal currently touches.
 
 ### 2.1 The `a₀` lever rebalances, it doesn't tilt
 
-Raising `a₀` shifts more weight from the base term ($\lambda_{\min}\nu$) onto the bonus term ($\lambda_{\max}A$). For a low-pledge pool this *reduces* the base by more than the bonus can recover — the operator is punished smoothly, not catalysed.
+Raising `a₀` shifts more weight from the base term ($\lambda_{\text{size}}\nu$) onto the bonus term ($\lambda_{\text{pledge}}A$). For a low-pledge pool this *reduces* the base by more than the bonus can recover — the operator is punished smoothly, not catalysed.
 
 ![V1 levers vs CIP-0050 / CIP-0037 — Healthy pool](figures/cip_levers_01_smooth_vs_hard.png)
 
@@ -109,39 +106,38 @@ Panel (a). For a Healthy pool ($\sigma = 15$ M, $\nu \approx 0.222$): raising $a
 
 Panel (b). CIP-0050 and CIP-0037 don't touch $(λ_{\min}, λ_{\max})$. They clip $\sigma'$ before the reward formula runs, so the penalty hits the **base term** $λ_{\min} \cdot \nu'$ — which is structurally *much larger* than $λ_{\max} \cdot A$ at any reasonable pool size. That is why their cliff is steep where `a₀` tweaks barely move the needle.
 
-### 2.2 The deeper bottleneck — A(π, ν) itself
+### 2.2 The deeper bottleneck — A(ν, π) itself
 
-Both `a₀` (rebalancing) and CIP-0050 / CIP-0037 (clipping) operate **around** the A function. Neither modifies it. So before plugging any numbers in, dissect the function itself: what does it say structurally, and is the structure even sound?
+Both `a₀` (rebalancing) and CIP-0050 / CIP-0037 (clipping) operate **around** the A function. Neither modifies it. So before plugging any numbers in, dissect the function itself: what does it say structurally?
 
 #### 2.2.1 Anatomy of the function — before any numbers
 
-![Structural anatomy of A(π, ν) — domain triangle and non-monotonicity](figures/cip_levers_04_A_structural_anatomy.png)
+![Structural anatomy of A(ν, π) — heatmap on the unit square + non-monotonicity in π for ν < 0.5](figures/cip_levers_04_A_structural_anatomy.png)
 
-**(i) Not all (π, ν) tuples are valid — the domain is a triangle, not a rectangle.**
+**(i) The factorisation: pure size factor × pledge-intensity factor.**
 
-A is written as a function of two variables π and ν, suggesting they are independent inputs. They are not. The protocol enforces
+A admits a clean multiplicative decomposition:
 
-$$p \;\leq\; \sigma \quad\Longleftrightarrow\quad \pi \;\leq\; \nu$$
+$$A(\nu, \pi) \;=\; \underbrace{\nu^2}_{\text{size factor}} \;\cdot\; \underbrace{\pi \cdot \bigl[1 - \pi(1-\nu)\bigr]}_{\text{pledge-intensity factor}}$$
 
-— pledge cannot exceed pool stake, because pledge *is part of* the pool's stake. Half of the unit square `[0,1] × [0,1]` is therefore unreachable: the upper triangle (π > ν) corresponds to operator configurations the protocol forbids.
+The two effects are independent and multiplicative. The **outer factor $\nu^2$** is a quadratic dependence on pool size — independent of pledge, applying at *every* commitment level. A pool earns bonus proportional to $\nu^2$ before any consideration of how much its operator pledges. The **inner factor** $\pi[1 - \pi(1-\nu)]$ controls how the pledge ratio modulates the bonus, with a weak coupling to $\nu$ via the $(1-\nu)$ term.
 
-This is already a **structural smell**. A well-designed two-variable function expresses two *independent* degrees of freedom. Here π and ν are coupled by an external constraint that the formula ignores. The natural reparametrisation is `(ν, ρ)` where `ρ = π/ν` is the pledge ratio (both bounded in `[0, 1]`, both independent) — but the formula uses `(π, ν)` instead. The mismatch propagates: every reasoning about A has to carry the side-condition "and remember π ≤ ν", which is exactly the kind of invisible footgun that produces the pathologies below.
+This is the load-bearing observation: *pool size enters the bonus quadratically as a pure penalty against small pools, regardless of how committed the operator is*. Even at the OPTIMAL pledge ratio for a given pool size, the bonus is still scaled by $\nu^2$.
 
-Panel (a) of the figure shows this: the green triangle is the entire valid domain of A; the hatched region above the diagonal is impossible. The orange strip near `π = 0` is where mainnet actually operates (median pledge ratio 0.07 % — operators sit very far from the diagonal).
+**(ii) Tour of the corners and edges.**
 
-**(ii) Tour of the boundaries.**
+| Configuration | Condition | A reduces to | Interpretation |
+|---|---|---|---|
+| Zero pledge | $\pi = 0$ | $A = 0$ | No bonus, sensible. |
+| Saturated pool | $\nu = 1$ | $A = 1 \cdot \pi \cdot [1 - 0] = \pi$ | Linear in $\pi$, well-behaved. The only regime where A is monotone clean. |
+| Full self-pledge | $\pi = 1$ | $A = \nu^2 \cdot 1 \cdot [1 - (1-\nu)] = \nu^3$ | The cubic collapse. |
+| Designed maximum | $(\nu, \pi) = (1, 1)$ | $A = 1$ | Saturated pool fully self-pledged. |
 
-| Boundary | What it represents | A reduces to |
-|---|---|---|
-| `π = 0` (left edge) | Zero pledge | $A = 0$ — no bonus, sensible. |
-| `ν = 1` (top edge of the valid triangle, at saturation) | Saturated pool | $A = \pi - \pi^2 \cdot 0 = \pi$ — linear in pledge, well-behaved. |
-| `π = ν` (the diagonal) | Full self-pledge — operator owns 100 % of the pool | $A = \nu \cdot \nu - \nu^2 (1-\nu) = \nu^3$ — **cubic in pool size**. |
+The third row is where the elaborate quadratic construction collapses. At full self-pledge, the inner factor $\pi[1 - \pi(1-\nu)]$ degenerates to $\nu$, and combined with the outer $\nu^2$ produces $\nu^3$ — cubing sub-unit numbers. That cube is the load-bearing pathology, but as (i) made explicit, the underlying $\nu^2$ size penalty is permanent regardless of pledge.
 
-The third boundary is where the construction collapses. The carefully shaped quadratic-in-π expression `πν − π²(1−ν)` becomes simply `ν³` when the operator commits everything they own. That cube is the load-bearing pathology — coming back to it shortly.
+**(iii) The pledge-intensity factor and what it was meant to do.**
 
-**(iii) The penalty term `−π²(1−ν)` and what it was supposed to do.**
-
-The two terms have distinct intents. The first, `πν`, is a bilinear "pledge × stake" reward — bigger pool with more pledge earns more bonus. The second, `−π²(1−ν)`, is a **splitting penalty** the SL-D1 design adds on purpose: an MPO who splits a fixed pledge `P` across `N` pools (each with `p = P/N` and total stake `Nσ_i`) sees the per-pool A reduced by something quadratic in their per-pool pledge fraction. The whitepaper's intent was to make MPO splitting reward-neutral.
+The inner factor $\pi[1 - \pi(1-\nu)] = \pi - \pi^2(1-\nu)$ has two pieces with distinct intents. The linear $\pi$ part is the bilinear "more pledge → more bonus" signal. The quadratic $-\pi^2(1-\nu)$ part is a **splitting penalty** the SL-D1 design adds on purpose: an MPO who splits a fixed total pledge across $N$ pools shrinks the per-pool $\pi$, and the quadratic term penalises high-$\pi$/low-$\nu$ configurations the protocol associates with potential gaming.
 
 The construction *does* achieve that intent in some regions. But it pays a heavy price elsewhere — pathology (iv) below.
 
@@ -149,34 +145,34 @@ The construction *does* achieve that intent in some regions. But it pays a heavy
 
 Take the partial derivative of A with respect to π at fixed ν:
 
-$$\frac{\partial A}{\partial \pi} \;=\; \nu \;-\; 2\pi(1-\nu)$$
+$$\frac{\partial A}{\partial \pi} \;=\; \nu^2 \bigl[1 - 2\pi(1-\nu)\bigr]$$
 
-This is zero at `π* = ν / (2(1−ν))` and negative for `π > π*`. Two regimes follow:
+This is zero at $\pi^* = 1 / [2(1-\nu)]$ and negative for $\pi > \pi^*$. Two regimes follow:
 
-- For `ν ≥ 0.5`: `π* ≥ ν`, so the maximum sits **at or beyond the boundary** of the valid domain. Inside the valid domain, A is monotone increasing in π — pledging more always earns more bonus. ✓
-- For `ν < 0.5`: `π* < ν`, so the maximum sits **inside** the valid domain. Increasing pledge from `π*` up to `π = ν` (full self-pledge) **decreases** A. *Pledging more pays less.*
+- For $\nu \geq 0.5$: $\pi^* \geq 1$, so the maximum sits **at or beyond the boundary** of the unit interval. Inside $[0, 1]$, A is monotone increasing in $\pi$ — pledging more always earns more bonus. ✓
+- For $\nu < 0.5$: $\pi^* < 1$, so the maximum sits **strictly inside** $[0, 1]$. Increasing pledge ratio from $\pi^*$ up to $\pi = 1$ (full self-pledge) **decreases** A. *Pledging more pays less.*
 
-Worked example at `ν = 0.3`:
+Worked example at $\nu = 0.3$ (a Healthy-tier pool around 20 M ADA):
 
-| π | A(π, 0.3) |
+| π | A(0.3, π) |
 |---:|---:|
-| 0.10 | 0.02300 |
-| 0.15 | 0.02925 |
-| 0.20 | 0.03200 |
-| **0.214 (= π*)** | **0.03214 ← max** |
-| 0.25 | 0.03125 |
-| **0.30 (= ν, full self-pledge)** | **0.02700 — 16 % BELOW the max** |
+| 0.30 | 0.0233 |
+| 0.50 | 0.0292 |
+| 0.65 | 0.0319 |
+| **0.714 (= π*)** | **0.0321 ← max** |
+| 0.80 | 0.0317 |
+| **1.00 (full self-pledge)** | **0.0270 — 16 % below the max** |
 
-For a pool at half-saturation (`σ = 33 M`, `ν = 0.5`), the optimal pledge is exactly the pool's full stake — the boundary is the maximum. Below half-saturation, an operator who fully self-pledges *destroys* part of their bonus by doing so. The formula whose stated purpose is "skin in the game" pays you **less for putting in more skin**, for the entire population of pools below half-saturation — which is essentially the entire mainnet population.
+For a pool exactly at half-saturation ($\nu = 0.5$), the optimum is at $\pi = 1$. Below half-saturation, an operator who fully self-pledges *destroys* part of their bonus. The formula whose stated purpose is "skin in the game" pays you **less for putting in more skin**, for the entire population of pools below half-saturation — which is essentially the entire mainnet population.
 
-Panel (b) of the figure shows this: each curve is A at fixed ν as a function of π over the valid domain `[0, ν]`. The gold star marks the interior maximum; the square marks the full self-pledge endpoint. For `ν < 0.5`, the square is *below* the star.
+Panel (b) of the figure shows this: each curve is A at fixed ν as a function of π over the unit interval. The gold star marks the interior maximum; the square marks the full self-pledge endpoint. For $\nu < 0.5$, the square is *below* the star.
 
 **(v) Summary of structural critiques — before any numbers.**
 
-1. The domain is a triangle, not a rectangle — π and ν are coupled, the formula's parametrisation hides this.
-2. On the full-self-pledge boundary (π = ν), the elaborate quadratic construction collapses to `ν³`.
-3. For any pool below half-saturation, A is non-monotone in π — pledging beyond `π* = ν/(2(1−ν))` actively reduces the bonus.
-4. The intended MPO-splitting penalty (`−π²(1−ν)`) is achieved at the cost of these defects.
+1. The bonus has a **quadratic outer size penalty** $\nu^2$ that holds at every pledge ratio. Small pools are quadratically penalised for being small, before pledge enters the picture.
+2. At full self-pledge ($\pi = 1$), the inner factor degenerates and A collapses to $\nu^3$ — the worst-case manifestation of the size penalty, compounding with a residual $\nu$ from the inner factor.
+3. For any pool below half-saturation, A is non-monotone in $\pi$ — pledging beyond $\pi^* = 1/[2(1-\nu)]$ actively reduces the bonus.
+4. The intended MPO-splitting penalty (the $-\pi^2(1-\nu)$ term) is achieved at the cost of (1)–(3).
 
 These are pre-empirical defects: they hold regardless of mainnet data, regardless of what `a₀` is set to, regardless of CIP reforms acting on σ′. They are properties of the algebra. With this in hand, the next subsection puts numbers on what they mean for actual operators.
 
@@ -214,9 +210,9 @@ To reach the CIP-0050 compliance threshold (`p ≥ σ/L`), each operator must co
 
 Same act (1 % pledge ratio) — Alice earns **1 123× more bonus than Bob** for committing the same *fraction* of her pool. And Bob has just been asked to lock 20 000 ₳ ($5 000) of his own capital to earn 4.6 ₳/yr ($1.15) in bonus. *The yield on his pledge is 0.023 % vs 2.3 % passive — he loses ~100× by complying.*
 
-##### Scenario C — the maximum signal anyone can give (100 % self-pledge)
+##### Scenario C — the maximum signal anyone can give (100 % self-pledge, π = 1)
 
-The strongest possible commitment: every ADA in the pool is the operator's own. No MPO games, no delegator slack — pure skin-in-the-game. This sits exactly on the diagonal `π = ν` and triggers the cubic collapse from (ii).
+The strongest possible commitment: every ADA in the pool is the operator's own. No MPO games, no delegator slack — pure skin-in-the-game. This is the corner $\pi = 1$ and triggers the cubic collapse from (ii).
 
 | Operator | Pool σ | Pledge p (100 %) | Yearly bonus from A |
 |---|---:|---:|---:|
@@ -224,17 +220,17 @@ The strongest possible commitment: every ADA in the pool is the operator's own. 
 | Charles | 15 M | 15 M | **5 762 ₳/yr** |
 | Alice | 67 M | 67 M | **513 463 ₳/yr** |
 
-Even at the *maximum possible commitment*, Alice earns **37 595× more bonus than Bob** — because the cubic `ν³` shapes the diagonal, not the strength of the commitment signal.
+Even at the *maximum possible commitment*, Alice earns **37 595× more bonus than Bob** — because the cubic $\nu^3$ that emerges at $\pi = 1$ collapses the bonus on pool size, not on the strength of the commitment signal.
 
-Furthermore — and this is pathology (iv) made tangible — Bob is on the *wrong side* of the maximum. His optimal pledge is `π* = ν/(2(1-ν)) = 0.0153`, which is `p* ≈ 1 030 000 ₳` (about 51 % of his pool). At full self-pledge he earns 14 ₳/yr; at the optimal interior pledge he would earn ~17 ₳/yr — *2 % more bonus by withholding half his potential pledge*. The formula incentivises him to under-commit.
+Furthermore — and this is pathology (iv) made tangible — Bob is on the *wrong side* of the maximum. His optimal pledge ratio is $\pi^* = 1/[2(1-\nu)] = 1/(2 \cdot 0.9703) \approx 0.515$ (about 51 % of his pool, $p^* \approx 1.03$ M ADA). At full self-pledge he earns 14 ₳/yr; at the interior optimum he would earn ~122 ₳/yr — **8.7× more bonus by withholding half his potential pledge**. The formula explicitly incentivises him to *under-commit*.
 
-![The pledge bonus paradox — A(π, ν) at full self-pledge](figures/cip_levers_02_A_anatomy.png)
+![The pledge bonus paradox — A(ν, π) at full self-pledge](figures/cip_levers_02_A_anatomy.png)
 
 Panel (a) is Scenario C as a bar chart at log scale (the disparity is too large for linear axes). Panel (b) re-expresses the same disparity as a "bonus yield" — bonus per ADA of pledge per year — and overlays the passive-delegation yield (~2.3 %/yr from POL.O2.F2) the operator gives up by locking that pledge: Bob's pledge yields **0.0007 %/yr** in bonus, Charles's **0.038 %/yr**, Alice's **0.77 %/yr**. All three are below passive delegation, but Bob is by far the most penalised.
 
 #### 2.2.3 The cubic ν³ — visualised
 
-Combine the diagonal collapse from (ii) with the non-monotone pathology from (iv): the operator who gives the *strongest possible signal* (full self-pledge, π = ν) is paid by `ν³` — a destruction operator on sub-unit numbers.
+Combine the corner-collapse from (ii) with the non-monotone pathology from (iv): the operator who gives the *strongest possible signal* (full self-pledge, $\pi = 1$) is paid by $\nu^3$ — a destruction operator on sub-unit numbers, layered on top of the permanent $\nu^2$ size penalty.
 
 ![The cubic crush — why ν³ destroys small-pool pledge](figures/cip_levers_03_cubic_crush.png)
 
@@ -257,16 +253,16 @@ Compare to the **passive-delegation alternative**: if Bob delegates that 2 M ins
 
 Walking through the structural anatomy and the three scenarios reveals one cumulative argument:
 
-1. **The function is structurally awkward** before any data is plugged in (§2.2.1). Coupled inputs, non-monotonic in π for sub-half-saturation pools, and on the full self-pledge diagonal it collapses to a cubic.
+1. **The function is structurally awkward** before any data is plugged in (§2.2.1). Permanent quadratic size penalty $\nu^2$, non-monotonic in $\pi$ for sub-half-saturation pools, and at full self-pledge it collapses to a cubic.
 2. **Mainnet today (Scenario A).** The bonus is silent for everyone. POL.O2.F1 is the predictable equilibrium of a formula with a near-zero gradient in the operating region.
 3. **At CIP-0050 compliance (Scenario B).** The disparity across pool sizes becomes severe — Alice gets 1 123× more bonus than Bob for the same *relative* effort. Bob loses ~100× by complying.
-4. **At maximum commitment (Scenario C).** The disparity becomes catastrophic — 37 595× — and the cubic `ν³` is the algebraic reason.
+4. **At maximum commitment (Scenario C).** The disparity becomes catastrophic — 37 595× — and the cubic $\nu^3$ at the corner $\pi = 1$ is the algebraic reason.
 
-CIP-0050 and CIP-0037 modify the *enforcement* of pledge (clip σ′ if pledge is too low) but not the *pricing* of pledge inside A. After their reform, the relative bonus disparity across operator sizes remains identical; the non-monotone regime for `ν < 0.5` remains identical; the diagonal cubic collapse remains identical. They patch around A without touching it.
+CIP-0050 and CIP-0037 modify the *enforcement* of pledge (clip $\sigma'$ if pledge is too low) but not the *pricing* of pledge inside A. After their reform, the relative bonus disparity across operator sizes remains identical; the non-monotone regime for $\nu < 0.5$ remains identical; the cubic collapse at full self-pledge remains identical. They patch around A without touching it.
 
-A reform that touched A directly — replacing `π² (1 − ν)` with a kernel that doesn't cube small pools, or reparametrising A in terms of `(ν, ρ)` so the inputs are independent — would be the most structural way to repair the pledge signal at its source. **No CIP currently in scope proposes this.** This is the deepest critique of both candidates in this folder: they accept A as given and patch around it, when A is the load-bearing piece of the pledge incentive.
+A reform that touched A directly — replacing the kernel with one that doesn't impose the quadratic size penalty $\nu^2$ at every pledge ratio, or that doesn't cube small pools at full commitment — would be the most structural way to repair the pledge signal at its source. **No CIP currently in scope proposes this.** This is the deepest critique of both candidates in this folder: they accept A as given and patch around it, when A is the load-bearing piece of the pledge incentive.
 
-This reading extends the formal critique at [diagnostic / pools-distribution §2.3.5](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#235-reader-friendly-reward-function): *"the bonus term $\lambda_{\max}A(\pi,\nu)$ is non-linear — at maximum pledge it reduces to $\lambda_{\max}\nu^3$. The cubic dependence means the bonus is structurally suppressed at low saturation levels and favours fewer, larger pools."*
+This reading extends the formal critique at [diagnostic / pools-distribution §2.3.5](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#235-reader-friendly-reward-function): *"the bonus term $\lambda_{\text{pledge}}A(\nu, \pi)$ is non-linear and asymmetric in its two inputs. The outer factor $\nu^2$ imposes a quadratic size penalty that holds at every pledge ratio; at full self-pledge ($\pi = 1$) the inner factor degenerates and the bonus collapses to $\lambda_{\text{pledge}}\nu^3$ — the cubic that suppresses the bonus structurally for any pool below saturation."*
 
 ### 2.3 What this implies for the CIP candidates in this folder
 
@@ -274,7 +270,7 @@ The two CIPs in this folder accept the V1 reward formula as given and patch arou
 
 - **CIP-0050 and CIP-0037 are not strictly worse than raising `a₀`.** They achieve the same intent (make pledge bind) without the smooth-but-uniformly-painful penalty that an `a₀` raise imposes on every low-pledge pool. The cliff/floor shape is *different*, not necessarily *worse*.
 - **The "MPO fleet-splitting" property neither `a₀` nor an A reform would deliver as cleanly.** CIP-0050's revenue-neutral pool-splitting ($N \cdot L \cdot (P/N) = L \cdot P$) is an *algebraic identity* of its primitive that smooth levers cannot reproduce without coordination across pools. This is the strongest standalone argument for the CIP-0050 family.
-- **None of the three reform vectors (`a₀`, σ' clip, A redesign) are mutually exclusive — and the deepest one is missing from the conversation.** The CIP discussion treats `σ'` clipping as the only available primitive. A revision of A itself — replacing $\pi^2(1-\nu)$ with a kernel that doesn't cube small pools — would be the most structural way to repair the pledge signal at the right end of the formula. No CIP currently in scope proposes this.
+- **None of the three reform vectors (`a₀`, σ' clip, A redesign) are mutually exclusive — and the deepest one is missing from the conversation.** The CIP discussion treats `σ'` clipping as the only available primitive. A revision of A itself — removing the $\nu^2$ outer size penalty, or replacing the inner $\pi[1-\pi(1-\nu)]$ factor with a kernel that doesn't cube small pools at full commitment — would be the most structural way to repair the pledge signal at the right end of the formula. No CIP currently in scope proposes this.
 
 The remainder of this folder evaluates the two `σ'`-clipping candidates on their own terms. The framing above is a reading aid, not a verdict — it reframes "is CIP-0050/0037 the right reform?" as "is `σ'` clipping the right *layer* of intervention?".
 

@@ -231,7 +231,7 @@ def main():
 
     # Style Panel 2
     ax2.set_xlabel("Pool rank (by stake, descending)", fontsize=10, color=TEXT_WHITE)
-    ax2.set_ylabel("Envelope E(π,ν) — % of P_max", fontsize=10, color=TEXT_WHITE)
+    ax2.set_ylabel("Envelope E(ν,π) — % of P_max", fontsize=10, color=TEXT_WHITE)
     ax2.set_xlim(0, min(len(pools_sorted), 1500))
     ax2.set_ylim(0, 110)
 

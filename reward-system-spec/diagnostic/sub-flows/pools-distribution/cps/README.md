@@ -73,7 +73,7 @@ The ~17B ADA outside delegation includes exchange-held ADA, governance-inactive 
 
 The SL-D1 reward curve fails at all three levels of the game:
 
-**The endgame eliminates the delegator entirely.** The reward function decomposes into a size fraction ($\lambda_{\min} \approx 76.9\%$) and a pledge fraction ($\lambda_{\max} \approx 23.1\%$). The formula's maximum ($P_{\max}$) is reached when $\pi = 1$ and $\nu = 1$: the operator pledges the full saturation amount *and* the pool is fully saturated.
+**The endgame eliminates the delegator entirely.** The reward function decomposes into a size fraction ($\lambda_{\text{size}} \approx 76.9\%$) and a pledge fraction ($\lambda_{\text{pledge}} \approx 23.1\%$). The formula's maximum ($P_{\max}$) is reached when $\pi = 1$ and $\nu = 1$: the operator pledges the full saturation amount *and* the pool is fully saturated.
 
 But since pledge counts as stake, an operator who pledges $z_0$ (currently **77M ADA**) fills the entire pool with their own capital. **There is no room for delegators.** The "dream" the reward curve defines is a pool with no community participation — a private operation where the operator is both the sole funder and the sole beneficiary.
 
@@ -81,7 +81,7 @@ But since pledge counts as stake, an operator who pledges $z_0$ (currently **77M
 
 This means the reward curve's ideal state **contradicts the protocol's security model**. The mechanism designed to produce 500 pools anchored by community trust instead defines an optimum of **500 private pools with no delegator oversight**.
 
-**The endgame is economically irrational.** Reaching $P_{\max}$ requires **77M ADA (~30M USD)** of personal capital. The incremental reward is ~**7.2K ADA/epoch** ($\lambda_{\max} \cdot P_{\max}$), a yield of ~**0.68%/yr**.
+**The endgame is economically irrational.** Reaching $P_{\max}$ requires **77M ADA (~30M USD)** of personal capital. The incremental reward is ~**7.2K ADA/epoch** ($\lambda_{\text{pledge}} \cdot P_{\max}$), a yield of ~**0.68%/yr**.
 
 The same 77M ADA passively delegated would earn **~2.3%/yr** — more than three times the return, with zero operational burden.
 

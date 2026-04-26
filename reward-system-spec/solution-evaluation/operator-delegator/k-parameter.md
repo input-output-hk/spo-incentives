@@ -43,9 +43,9 @@ CIP / lever evaluations use a three-level taxonomy mirroring the diagnostic's `S
 |---|---|---|---|
 | **k-lever.S1** | | **A standalone `k`-raise compresses the top of the distribution and amplifies the pledge bonus for self-pledged pools; hollow pools below saturation are mechanically unchanged** | §3.1 |
 | k-lever.S1.F1 | [R] | Above the new $z_0 = 1/k$, pool reward caps at $P_{\max} = R/k$. At $k: 500 \to 1000$, Large-healthy / Near-saturation / Saturated / Oversaturated pools converge to the same ceiling of **~11 942 ₳/ep** (–50 % vs today) | §2.3 pool-reward table, §3.1 |
-| k-lever.S1.F2 | [D] | For self-pledged pools below the new saturation, the pledge bonus $\lambda_{\max} A(\pi, \nu)$ scales as $k^2 \nu_{\text{old}}^3 \cdot R/k$ → **linear in k**. A fully self-pledged 15 M pool sees its bonus grow from +28 ₳/ep (k=500) to +191 ₳/ep (k=1000) | §2.3 pledge-amplification sub-table, §3.1 |
-| k-lever.S1.F3 | [B] | Hollow pools below saturation: $\hat f' = R \cdot \lambda_{\min} \cdot \sigma_{\text{rel}}$ — **k-independent**. Dormant, Sub-production, Sub-viable, Healthy tiers see zero mechanical change in pool reward, operator revenue, or delegator ROS | §2.3 pool-reward table, §3.1 |
-| k-lever.S1.F4 | [B] | **Of the three structural thresholds in the nine-tier taxonomy, `k` moves only saturation.** Production threshold $\text{stake}_n = n \cdot S_{\text{active}} / (L \cdot f)$ (Praos slot mechanics, $L$ and $f$ constant) and viability threshold $c / (R \lambda_{\min} / \text{CircSupply})$ (hollow-pool break-even) contain no `k`. At mainnet today: 3-block threshold ≈ 2.92 M ₳, break-even ≈ 0.54 M ₳ (minPoolCost=170) — both k-invariant. A k-raise does not rescue any pool at the production or viability boundary | §2.2 "What `k` does not move", §3.1 |
+| k-lever.S1.F2 | [D] | For self-pledged pools below the new saturation, the pledge bonus $\lambda_{\text{pledge}} A(\nu, \pi)$ scales as $k^2 \nu_{\text{old}}^3 \cdot R/k$ → **linear in k**. A fully self-pledged 15 M pool sees its bonus grow from +28 ₳/ep (k=500) to +191 ₳/ep (k=1000) | §2.3 pledge-amplification sub-table, §3.1 |
+| k-lever.S1.F3 | [B] | Hollow pools below saturation: $\hat f' = R \cdot \lambda_{\text{size}} \cdot \sigma_{\text{rel}}$ — **k-independent**. Dormant, Sub-production, Sub-viable, Healthy tiers see zero mechanical change in pool reward, operator revenue, or delegator ROS | §2.3 pool-reward table, §3.1 |
+| k-lever.S1.F4 | [B] | **Of the three structural thresholds in the nine-tier taxonomy, `k` moves only saturation.** Production threshold $\text{stake}_n = n \cdot S_{\text{active}} / (L \cdot f)$ (Praos slot mechanics, $L$ and $f$ constant) and viability threshold $c / (R \lambda_{\text{size}} / \text{CircSupply})$ (hollow-pool break-even) contain no `k`. At mainnet today: 3-block threshold ≈ 2.92 M ₳, break-even ≈ 0.54 M ₳ (minPoolCost=170) — both k-invariant. A k-raise does not rescue any pool at the production or viability boundary | §2.2 "What `k` does not move", §3.1 |
 | **k-lever.S2** | | **A fine tool for a narrow delegator segment, and insufficient on the operator side because the reward formula is unchanged** | §3.2 |
 | k-lever.S2.F1 | [R] | **The ROS-focused delegator segment is a minority of productive stake.** Of 21.57 B ₳ productive stake: **4.55 B custodial** (21.1 %, funds not discretionary) + 17.02 B retail. Within retail, CEN.O4.F2: **42 %** of delegations are loyal (not moved in 2.7+ years) → effectively ROS-inert. Of the 21 % volatile delegations, CEN.O6.F1: **50.5 %** of switches land on yield-identical pools; non-identical moves show visibility asymmetry, not yield (CEN.O6.F3). Genuinely ROS-responsive segment ≈ **8 % of productive stake at best** — single-digit channel, not a network-level redistribution mechanism | §3.2 |
 | k-lever.S2.F2 | [R] | **Changing `k` without revising the reward formula leaves the non-pledge equilibrium intact.** Operators don't pledge because pledge yield is structurally dominated by passive-delegation yield (POL.O2.F2: 0.68 %/yr vs 2.3 %/yr). POL.O2.F1: 78 % of stake at pledge < 1 %. POL.O4.F3: 41/48 capital-sufficient MPOs forfeit the bonus. A k-raise amplifies the bonus for the narrow band of fully self-pledged pools below the new $z_0$, but keeps $A(0, \nu) = 0$ (hollow pools untouched) and leaves the surrounding formula — which is what produces the dominance relation — unchanged. **Insufficient on the operator side**: changing `k` cannot fix a non-pledge equilibrium produced by the formula around `k` | §3.2 |
@@ -110,7 +110,7 @@ The mechanical content of a k-raise under the current formula:
 | Step | Mechanical support |
 | --- | --- |
 | 1. More slots | **Direct** — pool-count target rises by construction |
-| 2. Amplified pledge bonus | **Partial** — the bonus is amplified for fully self-pledged pools below the new $z_0$ (linear in `k`); hollow pools see *zero* change because $A(\pi = 0, \nu) = 0$; pools above the new $z_0$ see compression of the ceiling $P_{\max}$ |
+| 2. Amplified pledge bonus | **Partial** — the bonus is amplified for fully self-pledged pools below the new $z_0$ (linear in `k`); hollow pools see *zero* change because $A(\nu, 0) = 0$; pools above the new $z_0$ see compression of the ceiling $P_{\max}$ |
 | 3. Operators self-pledge more | **Not supported** — POL.O2.F2: pledge yield (0.68 %/yr) is structurally below passive-delegation yield (2.3 %/yr). POL.O4.F3: 41 of 48 capital-sufficient MPOs already forfeit the bonus. Amplifying a dominated reward does not flip the opportunity cost |
 | 4. Delegators migrate on yield signal | **Not supported** — OPE.O7.F1/F2: delegation is not sticky (delegators do move) but the observed flow does not clearly track ROS. And the only pools at the "high pledge + large size" intersection (Cardano Foundation 93.9 %, Chuck/Bux 81.1 %, Liqwid 73.9 %) are **private / treasury-affiliated**, not delegation-capturing — there is no observed destination population for the migration the mechanism assumes |
 
@@ -126,13 +126,13 @@ This section imports the simplified reward formula from [pools-distribution §2.
 
 **Pool reward** (hollow or pledged, below or above saturation):
 
-$$\hat f'(\pi, \nu, \bar p) = \underbrace{\bar p}_{\text{performance}} \cdot \underbrace{P_{\max}}_{\text{ceiling}} \cdot \underbrace{E(\pi, \nu)}_{\text{envelope}}$$
+$$\hat f'(\nu, \pi, \bar p) = \underbrace{\bar p}_{\text{performance}} \cdot \underbrace{P_{\max}}_{\text{ceiling}} \cdot \underbrace{E(\nu, \pi)}_{\text{envelope}}$$
 
 with
 
-$$P_{\max} = \frac{R}{k}, \qquad E(\pi, \nu) = \lambda_{\min}\,\nu + \lambda_{\max}\,A(\pi, \nu), \qquad A(\pi, \nu) = \pi \nu - \pi^2 (1 - \nu)$$
+$$P_{\max} = \frac{R}{k}, \qquad E(\nu, \pi) = \lambda_{\text{size}}\,\nu + \lambda_{\text{pledge}}\,A(\nu, \pi), \qquad A(\nu, \pi) = \nu^2 \cdot \pi \cdot \bigl[1 - \pi(1-\nu)\bigr]$$
 
-Normalised coordinates $\pi = s / z_0$ (pledge ratio) and $\nu = \sigma / z_0$ (stake ratio), with $z_0 = 1/k$. On mainnet at $a_0 = 0.3$: $\lambda_{\min} = 1/(1+a_0) \approx 76.9\,\%$ and $\lambda_{\max} = a_0/(1+a_0) \approx 23.1\,\%$.
+Normalised coordinates $\nu = \sigma / z_0$ (stake saturation level) and $\pi = s / \sigma$ (within-pool pledge ratio), with $z_0 = 1/k$. On mainnet at $a_0 = 0.3$: $\lambda_{\text{size}} = 1/(1+a_0) \approx 76.9\,\%$ and $\lambda_{\text{pledge}} = a_0/(1+a_0) \approx 23.1\,\%$.
 
 **Operator / member split** (case $\hat f' > c$, typical productive pool):
 
@@ -151,26 +151,26 @@ A standalone `k`-raise modifies only the scalar $k$. The formulas above are unch
 | $z_0 = 1/k$ (relative) | 0.2 % | 0.133 % | 0.1 % | Halved at $k=1000$ |
 | $z_0$ absolute (×Supply ≈ 38.49 B ₳) | 77 M ₳ | 51.3 M ₳ | 38.5 M ₳ | Halved at $k=1000$ |
 | $P_{\max} = R/k$ (at $R \approx 15.53$ M ₳) | 31 060 ₳/ep | 20 707 ₳/ep | 15 530 ₳/ep | Halved at $k=1000$ |
-| Saturated hollow reward ($P_{\max} \cdot \lambda_{\min}$) | ≈ 23 885 ₳/ep | ≈ 15 923 ₳/ep | ≈ 11 942 ₳/ep | Halved at $k=1000$ |
+| Saturated hollow reward ($P_{\max} \cdot \lambda_{\text{size}}$) | ≈ 23 885 ₳/ep | ≈ 15 923 ₳/ep | ≈ 11 942 ₳/ep | Halved at $k=1000$ |
 
 **What `k` does NOT move.**
 
-- The envelope shape $E(\pi, \nu)$. $\lambda_{\min}$ and $\lambda_{\max}$ are fixed functions of $a_0$, which is not touched.
+- The envelope shape $E(\nu, \pi)$. $\lambda_{\text{size}}$ and $\lambda_{\text{pledge}}$ are fixed functions of $a_0$, which is not touched.
 - The operator/member split formula. `minPoolCost` and `minPoolRate` / `poolRate` are independent parameters.
 - **Per-ADA gross reward for a hollow pool below saturation.** Expanding $\hat f'$ for $\pi = 0, \nu < 1$:
 
-$$\hat f' = \bar p \cdot \frac{R}{k} \cdot \lambda_{\min} \cdot \nu = \bar p \cdot \frac{R}{k} \cdot \lambda_{\min} \cdot \frac{\sigma_{\text{abs}} \cdot k}{\text{CircSupply}} = \bar p \cdot R \cdot \lambda_{\min} \cdot \frac{\sigma_{\text{abs}}}{\text{CircSupply}}$$
+$$\hat f' = \bar p \cdot \frac{R}{k} \cdot \lambda_{\text{size}} \cdot \nu = \bar p \cdot \frac{R}{k} \cdot \lambda_{\text{size}} \cdot \frac{\sigma_{\text{abs}} \cdot k}{\text{CircSupply}} = \bar p \cdot R \cdot \lambda_{\text{size}} \cdot \frac{\sigma_{\text{abs}}}{\text{CircSupply}}$$
 
 **The `k` cancels.** For any hollow pool staying below saturation at the new `k`, the absolute reward is invariant. This is the key mechanical result that refutes the "k-raise pushes the viability line up" framing.
 
 - **The production threshold.** From [pools-distribution §4.1.2.1](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#4121-block-production-threshold), the stake needed to produce $n$ blocks/epoch reliably is $\text{stake}_n \approx n \cdot S_{\text{active}} / (L \cdot f)$, where $L = 432\,000$ slots/epoch and $f = 0.05$ are fixed protocol constants. **No `k` in the formula.** The ~3 M ₳ "3-block threshold" and ~1 M ₳ "1-block threshold" are functions of Praos slot mechanics and participation ($S_{\text{active}}$) — not of `k`. A k-raise does not shift them.
-- **The viability threshold.** From [§4.1.2.2](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#4122-viability-threshold), break-even stake = Fixed cost / (Reward per ADA per epoch) = $c / (R \lambda_{\min} / \text{CircSupply})$. **No `k` in the formula** for hollow pools. At today's `minPoolCost = 170`, break-even ≈ 0.54 M ₳; at `minPoolCost = 340`, ≈ 1.09 M ₳. Neither number responds to `k`.
+- **The viability threshold.** From [§4.1.2.2](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#4122-viability-threshold), break-even stake = Fixed cost / (Reward per ADA per epoch) = $c / (R \lambda_{\text{size}} / \text{CircSupply})$. **No `k` in the formula** for hollow pools. At today's `minPoolCost = 170`, break-even ≈ 0.54 M ₳; at `minPoolCost = 340`, ≈ 1.09 M ₳. Neither number responds to `k`.
 
 **Structural consequence.** Of the three thresholds that structure the nine-tier taxonomy (production, viability, saturation), **`k` acts on only one — saturation.** The sub-production tier (< ~1 M ₳) stays where it is under any k-raise; the sub-viable tier (< ~3 M ₳ or more precisely < 0.54 M ₳ for break-even at minPoolCost=170) stays where it is; only the upper saturation line $z_0$ moves. A k-raise is strictly an upper-tail reparameterisation — it does not rescue any pool at the production or viability boundary.
 
-> **Finding k-lever.S1.F4 [B] — Of the three structural thresholds in the nine-tier taxonomy, `k` moves only saturation.** Production threshold ($n \cdot S_{\text{active}} / (L \cdot f)$, Praos slot mechanics with $L$ and $f$ constant) and viability threshold ($c / (R \lambda_{\min} / \text{CircSupply})$, hollow-pool break-even) contain no `k` — they are functions of participation, the reward pot, and fixed protocol constants. At mainnet today: 3-block threshold ≈ 2.92 M ₳, hollow-pool break-even ≈ 0.54 M ₳ (minPoolCost=170). Both are k-invariant. A k-raise is strictly an upper-tail reparameterisation — it **does not rescue any pool at the production or viability boundary**, regardless of how much $z_0$ shrinks. This strengthens S1.F3 (reward k-invariance) at the structural level: not only do rewards of hollow sub-saturation pools not change, the very boundaries that define "sub-production" and "sub-viable" are k-invariant as well.
+> **Finding k-lever.S1.F4 [B] — Of the three structural thresholds in the nine-tier taxonomy, `k` moves only saturation.** Production threshold ($n \cdot S_{\text{active}} / (L \cdot f)$, Praos slot mechanics with $L$ and $f$ constant) and viability threshold ($c / (R \lambda_{\text{size}} / \text{CircSupply})$, hollow-pool break-even) contain no `k` — they are functions of participation, the reward pot, and fixed protocol constants. At mainnet today: 3-block threshold ≈ 2.92 M ₳, hollow-pool break-even ≈ 0.54 M ₳ (minPoolCost=170). Both are k-invariant. A k-raise is strictly an upper-tail reparameterisation — it **does not rescue any pool at the production or viability boundary**, regardless of how much $z_0$ shrinks. This strengthens S1.F3 (reward k-invariance) at the structural level: not only do rewards of hollow sub-saturation pools not change, the very boundaries that define "sub-production" and "sub-viable" are k-invariant as well.
 
-> **Finding k-lever.S1.F3 [B] — Hollow pools below saturation see zero mechanical change under a `k`-raise.** The formula collapses to $\hat f' = \bar p \cdot R \cdot \lambda_{\min} \cdot \sigma_{\text{abs}} / \text{CircSupply}$ — the scalar `k` disappears. Consequently, operator revenue (capped at `minPoolCost`) and delegator ROS are both invariant for the entire Sub-viable, Sub-production, and Dormant populations. The `k`-raise's rationale that it "helps small pools" has no mechanical foundation in the formula; any positive effect must come through a behavioural channel, not the reward mechanism.
+> **Finding k-lever.S1.F3 [B] — Hollow pools below saturation see zero mechanical change under a `k`-raise.** The formula collapses to $\hat f' = \bar p \cdot R \cdot \lambda_{\text{size}} \cdot \sigma_{\text{abs}} / \text{CircSupply}$ — the scalar `k` disappears. Consequently, operator revenue (capped at `minPoolCost`) and delegator ROS are both invariant for the entire Sub-viable, Sub-production, and Dormant populations. The `k`-raise's rationale that it "helps small pools" has no mechanical foundation in the formula; any positive effect must come through a behavioural channel, not the reward mechanism.
 
 ### 2.3 Updated calibration at current parameters (epoch ~623, 2026/04)
 
@@ -178,7 +178,7 @@ All calibrations use today's parameters: $R \approx 15.53$ M ₳/epoch (PoolsPot
 
 #### 2.3.1 Pool reward across nine tiers (hollow pool, ₳/epoch)
 
-The ceiling $P_{\max} = R/k$ shrinks with `k`; the envelope $E(0, \nu) = \lambda_{\min} \nu$ clips at $\nu = 1$ (saturation). Rewards below the new saturation are k-invariant; rewards at or above it are pinned to $P_{\max} \cdot \lambda_{\min}$.
+The ceiling $P_{\max} = R/k$ shrinks with `k`; the envelope $E(0, \nu) = \lambda_{\text{size}} \nu$ clips at $\nu = 1$ (saturation). Rewards below the new saturation are k-invariant; rewards at or above it are pinned to $P_{\max} \cdot \lambda_{\text{size}}$.
 
 | Canonical tier | Rep. σ | $k = 500$ (current) | $k = 750$ | $k = 1000$ | Change |
 |---|---:|---:|---:|---:|---|
@@ -228,13 +228,13 @@ Delegator net ROS = $(\hat f' - c)/\sigma \times 73$ under hollow / full-delegat
 
 **Reading.** The k-raise is a **delegator-side regression at the top** and a **non-event at the bottom**. A delegator at a Saturated pool sees ROS halve (2.26 % → 1.12 %) across $k: 500 \to 1000$; a delegator at a Sub-viable or Healthy pool sees no change at all. The instrument does not redirect ROS — it extinguishes it above the new $z_0$.
 
-#### 2.3.4 Pledge-amplification channel (self-pledged pools, bonus from $\lambda_{\max} A(\pi,\nu)$)
+#### 2.3.4 Pledge-amplification channel (self-pledged pools, bonus from $\lambda_{\text{pledge}} A(\nu, \pi)$)
 
-For pools with meaningful self-pledge, the envelope's second term contributes an additional reward on top of the hollow base. Under full self-pledge ($\pi = \nu$), $A(\nu, \nu) = \nu^3$. Since $\nu$ doubles when $k$ doubles (for fixed $\sigma_{\text{abs}}$) and $P_{\max}$ halves, the absolute bonus scales **linearly in `k`**.
+For pools with meaningful self-pledge, the envelope's second term contributes an additional reward on top of the hollow base. Under full self-pledge ($\pi = 1$), $A(\nu, 1) = \nu^3$. Since $\nu$ doubles when $k$ doubles (for fixed $\sigma_{\text{abs}}$) and $P_{\max}$ halves, the absolute bonus scales **linearly in `k`**.
 
 For a fully self-pledged pool at σ = 15 M ₳ (Healthy tier):
 
-| $k$ | $\nu = \sigma / z_0$ | $A(\nu,\nu) = \nu^3$ | Bonus = $\lambda_{\max} \cdot A \cdot P_{\max}$ | Total $\hat f'$ (hollow + bonus) |
+| $k$ | $\nu = \sigma / z_0$ | $A(\nu, 1) = \nu^3$ | Bonus = $\lambda_{\text{pledge}} \cdot A \cdot P_{\max}$ | Total $\hat f'$ (hollow + bonus) |
 |---:|---:|---:|---:|---:|
 | 500 | 0.195 | 0.00739 | **28.3 ₳/ep** | 4 675 + 28 = 4 703 |
 | 750 | 0.292 | 0.0250 | **108 ₳/ep** | 4 675 + 108 = 4 783 |
@@ -268,8 +268,8 @@ Three structural limits — one per synthesis finding, each tied to the mechanic
 **What the k-raise mechanically does** is the sum of three effects, already quantified in §2.3:
 
 1. **[R] Top-tail compression.** Above the new $z_0$, the ceiling $P_{\max}$ shrinks with $k$. Every pool with $\sigma > z_0^{\text{new}}$ has its pool reward re-capped. At $k: 500 \to 1000$, Saturated and Oversaturated pools lose ≈ 50 %.
-2. **[D] Pledge-bonus amplification.** For self-pledged pools below the new $z_0$, the bonus $\lambda_{\max} A(\pi, \nu)$ scales linearly in `k` in absolute terms. The narrow band of pools that capture this is §3.2's subject.
-3. **[B] Bottom invariance.** Hollow pools below saturation: no change. The "k-raise helps small pools" framing has no mechanical basis — the formula shows $\hat f' = R \lambda_{\min} \sigma_{\text{abs}} / \text{CircSupply}$, with the `k` exactly cancelling.
+2. **[D] Pledge-bonus amplification.** For self-pledged pools below the new $z_0$, the bonus $\lambda_{\text{pledge}} A(\nu, \pi)$ scales linearly in `k` in absolute terms. The narrow band of pools that capture this is §3.2's subject.
+3. **[B] Bottom invariance.** Hollow pools below saturation: no change. The "k-raise helps small pools" framing has no mechanical basis — the formula shows $\hat f' = R \lambda_{\text{size}} \sigma_{\text{abs}} / \text{CircSupply}$, with the `k` exactly cancelling.
 
 **The arithmetic invariance at the bottom corrects a common misreading.** Earlier iterations of this evaluation, and several governance discussions, conclude that a k-raise "pushes the viability line up" or "makes sub-threshold pools worse". This is not what the formula does when only `k` changes. What pushes the viability line up is a change in the fee structure (e.g. `minPoolCost` increase) or the reward pot (e.g. reserve depletion lowering $R$) — not a change in `k`. The k-raise does reshape the upper tail (POL.O3.F6), but the diagnostic's §3.1 population sits in the lower tail — untouched.
 
@@ -292,7 +292,7 @@ Taken at face value, this is a **ROS-based redistribution claim**: delegators ch
 >
 > The ROS-responsive segment that the k-raise redistribution mechanism actually targets is **at most the subset of the retail-volatile tier whose switches are not yield-identical** — under the 50.5 %-yield-identical figure of CEN.O6.F1, that is ≈ 0.50 × 17 % ≈ **8 % of productive stake at best**, with a further discount for the visibility asymmetry. CIP-0082's k-raise can in principle move stake among that segment — but a single-digit-percent redistribution channel is not a network-level concentration reform.
 
-> **Finding k-lever.S2.F2 [R] — Changing `k` without revising the reward formula leaves the non-pledge equilibrium intact, so the operator side is insufficient on its own.** Operators do not pledge today for a well-understood reason: POL.O2.F2 shows pledge yield is structurally dominated by passive-delegation yield (0.68 %/yr vs ~2.3 %/yr). POL.O2.F1: 78 % of staked ADA sits in pools with pledge ratio < 1 %. POL.O4.F3: 41 of 48 capital-sufficient MPOs forfeit the bonus (~40.2 M ₳/yr) rather than lock capital. A k-raise amplifies the pledge-bonus term $\lambda_{\max} A(\pi, \nu)$ by roughly linear-in-`k` for fully self-pledged pools below the new $z_0$, but keeps $A(0, \nu) = 0$ — hollow and near-hollow pools (the overwhelming majority of productive stake) are untouched — and, more importantly, leaves the surrounding formula that makes pledge a dominated strategy *unchanged*. Changing `k` without changing the formula that produces the dominance relationship does not flip the opportunity-cost calculus. The non-pledge equilibrium persists; the amplified bonus is a larger prize for a behaviour operators still have no reason to adopt. **The proposal is insufficient on the operator side.** The instruments that would genuinely change the equilibrium (CIP-0050's $\sigma'$ clipping, CIP-0037's new saturation curve) change the formula itself — and sit out of scope for a standalone k-raise.
+> **Finding k-lever.S2.F2 [R] — Changing `k` without revising the reward formula leaves the non-pledge equilibrium intact, so the operator side is insufficient on its own.** Operators do not pledge today for a well-understood reason: POL.O2.F2 shows pledge yield is structurally dominated by passive-delegation yield (0.68 %/yr vs ~2.3 %/yr). POL.O2.F1: 78 % of staked ADA sits in pools with pledge ratio < 1 %. POL.O4.F3: 41 of 48 capital-sufficient MPOs forfeit the bonus (~40.2 M ₳/yr) rather than lock capital. A k-raise amplifies the pledge-bonus term $\lambda_{\text{pledge}} A(\nu, \pi)$ by roughly linear-in-`k` for fully self-pledged pools below the new $z_0$, but keeps $A(\nu, 0) = 0$ — hollow and near-hollow pools (the overwhelming majority of productive stake) are untouched — and, more importantly, leaves the surrounding formula that makes pledge a dominated strategy *unchanged*. Changing `k` without changing the formula that produces the dominance relationship does not flip the opportunity-cost calculus. The non-pledge equilibrium persists; the amplified bonus is a larger prize for a behaviour operators still have no reason to adopt. **The proposal is insufficient on the operator side.** The instruments that would genuinely change the equilibrium (CIP-0050's $\sigma'$ clipping, CIP-0037's new saturation curve) change the formula itself — and sit out of scope for a standalone k-raise.
 
 **Composite reading.** The CIP-0082 k-raise is not a wrong instrument in the abstract — it is a *narrow* instrument meeting a *narrow* audience on the demand side, and an *insufficient* instrument on the supply side because it leaves the formula that explains the non-pledge equilibrium unchanged. On the demand side it reaches only the ROS-responsive fraction of the retail-volatile segment — single-digit-percent of productive stake. On the supply side it amplifies a reward that is dominated by passive delegation yield *under the same formula that made pledge dominated in the first place*. The redistribution the CIP advertises would require either (a) a much larger ROS-responsive delegator market than the census documents, or (b) a reward-formula change that flips the pledge-vs-delegation opportunity cost. A standalone k-raise delivers neither.
 

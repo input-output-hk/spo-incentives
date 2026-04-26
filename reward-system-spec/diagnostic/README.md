@@ -386,7 +386,7 @@ This ratio defines the entity's **posture** — the answer to the question *"who
 
 The spectrum is continuous. At one extreme, the operator funds the entire pool with personal capital — **no delegator plays any role**. At the other, the operator contributes nothing but infrastructure and a registration certificate — **every ADA in the pool belongs to someone else**. Between these poles lies every possible split.
 
-The reward formula is sensitive to this ratio through the pledge bonus ($\lambda_{\max} \cdot A(\pi, \nu)$), which increases with the pledge fraction $\pi = \lambda / z_0$. In principle, the bonus should pull operators toward higher commitment. Whether it does so in practice — **with sufficient force to overcome the costs it imposes** — is the question the rest of this section examines.
+The reward formula is sensitive to this ratio through the pledge bonus ($\lambda_{\text{pledge}} \cdot A(\nu, \pi)$), which depends on the within-pool pledge ratio $\pi = s/\sigma$. In principle, the bonus should pull operators toward higher commitment. Whether it does so in practice — **with sufficient force to overcome the costs it imposes** — is the question the rest of this section examines.
 
 **Three archetypes** capture the essential strategic postures along this spectrum. They are not discrete options — real operators occupy every point on the continuum — but they define the poles and the centre in terms that map cleanly onto the security properties the protocol depends on.
 
@@ -676,12 +676,12 @@ The question that follows is **whether the formula actually provides this compen
 
 ##### 1.2.4.3.3 The reward structure weights size, not commitment
 
-The degree of freedom — the pledge/delegation ratio — is governed by a **single component** of the reward formula: the pledge bonus ($\lambda_{\max} \cdot A(\pi, \nu)$). Everything else in the pool's reward is sensitive to *size* ($\nu$), **not to *commitment* ($\pi$)**.
+The degree of freedom — the pledge/delegation ratio — is governed by a **single component** of the reward formula: the pledge bonus ($\lambda_{\text{pledge}} \cdot A(\nu, \pi)$). Everything else in the pool's reward is sensitive to *size* ($\nu$), **not to *commitment* ($\pi$)**.
 
 The **structural weight** tells the story:
 
-- The **size-only component** ($\lambda_{\min} \cdot \nu$, where $\lambda_{\min} \approx 76.9\%$ of $P_{\max}$) represents **~77% of the maximum reward**.
-- The **pledge component** ($\lambda_{\max} \cdot A(\pi, \nu)$, where $\lambda_{\max} \approx 23.1\%$) represents the remaining **~23%**.
+- The **size-only component** ($\lambda_{\text{size}} \cdot \nu$, where $\lambda_{\text{size}} \approx 76.9\%$ of $P_{\max}$) represents **~77% of the maximum reward**.
+- The **pledge component** ($\lambda_{\text{pledge}} \cdot A(\nu, \pi)$, where $\lambda_{\text{pledge}} \approx 23.1\%$) represents the remaining **~23%**.
 
 A pool that grows from **5M to 30M ₳** in total stake sees its per-epoch reward climb from **~2,000 to ~12,000 ADA** — **entirely from the size fraction, entirely insensitive to pledge**.
 
@@ -711,7 +711,7 @@ The following tables trace the pledge bonus across **four pool sizes** — from 
 
 At the production threshold, **the pledge bonus is undetectable**. Every strategy yields **2.27%/yr**. The best bonus — **Balanced**, at **+0.3 ADA per five-day epoch** — is buried so far below block-production variance that **no delegator, and no operator, can observe it**.
 
-Private is ***worse*** than Balanced and Healthy pledge: the concavity of $A(\pi, \nu)$ at low saturation means the bonus peaks around $r^* = 1/(2(1-\nu)) \approx 0.51$ and declines beyond. *Full commitment already destroys bonus value at this scale.*
+Private is ***worse*** than Balanced and Healthy pledge: the concavity of $A(\nu, \pi)$ at low saturation means the bonus peaks around $\pi^* = 1/(2(1-\nu)) \approx 0.51$ and declines beyond. *Full commitment already destroys bonus value at this scale.*
 
 **At 20M ₳ (ν ≈ 0.26):**
 
@@ -723,7 +723,7 @@ Private is ***worse*** than Balanced and Healthy pledge: the concavity of $A(\pi
 | **Healthy pledge** (80/20) | 16M | 4M | 6,366 ADA/ep | +158 ADA/ep | 2.32%/yr | 0.07%/yr | +2.5% |
 | **Private** (100/0) | 20M | 0 | 6,334 ADA/ep | +126 ADA/ep | 2.31%/yr | 0.05%/yr | +2.0% |
 
-The bonus becomes visible but reveals a **structural inversion**: **Private earns less bonus than Healthy pledge and Balanced.** The operator who pledges everything — the strategy the formula's global maximum endorses — earns **+126 ADA/ep**, while the one who pledges 80% earns **+158 ADA/ep**. Beyond the concavity peak ($r^* \approx 0.68$ at this saturation level), **each additional ADA pledged *reduces* the total bonus**.
+The bonus becomes visible but reveals a **structural inversion**: **Private earns less bonus than Healthy pledge and Balanced.** The operator who pledges everything — the strategy the formula's global maximum endorses — earns **+126 ADA/ep**, while the one who pledges 80% earns **+158 ADA/ep**. Beyond the concavity peak ($\pi^* \approx 0.68$ at this saturation level), **each additional ADA pledged *reduces* the total bonus**.
 
 *The formula punishes the very commitment its optimum was designed to incentivise.*
 
@@ -737,7 +737,7 @@ The bonus becomes visible but reveals a **structural inversion**: **Private earn
 | **Healthy pledge** (80/20) | 32M | 8M | 13,369 ADA/ep | +953 ADA/ep | 2.44%/yr | 0.22%/yr | +7.7% |
 | **Private** (100/0) | 40M | 0 | 13,422 ADA/ep | +1,006 ADA/ep | 2.45%/yr | 0.18%/yr | +8.1% |
 
-The concavity peak has moved past $r = 1$ at this saturation ($r^* \approx 1.04$), so Private no longer loses to Healthy pledge in absolute bonus. But the **bonus yield per pledged ADA continues to decline**: from **0.32%/yr** (Healthy delegation) to **0.18%/yr** (Private). The total yield spread from Hollow to Private is **0.18%/yr — for locking 40M ₳ as pledge**.
+The concavity peak has moved past $\pi = 1$ at this saturation ($\pi^* \approx 1.04$), so Private no longer loses to Healthy pledge in absolute bonus. But the **bonus yield per pledged ADA continues to decline**: from **0.32%/yr** (Healthy delegation) to **0.18%/yr** (Private). The total yield spread from Hollow to Private is **0.18%/yr — for locking 40M ₳ as pledge**.
 
 **At saturation (77M ₳, ν = 1) — the theoretical ceiling:**
 
@@ -749,7 +749,7 @@ The concavity peak has moved past $r = 1$ at this saturation ($r^* \approx 1.04$
 | **Healthy pledge** (80/20) | 61.6M | 15.4M | 29,634 ADA/ep | +5,736 ADA/ep | 2.81%/yr | 0.68%/yr | +24.0% |
 | **Private** (100/0) | 77M | 0 | 31,068 ADA/ep | +7,170 ADA/ep | 2.95%/yr | 0.68%/yr | +30.0% |
 
-Only at full saturation does $A(\pi, 1) = \pi$ become linear, eliminating the concavity penalty. The bonus yield stabilises at **0.68%/yr per pledged ADA regardless of allocation**. This is **the best case the mechanism offers** — and it requires **77M ₳ (~30M USD) of personal capital**. The total yield from Hollow to Private moves from **2.27% to 2.95%**: a **+0.68%/yr uplift for locking the entire saturation cap**.
+Only at full saturation does $A(1, \pi) = \pi$ become linear, eliminating the concavity penalty. The bonus yield stabilises at **0.68%/yr per pledged ADA regardless of allocation**. This is **the best case the mechanism offers** — and it requires **77M ₳ (~30M USD) of personal capital**. The total yield from Hollow to Private moves from **2.27% to 2.95%**: a **+0.68%/yr uplift for locking the entire saturation cap**.
 
 Reading the four tables together, the pattern is clear:
 
@@ -1129,7 +1129,7 @@ This makes the three-layer structure explicit: fixed cost first, operator margin
 Let the operator and member pool-share ratios be defined as:
 
 $$
-\rho^{\text{operator}}_{i} := \frac{\pi^{\text{pledged}}_{i}}{\sigma^{\text{totalStaked}}_{i}},
+\rho^{\text{operator}}_{i} := \frac{s^{\text{pledged}}_{i}}{\sigma^{\text{totalStaked}}_{i}},
 \qquad
 \rho^{\text{member}}_{i} := \frac{\sigma^{\text{poolMember}}_{\text{delegated},i}}{\sigma^{\text{totalStaked}}_{i}}
 $$

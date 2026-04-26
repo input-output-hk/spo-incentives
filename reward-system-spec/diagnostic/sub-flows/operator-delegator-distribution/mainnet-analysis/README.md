@@ -227,7 +227,7 @@ This makes the three-layer structure explicit: fixed cost first, operator margin
 Let the operator and member pool-share ratios be defined as:
 
 $$
-\rho^{\text{operator}}_{i} := \frac{\pi^{\text{pledged}}_{i}}{\sigma^{\text{totalStaked}}_{i}},
+\rho^{\text{operator}}_{i} := \frac{s^{\text{pledged}}_{i}}{\sigma^{\text{totalStaked}}_{i}},
 \qquad
 \rho^{\text{member}}_{i} := \frac{\sigma^{\text{poolMember}}_{\text{delegated},i}}{\sigma^{\text{totalStaked}}_{i}}
 $$

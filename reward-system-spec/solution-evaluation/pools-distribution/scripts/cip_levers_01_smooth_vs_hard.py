@@ -40,6 +40,12 @@ def A(pi, nu):
     return pi * nu - pi**2 * (1 - nu)
 
 def envelope(pi, nu, a0):
+    """Reward envelope E(ν, π) = λ_size·ν + λ_pledge·A(ν, π)
+    where the pledge ratio is taken as π_legacy/ν_legacy under the
+    transformation s = π·σ.  Here `pi` is supplied as p/z0 to keep the
+    bilinear original SL-D1 expression below; the script then reasons
+    in absolute pledge p, so labels are unaffected by the (ν, π=s/σ)
+    convention used in the published prose."""
     return (1.0/(1.0+a0)) * nu + (a0/(1.0+a0)) * A(pi, nu)
 
 p_ada = np.linspace(0, 600_000, 2000)

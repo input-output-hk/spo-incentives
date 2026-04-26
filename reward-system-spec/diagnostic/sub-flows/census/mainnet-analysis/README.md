@@ -1139,11 +1139,11 @@ The pools-distribution analysis (`pools-distribution/mainnet-analysis/`) decompo
 
 | Component | Share | Census root |
 |---|---|---|
-| Participation gap | 33.5% | = λ_min × (1 − staking_rate). Census staking rate at epoch 616: ~59.3%. With λ_min = 1/(1+a0) = 1/1.3 ≈ 0.769, gap = 0.769 × 0.407 ≈ 31.3%. The 33.5% figure uses the exact `ada_pots` supply rather than the rounded rate. |
-| Bonus budget unused | 22.5% | = λ_max − bonus_captured. λ_max = a0/(1+a0) = 0.3/1.3 ≈ 23.1%. The 22.5% means almost all the bonus budget goes uncaptured — pools collectively fail to meet pledge thresholds. |
+| Participation gap | 33.5% | = λ_size × (1 − staking_rate). Census staking rate at epoch 616: ~59.3%. With λ_size = 1/(1+a0) = 1/1.3 ≈ 0.769, gap = 0.769 × 0.407 ≈ 31.3%. The 33.5% figure uses the exact `ada_pots` supply rather than the rounded rate. |
+| Bonus budget unused | 22.5% | = λ_pledge − bonus_captured. λ_pledge = a0/(1+a0) = 0.3/1.3 ≈ 23.1%. The 22.5% means almost all the bonus budget goes uncaptured — pools collectively fail to meet pledge thresholds. |
 | Distributed | 43.7% | = pot − gap − bonus_unused − pledge_shortfall. This is what actually reaches delegators and operators. |
 
-The participation gap is a *direct function of the staking rate measured in this census*. Every percentage point the staking rate drops increases the gap by **~0.77 pp** (via the λ_min multiplier).
+The participation gap is a *direct function of the staking rate measured in this census*. Every percentage point the staking rate drops increases the gap by **~0.77 pp** (via the λ_size multiplier).
 
 **Epoch drift.** The distribution analysis uses epoch 616, this census goes to 623. The staking rate moved from **~59.3% (616)** to **59.0% (623)** — a **0.3 pp decline** over 7 epochs. The participation gap is therefore **slightly worse at 623** than the 33.5% reported at 616.
 

@@ -36,8 +36,8 @@ SUPPLY = 33_719_282_563
 K = 500
 ORIG_SAT = SUPPLY / K
 A0 = 0.3
-LAM_MIN = 1.0 / (1.0 + A0)
-LAM_MAX = A0 / (1.0 + A0)
+LAM_SIZE = 1.0 / (1.0 + A0)
+LAM_PLEDGE = A0 / (1.0 + A0)
 P_MAX_ADA_PER_EPOCH = 31_082          # calibrated from pool_envelope_detail.csv
 EPOCHS_PER_YEAR = 73
 
@@ -65,7 +65,7 @@ ax = ax_left
 names, sigmas, colors = zip(*operators)
 nus = np.array([s / ORIG_SAT for s in sigmas])
 A_vals = nus ** 3                              # A(ν, ν) = ν³ at full self-pledge
-bonus_per_ep = LAM_MAX * A_vals * P_MAX_ADA_PER_EPOCH
+bonus_per_ep = LAM_PLEDGE * A_vals * P_MAX_ADA_PER_EPOCH
 bonus_per_year = bonus_per_ep * EPOCHS_PER_YEAR
 
 # Compose richer x-axis labels including pool size + commitment level — keeps
@@ -111,10 +111,10 @@ sigma_axis = np.logspace(5, 8, 500)        # 100k → 100M ADA
 nu_axis = sigma_axis / ORIG_SAT
 
 # Bonus per ADA of pledge per year, at full self-pledge
-# yearly bonus = LAM_MAX · ν³ · P_MAX · 73
+# yearly bonus = LAM_PLEDGE · ν³ · P_MAX · 73
 # pledge = σ = ν · z0
-# yield = (LAM_MAX · ν³ · P_MAX · 73) / (ν · z0) = LAM_MAX · ν² · P_MAX · 73 / z0
-yield_per_ada_year = (LAM_MAX * nu_axis**2 * P_MAX_ADA_PER_EPOCH * EPOCHS_PER_YEAR) / ORIG_SAT
+# yield = (LAM_PLEDGE · ν³ · P_MAX · 73) / (ν · z0) = LAM_PLEDGE · ν² · P_MAX · 73 / z0
+yield_per_ada_year = (LAM_PLEDGE * nu_axis**2 * P_MAX_ADA_PER_EPOCH * EPOCHS_PER_YEAR) / ORIG_SAT
 # As a percentage yield per year
 yield_pct = yield_per_ada_year * 100        # ADA per ADA per year, ×100 for %
 
@@ -124,7 +124,7 @@ ax.plot(sigma_axis / 1e6, yield_pct, color=NEUTRAL, lw=2.6, zorder=5)
 op_yields = []
 for name, sigma, color in operators:
     nu = sigma / ORIG_SAT
-    y_pct = LAM_MAX * nu**2 * P_MAX_ADA_PER_EPOCH * EPOCHS_PER_YEAR / ORIG_SAT * 100
+    y_pct = LAM_PLEDGE * nu**2 * P_MAX_ADA_PER_EPOCH * EPOCHS_PER_YEAR / ORIG_SAT * 100
     op_yields.append(y_pct)
     ax.plot(sigma / 1e6, y_pct, 'o', markersize=10,
             markerfacecolor=color, markeredgecolor='black', markeredgewidth=0.8,
@@ -157,7 +157,7 @@ for spine in ('top', 'right'):
 
 # (Long explanation moved to figure footer)
 
-plt.suptitle('What A(π, ν) actually pays — the pledge bonus paradox  (full self-pledge case)',
+plt.suptitle('What A(ν, π) actually pays — the pledge bonus paradox  (full self-pledge, π = 1)',
              fontsize=13, fontweight='bold', y=0.97)
 
 # Footer explanation boxes — placed BELOW the panels

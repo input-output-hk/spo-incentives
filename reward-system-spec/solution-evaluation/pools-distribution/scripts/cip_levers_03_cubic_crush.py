@@ -39,7 +39,7 @@ SUPPLY = 33_719_282_563
 K = 500
 ORIG_SAT = SUPPLY / K
 A0 = 0.3
-LAM_MAX = A0 / (1.0 + A0)
+LAM_PLEDGE = A0 / (1.0 + A0)
 P_MAX = 31_082
 EPY = 73
 
@@ -160,7 +160,7 @@ kernels = [
     ('alt. scale-free\nA = 1  (max bonus)', 1.0, BLUE),
 ]
 labels, A_values, colors = zip(*kernels)
-bonuses = np.array([LAM_MAX * a * P_MAX * EPY for a in A_values])
+bonuses = np.array([LAM_PLEDGE * a * P_MAX * EPY for a in A_values])
 
 bars = ax.bar(labels, bonuses, color=colors, edgecolor='black', linewidth=0.8, width=0.62)
 
@@ -211,5 +211,5 @@ plt.savefig(out_path, dpi=150, bbox_inches='tight')
 print(f'Wrote {out_path}')
 print('---')
 for label, A_val, _ in kernels:
-    bonus = LAM_MAX * A_val * P_MAX * EPY
+    bonus = LAM_PLEDGE * A_val * P_MAX * EPY
     print(f'  {label.replace(chr(10), " "):45s}  bonus = {bonus:>15,.1f} ADA/yr')
