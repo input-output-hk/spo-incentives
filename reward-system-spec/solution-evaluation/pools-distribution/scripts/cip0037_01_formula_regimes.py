@@ -66,12 +66,15 @@ ax.text(880, ORIG_SAT / 1e6 + 1.8,
         f'ceiling  orig_sat = {ORIG_SAT/1e6:.2f} M',
         ha='right', va='bottom', fontsize=10, color='#1e6b1e', fontweight='bold')
 
-# Regime labels at the top
-ax.text(P_FLOOR_EXIT / 2 / 1000, 75, 'FLOOR',
+# Regime labels — placed at distinct y-levels so the formula box (top-left)
+# never overlaps them. FLOOR in the lower-left band (above floor line, below
+# slope crossing), SLOPE rides along the slope, CEILING at the top of its band.
+ax.text(P_FLOOR_EXIT / 2 / 1000, 6.5, 'FLOOR',
         ha='center', va='center', fontsize=11, fontweight='bold', color=RED,
         bbox=dict(facecolor='white', edgecolor=RED, pad=4, boxstyle='round,pad=0.3'))
-ax.text((P_FLOOR_EXIT + P_CEILING) / 2 / 1000, 75, 'SLOPE  sat = ℓ · p',
+ax.text(360, 32, 'SLOPE  sat = ℓ · p',
         ha='center', va='center', fontsize=11, fontweight='bold', color=DAWN,
+        rotation=42,
         bbox=dict(facecolor='white', edgecolor=DAWN, pad=4, boxstyle='round,pad=0.3'))
 ax.text((P_CEILING + 900_000) / 2 / 1000, 75, 'CEILING',
         ha='center', va='center', fontsize=11, fontweight='bold', color='#1e6b1e',
@@ -100,16 +103,17 @@ for px, py in cip_points:
     ax.plot(px / 1000, py / 1e6, 'o', markersize=6,
             markerfacecolor=BLUE, markeredgecolor='black', markeredgewidth=0.6, zorder=6)
 
-# Legend box with equations
+# Legend box with equations — bottom-right corner, in the empty area
+# below the ceiling-region curve. Free of all regime labels and curve elements.
 eq_box = (
     'CIP-0037 formula (simplified):\n'
     '  sat(p) = clamp(ℓ · p,  e · orig_sat,  orig_sat)\n'
     'Reference: e = 0.2,  ℓ = 125,  k = 500\n'
     'Blue dots: CIP-0037 §Specification example'
 )
-ax.text(0.02, 0.96, eq_box,
+ax.text(0.98, 0.04, eq_box,
         transform=ax.transAxes,
-        ha='left', va='top', fontsize=9.5, fontweight='normal',
+        ha='right', va='bottom', fontsize=9.5, fontweight='normal',
         bbox=dict(facecolor='#f7f7f7', edgecolor=NEUTRAL, pad=6, boxstyle='round,pad=0.4'))
 
 ax.set_xlabel('Pool pledge  p  (k ADA)', fontsize=11)
