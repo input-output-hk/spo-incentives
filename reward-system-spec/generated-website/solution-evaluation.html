@@ -20,7 +20,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777295517">
+<link rel="stylesheet" href="assets/site.css?v=1777296788">
 
 
 </head>
@@ -62,7 +62,7 @@ window.MathJax = {
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
     <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
-      <span class="nav-dd-ref-title">Layer synthesis</span>
+      <span class="nav-dd-ref-title">CIP evaluation synthesis</span>
       <span class="nav-dd-ref-cite">Two stake-cap shapes, same intent<span class="nav-dd-ref-stage">Index</span></span>
     </a>
     <a href="cip-0050.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
@@ -75,7 +75,7 @@ window.MathJax = {
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Fee Layer — Operator/Member Split</div>
     <a href="fee-layer.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
-      <span class="nav-dd-ref-title">Layer synthesis</span>
+      <span class="nav-dd-ref-title">CIP evaluation synthesis</span>
       <span class="nav-dd-ref-cite">Pricing-as-viability conflation<span class="nav-dd-ref-stage">Index</span></span>
     </a>
     <a href="cip-0023.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
@@ -251,10 +251,10 @@ window.MathJax = {
 </div>
 <div class="content"><p>The Cardano network has been observed in detail through a multi-stage <a href="observatory.html">mainnet diagnostic</a> — covering the Treasury &amp; Pool-Pots layer, the Pools-Distribution layer, the Operator-Delegator split, and the Staking Census. The diagnostic surfaced a small set of <strong>structural problems</strong> in the current reward system, each grounded in mainnet evidence rather than theory:</p>
 <ul>
-<li>A large share of productive operators sit below the viability line — running pools that do not cover their operational cost, irrespective of how reliably they produce blocks.</li>
-<li>Pledge no longer functions as a binding signal of operator commitment — the formula prices it as a small smooth nudge that the operator population has rationally chosen to ignore.</li>
-<li>Delegator yield is barely differentiated by pool quality — the dispersion delegators see across pools is dominated by fee structure, not by performance.</li>
-<li>Stake concentration bypasses the anti-Sybil mechanics at the entity level — multi-pool operators capture a majority of participating stake, the very pattern the formula's pledge term was meant to discourage.</li>
+<li><strong>A large share of productive operators sit below the viability line</strong> — 73 % of productive pools sit below the ~3 M ADA viability line (OPE.O6.F4); no single-pool retail operator earns a competitive wage at current ADA prices, irrespective of how reliably they produce blocks.</li>
+<li><strong>Pledge no longer functions as a binding signal of operator commitment</strong> — POL.O2.F1 reports 78 % of staked ADA sits in pools with pledge ratio &lt; 1 %, and POL.O4.F3 finds 41 of 48 capital-sufficient MPOs forfeit the pledge bonus. The formula prices pledge as a small smooth nudge (POL.O2.F2: pledge yield 0.68 %/yr vs ~2.3 %/yr passive delegation) that the operator population has rationally chosen to ignore.</li>
+<li><strong>Delegator yield is barely differentiated by pool quality</strong> — today's delegator fee-rate dispersion across the productive range is <strong>38×</strong> (27.3 % at Sub-viable pools vs 0.71 % at saturation); the dispersion delegators see is dominated by fee structure, not by performance, and delegation flow does not track yield (OPE.O7.F1).</li>
+<li><strong>Stake concentration bypasses the anti-Sybil mechanics at the entity level</strong> — 85 entities operating 901 pools today control 75.4 % of participating stake; multi-pool operators capture a majority, the very pattern the formula's pledge term was meant to discourage.</li>
 </ul>
 <p>The <a href="index.html">V2 specification</a> turns each of those problems into a <strong>named milestone</strong> — a concrete outcome the next generation of the reward system must deliver. Four are foreground microeconomics — <a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">Operator Viability</a>, <a href="index.html#32-restore-the-notion-of-pledge-among-operators">Pledge</a>, <a href="index.html#33-maintain-and-diversify-a-competitive-delegator-yield">Delegator Yield</a>, <a href="index.html#34-reduce-the-concentration-effects-that-distort-both-populations">Deconcentration</a> — and four are macroeconomics or transversal — <a href="index.html#41-the-staking-pot-must-survive-reserve-depletion">Pot Survival</a>, <a href="index.html#42-the-fee-generating-population-must-expand">Fee Policy</a>, <a href="index.html#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios">Price Robustness</a>, and the <a href="index.html#44-the-mechanism-must-be-governable">Recalibration Pipeline</a>. The dependency chain is strict: Operator Viability → Pledge → Delegator Yield → Deconcentration → Pot Survival → Fee Policy.</p>
 <p><strong>But the CIP backlog already contained proposals before this diagnostic was performed.</strong> <a href="cip-0023.html">CIP-0023</a> (2021), <a href="cip-0037.html">CIP-0037</a> (2021), <a href="cip-0050.html">CIP-0050</a> (2021), and <a href="cip-0082.html">CIP-0082</a> (2024) were each drafted with their own framing, their own evidence, and their own design choices. Most are still on the table for governance ratification today. None of them were written with the V2 specification in hand, because V2 did not exist yet.</p>
@@ -388,9 +388,9 @@ window.MathJax = {
 </table>
 <p>The Coverage matrix below preserves all four CIPs as distinct columns — the granularity is still useful when reading specific milestones, especially because CIP-0082's stages behave very differently from each other — but the headline is that the design space is two-dimensional, not four.</p>
 <h3 id="32-coverage-microeconomics">3.2 Coverage — Microeconomics</h3>
-<p>V2's <a href="index.html#3-microeconomics--participant-incentives-and-market-structure">Microeconomics chapter</a> names four milestones — <strong>Operator Viability</strong>, <strong>Pledge</strong>, <strong>Delegator Yield</strong>, <strong>Deconcentration</strong> — each broken into sub-aspects that the specification treats as separately addressable. Below, each milestone is mapped onto its sub-aspects, and each cell records what a candidate does at that level of granularity. Symbols: <strong>●</strong> delivers · <strong>○</strong> partial / indirect · <strong>·</strong> neutral · <strong>▼</strong> regresses on this sub-aspect.</p>
+<p>V2's <a href="index.html#3-microeconomics-participant-incentives-and-market-structure">Microeconomics chapter</a> names four milestones — <strong>Operator Viability</strong>, <strong>Pledge</strong>, <strong>Delegator Yield</strong>, <strong>Deconcentration</strong> — each broken into sub-aspects that the specification treats as separately addressable. Below, each milestone is mapped onto its sub-aspects, and each cell records what a candidate does at that level of granularity. Symbols: <strong>●</strong> delivers · <strong>○</strong> partial / indirect · <strong>·</strong> neutral · <strong>▼</strong> regresses on this sub-aspect.</p>
 <p>CIP-0082's two distinct phases are kept separate: <strong>stage 2</strong> is the Margin swap (delete <code>minPoolCost</code>, introduce <code>minPoolRate</code>); <strong>stages 3–4</strong> are the <code>k</code>-raises (<code>500 → 750 → 1000</code>). They behave very differently against each milestone, and lumping them into a single column hides the structural difference between a fee-layer reform and a pool-count expansion.</p>
-<p>V2's <a href="index.html#4-macroeconomics--a-self-sustaining-and-governable-mechanism">Macroeconomics milestones</a> — <a href="index.html#41-the-staking-pot-must-survive-reserve-depletion">Pot Survival</a>, <a href="index.html#42-the-fee-generating-population-must-expand">Fee Policy</a>, <a href="index.html#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios">Price Robustness</a>, <a href="index.html#44-the-mechanism-must-be-governable">Recalibration Pipeline</a> — are deliberately omitted from this coverage view: none of the four pre-existing CIPs targets the pre-depletion-vs-post-depletion pot composition, the fee-generating population, or the recalibration cycle, and the price-robustness implications appear in each per-CIP page rather than as a cross-CIP comparison.</p>
+<p>V2's <a href="index.html#4-macroeconomics-a-self-sustaining-and-governable-mechanism">Macroeconomics milestones</a> — <a href="index.html#41-the-staking-pot-must-survive-reserve-depletion">Pot Survival</a>, <a href="index.html#42-the-fee-generating-population-must-expand">Fee Policy</a>, <a href="index.html#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios">Price Robustness</a>, <a href="index.html#44-the-mechanism-must-be-governable">Recalibration Pipeline</a> — are deliberately omitted from this coverage view: none of the four pre-existing CIPs targets the pre-depletion-vs-post-depletion pot composition, the fee-generating population, or the recalibration cycle, and the price-robustness implications appear in each per-CIP page rather than as a cross-CIP comparison.</p>
 <h4 id="321-operator-viability">3.2.1 Operator Viability</h4>
 <p>V2's <a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">Operator Viability milestone</a> splits into a <strong>structural</strong> sub-milestone (the production-threshold rule the protocol must enforce) and an <strong>economic</strong> sub-milestone (every pool above the production threshold must cover its operational cost).</p>
 <table>
@@ -505,7 +505,7 @@ window.MathJax = {
 </thead>
 <tbody>
 <tr>
-<td><a href="index.html#3411-the-operator-side--multi-pool-entity-concentration">Operator side — multi-pool entity concentration</a></td>
+<td><a href="index.html#3411-the-operator-side-multi-pool-entity-concentration">Operator side — multi-pool entity concentration</a></td>
 <td style="text-align: center;">·</td>
 <td style="text-align: center;">·</td>
 <td style="text-align: center;">▼ 2020 <code>k:150→500</code> precedent: MPO fleet absorption (85 entities, 75.4 % stake, 901 pools today)</td>
@@ -521,7 +521,7 @@ window.MathJax = {
 <td style="text-align: center;">·</td>
 </tr>
 <tr>
-<td><a href="index.html#343-differentiated-delegation-incentives--titans-versus-micro-delegators">Differentiated delegation incentives — titans vs micro-delegators</a></td>
+<td><a href="index.html#343-differentiated-delegation-incentives-titans-versus-micro-delegators">Differentiated delegation incentives — titans vs micro-delegators</a></td>
 <td style="text-align: center;">·</td>
 <td style="text-align: center;">·</td>
 <td style="text-align: center;">·</td>
@@ -537,7 +537,7 @@ window.MathJax = {
 <ul>
 <li>the structural sub-milestone of <a href="index.html#312-structural-enforce-the-production-threshold">Operator Viability</a> — production-threshold enforcement;</li>
 <li><a href="index.html#342-entity-level-awareness-in-reward-distribution">entity-level awareness in reward distribution</a> inside <a href="index.html#34-reduce-the-concentration-effects-that-distort-both-populations">Deconcentration</a>;</li>
-<li><a href="index.html#343-differentiated-delegation-incentives--titans-versus-micro-delegators">differentiated delegation incentives between titans and micro-delegators</a>.</li>
+<li><a href="index.html#343-differentiated-delegation-incentives-titans-versus-micro-delegators">differentiated delegation incentives between titans and micro-delegators</a>.</li>
 </ul>
 <p>None of the four CIPs was written to target these, because they were drafted before V2 surfaced them as separable problems.</p>
 <h3 id="34-cross-cip-findings">3.4 Cross-CIP findings</h3>
@@ -550,7 +550,7 @@ window.MathJax = {
 <h2 id="4-verdict-no-go-on-the-existing-bundle">4. Verdict — no-go on the existing bundle</h2>
 <p><strong>Bundle no-go on V2.</strong> None of the candidates closes the V2 milestone gap, and the objections are structural — not parameters to tune. Three patterns recur across the five rows below:</p>
 <ul>
-<li><strong>The bonus function <code>A(ν, π)</code> is the load-bearing piece, and no CIP touches it.</strong> The stake-cap CIPs (CIP-0050 / CIP-0037) add a third layer of σ′ clipping on top of the existing <code>a₀</code> and <code>k</code> levers, but <code>A</code> carries the pledge pathology: a permanent quadratic <code>ν²</code> size penalty, a non-monotonicity in π for sub-half-saturated pools (small operators are explicitly incentivised to <em>under-pledge</em> — Bob's optimum is π ≈ 51 %, not π = 1), and a cubic <code>ν³</code> collapse at full self-pledge. The σ′ clip changes <em>who can earn the V1 reward</em>; it does not repair what <code>A</code> does to the pledge signal. A genuine V2 reform must redesign <code>A</code> — smoother operator onset at low ν, no design preference for fully-private pools (π = 1), explicit reward for the balanced-commitment regime (π ≈ 0.5).</li>
+<li><strong>The bonus function <code>A(ν, π)</code> is the load-bearing piece, and no CIP touches it.</strong> The stake-cap CIPs (CIP-0050 / CIP-0037) add a third layer of σ′ clipping on top of the existing <code>a₀</code> and <code>k</code> levers, but <code>A</code> carries the pledge pathology: a permanent quadratic <code>ν²</code> size penalty, a non-monotonicity in π for sub-half-saturated pools (small operators are explicitly incentivised to <em>under-pledge</em> — at ν ≈ 0.03 a 2 M operator earns <strong>8.7×</strong> more bonus by pledging 51 % than 100 %), and a cubic <code>ν³</code> collapse at full self-pledge (a saturated operator earns <strong>37 595×</strong> more bonus than a 2 M operator at maximum commitment). Today's mainnet equilibrium — <strong>POL.O2.F1: 78 % of staked ADA in pools with π &lt; 1 %</strong>; <strong>POL.O4.F3: 41 of 48 capital-sufficient MPOs forfeit the bonus</strong> — is exactly the equilibrium a formula with near-zero pledge gradient in the operating region predicts. The σ′ clip changes <em>who can earn the V1 reward</em>; it does not repair what <code>A</code> does to the pledge signal. A genuine V2 reform must redesign <code>A</code> — smoother operator onset at low ν, no design preference for fully-private pools (π = 1), explicit reward for the balanced-commitment regime (π ≈ 0.5).</li>
 <li><strong>Pricing-as-viability conflation</strong> rules out the fee-layer reform (CIP-0082 stage 2, with CIP-0023 inheriting). A margin/rate floor is a commission constraint, not a viability backstop — pricing belongs on the operator's competitive lever, viability on the reward-distribution layer (pre-split).</li>
 <li><strong><code>k</code>-raise on a 3-epoch cadence</strong> (CIP-0082 stages 3–4) leaves no window for a stake-cap layer to activate first, so new pool slots fire in the same regressive regime that produced today's MPO concentration in August 2020.</li>
 </ul>
@@ -630,7 +630,7 @@ window.MathJax = {
 <ul>
 <li>the <a href="index.html#312-structural-enforce-the-production-threshold">structural sub-milestone of Operator Viability</a> — production-threshold enforcement;</li>
 <li><a href="index.html#342-entity-level-awareness-in-reward-distribution">entity-level awareness in reward distribution</a> — the multi-pool entity lens the diagnostic surfaced is not present in any candidate;</li>
-<li><a href="index.html#343-differentiated-delegation-incentives--titans-versus-micro-delegators">differentiated delegation incentives between titans and micro-delegators</a> — the delegator side is untouched except as a side-effect of pool-side fee changes.</li>
+<li><a href="index.html#343-differentiated-delegation-incentives-titans-versus-micro-delegators">differentiated delegation incentives between titans and micro-delegators</a> — the delegator side is untouched except as a side-effect of pool-side fee changes.</li>
 </ul>
 <p>The four pre-existing CIPs were drafted before V2 surfaced these as separable problems, so this gap is not a failure of the candidates — it is a constraint on what the bundle can deliver at all.</p>
 <h3 id="45-cumulative-read">4.5 Cumulative read</h3>
@@ -679,6 +679,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777295517"></script>
+<script src="assets/site.js?v=1777296788"></script>
 </body>
 </html>

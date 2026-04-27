@@ -20,7 +20,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777295517">
+<link rel="stylesheet" href="assets/site.css?v=1777296788">
 
 
 </head>
@@ -62,7 +62,7 @@ window.MathJax = {
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
     <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis active">
-      <span class="nav-dd-ref-title">Layer synthesis</span>
+      <span class="nav-dd-ref-title">CIP evaluation synthesis</span>
       <span class="nav-dd-ref-cite">Two stake-cap shapes, same intent<span class="nav-dd-ref-stage">Index</span></span>
     </a>
     <a href="cip-0050.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
@@ -75,7 +75,7 @@ window.MathJax = {
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Fee Layer — Operator/Member Split</div>
     <a href="fee-layer.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
-      <span class="nav-dd-ref-title">Layer synthesis</span>
+      <span class="nav-dd-ref-title">CIP evaluation synthesis</span>
       <span class="nav-dd-ref-cite">Pricing-as-viability conflation<span class="nav-dd-ref-stage">Index</span></span>
     </a>
     <a href="cip-0023.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
@@ -249,78 +249,34 @@ window.MathJax = {
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
-<div class="content"><p>This folder evaluates the CIPs that act on the <strong>stake-cap layer</strong> of the Cardano reward pipeline — the reward-eligible pool stake $\sigma'$ that enters the SL-D1 reward formula. The fee split that runs <em>after</em> the formula is left untouched (<a href="fee-layer.html"><code>../operator-delegator/</code></a>); what changes is the allocation envelope itself.</p>
-<p>The two CIPs in scope (<a href="cip-0050.html">CIP-0050</a>, <a href="cip-0037.html">CIP-0037</a>) target what the <a href="observatory.html">mainnet diagnostic</a> flags as a <strong>broken signal</strong>: pledge is priced as irrelevant by the operator population. Mainnet evidence: POL.O2.F2 shows pledge yield is structurally dominated by passive-delegation yield (0.68 %/yr vs ~2.3 %/yr); POL.O2.F1 reports 78 % of staked ADA sits in pools with pledge ratio &lt; 1 %; POL.O4.F3 finds 41 of 48 capital-sufficient MPOs forfeit the pledge bonus. Both CIPs make pledge <strong>binding</strong> on the reward formula — without sufficient pledge, the pool's reward-eligible stake is clipped.</p>
-<p><em>The core question this folder asks: does forcing pledge binding repair the pledge signal without disproportionately punishing the operator populations that cannot respond?</em></p>
-<p>The argument proceeds in seven steps:</p>
-<ol>
-<li>
-<p><strong>Stake-cap formulas</strong> (§1). The shared intent — replace V1's flat saturation cap with a function of pledge — and the structural kinship between the two candidates: CIP-0037 is essentially CIP-0050 plus a floor.</p>
-</li>
-<li>
-<p><strong>Why a new instrument when V1 already has a pledge lever?</strong> (§2). Three nested layers of analysis: V1's <code>a₀</code> rebalances the bonus weight without raising it; the deeper bottleneck is the bonus function $A(\nu, \pi)$ itself — its $\nu^2$ outer size penalty and non-monotonicity in $\pi$ for sub-half-saturation pools; what CIP-0050/0037 fix and what they leave untouched.</p>
-</li>
-<li>
-<p><strong>Candidate index</strong> (§3). The two CIPs side by side with their V2 targets and source links.</p>
-</li>
-<li>
-<p><strong>Composition rules</strong> (§4). Same-layer pairings (CIP-0050 ⊕ CIP-0037) are redundant by construction — pick one. Cross-layer pairings (stake-cap ⊕ fee) compose cleanly.</p>
-</li>
-<li>
-<p><strong>Interaction with k</strong> (§5). Both CIPs reference $1/k$ inside their formulas. CIP-0050's leverage <code>L</code> is dimensionless and survives a <code>k</code> change cleanly; CIP-0037's three-anchor calibration must be re-pegged on every <code>k</code> change.</p>
-</li>
-<li>
-<p><strong>V2 milestone interaction</strong> (§6). Both CIPs primarily address §3.2 (pledge-as-signal) and §3.4 (concentration via Sybil cost). Neither addresses §3.1 (small-operator viability) — and both can worsen it without a companion fee-layer or viability instrument.</p>
-</li>
-<li>
-<p><strong>Reading order</strong> (§7) <strong>and references</strong> (§8). Suggested traversal and cross-folder anchors.</p>
-</li>
-</ol>
-<p>The Executive summary below packages the verdict shared by both CIPs: right layer of intervention, correct identification of the broken pledge signal, but capital-capability bias against operator populations that cannot respond, and a redistribution bet the diagnostic does not support.</p>
-<h2 id="executive-summary">Executive summary</h2>
+<div class="content"><p>This folder evaluates the CIPs that act on the <strong>stake-cap layer</strong> of the Cardano reward pipeline — the reward-eligible pool stake $\sigma'$ that enters the SL-D1 reward formula, <em>upstream</em> of the operator/member split that the <a href="fee-layer.html">fee layer</a> reshapes.</p>
+<p>The two CIPs in scope (<a href="cip-0050.html">CIP-0050</a>, <a href="cip-0037.html">CIP-0037</a>) target a real broken signal that the <a href="observatory.html">mainnet diagnostic</a> confirms: pledge is priced as irrelevant by the operator population. POL.O2.F2 — pledge yield (0.68 %/yr) is structurally dominated by passive-delegation yield (~2.3 %/yr); POL.O2.F1 — 78 % of staked ADA sits in pools with pledge ratio &lt; 1 %; POL.O4.F3 — 41 of 48 capital-sufficient MPOs forfeit the bonus. Both CIPs respond by making pledge <strong>binding</strong> on the reward formula — without sufficient pledge, the pool's reward-eligible stake is clipped.</p>
+<p><strong>Verdict on both CIPs: no-go, for two stacked reasons.</strong></p>
+<p><strong>The load-bearing piece is <code>A(ν, π)</code>, and neither CIP touches it.</strong> V1 already exposes a pledge-incentive knob — <code>a₀</code>, the weight of the pledge bonus inside the reward envelope (current mainnet value <code>0.3</code>; full walkthrough in <a href="#2-why-a-new-instrument-when-v1-already-has-a-pledge-lever">Why a new instrument when V1 already has a pledge lever?</a> below). Raising <code>a₀</code> rebalances the formula but does not make pledge "matter more" — every low-pledge pool earns less <em>before</em> the bonus can recover. CIP-0050 and CIP-0037 add a third lever (clip σ′ before the formula runs) on top of <code>a₀</code> and <code>k</code>, but they accept <code>A(ν, π)</code> as given. That function carries three structural pathologies:</p>
 <ul>
-<li>
-<p><strong>Scope.</strong> Reward-eligible pool stake $\sigma'$ used inside the SL-D1 reward curve. The fee split that follows is untouched (<a href="fee-layer.html"><code>../operator-delegator/</code></a>); what changes is the allocation envelope itself — these CIPs act on <strong>the reward-distribution formula</strong>, upstream of the operator/member split.</p>
-</li>
-<li>
-<p><strong>What the CIPs in this folder correctly identify.</strong> CIP-0050 and CIP-0037 act on what our mainnet diagnostic confirms is a <strong>broken signal</strong>: pledge is priced as irrelevant by the operator population. POL.O2.F2 shows pledge yield is structurally dominated by passive-delegation yield (0.68 %/yr vs ~2.3 %/yr); POL.O2.F1: 78 % of staked ADA sits in pools with pledge ratio &lt; 1 %; POL.O4.F3: 41 of 48 capital-sufficient MPOs forfeit the bonus. Both CIPs target this correctly by making pledge <strong>binding</strong> on the reward formula — without pledge, reward is clipped.</p>
-</li>
-<li>
-<p><strong>Right layer, different target from the fee CIPs.</strong> These CIPs act on the correct V2 layer (reward-distribution, pre-split) — the layer the principled critique of <a href="fee-layer.html"><code>../operator-delegator/README.md</code></a> identified as the right home for distributional fixes. But their <strong>target</strong> is V2 §3.2 (pledge-as-signal) and §3.4 (concentration via Sybil cost), <strong>not</strong> §3.1 (small-operator viability). The V2 priority-1 problem (small-operator viability) is not what these instruments solve.</p>
-</li>
-<li>
-<p><strong>The capital-capability bias.</strong> By making pledge binding, both CIPs implicitly discriminate by the operator's <strong>capital capability</strong>, not by operator quality or network contribution:</p>
-</li>
-<li><strong>Custodial entities (21 % of productive stake)</strong> hold custodied retail funds they legally cannot self-pledge — reward for this segment collapses to the pledge floor regardless of operator quality.</li>
-<li><strong>Retail small operators (POL.O5.F2: 78 % of single-pool stake non-compliant at pledge &lt; 2 %)</strong> mostly don't have the capital to raise pledge — their only response is to accept reduced reward or exit.</li>
-<li><strong>Capital-sufficient MPOs (POL.O4.F2: 48 entities)</strong> can in principle pledge more; a subset will choose to, a subset will not.</li>
+<li>a permanent quadratic <code>ν²</code> size penalty applies at <em>every</em> pledge ratio — small pools are crushed regardless of how committed the operator is;</li>
+<li>a non-monotonicity in π for sub-half-saturated pools — a 2 M operator (ν ≈ 0.03) earns <strong>8.7×</strong> <em>more</em> bonus by pledging 51 % than by fully self-pledging. The formula explicitly incentivises small operators to <em>under-commit</em>;</li>
+<li>a cubic <code>ν³</code> collapse at full self-pledge — a saturated operator earns <strong>37 595×</strong> more bonus than a 2 M operator at maximum commitment, because the size factor cubes when the pledge factor saturates.</li>
 </ul>
-<p>The reform rewards the population that <em>can</em> pledge and penalises the population that <em>cannot</em> — independent of whether the penalised pools produce reliable blocks, serve delegators well, or contribute to decentralisation by any other measure.</p>
+<p>The σ′ clip changes <em>who can earn the V1 reward</em>; it does not repair what <code>A</code> does to the pledge signal. The relative bonus disparity, the under-commitment incentive, and the cubic crush all carry through unchanged.</p>
+<p><strong>A genuine V2 stake-cap reform must redesign <code>A</code></strong> with three properties no CIP currently in scope delivers:</p>
 <ul>
-<li>
-<p><strong>The side effect on small-operator viability.</strong> Small retail pools that have attracted delegation in reliance on V1 rules (low pledge + significant delegation) see their $\sigma'$ clipped — both operator revenue and delegator ROS drop. This is the <strong>opposite direction</strong> of the V2 §3.1 viability goal. The stake-cap layer in its current form does not help the small-operator population the fee-layer reforms also failed to help — it can actively worsen it for the low-pledge subset.</p>
-</li>
-<li>
-<p><strong>The bet.</strong> Both CIPs implicitly bet that operators will respond by <strong>increasing pledge</strong> rather than by accepting reduced reward. Two populations make that bet hard:</p>
-</li>
-<li>Custodial entities cannot respond (structural). Their reward drops with no recourse.</li>
-<li>Retail small operators have no capital to pledge more. Their only move is to exit or shrink.</li>
+<li>a <strong>smoother operator onset at low ν</strong> — no cubic crush of small pools as they grow;</li>
+<li>a design that <strong>does not privilege fully-private pools (π = 1)</strong> — the V2 target is not "everyone runs a 100 %-pledged pool";</li>
+<li>explicit reward for the <strong>balanced-commitment regime (π ≈ 0.5)</strong> — pledge serving as a credible signal <em>and</em> the pool remaining open to delegation.</li>
 </ul>
-<p>The population that <em>can</em> respond (capital-sufficient MPOs) already has the pledge-bonus choice available today and has empirically opted against it (POL.O4.F3). There is no mainnet signal that reshaping $\sigma'$ flips that choice for a meaningful fraction of the population.</p>
-<ul>
-<li><strong>A principled framing — consistent with the fee-layer critique.</strong> The companion <a href="fee-layer.html"><code>../operator-delegator/README.md</code></a> argues that viability should be abstracted from pricing tools. The same separation applies here: <strong>pledge-as-signal</strong> (what §3.2 targets) is a different function from <strong>viability</strong> (what §3.1 targets). A stake-cap instrument that restores pledge-as-signal is legitimate on its own terms, but should not be advanced as a solution to small-operator viability, and should not be deployed without an active viability instrument protecting the low-pledge retail population that the stake-cap rule would otherwise penalise.</li>
-</ul>
+<p><strong>Capital-capability bias compounds the <code>A</code> objection.</strong> By making pledge binding, both CIPs implicitly discriminate by the operator's capital, not by operator quality. Custodial entities (~21 % of productive stake) hold custodied retail funds they legally cannot self-pledge — their reward collapses to the pledge floor regardless of operator quality. Retail small operators (POL.O5.F2 — 78 % of single-pool stake non-compliant at pledge &lt; 2 %) mostly do not have the capital to raise pledge — their only response is reduced reward or exit. The reform rewards the population that <em>can</em> pledge and penalises the population that <em>cannot</em>, independent of whether the penalised pools produce reliable blocks, serve delegators well, or contribute to decentralisation by any other measure. Even if <code>A</code> were repaired, the σ′ primitive on its own would still pressure the wrong segment.</p>
+<p><strong>Side effect on small-operator viability.</strong> Small retail pools that have attracted delegation in reliance on V1 rules see their σ′ clipped — both operator revenue and delegator ROS drop. This is the <em>opposite direction</em> of the V2 <a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">Operator Viability milestone</a>. A stake-cap instrument that restores pledge-as-signal is legitimate on its own terms, but it should not be deployed without an active viability instrument protecting the low-pledge retail population the stake-cap rule would otherwise penalise.</p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <nav class="toc-nav">
 <ul>
-<li><a href="#executive-summary">Executive summary</a></li>
 <li><a href="#1-stake-cap-formulas">1. Stake-cap formulas</a></li>
 <li><a href="#2-why-a-new-instrument-when-v1-already-has-a-pledge-lever">2. Why a new instrument when V1 already has a pledge lever?</a><ul>
-<li><a href="#21-the-a-lever-rebalances-it-doesnt-tilt">2.1 The <code>a₀</code> lever rebalances, it doesn't tilt</a></li>
-<li><a href="#22-the-deeper-bottleneck--aν-π-itself">2.2 The deeper bottleneck — A(ν, π) itself</a><ul>
-<li><a href="#221-anatomy-of-the-function--before-any-numbers">2.2.1 Anatomy of the function — before any numbers</a></li>
-<li><a href="#222-what-a-actually-pays--three-operators-across-three-pledge-levels">2.2.2 What A actually pays — three operators across three pledge levels</a></li>
-<li><a href="#223-the-cubic-ν³--visualised">2.2.3 The cubic ν³ — visualised</a></li>
+<li><a href="#21-the-a0-lever-rebalances-it-doesnt-tilt">2.1 The <code>a₀</code> lever rebalances, it doesn't tilt</a></li>
+<li><a href="#22-the-deeper-bottleneck-a-itself">2.2 The deeper bottleneck — A(ν, π) itself</a><ul>
+<li><a href="#221-anatomy-of-the-function-before-any-numbers">2.2.1 Anatomy of the function — before any numbers</a></li>
+<li><a href="#222-what-a-actually-pays-three-operators-across-three-pledge-levels">2.2.2 What A actually pays — three operators across three pledge levels</a></li>
+<li><a href="#223-the-cubic-3-visualised">2.2.3 The cubic ν³ — visualised</a></li>
 <li><a href="#224-what-this-means-for-the-cip-critique">2.2.4 What this means for the CIP critique</a></li>
 </ul>
 </li>
@@ -783,6 +739,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777295517"></script>
+<script src="assets/site.js?v=1777296788"></script>
 </body>
 </html>
