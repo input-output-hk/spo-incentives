@@ -1109,7 +1109,7 @@ window.MathJax = {{
       <span class="nav-dd-ref-title">CIP-0082 — Improved Rewards Scheme</span>
       <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
     </a>
-    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_k_parameter}">
+    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deeper{cls_k_parameter}">
       <span class="nav-dd-ref-title">k-Parameter mechanics</span>
       <span class="nav-dd-ref-cite">Sub-document of CIP-0082 stages 3–4<span class="nav-dd-ref-stage">Sub-doc</span></span>
     </a>

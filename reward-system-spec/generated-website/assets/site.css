@@ -473,16 +473,35 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
    synthesis with an explicit guide. Each child draws a full-height
    vertical line on the left plus an L-connector at vertical centre;
    the last child in a sequence cuts the vertical line off at centre
-   so the bracket closes ┘-style instead of dangling past the row. */
+   so the bracket closes ┘-style instead of dangling past the row.
+   Lines use --text-muted (not --border) so they read clearly against
+   the white menu background. */
 .nav-dd-ref-deep{padding-left:56px;position:relative}
 .nav-dd-ref-deep::before{content:"";position:absolute;
-  left:36px;top:0;bottom:0;width:1px;background:var(--border)}
+  left:36px;top:0;bottom:0;width:1px;background:var(--text-muted)}
 .nav-dd-ref-deep::after{content:"";position:absolute;
-  left:36px;top:50%;width:14px;height:1px;background:var(--border)}
-/* Last deep entry of a sequence (next sibling is not deep): vertical
-   line stops at centre. */
-.nav-dd-ref-deep:has(+ :not(.nav-dd-ref-deep))::before,
+  left:36px;top:50%;width:14px;height:1px;background:var(--text-muted)}
+/* Last entry of the tree (next sibling is neither deep nor deeper):
+   vertical line stops at centre. The deeper class is a sub-doc nested
+   under a deep row, so when CIP-0082 has k-Parameter as its next
+   sibling, CIP-0082's vertical line should still continue. */
+.nav-dd-ref-deep:has(+ :not(.nav-dd-ref-deep, .nav-dd-ref-deeper))::before,
 .nav-dd-ref-deep:last-child::before{bottom:auto;height:50%}
+
+/* Sub-doc nested one level deeper (e.g. k-Parameter mechanics under
+   CIP-0082). The parent group's vertical line continues through this
+   row; an additional L from the parent CIP's indent points to this
+   row's title with a rounded corner so the two-level hierarchy reads
+   at a glance. */
+.nav-dd-ref-deeper{padding-left:76px;position:relative}
+.nav-dd-ref-deeper::before{content:"";position:absolute;
+  left:36px;top:0;height:50%;width:1px;background:var(--text-muted)}
+.nav-dd-ref-deeper::after{content:"";position:absolute;
+  left:56px;top:0;width:18px;height:50%;
+  border-left:1px solid var(--text-muted);
+  border-bottom:1px solid var(--text-muted);
+  border-bottom-left-radius:6px}
+
 /* Layer synthesis row sits one indent shallower than the CIP children — visually the parent node */
 .nav-dd-ref-synthesis .nav-dd-ref-title{font-weight:600;color:var(--text-primary)}
 
