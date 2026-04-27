@@ -48,7 +48,33 @@
 [data-theme=dark] .synth-scope{background:var(--bg-panel)}
 [data-theme=dark] .synth-fref{background:var(--bg-code)}
 
-html{scroll-behavior:smooth;scroll-padding-top:56px}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+
+/* Anchor-target visual cue — header lands clear of the sticky nav and briefly flashes */
+.content :target{scroll-margin-top:96px}
+.content h1:target,.content h2:target,.content h3:target,.content h4:target,.content h5:target,.content h6:target,
+.ev-card:target,.sro-card:target,.sro-finding:target{
+  animation:target-flash 2.6s ease-out
+}
+@keyframes target-flash{
+  0%,10% {background-color:rgba(229,35,33,.16); box-shadow:inset 4px 0 0 var(--infared)}
+  100%   {background-color:transparent;          box-shadow:inset 4px 0 0 transparent}
+}
+[data-theme=dark] .content h1:target,[data-theme=dark] .content h2:target,[data-theme=dark] .content h3:target,[data-theme=dark] .content h4:target,[data-theme=dark] .content h5:target,[data-theme=dark] .content h6:target,
+[data-theme=dark] .ev-card:target,[data-theme=dark] .sro-card:target,[data-theme=dark] .sro-finding:target{
+  animation:target-flash-dark 2.6s ease-out
+}
+@keyframes target-flash-dark{
+  0%,10% {background-color:rgba(229,35,33,.22); box-shadow:inset 4px 0 0 #FF7A78}
+  100%   {background-color:transparent;          box-shadow:inset 4px 0 0 transparent}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .content h1:target,.content h2:target,.content h3:target,.content h4:target,.content h5:target,.content h6:target,
+  .ev-card:target,.sro-card:target,.sro-finding:target{
+    animation:none;background-color:rgba(229,35,33,.08);box-shadow:inset 4px 0 0 var(--infared)
+  }
+}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;background:var(--bg-warm);color:var(--text-body);line-height:1.78;-webkit-font-smoothing:antialiased}
 
@@ -501,35 +527,54 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
         │── CIP-0082                  ← deep (parent of deeper sub-doc)
         │   ╰── k-Parameter           ← .nav-dd-ref-deeper            */
 
-/* Parent synthesis row — extend its existing left-bullet (defined on
-   .nav-dd-ref-sub::before) so it reaches the children's vertical
-   line, and add a downward stub from row centre to row bottom. The
-   stub butts up against the first child's full-height line so the
-   tree visibly hangs from the parent without a gap. */
-.nav-dd-ref-synthesis-parent::before{width:14px!important;
-  background:var(--text-muted)!important;opacity:1!important}
-.nav-dd-ref-synthesis-parent::after{content:"";position:absolute;
-  left:36px;top:50%;bottom:0;width:2px;background:var(--text-muted)}
+/* The tree connector is implemented as a solid border-left on the
+   children rows, plus an L-shaped horizontal connector at row centre
+   via ::before. border-left is the most predictable rendering path —
+   no pseudo-element positioning math, no z-index quirks. The parent
+   synthesis row gets a matching short border-left segment in its
+   bottom half so the tree visibly hangs from the parent. */
 
-/* Level-1 child (CIP entry) — full-height vertical line + L-connector
-   at row centre. The last child of each group cuts the vertical line
-   off at centre via .nav-dd-ref-deep-last. */
-.nav-dd-ref-deep{padding-left:56px;position:relative}
+/* Parent synthesis row — bottom half of the row gets a left border
+   that joins seamlessly with the first child's full-height border. */
+.nav-dd-ref-synthesis-parent{
+  position:relative;
+  background:linear-gradient(to bottom,
+    transparent 50%,
+    var(--text-muted) 50%) no-repeat 36px 0/2px 100%}
+
+/* Level-1 child (CIP entry) — full-height left border at the same
+   x position as the parent stub, so the lines visually join across
+   row boundaries. */
+.nav-dd-ref-deep{
+  padding-left:56px;position:relative;
+  background:linear-gradient(to bottom,
+    var(--text-muted),
+    var(--text-muted)) no-repeat 36px 0/2px 100%}
 .nav-dd-ref-deep::before{content:"";position:absolute;
-  left:36px;top:0;bottom:0;width:2px;background:var(--text-muted)}
-.nav-dd-ref-deep::after{content:"";position:absolute;
-  left:36px;top:50%;width:14px;height:2px;background:var(--text-muted)}
-.nav-dd-ref-deep-last::before{bottom:auto;height:50%}
+  left:36px;top:50%;width:14px;height:2px;background:var(--text-muted);
+  transform:translateY(-50%)}
+.nav-dd-ref-deep-last{
+  /* Only top half of border visible — the bracket closes ┘-style. */
+  background:linear-gradient(to bottom,
+    var(--text-muted) 0,
+    var(--text-muted) 50%,
+    transparent 50%) no-repeat 36px 0/2px 100%}
 
-/* Level-2 sub-doc (e.g. k-Parameter under CIP-0082) — the parent
-   tree's vertical line continues from row top to row centre (and
-   stops there since the sub-doc closes the tree). An additional
-   rounded L at the deeper indent points to the sub-doc title. */
-.nav-dd-ref-deeper{padding-left:76px;position:relative}
+/* Level-2 sub-doc (e.g. k-Parameter under CIP-0082). Two visual
+   hierarchies stacked:
+   - The parent group's vertical line continues from row top to row
+     centre at left:36px (only the top half — k-Parameter closes the
+     fee-layer tree).
+   - An additional rounded L at left:56px points from CIP-0082's
+     column into the sub-doc title. */
+.nav-dd-ref-deeper{
+  padding-left:76px;position:relative;
+  background:linear-gradient(to bottom,
+    var(--text-muted) 0,
+    var(--text-muted) 50%,
+    transparent 50%) no-repeat 36px 0/2px 100%}
 .nav-dd-ref-deeper::before{content:"";position:absolute;
-  left:36px;top:0;height:50%;width:2px;background:var(--text-muted)}
-.nav-dd-ref-deeper::after{content:"";position:absolute;
-  left:56px;top:0;width:18px;height:50%;
+  left:56px;top:0;width:18px;height:calc(50% + 1px);
   border-left:2px solid var(--text-muted);
   border-bottom:2px solid var(--text-muted);
   border-bottom-left-radius:6px}
