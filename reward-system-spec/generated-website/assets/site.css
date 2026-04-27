@@ -515,105 +515,16 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .nav-dd-ref-stage-soon{color:#5a4d00;background:rgba(242,255,88,.32);border-color:rgba(242,255,88,.6)}
 [data-theme=dark] .nav-dd-ref-stage-soon{color:#F2FF58;background:rgba(242,255,88,.10);border-color:rgba(242,255,88,.4)}
 
-/* ── Tree nesting for the Solution Evaluation dropdown ──
-   Static-class design — no :has() selectors. build_site.py marks the
-   parent synthesis row with .nav-dd-ref-synthesis-parent and the last
-   child of each tree group with .nav-dd-ref-deep-last. Lines are 2px
-   solid in --text-muted for clear visibility on the white menu.
+/* CIP children of each layer's evaluation synthesis are simply
+   indented one level deeper than the synthesis row. No tree
+   connector — readers infer hierarchy from the indent and the
+   ordering alone, which keeps the dropdown calm and avoids fragile
+   pseudo-element drawing. */
+.nav-dd-ref-deep{padding-left:56px}
+.nav-dd-ref-deeper{padding-left:76px}
 
-   Visual layout:
-       ─┐ CIP evaluation synthesis    ← .nav-dd-ref-synthesis-parent
-        │── CIP-0050                  ← .nav-dd-ref-deep
-        └── CIP-0037                  ← .nav-dd-ref-deep .nav-dd-ref-deep-last
-
-   With sub-doc nesting (Fee Layer):
-       ─┐ CIP evaluation synthesis
-        │── CIP-0023                  ← deep
-        │── CIP-0082                  ← deep (parent of deeper sub-doc)
-        │   ╰── k-Parameter           ← .nav-dd-ref-deeper            */
-
-/* Tree visual is just a continuous vertical guide on the left edge of
-   each child group — no L-connectors, no horizontal stubs. The single
-   continuous line + clear indent is enough to convey "child of the
-   row above"; that's the GitHub / Notion / VS Code file-tree pattern
-   and it ages much better than engineering-textbook ┴┬├ glyphs.
-
-   Lines are drawn as background-gradients (not pseudo-elements or
-   border-left) because they need to overlap row boundaries seamlessly
-   to feel continuous from parent down to the last child. Anchor x is
-   16px (just past the small bullet glyph each .nav-dd-ref-sub already
-   carries), so the line picks up where the bullet ends without
-   competing with it.
-
-   Visual:
-       ─ CIP evaluation synthesis    ← parent (line begins here, bottom half)
-       │ CIP-0050                    ← deep
-       │ CIP-0037                    ← last deep (line ends here, top half)
-       │ ┐
-       │ │ CIP-0023
-       │ │ CIP-0082
-       │ │  ╰─ k-Parameter (deeper)
-*/
-
-/* Each rule uses long-form background-* properties (NOT the shorthand)
-   to avoid the trap where `background: <color> no-repeat ...` sets the
-   color as background-color and floods the entire row. With long-form,
-   only background-image draws — the cells stay transparent everywhere
-   except along the 2px-wide guide. */
-
-/* The .nav-dd-ref-sub::before bullet (small "─" mark) is the
-   inheritance from the Reward-Flow nav items — for tree members it
-   creates a stray dash that competes with the vertical guide. Hide
-   it on synthesis-parents and tree children so the line is the only
-   hierarchy mark. */
-.nav-dd-ref-synthesis-parent::before,
-.nav-dd-ref-deep::before,
-.nav-dd-ref-deeper::before{display:none}
-
-/* Parent synthesis row — line on bottom half, hands off to the first
-   child seamlessly. */
-.nav-dd-ref-synthesis-parent{
-  background-image:linear-gradient(to bottom,
-    transparent calc(50% - 1px),
-    var(--text-muted) calc(50% - 1px));
-  background-repeat:no-repeat;
-  background-position:36px 0;
-  background-size:2px 100%}
-
-/* Level-1 child — full-height vertical line at left:36px. */
-.nav-dd-ref-deep{
-  padding-left:56px;
-  background-image:linear-gradient(var(--text-muted),var(--text-muted));
-  background-repeat:no-repeat;
-  background-position:36px 0;
-  background-size:2px 100%}
-
-/* Last child of a sequence — line stops at row centre. */
-.nav-dd-ref-deep-last{
-  background-image:linear-gradient(to bottom,
-    var(--text-muted) calc(50% + 1px),
-    transparent calc(50% + 1px));
-  background-repeat:no-repeat;
-  background-position:36px 0;
-  background-size:2px 100%}
-
-/* Level-2 sub-doc — two parallel verticals, both stopping at row
-   centre (k-Parameter closes both the deeper tree and the outer one). */
-.nav-dd-ref-deeper{
-  padding-left:76px;
-  background-image:
-    linear-gradient(to bottom,
-      var(--text-muted) calc(50% + 1px),
-      transparent calc(50% + 1px)),
-    linear-gradient(to bottom,
-      var(--text-muted) calc(50% + 1px),
-      transparent calc(50% + 1px));
-  background-repeat:no-repeat,no-repeat;
-  background-position:36px 0,56px 0;
-  background-size:2px 100%,2px 100%}
-
-/* Synthesis row title styling — shared by Forward "Draft in
-   preparation" (no children) and the parent-of-CIPs synthesis rows. */
+/* Synthesis row title weight — used by both Forward 'Draft in
+   preparation' and the per-layer parent rows. */
 .nav-dd-ref-synthesis .nav-dd-ref-title{font-weight:600;color:var(--text-primary)}
 
 /* Active / parent-active state on rich-list item */

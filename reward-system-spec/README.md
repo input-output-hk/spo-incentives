@@ -262,14 +262,57 @@ The replacement pools that sustain the ~950-pool total are **entity-operated, no
 
 ##### 3.1.1.1 Evidence base
 
-| Dimension | Key observation | Source |
-| --- | --- | --- |
-| **Fee structure** | The distortion comes from the fixed-cost floor, not from the commission market. A sub-viable operator absorbs 48.3% of pool rewards yet earns 24,820 ADA/yr; an 11+ pool MPO absorbs 7.7% yet earns 1,035,496 ADA/yr — 42× more revenue at 6× less effective price. The commission market is healthy: 69% competitive, median margin stable for 405 epochs. | [DIA.1.3.O1, DIA.1.3.O2, DIA.1.3.O6](diagnostic/README.md#132-mainnet-observations) |
-| **Fee floor trajectory** | The floor's burden grows as the reserve depletes: the fixed-cost share of pool rewards rises mechanically, progressively extending the viability gap toward pools in the 5–10M range. | [DIA.1.3.O8](diagnostic/README.md#132-mainnet-observations) |
-| **Population dynamics** | The productive pool count has held near 950 since epoch 300, but this masks 3,497 entries against 3,070 exits — ~16 pools/epoch turnover (1.7%/epoch). Turnover falls disproportionately on small independent operators near the production threshold. | [Census — population dynamics](diagnostic/sub-flows/census/mainnet-analysis/README.md#35-population-dynamics-entries-exits-and-turnover) |
-| **Stake variability** | Pools near the production threshold oscillate in and out of viability: 9.3% have CV between 50–100%, 3.4% exceed 100%. | [Census — pool-size variability](diagnostic/sub-flows/census/mainnet-analysis/README.md#36-pool-size-variability-how-stable-is-a-pools-stake) |
-| **Thresholds** | The production threshold rises mechanically with total staked ADA — from ~470K at Shelley launch to ~1M at epoch 623. The independent single-pool operator population stands at 477 pools (5.28B ADA, 24.5% of productive stake), share in slow decline; only 283 above the viability threshold. 116 sub-threshold pools carry 0.31% of active stake. | [Census — historical decomposition](diagnostic/sub-flows/census/mainnet-analysis/README.md#343-historical-decomposition-productive-vs-sub-threshold-pools), [DIA.1.2.O5](diagnostic/README.md#122-mainnet-observations), [the production-threshold proposal](diagnostic/README.md#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano) |
-| **Incentive alignment** | The current fee structure favours operators who amortise the fixed cost across large fleets. Small independent operators — from whom tomorrow's established entities should emerge — face the highest effective cost burden. The incentive gradient runs counter to the mechanism's design intent. | [DIA.1.3.O1](diagnostic/README.md#132-mainnet-observations), [DIA.1.3.O6](diagnostic/README.md#132-mainnet-observations) |
+<div class="ev-list" markdown="1">
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Fee structure</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">The distortion comes from the fixed-cost floor, not from the commission market. A sub-viable operator absorbs **48.3 %** of pool rewards yet earns **24,820 ADA/yr**; an 11+-pool MPO absorbs **7.7 %** yet earns **1,035,496 ADA/yr** — **42× more revenue at 6× less effective price**. The commission market is healthy: 69 % competitive, median margin stable for 405 epochs.</p>
+<p class="ev-sources" markdown="1">Sources: [DIA.1.3.O1, .O2, .O6](diagnostic/README.md#132-mainnet-observations).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Fee floor trajectory</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">The floor's burden grows as the reserve depletes: the fixed-cost share of pool rewards rises mechanically, progressively extending the viability gap toward pools in the **5–10 M range**.</p>
+<p class="ev-sources" markdown="1">Source: [DIA.1.3.O8](diagnostic/README.md#132-mainnet-observations).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Population dynamics</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">Productive pool count has held near **950 since epoch 300**, but this masks **3,497 entries vs 3,070 exits** — ~16 pools/epoch turnover (**1.7 %/epoch**). Turnover falls disproportionately on small independent operators near the production threshold.</p>
+<p class="ev-sources" markdown="1">Source: [Census — population dynamics](diagnostic/sub-flows/census/mainnet-analysis/README.md#35-population-dynamics-entries-exits-and-turnover).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Stake variability</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">Pools near the production threshold oscillate in and out of viability: **9.3 %** have CV between 50–100 %, **3.4 %** exceed 100 %.</p>
+<p class="ev-sources" markdown="1">Source: [Census — pool-size variability](diagnostic/sub-flows/census/mainnet-analysis/README.md#36-pool-size-variability-how-stable-is-a-pools-stake).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Thresholds</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">Production threshold rises with total staked ADA — from **~470 K at Shelley launch** to **~1 M at epoch 623**. Independent single-pool operator population: **477 pools, 5.28 B ADA, 24.5 % of productive stake**, share in slow decline; only **283 above the viability threshold**; **116 sub-threshold pools** carry 0.31 % of active stake.</p>
+<p class="ev-sources" markdown="1">Sources: [Census — historical decomposition](diagnostic/sub-flows/census/mainnet-analysis/README.md#343-historical-decomposition-productive-vs-sub-threshold-pools), [DIA.1.2.O5](diagnostic/README.md#122-mainnet-observations), [production-threshold proposal](diagnostic/README.md#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Incentive alignment</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">The current fee structure **favours operators who amortise the fixed cost across large fleets**. Small independent operators — from whom tomorrow's established entities should emerge — face the highest effective cost burden. The incentive gradient runs counter to the mechanism's design intent.</p>
+<p class="ev-sources" markdown="1">Sources: [DIA.1.3.O1, .O6](diagnostic/README.md#132-mainnet-observations).</p>
+</div>
+</div>
+
+</div>
 
 #### 3.1.2 Structural: enforce the production threshold
 
@@ -370,14 +413,57 @@ $k = 500$ implies 500 independent entities sharing consensus power; the effectiv
 
 ##### 3.2.1.1 Evidence base
 
-| Dimension | Key observation | Source |
-| --- | --- | --- |
-| **Pledge-bonus utilisation** | 95.6% of the pledge-bonus budget returns to the reserve unused. The instrument exists in the formula but is economically inert. | [DIA.1.2.O6](diagnostic/README.md#122-mainnet-observations) |
-| **Entity-level pledge behaviour** | 78 of 85 multi-pool entities are outside the pledge-response path entirely. Only 7 entities (8%) respond to the pledge signal. | [multi-pool entity analysis](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures) |
-| **Custodial constraint** | CEX + IVaaS operators (10 entities, 181 pools, 7.40B ADA) cannot pledge the capital they manage — delegated ADA belongs to end users. The constraint is architectural, not strategic. | [the hollow-strategy analysis](diagnostic/README.md#124313-the-hollow-strategy-dominates-at-every-level-of-aggregation) |
-| **Fleet expansion cost** | The marginal cost of a new pool is ~500 ADA (certificate deposit). The marginal reward is a full share of the reward curve. The Sybil tax is effectively priced at zero. | [mainnet pledge data](diagnostic/README.md#12431-what-mainnet-reveals) |
-| **Independent operators** | Single-pool operators pledge out of conviction rather than economic rationality, receiving almost nothing in return. Their share of active stake is in slow decline. | [the hollow-strategy analysis](diagnostic/README.md#124313-the-hollow-strategy-dominates-at-every-level-of-aggregation), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable) |
-| **Market structure outcome** | 85 multi-pool entities control 75.4% of staked supply through 901 pools. The effective entity-level concentration is an order of magnitude above the $k$-target equilibrium. | [DIA.1.2.O4](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable) |
+<div class="ev-list" markdown="1">
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Pledge-bonus utilisation</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">**95.6 %** of the pledge-bonus budget returns to the reserve unused. The instrument exists in the formula but is **economically inert**.</p>
+<p class="ev-sources" markdown="1">Source: [DIA.1.2.O6](diagnostic/README.md#122-mainnet-observations).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Entity-level pledge behaviour</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">**78 of 85** multi-pool entities are outside the pledge-response path entirely. Only **7 entities (8 %)** respond to the pledge signal.</p>
+<p class="ev-sources" markdown="1">Source: [multi-pool entity analysis](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Custodial constraint</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">CEX + IVaaS operators (**10 entities, 181 pools, 7.40 B ADA**) cannot pledge the capital they manage — delegated ADA belongs to end users. The constraint is architectural, not strategic.</p>
+<p class="ev-sources" markdown="1">Source: [hollow-strategy analysis](diagnostic/README.md#124313-the-hollow-strategy-dominates-at-every-level-of-aggregation).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Fleet expansion cost</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">Marginal cost of a new pool is **~500 ADA** (certificate deposit); marginal reward is a full share of the reward curve. **The Sybil tax is effectively priced at zero.**</p>
+<p class="ev-sources" markdown="1">Source: [mainnet pledge data](diagnostic/README.md#12431-what-mainnet-reveals).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Independent operators</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">Single-pool operators pledge out of conviction rather than economic rationality, receiving almost nothing in return. Their share of active stake is in slow decline.</p>
+<p class="ev-sources" markdown="1">Sources: [hollow-strategy analysis](diagnostic/README.md#124313-the-hollow-strategy-dominates-at-every-level-of-aggregation), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Market structure outcome</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">**85 multi-pool entities control 75.4 % of staked supply through 901 pools.** The effective entity-level concentration is an **order of magnitude** above the $k$-target equilibrium.</p>
+<p class="ev-sources" markdown="1">Sources: [DIA.1.2.O4](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
+</div>
+</div>
+
+</div>
 
 #### 3.2.2 Specification
 
@@ -561,14 +647,57 @@ The consequence is:
 
 ##### 3.4.1.3 Evidence base
 
-| Dimension | Key observation | Source |
-| --- | --- | --- |
-| **MPO fleet structure** | 85 entities, 901 pools, 75.4% of staked supply. 12 entities with 11+ pools control 40.4% of productive stake. | [DIA.1.2.O4](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable) |
-| **Sybil cost** | Marginal cost of a new pool is ~500 ADA; marginal reward is a full share of the curve. 78 of 85 MPO entities are outside the pledge-response path. | [DIA.1.2.O6](diagnostic/README.md#122-mainnet-observations), [mainnet pledge data](diagnostic/README.md#12431-what-mainnet-reveals) |
-| **Independent operator decline** | 283 viable single-pool operators, stake share in slow decline from 39% to 25% since epoch 300. | [DIA.1.2.O5](diagnostic/README.md#122-mainnet-observations), [Census — the independent pipeline](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-pipeline--what-the-mechanism-was-intended-to-produce) |
-| **Delegator concentration** | 1,000 delegators (0.07%) control 57% of staked ADA. Gini = 0.976. Frozen since epoch 300. | [DIA.2.1.O3](diagnostic/README.md#212-mainnet-observations) |
-| **Titan mobility** | Whales (1M+) average 3.06 switches; micro (<1K) average 0.67. Mobility scales with size but is not yield-driven. | [DIA.2.1.O5](diagnostic/README.md#212-mainnet-observations), [DIA.2.1.O6](diagnostic/README.md#212-mainnet-observations) |
-| **Yield signal failure** | 50.5% of switches produce zero yield change. Pool size is the only asymmetric signal. | [DIA.2.1.O6](diagnostic/README.md#212-mainnet-observations) |
+<div class="ev-list" markdown="1">
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">MPO fleet structure</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">**85 entities, 901 pools, 75.4 % of staked supply.** 12 entities with 11+ pools control **40.4 % of productive stake**.</p>
+<p class="ev-sources" markdown="1">Sources: [DIA.1.2.O4](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Sybil cost</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">Marginal cost of a new pool is **~500 ADA**; marginal reward is a full share of the curve. **78 of 85** MPO entities are outside the pledge-response path.</p>
+<p class="ev-sources" markdown="1">Sources: [DIA.1.2.O6](diagnostic/README.md#122-mainnet-observations), [mainnet pledge data](diagnostic/README.md#12431-what-mainnet-reveals).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Independent operator decline</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">**283 viable single-pool operators**, stake share in slow decline from **39 % → 25 %** since epoch 300.</p>
+<p class="ev-sources" markdown="1">Sources: [DIA.1.2.O5](diagnostic/README.md#122-mainnet-observations), [Census — the independent pipeline](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-pipeline-what-the-mechanism-was-intended-to-produce).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Delegator concentration</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">**1,000 delegators (0.07 %) control 57 % of staked ADA.** Gini = **0.976**. Frozen since epoch 300.</p>
+<p class="ev-sources" markdown="1">Source: [DIA.2.1.O3](diagnostic/README.md#212-mainnet-observations).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Titan mobility</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">Whales (1 M+) average **3.06 switches**; micro (< 1 K) average **0.67**. Mobility scales with size but is **not yield-driven**.</p>
+<p class="ev-sources" markdown="1">Sources: [DIA.2.1.O5, .O6](diagnostic/README.md#212-mainnet-observations).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Yield signal failure</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">**50.5 % of switches produce zero yield change.** Pool size is the only asymmetric signal.</p>
+<p class="ev-sources" markdown="1">Source: [DIA.2.1.O6](diagnostic/README.md#212-mainnet-observations).</p>
+</div>
+</div>
+
+</div>
 
 #### 3.4.2 Entity-level awareness in reward distribution
 
@@ -692,12 +821,41 @@ The mechanism cannot be allowed to discover its funding-model transition by *run
 
 ##### 4.1.1.1 Evidence base
 
-| Dimension | Key observation | Source |
-|---|---|---|
-| **Funding composition** | Monetary expansion provides ~99.8% of the epoch pot; fees ~0.19%. Self-sufficiency requires 12–16× current fee capacity. | [DIA.1.1.O1](diagnostic/README.md#112-mainnet-observations) |
-| **Reserve trajectory** | Reserve half-depleted (13.29B → 6.53B ADA) in 5.5 years. Significant reward pressure expected at epochs 1000–1200 (~2028–2029). | [DIA.1.1.O2](diagnostic/README.md#112-mainnet-observations) |
-| **Realised vs. potential** | Only ~44% of the budget reaches operators/delegators; 4.55B ADA cumulative (~70% of current reserve) has returned to the reserve as undistributed rewards. | [DIA.1.1.O3](diagnostic/README.md#112-mainnet-observations) |
-| **Parameter inertia** | $\rho = 0.3\%$ and $\tau = 20\%$ unchanged since Shelley; no governance proposal has ever targeted them. | [DIA.1.1.O4](diagnostic/README.md#112-mainnet-observations) |
+<div class="ev-list" markdown="1">
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Funding composition</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">Monetary expansion provides **~99.8 %** of the epoch pot; fees **~0.19 %**. Self-sufficiency requires **12–16× current fee capacity**.</p>
+<p class="ev-sources" markdown="1">Source: [DIA.1.1.O1](diagnostic/README.md#112-mainnet-observations).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Reserve trajectory</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">Reserve **half-depleted (13.29 B → 6.53 B ADA)** in 5.5 years. Significant reward pressure expected at epochs **1000–1200 (~2028–2029)**.</p>
+<p class="ev-sources" markdown="1">Source: [DIA.1.1.O2](diagnostic/README.md#112-mainnet-observations).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Realised vs potential</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">Only **~44 %** of the budget reaches operators/delegators; **4.55 B ADA cumulative** (~70 % of current reserve) has returned to the reserve as undistributed rewards.</p>
+<p class="ev-sources" markdown="1">Source: [DIA.1.1.O3](diagnostic/README.md#112-mainnet-observations).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Parameter inertia</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">$\rho = 0.3\,\%$ and $\tau = 20\,\%$ unchanged since Shelley; **no governance proposal has ever targeted them**.</p>
+<p class="ev-sources" markdown="1">Source: [DIA.1.1.O4](diagnostic/README.md#112-mainnet-observations).</p>
+</div>
+</div>
+
+</div>
 
 #### 4.1.2 Surveillance and recalibration of $\rho$ and $\tau$
 
@@ -768,13 +926,49 @@ The mechanism currently has **no instrument** to detect this divergence at the p
 
 ##### 4.2.1.1 Evidence base
 
-| Dimension | Key observation | Source |
-|---|---|---|
-| **Population trajectory** | Unique input addresses per epoch: ~512K (epoch 300) → ~158K (epoch 384) — a 69% decline. Transaction count held above 300K. | [DIA.2.2.O8](diagnostic/README.md#222-mainnet-observations) |
-| **Eligibility mismatch** | 82% of submitter addresses carry a staking credential by headcount; 30.6% of fee revenue comes from enterprise/script addresses that cannot delegate. | [DIA.2.2.O9](diagnostic/README.md#222-mainnet-observations) |
-| **Fee concentration** | Script transactions: 12.6% of count, 29.7% of fees; >40% during high-DeFi epochs. | [DIA.2.2.O10](diagnostic/README.md#222-mainnet-observations) |
-| **Revenue concentration** | Top 10 fee-paying addresses: 30.5% of fees; top 500: 51.5%. Heavy-tailed but below delegation Gini. | [DIA.2.2.O11](diagnostic/README.md#222-mainnet-observations) |
-| **Structural insufficiency** | Closing the funding gap requires 12–16× current fee capacity; submitter base is shrinking, not growing. | [fee-input insufficiency](diagnostic/README.md#2231-the-fee-input-is-structurally-insufficient) |
+<div class="ev-list" markdown="1">
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Population trajectory</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">Unique input addresses per epoch: **~512 K (epoch 300) → ~158 K (epoch 384)** — a **69 % decline**. Transaction count held above 300 K.</p>
+<p class="ev-sources" markdown="1">Source: [DIA.2.2.O8](diagnostic/README.md#222-mainnet-observations).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Eligibility mismatch</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">82 % of submitter addresses carry a staking credential by headcount; **30.6 % of fee revenue** comes from enterprise/script addresses that cannot delegate.</p>
+<p class="ev-sources" markdown="1">Source: [DIA.2.2.O9](diagnostic/README.md#222-mainnet-observations).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Fee concentration</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">Script transactions: **12.6 % of count, 29.7 % of fees**; **> 40 %** during high-DeFi epochs.</p>
+<p class="ev-sources" markdown="1">Source: [DIA.2.2.O10](diagnostic/README.md#222-mainnet-observations).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Revenue concentration</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">Top **10** fee-paying addresses: **30.5 % of fees**; top **500: 51.5 %**. Heavy-tailed but below delegation Gini.</p>
+<p class="ev-sources" markdown="1">Source: [DIA.2.2.O11](diagnostic/README.md#222-mainnet-observations).</p>
+</div>
+</div>
+
+<div class="ev-card" markdown="1">
+<div class="ev-label">Structural insufficiency</div>
+<div class="ev-content" markdown="1">
+<p class="ev-body" markdown="1">Closing the funding gap requires **12–16× current fee capacity**; **submitter base is shrinking, not growing**.</p>
+<p class="ev-sources" markdown="1">Source: [fee-input insufficiency](diagnostic/README.md#2231-the-fee-input-is-structurally-insufficient).</p>
+</div>
+</div>
+
+</div>
 
 #### 4.2.2 Surveillance and recalibration of fee policy
 

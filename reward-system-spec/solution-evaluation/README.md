@@ -2,10 +2,10 @@
 
 The Cardano network has been observed in detail through a multi-stage [mainnet diagnostic](../diagnostic/README.md) — covering the Treasury & Pool-Pots layer, the Pools-Distribution layer, the Operator-Delegator split, and the Staking Census. The diagnostic surfaced a small set of **structural problems** in the current reward system, each grounded in mainnet evidence rather than theory:
 
-- A large share of productive operators sit below the viability line — running pools that do not cover their operational cost, irrespective of how reliably they produce blocks.
-- Pledge no longer functions as a binding signal of operator commitment — the formula prices it as a small smooth nudge that the operator population has rationally chosen to ignore.
-- Delegator yield is barely differentiated by pool quality — the dispersion delegators see across pools is dominated by fee structure, not by performance.
-- Stake concentration bypasses the anti-Sybil mechanics at the entity level — multi-pool operators capture a majority of participating stake, the very pattern the formula's pledge term was meant to discourage.
+- **A large share of productive operators sit below the viability line** — 73 % of productive pools sit below the ~3 M ADA viability line (OPE.O6.F4); no single-pool retail operator earns a competitive wage at current ADA prices, irrespective of how reliably they produce blocks.
+- **Pledge no longer functions as a binding signal of operator commitment** — POL.O2.F1 reports 78 % of staked ADA sits in pools with pledge ratio < 1 %, and POL.O4.F3 finds 41 of 48 capital-sufficient MPOs forfeit the pledge bonus. The formula prices pledge as a small smooth nudge (POL.O2.F2: pledge yield 0.68 %/yr vs ~2.3 %/yr passive delegation) that the operator population has rationally chosen to ignore.
+- **Delegator yield is barely differentiated by pool quality** — today's delegator fee-rate dispersion across the productive range is **38×** (27.3 % at Sub-viable pools vs 0.71 % at saturation); the dispersion delegators see is dominated by fee structure, not by performance, and delegation flow does not track yield (OPE.O7.F1).
+- **Stake concentration bypasses the anti-Sybil mechanics at the entity level** — 85 entities operating 901 pools today control 75.4 % of participating stake; multi-pool operators capture a majority, the very pattern the formula's pledge term was meant to discourage.
 
 The [V2 specification](../README.md) turns each of those problems into a **named milestone** — a concrete outcome the next generation of the reward system must deliver. Four are foreground microeconomics — [Operator Viability](../README.md#31-guarantee-operator-viability-across-the-entire-productive-population), [Pledge](../README.md#32-restore-the-notion-of-pledge-among-operators), [Delegator Yield](../README.md#33-maintain-and-diversify-a-competitive-delegator-yield), [Deconcentration](../README.md#34-reduce-the-concentration-effects-that-distort-both-populations) — and four are macroeconomics or transversal — [Pot Survival](../README.md#41-the-staking-pot-must-survive-reserve-depletion), [Fee Policy](../README.md#42-the-fee-generating-population-must-expand), [Price Robustness](../README.md#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios), and the [Recalibration Pipeline](../README.md#44-the-mechanism-must-be-governable). The dependency chain is strict: Operator Viability → Pledge → Delegator Yield → Deconcentration → Pot Survival → Fee Policy.
 
@@ -92,11 +92,11 @@ The Coverage matrix below preserves all four CIPs as distinct columns — the gr
 
 ### 3.2 Coverage — Microeconomics
 
-V2's [Microeconomics chapter](../README.md#3-microeconomics--participant-incentives-and-market-structure) names four milestones — **Operator Viability**, **Pledge**, **Delegator Yield**, **Deconcentration** — each broken into sub-aspects that the specification treats as separately addressable. Below, each milestone is mapped onto its sub-aspects, and each cell records what a candidate does at that level of granularity. Symbols: **●** delivers · **○** partial / indirect · **·** neutral · **▼** regresses on this sub-aspect.
+V2's [Microeconomics chapter](../README.md#3-microeconomics-participant-incentives-and-market-structure) names four milestones — **Operator Viability**, **Pledge**, **Delegator Yield**, **Deconcentration** — each broken into sub-aspects that the specification treats as separately addressable. Below, each milestone is mapped onto its sub-aspects, and each cell records what a candidate does at that level of granularity. Symbols: **●** delivers · **○** partial / indirect · **·** neutral · **▼** regresses on this sub-aspect.
 
 CIP-0082's two distinct phases are kept separate: **stage 2** is the Margin swap (delete `minPoolCost`, introduce `minPoolRate`); **stages 3–4** are the `k`-raises (`500 → 750 → 1000`). They behave very differently against each milestone, and lumping them into a single column hides the structural difference between a fee-layer reform and a pool-count expansion.
 
-V2's [Macroeconomics milestones](../README.md#4-macroeconomics--a-self-sustaining-and-governable-mechanism) — [Pot Survival](../README.md#41-the-staking-pot-must-survive-reserve-depletion), [Fee Policy](../README.md#42-the-fee-generating-population-must-expand), [Price Robustness](../README.md#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios), [Recalibration Pipeline](../README.md#44-the-mechanism-must-be-governable) — are deliberately omitted from this coverage view: none of the four pre-existing CIPs targets the pre-depletion-vs-post-depletion pot composition, the fee-generating population, or the recalibration cycle, and the price-robustness implications appear in each per-CIP page rather than as a cross-CIP comparison.
+V2's [Macroeconomics milestones](../README.md#4-macroeconomics-a-self-sustaining-and-governable-mechanism) — [Pot Survival](../README.md#41-the-staking-pot-must-survive-reserve-depletion), [Fee Policy](../README.md#42-the-fee-generating-population-must-expand), [Price Robustness](../README.md#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios), [Recalibration Pipeline](../README.md#44-the-mechanism-must-be-governable) — are deliberately omitted from this coverage view: none of the four pre-existing CIPs targets the pre-depletion-vs-post-depletion pot composition, the fee-generating population, or the recalibration cycle, and the price-robustness implications appear in each per-CIP page rather than as a cross-CIP comparison.
 
 #### 3.2.1 Operator Viability
 
@@ -137,9 +137,9 @@ V2's [Deconcentration milestone](../README.md#34-reduce-the-concentration-effect
 
 | Sub-aspect | CIP-0023 | CIP-0082 stage 2 | CIP-0082 stages 3–4 | CIP-0050 | CIP-0037 |
 |---|:---:|:---:|:---:|:---:|:---:|
-| [Operator side — multi-pool entity concentration](../README.md#3411-the-operator-side--multi-pool-entity-concentration) | · | · | ▼ 2020 `k:150→500` precedent: MPO fleet absorption (85 entities, 75.4 % stake, 901 pools today) | ● revenue-neutral pool-splitting at the pool level | ○ slope penalises split; 20 % floor undoes it for sub-floor splits |
+| [Operator side — multi-pool entity concentration](../README.md#3411-the-operator-side-multi-pool-entity-concentration) | · | · | ▼ 2020 `k:150→500` precedent: MPO fleet absorption (85 entities, 75.4 % stake, 901 pools today) | ● revenue-neutral pool-splitting at the pool level | ○ slope penalises split; 20 % floor undoes it for sub-floor splits |
 | [Entity-level awareness in reward distribution](../README.md#342-entity-level-awareness-in-reward-distribution) | · | · | · | · | · |
-| [Differentiated delegation incentives — titans vs micro-delegators](../README.md#343-differentiated-delegation-incentives--titans-versus-micro-delegators) | · | · | · | · | · |
+| [Differentiated delegation incentives — titans vs micro-delegators](../README.md#343-differentiated-delegation-incentives-titans-versus-micro-delegators) | · | · | · | · | · |
 
 *CIP-0050's revenue-neutral pool-splitting is the sharpest tool for pool-level Deconcentration in the bundle. **None of the candidates addresses entity-level Deconcentration** — the 10 entities holding 1.59 B ₳ via custodial-by-pledge sit above any pool-level cap or floor regardless of the rule. **None addresses the titans-vs-micro-delegators sub-aspect** either — it is a delegator-side incentive question, and no candidate touches the delegator side except through pool-side fee changes.*
 
@@ -151,7 +151,7 @@ Three Microeconomics sub-aspects are **entirely untouched** by every candidate:
 
 - the structural sub-milestone of [Operator Viability](../README.md#312-structural-enforce-the-production-threshold) — production-threshold enforcement;
 - [entity-level awareness in reward distribution](../README.md#342-entity-level-awareness-in-reward-distribution) inside [Deconcentration](../README.md#34-reduce-the-concentration-effects-that-distort-both-populations);
-- [differentiated delegation incentives between titans and micro-delegators](../README.md#343-differentiated-delegation-incentives--titans-versus-micro-delegators).
+- [differentiated delegation incentives between titans and micro-delegators](../README.md#343-differentiated-delegation-incentives-titans-versus-micro-delegators).
 
 None of the four CIPs was written to target these, because they were drafted before V2 surfaced them as separable problems.
 
@@ -173,7 +173,7 @@ Five mechanical observations stitch the per-CIP analyses into a single cross-CIP
 
 **Bundle no-go on V2.** None of the candidates closes the V2 milestone gap, and the objections are structural — not parameters to tune. Three patterns recur across the five rows below:
 
-- **The bonus function `A(ν, π)` is the load-bearing piece, and no CIP touches it.** The stake-cap CIPs (CIP-0050 / CIP-0037) add a third layer of σ′ clipping on top of the existing `a₀` and `k` levers, but `A` carries the pledge pathology: a permanent quadratic `ν²` size penalty, a non-monotonicity in π for sub-half-saturated pools (small operators are explicitly incentivised to *under-pledge* — Bob's optimum is π ≈ 51 %, not π = 1), and a cubic `ν³` collapse at full self-pledge. The σ′ clip changes *who can earn the V1 reward*; it does not repair what `A` does to the pledge signal. A genuine V2 reform must redesign `A` — smoother operator onset at low ν, no design preference for fully-private pools (π = 1), explicit reward for the balanced-commitment regime (π ≈ 0.5).
+- **The bonus function `A(ν, π)` is the load-bearing piece, and no CIP touches it.** The stake-cap CIPs (CIP-0050 / CIP-0037) add a third layer of σ′ clipping on top of the existing `a₀` and `k` levers, but `A` carries the pledge pathology: a permanent quadratic `ν²` size penalty, a non-monotonicity in π for sub-half-saturated pools (small operators are explicitly incentivised to *under-pledge* — at ν ≈ 0.03 a 2 M operator earns **8.7×** more bonus by pledging 51 % than 100 %), and a cubic `ν³` collapse at full self-pledge (a saturated operator earns **37 595×** more bonus than a 2 M operator at maximum commitment). Today's mainnet equilibrium — **POL.O2.F1: 78 % of staked ADA in pools with π < 1 %**; **POL.O4.F3: 41 of 48 capital-sufficient MPOs forfeit the bonus** — is exactly the equilibrium a formula with near-zero pledge gradient in the operating region predicts. The σ′ clip changes *who can earn the V1 reward*; it does not repair what `A` does to the pledge signal. A genuine V2 reform must redesign `A` — smoother operator onset at low ν, no design preference for fully-private pools (π = 1), explicit reward for the balanced-commitment regime (π ≈ 0.5).
 - **Pricing-as-viability conflation** rules out the fee-layer reform (CIP-0082 stage 2, with CIP-0023 inheriting). A margin/rate floor is a commission constraint, not a viability backstop — pricing belongs on the operator's competitive lever, viability on the reward-distribution layer (pre-split).
 - **`k`-raise on a 3-epoch cadence** (CIP-0082 stages 3–4) leaves no window for a stake-cap layer to activate first, so new pool slots fire in the same regressive regime that produced today's MPO concentration in August 2020.
 
@@ -244,7 +244,7 @@ Even setting the regressions aside, the bundle is **structurally incomplete agai
 
 - the [structural sub-milestone of Operator Viability](../README.md#312-structural-enforce-the-production-threshold) — production-threshold enforcement;
 - [entity-level awareness in reward distribution](../README.md#342-entity-level-awareness-in-reward-distribution) — the multi-pool entity lens the diagnostic surfaced is not present in any candidate;
-- [differentiated delegation incentives between titans and micro-delegators](../README.md#343-differentiated-delegation-incentives--titans-versus-micro-delegators) — the delegator side is untouched except as a side-effect of pool-side fee changes.
+- [differentiated delegation incentives between titans and micro-delegators](../README.md#343-differentiated-delegation-incentives-titans-versus-micro-delegators) — the delegator side is untouched except as a side-effect of pool-side fee changes.
 
 The four pre-existing CIPs were drafted before V2 surfaced these as separable problems, so this gap is not a failure of the candidates — it is a constraint on what the bundle can deliver at all.
 
