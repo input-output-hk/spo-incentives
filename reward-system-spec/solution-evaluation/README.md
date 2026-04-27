@@ -19,7 +19,6 @@ The [V2 specification](../README.md) turns each of those problems into a **named
 - [2. The candidates and how to read them](#2-the-candidates-and-how-to-read-them)
   - [2.1 Stake-cap layer](#21-stake-cap-layer)
   - [2.2 Fee layer](#22-fee-layer)
-  - [2.3 Suggested reading order](#23-suggested-reading-order)
 - [3. Cross-CIP analysis](#3-cross-cip-analysis)
   - [3.1 The bundle reduces to two effective candidates](#31-the-bundle-reduces-to-two-effective-candidates)
   - [3.2 Coverage — Microeconomics](#32-coverage-microeconomics)
@@ -72,12 +71,6 @@ Modifies the operator/member split *after* the per-pool reward has been computed
 | [**CIP-0082**](operator-delegator/cip-0082.md) — Improved Rewards Scheme Parameters | 4-stage package: stage 1 floor halving (done), stage 2 margin swap (`minPoolCost` → `minPoolRate = 3 %`, hard fork), stages 3–4 `k`-raises (500 → 750 → 1000) | The Margin swap inverts operator revenue across the viability line: Sub-viable **−9×** (12 410 → 1 365 ₳/yr), Saturated **+4×**. On n-MPO axis: 11+-pool MPO **+200 k ₳/yr** vs sub-viable single-pool **+431 ₳/yr** | [CIP-0082](https://cips.cardano.org/cip/CIP-0082) |
 
 CIP-0082 stages 3–4 are pool-count expansions — i.e. `k` raises. The mechanical analysis of *what raising `k` actually does to the operator/delegator split, while holding the reward formula fixed* is a sub-document of the CIP-0082 evaluation: → [`operator-delegator/k-parameter.md`](operator-delegator/k-parameter.md). It backs the verdict on CIP-0082's stages 3–4.
-
-### 2.3 Suggested reading order
-
-1. The two layer indexes — [`pools-distribution/README.md`](pools-distribution/README.md), [`operator-delegator/README.md`](operator-delegator/README.md) — for the layer-level framing.
-2. The individual per-CIP pages, in any order. CIP-0082 readers should also read [`k-parameter.md`](operator-delegator/k-parameter.md) for stages 3–4.
-3. Come back to [Cross-CIP analysis](#3-cross-cip-analysis) for the cross-CIP readout, then [Verdict — no-go on the existing bundle](#4-verdict-no-go-on-the-existing-bundle) for the overall judgement.
 
 ## 3. Cross-CIP analysis
 
@@ -178,21 +171,45 @@ Five mechanical observations stitch the per-CIP analyses into a single cross-CIP
 
 ## 4. Verdict — no-go on the existing bundle
 
-Read across the four candidates, and through [the simplification into two effective candidates](#31-the-bundle-reduces-to-two-effective-candidates), the verdict is **no-go on the existing bundle as a path to V2**. None of the candidates closes the V2 milestone gap, and each carries a structural caveat that the per-CIP analyses surface as a hard objection rather than a tunable parameter. The table below is the synoptic; the sub-sections argue, each pointing to the per-CIP file that backs the claim.
+**Bundle no-go on V2.** None of the candidates closes the V2 milestone gap, and the objections are structural — not parameters to tune. Three patterns recur across the five rows below:
 
-| Candidate | Verdict | Primary objection | Backed by |
-|---|:---:|---|---|
-| **CIP-0050** | ▼ no-go | Capital-capability bias — Custodial-by-extraction segment cannot self-pledge; σ′ collapses to zero | [`cip-0050.md`](pools-distribution/cip-0050.md) · [capital-capability bias finding](#34-cross-cip-findings) |
-| **CIP-0037** | ▼ no-go | Same capital-capability bias; softened by 20 % floor but not removed | [`cip-0037.md`](pools-distribution/cip-0037.md) · [capital-capability bias finding](#34-cross-cip-findings) |
-| **CIP-0023** | ⊂ moot | Same pricing/viability conflation as CIP-0082 stage 2, smaller calibration — strictly less mechanism, same regression | [`cip-0023.md`](operator-delegator/cip-0023.md) · [subsumption finding](#34-cross-cip-findings) |
-| **CIP-0082 stage 2** | ▼ no-go | Conflates **pricing** with **viability** — `minPoolRate` bolts the viability function onto the operator's commission, producing a regressive transfer (Sub-viable **−9×**, **+200 k ₳/yr** to MPO entities) | [`cip-0082.md`](operator-delegator/cip-0082.md) · [viability-inversion finding](#34-cross-cip-findings) |
-| **CIP-0082 stages 3–4** | ▼ no-go | `k`-raise on a 3-epoch cadence regenerates the 2020 MPO-fleet absorption pattern | [`k-parameter.md`](operator-delegator/k-parameter.md) · [2020-pattern finding](#34-cross-cip-findings) |
+- **The bonus function `A(ν, π)` is the load-bearing piece, and no CIP touches it.** The stake-cap CIPs (CIP-0050 / CIP-0037) add a third layer of σ′ clipping on top of the existing `a₀` and `k` levers, but `A` carries the pledge pathology: a permanent quadratic `ν²` size penalty, a non-monotonicity in π for sub-half-saturated pools (small operators are explicitly incentivised to *under-pledge* — Bob's optimum is π ≈ 51 %, not π = 1), and a cubic `ν³` collapse at full self-pledge. The σ′ clip changes *who can earn the V1 reward*; it does not repair what `A` does to the pledge signal. A genuine V2 reform must redesign `A` — smoother operator onset at low ν, no design preference for fully-private pools (π = 1), explicit reward for the balanced-commitment regime (π ≈ 0.5).
+- **Pricing-as-viability conflation** rules out the fee-layer reform (CIP-0082 stage 2, with CIP-0023 inheriting). A margin/rate floor is a commission constraint, not a viability backstop — pricing belongs on the operator's competitive lever, viability on the reward-distribution layer (pre-split).
+- **`k`-raise on a 3-epoch cadence** (CIP-0082 stages 3–4) leaves no window for a stake-cap layer to activate first, so new pool slots fire in the same regressive regime that produced today's MPO concentration in August 2020.
+
+Five rows below because CIP-0082's stage 2 and stages 3–4 are evaluated separately — they carry different objections. The synoptic table maps each candidate to its primary objection; the sub-sections that follow argue each verdict in turn, each pointing to the per-CIP file with the full quantitative argument.
+
+| Candidate | Verdict | Why |
+|---|:---:|---|
+| [**CIP-0050**](pools-distribution/cip-0050.md) | ▼ No-go | Patches around `A(ν, π)` — pledge pathology unfixed; capital-capability bias compounds |
+| [**CIP-0037**](pools-distribution/cip-0037.md) | ▼ No-go | Same as CIP-0050 — `A` still unmodified; 20 % floor softens the σ′ clip but not the bottleneck |
+| [**CIP-0023**](operator-delegator/cip-0023.md) | ⊂ Moot | Subsumed by CIP-0082 stage 2 — same pricing/viability conflation, less mechanism |
+| [**CIP-0082 stage 2**](operator-delegator/cip-0082.md) | ▼ No-go | Conflates **pricing** with **viability** — `minPoolRate` bolts viability onto commission (Sub-viable **−9×**, **+200 k ₳/yr** to MPO entities) |
+| [**CIP-0082 stages 3–4**](operator-delegator/k-parameter.md) | ▼ No-go | `k`-raise on a 3-epoch cadence regenerates the 2020 MPO-fleet absorption pattern |
+
+*Each row's Why links to the per-CIP file that backs the claim. The cross-CIP findings these verdicts cite are listed in [Cross-CIP findings](#34-cross-cip-findings) above.*
 
 ### 4.1 Stake-cap CIPs (CIP-0050 / CIP-0037)
 
-Both implement the right intent — binding pledge on σ′ to deliver the [Pledge milestone](../README.md#32-restore-the-notion-of-pledge-among-operators) — but on a population that **cannot respond**. [The capital-capability bias finding](#34-cross-cip-findings) draws the line: Custodial-by-extraction stake (57 entities, 2.04 B ₳, ~21 % of productive stake) holds custodied retail funds the operator legally cannot self-pledge, while Custodial-by-pledge entities (10 entities, 1.59 B ₳) sit *above* any cap regardless. Both shapes — single hard cap (CIP-0050) and three-anchor curve with 20 % floor (CIP-0037) — therefore turn the reform into a regressive transfer to the segments that already concentrate stake.
+Both CIPs target the right intent — binding pledge on σ′ to deliver the [Pledge milestone](../README.md#32-restore-the-notion-of-pledge-among-operators) — but they patch *around* the load-bearing piece of the pledge incentive, not into it.
 
-The verdict is no-go, but the underlying intent is sound. The [new proposal](#5-toward-a-new-proposal) needs a stake-cap mechanic that accommodates Custodial-by-extraction without rewarding Custodial-by-pledge — a constraint neither CIP-0050 nor CIP-0037 can satisfy on its own primitive. The structural argument is in [`cip-0050.md`](pools-distribution/cip-0050.md) and [`cip-0037.md`](pools-distribution/cip-0037.md).
+**The protocol already has a pledge lever; the deeper bottleneck is the bonus function `A(ν, π)` itself.** V1 exposes `a₀` (currently `0.3` on mainnet) as the weight of the pledge bonus inside the SL-D1 reward envelope. As the [stake-cap layer synthesis](pools-distribution/README.md) walks through, raising `a₀` rebalances the formula without making pledge "matter more" — every low-pledge pool earns less before the bonus can recover. CIP-0050 and CIP-0037 add a third lever (clipping σ′ before the formula runs) on top of the existing `a₀` and `k`, but they accept `A(ν, π)` as given. That function carries three structural pathologies the diagnostic surfaces:
+
+- a permanent quadratic `ν²` size penalty applies at *every* pledge ratio — small pools are crushed regardless of how committed the operator is;
+- a non-monotonicity in π for sub-half-saturated pools — at ν ≈ 0.03 (Bob's 2 M pool), the optimum pledge ratio is π ≈ 51 %, not π = 1; full self-pledge gives **8.7×** *less* bonus than withholding half the potential pledge. The formula explicitly incentivises small operators to *under-commit*;
+- a cubic `ν³` collapse at full self-pledge (π = 1) — at maximum commitment, a saturated operator (Alice) earns **37 595×** more bonus than a 2 M operator (Bob), because the size factor cubes when the pledge factor saturates.
+
+The pledge problem persists despite the capping. The σ′ clip changes *who can earn the V1 reward*, but the relative bonus disparity across operator sizes, the under-commitment incentive at low ν, and the cubic collapse at full pledge all carry through unchanged. Patching around `A` does not repair the pledge signal at its source.
+
+**A genuine V2 stake-cap reform must redesign `A`** with three properties no CIP currently in scope delivers:
+
+- a **smoother operator onset at low ν** — no cubic crush of small pools at the moment they are trying to grow;
+- a design that **does not privilege fully-private pools (π = 1)**. The current `A` happens to crush small private pools via `ν³`, but the gradient still pushes large operators toward 100 % self-pledge — that is not the V2 target;
+- an explicit reward for the **balanced-commitment regime (e.g. π ≈ 0.5)** — the configuration where pledge serves as a credible signal *and* the pool remains open to delegation.
+
+A second, compounding objection sits on top of the `A` argument: the [capital-capability bias finding](#34-cross-cip-findings) — Custodial-by-extraction stake (57 entities, 2.04 B ₳, ~21 % of productive stake) cannot self-pledge by construction, while Custodial-by-pledge entities (10 entities, 1.59 B ₳) sit *above* any cap regardless of the rule. Even if `A` were repaired, the σ′ primitive would still pressure the wrong segment.
+
+Per-CIP detail: [`cip-0050.md`](pools-distribution/cip-0050.md), [`cip-0037.md`](pools-distribution/cip-0037.md). The full `A`-anatomy walkthrough — heatmaps, scenarios, and the cubic-crush analysis — is in the [stake-cap layer synthesis](pools-distribution/README.md).
 
 ### 4.2 CIP-0082
 
@@ -247,7 +264,7 @@ The design space therefore needs a fresh proposal that respects three separation
 
 The structural caveats surfaced by [the Verdict above](#4-verdict-no-go-on-the-existing-bundle) — combined with the V2 milestones the existing bundle does not close ([Pot Survival](../README.md#41-the-staking-pot-must-survive-reserve-depletion), [Fee Policy](../README.md#42-the-fee-generating-population-must-expand), the entity-level gap inside [Deconcentration](../README.md#34-reduce-the-concentration-effects-that-distort-both-populations), and the untouched bonus function `A(ν, π)`) — motivate a new proposal currently in preparation.
 
-> *Document en préparation. This section will be expanded with a summary and linked to the dedicated proposal page once the draft is ready for review.*
+> *Draft in preparation. This section will be expanded with a summary and linked to the dedicated proposal page once the draft is ready for review.*
 
 ## 6. References
 

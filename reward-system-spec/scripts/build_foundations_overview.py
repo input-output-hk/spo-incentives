@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
-Foundations overview — minimal version.
+Foundations overview — every document visible, ★ on novel docs only.
 
-Five inputs feed the V2 Specification, mediated by the Diagnostic.
-The detail (which paper, which sub-report) lives in the prose; the figure
-carries only the structural skeleton.
+Layout: a single left column with all 12 source documents stacked vertically
+(grouped by category headers), The Diagnostic synthesis node centre-right,
+V2 Specification on the right. Arrows fan out from input groups to their
+destination — no crossing because the input column is alone on the left.
 
 Outputs: figures/foundations_overview.png
 """
@@ -22,22 +23,25 @@ FIG_DIR = REPORT_DIR / "figures"
 
 BG_COLOR = "#FFFFFF"
 TEXT_COLOR = "#1A1A1A"
-TEXT_DIM = "#555555"
+TEXT_DIM = "#444444"
 
 INFARED = "#E52321"
 DAWN = "#EC641D"
 ELECTRIC_BLUE = "#0DBFB0"
 COBALT_PULSE = "#2C4FFA"
-RESEARCH_GREY = "#888888"
 EVIDENCE_OLIVE = "#9CAA00"
+RESEARCH_GREY = "#888888"
 
 
-def draw_node(ax, x, y, w, h, title, subtitle, accent, novel=False, dark=False):
+def draw_card(ax, x_center, y_center, w, h, title, sub, accent,
+              novel=False, dashed_border=False, dark=False):
+    style = "--" if dashed_border else "-"
     box = FancyBboxPatch(
-        (x - w / 2, y - h / 2),
+        (x_center - w / 2, y_center - h / 2),
         w, h,
-        boxstyle="round,pad=0.02,rounding_size=0.14",
-        linewidth=2.2, edgecolor=accent,
+        boxstyle="round,pad=0.02,rounding_size=0.08",
+        linewidth=1.6, edgecolor=accent,
+        linestyle=style,
         facecolor="#000000" if dark else "#FFFFFF",
     )
     ax.add_patch(box)
@@ -47,21 +51,33 @@ def draw_node(ax, x, y, w, h, title, subtitle, accent, novel=False, dark=False):
 
     star = "★ " if novel else ""
     ax.text(
-        x, y + 0.18,
+        x_center, y_center + 0.12,
         star + title,
         ha="center", va="center",
-        fontsize=14, fontweight="bold", color=title_color,
+        fontsize=10, fontweight="bold", color=title_color,
     )
+    if sub:
+        ax.text(
+            x_center, y_center - 0.14,
+            sub,
+            ha="center", va="center",
+            fontsize=8, color=sub_color, style="italic",
+        )
+
+
+def draw_category_header(ax, x_left, y, text, color, x_right):
+    """Header label, left-aligned, with a thin colored underline."""
     ax.text(
-        x, y - 0.28,
-        subtitle,
-        ha="center", va="center",
-        fontsize=10, color=sub_color, style="italic",
+        x_left, y, text,
+        ha="left", va="center",
+        fontsize=10, fontweight="bold", color=color,
     )
+    # underline
+    ax.plot([x_left, x_right], [y - 0.18, y - 0.18],
+            color=color, linewidth=1.2, alpha=0.4)
 
 
-def arrow(ax, p_from, p_to, label, color, dashed=False, curve=0.0,
-          label_pos=0.5, label_offset=(0, 0.30)):
+def arrow(ax, p_from, p_to, color, dashed=False, curve=0.0):
     style = "--" if dashed else "-"
     a = FancyArrowPatch(
         p_from, p_to,
@@ -72,21 +88,12 @@ def arrow(ax, p_from, p_to, label, color, dashed=False, curve=0.0,
         shrinkA=4, shrinkB=6,
     )
     ax.add_patch(a)
-    if label:
-        mx = p_from[0] + (p_to[0] - p_from[0]) * label_pos + label_offset[0]
-        my = p_from[1] + (p_to[1] - p_from[1]) * label_pos + label_offset[1]
-        ax.text(
-            mx, my, label,
-            ha="center", va="center",
-            fontsize=10, color=color, style="italic",
-            bbox=dict(facecolor=BG_COLOR, edgecolor="none", pad=2.0),
-        )
 
 
 def main():
     FIG_DIR.mkdir(parents=True, exist_ok=True)
 
-    fig_w, fig_h = 16.0, 11.0
+    fig_w, fig_h = 17.0, 14.0
     fig, ax = plt.subplots(figsize=(fig_w, fig_h))
     fig.patch.set_facecolor(BG_COLOR)
     ax.set_facecolor(BG_COLOR)
@@ -95,106 +102,158 @@ def main():
     ax.set_aspect("equal")
     ax.axis("off")
 
+    # Header
     fig.text(
-        0.5, 0.96,
+        0.5, 0.965,
         "Foundations — what the V2 Specification reasons from",
         ha="center", va="center",
-        fontsize=16, fontweight="bold", color=TEXT_COLOR,
+        fontsize=17, fontweight="bold", color=TEXT_COLOR,
     )
     fig.text(
-        0.5, 0.928,
-        "Solid arrow = substantive dependency  ·  Dashed = inspiration only  ·  ★ = novel companion document",
+        0.5, 0.94,
+        "Solid arrow = substantive dependency  ·  Dashed = inspiration only  ·  ★ = novel companion document written for this spec",
         ha="center", va="center",
-        fontsize=10.5, color=TEXT_DIM, style="italic",
+        fontsize=11, color=TEXT_DIM, style="italic",
     )
 
-    # Layout: 3 columns
-    col_left = 3.0
-    col_mid = 8.5
-    col_right = 13.5
+    # Single input column on the left
+    col_x = 3.2
+    card_w = 5.0
+    card_h = 0.75
 
-    node_w, node_h = 4.6, 1.0
+    col_x_left = col_x - card_w / 2
+    col_x_right = col_x + card_w / 2
 
-    # LEFT — five input categories, vertically stacked
-    inputs = [
-        ("Design baseline",     "SL-D1 · The Intended Game",            INFARED, True),
-        ("Research papers",     "RSS · IAPG · RMPC · BPD",              RESEARCH_GREY, False),
-        ("Community antecedent","SD-L · 2025",                          DAWN, False),
-        ("Diagnostic evidence", "4 sub-reports · findings → observations", EVIDENCE_OLIVE, False),
-        ("Cardano Constitution v2", "tenets · parameter guardrails",     COBALT_PULSE, False),
+    # ── Input cards, stacked top to bottom ──
+    # Layout structure: list of (kind, ...) entries.
+    #   ("section", header_text, color, [(title, sub, novel, dashed), ...])
+    sections = [
+        ("DESIGN ARTEFACTS", INFARED, [
+            ("SL-D1  ·  2019", "Delegation Incentives · Kant · Brünjes · Coutts",
+             False, False),
+            ("The Intended Game", "normative baseline · written for this spec",
+             True, False),
+        ]),
+        ("RESEARCH PAPERS  ·  inspiration only", RESEARCH_GREY, [
+            ("RSS  ·  2020", "Reward Sharing Schemes · Brünjes · Kiayias et al.",
+             False, True),
+            ("IAPG  ·  2021", "Incentives Against Power Grabs", False, True),
+            ("RMPC  ·  2022", "Removing min-pool-cost", False, True),
+            ("BPD  ·  2024", "Block Participation × Decentralization", False, True),
+        ]),
+        ("COMMUNITY ANTECEDENT", DAWN, [
+            ("SD-L  ·  2025", "Incentive Mechanism Analysis · Lopez de Lara",
+             False, False),
+        ]),
+        ("DIAGNOSTIC EVIDENCE  ·  4 sub-reports", EVIDENCE_OLIVE, [
+            ("Treasury & Pool Pots", "epoch budget · reserve · fees",
+             False, False),
+            ("Pools Distribution Gaps", "reward curve · pledge · tiers",
+             False, False),
+            ("The Operator's Cut", "intra-pool split · commission",
+             False, False),
+            ("The Staking Census", "populations · submitters", False, False),
+        ]),
+        ("GOVERNANCE", COBALT_PULSE, [
+            ("Cardano Constitution v2",
+             "tenets · parameter guardrails · ratified epoch 609",
+             False, False),
+        ]),
     ]
 
-    y_top = 9.5
-    y_step = 1.7
-    input_centers = []
-    for i, (title, sub, color, novel) in enumerate(inputs):
-        y = y_top - i * y_step
-        draw_node(ax, col_left, y, node_w, node_h, title, sub, color, novel=novel)
-        input_centers.append((col_left, y, color, title))
+    # Vertical stepping (in axis units, y decreasing downward):
+    pad_before_header = 0.55
+    pad_after_header  = 0.55       # gap from header baseline to first card top
+    card_step         = 0.95       # centre-to-centre between cards
 
-    # MID — The Diagnostic
-    diag_y = (y_top + (y_top - 4 * y_step)) / 2  # vertical centre of the inputs
-    draw_node(
-        ax, col_mid, diag_y, 3.6, 1.4,
-        "The Diagnostic",
-        "holistic audit · problem induction",
-        ELECTRIC_BLUE, novel=True,
-    )
+    y = 13.30  # starting y for first header
+    category_centroids = {}
 
-    # RIGHT — V2 Specification
-    spec_y = diag_y
-    draw_node(
-        ax, col_right, spec_y, 3.4, 1.6,
-        "V2 Specification",
-        "milestones · KPIs",
-        INFARED, dark=True,
-    )
+    for header_text, color, cards in sections:
+        # Header
+        draw_category_header(ax, col_x_left, y, header_text, color, col_x_right)
+        category_key = header_text.split("  ·  ")[0]
+        category_centroids[category_key] = []
+        # Move down to first card centre
+        y -= pad_after_header + card_h / 2
+        for (title, sub, novel, dashed) in cards:
+            draw_card(ax, col_x, y, card_w, card_h, title, sub, color,
+                      novel=novel, dashed_border=dashed)
+            category_centroids[category_key].append(y)
+            y -= card_step
+        # Section ended — recoup the half-card we owe and add header gap
+        y += card_step  # back to last card centre
+        y -= card_h / 2 + pad_before_header  # past the bottom of last card
 
-    # Arrows from inputs — no labels, colour matches source box
-    diag_left = col_mid - 1.8
-    spec_left = col_right - 1.7
-    diag_right = col_mid + 1.8
+    def centroid(key):
+        ys = category_centroids[key]
+        return sum(ys) / len(ys)
 
-    # Design → Spec (direct, solid red)
+    # ── Diagnostic synthesis (centre-right) ──
+    diag_x = 11.0
+    diag_y = 7.0
+    draw_card(ax, diag_x, diag_y, 3.6, 1.6,
+              "The Diagnostic",
+              "holistic audit · problem induction",
+              ELECTRIC_BLUE, novel=True)
+
+    # ── V2 Specification (far right) ──
+    spec_x = 14.5
+    spec_y = 7.0
+    draw_card(ax, spec_x, spec_y, 3.0, 1.6,
+              "V2 Specification",
+              "milestones · KPIs",
+              INFARED, dark=True)
+
+    # ── Arrows ──
+    spec_left = spec_x - 1.5
+    diag_left = diag_x - 1.8
+    diag_right = diag_x + 1.8
+
+    # Design → Spec
     arrow(ax,
-          (col_left + node_w / 2, input_centers[0][1]), (spec_left, spec_y + 0.45),
-          None, INFARED, curve=-0.15)
+          (col_x_right, centroid("DESIGN ARTEFACTS")),
+          (spec_left, spec_y + 0.6),
+          INFARED, curve=-0.10)
 
-    # Research → Spec (dashed grey)
+    # Research → Spec (dashed)
     arrow(ax,
-          (col_left + node_w / 2, input_centers[1][1]), (spec_left, spec_y + 0.20),
-          None, RESEARCH_GREY, dashed=True, curve=-0.10)
+          (col_x_right, centroid("RESEARCH PAPERS")),
+          (spec_left, spec_y + 0.3),
+          RESEARCH_GREY, dashed=True, curve=-0.10)
 
     # Antecedent → Diagnostic
     arrow(ax,
-          (col_left + node_w / 2, input_centers[2][1]), (diag_left, diag_y + 0.10),
-          None, DAWN, curve=0.05)
+          (col_x_right, centroid("COMMUNITY ANTECEDENT")),
+          (diag_left, diag_y + 0.5),
+          DAWN, curve=-0.05)
 
     # Evidence → Diagnostic
     arrow(ax,
-          (col_left + node_w / 2, input_centers[3][1]), (diag_left, diag_y - 0.10),
-          None, EVIDENCE_OLIVE, curve=-0.05)
+          (col_x_right, centroid("DIAGNOSTIC EVIDENCE")),
+          (diag_left, diag_y - 0.3),
+          EVIDENCE_OLIVE, curve=0.05)
 
     # Diagnostic → Spec
     arrow(ax,
           (diag_right, diag_y), (spec_left, spec_y),
-          None, ELECTRIC_BLUE)
+          ELECTRIC_BLUE)
 
-    # Constitution → Spec (governance)
+    # Governance → Spec
     arrow(ax,
-          (col_left + node_w / 2, input_centers[4][1]), (spec_left, spec_y - 0.45),
-          None, COBALT_PULSE, curve=0.10)
+          (col_x_right, centroid("GOVERNANCE")),
+          (spec_left, spec_y - 0.6),
+          COBALT_PULSE, curve=0.10)
 
-    # Caption explaining the flow
+    # Caption
     fig.text(
-        0.5, 0.04,
-        "Each input flows to its destination via a same-colour arrow.  "
-        "Three sources feed the Diagnostic (community antecedent, evidence sub-reports);  "
-        "the Diagnostic + Design baseline + Constitution feed the V2 Specification directly;  "
+        0.5, 0.045,
+        "Each category flows to its destination via a same-colour arrow.  "
+        "Community antecedent and diagnostic evidence feed the Diagnostic;  "
+        "the Diagnostic + design baseline + Constitution feed the V2 Specification directly;  "
         "research papers contribute as inspiration only (dashed).",
         ha="center", va="center",
-        fontsize=10, color=TEXT_DIM, style="italic",
-        wrap=True,
+        fontsize=10.5, color=TEXT_DIM, style="italic",
     )
 
     out_path = FIG_DIR / "foundations_overview.png"

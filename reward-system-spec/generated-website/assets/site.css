@@ -460,8 +460,20 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .nav-dd-ref-flow{padding-left:40px}
 .nav-dd-ref-flow::before{left:28px}
 .nav-dd-ref-sub .nav-dd-ref-title{font-size:12.5px;font-weight:500}
-.nav-dd-ref-stage{display:inline-block;margin-left:8px;font:600 9.5px/1 -apple-system,sans-serif;letter-spacing:.4px;color:var(--text-secondary);background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:2px 5px;text-transform:uppercase}
+.nav-dd-ref-stage{display:inline-block;margin-left:8px;font:600 9.5px/1 -apple-system,sans-serif;letter-spacing:.4px;color:var(--text-secondary);background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:2px 5px;text-transform:uppercase;white-space:nowrap}
 [data-theme=dark] .nav-dd-ref-stage{background:var(--bg)}
+
+/* Verdict tag colour variants used in Solution Evaluation dropdown */
+.nav-dd-ref-stage-nogo{color:#A8120F;background:rgba(229,35,33,.12);border-color:rgba(229,35,33,.45)}
+[data-theme=dark] .nav-dd-ref-stage-nogo{color:#FF7A78;background:rgba(229,35,33,.14);border-color:rgba(229,35,33,.5)}
+.nav-dd-ref-stage-soon{color:#5a4d00;background:rgba(242,255,88,.32);border-color:rgba(242,255,88,.6)}
+[data-theme=dark] .nav-dd-ref-stage-soon{color:#F2FF58;background:rgba(242,255,88,.10);border-color:rgba(242,255,88,.4)}
+
+/* Tree nesting: per-CIP entries nested under their layer synthesis get a deeper indent */
+.nav-dd-ref-deep{padding-left:56px;position:relative}
+.nav-dd-ref-deep::before{content:"";position:absolute;left:44px;top:16px;width:6px;height:1px;background:var(--border)}
+/* Layer synthesis row sits one indent shallower than the CIP children — visually the parent node */
+.nav-dd-ref-synthesis .nav-dd-ref-title{font-weight:600;color:var(--text-primary)}
 
 /* Active / parent-active state on rich-list item */
 .nav-dd-ref.active{background:rgba(22,233,216,.09);box-shadow:inset 3px 0 0 rgba(22,233,216,.7)}

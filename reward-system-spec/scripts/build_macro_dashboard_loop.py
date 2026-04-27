@@ -71,7 +71,7 @@ def draw_box(ax, x_center, y_center, w, h, title, subtitle, accent):
     )
 
 
-def draw_forward_arrow(ax, x_from, x_to, y, label):
+def draw_forward_arrow(ax, x_from, x_to, y, label, label_y):
     a = FancyArrowPatch(
         (x_from, y), (x_to, y),
         arrowstyle="-|>,head_length=14,head_width=10",
@@ -79,10 +79,10 @@ def draw_forward_arrow(ax, x_from, x_to, y, label):
     )
     ax.add_patch(a)
     ax.text(
-        (x_from + x_to) / 2, y + 0.30,
+        (x_from + x_to) / 2, label_y,
         label,
-        ha="center", va="bottom",
-        fontsize=11, color=TEXT_MUTED, style="italic",
+        ha="center", va="center",
+        fontsize=12, color=TEXT_DIM, fontweight="bold",
     )
 
 
@@ -134,10 +134,11 @@ def main():
         draw_box(ax, xc, y_center, box_w, box_h, title, subtitle, accent)
         box_centers.append(xc)
 
+    label_y = y_center + box_h / 2 + 0.45  # well above the box tops
     for i in range(3):
         x_from = box_centers[i] + box_w / 2 + 0.05
         x_to = box_centers[i + 1] - box_w / 2 - 0.05
-        draw_forward_arrow(ax, x_from, x_to, y_center, ARROW_LABELS[i])
+        draw_forward_arrow(ax, x_from, x_to, y_center, ARROW_LABELS[i], label_y)
 
     # Loop arrow under the row
     y_loop_anchor = y_center - box_h / 2 - 0.25

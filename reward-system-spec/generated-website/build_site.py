@@ -1078,33 +1078,38 @@ window.MathJax = {{
       <span class="nav-dd-ref-title">Cross-CIP Analysis &amp; Verdict</span>
       <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, no-go verdict on the bundle</span>
     </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Forward — New Proposal</div>
+    <a href="solution-evaluation.html#5-toward-a-new-proposal" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
+      <span class="nav-dd-ref-title">Draft in preparation</span>
+      <span class="nav-dd-ref-cite">V2 spec target with the structural caveats addressed<span class="nav-dd-ref-stage nav-dd-ref-stage-soon">Soon</span></span>
+    </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
-    <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_stake_cap}">
-      <span class="nav-dd-ref-title">Layer index</span>
+    <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis{cls_stake_cap}">
+      <span class="nav-dd-ref-title">Layer synthesis</span>
       <span class="nav-dd-ref-cite">Two stake-cap shapes, same intent<span class="nav-dd-ref-stage">Index</span></span>
     </a>
-    <a href="cip-0050.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_cip_0050}">
+    <a href="cip-0050.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_cip_0050}">
       <span class="nav-dd-ref-title">CIP-0050 — Pledge Leverage</span>
-      <span class="nav-dd-ref-cite">Single hard cap on σ′ — capital-capability bias<span class="nav-dd-ref-stage">▼ No-go</span></span>
+      <span class="nav-dd-ref-cite">σ′ clip leaves A(ν, π) bottleneck unfixed<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
     </a>
-    <a href="cip-0037.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_cip_0037}">
+    <a href="cip-0037.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_cip_0037}">
       <span class="nav-dd-ref-title">CIP-0037 — Dynamic Saturation</span>
-      <span class="nav-dd-ref-cite">Three-anchor curve with 20 % floor — same bias, softened<span class="nav-dd-ref-stage">▼ No-go</span></span>
+      <span class="nav-dd-ref-cite">Same as CIP-0050 plus 20 % floor — A still unfixed<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Fee Layer — Operator/Member Split</div>
-    <a href="fee-layer.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_fee_layer}">
-      <span class="nav-dd-ref-title">Layer index</span>
+    <a href="fee-layer.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis{cls_fee_layer}">
+      <span class="nav-dd-ref-title">Layer synthesis</span>
       <span class="nav-dd-ref-cite">Pricing-as-viability conflation<span class="nav-dd-ref-stage">Index</span></span>
     </a>
-    <a href="cip-0023.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_cip_0023}">
+    <a href="cip-0023.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_cip_0023}">
       <span class="nav-dd-ref-title">CIP-0023 — Fair Min Fees</span>
       <span class="nav-dd-ref-cite">minPoolMargin floor — subsumed by CIP-0082 stage 2<span class="nav-dd-ref-stage">⊂ Moot</span></span>
     </a>
-    <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_cip_0082}">
+    <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_cip_0082}">
       <span class="nav-dd-ref-title">CIP-0082 — Improved Rewards Scheme</span>
-      <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage">▼ No-go</span></span>
+      <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
     </a>
-    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_k_parameter}">
+    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_k_parameter}">
       <span class="nav-dd-ref-title">k-Parameter mechanics</span>
       <span class="nav-dd-ref-cite">Sub-document of CIP-0082 stages 3–4<span class="nav-dd-ref-stage">Sub-doc</span></span>
     </a>
