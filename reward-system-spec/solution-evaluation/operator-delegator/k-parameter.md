@@ -1,6 +1,24 @@
 # `k` parameter — Changing the scalar without revising the function that uses it
 
-> **Status:** Active 2026/04/23. Companion to CIP-0082.S3. **Scope:** mechanical effect of raising `k` on the operator/delegator split **when the reward function $\hat f'(\pi, \nu, \bar p) = \bar p \cdot P_{\max} \cdot E(\pi, \nu)$ is held fixed** — only the scalar `k` moves, which flows through to $P_{\max} = R/k$ and $z_0 = 1/k$. Any evaluation that also changes the function itself (CIP-0050 via $\sigma'$ clipping, CIP-0037 via a new saturation curve) is out of scope and lives in [`../pools-distribution/`](../pools-distribution/README.md). References in §3.4.
+> **Status:** Active 2026/04/23. Companion to CIP-0082.S3. **Scope:** mechanical effect of raising `k` on the operator/delegator split **when the reward function $\hat f'(\nu, \pi, \bar p) = \bar p \cdot P_{\max} \cdot E(\nu, \pi)$ is held fixed** — only the scalar `k` moves, which flows through to $P_{\max} = R/k$ and $z_0 = 1/k$. Any evaluation that also changes the function itself (CIP-0050 via $\sigma'$ clipping, CIP-0037 via a new saturation curve) is out of scope and lives in [`../pools-distribution/`](../pools-distribution/README.md).
+
+The `k` parameter — `stakePoolTargetNum` in the Cardano protocol — sets the **target number of pools** the network is calibrated for. It enters the SL-D1 reward formula in two derived places: the per-pool saturation threshold `z₀ = 1/k` and the per-pool reward ceiling `P_max = R/k`. Raising `k` mechanically compresses both: the saturation cap drops (more pools, smaller ceiling each) and the reward ceiling shrinks proportionally.
+
+The protocol's only previous `k` change was Aug 2020 — `k: 150 → 500` — and it produced today's MPO landscape (85 entities operating 901 pools, 75.4 % of participating stake). That is the natural-experiment baseline against which any future `k` raise must be evaluated. The mechanical question is whether the same outcome is structurally inevitable under the current weak-pledge regime, or whether something has changed in the operator population that would make a future raise behave differently.
+
+This document evaluates **the `k` lever in isolation** — what changes when only the scalar `k` moves, holding the reward formula and the operator/member split formula fixed. It is the standalone analysis underneath CIP-0082 stages 3–4 (`k: 500 → 750 → 1000`) and a precondition for understanding why the V2 dependency chain treats `k` as the *last* lever to activate, not the first.
+
+*The core question this evaluation asks: under the current weak-pledge equilibrium, does a `k` raise distribute new pool slots to independent operators, or does it absorb horizontally into existing MPO fleets — repeating the 2020 pattern?*
+
+The argument proceeds in three parts:
+
+1. **Introduction** (§1). The lever's identity, why it sits in the operator-delegator folder despite acting transversally, and the diagnostic findings that anchor the analysis (the 2020 `k: 150 → 500` outcome, current MPO concentration, the non-pledge equilibrium).
+
+2. **Mechanism** (§2). Formula references inherited from the sub-flows, what `k` moves and what it does NOT move (a key result: hollow pool reward per ADA is `k`-invariant — the formula's `k` cancels), and the four mechanical channels: top-tail compression, pledge-amplification for self-pledged pools below the new saturation, hollow-pool invariance, and the structural-threshold invariance that means production and viability thresholds do not respond to `k`.
+
+3. **Limits as a standalone proposal** (§3). Three synthesis findings — S1 (top-tail compression + narrow pledge amplification + bottom unchanged — Regresses + Delivers narrowly + Blind spot), S2 (a fine tool for a narrow demand-side segment, insufficient on the supply side because the formula stays intact — Regresses), S3 (MPO fleet absorption under weak pledge, historical and structural — Regresses).
+
+The Executive summary below packages the verdict; the Findings summary table after it is the navigation index for §3.
 
 ## Executive summary
 
@@ -11,7 +29,7 @@
   - **S2** — A fine tool for a narrow segment, insufficient on its own: the demand side — the ROS-focused delegator market the k-raise targets — is a single-digit-percent slice of productive stake once custodial and loyal retail are removed; and the operator side stays in its non-pledge equilibrium because the reward formula that produces the equilibrium is not touched by a k-raise (2 F's: §3.2).
   - **S3** — Under the current weak-pledge regime, new pool slots are absorbed horizontally by existing MPO fleets — historical precedent plus the structural economics of fleet expansion (2 F's: §3.3).
 
-## Contents
+## Table of Contents
 
 - [Executive summary](#executive-summary)
 - [Findings summary](#findings-summary)

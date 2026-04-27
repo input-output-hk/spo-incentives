@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIP-0082 — Pool Reward Improvements</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem('spo-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script>(function(){var bgs=['iog-hero-bg-01.jpg','iog-hero-bg-02.jpg','iog-hero-bg-03.jpg'];var pick=bgs[Math.floor(Math.random()*bgs.length)];document.documentElement.style.setProperty('--hero-bg','url("'+pick+'")');})();</script>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="assets/site.css?v=1777279189">
+
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<nav class="site-nav"><div class="nav-brand">
+<a href="index.html" class="nav-brand-home">
+<img src="assets/iog-word-marque-white.png" alt="Input | Output Group" class="nav-brand-wordmark">
+<span class="nav-brand-sep-vr" aria-hidden="true"></span>
+<span class="nav-brand-org"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</span>
+<span class="nav-brand-sep" aria-hidden="true">/</span>
+<span class="nav-brand-title">Cardano Reward System V2</span>
+</a>
+<div class="nav-brand-right">
+<button class="pdf-export" onclick="printAsPdf()" title="Save this page as PDF" aria-label="Save as PDF">PDF</button>
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light theme" aria-label="Toggle theme">☀</button>
+</div>
+</div>
+<div class="nav-pages">
+
+<!-- Zone 1 (left anchor) — Solution Evaluation: CIP candidates evaluated against V2 -->
+<div class="nav-zone nav-zone-solution">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-solution active" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Solution Evaluation ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-solution">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
+      <span class="nav-dd-stratum-meta">CIP candidates evaluated against the V2 specification — what each delivers, regresses, and leaves blind</span>
+    </div>
+    <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero parent-active">
+      <span class="nav-dd-ref-title">The Solution Landscape</span>
+      <span class="nav-dd-ref-cite">Situation, candidates, conclusion — and the forward-pointer to the new proposal</span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer</div>
+    <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
+      <span class="nav-dd-ref-title">Stake-Cap Layer Index<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Pledge-as-binding-signal candidates, side by side<span class="nav-dd-ref-stage">Index</span></span>
+    </a>
+    <a href="cip-0050.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
+      <span class="nav-dd-ref-title">CIP-0050<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Pledge Leverage-Based Staking Rewards<span class="nav-dd-ref-stage">Hard Cap</span></span>
+    </a>
+    <a href="cip-0037.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
+      <span class="nav-dd-ref-title">CIP-0037<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Dynamic Saturation Based on Pledge<span class="nav-dd-ref-stage">Cap + Floor</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Fee Layer &amp; k-Lever</div>
+    <a href="fee-layer.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow parent-active">
+      <span class="nav-dd-ref-title">Fee Layer Index<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Operator/delegator pricing + the k-parameter lever<span class="nav-dd-ref-stage">Index</span></span>
+    </a>
+    <a href="cip-0023.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
+      <span class="nav-dd-ref-title">CIP-0023<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Updated minPoolCost &amp; minPoolMargin<span class="nav-dd-ref-stage">Fee Layer</span></span>
+    </a>
+    <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow active">
+      <span class="nav-dd-ref-title">CIP-0082<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Pool reward improvements (k-raise + fee-layer)<span class="nav-dd-ref-stage">Composite</span></span>
+    </a>
+    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
+      <span class="nav-dd-ref-title">k-Parameter Lever<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Standalone k-raise — what it can and cannot do<span class="nav-dd-ref-stage">Transversal</span></span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
+<div class="nav-zone nav-zone-output">
+<a href="index.html" class="nav-tab-spec-big">V2 Specification</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 3 — Mainnet Diagnostic (observed reality) -->
+<div class="nav-zone nav-zone-diag">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-diag" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Mainnet Diagnostic ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-diag">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-diagnostic">Mainnet Diagnostic</span>
+      <span class="nav-dd-stratum-meta">What mainnet is actually doing — synthesis, Reward-Flow evidence, and the prior report</span>
+    </div>
+    <a href="findings.html" class="nav-dd-ref nav-dd-ref-hero">
+      <span class="nav-dd-ref-title">Findings &amp; Observations<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Every diagnostic finding paired with its mainnet evidence — one-page synthesis</span>
+    </a>
+    <a href="observatory.html" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">The Diagnostic</span>
+      <span class="nav-dd-ref-cite">Full narrative — observations, problem induction, and sub-report links</span>
+    </a>
+    <a href="census.html" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">The Staking Census<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Who holds stake — capital, participation<span class="nav-dd-ref-stage">Evidence</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Reward Flow</div>
+    <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
+      <span class="nav-dd-ref-title">Reserves<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Treasury & pool-pot distribution<span class="nav-dd-ref-stage">Stage 1</span></span>
+    </a>
+    <a href="pools.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
+      <span class="nav-dd-ref-title">Pools<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Distribution gaps across the pool population<span class="nav-dd-ref-stage">Stage 2</span></span>
+    </a>
+    <a href="operator.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
+      <span class="nav-dd-ref-title">Operators/Delegators<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">The operator's cut versus the delegator share<span class="nav-dd-ref-stage">Stage 3</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label">Past Analysis</div>
+    <a href="pdf-viewer.html?file=references/previous-analasys/spo-incentives-analysis_lopez-de-lara_2025.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Nov 2025 — Analysis of Cardano's Incentive Mechanism</span>
+      <span class="nav-dd-ref-cite">Lopez de Lara · prior mainnet diagnostic<span class="nav-dd-ref-tag">SD-L</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 4 — Design Support (intended mechanism) -->
+<div class="nav-zone nav-zone-design">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-design" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Design Support ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-design">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-design">Design Support</span>
+      <span class="nav-dd-stratum-meta">The intended mechanism — formal spec + the narrative it never came with</span>
+    </div>
+    <a href="intended-game.html" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">The Intended Game<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Plain-prose companion to SL-D1 — fills the narrative gap the formal spec left open</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/design-specs/delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Delegation Incentives Design Specification</span>
+      <span class="nav-dd-ref-cite">Kant · Brünjes · Coutts — 2019<span class="nav-dd-ref-tag">SL-D1</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 5 — Research Papers (academic foundations) -->
+<div class="nav-zone nav-zone-research">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-research" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Research Papers ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-research">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-research">Research Papers</span>
+      <span class="nav-dd-stratum-meta">Academic antecedents and adjacent work on reward schemes</span>
+    </div>
+    <a href="pdf-viewer.html?file=references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Reward Sharing Schemes for Stake Pools</span>
+      <span class="nav-dd-ref-cite">Brünjes · Kiayias · Koutsoupias · Stouka — 2020<span class="nav-dd-ref-tag">RSS-2020</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/research-papers/incentives-against-power-grabs_kiayias-et-al_2021.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Incentives Against Power Grabs</span>
+      <span class="nav-dd-ref-cite">Kiayias et al. — 2021<span class="nav-dd-ref-tag">IAPG</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/research-papers/removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Removing the Minimum Pool Cost</span>
+      <span class="nav-dd-ref-cite">Stouka · Brünjes · Kiayias · Koutsoupias — 2022<span class="nav-dd-ref-tag">RMPC</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Balancing Participation & Decentralization</span>
+      <span class="nav-dd-ref-cite">Kiayias et al. — 2024<span class="nav-dd-ref-tag">BPD</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="nav-breadcrumb"><span class="nav-breadcrumb-item">Solution Evaluation</span><span class="nav-breadcrumb-sep" aria-hidden="true">›</span><span class="nav-breadcrumb-item">Fee Layer &amp; k-Lever</span><span class="nav-breadcrumb-sep" aria-hidden="true">›</span><span class="nav-breadcrumb-item nav-breadcrumb-current">CIP-0082</span><span class="nav-breadcrumb-desc-sep" aria-hidden="true">—</span><span class="nav-breadcrumb-desc">Pool Reward Improvements (k-raise + Fee Layer)</span></div>
+</nav>
+<div class="hero">
+  <svg class="hero-schema" viewBox="0 0 1400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <pattern id="heroGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,.06)" stroke-width=".5"/>
+      </pattern>
+    </defs>
+    <rect width="1400" height="400" fill="url(#heroGrid)"/>
+    <g class="hero-schema-marks" stroke="rgba(229,35,33,.5)" stroke-width=".8" fill="none">
+      <path d="M 0 60 L 120 60 L 140 80 L 260 80"/>
+      <path d="M 1400 320 L 1260 320 L 1240 300 L 1120 300"/>
+      <circle cx="140" cy="80" r="3" fill="#E52321"/>
+      <circle cx="1240" cy="300" r="3" fill="#E52321"/>
+    </g>
+    <g stroke="rgba(22,233,216,.28)" stroke-width=".6" fill="none">
+      <path d="M 40 340 L 180 340 L 200 320 L 320 320"/>
+      <circle cx="200" cy="320" r="2.5" fill="#16E9D8"/>
+    </g>
+  </svg>
+  <div class="hero-topbar">
+    <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="hero-full-logo">
+    <div class="hero-division">
+      <span class="hero-division-dot" aria-hidden="true"></span>
+      <span class="hero-division-label">Cardano Business Unit</span>
+    </div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">V2 Reward System &middot; Technical Specification</div>
+    <h1>CIP-0082</h1>
+    <div class="sub">Pool Reward Improvements (k-raise + Fee Layer)</div>
+  </div>
+  <div class="hero-bottom-rule" aria-hidden="true"></div>
+</div>
+<div class="content"><blockquote>
+<p><strong>Status:</strong> Active 2026/04/23. Fee-layer reform (stages 1–2) + transversal <code>k</code> raise (stages 3–4). CIP identity and sources in §1; evaluation references in §3.4.</p>
+</blockquote>
+<p>CIP-0082 is a <strong>four-stage</strong> reform package that sequences fee-layer changes and global pool-count expansions over a planned 3-epoch cadence:</p>
+<ol>
+<li><strong>Floor halving</strong> — <code>minPoolCost: 340 → 170</code> ADA. <strong>Already retired on mainnet</strong> (Conway DIA.1.3).</li>
+<li><strong>Margin swap</strong> — delete <code>minPoolCost</code>, introduce <code>minPoolRate = 3 %</code>. Requires a hard fork.</li>
+<li><strong>Pool-count expansion</strong> — <code>k: 500 → 750</code>. Parameter update.</li>
+<li><strong>Pool-count expansion</strong> — <code>k: 750 → 1000</code>. Parameter update.</li>
+</ol>
+<p>The intent is to address V2 §3.1 (small-operator viability) and §3.3 (delegator yield) via stages 1–2, then close §3.4 (concentration) via stages 3–4 by raising the target pool count. Existing pool registration certificates are preserved across all stages via the rule <code>poolRateEff = max(poolRate, minPoolRate)</code>.</p>
+<p>The live content of this evaluation is <strong>the Margin swap (stage 2) + the two pool-count expansions (stages 3–4)</strong> — stage 1 is already complete. Stage 2 is a fee-layer reform with a precise structural signature; stages 3–4 are a transversal lever whose standalone analysis is handled in <a href="k-parameter.html"><code>k-parameter.md</code></a>. This file's own structural critique focuses on stage 2 (S1).</p>
+<p><em>The core question this evaluation asks: does the Margin swap deliver the small-operator viability outcome it promises, or does it transfer revenue regressively up the operator-fleet distribution? And does the planned 3-epoch cadence between stages create a window where the <code>k</code> raises fire in exactly the regressive regime the k-parameter analysis identifies?</em></p>
+<p>The argument proceeds in three parts:</p>
+<ol>
+<li>
+<p><strong>Introduction</strong> (§1). CIP identity card, the four-stage timeline, the diagnostic findings the proposal targets, the relationship to CIP-0023 (which CIP-0082 subsumes via stage 2), and the V2 §3 problem statement.</p>
+</li>
+<li>
+<p><strong>Mechanism</strong> (§2). The fee-split formula at each stage, worked calibrations at current mainnet parameters across the 9-tier pool-size taxonomy and the n-MPO operator-fleet brackets, and the per-stage delta on operator revenue and delegator ROS.</p>
+</li>
+<li>
+<p><strong>Limits as a standalone proposal</strong> (§3). Synthesis finding S1 — the Margin swap delivers on the delegator side and regresses on the operator side (3 quantified F's). Plus the cadence caveat: the first pool-count expansion fires 6 epochs after the Margin swap, leaving no time to activate a stake-cap layer in between.</p>
+</li>
+</ol>
+<p>The Executive summary below packages the verdict; the Findings summary table after it is the navigation index for §3.</p>
+<h2 id="executive-summary">Executive summary</h2>
+<ul>
+<li><strong>Verdict.</strong> <strong>Not a standalone path to ratify.</strong> CIP-0082 sequences four named stages: <strong>Floor halving</strong> (stage 1 — <code>minPoolCost: 340 → 170</code>, <strong>already retired on mainnet</strong> via Conway DIA.1.3), <strong>Margin swap</strong> (stage 2 — delete <code>minPoolCost</code>, add <code>minPoolRate = 3 %</code>, hard fork), and two <strong>pool-count expansions</strong> (stages 3–4 — <code>k: 500 → 750 → 1000</code>). Live content is the Margin swap + the two pool-count expansions. The evaluation of stages 3–4 as a standalone lever is handled in <a href="k-parameter.html"><code>k-parameter.md</code></a>; this file's own structural critique (S1) targets the <strong>Margin swap</strong>.</li>
+<li><strong>Instrument.</strong> Four stages — one parameter update (Floor halving, complete), one <strong>hard fork</strong> (Margin swap, pending HFC), two parameter updates (pool-count expansions). Proposed interval 3 epochs. Existing pool registration certificates preserved via $poolRateEff = \max(poolRate, minPoolRate)$.</li>
+<li><strong>One synthesis finding carries the Margin-swap verdict</strong> — detailed in §3.1 and re-surfaced inline throughout:</li>
+<li><strong>S1</strong> — The Margin swap delivers on the delegator side and regresses on the operator side (3 F's: §3.1).</li>
+<li><strong>Stages 3–4</strong> are analysed in <a href="k-parameter.html"><code>k-parameter.md</code></a> (k-lever.S1–S3). The CIP-0082-specific caveat: in the CIP's 3-epoch-interval timeline, the first pool-count expansion fires 6 epochs after the Margin swap — no stake-cap layer can be activated in that window, so the k-raise fires in exactly the regressive regime k-parameter.md identifies (§3.2).</li>
+</ul>
+<h2 id="findings-summary">Findings summary</h2>
+<p>CIP evaluations use a three-level taxonomy, mirroring the diagnostic's <code>SUBFLOW.O&lt;n&gt;.F&lt;m&gt;</code>: <strong>S<n></strong> = synthesis-level verdict statement; <strong>F<m></strong> = quantified finding anchored in §2 / §3 evidence; each F tagged <strong>[D] Delivers / [R] Regresses / [B] Blind spot</strong>. Each finding below is re-surfaced as an inline callout at the moment it is discovered in the body of the document — the table is a compact index.</p>
+<p><strong>CIP-0082-specific findings — Margin swap (stage 2):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Tag</th>
+<th>Claim</th>
+<th>Emerges in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CIP-0082.S1</strong></td>
+<td></td>
+<td><strong>The Margin swap delivers on the delegator side and regresses on the operator side</strong></td>
+<td>§3.1</td>
+</tr>
+<tr>
+<td>CIP-0082.S1.F1</td>
+<td>[D]</td>
+<td>Delegator fee-rate dispersion collapses from <strong>38×</strong> today to <strong>1.00×</strong> (flat 3 %); Sub-viable and below jump from <strong>0 % / 1.65 %</strong> to <strong>2.21 %</strong> net ROS</td>
+<td>§2.2 delegator-ROS table</td>
+</tr>
+<tr>
+<td>CIP-0082.S1.F2</td>
+<td>[R]</td>
+<td>Per-pool operator revenue inverts across the viability line: Sub-viable <strong>12 410 → 1 365 ₳/yr (–9×)</strong>; Saturated <strong>12 410 → 52 560 ₳/yr (+4×)</strong></td>
+<td>§2.2 operator-revenue table, §3.1.1</td>
+</tr>
+<tr>
+<td>CIP-0082.S1.F3</td>
+<td>[R]</td>
+<td>On the n-MPO fleet axis the transfer compounds: <strong>+27 K ₳/yr</strong> (2-pool MPO) → <strong>+200 K ₳/yr</strong> (11+ pool MPO) — 7.3× bracket-to-bracket amplification</td>
+<td>§2.2 MPO table, §3.1.2</td>
+</tr>
+</tbody>
+</table>
+<p><em>Cross-CIP link.</em> <strong>CIP-0082.S1</strong> is the scaled-up version of the same structural critique applied to CIP-0023's paired variant (<a href="cip-0023.html#323-reading--why-this-fails-the-missing-cps">cip-0023.md §3.2.3</a>); per-pool Δ values are ~2× larger, per-entity Δ on the n-MPO axis is ~4× larger.</p>
+<p><strong>Stages 3–4 findings — carried from the standalone <code>k</code>-lever analysis in <a href="k-parameter.html"><code>k-parameter.md</code></a>:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Tag</th>
+<th>Claim</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>k-lever.S1</strong></td>
+<td></td>
+<td><strong>A standalone <code>k</code>-raise compresses the top of the distribution and amplifies the pledge bonus for self-pledged pools; hollow pools below saturation are mechanically unchanged, and production + viability thresholds are k-invariant</strong></td>
+<td><a href="k-parameter.html#31-k-levers1--top-tail-compression--narrow-pledge-amplification-bottom-unchanged">k-parameter.md §3.1</a></td>
+</tr>
+<tr>
+<td>k-lever.S1.F1</td>
+<td>[R]</td>
+<td>Above the new $z_0 = 1/k$, pool reward caps at $P_{\max} = R/k$. At $k: 500 \to 1000$, Large-healthy / Near-saturation / Saturated / Oversaturated tiers converge to ≈ 11 942 ₳/ep — <strong>–50 %</strong> vs today</td>
+<td>k-parameter.md §2.3</td>
+</tr>
+<tr>
+<td>k-lever.S1.F2</td>
+<td>[D]</td>
+<td>For self-pledged pools below the new saturation, the bonus $\lambda_{\text{pledge}} A(\nu, \pi)$ scales linearly in <code>k</code> — a fully self-pledged 15 M pool's bonus grows 28 → 218 ₳/ep (7.7× amplification)</td>
+<td>k-parameter.md §2.3.4</td>
+</tr>
+<tr>
+<td>k-lever.S1.F3</td>
+<td>[B]</td>
+<td>Hollow pools below saturation: $\hat f' = R \cdot \lambda_{\text{size}} \cdot \sigma_{\text{rel}}$ — <strong>k-independent</strong>. Dormant, Sub-production, Sub-viable, Healthy tiers see zero mechanical change in pool reward, operator revenue, or delegator ROS</td>
+<td>k-parameter.md §2.3</td>
+</tr>
+<tr>
+<td>k-lever.S1.F4</td>
+<td>[B]</td>
+<td><strong>Of the three structural thresholds in the nine-tier taxonomy, <code>k</code> moves only saturation.</strong> Production threshold ($n \cdot S_{\text{active}} / (L \cdot f)$) and viability threshold ($c / (R \lambda_{\text{size}} / \text{CircSupply})$) contain no <code>k</code>. A k-raise does not rescue any pool at the production or viability boundary</td>
+<td>k-parameter.md §2.2</td>
+</tr>
+<tr>
+<td><strong>k-lever.S2</strong></td>
+<td></td>
+<td><strong>A fine tool for a narrow delegator segment, and insufficient on the operator side because the reward formula is unchanged</strong></td>
+<td><a href="k-parameter.html#32-k-levers2--a-fine-tool-for-a-narrow-delegator-segment-and-insufficient-on-the-operator-side-because-the-formula-is-unchanged">k-parameter.md §3.2</a></td>
+</tr>
+<tr>
+<td>k-lever.S2.F1</td>
+<td>[R]</td>
+<td><strong>The ROS-focused delegator segment is a minority of productive stake.</strong> Of 21.57 B ₳ productive stake: 4.55 B custodial (21.1 %, not discretionary) + 17.02 B retail, of which CEN.O4.F2 says 42 % are loyal (never move in 2.7+ yr); of the 21 % volatile, CEN.O6.F1: 50.5 % of switches land on yield-identical pools. Genuine ROS-responsive segment ≈ <strong>8 % of productive stake at best</strong></td>
+<td>k-parameter.md §3.2</td>
+</tr>
+<tr>
+<td>k-lever.S2.F2</td>
+<td>[R]</td>
+<td><strong>Changing <code>k</code> without revising the reward formula leaves the non-pledge equilibrium intact.</strong> Pledge yield structurally below passive-delegation yield (POL.O2.F2: 0.68 %/yr vs 2.3 %/yr). 78 % of stake at pledge &lt; 1 % (POL.O2.F1). 41/48 capital-sufficient MPOs forfeit the bonus (POL.O4.F3). A k-raise amplifies the bonus but keeps the dominance relation the formula produces — insufficient on the operator side</td>
+<td>k-parameter.md §3.2</td>
+</tr>
+<tr>
+<td><strong>k-lever.S3</strong></td>
+<td></td>
+<td><strong>Under the current weak-pledge regime, new pool slots are absorbed horizontally by existing MPO fleets — historical precedent plus structural economics</strong></td>
+<td><a href="k-parameter.html#33-k-levers3--mpo-fleet-absorption-under-weak-pledge">k-parameter.md §3.3</a></td>
+</tr>
+<tr>
+<td>k-lever.S3.F1</td>
+<td>[R]</td>
+<td>Historical <code>k: 150 → 500</code> (Aug 2020) produced the MPO fleet landscape POL.O4.F1 documents today (85 entities control 75.4 % of participating stake across 901 pools)</td>
+<td>k-parameter.md §3.3</td>
+</tr>
+<tr>
+<td>k-lever.S3.F2</td>
+<td>[R]</td>
+<td>Structural economics favour MPO fleet expansion over new-entrant entry: ~500 ADA registration cost per pool vs median MPO entity revenue of hundreds of K ₳/yr; operational infrastructure scales horizontally; pledge not binding. No mechanism in the k-raise forecloses the expansion pattern</td>
+<td>k-parameter.md §3.3</td>
+</tr>
+</tbody>
+</table>
+<p><em>CIP-0082-specific caveat on stages 3–4.</em> In the CIP's 3-epoch-interval timeline, the first pool-count expansion fires <strong>6 epochs after the Margin swap</strong> — no stake-cap layer (CIP-0050's <code>L</code> or CIP-0037's dynamic saturation) can be negotiated, voted, ramped, and activated in that window. The k-raise therefore fires in exactly the regressive regime k-lever.S3 identifies. Detail in §3.2.</p>
+<h2 id="table-of-contents">Table of Contents</h2>
+<nav class="toc-nav">
+<ul>
+<li><a href="#executive-summary">Executive summary</a></li>
+<li><a href="#findings-summary">Findings summary</a></li>
+<li><a href="#1-introduction">1. Introduction</a><ul>
+<li><a href="#11-identity-card">1.1 Identity card</a></li>
+<li><a href="#12-origin-and-context">1.2 Origin and context</a></li>
+<li><a href="#13-related-diagnostic-findings">1.3 Related diagnostic findings</a></li>
+<li><a href="#14-missing-cpss--mapping-to-v2-3">1.4 Missing CPSs — mapping to V2 §3</a></li>
+</ul>
+</li>
+<li><a href="#2-mechanism">2. Mechanism</a><ul>
+<li><a href="#21-four-stages-and-the-worked-calibration-from-the-cip-rationale">2.1 Four stages and the worked calibration from the CIP rationale</a></li>
+<li><a href="#22-updated-calibration-at-current-parameters-epoch-623-202604">2.2 Updated calibration at current parameters (epoch ~623, 2026/04)</a></li>
+</ul>
+</li>
+<li><a href="#3-limits-of-cip-0082-as-a-standalone-proposal">3. Limits of CIP-0082 as a standalone proposal</a><ul>
+<li><a href="#31-margin-swap-inverts-operator-revenue-across-the-viability-line--more-aggressively-than-cip-0023">3.1 Margin swap inverts operator revenue across the viability line — more aggressively than CIP-0023</a><ul>
+<li><a href="#311-pool-axis--δ-per-pool-across-the-nine-canonical-tiers">3.1.1 Pool axis — Δ per pool across the nine canonical tiers</a></li>
+<li><a href="#312-operator-axis--δ-per-entity-by-n-mpo-bracket">3.1.2 Operator axis — Δ per entity by n-MPO bracket</a></li>
+<li><a href="#313-reading">3.1.3 Reading</a></li>
+</ul>
+</li>
+<li><a href="#32-pool-count-expansions--standalone-k-lever-analysis-in-k-parametermd">3.2 Pool-count expansions — standalone <code>k</code>-lever analysis in <code>k-parameter.md</code></a></li>
+<li><a href="#33-references">3.3 References</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+<h2 id="1-introduction">1. Introduction</h2>
+<p><strong>CIP-0082 — "Improved Rewards Scheme Parameters".</strong> A 2022 proposal to reform the reward-sharing scheme via four sequenced protocol actions: halve, then delete <code>minPoolCost</code>; introduce a proportional margin floor <code>minPoolRate</code>; raise the pool-count target <code>k</code> in two stages. The author frames the package as a fairness-and-decentralisation reform unlocking the pledge benefit that the current <code>minPoolCost</code> floor occludes.</p>
+<h3 id="11-identity-card">1.1 Identity card</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CIP number</td>
+<td>CIP-0082</td>
+</tr>
+<tr>
+<td>Title</td>
+<td>Improved Rewards Scheme Parameters</td>
+</tr>
+<tr>
+<td>Authors</td>
+<td>Tobias Fancee</td>
+</tr>
+<tr>
+<td>Created</td>
+<td>2022/01/03</td>
+</tr>
+<tr>
+<td>Category</td>
+<td>Ledger</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Proposed (as of 2026/04)</td>
+</tr>
+<tr>
+<td>Official page</td>
+<td><a href="https://cips.cardano.org/cip/CIP-0082">cips.cardano.org/cip/CIP-0082</a></td>
+</tr>
+<tr>
+<td>Source (GitHub)</td>
+<td><a href="https://github.com/cardano-foundation/CIPs/tree/master/CIP-0082">cardano-foundation/CIPs / CIP-0082</a></td>
+</tr>
+<tr>
+<td>Forum thread</td>
+<td><a href="https://forum.cardano.org/t/cip-improved-rewards-scheme-parameters/112409">forum.cardano.org/t/cip-improved-rewards-scheme-parameters/112409</a></td>
+</tr>
+<tr>
+<td>Worked-calibration spreadsheet</td>
+<td><code>Context/CIPs-repo/CIP-0082/ImprovedRewardsSchemeParameters.xlsx</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-origin-and-context">1.2 Origin and context</h3>
+<p><strong>Authorship and moment.</strong> Written in early 2022 by Tobias Fancee. The worked calibration in the CIP uses epoch-385 parameters (<code>minPoolCost = 340</code>, <code>a_0 = 0.3</code>, <code>k = 500</code>, rewards ≈ 31.2 M ₳/epoch, saturation ≈ 64 M ₳). The author's central observation: a 10 M ₳ community pool and a saturated pool both pay the same 340 ₳ flat fee, and the effective fee rate hyperbola penalises small productive pools. The CIP aggregates into one package three reforms the community had been discussing separately — <code>minPoolCost</code> reduction, <code>minPoolMargin</code> / <code>minPoolRate</code> introduction (crediting CIP-0023 explicitly), and <code>k</code> raises to amplify the pledge benefit.</p>
+<p><strong>Stage 1 is already retired on mainnet.</strong> In the Conway era, governance action DIA.1.3 halved <code>minPoolCost</code> from 340 to <strong>170 ₳</strong> — the exact change proposed in stage 1. The live content of CIP-0082 as a governance item is therefore <strong>stages 2–4</strong>. The CIP text preserves stage 1 as documentation; this evaluation treats it as a completed milestone and scopes the analysis to stages 2–4.</p>
+<p><strong>Hard-fork requirement.</strong> Stage 2 is the non-trivial change: a hard fork that deletes <code>minPoolCost</code>, introduces <code>minPoolRate</code>, and modifies the pool-fee calculation to $poolRateEff = \max(poolRate, minPoolRate)$ — a rule change preserving existing pool registration certificates without re-registration. Stages 3 and 4 are parameter updates only.</p>
+<p><strong>Historical placement.</strong> The CIP explicitly credits CIP-0023 for the margin-floor instrument: <em>"<code>minPoolRate</code> was originally proposed in CIP-0023."</em> CIP-0082 stage 2 is therefore mechanically equivalent to a <em>paired variant</em> of CIP-0023 (reduction of <code>minPoolCost</code> + introduction of a margin floor) — with the reduction taken to zero and the margin set to 3 % (vs CIP-0023's illustrative 50 ₳ + 1.5 %). The comparison with CIP-0023 paired is used as the structural reference in §3.1.</p>
+<h3 id="13-related-diagnostic-findings">1.3 Related diagnostic findings</h3>
+<p>CIP-0082's four stages touch three layers of the reward pipeline: fee (stages 1–2), saturation and tier boundaries (stages 3–4), and — indirectly — the pledge signal via k-raise amplification of $a_0$. Five findings across the operator-delegator-distribution and pools-distribution mainnet analyses are the CIP's direct targets.</p>
+<table>
+<thead>
+<tr>
+<th>Finding</th>
+<th>Why shared</th>
+<th>Supporting observations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>OPE.O1.F4 — The flat fee follows a $1/\sigma$ hyperbola: 47.5 % of pool reward at the sub-viable tier, 1.5 % at near-saturation</strong></td>
+<td>Stage 2 eliminates the hyperbola by construction — the 3 % <code>minPoolRate</code> produces a constant effective fee rate across pool sizes. This is the CIP's flagship delegator-side claim</td>
+<td>OPE.O1.F1 (flat fee delivers <strong>60 %</strong> of retail operator revenue — the passive channel dominates the active one) · OPE.O5.F1 (sub-viable delegators pay <strong>18× more</strong> for <strong>0.30 pp</strong> of extra yield)</td>
+</tr>
+<tr>
+<td><strong>OPE.O6.F1 — A sub-viable single-pool operator absorbs 48.3 % of pool rewards for 24 820 ₳/yr; an 11+ pool MPO absorbs 7.7 % for 1 035 496 ₳/yr — 42× more revenue at 6× less effective price</strong></td>
+<td>Stage 2 replaces the fixed fee with a proportional margin. The <em>delegator-side</em> price gap collapses to a flat 3 %. The <em>operator-side</em> revenue gap <strong>widens</strong> because revenue now scales with pool size rather than being clamped at 170 ₳ — see §3.1</td>
+<td>OPE.O6.F4 (no single-pool operator earns a competitive wage — median ~25 000 ₳/yr covers infrastructure but not 5–15 hrs/mo of skilled labour)</td>
+</tr>
+<tr>
+<td><strong>OPE.O7.F1 — Delegation follows visibility, not return</strong> (65.9 % of retail delegators sit in hollow MPO pools at 2.18 % net ROS, while hollow single-pool near-saturation pools at 2.34 % hold only 2.7 % of delegators)</td>
+<td>Stage 2's explicit design goal is to flatten delegator ROS so pledge becomes the differentiator steering delegation toward small productive pools. But OPE.O7.F1 establishes delegation does not respond to ROS at a 0.39 pp spread — flattening to a 0.02 pp spread removes a signal delegators were not using</td>
+<td>OPE.O7.F2 (pledge premium is negative in retail data; flat fee drag overwhelms the pledge benefit)</td>
+</tr>
+<tr>
+<td><strong>POL.O3.F5 — Tier boundaries are dynamic functions of k and active stake</strong></td>
+<td>Stages 3–4 raise <code>k</code> from 500 → 750 → 1000. Each raise halves $z_0 = \text{Supply}/k$ and reshapes the nine-tier taxonomy — Large-healthy pools become Near-saturation, Near-saturation becomes Saturated, etc. The lower-tail population (Sub-viable and below) is <em>untouched</em> by the k-raise, against the CIP's §3.1 framing</td>
+<td>POL.O3.F6 (CIPs targeting k reshape the upper tail; CIPs targeting fees or block production reshape the lower tail)</td>
+</tr>
+<tr>
+<td><strong>POL.O4.F1 — 85 MPO entities operate 901 pools holding 16.4 B ₳ (75.4 % of participating stake)</strong></td>
+<td>A standalone k-raise creates pool slots the existing MPO fleet can absorb at ~500 ₳ registration cost per pool. Stages 3–4 add up to <strong>500 new slots</strong> to a population already three-quarters controlled by multi-pool operators</td>
+<td>Historical precedent: 2020 <code>k: 150 → 500</code> produced today's MPO landscape; full k-lever analysis in <a href="k-parameter.html"><code>k-parameter.md</code></a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="14-missing-cpss-mapping-to-v2-3">1.4 Missing CPSs — mapping to V2 §3</h3>
+<p>CIP-0082 ships without a formal CPS. Read for what it actually addresses, the CIP operates on <strong>four</strong> distinct V2 §3 specifications simultaneously — two as primary claims, two indirect.</p>
+<table>
+<thead>
+<tr>
+<th>V2 slot</th>
+<th>What CIP-0082 proposes as the fix</th>
+<th>Weight</th>
+<th>Evidence base</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">§3.1 Guarantee operator viability</a></td>
+<td>Stage 2's <code>minPoolRate</code> makes the operator take proportional — the CIP's worded claim is that "the stakepool viability point collapses to 1 ADA"</td>
+<td><strong>Primary</strong> (stages 1–2)</td>
+<td>OPE.O6.F1, OPE.O6.F4</td>
+</tr>
+<tr>
+<td><a href="index.html#33-maintain-and-diversify-a-competitive-delegator-yield">§3.3 Maintain and diversify a competitive delegator yield</a></td>
+<td>Stage 2 flattens the effective fee rate to 3 % everywhere — delegator ROS spread shrinks to 0.016 pp across pool sizes in the CIP's own worked calibration</td>
+<td><strong>Primary</strong> (stage 2)</td>
+<td>OPE.O1.F4, OPE.O5.F1, OPE.O1.F1</td>
+</tr>
+<tr>
+<td><a href="index.html#32-restore-the-notion-of-pledge-among-operators">§3.2 Restore the notion of pledge among operators</a></td>
+<td>Stages 3–4's k-raises amplify $a_0$'s pledge-benefit coefficient by shrinking $z_0$ — the pledge-to-saturation ratio rises</td>
+<td>Indirect</td>
+<td>POL.O3.F5</td>
+</tr>
+<tr>
+<td><a href="index.html#34-reduce-the-concentration-effects-that-distort-both-populations">§3.4 Reduce the concentration effects that distort both populations</a></td>
+<td>Stages 3–4's k-raises "get stale delegations moving" by oversaturating large pools; pool-count metric rises mechanically</td>
+<td>Indirect, pool-level only</td>
+<td>POL.O4.F1, POL.O3.F6</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What the reform addresses without declaring.</strong> Stage 2's shift from fixed-per-pool take to proportional-to-size take is a <strong>revenue reallocation on the operator layer</strong>: small operators receive less in absolute terms; large operators receive more. The CIP's own rationale section discusses delegator ROS at length but does not quantify the operator-side reallocation — this gap is the subject of §3.1.</p>
+<p><strong>Foundational claim carried by V2 §3.1.</strong> <a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">§3.1 is declared the foundational V2 specification</a>: every downstream problem (delegator yield, pledge signal, concentration) sits on a functioning operator growth path, or else it sits on nothing. CIP-0082's primary weight lands on §3.1, which is why the operator-side revenue inversion (§3.1) is a load-bearing limit — not a tangential concern.</p>
+<h2 id="2-mechanism">2. Mechanism</h2>
+<p><strong>Stage 2 formula</strong> (post-hard-fork pool-fee calculation, replacing the prior <code>minPoolCost + poolRate × (R − minPoolCost)</code> shape):</p>
+<p>$$\text{take}(\sigma) = poolRateEff_{i} \times R_{\text{pool}}(\sigma), \qquad poolRateEff_{i} = \max(poolRate_{i},\ minPoolRate)$$</p>
+<p>With <code>minPoolCost</code> removed, the fixed-per-pool component vanishes entirely. Stages 3–4 leave the fee formula unchanged and modify only $k$ (and therefore $z_0 = \text{Supply}/k$).</p>
+<p><strong>Design surface.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>New parameters</td>
+<td><code>minPoolRate</code> (= 0.03), <code>poolRateEff</code> (derived)</td>
+</tr>
+<tr>
+<td>Deleted parameters</td>
+<td><code>minPoolCost</code> (at stage 2)</td>
+</tr>
+<tr>
+<td>Changed parameters</td>
+<td><code>stakePoolTargetNum</code> (500 → 750 → 1000 across stages 3–4)</td>
+</tr>
+<tr>
+<td>Hard fork required</td>
+<td>Stage 2 only</td>
+</tr>
+<tr>
+<td>Re-registration</td>
+<td>Not required — <code>poolRateEff</code> derived in ledger reward calc</td>
+</tr>
+<tr>
+<td>Layer</td>
+<td>Fee (stages 1–2) + transversal (stages 3–4)</td>
+</tr>
+<tr>
+<td>Reward curve shape</td>
+<td>Untouched</td>
+</tr>
+<tr>
+<td>Pledge mechanics</td>
+<td>Untouched (amplified indirectly by k via $z_0$ shrinkage)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="21-four-stages-and-the-worked-calibration-from-the-cip-rationale">2.1 Four stages and the worked calibration from the CIP rationale</h3>
+<p>CIP-0082 sequences four on-chain actions. Each has a distinct mechanical role, which is easier to hold in mind once named:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Stage name</th>
+<th>Action</th>
+<th>What it does mechanically</th>
+<th>Mainnet status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Floor halving</strong></td>
+<td><code>minPoolCost: 340 → 170 ₳</code> (parameter update)</td>
+<td>Halves the flat per-pool fee. First-order relief on the $1/\sigma$ hyperbola without changing the fee <em>shape</em> — every pool still owes a fixed ADA amount</td>
+<td><strong>Complete on mainnet</strong> — Conway governance action DIA.1.3</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Proportional-margin swap</strong></td>
+<td>Delete <code>minPoolCost</code>; add <code>minPoolRate = 3 %</code> (hard fork + ledger-rule change)</td>
+<td>Replaces the flat-ADA floor with a size-proportional floor via $poolRateEff = \max(poolRate, minPoolRate)$. The effective fee <em>rate</em> becomes constant at 3 % across every pool size. This is CIP-0023's <em>paired</em> variant at harsher calibration</td>
+<td>Pending HFC</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>First pool-count expansion</strong></td>
+<td><code>k: 500 → 750</code> (parameter update)</td>
+<td>Shrinks saturation from $z_0 \approx 77$ M ₳ to $\approx 51$ M ₳. Author's stated goal: "get stale delegations moving" by oversaturating large pools and amplifying the pledge benefit via $a_0$ on the reward curve</td>
+<td>Pending</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Second pool-count expansion</strong></td>
+<td><code>k: 750 → 1000</code> (parameter update)</td>
+<td>Further shrinks saturation to $\approx 38.5$ M ₳. Completes the concentration-relief programme: every current Large-healthy pool is reclassified as Near-saturation or beyond at the new cap</td>
+<td>Pending</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Per-stage role in one line each.</strong> Stage 1 <em>shrinks</em> the flat floor. Stage 2 <em>replaces</em> it. Stages 3 and 4 <em>fragment the top of the distribution</em> that the replaced floor was protecting — making them coherent only if the underlying pledge signal is simultaneously restored by a stake-cap layer (§3.3).</p>
+<p><strong>Author's epoch-385 calibration for hollow pools</strong> (declared <code>poolRate ≈ 0</code>, minimum fees; total rewards ≈ 31.2 M ₳/epoch, saturation 64 M ₳):</p>
+<table>
+<thead>
+<tr>
+<th>Pool</th>
+<th style="text-align: right;">Stake</th>
+<th style="text-align: right;">Pledge</th>
+<th>Current</th>
+<th>Stage 1 — Floor halving</th>
+<th>Stage 2 — Margin swap</th>
+<th>Stage 3 — k → 750</th>
+<th>Stage 4 — k → 1000</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sybil</td>
+<td style="text-align: right;">100 K ₳</td>
+<td style="text-align: right;">100 K</td>
+<td>below viability</td>
+<td>below viability</td>
+<td>1.52 ₳/ep, ROS 3.66 %</td>
+<td>1.52 ₳/ep, ROS 3.66 %</td>
+<td>1.52 ₳/ep, ROS 3.66 %</td>
+</tr>
+<tr>
+<td>Sybil</td>
+<td style="text-align: right;">1 M ₳</td>
+<td style="text-align: right;">1 M</td>
+<td>340 ₳/ep, ROS 1.23 %</td>
+<td>170 ₳/ep, ROS 2.50 %</td>
+<td>15.24 ₳/ep, ROS 3.66 %</td>
+<td>15.24 ₳/ep, ROS 3.66 %</td>
+<td>15.24 ₳/ep, ROS 3.66 %</td>
+</tr>
+<tr>
+<td>Community</td>
+<td style="text-align: right;">10 M ₳</td>
+<td style="text-align: right;">100 K</td>
+<td>340 ₳/ep, ROS 3.52 %</td>
+<td>170 ₳/ep, ROS 3.65 %</td>
+<td>152.4 ₳/ep, ROS 3.66 %</td>
+<td>152.5 ₳/ep, ROS 3.66 %</td>
+<td>152.5 ₳/ep, ROS 3.66 %</td>
+</tr>
+<tr>
+<td>Community</td>
+<td style="text-align: right;">Saturated</td>
+<td style="text-align: right;">1 M</td>
+<td>340 ₳/ep, ROS 3.76 %</td>
+<td>170 ₳/ep, ROS 3.77 %</td>
+<td>1081 ₳/ep, ROS 3.68 %</td>
+<td>720 ₳/ep, ROS 3.69 %</td>
+<td>543 ₳/ep, ROS 3.69 %</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Headline figures (author's own).</strong> Three summary metrics distilling each stage's effect on the <em>delegator side</em>. All three describe how the fee scheme treats a <em>pledge-only pool</em> — one whose stake equals its pledge, before any external delegation arrives.</p>
+<ul>
+<li><strong>Viability point (pledge).</strong> The smallest pledge at which a zero-delegation pool produces <em>any</em> delegator reward at all. Below this threshold, the pool's epoch reward is smaller than <code>minPoolCost</code>, so the entire reward is absorbed by the flat fee and delegators receive zero. In practice this is the floor an operator must clear before registering a pool is not immediately futile.</li>
+<li><strong>Competitive point (pledge).</strong> The smallest pledge at which a zero-delegation pool's delegator ROS matches the ROS of an already-saturated, zero-pledge pool. Below this pledge, a rational delegator is better off joining a saturated pool than a small pledged one — the small pool cannot compete on yield. Above it, the pledged small pool is finally yield-competitive with the incumbent fleet and can in principle attract organic delegation.</li>
+<li><strong>Delegator ROS dispersion (100 K pool → saturated).</strong> The spread between a tiny 100 K-ADA pool's delegator ROS and a saturated pool's, holding all else equal. This is the single-number summary of the OPE.O1.F4 / OPE.O5.F1 regressivity — how much the fee scheme penalises delegators to small pools. A high value means delegator yield depends strongly on pool size; a low value means pool size is largely irrelevant to delegator return.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Headline</th>
+<th style="text-align: right;">Current</th>
+<th style="text-align: right;">Stage 1 — Floor halving</th>
+<th style="text-align: right;">Stage 2 — Margin swap</th>
+<th style="text-align: right;">Stage 3 — k → 750</th>
+<th style="text-align: right;">Stage 4 — k → 1000</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Viability point (pledge)</td>
+<td style="text-align: right;">~670 K ₳</td>
+<td style="text-align: right;">~335 K ₳</td>
+<td style="text-align: right;">1 ₳</td>
+<td style="text-align: right;">1 ₳</td>
+<td style="text-align: right;">1 ₳</td>
+</tr>
+<tr>
+<td>Competitive point (pledge)</td>
+<td style="text-align: right;">~20 M ₳</td>
+<td style="text-align: right;">~16.5 M ₳</td>
+<td style="text-align: right;">1 ₳</td>
+<td style="text-align: right;">1 ₳</td>
+<td style="text-align: right;">1 ₳</td>
+</tr>
+<tr>
+<td>Delegator ROS dispersion (100 K pool → saturated)</td>
+<td style="text-align: right;">2.53 pp</td>
+<td style="text-align: right;">1.28 pp</td>
+<td style="text-align: right;"><strong>0.016 pp</strong></td>
+<td style="text-align: right;">0.024 pp</td>
+<td style="text-align: right;">0.031 pp</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Reading — row by row.</strong></p>
+<p><em>Row 1 — Viability point.</em> An operator needs ~670 K ₳ of self-pledge today to register a pool that will pay its delegators anything at all (the <strong>Floor halving</strong> cuts that to ~335 K ₳ on mainnet — already in force). Under the <strong>Margin swap</strong> <code>minPoolCost</code> disappears, so the flat-fee trap vanishes with it: any pledge ≥ 1 ₳ produces a nonzero delegator reward. The viability threshold becomes numerically trivial. (Note: trivial <em>arithmetic</em> viability does not imply <em>economic</em> viability for the operator — see §3.2.)</p>
+<p><em>Row 2 — Competitive point.</em> Under today's scheme, a fresh pool needs ~16.5 M ₳ of self-pledge before its zero-delegation ROS matches a saturated hollow pool's — a prohibitive barrier for any operator without multi-million-ADA capital sitting in self-custody. Under the <strong>Margin swap</strong>, every pool pays the same flat 3 % fee rate, so delegator ROS is invariant to pool size, and any ≥ 1 ₳ pledged pool is instantly "competitive" on yield with a saturated pool. The organic-delegation path the current scheme closes for small operators is opened — <em>on paper</em>, subject to the OPE.O7.F1 caveat in §3.2.</p>
+<p><em>Row 3 — Delegator ROS dispersion.</em> The yield gap between a 100 K ₳ pool and a saturated pool shrinks from <strong>2.53 pp today to 0.016 pp</strong> under the <strong>Margin swap</strong> — a ~160× compression. This is the headline delegator-side outcome of the reform: fee-driven differences in delegator return disappear, and the residual 0.016 pp is the pledge benefit ($a_0 = 0.3$) rewarding the 1 M-pledge saturated pool slightly more than the 100 K-pledge baseline.</p>
+<p><strong>Why the dispersion drifts <em>back up</em> at stages 3–4.</strong> The <strong>pool-count expansions</strong> do not change the fee rule — the 3 % margin still applies everywhere, so the fee-regressivity component stays at zero. What the k-raises do is shrink $z_0 = \text{Supply}/k$, which makes the pledge-benefit coefficient $a_0$ bite harder per unit of pool reward. The saturated 1 M-pledge pool pulls slightly further ahead of the 100 K-pledge baseline — 0.016 → 0.024 → 0.031 pp. This is the <em>intended</em> effect: the author states explicitly that the k-raises are there to "increase the effect of the pledge benefit on rewards". The dispersion creep is not a regression of the fee scheme; it's pledge differentiation activating more strongly, by design.</p>
+<p><strong>Why saturated-pool operator revenue falls 1081 → 720 → 543 across stages 2 → 3 → 4.</strong> The pool-count expansions also halve saturation each time. Total reward pot is unchanged; more pools are sharing the same pot, so the per-pool reward at saturation shrinks. The saturated-pool operator's 3 % share shrinks with it — 1081 ₳/ep at $k = 500$, 720 at $k = 750$, 543 at $k = 1000$. This has nothing to do with the fee mechanism; it is arithmetic on the $1/k$ saturation size.</p>
+<p><strong>What the three rows together do not show.</strong> All three metrics look at the <em>delegator side</em>. The corresponding <em>operator-side</em> picture — absolute ADA revenue per pool under the Margin swap — runs in the opposite direction: the 3 % margin produces a revenue stream that scales linearly with pool size, inverting the transfer across the viability line. This is the structural issue quantified in §3.1.</p>
+<h3 id="22-updated-calibration-at-current-parameters-epoch-623-202604">2.2 Updated calibration at current parameters (epoch ~623, 2026/04)</h3>
+<p>Stage 1 is retired (mainnet <code>minPoolCost = 170</code>; see §1.2). Stages 2–4 are the forward-looking content. Calibration below uses today's parameters: $z_0 = 77$ M ₳ at $k = 500$, hollow-pool yield at saturation ≈ 2.275 %/yr (≈ 24 000 ₳/epoch at saturation), $a_0 = 0.3$, total reward pot $P \approx 12$ M ₳/epoch. Representative σ per tier follows the canonical nine-tier taxonomy from <a href="pools.html#413-tier-definitions">pools-distribution §4.1.3</a>. All figures below assume a <strong>hollow pool</strong> (<code>poolRate ≈ 0</code>, pledge ≈ 0), matching the CIP's own worked calibration.</p>
+<p>The fee-rate picture would show 3 % everywhere from the Margin swap onward — not useful. The two axes that actually move across stages are <strong>delegator net ROS</strong> and <strong>operator annualised revenue</strong>, and they move in opposite directions. Both are shown below.</p>
+<p><strong>How the reward floor moves with k.</strong> Below saturation, per-ADA gross yield is constant at ≈ 2.275 %/yr regardless of σ or $k$ (the reward curve is size-proportional). <em>Above</em> saturation the per-pool reward caps at $P/k$ — so every k-raise <em>halves</em> the effective reward-per-ADA for pools stranded above the new cap. At $k = 500$, $P/k = 24\,000$ ₳/ep. At $k = 750$, $16\,000$. At $k = 1\,000$, $12\,000$. Pools above the new $z_0$ see their yield — and the operator's 3 % cut of it — shrink one-for-one.</p>
+<p><strong>Saturation cap per stage:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th style="text-align: right;">$k$</th>
+<th style="text-align: right;">$z_0 = \text{Supply}/k$</th>
+<th style="text-align: right;">Saturation-pinned reward $P/k$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Current / Margin swap</td>
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">~77 M ₳</td>
+<td style="text-align: right;">24 000 ₳/ep</td>
+</tr>
+<tr>
+<td>Stage 3 — k → 750</td>
+<td style="text-align: right;">750</td>
+<td style="text-align: right;">~51.3 M ₳</td>
+<td style="text-align: right;">16 000 ₳/ep</td>
+</tr>
+<tr>
+<td>Stage 4 — k → 1000</td>
+<td style="text-align: right;">1000</td>
+<td style="text-align: right;">~38.5 M ₳</td>
+<td style="text-align: right;">12 000 ₳/ep</td>
+</tr>
+</tbody>
+</table>
+<h4 id="delegator-net-ros-across-the-nine-tiers-yr">Delegator net ROS across the nine tiers (%/yr)</h4>
+<p>Net ROS = gross yield × (1 − effective fee rate). Gross yield is 2.275 %/yr below saturation; above saturation it is $(P/k) \cdot 73 / \sigma$ and drops with larger pools.</p>
+<table>
+<thead>
+<tr>
+<th>Canonical tier</th>
+<th style="text-align: right;">Rep. σ</th>
+<th style="text-align: right;">Current (<code>minPoolCost = 170</code>)</th>
+<th style="text-align: right;">Stage 2 — Margin swap</th>
+<th style="text-align: right;">Stage 3 — k → 750</th>
+<th style="text-align: right;">Stage 4 — k → 1000</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zero-stake</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr>
+<td>Dormant</td>
+<td style="text-align: right;">50 K</td>
+<td style="text-align: right;"><strong>0 %</strong> (fee consumes pool)</td>
+<td style="text-align: right;">2.21 %</td>
+<td style="text-align: right;">2.21 %</td>
+<td style="text-align: right;">2.21 %</td>
+</tr>
+<tr>
+<td>Sub-production</td>
+<td style="text-align: right;">500 K</td>
+<td style="text-align: right;"><strong>0 %</strong> (fee consumes pool)</td>
+<td style="text-align: right;">2.21 %</td>
+<td style="text-align: right;">2.21 %</td>
+<td style="text-align: right;">2.21 %</td>
+</tr>
+<tr>
+<td>Sub-viable</td>
+<td style="text-align: right;">2 M</td>
+<td style="text-align: right;">1.65 %</td>
+<td style="text-align: right;">2.21 %</td>
+<td style="text-align: right;">2.21 %</td>
+<td style="text-align: right;">2.21 %</td>
+</tr>
+<tr>
+<td>Healthy</td>
+<td style="text-align: right;">15 M</td>
+<td style="text-align: right;">2.19 %</td>
+<td style="text-align: right;">2.21 %</td>
+<td style="text-align: right;">2.21 %</td>
+<td style="text-align: right;">2.21 %</td>
+</tr>
+<tr>
+<td>Large healthy</td>
+<td style="text-align: right;">50 M</td>
+<td style="text-align: right;">2.25 %</td>
+<td style="text-align: right;">2.21 %</td>
+<td style="text-align: right;">2.21 % (still ≤ $z_0$)</td>
+<td style="text-align: right;"><strong>1.70 %</strong> (now above $z_0$)</td>
+</tr>
+<tr>
+<td>Near-saturation</td>
+<td style="text-align: right;">67 M</td>
+<td style="text-align: right;">2.26 %</td>
+<td style="text-align: right;">2.21 %</td>
+<td style="text-align: right;"><strong>1.69 %</strong> (now above $z_0$)</td>
+<td style="text-align: right;"><strong>1.27 %</strong></td>
+</tr>
+<tr>
+<td>Saturated</td>
+<td style="text-align: right;">77 M</td>
+<td style="text-align: right;">2.26 %</td>
+<td style="text-align: right;">2.21 %</td>
+<td style="text-align: right;"><strong>1.47 %</strong></td>
+<td style="text-align: right;"><strong>1.10 %</strong></td>
+</tr>
+<tr>
+<td>Oversaturated</td>
+<td style="text-align: right;">85 M</td>
+<td style="text-align: right;">2.05 %</td>
+<td style="text-align: right;">2.00 %</td>
+<td style="text-align: right;"><strong>1.33 %</strong></td>
+<td style="text-align: right;"><strong>1.00 %</strong></td>
+</tr>
+</tbody>
+</table>
+<p><em>Reading.</em> The <strong>Margin swap</strong> is a clean win at the bottom of the distribution: Dormant / Sub-production jump from 0 % to 2.21 %; Sub-viable jumps from 1.65 % to 2.21 %. Above the Healthy tier, delegator ROS barely changes (2.21 % vs current 2.19–2.26 %). Most delegated pools on mainnet sit in Healthy or above, so most delegators see <strong>a 0.02–0.05 pp shift, not the headline jump</strong>. The two <strong>pool-count expansions</strong> do not touch the fee mechanics but clip gross yield at the top of the distribution — a delegator at today's saturated pool sees ROS drop from 2.26 % to 1.10 % across stages 2 → 4 because per-pool reward at the new cap is now 12 000 ₳/ep rather than 24 000. This is not a fee effect; it is $P/k$ arithmetic.</p>
+<blockquote>
+<p><strong>Finding CIP-0082.S1.F1 [D] — Delegator fee-rate dispersion collapses from 38× to 1.00×.</strong> Under the Margin swap, the net-ROS floor rises from 0 % / 1.65 % (Sub-viable and below, today) to 2.21 % (flat across the productive range). This is a direct delivery on the CIP's stated §3.3 delegator-yield claim — though the gain is concentrated in the tiers that currently attract the <em>fewest</em> delegators (see CIP-0082.S2.F2 for the redistribution caveat).</p>
+</blockquote>
+<h4 id="operator-annualised-revenue-across-the-nine-tiers-yr">Operator annualised revenue across the nine tiers (₳/yr)</h4>
+<p>Operator take × 73 epochs/yr. The Margin-swap and k-raise columns use the proportional-margin rule with <code>minPoolCost = 0</code> and <code>minPoolRate = 3 %</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Canonical tier</th>
+<th style="text-align: right;">Rep. σ</th>
+<th style="text-align: right;">Current (<code>minPoolCost = 170</code>)</th>
+<th style="text-align: right;">Stage 2 — Margin swap</th>
+<th style="text-align: right;">Stage 3 — k → 750</th>
+<th style="text-align: right;">Stage 4 — k → 1000</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zero-stake</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Dormant</td>
+<td style="text-align: right;">50 K</td>
+<td style="text-align: right;">1 139 (pool absorbed)</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">34</td>
+</tr>
+<tr>
+<td>Sub-production</td>
+<td style="text-align: right;">500 K</td>
+<td style="text-align: right;">11 373 (pool absorbed)</td>
+<td style="text-align: right;">341</td>
+<td style="text-align: right;">341</td>
+<td style="text-align: right;">341</td>
+</tr>
+<tr>
+<td>Sub-viable</td>
+<td style="text-align: right;">2 M</td>
+<td style="text-align: right;">12 410</td>
+<td style="text-align: right;"><strong>1 365</strong></td>
+<td style="text-align: right;">1 365</td>
+<td style="text-align: right;">1 365</td>
+</tr>
+<tr>
+<td>Healthy</td>
+<td style="text-align: right;">15 M</td>
+<td style="text-align: right;">12 410</td>
+<td style="text-align: right;">10 242</td>
+<td style="text-align: right;">10 242</td>
+<td style="text-align: right;">10 242</td>
+</tr>
+<tr>
+<td>Large healthy</td>
+<td style="text-align: right;">50 M</td>
+<td style="text-align: right;">12 410</td>
+<td style="text-align: right;"><strong>34 128</strong></td>
+<td style="text-align: right;">34 128 (≤ $z_0$)</td>
+<td style="text-align: right;"><strong>26 280</strong> (above new $z_0$)</td>
+</tr>
+<tr>
+<td>Near-saturation</td>
+<td style="text-align: right;">67 M</td>
+<td style="text-align: right;">12 410</td>
+<td style="text-align: right;"><strong>45 735</strong></td>
+<td style="text-align: right;"><strong>35 040</strong> (above new $z_0$)</td>
+<td style="text-align: right;">26 280</td>
+</tr>
+<tr>
+<td>Saturated</td>
+<td style="text-align: right;">77 M</td>
+<td style="text-align: right;">12 410</td>
+<td style="text-align: right;"><strong>52 560</strong></td>
+<td style="text-align: right;">35 040</td>
+<td style="text-align: right;">26 280</td>
+</tr>
+<tr>
+<td>Oversaturated</td>
+<td style="text-align: right;">85 M</td>
+<td style="text-align: right;">12 410</td>
+<td style="text-align: right;">52 560</td>
+<td style="text-align: right;">35 040</td>
+<td style="text-align: right;">26 280</td>
+</tr>
+</tbody>
+</table>
+<p><em>Reading.</em> Today's flat <code>minPoolCost = 170 ₳</code> caps every productive pool's operator revenue at <strong>12 410 ₳/yr</strong> — the signature of OPE.O6.F4 (no single-pool operator earns a competitive wage). The <strong>Margin swap</strong> replaces the flat cap with a proportional share of the pool reward: Sub-viable operators fall from 12 410 to 1 365 ₳/yr (a 9× <em>cut</em>), while Saturated operators jump from 12 410 to 52 560 ₳/yr (a 4× <em>multiplication</em>). <strong>The operator-revenue curve inverts across the viability line</strong> — the delegator-side equalisation is funded by a transfer up the operator distribution. The <strong>pool-count expansions</strong> then compress operator revenue at the top of the distribution as $P/k$ shrinks (52 560 → 35 040 → 26 280 at saturation) while leaving the Sub-viable, Sub-production, and Dormant tiers unchanged at their Margin-swap values. Stages 3–4 <em>do not help the small-pool tail at all</em>; they redistribute revenue <em>among large pools only</em>.</p>
+<blockquote>
+<p><strong>Finding CIP-0082.S1.F2 [R] — Per-pool operator revenue inverts across the viability line.</strong> Sub-viable operators go from 12 410 to 1 365 ₳/yr (–9×); Saturated operators go from 12 410 to 52 560 ₳/yr (+4×). The CIP-0023 paired variant produces the same inversion with smaller magnitudes (~2× smaller each side). This is the operator-side counterpart of S1.F1 — the delegator-side equalisation is <em>funded</em> by a transfer from small operators to large ones.</p>
+</blockquote>
+<h4 id="operator-revenue-by-n-mpo-bracket-per-entity-yr-across-the-fleet">Operator revenue by n-MPO bracket (per-entity ₳/yr, across the fleet)</h4>
+<p>Per-entity totals sum operator take across the operator's pools using mean pools/entity and mean pool stake from <a href="operator.html#44-operator-profitability-versus-delegator-return">operator-delegator §4.4</a> (retail hollow segment, epoch 623; 73 epochs/yr). Per-pool $R(\sigma)$ computed at each stage's $z_0$.</p>
+<table>
+<thead>
+<tr>
+<th>n-MPO bracket</th>
+<th style="text-align: right;">Entities</th>
+<th style="text-align: right;">Pools/entity</th>
+<th style="text-align: right;">Mean stake/pool</th>
+<th style="text-align: right;">Current</th>
+<th style="text-align: right;">Margin swap</th>
+<th style="text-align: right;"><strong>Δ (Margin swap − Today)</strong></th>
+<th style="text-align: right;">k → 750</th>
+<th style="text-align: right;">k → 1000</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2-pool MPO</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">2.00</td>
+<td style="text-align: right;">38.24 M</td>
+<td style="text-align: right;">24 820</td>
+<td style="text-align: right;">52 195</td>
+<td style="text-align: right;"><strong>+27 375</strong></td>
+<td style="text-align: right;">52 195</td>
+<td style="text-align: right;">52 195</td>
+</tr>
+<tr>
+<td>3–5 pool MPO</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">3.92</td>
+<td style="text-align: right;">29.47 M</td>
+<td style="text-align: right;">48 653</td>
+<td style="text-align: right;">78 846</td>
+<td style="text-align: right;"><strong>+30 193</strong></td>
+<td style="text-align: right;">78 846</td>
+<td style="text-align: right;">78 846</td>
+</tr>
+<tr>
+<td>6–10 pool MPO</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">7.44</td>
+<td style="text-align: right;">35.37 M</td>
+<td style="text-align: right;">92 319</td>
+<td style="text-align: right;">179 599</td>
+<td style="text-align: right;"><strong>+87 280</strong></td>
+<td style="text-align: right;">179 599</td>
+<td style="text-align: right;">179 599</td>
+</tr>
+<tr>
+<td>11+ pool MPO</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">19.29</td>
+<td style="text-align: right;">33.41 M</td>
+<td style="text-align: right;">239 387</td>
+<td style="text-align: right;">439 850</td>
+<td style="text-align: right;"><strong>+200 463</strong></td>
+<td style="text-align: right;">439 850</td>
+<td style="text-align: right;">439 850</td>
+</tr>
+</tbody>
+</table>
+<p><em>Reading.</em> At each bracket's <em>mean</em> pool stake, pools stay below $z_0$ at every k-raise — 38.24 M &lt; 38.5 M (the $k = 1000$ cap) for the 2-pool MPO; comfortably below for the other three. So the <strong>pool-count expansions do not erode MPO entity revenue</strong>. The Margin-swap uplift — <strong>+27 K</strong> ₳/yr for a 2-pool MPO to <strong>+200 K</strong> for an 11+ pool MPO — is preserved through all later stages. The revenue trimming at the top of the nine-tier table (Large-healthy / Near-saturation / Saturated collapsing from 52 560 to 26 280 ₳/yr across stages 2 → 4) applies to <em>individual high-stake pools</em>, not to the mean MPO pool. The k-raises clip the tails of the single-pool distribution; they leave MPO fleets whole.</p>
+<p><em>Caveat on fleet heterogeneity.</em> Some individual pools inside an MPO fleet do sit at or near today's saturation cap (Everstake, for instance, operates individual pools above 50 M ₳); those specific pools do see reward-cap compression across stages 3 → 4. But on the bracket <em>mean</em> — the operator-level aggregate — revenue is insulated from the k-raises.</p>
+<blockquote>
+<p><strong>Finding CIP-0082.S1.F3 [R] — On the n-MPO fleet axis, the transfer compounds mechanically with fleet size.</strong> +27 K ₳/yr for a 2-pool MPO entity; +200 K ₳/yr for an 11+ pool MPO — a 7.3× bracket-to-bracket amplification. The transfer direction (up-distribution) is preserved through stages 3–4 because MPO mean pool stakes stay below $z_0$ at every k-raise. This closes the S1 argument: the Margin swap's delegator-side equalisation is funded primarily by the small-pool tail, and captured primarily by the large-fleet top.</p>
+</blockquote>
+<p><strong>Putting it together.</strong> The Margin swap buys the delegator-side equalisation (ROS floor at 2.21 %) at the cost of an operator-side regression (small-pool operator revenue cut ~9×). The subsequent k-raises leave the delegator-side gain intact for small pools but damage it for pools above the shrinking $z_0$ — and on the operator side, they trim the top of the transfer without returning any of it to the tiers the CIP's primary V2 §3.1 claim says to protect. The full quantification of the cross-tier and cross-fleet operator-revenue transfer is in §3.1.</p>
+<h2 id="3-limits-of-cip-0082-as-a-standalone-proposal">3. Limits of CIP-0082 as a standalone proposal</h2>
+<p>Three structural limits — one per active-stage grouping of the remaining content.</p>
+<h3 id="31-margin-swap-inverts-operator-revenue-across-the-viability-line-more-aggressively-than-cip-0023">3.1 Margin swap inverts operator revenue across the viability line — more aggressively than CIP-0023</h3>
+<p>The <strong>Margin swap</strong> (stage 2) is mechanically equivalent to CIP-0023's <strong>paired variant</strong> (reduction of <code>minPoolCost</code> + introduction of a margin floor) at the extreme calibration: <code>minPoolCost → 0</code>, <code>minPoolRate = 3 %</code> vs CIP-0023's illustrative 50 ₳ + 1.5 %. The structural effect is the same — delegator-side fee dispersion collapses; operator-side per-pool revenue scales with $R(\sigma)$ and the transfer inverts across the viability line — but the magnitude is roughly doubled on both sides.</p>
+<h4 id="311-pool-axis-per-pool-across-the-nine-canonical-tiers">3.1.1 Pool axis — Δ per pool across the nine canonical tiers</h4>
+<p>Convention as in §2.2: declared margin ≈ 0, $R(\sigma) \approx 24\,000 \times \sigma / 77\text{M}$ below saturation. Column "Δ CIP-0023 paired" carries the CIP-0023 §3.2.1 numbers for reference.</p>
+<table>
+<thead>
+<tr>
+<th>Canonical tier</th>
+<th>Stake range</th>
+<th style="text-align: right;">Rep. σ</th>
+<th style="text-align: right;">$R(\sigma)$ ₳/ep</th>
+<th style="text-align: right;">Current take (post-Floor-halving, <code>minPoolCost = 170</code>)</th>
+<th style="text-align: right;">Margin-swap take (3 % × R)</th>
+<th style="text-align: right;"><strong>Δ per pool, Margin swap</strong></th>
+<th style="text-align: right;">Δ per pool, CIP-0023 paired</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zero-stake</td>
+<td>0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Dormant</td>
+<td>&gt; 0 → ~100 K</td>
+<td style="text-align: right;">50 K</td>
+<td style="text-align: right;">15.6</td>
+<td style="text-align: right;">15.6</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;"><strong>–15.1</strong></td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Sub-production</td>
+<td>~100 K → ~1 M</td>
+<td style="text-align: right;">500 K</td>
+<td style="text-align: right;">155.8</td>
+<td style="text-align: right;">155.8</td>
+<td style="text-align: right;">4.67</td>
+<td style="text-align: right;"><strong>–151.1</strong></td>
+<td style="text-align: right;">–104.2</td>
+</tr>
+<tr>
+<td>Sub-viable</td>
+<td>~1 M → ~3 M</td>
+<td style="text-align: right;">2 M</td>
+<td style="text-align: right;">623</td>
+<td style="text-align: right;">170</td>
+<td style="text-align: right;">18.7</td>
+<td style="text-align: right;"><strong>–151.3</strong></td>
+<td style="text-align: right;">–111.4</td>
+</tr>
+<tr>
+<td>Healthy</td>
+<td>~3 M → ~38.5 M</td>
+<td style="text-align: right;">15 M</td>
+<td style="text-align: right;">4 675</td>
+<td style="text-align: right;">170</td>
+<td style="text-align: right;">140.3</td>
+<td style="text-align: right;">–29.7</td>
+<td style="text-align: right;">–50.6</td>
+</tr>
+<tr>
+<td>Large healthy</td>
+<td>~38.5 M → ~61.6 M</td>
+<td style="text-align: right;">50 M</td>
+<td style="text-align: right;">15 584</td>
+<td style="text-align: right;">170</td>
+<td style="text-align: right;">467.5</td>
+<td style="text-align: right;">+297.5</td>
+<td style="text-align: right;">+113.0</td>
+</tr>
+<tr>
+<td>Near-saturation</td>
+<td>~61.6 M → ~73.1 M</td>
+<td style="text-align: right;">67 M</td>
+<td style="text-align: right;">20 883</td>
+<td style="text-align: right;">170</td>
+<td style="text-align: right;">626.5</td>
+<td style="text-align: right;">+456.5</td>
+<td style="text-align: right;">+192.5</td>
+</tr>
+<tr>
+<td>Saturated</td>
+<td>~73.1 M → ~80.8 M</td>
+<td style="text-align: right;">77 M</td>
+<td style="text-align: right;">24 000</td>
+<td style="text-align: right;">170</td>
+<td style="text-align: right;">720.0</td>
+<td style="text-align: right;"><strong>+550.0</strong></td>
+<td style="text-align: right;">+239.3</td>
+</tr>
+<tr>
+<td>Oversaturated</td>
+<td>&gt; ~80.8 M</td>
+<td style="text-align: right;">85 M</td>
+<td style="text-align: right;">≈ 24 000</td>
+<td style="text-align: right;">170</td>
+<td style="text-align: right;">720.0</td>
+<td style="text-align: right;">+550.0</td>
+<td style="text-align: right;">+239.3</td>
+</tr>
+</tbody>
+</table>
+<p>The inversion pattern is identical to CIP-0023 paired, but the magnitudes are <strong>2.0 – 2.5× larger on both sides of the viability line</strong>. Saturated-pool operators gain <strong>+550 ₳/ep</strong> under the <strong>Margin swap</strong> (vs +239 under CIP-0023 paired); Sub-viable operators lose <strong>–151 ₳/ep</strong> (vs –111). Sub-production pools — untouched by CIP-0023 standalone — lose <strong>–151 ₳/ep</strong> here because <code>minPoolCost</code> is gone entirely: every productive pool becomes a proportional-margin contributor, including the tiers that previously collected the full pool reward as the fixed fee.</p>
+<h4 id="312-operator-axis-per-entity-by-n-mpo-bracket">3.1.2 Operator axis — Δ per entity by n-MPO bracket</h4>
+<p>Per-pool Δ stacks over the operator's fleet. Mean pools per entity and mean pool stake from <a href="operator.html#44-operator-profitability-versus-delegator-return">operator-delegator §4.4</a> (retail hollow segment, epoch 623; 73 epochs/yr). Column "Δ CIP-0023 paired" carries the CIP-0023 §3.2.2 numbers for reference.</p>
+<table>
+<thead>
+<tr>
+<th>n-MPO bracket</th>
+<th style="text-align: right;">Entities</th>
+<th style="text-align: right;">Pools/entity</th>
+<th style="text-align: right;">Mean stake/pool</th>
+<th style="text-align: right;">$R(\sigma)$ ₳/ep</th>
+<th style="text-align: right;"><strong>Δ per entity per year — Margin swap</strong></th>
+<th style="text-align: right;">Δ per entity per year — CIP-0023 paired</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single-pool — Sub-viable (&lt; 3 M)</td>
+<td style="text-align: right;">155</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.81 M</td>
+<td style="text-align: right;">564</td>
+<td style="text-align: right;"><strong>–11 176 ₳/yr</strong></td>
+<td style="text-align: right;">–8 198 ₳/yr</td>
+</tr>
+<tr>
+<td>Single-pool — Healthy (3–38.5 M)</td>
+<td style="text-align: right;">214</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">11.40 M</td>
+<td style="text-align: right;">3 554</td>
+<td style="text-align: right;">–4 628 ₳/yr</td>
+<td style="text-align: right;">–4 920 ₳/yr</td>
+</tr>
+<tr>
+<td>Single-pool — Large healthy (38.5–62 M)</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">50.69 M</td>
+<td style="text-align: right;">15 798</td>
+<td style="text-align: right;">+22 185 ₳/yr</td>
+<td style="text-align: right;">+8 483 ₳/yr</td>
+</tr>
+<tr>
+<td>Single-pool — Near-saturation (62–77 M)</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">69.38 M</td>
+<td style="text-align: right;">21 623</td>
+<td style="text-align: right;">+34 945 ₳/yr</td>
+<td style="text-align: right;">+14 863 ₳/yr</td>
+</tr>
+<tr>
+<td>2-pool MPO</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">2.00</td>
+<td style="text-align: right;">38.24 M</td>
+<td style="text-align: right;">11 918</td>
+<td style="text-align: right;">+27 375 ₳/yr</td>
+<td style="text-align: right;">+8 468 ₳/yr</td>
+</tr>
+<tr>
+<td>3–5 pool MPO</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">3.92</td>
+<td style="text-align: right;">29.47 M</td>
+<td style="text-align: right;">9 183</td>
+<td style="text-align: right;">+30 193 ₳/yr</td>
+<td style="text-align: right;">+4 865 ₳/yr</td>
+</tr>
+<tr>
+<td>6–10 pool MPO</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">7.44</td>
+<td style="text-align: right;">35.37 M</td>
+<td style="text-align: right;">11 024</td>
+<td style="text-align: right;">+87 280 ₳/yr</td>
+<td style="text-align: right;">+24 223 ₳/yr</td>
+</tr>
+<tr>
+<td>11+ pool MPO</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">19.29</td>
+<td style="text-align: right;">33.41 M</td>
+<td style="text-align: right;">10 413</td>
+<td style="text-align: right;"><strong>+200 463 ₳/yr</strong></td>
+<td style="text-align: right;">+49 852 ₳/yr</td>
+</tr>
+</tbody>
+</table>
+<p>The transfer is <strong>~4× larger on the operator-fleet axis than CIP-0023's paired variant</strong> (200 K vs 50 K ₳/yr for the 11+ pool MPO bracket). Sub-viable single-pool operators lose ~11 000 ₳/yr — roughly three months' operator cost floor stripped annually from the population the CIP's primary CPS (V2 §3.1) identifies as needing support.</p>
+<h4 id="313-reading">3.1.3 Reading</h4>
+<p><strong>The Margin swap delivers on the delegator side and regresses on the operator side</strong> (<strong>CIP-0082.S1</strong>). The effective-fee-rate story is clean (flat 3 % everywhere — §2.2). The operator-revenue story runs opposite: every MPO bracket is a net winner; every sub-viable and sub-production single-pool operator is a net loser; and MPO entities compound the transfer across their fleets — 19 pools × +142 ₳/ep gives the dominant per-entity uplift in the table.</p>
+<p>This is the same structural critique CIP-0023 paired faces (<a href="cip-0023.html#323-reading--why-this-fails-the-missing-cps">see cip-0023.md §3.2.3</a>) scaled up roughly ~4×. The scaling follows from the choice of <code>minPoolCost = 0</code> + <code>minPoolRate = 3 %</code> vs CIP-0023 paired's 50 + 1.5 %.</p>
+<h3 id="32-pool-count-expansions-standalone-k-lever-analysis-in-k-parametermd">3.2 Pool-count expansions — standalone <code>k</code>-lever analysis in <a href="k-parameter.html"><code>k-parameter.md</code></a></h3>
+<p>CIP-0082 stages 3–4 raise <code>k</code> from 500 → 750 → 1000 without changing the reward formula. The standalone evaluation of that lever — its mechanical effect on the operator / delegator split, its delegator-market assumptions, and its structural limits — lives in a companion file, <a href="k-parameter.html"><code>k-parameter.md</code></a>. A summary of the three synthesis findings established there, reproduced here for reference:</p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Tag</th>
+<th>Claim</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>k-lever.S1</strong></td>
+<td>mixed</td>
+<td>A standalone <code>k</code>-raise compresses the top of the distribution and amplifies the pledge bonus for self-pledged pools; hollow pools below saturation are mechanically unchanged, and the production + viability thresholds are k-invariant (4 F's)</td>
+</tr>
+<tr>
+<td><strong>k-lever.S2</strong></td>
+<td>R</td>
+<td>A fine tool for a narrow delegator segment, and insufficient on the operator side because the reward formula is unchanged — the ROS-responsive segment is ≈ 8 % of productive stake at best (CEN.O4.F2, CEN.O6.F1, CEN.O6.F3), and the non-pledge equilibrium (POL.O2.F2) is preserved (2 F's)</td>
+</tr>
+<tr>
+<td><strong>k-lever.S3</strong></td>
+<td>R</td>
+<td>Under the current weak-pledge regime, new pool slots are absorbed horizontally by existing MPO fleets — historical precedent (<code>k: 150 → 500</code> → today's POL.O4.F1 landscape) plus structural economics (registration cost trivial vs MPO revenue, pledge non-binding on expansion) (2 F's)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What CIP-0082 adds on top of the standalone critique.</strong> CIP-0082 stages 3–4 fire <strong>6 epochs after the Margin swap</strong> (stage 2) in the CIP's own 3-epoch-interval timeline — no stake-cap layer can be negotiated, voted, and activated in that window. The k-raise therefore fires <strong>in exactly the regime <code>k-parameter.md</code> identifies as regressive</strong>: weak pledge, MPO-dominated fleet, empirically non-yield-following delegator base. CIP-0082 does not embed the precondition the lever needs to flip from regressive to constructive (an active stake-cap layer — CIP-0050's <code>L</code> or CIP-0037's dynamic saturation). Stages 3–4 are therefore not safe to fire in the sequence CIP-0082 proposes. <strong>The package either needs to acquire a stake-cap layer between stage 2 and stage 3 or to remove stages 3–4.</strong></p>
+<h3 id="33-references">3.3 References</h3>
+<ul>
+<li><strong>Missing-CPS anchors:</strong> §1.4 of this file; V2 <a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">§3.1 operator viability</a>, <a href="index.html#33-maintain-and-diversify-a-competitive-delegator-yield">§3.3 delegator yield</a>, <a href="index.html#32-restore-the-notion-of-pledge-among-operators">§3.2 pledge signal</a>, <a href="index.html#34-reduce-the-concentration-effects-that-distort-both-populations">§3.4 concentration</a>.</li>
+<li><strong>Numerical baselines:</strong> §2.2 of this file (per-pool reward derivation at $z_0 = 77$ M ₳); <a href="operator.html#44-operator-profitability-versus-delegator-return">operator-delegator §4.4</a> (n-MPO brackets); <a href="pools.html#413-tier-definitions">pools-distribution §4.1.3</a> (nine-tier taxonomy).</li>
+<li><strong>Diagnostic findings cited in this file:</strong> OPE.O1.F4, OPE.O1.F1, OPE.O5.F1, OPE.O6.F1 (operator-delegator); POL.O3.F5 (pools-distribution). Additional findings used in the stages-3–4 critique are cited in <a href="k-parameter.html"><code>k-parameter.md</code></a>.</li>
+<li><strong>Predecessor CIP:</strong> <a href="cip-0023.html"><code>cip-0023.md</code></a> — standalone margin-floor mechanism that CIP-0082 stage 2 absorbs and extends. §3.1 of this file references CIP-0023's paired variant as the direct structural analogue.</li>
+<li><strong>Companion analysis (stages 3–4):</strong> <a href="k-parameter.html"><code>k-parameter.md</code></a> — standalone k-raise analysis. §3.2 of this file summarises the three k-lever synthesis findings and adds the CIP-0082-specific ordering caveat.</li>
+<li><strong>Stake-cap pairing options (stage-3 precondition):</strong> <a href="cip-0050.html"><code>../pools-distribution/cip-0050.md</code></a>, <a href="cip-0037.html"><code>../pools-distribution/cip-0037.md</code></a>.</li>
+<li><strong>Canonical source:</strong> CIP-0082 official page at <a href="https://cips.cardano.org/cip/CIP-0082">cips.cardano.org/cip/CIP-0082</a>; author's worked calibration spreadsheet at <code>Context/CIPs-repo/CIP-0082/ImprovedRewardsSchemeParameters.xlsx</code>.</li>
+<li><strong>Mainnet stage-1 retirement:</strong> Conway-era governance action DIA.1.3 — <code>minPoolCost 340 → 170</code>.</li>
+</ul><div class="sro-obs-registry" aria-hidden="true" hidden><div class="sro-obs-detail" id="srobs-cen-o1" data-obs-canon="CEN.O1" data-short="O1" data-group="1" data-page="census.html" data-href="census.html#1-mainnet-observations" data-findings="CEN.O1.F1,CEN.O1.F2,CEN.O1.F3,CEN.O1.F4,CEN.O1.F5,CEN.O1.F6,CEN.O1.F7,CEN.O1.F8"><div class="sro-obs-detail-id">CEN.O1</div><div class="sro-obs-detail-title">The productive pool landscape is a stable oligopoly</div><div class="sro-obs-detail-summary">Two-thirds of registered pools (1,926 of 2,877) sit below the production threshold (~1M ADA) — they hold 0.86% of stake and are economically irrelevant · 73 named entities control 75.5% of productive stake through 464 pools — entity attribution is a lower bound</div><div class="sro-obs-detail-count">8 findings</div></div><div class="sro-obs-detail" id="srobs-cen-o2" data-obs-canon="CEN.O2" data-short="O2" data-group="2" data-page="census.html" data-href="census.html#1-mainnet-observations" data-findings="CEN.O2.F1"><div class="sro-obs-detail-id">CEN.O2</div><div class="sro-obs-detail-title">Pool size variability is an institutional rebalancing phenomenon</div><div class="sro-obs-detail-summary">Custodial-by-delegation pools (28 pools, median delegation ≥ 100K ₳) have median CV 19.3% and 21% exceed CV 50%; retail pools sit at median CV 8.4%; custodial-by-extraction are the most inert (median CV 6.6%)</div><div class="sro-obs-detail-count">1 finding</div></div><div class="sro-obs-detail" id="srobs-cen-o3" data-obs-canon="CEN.O3" data-short="O3" data-group="3" data-page="census.html" data-href="census.html#1-mainnet-observations" data-findings="CEN.O3.F1,CEN.O3.F2,CEN.O3.F3"><div class="sro-obs-detail-id">CEN.O3</div><div class="sro-obs-detail-title">Stake concentration among delegators is extreme and frozen</div><div class="sro-obs-detail-summary">The median delegator holds 32 ADA; the mean is 16,055 ADA — a 500× gap measuring power-law skewness · 1,000 delegators (0.07%) control 57% of staked ADA; the top 10,000 (0.74%) control 79.2%; Gini = 0.976</div><div class="sro-obs-detail-count">3 findings</div></div><div class="sro-obs-detail" id="srobs-cen-o4" data-obs-canon="CEN.O4" data-short="O4" data-group="4" data-page="census.html" data-href="census.html#1-mainnet-observations" data-findings="CEN.O4.F1,CEN.O4.F2,CEN.O4.F3"><div class="sro-obs-detail-id">CEN.O4</div><div class="sro-obs-detail-title">The delegation market has matured and crystallised</div><div class="sro-obs-detail-summary">Redelegation activity fell 75% from 2,000–3,500/epoch (early Shelley) to 600–800 (current regime) · The delegator base is structurally bimodal: 42% loyal (201+ epochs), 21% volatile (≤ 5 epochs), 37% moderate</div><div class="sro-obs-detail-count">3 findings</div></div><div class="sro-obs-detail" id="srobs-cen-o5" data-obs-canon="CEN.O5" data-short="O5" data-group="5" data-page="census.html" data-href="census.html#1-mainnet-observations" data-findings="CEN.O5.F1,CEN.O5.F2"><div class="sro-obs-detail-id">CEN.O5</div><div class="sro-obs-detail-title">Delegation size determines behaviour, not price</div><div class="sro-obs-detail-summary">Micro-delegators (&lt; 1K ADA) average 0.67 lifetime switches; whales (1M+) average 3.06 — switching scales monotonically with stake size · Whales hold 14.1B of 21.8B staked total, yet only 38% of their stake sits in loyal delegations — capital is disproportionately mobile</div><div class="sro-obs-detail-count">2 findings</div></div><div class="sro-obs-detail" id="srobs-cen-o6" data-obs-canon="CEN.O6" data-short="O6" data-group="6" data-page="census.html" data-href="census.html#1-mainnet-observations" data-findings="CEN.O6.F1,CEN.O6.F2,CEN.O6.F3,CEN.O6.F4,CEN.O6.F5"><div class="sro-obs-detail-id">CEN.O6</div><div class="sro-obs-detail-title">Yield does not drive delegation decisions</div><div class="sro-obs-detail-summary">Half of all switches (50.5%) produce zero yield change (±5 bps); the median ROS differential is +0.02 bps · Operator take direction is symmetric: 30.8% lower / 37.7% similar / 31.5% higher — no optimisation pattern</div><div class="sro-obs-detail-count">5 findings</div></div><div class="sro-obs-detail" id="srobs-cen-o7" data-obs-canon="CEN.O7" data-short="O7" data-group="7" data-page="census.html" data-href="census.html#1-mainnet-observations" data-findings="CEN.O7.F1,CEN.O7.F2"><div class="sro-obs-detail-id">CEN.O7</div><div class="sro-obs-detail-title">The staking participation rate is structurally declining</div><div class="sro-obs-detail-summary">Staking rate has fallen from 71% (epoch ~260) to 59% (epoch 623) — driven by supply growth outpacing stake inflows · 14.36B ADA (39.8%) does not participate; of this, only 134.6M (0.37%) is <em>addressable</em> (registered stake credential, not delegated) — the remaining 14.2B sits in addresses with no stake credential</div><div class="sro-obs-detail-count">2 findings</div></div><div class="sro-obs-detail" id="srobs-tre-o1" data-obs-canon="TRE.O1" data-short="O1" data-group="1" data-page="treasury.html" data-href="treasury.html#1-mainnet-observations" data-findings="TRE.O1.F1,TRE.O1.F2,TRE.O1.F3,TRE.O1.F4"><div class="sro-obs-detail-id">TRE.O1</div><div class="sro-obs-detail-title">The epoch pot is a single-source budget</div><div class="sro-obs-detail-summary">Monetary expansion dominates the epoch pot (~99.8%) · Fee revenue is structurally insufficient — even at full capacity, fees cover ~1.3% of expansion</div><div class="sro-obs-detail-count">4 findings</div></div><div class="sro-obs-detail" id="srobs-tre-o2" data-obs-canon="TRE.O2" data-short="O2" data-group="2" data-page="treasury.html" data-href="treasury.html#1-mainnet-observations" data-findings="TRE.O2.F1,TRE.O2.F2"><div class="sro-obs-detail-id">TRE.O2</div><div class="sro-obs-detail-title">The reserve has crossed its half-life</div><div class="sro-obs-detail-summary">Reserve is half-depleted (−51.43%) in 5.7 years · Significant reward pressure expected at epochs 1000–1200</div><div class="sro-obs-detail-count">2 findings</div></div><div class="sro-obs-detail" id="srobs-tre-o3" data-obs-canon="TRE.O3" data-short="O3" data-group="3" data-page="treasury.html" data-href="treasury.html#1-mainnet-observations" data-findings="TRE.O3.F1,TRE.O3.F2,TRE.O3.F3"><div class="sro-obs-detail-id">TRE.O3</div><div class="sro-obs-detail-title">The reward mechanism operates at ~44% of its potential</div><div class="sro-obs-detail-summary">Only ~44% of the pools pot is distributed to operators and delegators — the rest returns to the reserve · 4.61B ADA cumulative (~71% of current reserve) exists because of undistributed rewards</div><div class="sro-obs-detail-count">3 findings</div></div><div class="sro-obs-detail" id="srobs-tre-o4" data-obs-canon="TRE.O4" data-short="O4" data-group="4" data-page="treasury.html" data-href="treasury.html#1-mainnet-observations" data-findings="TRE.O4.F1"><div class="sro-obs-detail-id">TRE.O4</div><div class="sro-obs-detail-title">Reward parameters have never been adjusted</div><div class="sro-obs-detail-summary">Treasury split and expansion rate never adjusted since Shelley</div><div class="sro-obs-detail-count">1 finding</div></div><div class="sro-obs-detail" id="srobs-pol-o1" data-obs-canon="POL.O1" data-short="O1" data-group="1" data-page="pools.html" data-href="pools.html#1-mainnet-observations" data-findings="POL.O1.F1,POL.O1.F2,POL.O1.F3,POL.O1.F4"><div class="sro-obs-detail-id">POL.O1</div><div class="sro-obs-detail-title">Two causes account for 54% of the pools pot returning to reserve</div><div class="sro-obs-detail-summary">Only 6.79M of 15.53M ADA/epoch reaches operators and delegators — 44% distribution efficiency · The participation gap (unstaked ADA) alone returns 4.91M ADA/epoch — 31.6% of the pot</div><div class="sro-obs-detail-count">4 findings</div></div><div class="sro-obs-detail" id="srobs-pol-o2" data-obs-canon="POL.O2" data-short="O2" data-group="2" data-page="pools.html" data-href="pools.html#1-mainnet-observations" data-findings="POL.O2.F1,POL.O2.F2,POL.O2.F3"><div class="sro-obs-detail-id">POL.O2</div><div class="sro-obs-detail-title">The pledge mechanism is economically broken</div><div class="sro-obs-detail-summary">78% of staked ADA sits in pools with pledge ratio &lt; 1%; stake-weighted median ratio is 0.07% · Yield on pledge capital is 0.68%/yr at best (full saturation) — below passive delegation yield of 2.3%/yr</div><div class="sro-obs-detail-count">3 findings</div></div><div class="sro-obs-detail" id="srobs-pol-o3" data-obs-canon="POL.O3" data-short="O3" data-group="3" data-page="pools.html" data-href="pools.html#1-mainnet-observations" data-findings="POL.O3.F1,POL.O3.F2,POL.O3.F3,POL.O3.F4,POL.O3.F5,POL.O3.F6"><div class="sro-obs-detail-id">POL.O3</div><div class="sro-obs-detail-title">The pool landscape is stratified into four tiers</div><div class="sro-obs-detail-summary">Regular block production requires ~3M ADA stake (~3 blocks/epoch) — the emergent viability boundary · Below 1.1M ADA, the 340 ADA fixed cost exceeds pool reward — operators are in economic loss</div><div class="sro-obs-detail-count">6 findings</div></div><div class="sro-obs-detail" id="srobs-pol-o4" data-obs-canon="POL.O4" data-short="O4" data-group="4" data-page="pools.html" data-href="pools.html#1-mainnet-observations" data-findings="POL.O4.F1,POL.O4.F2,POL.O4.F3,POL.O4.F4,POL.O4.F5,POL.O4.F6,POL.O4.F7"><div class="sro-obs-detail-id">POL.O4</div><div class="sro-obs-detail-title">Multi-pool operators control 75% of staked supply</div><div class="sro-obs-detail-summary">85 MPO entities operate 901 pools holding 16.4B ADA — 75.4% of participating stake · 48 capital-sufficient MPOs (14.5B ADA) could play the pledge game; 37 capital-insufficient MPOs (1.74B ADA) cannot</div><div class="sro-obs-detail-count">7 findings</div></div><div class="sro-obs-detail" id="srobs-pol-o5" data-obs-canon="POL.O5" data-short="O5" data-group="5" data-page="pools.html" data-href="pools.html#1-mainnet-observations" data-findings="POL.O5.F1,POL.O5.F2,POL.O5.F3,POL.O5.F4"><div class="sro-obs-detail-id">POL.O5</div><div class="sro-obs-detail-title">The independent operator base is far smaller and weaker than it appears</div><div class="sro-obs-detail-summary">The <a href="https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf"><em>Incentive Mechanism Analysis</em></a>'s 741 healthy pools collapse to 283 independent viable operators once MPO fleet members are removed — the other 61% were fleet pools · 78% of independent single-pool stake is non-compliant — the pledge signal is correctly priced as irrelevant at their scale</div><div class="sro-obs-detail-count">4 findings</div></div><div class="sro-obs-detail" id="srobs-pol-o6" data-obs-canon="POL.O6" data-short="O6" data-group="6" data-page="pools.html" data-href="pools.html#1-mainnet-observations" data-findings="POL.O6.F1,POL.O6.F2,POL.O6.F3"><div class="sro-obs-detail-id">POL.O6</div><div class="sro-obs-detail-title">The incentive-responsive field is a fraction of the network</div><div class="sro-obs-detail-summary">78 of 85 MPO entities (13.74B ADA, 63% of active stake) are outside the pledge-response path — multi-game optimization, not calibration failure · CEX cannot pledge custodied funds; IVaaS cannot pledge client assets; community fleets choose not to — three distinct mechanisms</div><div class="sro-obs-detail-count">3 findings</div></div><div class="sro-obs-detail" id="srobs-ope-o1" data-obs-canon="OPE.O1" data-short="O1" data-group="1" data-page="operator.html" data-href="operator.html#1-mainnet-observations" data-findings="OPE.O1.F1,OPE.O1.F2,OPE.O1.F3,OPE.O1.F4,OPE.O1.F5"><div class="sro-obs-detail-id">OPE.O1</div><div class="sro-obs-detail-title">The flat fee dominates operator revenue but operators do not actively set it</div><div class="sro-obs-detail-abstract">The flat fee delivers <strong>60%</strong> of retail operator revenue yet behaves as a frozen governance artefact — <strong>89.5%</strong> of pools pick one of two floor values, and <strong>64%</strong> still declare the pre-halving <strong>340 ₳</strong> floor <strong>178 epochs</strong> after governance halved it to <strong>170 ₳</strong>. The channel that dominates revenue is the one operators touch the least.</div><div class="sro-obs-detail-summary">The flat fee accounts for <strong>60%</strong> of all operator revenue in the retail market; the commission accounts for <strong>40%</strong> · <strong>64%</strong> of pools still declare the former floor (<strong>340 ₳</strong>) — <strong>178 epochs</strong> after a governance action halved it to <strong>170 ₳</strong></div><div class="sro-obs-detail-count">5 findings</div></div><div class="sro-obs-detail" id="srobs-ope-o2" data-obs-canon="OPE.O2" data-short="O2" data-group="2" data-page="operator.html" data-href="operator.html#1-mainnet-observations" data-findings="OPE.O2.F1,OPE.O2.F2"><div class="sro-obs-detail-id">OPE.O2</div><div class="sro-obs-detail-title">The commission market is bimodal with an empty middle</div><div class="sro-obs-detail-abstract">Commissions cluster at two extremes — a competitive band ≤ <strong>10%</strong> holding <strong>87%</strong> of pools and a privatisation band ≥ <strong>99%</strong> holding <strong>12%</strong> — with only <strong>12 pools</strong> priced in the 89pp interval between them.</div><div class="sro-obs-detail-summary">87% of pools set a commission at or below 10%; 12% set ≥ 99% (privatisation). The 89pp range between 10% and 99% contains 12 pools · Four bands: no-commission (170 pools, 17.9%), competitive (658, 69.1%), no man's land (12, 1.3%), privatisation (112, 11.8%)</div><div class="sro-obs-detail-count">2 findings</div></div><div class="sro-obs-detail" id="srobs-ope-o3" data-obs-canon="OPE.O3" data-short="O3" data-group="3" data-page="operator.html" data-href="operator.html#1-mainnet-observations" data-findings="OPE.O3.F1,OPE.O3.F2,OPE.O3.F3"><div class="sro-obs-detail-id">OPE.O3</div><div class="sro-obs-detail-title">21% of productive stake is custodial — three mechanisms, three economics</div><div class="sro-obs-detail-abstract"><strong>21.1%</strong> of productive stake is custodial across <strong>three on-chain-detectable mechanisms</strong> (pledge, extraction, median-delegation), each producing a distinct economic outcome — from <strong>29,329 ₳/yr</strong> median revenue per entity for custodial-by-delegation to <strong>1,759,252 ₳/yr</strong> for custodial-by-pledge.</div><div class="sro-obs-detail-summary">79 entities operating 143 pools (4.55B, 21.1%) are custodial: by pledge (10 entities, 36 pools, 1.59B), by extraction (57 entities, 79 pools, 2.04B), by delegation (15 entities, 28 pools, 0.92B) · Custodial-by-delegation uses the per-pool <strong>median</strong> delegation (db-sync <code>epoch_stake</code>) ≥ 100K ₳ — the amount held by the typical delegator. A delegation of 50K ₳ is already in the top 1.5% of the network</div><div class="sro-obs-detail-count">3 findings</div></div><div class="sro-obs-detail" id="srobs-ope-o4" data-obs-canon="OPE.O4" data-short="O4" data-group="4" data-page="operator.html" data-href="operator.html#1-mainnet-observations" data-findings="OPE.O4.F1,OPE.O4.F2"><div class="sro-obs-detail-id">OPE.O4</div><div class="sro-obs-detail-title">The retail market is 79% of stake and the typical delegator holds 87 ₳</div><div class="sro-obs-detail-abstract">Once custodial pools are filtered out, the retail market is <strong>809 pools, 516 entities, 17.02B ADA and 1,272,836 delegators</strong> — with a <strong>median delegation of 87 ₳</strong> that is remarkably uniform across operator types, from independent single-pool to Coinbase and Binance.</div><div class="sro-obs-detail-summary">809 retail pools, 516 entities, 17.02B ADA, 1,272,836 delegators. This includes institutional operators (Coinbase, Binance, Kiln) — retail by median delegation · The median retail delegation is 87 ₳ — remarkably uniform across operator types (45–962 ₳ range)</div><div class="sro-obs-detail-count">2 findings</div></div><div class="sro-obs-detail" id="srobs-ope-o5" data-obs-canon="OPE.O5" data-short="O5" data-group="5" data-page="operator.html" data-href="operator.html#1-mainnet-observations" data-findings="OPE.O5.F1,OPE.O5.F2"><div class="sro-obs-detail-id">OPE.O5</div><div class="sro-obs-detail-title">Delegators pay 18× more for the same return</div><div class="sro-obs-detail-abstract">A sub-viable delegator pays <strong>48.3%</strong> effective price for <strong>2.04%</strong> net return; a near-saturation delegator pays <strong>2.7%</strong> for <strong>2.34%</strong> — <strong>18× the price for 0.30 percentage points</strong> of extra yield. Net return converges to <strong>1.95–2.34%</strong> across the entire retail market — a signal too narrow to discipline pricing.</div><div class="sro-obs-detail-summary">A delegator in a sub-viable pool pays 48.3% effective price and receives 2.04% net return. A delegator in a near-saturation pool pays 2.7% and receives 2.34%. 18× more for 0.30pp of return · Net return converges to 1.95–2.34% across the entire retail market regardless of effective price, operator type, or pool size</div><div class="sro-obs-detail-count">2 findings</div></div><div class="sro-obs-detail" id="srobs-ope-o6" data-obs-canon="OPE.O6" data-short="O6" data-group="6" data-page="operator.html" data-href="operator.html#1-mainnet-observations" data-findings="OPE.O6.F1,OPE.O6.F2,OPE.O6.F3,OPE.O6.F4"><div class="sro-obs-detail-id">OPE.O6</div><div class="sro-obs-detail-title">Stake pool operator profitability ranges from 24K to 1M ₳/yr — operators who charge the most earn the least</div><div class="sro-obs-detail-abstract">Operator revenue scales with fleet size, not price — the sub-viable single-pool operator absorbs <strong>48.3%</strong> of pool rewards for <strong>24,820 ₳/yr</strong>, while an 11+ pool MPO absorbs <strong>7.7%</strong> for <strong>1,035,496 ₳/yr</strong> (<strong>42× more revenue at 6× less price</strong>). No single-pool operator in the retail market earns a competitive wage.</div><div class="sro-obs-detail-summary">A sub-viable single-pool operator absorbs 48.3% of pool rewards but earns 24,820 ₳/yr. An 11+ pool MPO absorbs 7.7% but earns 1,035,496 ₳/yr — 42× more at 6× less effective price · MPO revenue scales horizontally (more pools) not vertically (higher price). The 11+ pool bracket captures 26.5% of retail rewards through 7 entities</div><div class="sro-obs-detail-count">4 findings</div></div><div class="sro-obs-detail" id="srobs-ope-o7" data-obs-canon="OPE.O7" data-short="O7" data-group="7" data-page="operator.html" data-href="operator.html#1-mainnet-observations" data-findings="OPE.O7.F1,OPE.O7.F2"><div class="sro-obs-detail-id">OPE.O7</div><div class="sro-obs-detail-title">Delegation follows visibility, not return</div><div class="sro-obs-detail-abstract">Delegators do not chase yield — <strong>65.9%</strong> sit in hollow MPO pools at <strong>2.18%</strong> net return while hollow single-pool near-saturation peers offer <strong>2.34%</strong>. The pledge premium is negative once the flat fee drag (<strong>1.06pp</strong> for balanced vs <strong>0.47pp</strong> for hollow) is priced in.</div><div class="sro-obs-detail-summary">65.9% of retail delegators sit in hollow MPO pools at 2.18% net return; hollow single-pool near-saturation pools offer 2.34% — 0.16pp more — and hold 2.7% of delegators · The pledge premium is negative in the retail data: balanced median net return 1.98% vs hollow 2.08%. The flat fee drag (1.06pp for balanced vs 0.47pp for hollow single-pool operators) overwhelms the pledge benefit</div><div class="sro-obs-detail-count">2 findings</div></div><div class="sro-obs-detail" id="srobs-ope-o8" data-obs-canon="OPE.O8" data-short="O8" data-group="8" data-page="operator.html" data-href="operator.html#1-mainnet-observations" data-findings="OPE.O8.F1,OPE.O8.F2,OPE.O8.F3,OPE.O8.F4"><div class="sro-obs-detail-id">OPE.O8</div><div class="sro-obs-detail-title">The mechanism is on a structural clock: reserve depletion compresses yield, widens the confiscatory zone, and erodes the signal every epoch</div><div class="sro-obs-detail-abstract">Reserve depletion is a structural clock — yield has fallen <strong>5.3% → 2.0%</strong> in <strong>413 epochs</strong> (R² = 0.99), projected to sub-<strong>1.5%</strong> within <strong>~1.7 years</strong>. As the epoch pot shrinks, the fixed-in-₳ flat fee consumes a growing share, the confiscatory zone expands upward, and the retail yield spread compresses toward block-production noise.</div><div class="sro-obs-detail-summary">The delegator yield has fallen from 5.3% to 2.0% in 413 epochs (5.5 years), tracking reserve depletion with R² = 0.99. Projection: sub-1.5% within ~1.7 years, sub-1.0% within ~3.5 years. The decline is irreversible without protocol-level intervention — it is built into the monetary expansion formula · At 2.0%, Cardano sits below the USD risk-free rate (4.3%) and at the bottom of the PoS landscape. No other major chain combines this low a yield with liquid, non-custodial, slashing-free design. The low return is the cost of that design — delegation is a conviction bet on ADA, not a yield-seeking decision</div><div class="sro-obs-detail-count">4 findings</div></div></div><div class="findings-registry" aria-hidden="true" hidden><div class="finding-detail" id="finding-cen-o1-f1" data-finding="CEN.O1.F1" data-short="F1.1" data-group="1" data-page="census.html" data-href="../../../README.md#32-the-structural-requirement"><div class="finding-detail-id">CEN.O1.F1</div><div class="finding-detail-summary">Two-thirds of registered pools (1,926 of 2,877) sit below the production threshold (~1M ADA) — they hold 0.86% of stake and are economically irrelevant</div><div class="finding-detail-insight">Structural threshold</div><span class="finding-detail-src">§3.2</span></div><div class="finding-detail" id="finding-cen-o1-f2" data-finding="CEN.O1.F2" data-short="F1.2" data-group="1" data-page="census.html" data-href="../../../README.md#33-problem-induction"><div class="finding-detail-id">CEN.O1.F2</div><div class="finding-detail-summary">73 named entities control 75.5% of productive stake through 464 pools — entity attribution is a lower bound</div><div class="finding-detail-insight">Concentration — supply side</div><span class="finding-detail-src">§3.3</span></div><div class="finding-detail" id="finding-cen-o1-f3" data-finding="CEN.O1.F3" data-short="F1.3" data-group="1" data-page="census.html" data-href="census.html#35-population-dynamics-entries-exits-and-turnover"><div class="finding-detail-id">CEN.O1.F3</div><div class="finding-detail-summary">The productive set is a quasi-equilibrium at ~950 pools since epoch 300, with 1.7% turnover per epoch (3,497 entries vs 3,070 exits)</div><div class="finding-detail-insight">Market maturity</div><span class="finding-detail-src">§3.5</span></div><div class="finding-detail" id="finding-cen-o1-f4" data-finding="CEN.O1.F4" data-short="F1.4" data-group="1" data-page="census.html" data-href="census.html#34-operator-landscape"><div class="finding-detail-id">CEN.O1.F4</div><div class="finding-detail-summary">The n-MPO distribution is heavy-tailed: 12 entities with 11+ pools control 40.4% of productive stake</div><div class="finding-detail-insight">Scale dominance</div><span class="finding-detail-src">§3.4</span></div><div class="finding-detail" id="finding-cen-o1-f5" data-finding="CEN.O1.F5" data-short="F1.5" data-group="1" data-page="census.html" data-href="census.html#34-operator-landscape"><div class="finding-detail-id">CEN.O1.F5</div><div class="finding-detail-summary">CEX + IVaaS (10 entities, 181 pools) hold 7.40B ADA — 34.3% of productive stake at structurally zero pledge</div><div class="finding-detail-insight">Custodial constraint</div><span class="finding-detail-src">§3.4</span></div><div class="finding-detail" id="finding-cen-o1-f6" data-finding="CEN.O1.F6" data-short="F1.6" data-group="1" data-page="census.html" data-href="census.html#35-population-dynamics-entries-exits-and-turnover"><div class="finding-detail-id">CEN.O1.F6</div><div class="finding-detail-summary">Independent single-pool operators contracted from 555 pools / 39.1% of productive stake (epoch 300) to 291 pools / 24.4% (epoch 623) — a 48% loss in pool count and 15pp in stake share</div><div class="finding-detail-insight">Structural decline</div><span class="finding-detail-src">§3.5</span></div><div class="finding-detail" id="finding-cen-o1-f7" data-finding="CEN.O1.F7" data-short="F1.7" data-group="1" data-page="census.html" data-href="census.html#35-population-dynamics-entries-exits-and-turnover"><div class="finding-detail-id">CEN.O1.F7</div><div class="finding-detail-summary">Multi-pool entities grew from 23 (epoch 210) to 85 (epoch 623), expanding from 135 to 660 productive pools and from 65% to 75.6% of productive stake — mid-tier fleets (6–20 pools) tripled</div><div class="finding-detail-insight">Entity expansion</div><span class="finding-detail-src">§3.5</span></div><div class="finding-detail" id="finding-cen-o1-f8" data-finding="CEN.O1.F8" data-short="F1.8" data-group="1" data-page="census.html" data-href="census.html#35-population-dynamics-entries-exits-and-turnover"><div class="finding-detail-id">CEN.O1.F8</div><div class="finding-detail-summary">The designed operator progression path (entry → growth → established) has no observable expression: the independent segment is contracting, not graduating</div><div class="finding-detail-insight">Pipeline failure</div><span class="finding-detail-src">§3.5</span></div><div class="finding-detail" id="finding-cen-o2-f1" data-finding="CEN.O2.F1" data-short="F2.1" data-group="2" data-page="census.html" data-href="census.html#36-pool-size-variability-how-stable-is-a-pools-stake"><div class="finding-detail-id">CEN.O2.F1</div><div class="finding-detail-summary">Custodial-by-delegation pools (28 pools, median delegation ≥ 100K ₳) have median CV 19.3% and 21% exceed CV 50%; retail pools sit at median CV 8.4%; custodial-by-extraction are the most inert (median CV 6.6%)</div><div class="finding-detail-insight">Segment-driven variance</div><span class="finding-detail-src">§3.6</span></div><div class="finding-detail" id="finding-cen-o3-f1" data-finding="CEN.O3.F1" data-short="F3.1" data-group="3" data-page="census.html" data-href="../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield"><div class="finding-detail-id">CEN.O3.F1</div><div class="finding-detail-summary">The median delegator holds 32 ADA; the mean is 16,055 ADA — a 500× gap measuring power-law skewness</div><div class="finding-detail-insight">Structural inequality</div><span class="finding-detail-src">§2.3</span></div><div class="finding-detail" id="finding-cen-o3-f2" data-finding="CEN.O3.F2" data-short="F3.2" data-group="3" data-page="census.html" data-href="../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield"><div class="finding-detail-id">CEN.O3.F2</div><div class="finding-detail-summary">1,000 delegators (0.07%) control 57% of staked ADA; the top 10,000 (0.74%) control 79.2%; Gini = 0.976</div><div class="finding-detail-insight">Concentration — demand side</div><span class="finding-detail-src">§2.3</span></div><div class="finding-detail" id="finding-cen-o3-f3" data-finding="CEN.O3.F3" data-short="F3.3" data-group="3" data-page="census.html" data-href="../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield"><div class="finding-detail-id">CEN.O3.F3</div><div class="finding-detail-summary">Stake concentration crystallised by epoch 300 and has not moved since — 9× growth in delegator count without affecting the top-1% share (78–82%)</div><div class="finding-detail-insight">Structural lock-in</div><span class="finding-detail-src">§2.3</span></div><div class="finding-detail" id="finding-cen-o4-f1" data-finding="CEN.O4.F1" data-short="F4.1" data-group="4" data-page="census.html" data-href="../../../README.md#31-the-staking-pot-must-survive-reserve-depletion"><div class="finding-detail-id">CEN.O4.F1</div><div class="finding-detail-summary">Redelegation activity fell 75% from 2,000–3,500/epoch (early Shelley) to 600–800 (current regime)</div><div class="finding-detail-insight">Market maturity</div><span class="finding-detail-src">§3.1</span></div><div class="finding-detail" id="finding-cen-o4-f2" data-finding="CEN.O4.F2" data-short="F4.2" data-group="4" data-page="census.html" data-href="../../../README.md#31-the-staking-pot-must-survive-reserve-depletion"><div class="finding-detail-id">CEN.O4.F2</div><div class="finding-detail-summary">The delegator base is structurally bimodal: 42% loyal (201+ epochs), 21% volatile (≤ 5 epochs), 37% moderate</div><div class="finding-detail-insight">Structural bimodality</div><span class="finding-detail-src">§3.1</span></div><div class="finding-detail" id="finding-cen-o4-f3" data-finding="CEN.O4.F3" data-short="F4.3" data-group="4" data-page="census.html" data-href="../../../README.md#31-the-staking-pot-must-survive-reserve-depletion"><div class="finding-detail-id">CEN.O4.F3</div><div class="finding-detail-summary">Custodial and private pools contribute negligible churn — retail-only filter produces identical aggregate metrics</div><div class="finding-detail-insight">Churn is retail-only</div><span class="finding-detail-src">§3.1</span></div><div class="finding-detail" id="finding-cen-o5-f1" data-finding="CEN.O5.F1" data-short="F5.1" data-group="5" data-page="census.html" data-href="../../../README.md#31-the-staking-pot-must-survive-reserve-depletion"><div class="finding-detail-id">CEN.O5.F1</div><div class="finding-detail-summary">Micro-delegators (&lt; 1K ADA) average 0.67 lifetime switches; whales (1M+) average 3.06 — switching scales monotonically with stake size</div><div class="finding-detail-insight">Size-driven behaviour</div><span class="finding-detail-src">§3.1</span></div><div class="finding-detail" id="finding-cen-o5-f2" data-finding="CEN.O5.F2" data-short="F5.2" data-group="5" data-page="census.html" data-href="../../../README.md#31-the-staking-pot-must-survive-reserve-depletion"><div class="finding-detail-id">CEN.O5.F2</div><div class="finding-detail-summary">Whales hold 14.1B of 21.8B staked total, yet only 38% of their stake sits in loyal delegations — capital is disproportionately mobile</div><div class="finding-detail-insight">Capital instability</div><span class="finding-detail-src">§3.1</span></div><div class="finding-detail" id="finding-cen-o6-f1" data-finding="CEN.O6.F1" data-short="F6.1" data-group="6" data-page="census.html" data-href="../../../README.md#32-the-fee-generating-population-must-expand"><div class="finding-detail-id">CEN.O6.F1</div><div class="finding-detail-summary">Half of all switches (50.5%) produce zero yield change (±5 bps); the median ROS differential is +0.02 bps</div><div class="finding-detail-insight">Price signal invisible</div><span class="finding-detail-src">§3.2</span></div><div class="finding-detail" id="finding-cen-o6-f2" data-finding="CEN.O6.F2" data-short="F6.2" data-group="6" data-page="census.html" data-href="../../../README.md#32-the-fee-generating-population-must-expand"><div class="finding-detail-id">CEN.O6.F2</div><div class="finding-detail-summary">Operator take direction is symmetric: 30.8% lower / 37.7% similar / 31.5% higher — no optimisation pattern</div><div class="finding-detail-insight">No fee-chasing</div><span class="finding-detail-src">§3.2</span></div><div class="finding-detail" id="finding-cen-o6-f3" data-finding="CEN.O6.F3" data-short="F6.3" data-group="6" data-page="census.html" data-href="../../../README.md#32-the-fee-generating-population-must-expand"><div class="finding-detail-id">CEN.O6.F3</div><div class="finding-detail-summary">Pool size is the only asymmetric signal: moves to smaller pools accept higher take (21.5%), moves to larger pools are take-neutral (21.0%)</div><div class="finding-detail-insight">Visibility over optimality</div><span class="finding-detail-src">§3.2</span></div><div class="finding-detail" id="finding-cen-o6-f4" data-finding="CEN.O6.F4" data-short="F6.4" data-group="6" data-page="census.html" data-href="../../../README.md#32-the-fee-generating-population-must-expand"><div class="finding-detail-id">CEN.O6.F4</div><div class="finding-detail-summary">92.1% of loyal delegations sit in the 0–5% margin range — loyalty and low fees coexist, not trade off</div><div class="finding-detail-insight">Entry filter, not trigger</div><span class="finding-detail-src">§3.2</span></div><div class="finding-detail" id="finding-cen-o6-f5" data-finding="CEN.O6.F5" data-short="F6.5" data-group="6" data-page="census.html" data-href="../../../README.md#33-the-mechanism-must-function-across-a-range-of-ada-price-scenarios"><div class="finding-detail-id">CEN.O6.F5</div><div class="finding-detail-summary">99.97% of delegations and 99.83% of stake are key-based; script-based delegation (399 addresses, 38M ADA) is negligible — DeFi operates outside the delegation system</div><div class="finding-detail-insight">No smart-contract staking</div><span class="finding-detail-src">§3.3</span></div><div class="finding-detail" id="finding-cen-o7-f1" data-finding="CEN.O7.F1" data-short="F7.1" data-group="7" data-page="census.html" data-href="census.html#1-mainnet-observations"><div class="finding-detail-id">CEN.O7.F1</div><div class="finding-detail-summary">Staking rate has fallen from 71% (epoch ~260) to 59% (epoch 623) — driven by supply growth outpacing stake inflows</div><div class="finding-detail-insight">Supply-side erosion</div></div><div class="finding-detail" id="finding-cen-o7-f2" data-finding="CEN.O7.F2" data-short="F7.2" data-group="7" data-page="census.html" data-href="census.html#1-mainnet-observations"><div class="finding-detail-id">CEN.O7.F2</div><div class="finding-detail-summary">14.36B ADA (39.8%) does not participate; of this, only 134.6M (0.37%) is <em>addressable</em> (registered stake credential, not delegated) — the remaining 14.2B sits in addresses with no stake credential</div><div class="finding-detail-insight">Structural non-participation</div></div><div class="finding-detail" id="finding-tre-o1-f1" data-finding="TRE.O1.F1" data-short="F1.1" data-group="1" data-page="treasury.html" data-href="../../../README.md#1-constitutional-framework"><div class="finding-detail-id">TRE.O1.F1</div><div class="finding-detail-summary">Monetary expansion dominates the epoch pot (~99.8%)</div><div class="finding-detail-insight">Structural — unchanged since Shelley</div><span class="finding-detail-src">§1</span></div><div class="finding-detail" id="finding-tre-o1-f2" data-finding="TRE.O1.F2" data-short="F1.2" data-group="1" data-page="treasury.html" data-href="../../../README.md#22-restore-the-notion-of-pledge-among-operators"><div class="finding-detail-id">TRE.O1.F2</div><div class="finding-detail-summary">Fee revenue is structurally insufficient — even at full capacity, fees cover ~1.3% of expansion</div><div class="finding-detail-insight">Structural — 12–16× capacity gap</div><span class="finding-detail-src">§2.2</span></div><div class="finding-detail" id="finding-tre-o1-f3" data-finding="TRE.O1.F3" data-short="F1.3" data-group="1" data-page="treasury.html" data-href="../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield"><div class="finding-detail-id">TRE.O1.F3</div><div class="finding-detail-summary">Deposit contribution is small and unmeasurable at epoch granularity</div><div class="finding-detail-insight">Data limitation — Koios coverage</div><span class="finding-detail-src">§2.3</span></div><div class="finding-detail" id="finding-tre-o1-f4" data-finding="TRE.O1.F4" data-short="F1.4" data-group="1" data-page="treasury.html" data-href="../../../README.md#24-reduce-the-concentration-effects-that-distort-both-populations"><div class="finding-detail-id">TRE.O1.F4</div><div class="finding-detail-summary">SPOs produce ~97% of their assigned blocks — the pot assembles reliably</div><div class="finding-detail-insight">Structural — avg η = 0.977</div><span class="finding-detail-src">§2.4</span></div><div class="finding-detail" id="finding-tre-o2-f1" data-finding="TRE.O2.F1" data-short="F2.1" data-group="2" data-page="treasury.html" data-href="../../../README.md#21-guarantee-operator-viability-across-the-entire-productive-population"><div class="finding-detail-id">TRE.O2.F1</div><div class="finding-detail-summary">Reserve is half-depleted (−51.43%) in 5.7 years</div><div class="finding-detail-insight">Structural — exponential decay</div><span class="finding-detail-src">§2.1</span></div><div class="finding-detail" id="finding-tre-o2-f2" data-finding="TRE.O2.F2" data-short="F2.2" data-group="2" data-page="treasury.html" data-href="treasury.html#51-reserve-depletion-trajectory"><div class="finding-detail-id">TRE.O2.F2</div><div class="finding-detail-summary">Significant reward pressure expected at epochs 1000–1200</div><div class="finding-detail-insight">Projected — ~2028–2029</div><span class="finding-detail-src">§5.1</span></div><div class="finding-detail" id="finding-tre-o3-f1" data-finding="TRE.O3.F1" data-short="F3.1" data-group="3" data-page="treasury.html" data-href="../../../README.md#32-the-fee-generating-population-must-expand"><div class="finding-detail-id">TRE.O3.F1</div><div class="finding-detail-summary">Only ~44% of the pools pot is distributed to operators and delegators — the rest returns to the reserve</div><div class="finding-detail-insight">Epoch 623 — 6.78M of 15.39M ADA</div><span class="finding-detail-src">§3.2</span></div><div class="finding-detail" id="finding-tre-o3-f2" data-finding="TRE.O3.F2" data-short="F3.2" data-group="3" data-page="treasury.html" data-href="../../../README.md#32-the-fee-generating-population-must-expand"><div class="finding-detail-id">TRE.O3.F2</div><div class="finding-detail-summary">4.61B ADA cumulative (~71% of current reserve) exists because of undistributed rewards</div><div class="finding-detail-insight">Structural — side-effect, not design</div><span class="finding-detail-src">§3.2</span></div><div class="finding-detail" id="finding-tre-o3-f3" data-finding="TRE.O3.F3" data-short="F3.3" data-group="3" data-page="treasury.html" data-href="../../../README.md#32-the-fee-generating-population-must-expand"><div class="finding-detail-id">TRE.O3.F3</div><div class="finding-detail-summary">The primary driver is inactive stake — ~16.8B ADA (~43.6%) does not participate in delegation</div><div class="finding-detail-insight">Upstream — outside formula control</div><span class="finding-detail-src">§3.2</span></div><div class="finding-detail" id="finding-tre-o4-f1" data-finding="TRE.O4.F1" data-short="F4.1" data-group="4" data-page="treasury.html" data-href="../../../README.md#33-the-mechanism-must-function-across-a-range-of-ada-price-scenarios"><div class="finding-detail-id">TRE.O4.F1</div><div class="finding-detail-summary">Treasury split and expansion rate never adjusted since Shelley</div><div class="finding-detail-insight">Governance — τ = 20%, ρ = 0.3% constant</div><span class="finding-detail-src">§3.3</span></div><div class="finding-detail" id="finding-pol-o1-f1" data-finding="POL.O1.F1" data-short="F1.1" data-group="1" data-page="pools.html" data-href="pools.html#361-current-snapshot"><div class="finding-detail-id">POL.O1.F1</div><div class="finding-detail-summary">Only 6.79M of 15.53M ADA/epoch reaches operators and delegators — 44% distribution efficiency</div><div class="finding-detail-insight">Epoch 616</div><span class="finding-detail-src">§3.6.1</span></div><div class="finding-detail" id="finding-pol-o1-f2" data-finding="POL.O1.F2" data-short="F1.2" data-group="1" data-page="pools.html" data-href="../../../README.md#31-overview"><div class="finding-detail-id">POL.O1.F2</div><div class="finding-detail-summary">The participation gap (unstaked ADA) alone returns 4.91M ADA/epoch — 31.6% of the pot</div><div class="finding-detail-insight">Upstream — outside formula control</div><span class="finding-detail-src">§3.1</span></div><div class="finding-detail" id="finding-pol-o1-f3" data-finding="POL.O1.F3" data-short="F1.3" data-group="1" data-page="pools.html" data-href="pools.html#341-why-pledge-matters-and-why-this-is-not-zero-sum"><div class="finding-detail-id">POL.O1.F3</div><div class="finding-detail-summary">The unused pledge-incentive budget returns 3.43M ADA/epoch — 22.1% of the pot, 95.6% of the bonus budget wasted</div><div class="finding-detail-insight">Addressable by formula reform</div><span class="finding-detail-src">§3.4.1</span></div><div class="finding-detail" id="finding-pol-o1-f4" data-finding="POL.O1.F4" data-short="F1.4" data-group="1" data-page="pools.html" data-href="pools.html#361-current-snapshot"><div class="finding-detail-id">POL.O1.F4</div><div class="finding-detail-summary">These two causes together (53.7% of pot) dwarf all others: pledge-not-met confiscation (2.1%), performance (0.5%), oversaturation (0.3%) are secondary</div><div class="finding-detail-insight">The reform priority is clear</div><span class="finding-detail-src">§3.6.1</span></div><div class="finding-detail" id="finding-pol-o2-f1" data-finding="POL.O2.F1" data-short="F2.1" data-group="2" data-page="pools.html" data-href="pools.html#344-the-evidence-on-mainnet"><div class="finding-detail-id">POL.O2.F1</div><div class="finding-detail-summary">78% of staked ADA sits in pools with pledge ratio &lt; 1%; stake-weighted median ratio is 0.07%</div><div class="finding-detail-insight">Structural — pledge is absent where stake concentrates</div><span class="finding-detail-src">§3.4.4</span></div><div class="finding-detail" id="finding-pol-o2-f2" data-finding="POL.O2.F2" data-short="F2.2" data-group="2" data-page="pools.html" data-href="pools.html#342-the-playing-field-what-pledge-actually-buys"><div class="finding-detail-id">POL.O2.F2</div><div class="finding-detail-summary">Yield on pledge capital is 0.68%/yr at best (full saturation) — below passive delegation yield of 2.3%/yr</div><div class="finding-detail-insight">Economically irrational to pledge</div><span class="finding-detail-src">§3.4.2</span></div><div class="finding-detail" id="finding-pol-o2-f3" data-finding="POL.O2.F3" data-short="F2.3" data-group="2" data-page="pools.html" data-href="pools.html#361-current-snapshot"><div class="finding-detail-id">POL.O2.F3</div><div class="finding-detail-summary">3.4M ADA/epoch (22% of pot) is reserved for pledge bonus but returns to reserve unused</div><div class="finding-detail-insight">Structural cost of maintaining a₀ = 0.3</div><span class="finding-detail-src">§3.6.1</span></div><div class="finding-detail" id="finding-pol-o3-f1" data-finding="POL.O3.F1" data-short="F3.1" data-group="3" data-page="pools.html" data-href="pools.html#4121-production-threshold"><div class="finding-detail-id">POL.O3.F1</div><div class="finding-detail-summary">Regular block production requires ~3M ADA stake (~3 blocks/epoch) — the emergent viability boundary</div><div class="finding-detail-insight">Structural — not a protocol parameter</div><span class="finding-detail-src">§4.1.2.1</span></div><div class="finding-detail" id="finding-pol-o3-f2" data-finding="POL.O3.F2" data-short="F3.2" data-group="3" data-page="pools.html" data-href="pools.html#4122-viability-threshold"><div class="finding-detail-id">POL.O3.F2</div><div class="finding-detail-summary">Below 1.1M ADA, the 340 ADA fixed cost exceeds pool reward — operators are in economic loss</div><div class="finding-detail-insight">1,987 below-viability pools affected</div><span class="finding-detail-src">§4.1.2.2</span></div><div class="finding-detail" id="finding-pol-o3-f3" data-finding="POL.O3.F3" data-short="F3.3" data-group="3" data-page="pools.html" data-href="pools.html#4123-saturation-threshold"><div class="finding-detail-id">POL.O3.F3</div><div class="finding-detail-summary">Only 8 pools reach the saturation threshold (z₀ = 77M ADA) — the cap designed for 500 pools is nearly inactive</div><div class="finding-detail-insight">1.6% of design target</div><span class="finding-detail-src">§4.1.2.3</span></div><div class="finding-detail" id="finding-pol-o3-f4" data-finding="POL.O3.F4" data-short="F3.4" data-group="3" data-page="pools.html" data-href="pools.html#4123-saturation-threshold"><div class="finding-detail-id">POL.O3.F4</div><div class="finding-detail-summary">Active stake fills only 56.5% of theoretical capacity (k × z₀) — at most 282 pools could saturate</div><div class="finding-detail-insight">Capital constraint</div><span class="finding-detail-src">§4.1.2.3</span></div><div class="finding-detail" id="finding-pol-o3-f5" data-finding="POL.O3.F5" data-short="F3.5" data-group="3" data-page="pools.html" data-href="pools.html#415-conclusion"><div class="finding-detail-id">POL.O3.F5</div><div class="finding-detail-summary">Tier boundaries are dynamic — they shift with active stake, fixed costs, and k; any CIP evaluation must track where they move</div><div class="finding-detail-insight">Framework — not a snapshot</div><span class="finding-detail-src">§4.1.5</span></div><div class="finding-detail" id="finding-pol-o3-f6" data-finding="POL.O3.F6" data-short="F3.6" data-group="3" data-page="pools.html" data-href="pools.html#415-conclusion"><div class="finding-detail-id">POL.O3.F6</div><div class="finding-detail-summary">CIPs targeting k reshape the upper tail; CIPs targeting fees reshape the lower tail — reforms hit different tiers</div><div class="finding-detail-insight">Asymmetric reform impact</div><span class="finding-detail-src">§4.1.5</span></div><div class="finding-detail" id="finding-pol-o4-f1" data-finding="POL.O4.F1" data-short="F4.1" data-group="4" data-page="pools.html" data-href="../../../README.md#211-problem-statement"><div class="finding-detail-id">POL.O4.F1</div><div class="finding-detail-summary">85 MPO entities operate 901 pools holding 16.4B ADA — 75.4% of participating stake</div><div class="finding-detail-insight">Structural — concentration</div><span class="finding-detail-src">§2.1.1</span></div><div class="finding-detail" id="finding-pol-o4-f2" data-finding="POL.O4.F2" data-short="F4.2" data-group="4" data-page="pools.html" data-href="../../../README.md#212-structural-enforce-the-production-threshold"><div class="finding-detail-id">POL.O4.F2</div><div class="finding-detail-summary">48 capital-sufficient MPOs (14.5B ADA) could play the pledge game; 37 capital-insufficient MPOs (1.74B ADA) cannot</div><div class="finding-detail-insight">Scale determines access</div><span class="finding-detail-src">§2.1.2</span></div><div class="finding-detail" id="finding-pol-o4-f3" data-finding="POL.O4.F3" data-short="F4.3" data-group="4" data-page="pools.html" data-href="pools.html#4241-pledge-compliance-classification"><div class="finding-detail-id">POL.O4.F3</div><div class="finding-detail-summary">41 of 48 capital-sufficient MPOs are non-compliant — they forfeit ~550K ADA/epoch in pledge bonus</div><div class="finding-detail-insight">Strategic non-response</div><span class="finding-detail-src">§4.2.4.1</span></div><div class="finding-detail" id="finding-pol-o4-f4" data-finding="POL.O4.F4" data-short="F4.4" data-group="4" data-page="pools.html" data-href="pools.html#4242-structural-non-compliance-cex-and-ivaas"><div class="finding-detail-id">POL.O4.F4</div><div class="finding-detail-summary">CEX + IVaaS alone hold 7.4B ADA (19.2% of supply) at structurally zero pledge</div><div class="finding-detail-insight">Custodial constraint</div><span class="finding-detail-src">§4.2.4.2</span></div><div class="finding-detail" id="finding-pol-o4-f5" data-finding="POL.O4.F5" data-short="F4.5" data-group="4" data-page="pools.html" data-href="pools.html#4244-pledge-compliance-pool-tier"><div class="finding-detail-id">POL.O4.F5</div><div class="finding-detail-summary">Capital-sufficient non-compliance is a scale phenomenon — 82.9% of capital-sufficient viable MPO stake, &gt;99% of 12B ADA in viable-and-above pools</div><div class="finding-detail-insight">Non-compliance spans every viable tier</div><span class="finding-detail-src">§4.2.4.4</span></div><div class="finding-detail" id="finding-pol-o4-f6" data-finding="POL.O4.F6" data-short="F4.6" data-group="4" data-page="pools.html" data-href="pools.html#4244-pledge-compliance-pool-tier"><div class="finding-detail-id">POL.O4.F6</div><div class="finding-detail-summary">Non-compliance is spread across the full tier spectrum — no single-tier fix exists; any parameter change ripples across all tiers</div><div class="finding-detail-insight">Reform constraint</div><span class="finding-detail-src">§4.2.4.4</span></div><div class="finding-detail" id="finding-pol-o4-f7" data-finding="POL.O4.F7" data-short="F4.7" data-group="4" data-page="pools.html" data-href="pools.html#4243-the-cost-of-non-compliance"><div class="finding-detail-id">POL.O4.F7</div><div class="finding-detail-summary">3 exemplary MPOs capture 82% of bonus ADA among pledging entities — but CF pledges by mandate; the mechanism's output rests on 2 private entities (67% of pledging bonus)</div><div class="finding-detail-insight">A Sybil-resistance tool for 500 pools is a transfer to two</div><span class="finding-detail-src">§4.2.4.3</span></div><div class="finding-detail" id="finding-pol-o5-f1" data-finding="POL.O5.F1" data-short="F5.1" data-group="5" data-page="pools.html" data-href="../../../README.md#221-problem-statement"><div class="finding-detail-id">POL.O5.F1</div><div class="finding-detail-summary">The <a href="https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf"><em>Incentive Mechanism Analysis</em></a>'s 741 healthy pools collapse to 283 independent viable operators once MPO fleet members are removed — the other 61% were fleet pools</div><div class="finding-detail-insight">The competitive field is 3× smaller than headline</div><span class="finding-detail-src">§2.2.1</span></div><div class="finding-detail" id="finding-pol-o5-f2" data-finding="POL.O5.F2" data-short="F5.2" data-group="5" data-page="pools.html" data-href="../../../README.md#222-specification"><div class="finding-detail-id">POL.O5.F2</div><div class="finding-detail-summary">78% of independent single-pool stake is non-compliant — the pledge signal is correctly priced as irrelevant at their scale</div><div class="finding-detail-insight">Rational non-compliance</div><span class="finding-detail-src">§2.2.2</span></div><div class="finding-detail" id="finding-pol-o5-f3" data-finding="POL.O5.F3" data-short="F5.3" data-group="5" data-page="pools.html" data-href="../../../README.md#222-specification"><div class="finding-detail-id">POL.O5.F3</div><div class="finding-detail-summary">561 marginal single-pool operators (16% of single-pool stake) partially pledge — the narrow policy-sensitive population</div><div class="finding-detail-insight">Target for parameter reform</div><span class="finding-detail-src">§2.2.2</span></div><div class="finding-detail" id="finding-pol-o5-f4" data-finding="POL.O5.F4" data-short="F5.4" data-group="5" data-page="pools.html" data-href="pools.html#433-historical-evolution-has-the-single-pool-landscape-always-looked-like-this"><div class="finding-detail-id">POL.O5.F4</div><div class="finding-detail-summary">Independent operators' share of active stake has fallen from 28.0% to 25.0% since epoch 583 — internal pledge composition barely changed</div><div class="finding-detail-insight">Slow structural decline</div><span class="finding-detail-src">§4.3.3</span></div><div class="finding-detail" id="finding-pol-o6-f1" data-finding="POL.O6.F1" data-short="F6.1" data-group="6" data-page="pools.html" data-href="../../../README.md#231-make-the-base-yield-competitive"><div class="finding-detail-id">POL.O6.F1</div><div class="finding-detail-summary">78 of 85 MPO entities (13.74B ADA, 63% of active stake) are outside the pledge-response path — multi-game optimization, not calibration failure</div><div class="finding-detail-insight">Structural + strategic</div><span class="finding-detail-src">§2.3.1</span></div><div class="finding-detail" id="finding-pol-o6-f2" data-finding="POL.O6.F2" data-short="F6.2" data-group="6" data-page="pools.html" data-href="pools.html#4242-structural-non-compliance-cex-and-ivaas"><div class="finding-detail-id">POL.O6.F2</div><div class="finding-detail-summary">CEX cannot pledge custodied funds; IVaaS cannot pledge client assets; community fleets choose not to — three distinct mechanisms</div><div class="finding-detail-insight">Architectural vs strategic</div><span class="finding-detail-src">§4.2.4.2</span></div><div class="finding-detail" id="finding-pol-o6-f3" data-finding="POL.O6.F3" data-short="F6.3" data-group="6" data-page="pools.html" data-href="pools.html#444-the-incentive-responsive-field"><div class="finding-detail-id">POL.O6.F3</div><div class="finding-detail-summary">The filtered proxy (single-pool operators + retained MPOs) holds 7.89B ADA — only 36% of active stake responds to the pledge signal</div><div class="finding-detail-insight">The actual incentive-responsive arena</div><span class="finding-detail-src">§4.4.4</span></div><div class="finding-detail" id="finding-ope-o1-f1" data-finding="OPE.O1.F1" data-short="F1.1" data-group="1" data-page="operator.html" data-href="../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield"><div class="finding-detail-id">OPE.O1.F1</div><div class="finding-detail-summary">The flat fee accounts for <strong>60%</strong> of all operator revenue in the retail market; the commission accounts for <strong>40%</strong></div><div class="finding-detail-insight">Structural — the passive channel dominates the active one</div><span class="finding-detail-src">§2.3</span></div><div class="finding-detail" id="finding-ope-o1-f2" data-finding="OPE.O1.F2" data-short="F1.2" data-group="1" data-page="operator.html" data-href="../../../README.md#1-constitutional-framework"><div class="finding-detail-id">OPE.O1.F2</div><div class="finding-detail-summary"><strong>64%</strong> of pools still declare the former floor (<strong>340 ₳</strong>) — <strong>178 epochs</strong> after a governance action halved it to <strong>170 ₳</strong></div><div class="finding-detail-insight">Governance inertia — driven by the largest entities</div><span class="finding-detail-src">§1</span></div><div class="finding-detail" id="finding-ope-o1-f3" data-finding="OPE.O1.F3" data-short="F1.3" data-group="1" data-page="operator.html" data-href="../../../README.md#1-constitutional-framework"><div class="finding-detail-id">OPE.O1.F3</div><div class="finding-detail-summary"><strong>89.5%</strong> of pools declare one of two floor values (<strong>170</strong> or <strong>340 ₳</strong>); "custom" values are mostly near-floor inertia (Binance 345, Everstake 400) or extraction</div><div class="finding-detail-insight">The flat fee is a binary choice, not a pricing parameter</div><span class="finding-detail-src">§1</span></div><div class="finding-detail" id="finding-ope-o1-f4" data-finding="OPE.O1.F4" data-short="F1.4" data-group="1" data-page="operator.html" data-href="../../../README.md#1-constitutional-framework"><div class="finding-detail-id">OPE.O1.F4</div><div class="finding-detail-summary">The flat fee follows a 1/σ hyperbola: <strong>47.5%</strong> of pool reward at the sub-viable tier, <strong>1.5%</strong> at near-saturation</div><div class="finding-detail-insight">Regressive by design — a fixed-in-₳ levy on a size-proportional reward</div><span class="finding-detail-src">§1</span></div><div class="finding-detail" id="finding-ope-o1-f5" data-finding="OPE.O1.F5" data-short="F1.5" data-group="1" data-page="operator.html" data-href="../../../README.md#1-constitutional-framework"><div class="finding-detail-id">OPE.O1.F5</div><div class="finding-detail-summary"><strong>No other major PoS protocol uses a flat fee.</strong> The fixed-cost model is unique to Cardano; Ethereum, Solana, Cosmos, and Polkadot all price validators on proportional rules</div><div class="finding-detail-insight">Unique to Cardano — no cross-chain precedent or comparator</div><span class="finding-detail-src">§1</span></div><div class="finding-detail" id="finding-ope-o2-f1" data-finding="OPE.O2.F1" data-short="F2.1" data-group="2" data-page="operator.html" data-href="../../../README.md#21-guarantee-operator-viability-across-the-entire-productive-population"><div class="finding-detail-id">OPE.O2.F1</div><div class="finding-detail-summary">87% of pools set a commission at or below 10%; 12% set ≥ 99% (privatisation). The 89pp range between 10% and 99% contains 12 pools</div><div class="finding-detail-insight">No man&#x27;s land — no economic attractor exists between pricing and extraction</div><span class="finding-detail-src">§2.1</span></div><div class="finding-detail" id="finding-ope-o2-f2" data-finding="OPE.O2.F2" data-short="F2.2" data-group="2" data-page="operator.html" data-href="../../../README.md#21-guarantee-operator-viability-across-the-entire-productive-population"><div class="finding-detail-id">OPE.O2.F2</div><div class="finding-detail-summary">Four bands: no-commission (170 pools, 17.9%), competitive (658, 69.1%), no man's land (12, 1.3%), privatisation (112, 11.8%)</div><div class="finding-detail-insight">The market self-organises into discrete tiers</div><span class="finding-detail-src">§2.1</span></div><div class="finding-detail" id="finding-ope-o3-f1" data-finding="OPE.O3.F1" data-short="F3.1" data-group="3" data-page="operator.html" data-href="../../../README.md#22-restore-the-notion-of-pledge-among-operators"><div class="finding-detail-id">OPE.O3.F1</div><div class="finding-detail-summary">79 entities operating 143 pools (4.55B, 21.1%) are custodial: by pledge (10 entities, 36 pools, 1.59B), by extraction (57 entities, 79 pools, 2.04B), by delegation (15 entities, 28 pools, 0.92B)</div><div class="finding-detail-insight">Three distinct mechanisms — each detectable from on-chain observables</div><span class="finding-detail-src">§2.2</span></div><div class="finding-detail" id="finding-ope-o3-f2" data-finding="OPE.O3.F2" data-short="F3.2" data-group="3" data-page="operator.html" data-href="../../../README.md#222-specification"><div class="finding-detail-id">OPE.O3.F2</div><div class="finding-detail-summary">Custodial-by-delegation uses the per-pool <strong>median</strong> delegation (db-sync <code>epoch_stake</code>) ≥ 100K ₳ — the amount held by the typical delegator. A delegation of 50K ₳ is already in the top 1.5% of the network</div><div class="finding-detail-insight">The median measures the delegator&#x27;s experience, not capital concentration</div><span class="finding-detail-src">§2.2.2</span></div><div class="finding-detail" id="finding-ope-o3-f3" data-finding="OPE.O3.F3" data-short="F3.3" data-group="3" data-page="operator.html" data-href="operator.html#433-summary"><div class="finding-detail-id">OPE.O3.F3</div><div class="finding-detail-summary">Custodial-by-pledge entities earn 1,759,252 ₳/yr median — they capture 100% of rewards on self-funded pools. Custodial-by-extraction entities earn 281,831 ₳/yr — privatisation commission on pools with inert delegators. Custodial-by-delegation entities earn 29,329 ₳/yr — small whale pools, not revenue machines</div><div class="finding-detail-insight">Each custodial mechanism produces a different economic outcome</div><span class="finding-detail-src">§4.3.3</span></div><div class="finding-detail" id="finding-ope-o4-f1" data-finding="OPE.O4.F1" data-short="F4.1" data-group="4" data-page="operator.html" data-href="operator.html#433-summary"><div class="finding-detail-id">OPE.O4.F1</div><div class="finding-detail-summary">809 retail pools, 516 entities, 17.02B ADA, 1,272,836 delegators. This includes institutional operators (Coinbase, Binance, Kiln) — retail by median delegation</div><div class="finding-detail-insight">The retail market is larger than the mean-based estimate suggested</div><span class="finding-detail-src">§4.3.3</span></div><div class="finding-detail" id="finding-ope-o4-f2" data-finding="OPE.O4.F2" data-short="F4.2" data-group="4" data-page="operator.html" data-href="../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield"><div class="finding-detail-id">OPE.O4.F2</div><div class="finding-detail-summary">The median retail delegation is 87 ₳ — remarkably uniform across operator types (45–962 ₳ range)</div><div class="finding-detail-insight">Retail delegators are small and homogeneous</div><span class="finding-detail-src">§2.3</span></div><div class="finding-detail" id="finding-ope-o5-f1" data-finding="OPE.O5.F1" data-short="F5.1" data-group="5" data-page="operator.html" data-href="../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield"><div class="finding-detail-id">OPE.O5.F1</div><div class="finding-detail-summary">A delegator in a sub-viable pool pays 48.3% effective price and receives 2.04% net return. A delegator in a near-saturation pool pays 2.7% and receives 2.34%. 18× more for 0.30pp of return</div><div class="finding-detail-insight">The effective price is a mechanical artefact of pool size, not a market signal</div><span class="finding-detail-src">§2.3</span></div><div class="finding-detail" id="finding-ope-o5-f2" data-finding="OPE.O5.F2" data-short="F5.2" data-group="5" data-page="operator.html" data-href="../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield"><div class="finding-detail-id">OPE.O5.F2</div><div class="finding-detail-summary">Net return converges to 1.95–2.34% across the entire retail market regardless of effective price, operator type, or pool size</div><div class="finding-detail-insight">The return signal is too weak to drive delegation</div><span class="finding-detail-src">§2.3</span></div><div class="finding-detail" id="finding-ope-o6-f1" data-finding="OPE.O6.F1" data-short="F6.1" data-group="6" data-page="operator.html" data-href="../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield"><div class="finding-detail-id">OPE.O6.F1</div><div class="finding-detail-summary">A sub-viable single-pool operator absorbs 48.3% of pool rewards but earns 24,820 ₳/yr. An 11+ pool MPO absorbs 7.7% but earns 1,035,496 ₳/yr — 42× more at 6× less effective price</div><div class="finding-detail-insight">The flat fee penalises small-pool delegators without compensating small-pool operators</div><span class="finding-detail-src">§2.3</span></div><div class="finding-detail" id="finding-ope-o6-f2" data-finding="OPE.O6.F2" data-short="F6.2" data-group="6" data-page="operator.html" data-href="../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield"><div class="finding-detail-id">OPE.O6.F2</div><div class="finding-detail-summary">MPO revenue scales horizontally (more pools) not vertically (higher price). The 11+ pool bracket captures 26.5% of retail rewards through 7 entities</div><div class="finding-detail-insight">Fleet size, not pricing, drives operator economics</div><span class="finding-detail-src">§2.3</span></div><div class="finding-detail" id="finding-ope-o6-f3" data-finding="OPE.O6.F3" data-short="F6.3" data-group="6" data-page="operator.html" data-href="../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield"><div class="finding-detail-id">OPE.O6.F3</div><div class="finding-detail-summary">57 hollow MPOs operate on 64.4% of retail rewards; 414 hollow single-pool operators share 31.1%; 41 balanced operators share 1.2%</div><div class="finding-detail-insight">Structural concentration</div><span class="finding-detail-src">§2.3</span></div><div class="finding-detail" id="finding-ope-o6-f4" data-finding="OPE.O6.F4" data-short="F6.4" data-group="6" data-page="operator.html" data-href="../../../README.md#24-reduce-the-concentration-effects-that-distort-both-populations"><div class="finding-detail-id">OPE.O6.F4</div><div class="finding-detail-summary">No single-pool operator in the retail market earns a competitive wage for their labour. The median single-pool revenue of ~25,000 ₳/yr (6,250 at0.25/ADA) covers infrastructure but not the 5–15 hrs/month of skilled work. Competitive compensation begins at the 2-pool MPO tier (~68,700 ₳/yr)</div><div class="finding-detail-insight">The single-pool operator subsidises the network</div><span class="finding-detail-src">§2.4</span></div><div class="finding-detail" id="finding-ope-o7-f1" data-finding="OPE.O7.F1" data-short="F7.1" data-group="7" data-page="operator.html" data-href="../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield"><div class="finding-detail-id">OPE.O7.F1</div><div class="finding-detail-summary">65.9% of retail delegators sit in hollow MPO pools at 2.18% net return; hollow single-pool near-saturation pools offer 2.34% — 0.16pp more — and hold 2.7% of delegators</div><div class="finding-detail-insight">The return signal does not drive delegation</div><span class="finding-detail-src">§2.3</span></div><div class="finding-detail" id="finding-ope-o7-f2" data-finding="OPE.O7.F2" data-short="F7.2" data-group="7" data-page="operator.html" data-href="../../../README.md#23-maintain-and-diversify-a-competitive-delegator-yield"><div class="finding-detail-id">OPE.O7.F2</div><div class="finding-detail-summary">The pledge premium is negative in the retail data: balanced median net return 1.98% vs hollow 2.08%. The flat fee drag (1.06pp for balanced vs 0.47pp for hollow single-pool operators) overwhelms the pledge benefit</div><div class="finding-detail-insight">The incentive mechanism&#x27;s core assumption fails</div><span class="finding-detail-src">§2.3</span></div><div class="finding-detail" id="finding-ope-o8-f1" data-finding="OPE.O8.F1" data-short="F8.1" data-group="8" data-page="operator.html" data-href="operator.html#51-the-yield-trajectory-level-and-decline"><div class="finding-detail-id">OPE.O8.F1</div><div class="finding-detail-summary">The delegator yield has fallen from 5.3% to 2.0% in 413 epochs (5.5 years), tracking reserve depletion with R² = 0.99. Projection: sub-1.5% within ~1.7 years, sub-1.0% within ~3.5 years. The decline is irreversible without protocol-level intervention — it is built into the monetary expansion formula</div><div class="finding-detail-insight">The entire yield surface descends as a unit; no pool-level strategy can offset the macro trajectory</div><span class="finding-detail-src">§5.1</span></div><div class="finding-detail" id="finding-ope-o8-f2" data-finding="OPE.O8.F2" data-short="F8.2" data-group="8" data-page="operator.html" data-href="operator.html#52-the-yield-in-context-cross-chain-and-cross-asset-comparison"><div class="finding-detail-id">OPE.O8.F2</div><div class="finding-detail-summary">At 2.0%, Cardano sits below the USD risk-free rate (4.3%) and at the bottom of the PoS landscape. No other major chain combines this low a yield with liquid, non-custodial, slashing-free design. The low return is the cost of that design — delegation is a conviction bet on ADA, not a yield-seeking decision</div><div class="finding-detail-insight">The mechanism assumes yield-sensitive delegators, but the yield regime no longer supports that assumption</div><span class="finding-detail-src">§5.2</span></div><div class="finding-detail" id="finding-ope-o8-f3" data-finding="OPE.O8.F3" data-short="F8.3" data-group="8" data-page="operator.html" data-href="operator.html#53-the-yield-spread-structural-compression"><div class="finding-detail-id">OPE.O8.F3</div><div class="finding-detail-summary">As the epoch pot shrinks, the flat fee (fixed at 170/340 ₳) consumes a growing share of pool rewards — the confiscatory zone identified in <a href="../../../README.md#1-constitutional-framework">§1</a> expands upward. The 0.39pp retail yield spread compresses proportionally: at 1.0% base yield (~3.5 years), the same relative dispersion produces ~0.20pp — indistinguishable from block-production noise. Pools that are viable today will cross the sub-viable threshold</div><div class="finding-detail-insight">The failures documented in §4 are not static — they degrade every epoch</div><span class="finding-detail-src">§5.3</span></div><div class="finding-detail" id="finding-ope-o8-f4" data-finding="OPE.O8.F4" data-short="F8.4" data-group="8" data-page="operator.html" data-href="operator.html#53-the-yield-spread-structural-compression"><div class="finding-detail-id">OPE.O8.F4</div><div class="finding-detail-summary">The declining yield acts as a selection ratchet against small independent operators. The flat fee is fixed in absolute terms while the epoch pot shrinks — the confiscatory zone expands upward every epoch. Single-pool operators bear the full drag with no fleet to amortise it; multi-pool operators are insulated by horizontal scaling. The structural feedback loop (yield compression → confiscatory expansion → single-pool attrition → delegation migration → fleet concentration) drives the centralisation the mechanism was designed to prevent</div><div class="finding-detail-insight">The mechanism selects against its smallest operators and reinforces its largest</div><span class="finding-detail-src">§5.3</span></div></div></div>
+
+<footer class="site-footer">
+  <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="footer-logo">
+  <div class="footer-division"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</div>
+</footer>
+<div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
+<a href="#" class="back-top" id="btt">&uarr;</a>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+<script>
+if (window.mermaid) {
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    securityLevel: 'loose',
+    themeVariables: { fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' },
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' }
+  });
+}
+</script>
+<script src="assets/site.js?v=1777279189"></script>
+</body>
+</html>

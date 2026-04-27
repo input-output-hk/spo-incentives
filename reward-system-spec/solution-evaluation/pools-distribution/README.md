@@ -1,6 +1,30 @@
 # Pools distribution — Stake-cap layer
 
-> **Status:** Active 2026/04/23. Subfolder of [`../README.md`](../README.md). Candidates that act on the stake-cap layer of the Cardano reward pipeline. Sources in §5.
+> **Status:** Active 2026/04/23. Subfolder of [`../README.md`](../README.md). Candidates that act on the stake-cap layer of the Cardano reward pipeline.
+
+This folder evaluates the CIPs that act on the **stake-cap layer** of the Cardano reward pipeline — the reward-eligible pool stake $\sigma'$ that enters the SL-D1 reward formula. The fee split that runs *after* the formula is left untouched ([`../operator-delegator/`](../operator-delegator/README.md)); what changes is the allocation envelope itself.
+
+The two CIPs in scope ([CIP-0050](cip-0050.md), [CIP-0037](cip-0037.md)) target what the [mainnet diagnostic](../../diagnostic/README.md) flags as a **broken signal**: pledge is priced as irrelevant by the operator population. Mainnet evidence: POL.O2.F2 shows pledge yield is structurally dominated by passive-delegation yield (0.68 %/yr vs ~2.3 %/yr); POL.O2.F1 reports 78 % of staked ADA sits in pools with pledge ratio < 1 %; POL.O4.F3 finds 41 of 48 capital-sufficient MPOs forfeit the pledge bonus. Both CIPs make pledge **binding** on the reward formula — without sufficient pledge, the pool's reward-eligible stake is clipped.
+
+*The core question this folder asks: does forcing pledge binding repair the pledge signal without disproportionately punishing the operator populations that cannot respond?*
+
+The argument proceeds in seven steps:
+
+1. **Stake-cap formulas** (§1). The shared intent — replace V1's flat saturation cap with a function of pledge — and the structural kinship between the two candidates: CIP-0037 is essentially CIP-0050 plus a floor.
+
+2. **Why a new instrument when V1 already has a pledge lever?** (§2). Three nested layers of analysis: V1's `a₀` rebalances the bonus weight without raising it; the deeper bottleneck is the bonus function $A(\nu, \pi)$ itself — its $\nu^2$ outer size penalty and non-monotonicity in $\pi$ for sub-half-saturation pools; what CIP-0050/0037 fix and what they leave untouched.
+
+3. **Candidate index** (§3). The two CIPs side by side with their V2 targets and source links.
+
+4. **Composition rules** (§4). Same-layer pairings (CIP-0050 ⊕ CIP-0037) are redundant by construction — pick one. Cross-layer pairings (stake-cap ⊕ fee) compose cleanly.
+
+5. **Interaction with k** (§5). Both CIPs reference $1/k$ inside their formulas. CIP-0050's leverage `L` is dimensionless and survives a `k` change cleanly; CIP-0037's three-anchor calibration must be re-pegged on every `k` change.
+
+6. **V2 milestone interaction** (§6). Both CIPs primarily address §3.2 (pledge-as-signal) and §3.4 (concentration via Sybil cost). Neither addresses §3.1 (small-operator viability) — and both can worsen it without a companion fee-layer or viability instrument.
+
+7. **Reading order** (§7) **and references** (§8). Suggested traversal and cross-folder anchors.
+
+The Executive summary below packages the verdict shared by both CIPs: right layer of intervention, correct identification of the broken pledge signal, but capital-capability bias against operator populations that cannot respond, and a redistribution bet the diagnostic does not support.
 
 ## Executive summary
 
@@ -27,7 +51,7 @@
 
 - **A principled framing — consistent with the fee-layer critique.** The companion [`../operator-delegator/README.md`](../operator-delegator/README.md) argues that viability should be abstracted from pricing tools. The same separation applies here: **pledge-as-signal** (what §3.2 targets) is a different function from **viability** (what §3.1 targets). A stake-cap instrument that restores pledge-as-signal is legitimate on its own terms, but should not be advanced as a solution to small-operator viability, and should not be deployed without an active viability instrument protecting the low-pledge retail population that the stake-cap rule would otherwise penalise.
 
-## Contents
+## Table of Contents
 
 - [Executive summary](#executive-summary)
 - [1. Stake-cap formulas](#1-stake-cap-formulas)
@@ -319,4 +343,4 @@ Stake-cap reforms tighten the viability envelope for undercapitalised independen
 - **Cross-layer subfolder:** [`../operator-delegator/README.md`](../operator-delegator/README.md).
 - **Standalone `k`-lever analysis (held-formula-fixed assumption):** [`../operator-delegator/k-parameter.md`](../operator-delegator/k-parameter.md).
 - **Head-to-head:** CIP-0050-vs-0037 comparison maintained as a separate working document.
-- **Synthesis:** [`../synthesis.md`](../synthesis.md).
+- **Solution-evaluation landing + cross-CIP conclusion:** [`../README.md`](../README.md).

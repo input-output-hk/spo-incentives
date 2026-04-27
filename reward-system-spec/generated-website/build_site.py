@@ -110,6 +110,79 @@ PAGES = [
         "hero_sub": "Mainnet Analysis — Stage 3",
         "active_nav": "operator",
     },
+    # --- Solution Evaluation -------------------------------------------------
+    {
+        "slug": "solution-evaluation",
+        "md": "solution-evaluation/README.md",
+        "html": "solution-evaluation.html",
+        "title": "Solution Evaluation — SPO Incentives",
+        "hero_h1": "Solution Evaluation",
+        "hero_sub": "CIP Candidates Against the V2 Specification",
+        "active_nav": "solution-evaluation",
+    },
+    {
+        "slug": "stake-cap",
+        "md": "solution-evaluation/pools-distribution/README.md",
+        "html": "stake-cap.html",
+        "title": "Stake-Cap Layer — Solution Evaluation",
+        "hero_h1": "Stake-Cap Layer",
+        "hero_sub": "CIP-0050 + CIP-0037 — Pledge as Binding Signal",
+        "active_nav": "stake-cap",
+    },
+    {
+        "slug": "cip-0050",
+        "md": "solution-evaluation/pools-distribution/cip-0050.md",
+        "html": "cip-0050.html",
+        "title": "CIP-0050 — Pledge Leverage-Based Staking Rewards",
+        "hero_h1": "CIP-0050",
+        "hero_sub": "Pledge Leverage-Based Staking Rewards",
+        "active_nav": "cip-0050",
+    },
+    {
+        "slug": "cip-0037",
+        "md": "solution-evaluation/pools-distribution/cip-0037.md",
+        "html": "cip-0037.html",
+        "title": "CIP-0037 — Dynamic Saturation Based on Pledge",
+        "hero_h1": "CIP-0037",
+        "hero_sub": "Dynamic Saturation Based on Pledge",
+        "active_nav": "cip-0037",
+    },
+    {
+        "slug": "fee-layer",
+        "md": "solution-evaluation/operator-delegator/README.md",
+        "html": "fee-layer.html",
+        "title": "Fee Layer & k-Lever — Solution Evaluation",
+        "hero_h1": "Fee Layer & k-Lever",
+        "hero_sub": "CIP-0023 + CIP-0082 + Standalone k-Raise",
+        "active_nav": "fee-layer",
+    },
+    {
+        "slug": "cip-0023",
+        "md": "solution-evaluation/operator-delegator/cip-0023.md",
+        "html": "cip-0023.html",
+        "title": "CIP-0023 — Updated minPoolCost & minPoolMargin",
+        "hero_h1": "CIP-0023",
+        "hero_sub": "Updated minPoolCost and minPoolMargin",
+        "active_nav": "cip-0023",
+    },
+    {
+        "slug": "cip-0082",
+        "md": "solution-evaluation/operator-delegator/cip-0082.md",
+        "html": "cip-0082.html",
+        "title": "CIP-0082 — Pool Reward Improvements",
+        "hero_h1": "CIP-0082",
+        "hero_sub": "Pool Reward Improvements (k-raise + Fee Layer)",
+        "active_nav": "cip-0082",
+    },
+    {
+        "slug": "k-parameter",
+        "md": "solution-evaluation/operator-delegator/k-parameter.md",
+        "html": "k-parameter.html",
+        "title": "The k-Parameter Standalone Lever",
+        "hero_h1": "The k-Parameter Lever",
+        "hero_sub": "Standalone k-Raise — What It Can and Cannot Do",
+        "active_nav": "k-parameter",
+    },
 ]
 
 # Sub-report 3-letter code lookup. Pages without `code` are not sub-reports
@@ -132,6 +205,139 @@ DIA_SOURCE_MAP: dict[str, dict[str, str]] = {
 
 # MD path (relative to REPO_ROOT) → output HTML filename
 MD_TO_HTML_MAP = {p["md"]: p["html"] for p in PAGES}
+
+
+# --- Reader-feedback / analytics integrations -----------------------------
+#
+# Optional integrations for collecting reader feedback and visit stats. All
+# fields default to empty strings; the build inserts the corresponding HTML
+# blocks only when the relevant fields are populated. Override at runtime via
+# environment variables (preferred for GitHub Pages deploys via Actions) or
+# edit the constants below.
+#
+# Plausible Analytics
+#   - PLAUSIBLE_DOMAIN: the domain you registered with Plausible
+#     (e.g. "iohk.github.io/spo-incentives" or a custom domain).
+#   - PLAUSIBLE_SCRIPT_URL: where to load the script from. Defaults to the
+#     hosted Plausible Cloud script. For self-hosted Plausible, set this to
+#     your instance URL (e.g. "https://stats.iog.tld/js/script.js").
+#   - The bundled script tag includes the `script.js` core. Custom-event
+#     tracking ("Finding Reaction", "Overlay Open") uses the global
+#     `window.plausible(name, {props: {...}})` API. To enable outbound link
+#     tracking or 404 detection, swap in `script.outbound-links.js` or
+#     `script.compat.js`.
+#
+# Giscus comments (per-page GitHub Discussions thread)
+#   - Configure once at https://giscus.app to obtain repo+repoId+category
+#     +categoryId. The repo MUST have Discussions enabled and the
+#     `giscus` GitHub App installed.
+#   - GISCUS_MAPPING: how Giscus matches pages to discussions. "pathname"
+#     (default) gives one thread per HTML page, which lines up with the
+#     site's per-page narrative.
+#   - GISCUS_THEME: "preferred_color_scheme" follows the user's OS theme;
+#     swap for "light" / "dark" / a custom theme URL if needed.
+#
+# Finding reactions
+#   - REACTIONS_ENABLED: when True (and Plausible is configured), thumbs
+#     up/down buttons attach to every `.sro-finding`. Each click fires a
+#     custom Plausible event with `{finding: "OPE.O1.F2", sentiment: "up"}`
+#     props. SessionStorage prevents double-counting within a session.
+#   - No persistent backend is required: counts live in the Plausible
+#     dashboard. Switch to a Cloudflare Worker + KV if a live counter
+#     in-page is needed later.
+
+import os as _os
+
+
+def _cfg(name: str, default: str = "") -> str:
+    """Read an integration setting from the environment, falling back to the
+    constant defined below. Lets CI override per-deploy without editing
+    source.
+    """
+    return _os.environ.get(name, "").strip() or default
+
+
+PLAUSIBLE_DOMAIN = _cfg("SPO_PLAUSIBLE_DOMAIN", "")
+PLAUSIBLE_SCRIPT_URL = _cfg(
+    "SPO_PLAUSIBLE_SCRIPT_URL", "https://plausible.io/js/script.js"
+)
+
+GISCUS_REPO = _cfg("SPO_GISCUS_REPO", "")
+GISCUS_REPO_ID = _cfg("SPO_GISCUS_REPO_ID", "")
+GISCUS_CATEGORY = _cfg("SPO_GISCUS_CATEGORY", "General")
+GISCUS_CATEGORY_ID = _cfg("SPO_GISCUS_CATEGORY_ID", "")
+GISCUS_MAPPING = _cfg("SPO_GISCUS_MAPPING", "pathname")
+GISCUS_THEME = _cfg("SPO_GISCUS_THEME", "preferred_color_scheme")
+GISCUS_LANG = _cfg("SPO_GISCUS_LANG", "en")
+
+REACTIONS_ENABLED = _cfg("SPO_REACTIONS_ENABLED", "1") not in ("0", "false", "no")
+
+
+def _render_plausible_head() -> str:
+    """Return the `<head>` injection for Plausible. Empty when the domain is
+    not configured. Bundles a tiny stub so `plausible(...)` calls fired
+    before the deferred script loads are queued and replayed.
+    """
+    if not PLAUSIBLE_DOMAIN:
+        return ""
+    return (
+        f'<script defer data-domain="{_html.escape(PLAUSIBLE_DOMAIN)}" '
+        f'src="{_html.escape(PLAUSIBLE_SCRIPT_URL)}"></script>'
+        '<script>window.plausible=window.plausible||function()'
+        '{(window.plausible.q=window.plausible.q||[]).push(arguments)}'
+        '</script>'
+    )
+
+
+def _render_giscus_block() -> str:
+    """Return the per-page Giscus comments block. Empty when not configured.
+    Loads `giscus.app/client.js` with the standard data-* attributes; users
+    sign in with GitHub to post.
+    """
+    if not (GISCUS_REPO and GISCUS_REPO_ID and GISCUS_CATEGORY_ID):
+        return ""
+    return (
+        '<section class="page-feedback" aria-labelledby="page-feedback-heading">'
+        '<h2 id="page-feedback-heading" class="page-feedback-heading">'
+        'Reader Feedback'
+        '</h2>'
+        '<p class="page-feedback-lede">Comments and reactions are anchored '
+        'to this page. Sign in with GitHub to post — threads live in the '
+        f'<a href="https://github.com/{_html.escape(GISCUS_REPO)}/discussions" '
+        'rel="noopener">project Discussions</a>.</p>'
+        '<div class="giscus" data-giscus></div>'
+        '<script src="https://giscus.app/client.js" '
+        f'data-repo="{_html.escape(GISCUS_REPO)}" '
+        f'data-repo-id="{_html.escape(GISCUS_REPO_ID)}" '
+        f'data-category="{_html.escape(GISCUS_CATEGORY)}" '
+        f'data-category-id="{_html.escape(GISCUS_CATEGORY_ID)}" '
+        f'data-mapping="{_html.escape(GISCUS_MAPPING)}" '
+        'data-strict="0" '
+        'data-reactions-enabled="1" '
+        'data-emit-metadata="0" '
+        'data-input-position="bottom" '
+        f'data-theme="{_html.escape(GISCUS_THEME)}" '
+        f'data-lang="{_html.escape(GISCUS_LANG)}" '
+        'data-loading="lazy" '
+        'crossorigin="anonymous" '
+        'async></script>'
+        '</section>'
+    )
+
+
+def _render_body_data_attrs() -> str:
+    """Return space-prefixed attributes for the `<body>` tag. Used by the
+    feedback JS module to decide whether to inject reaction buttons and
+    whether Plausible custom-event capture is wired up.
+    """
+    parts = []
+    if PLAUSIBLE_DOMAIN:
+        parts.append('data-plausible="1"')
+    if REACTIONS_ENABLED and PLAUSIBLE_DOMAIN:
+        parts.append('data-reactions="1"')
+    if GISCUS_REPO:
+        parts.append('data-giscus="1"')
+    return (" " + " ".join(parts)) if parts else ""
 
 
 # --- Math protection ------------------------------------------------------
@@ -702,8 +908,9 @@ window.MathJax = {{
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="assets/site.css?v={asset_ver}">
+{plausible_head}
 </head>
-<body>
+<body{body_data_attrs}>
 <div class="progress-bar" id="progress"></div>
 <nav class="site-nav"><div class="nav-brand">
 <a href="index.html" class="nav-brand-home">
@@ -720,14 +927,65 @@ window.MathJax = {{
 </div>
 <div class="nav-pages">
 
-<!-- Zone 1 (left anchor) — V2 Specification: the destination, not the conclusion -->
+<!-- Zone 1 (left anchor) — Solution Evaluation: CIP candidates evaluated against V2 -->
+<div class="nav-zone nav-zone-solution">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-solution{cls_solution_trigger}" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Solution Evaluation ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-solution">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
+      <span class="nav-dd-stratum-meta">CIP candidates evaluated against the V2 specification — what each delivers, regresses, and leaves blind</span>
+    </div>
+    <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero{cls_solution_eval}">
+      <span class="nav-dd-ref-title">The Solution Landscape</span>
+      <span class="nav-dd-ref-cite">Situation, candidates, conclusion — and the forward-pointer to the new proposal</span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer</div>
+    <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_stake_cap}">
+      <span class="nav-dd-ref-title">Stake-Cap Layer Index<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Pledge-as-binding-signal candidates, side by side<span class="nav-dd-ref-stage">Index</span></span>
+    </a>
+    <a href="cip-0050.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_cip_0050}">
+      <span class="nav-dd-ref-title">CIP-0050<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Pledge Leverage-Based Staking Rewards<span class="nav-dd-ref-stage">Hard Cap</span></span>
+    </a>
+    <a href="cip-0037.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_cip_0037}">
+      <span class="nav-dd-ref-title">CIP-0037<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Dynamic Saturation Based on Pledge<span class="nav-dd-ref-stage">Cap + Floor</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Fee Layer &amp; k-Lever</div>
+    <a href="fee-layer.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_fee_layer}">
+      <span class="nav-dd-ref-title">Fee Layer Index<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Operator/delegator pricing + the k-parameter lever<span class="nav-dd-ref-stage">Index</span></span>
+    </a>
+    <a href="cip-0023.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_cip_0023}">
+      <span class="nav-dd-ref-title">CIP-0023<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Updated minPoolCost &amp; minPoolMargin<span class="nav-dd-ref-stage">Fee Layer</span></span>
+    </a>
+    <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_cip_0082}">
+      <span class="nav-dd-ref-title">CIP-0082<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Pool reward improvements (k-raise + fee-layer)<span class="nav-dd-ref-stage">Composite</span></span>
+    </a>
+    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_k_parameter}">
+      <span class="nav-dd-ref-title">k-Parameter Lever<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Standalone k-raise — what it can and cannot do<span class="nav-dd-ref-stage">Transversal</span></span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
 <div class="nav-zone nav-zone-output">
 <a href="index.html" class="nav-tab-spec-big{cls_spec}">V2 Specification</a>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
 
-<!-- Zone 2 — Mainnet Diagnostic (observed reality) -->
+<!-- Zone 3 — Mainnet Diagnostic (observed reality) -->
 <div class="nav-zone nav-zone-diag">
 <div class="nav-dd-wrap nav-dd-wrap-light">
 <button class="nav-dd-btn-light nav-dd-btn-diag{cls_diag_trigger}" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Mainnet Diagnostic ▾</button>
@@ -775,7 +1033,7 @@ window.MathJax = {{
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
 
-<!-- Zone 3 — Design Support (intended mechanism) -->
+<!-- Zone 4 — Design Support (intended mechanism) -->
 <div class="nav-zone nav-zone-design">
 <div class="nav-dd-wrap nav-dd-wrap-light">
 <button class="nav-dd-btn-light nav-dd-btn-design{cls_design_trigger}" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Design Support ▾</button>
@@ -801,7 +1059,7 @@ window.MathJax = {{
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
 
-<!-- Zone 4 — Research Papers (academic foundations) -->
+<!-- Zone 5 — Research Papers (academic foundations) -->
 <div class="nav-zone nav-zone-research">
 <div class="nav-dd-wrap nav-dd-wrap-light">
 <button class="nav-dd-btn-light nav-dd-btn-research" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Research Papers ▾</button>
@@ -873,6 +1131,7 @@ window.MathJax = {{
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
 <div class="content">{content}</div>
+{giscus_block}
 <footer class="site-footer">
   <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="footer-logo">
   <div class="footer-division"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</div>
@@ -899,6 +1158,11 @@ if (window.mermaid) {{
 
 # Which active-nav slugs fall under which top-level dropdown
 DIAG_ACTIVE = {"findings", "observatory", "census", "treasury", "pools", "operator"}
+SOLUTION_ACTIVE = {
+    "solution-evaluation",
+    "stake-cap", "cip-0050", "cip-0037",
+    "fee-layer", "cip-0023", "cip-0082", "k-parameter",
+}
 DESIGN_ACTIVE = {"intended-game"}
 
 # Breadcrumb shown beneath the nav to convey hierarchical location.
@@ -912,6 +1176,14 @@ BREADCRUMBS = {
     "treasury": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
     "pools": ["Mainnet Diagnostic", "Reward Flow", "Pools"],
     "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],
+    "solution-evaluation": ["Solution Evaluation", "The Solution Landscape"],
+    "stake-cap": ["Solution Evaluation", "Stake-Cap Layer"],
+    "cip-0050": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0050"],
+    "cip-0037": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0037"],
+    "fee-layer": ["Solution Evaluation", "Fee Layer & k-Lever"],
+    "cip-0023": ["Solution Evaluation", "Fee Layer & k-Lever", "CIP-0023"],
+    "cip-0082": ["Solution Evaluation", "Fee Layer & k-Lever", "CIP-0082"],
+    "k-parameter": ["Solution Evaluation", "Fee Layer & k-Lever", "k-Parameter Lever"],
 }
 
 
@@ -946,6 +1218,14 @@ def render_shell(page: dict, content_html: str) -> str:
         "treasury": "cls_treasury",
         "pools": "cls_pools",
         "operator": "cls_operator",
+        "solution-evaluation": "cls_solution_eval",
+        "stake-cap": "cls_stake_cap",
+        "cip-0050": "cls_cip_0050",
+        "cip-0037": "cls_cip_0037",
+        "fee-layer": "cls_fee_layer",
+        "cip-0023": "cls_cip_0023",
+        "cip-0082": "cls_cip_0082",
+        "k-parameter": "cls_k_parameter",
     }
     classes = {v: "" for v in nav_map.values()}
     if active in nav_map:
@@ -954,7 +1234,16 @@ def render_shell(page: dict, content_html: str) -> str:
     # hierarchy (Diagnostic → sub-report) stays legible in the dropdown panel.
     if active in {"census", "treasury", "pools", "operator"}:
         classes["cls_observatory_title"] = " parent-active"
+    # Sub-eval pages light up the Solution Evaluation landing as parent-active.
+    if active in {"stake-cap", "cip-0050", "cip-0037",
+                  "fee-layer", "cip-0023", "cip-0082", "k-parameter"}:
+        classes["cls_solution_eval"] = " parent-active"
+    if active in {"cip-0050", "cip-0037"}:
+        classes["cls_stake_cap"] = " parent-active"
+    if active in {"cip-0023", "cip-0082", "k-parameter"}:
+        classes["cls_fee_layer"] = " parent-active"
     cls_diag_trigger = " active" if active in DIAG_ACTIVE else ""
+    cls_solution_trigger = " active" if active in SOLUTION_ACTIVE else ""
     cls_design_trigger = " active" if active in DESIGN_ACTIVE else ""
     breadcrumb_inner = _render_breadcrumb(active, page.get("hero_sub", ""))
     # Cache-bust CSS/JS using the max mtime of the two asset files so
@@ -975,9 +1264,13 @@ def render_shell(page: dict, content_html: str) -> str:
         hero_sub=page["hero_sub"],
         content=content_html,
         cls_diag_trigger=cls_diag_trigger,
+        cls_solution_trigger=cls_solution_trigger,
         cls_design_trigger=cls_design_trigger,
         breadcrumb_inner=breadcrumb_inner,
         asset_ver=asset_ver,
+        plausible_head=_render_plausible_head(),
+        giscus_block=_render_giscus_block(),
+        body_data_attrs=_render_body_data_attrs(),
         **classes,
     )
 
@@ -1425,6 +1718,65 @@ _CROSS_OBS_CSS = """
 .sro-nature{font-style:italic;color:var(--text-muted)}
 .sro-nature::before{content:"· ";color:var(--border);font-style:normal}
 
+/* Reader feedback — thumbs up/down per .sro-finding.
+   Sits in the .sro-meta row, far right, so it never competes with the
+   evidence text above. The buttons are visually quiet by default and
+   pulse on activation; the only persistent state is the `is-active`
+   highlight that confirms the click landed in this session. */
+.feedback-react{display:inline-flex;align-items:center;gap:4px;
+  margin-left:auto;padding-left:10px;
+  border-left:1px solid var(--border)}
+.feedback-react-btn{display:inline-flex;align-items:center;gap:4px;
+  padding:3px 8px;border-radius:4px;
+  background:transparent;border:1px solid transparent;
+  color:var(--text-muted);cursor:pointer;
+  font:500 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;
+  transition:color .15s,background .15s,border-color .15s,transform .15s}
+.feedback-react-btn svg{width:13px;height:13px;fill:none;
+  stroke:currentColor;stroke-width:1.4;
+  stroke-linecap:round;stroke-linejoin:round}
+.feedback-react-btn:hover{color:var(--text-primary);
+  background:var(--bg-panel);border-color:var(--border)}
+.feedback-react-up.is-active{color:var(--infared);
+  background:color-mix(in srgb, var(--infared) 10%, transparent);
+  border-color:color-mix(in srgb, var(--infared) 35%, transparent)}
+.feedback-react-down.is-active{color:#666;
+  background:var(--bg-panel);border-color:var(--border)}
+.feedback-react-pulse{transform:scale(1.08)}
+.feedback-react-label{font-variant-numeric:tabular-nums}
+@media (max-width:520px){
+  .feedback-react-label{display:none}
+  .feedback-react{padding-left:6px}
+}
+
+/* Per-page Giscus comments block — anchored below the article content,
+   above the site footer. Designed to look like an editorial footer note
+   rather than a forum widget so it doesn't fight with the report's
+   tone. */
+.page-feedback{max-width:880px;margin:48px auto 24px;
+  padding:28px 28px 8px;
+  border-top:1px solid var(--border);
+  background:linear-gradient(180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--infared) 3%, transparent) 100%)}
+.page-feedback-heading{margin:0 0 6px;
+  font:600 13px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-secondary)}
+.page-feedback-heading::before{content:"";display:inline-block;
+  width:18px;height:1px;background:var(--infared);
+  margin-right:8px;vertical-align:middle}
+.page-feedback-lede{margin:0 0 18px;
+  font:400 13px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+.page-feedback-lede a{color:var(--infared);text-decoration:none;
+  border-bottom:1px dashed var(--infared)}
+.page-feedback-lede a:hover{border-bottom-style:solid}
+.page-feedback .giscus,
+.page-feedback .giscus-frame{width:100%;border:none}
+.page-feedback .giscus-frame{min-height:200px}
+
 /* Responsive */
 @media (max-width:720px){
   .dia-obs-row{padding:12px 14px}
@@ -1434,6 +1786,7 @@ _CROSS_OBS_CSS = """
   .sro-count{order:2}
   .sro-abstract{padding:10px 12px 12px}
   .sro-finding{padding:10px 12px;gap:10px}
+  .page-feedback{margin:32px 16px 16px;padding:20px 18px 6px}
 }
 /* ── /Cross-page DIA source overlay + compact §X.Y.2 view ── */
 """
@@ -1678,6 +2031,110 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
       });
     });
   })();
+
+  /* ── Reader feedback: Plausible custom events + finding reactions ──
+     Fires custom Plausible events for overlay engagement and injects a
+     thumbs up/down control under each `.sro-finding`. The script is a
+     no-op when Plausible is not configured (the body has no
+     `data-plausible="1"`). Per-session idempotency via sessionStorage so
+     hammering a button only counts once per (page, finding, sentiment)
+     in a given session — keeps the dashboard signal clean. */
+  (function initReaderFeedback(){
+    function p(){
+      if(typeof window.plausible==='function'){
+        try{window.plausible.apply(window,arguments);}catch(e){}
+      }
+    }
+    var body=document.body;
+    if(!body) return;
+    var hasPlausible=body.getAttribute('data-plausible')==='1';
+    var hasReactions=body.getAttribute('data-reactions')==='1';
+
+    /* Overlay engagement events — captured even when Plausible is not
+       configured the listener is cheap; the p() helper guards the call. */
+    document.addEventListener('click',function(ev){
+      var t=ev.target;
+      if(!t||!t.closest) return;
+      var or=t.closest('.obs-ref, a.sro-obs-ref');
+      if(or){
+        var canon=or.getAttribute('data-obs')||or.getAttribute('data-obs-src')||
+                   or.getAttribute('data-canon')||or.textContent.trim();
+        p('Overlay Open',{props:{kind:'observation',target:canon,
+          page:location.pathname.split('/').pop()||'index.html'}});
+        return;
+      }
+      var fr=t.closest('.finding-ref');
+      if(fr){
+        var fid=fr.getAttribute('data-finding')||fr.textContent.trim();
+        p('Overlay Open',{props:{kind:'finding',target:fid,
+          page:location.pathname.split('/').pop()||'index.html'}});
+      }
+    },true);
+
+    /* Reaction buttons — injected once per .sro-finding, only when the
+       page declares data-reactions="1". The dashboard records sentiment
+       as a custom prop so the editor can sort findings by 👍/👎 weight. */
+    if(!hasReactions) return;
+    var findings=document.querySelectorAll('.sro-finding[data-finding]');
+    if(!findings.length) return;
+    var SK='spo:react:';
+
+    function isSent(canon,sent){
+      try{return sessionStorage.getItem(SK+canon+':'+sent)==='1';}
+      catch(e){return false;}
+    }
+    function markSent(canon,sent){
+      try{sessionStorage.setItem(SK+canon+':'+sent,'1');}catch(e){}
+    }
+
+    function makeBtn(canon,sent,label,svg){
+      var b=document.createElement('button');
+      b.type='button';
+      b.className='feedback-react-btn feedback-react-'+sent;
+      b.setAttribute('data-finding',canon);
+      b.setAttribute('data-sentiment',sent);
+      b.setAttribute('aria-label',label+' — '+canon);
+      b.setAttribute('title',label);
+      b.innerHTML=svg+'<span class="feedback-react-label">'+label+'</span>';
+      if(isSent(canon,sent)) b.classList.add('is-active');
+      b.addEventListener('click',function(ev){
+        ev.preventDefault();ev.stopPropagation();
+        if(isSent(canon,sent)){
+          /* Already counted this session — visual confirm only. */
+          b.classList.add('is-active');
+          return;
+        }
+        p('Finding Reaction',{props:{finding:canon,sentiment:sent,
+          page:location.pathname.split('/').pop()||'index.html'}});
+        markSent(canon,sent);
+        b.classList.add('is-active');
+        b.classList.add('feedback-react-pulse');
+        setTimeout(function(){b.classList.remove('feedback-react-pulse');},420);
+      });
+      return b;
+    }
+
+    var SVG_UP='<svg viewBox="0 0 16 16" aria-hidden="true">'
+      +'<path d="M3 8.5h2.2L7 3.5c.7-.2 1.4.4 1.3 1.1L8 7.5h3.6c.8 0 1.4.7 1.2 1.5L12 12c-.2.7-.8 1.2-1.5 1.2H6L3 13"/>'
+      +'</svg>';
+    var SVG_DOWN='<svg viewBox="0 0 16 16" aria-hidden="true">'
+      +'<path d="M3 7.5h2.2L7 12.5c.7.2 1.4-.4 1.3-1.1L8 8.5h3.6c.8 0 1.4-.7 1.2-1.5L12 4c-.2-.7-.8-1.2-1.5-1.2H6L3 3"/>'
+      +'</svg>';
+
+    findings.forEach(function(li){
+      if(li.querySelector('.feedback-react')) return;
+      var canon=li.getAttribute('data-finding');
+      if(!canon) return;
+      var meta=li.querySelector('.sro-meta');
+      var host=document.createElement('div');
+      host.className='feedback-react';
+      host.setAttribute('role','group');
+      host.setAttribute('aria-label','Reactions for '+canon);
+      host.appendChild(makeBtn(canon,'up','Useful',SVG_UP));
+      host.appendChild(makeBtn(canon,'down','Not useful',SVG_DOWN));
+      if(meta){meta.appendChild(host);}else{li.appendChild(host);}
+    });
+  })();
   /* ── /Cross-page DIA source overlay ── */
 
 """
@@ -1797,6 +2254,9 @@ def sync_figures() -> None:
         ("diagnostic/sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/figures",
          "sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/figures"),
         ("the-intended-game/figures", "the-intended-game/figures"),
+        # Solution evaluation — CIP figures
+        ("solution-evaluation/pools-distribution/figures",
+         "solution-evaluation/pools-distribution/figures"),
     ]
 
     for src_rel, dst_rel in source_roots:
