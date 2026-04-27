@@ -48,10 +48,10 @@
 [data-theme=dark] .synth-scope{background:var(--bg-panel)}
 [data-theme=dark] .synth-fref{background:var(--bg-code)}
 
-html{scroll-behavior:smooth;scroll-padding-top:96px}
+html{scroll-behavior:smooth;scroll-padding-top:150px}
 
 /* Anchor-target visual cue — header lands clear of the sticky nav and flashes prominently */
-.content :target{scroll-margin-top:96px}
+.content :target{scroll-margin-top:150px}
 .content h1:target,.content h2:target,.content h3:target,.content h4:target,.content h5:target,.content h6:target,
 .ev-card:target,.sro-card:target,.sro-finding:target{
   animation:target-flash 3.6s ease-out;
@@ -483,8 +483,8 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 
 /* Rich reference row inside the dropdown: title + citation on the left, PDF chip on the right */
 .nav-dd-ref{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:12px;align-items:center;padding:8px 10px;margin:2px -6px;border-radius:6px;text-decoration:none;transition:background .12s}
-.nav-dd-ref:hover{background:rgba(229,35,33,.04)}
-[data-theme=dark] .nav-dd-ref:hover{background:rgba(229,35,33,.09)}
+.nav-dd-ref:hover{background-color:rgba(229,35,33,.04)}
+[data-theme=dark] .nav-dd-ref:hover{background-color:rgba(229,35,33,.09)}
 .nav-dd-ref-title{grid-column:1;grid-row:1;font:500 13px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-primary);letter-spacing:-.1px}
 .nav-dd-ref:hover .nav-dd-ref-title{color:var(--infared)}
 .nav-dd-ref-cite{grid-column:1;grid-row:2;font:400 11px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
@@ -555,44 +555,53 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
        │ │  ╰─ k-Parameter (deeper)
 */
 
-/* Parent synthesis row — line on bottom half so it hands off to the
-   first child seamlessly. */
+/* Each rule uses long-form background-* properties (NOT the shorthand)
+   to avoid the trap where `background: <color> no-repeat ...` sets the
+   color as background-color and floods the entire row. With long-form,
+   only background-image draws — the cells stay transparent everywhere
+   except along the 2px-wide guide. */
+
+/* Parent synthesis row — line on bottom half, hands off to the first
+   child seamlessly. */
 .nav-dd-ref-synthesis-parent{
-  background:linear-gradient(to bottom,
-    transparent 0,
+  background-image:linear-gradient(to bottom,
     transparent calc(50% - 1px),
-    var(--text-muted) calc(50% - 1px),
-    var(--text-muted) 100%) no-repeat 36px 0/2px 100%}
+    var(--text-muted) calc(50% - 1px));
+  background-repeat:no-repeat;
+  background-position:36px 0;
+  background-size:2px 100%}
 
 /* Level-1 child — full-height vertical line at left:36px. */
 .nav-dd-ref-deep{
   padding-left:56px;
-  background:var(--text-muted) no-repeat 36px 0/2px 100%;
-  background-image:linear-gradient(var(--text-muted),var(--text-muted))}
+  background-image:linear-gradient(var(--text-muted),var(--text-muted));
+  background-repeat:no-repeat;
+  background-position:36px 0;
+  background-size:2px 100%}
 
-/* Last child of a sequence — line stops at row centre, closes the
-   bracket without dangling. */
+/* Last child of a sequence — line stops at row centre. */
 .nav-dd-ref-deep-last{
-  background:linear-gradient(to bottom,
-    var(--text-muted) 0,
+  background-image:linear-gradient(to bottom,
     var(--text-muted) calc(50% + 1px),
-    transparent calc(50% + 1px)) no-repeat 36px 0/2px 100%}
+    transparent calc(50% + 1px));
+  background-repeat:no-repeat;
+  background-position:36px 0;
+  background-size:2px 100%}
 
-/* Level-2 sub-doc — parent line continues to row centre; an extra
-   nested vertical at left:56px sits inside that, going from the row
-   top to its centre (closing the sub-tree at the same y-coord as the
-   outer one). Two parallel lines visually = two nesting levels. */
+/* Level-2 sub-doc — two parallel verticals, both stopping at row
+   centre (k-Parameter closes both the deeper tree and the outer one). */
 .nav-dd-ref-deeper{
   padding-left:76px;
-  background:
+  background-image:
     linear-gradient(to bottom,
-      var(--text-muted) 0,
       var(--text-muted) calc(50% + 1px),
-      transparent calc(50% + 1px)) no-repeat 36px 0/2px 100%,
+      transparent calc(50% + 1px)),
     linear-gradient(to bottom,
-      var(--text-muted) 0,
       var(--text-muted) calc(50% + 1px),
-      transparent calc(50% + 1px)) no-repeat 56px 0/2px 100%}
+      transparent calc(50% + 1px));
+  background-repeat:no-repeat,no-repeat;
+  background-position:36px 0,56px 0;
+  background-size:2px 100%,2px 100%}
 
 /* Synthesis row title styling — shared by Forward "Draft in
    preparation" (no children) and the parent-of-CIPs synthesis rows. */
