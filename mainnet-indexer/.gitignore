@@ -1,0 +1,3 @@
+# Docker volumes and snapshots — too large for git
+snapshots/
+secrets/

@@ -1,5 +1,35 @@
+# git filter-branch rewrite artefacts
+.git-rewrite/
+
 spo_incentives/report.log
 spo_incentives/report.out
 spo_incentives/report.toc
 spo_incentives/report.aux
 
+# Large local Koios exports; keep them out of Git history.
+reward-system-spec/diagnostic/sub-flows/pools-distribution/mainnet-analysis/data/koios_pool_history_mainnet.csv
+reward-system-spec/diagnostic/sub-flows/pools-distribution/mainnet-analysis/data/koios_pool_owner_history_mainnet.csv
+scenarii-evaluation-legacy/data/koios_pool_history_mainnet.csv
+scenarii-evaluation-legacy/data/koios_pool_owner_history_mainnet.csv
+
+# Raw and processed data for the delegator/analysis pipelines — too large
+# for git. Reproduce via the ingestion scripts in the analysis folders.
+data/
+
+# DuckDB is an embedded file, not a service — ignore it.
+*.duckdb
+*.duckdb.wal
+
+# Python bytecode caches.
+__pycache__/
+*.pyc
+*.pyo
+
+# Raw Cardano blocks fetched by the nakamoto-revaluation pipeline. Each
+# file is ~25 MB and is reproducible via
+# `reward-system-spec/diagnostic/sub-flows/nakamoto-revaluation/edi-replication/scripts/01_fetch_blocks_koios.py`.
+reward-system-spec/diagnostic/sub-flows/nakamoto-revaluation/edi-replication/inputs/*.ndjson
+reward-system-spec/diagnostic/sub-flows/nakamoto-revaluation/edi-replication/inputs_*/*.ndjson
+
+# OS generated files
+.DS_Store

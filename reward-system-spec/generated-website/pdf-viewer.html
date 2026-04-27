@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document Viewer — SPO Incentives</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem('spo-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<style>
+:root {
+  --accent:#EC641D;
+  --infared:#E52321;--dawn:#EC641D;--black:#1a1a1a;--white:#fff;
+  --electric-blue:#16E9D8;--acid-green:#06FF89;--volt-yellow:#F2FF58;
+  --cobalt-pulse:#2C4FFA;--ultraviolet:#A700FF;
+  --bg:#ffffff;--bg-warm:#faf9f7;--bg-panel:#f5f4f2;--bg-code:#f0efed;
+  --text-primary:#1a1a1a;--text-body:#3a3a3a;--text-secondary:#6b6b6b;--text-muted:#999;
+  --border:#e2e0dc;--border-light:#eceae6;
+}
+[data-theme=dark]{
+  --bg:#0a0a0c;--bg-warm:#111113;--bg-panel:#1a1a1d;--bg-code:#242428;
+  --text-primary:#e4e4e7;--text-body:#a1a1aa;--text-secondary:#71717a;--text-muted:#52525b;
+  --border:#27272a;--border-light:#1f1f23;--black:#e4e4e7;--white:#0a0a0c;
+}
+[data-theme=dark] body{background:var(--bg-warm);color:var(--text-body)}
+[data-theme=dark] .nav-pages{background:var(--bg);border-bottom-color:var(--border)}
+[data-theme=dark] .nav-tab:hover{background:rgba(255,255,255,.06)}
+[data-theme=dark] .nav-tab.active{background:rgba(229,35,33,.12);color:var(--text-primary)}
+[data-theme=dark] .nav-col+.nav-col{border-left-color:var(--border)}
+[data-theme=dark] .nav-col-title{color:var(--infared)}
+[data-theme=dark] .nav-pdf-badge{background:rgba(229,35,33,.15)}
+[data-theme=dark] .pdf-toolbar{background:var(--bg);border-bottom-color:var(--border)}
+[data-theme=dark] .pdf-toolbar a{color:var(--text-body)}
+html,body{height:100%;margin:0;padding:0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;background:var(--bg-warm);color:var(--text-body);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;height:100vh}
+.site-nav{position:sticky;top:0;z-index:100;display:flex;flex-direction:column;flex-shrink:0}
+.nav-brand{background:#111;padding:0 28px;display:flex;align-items:center;min-height:36px;gap:12px}
+.nav-brand-home{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-brand-logo{height:18px;width:auto;opacity:.7;flex-shrink:0}
+.nav-brand-org{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.nav-brand-title{font:600 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.2px}
+.nav-brand-sep{color:rgba(255,255,255,.28);font:300 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0 2px}
+.nav-brand-subtitle{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.55)}
+@media (max-width:900px){.nav-brand-sep,.nav-brand-subtitle{display:none}}
+.nav-brand-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+.theme-toggle{background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;cursor:pointer;padding:5px 8px;color:rgba(255,255,255,.5);font-size:14px;line-height:1;transition:color .15s,border-color .15s;display:flex;align-items:center}
+.theme-toggle:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.3)}
+.nav-dd-wrap{position:relative}
+.nav-dd-btn{background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;cursor:pointer;font:400 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.5px;color:rgba(255,255,255,.5);padding:6px 12px;transition:color .15s,border-color .15s;white-space:nowrap}
+.nav-dd-btn:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.3)}
+.nav-dd-wrap.open .nav-dd-btn{color:#fff;border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.08)}
+.nav-dd-panel{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#1a1a1a;border:1px solid rgba(255,255,255,.1);border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.4);padding:8px 0;min-width:340px;z-index:200}
+.nav-dd-wrap.open .nav-dd-panel{display:block}
+.nav-dd-item{display:block;padding:10px 16px;text-decoration:none;transition:background .1s}
+.nav-dd-item:hover{background:rgba(255,255,255,.06)}
+.nav-dd-title{display:block;font:500 13px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:rgba(255,255,255,.85);border-bottom:none}
+.nav-dd-meta{display:block;font:400 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:rgba(255,255,255,.35);margin-top:3px}
+.nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:stretch;padding:0;overflow-x:auto;white-space:nowrap}
+.nav-pages a{text-decoration:none;transition:color .15s,background .15s}
+.nav-col{display:flex;flex-direction:column;padding:8px 0 10px 20px;min-width:0}
+.nav-col+.nav-col{border-left:1px solid var(--border)}
+.nav-col-main{flex:1}
+.nav-col-title{font:700 9px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--infared);padding:2px 14px 6px 0;flex-shrink:0}
+.nav-col-title-link{text-decoration:none;cursor:pointer;transition:color .15s}
+.nav-col-title-link:hover{color:var(--dawn)}
+.nav-col-title-link.active{color:var(--dawn);border-bottom:none}
+.nav-col-links{display:flex;align-items:center;gap:0;white-space:nowrap}
+.nav-col-links-wrap{flex-wrap:wrap;gap:0}
+.nav-tab{display:flex;align-items:center;gap:5px;padding:4px 10px;font:500 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.3px;text-transform:uppercase;color:var(--text-muted);border-radius:4px}
+.nav-tab:hover{color:var(--text-primary);background:rgba(0,0,0,.04)}
+.nav-tab.active{color:var(--text-primary);font-weight:600;background:rgba(229,35,33,.06)}
+.nav-pdf{font-size:11px;color:var(--text-muted);opacity:.8}
+.nav-pdf:hover{opacity:1}
+.nav-pdf-badge{display:inline-block;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--infared);background:rgba(229,35,33,.08);border-radius:3px;padding:2px 4px;margin-left:4px;vertical-align:middle}
+.nav-flow-sep{width:1px;align-self:center;height:16px;background:var(--border);margin:0 6px;flex-shrink:0}
+.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.nav-arrow{font-size:11px;color:var(--dawn);opacity:.5;display:flex;align-items:center;padding:0 1px;flex-shrink:0}
+/* Toolbar above the PDF */
+.pdf-toolbar{display:flex;align-items:center;gap:16px;padding:10px 28px;background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0}
+.pdf-title{font:600 14px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-primary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pdf-toolbar a{font-size:12px;color:var(--text-secondary);text-decoration:none;border:1px solid var(--border);border-radius:4px;padding:5px 12px;transition:color .15s,border-color .15s;white-space:nowrap}
+.pdf-toolbar a:hover{color:var(--text-primary);border-color:var(--text-muted)}
+/* Full-bleed iframe */
+.pdf-frame{flex:1;width:100%;border:none;display:block;background:var(--bg-warm)}
+.pdf-error{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text-secondary);font-size:15px;padding:40px}
+.pdf-error a{color:var(--infared)}
+.site-footer{background:#111;color:rgba(255,255,255,.35);font-size:11px;letter-spacing:.5px;text-transform:uppercase;text-align:center;padding:12px 20px;display:flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0}
+.site-footer img{height:14px;opacity:.4}
+/* ── Inputs → Synthesis → Output nav (shared with site.css) ── */
+.nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:10px 20px;overflow:visible;white-space:nowrap;gap:14px;position:relative;z-index:50}
+[data-theme=dark] .nav-pages{background:var(--bg)}
+.nav-zone{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-flow-arrow{color:var(--text-muted);opacity:.4;font-size:15px;flex-shrink:0;padding:0 4px;user-select:none;font-weight:300}
+.nav-zone-label{font:700 9px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);flex-shrink:0}
+.nav-zone-label-output{color:var(--infared);opacity:.9}
+.nav-zone-diag,.nav-zone-design,.nav-zone-research{flex:0 0 auto}
+.nav-dd-btn-diag,.nav-dd-btn-design,.nav-dd-btn-research{min-width:0}
+.nav-dd-btn-diag.active{color:var(--text-primary);border-color:rgba(236,100,29,.55);background:rgba(236,100,29,.08);font-weight:600}
+.nav-dd-btn-design.active{color:var(--text-primary);border-color:rgba(229,35,33,.55);background:rgba(229,35,33,.08);font-weight:600}
+.nav-dd-panel-diag{left:0;right:auto;min-width:500px;max-width:540px}
+.nav-dd-panel-design{left:0;right:auto;min-width:460px;max-width:500px}
+.nav-dd-panel-research{left:auto;right:0;min-width:460px;max-width:500px}
+.nav-dd-ref-group-label{display:block;font:700 9.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-muted);padding:10px 10px 4px;margin-top:4px}
+.nav-dd-ref-group-label-flow{padding-left:16px}
+.nav-dd-ref-flow{padding-left:40px !important}
+.nav-dd-ref-flow::before{left:28px !important}
+.nav-dd-ref-new{display:inline-block;margin-left:8px;font:700 9px/1 -apple-system,sans-serif;letter-spacing:.7px;color:#0a8a80;background:rgba(22,233,216,.14);border:1px solid rgba(22,233,216,.45);border-radius:3px;padding:2px 5px;text-transform:uppercase;vertical-align:1px}
+[data-theme=dark] .nav-dd-ref-new{color:#16E9D8;background:rgba(22,233,216,.1);border-color:rgba(22,233,216,.35)}
+.nav-breadcrumb{background:var(--bg-panel);border-bottom:1px solid var(--border);padding:7px 20px;font:400 11.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);display:flex;align-items:center;flex-wrap:wrap;gap:6px;letter-spacing:.1px}
+[data-theme=dark] .nav-breadcrumb{background:var(--bg)}
+.nav-breadcrumb:empty{display:none}
+.nav-breadcrumb-item{color:var(--text-secondary)}
+.nav-breadcrumb-current{color:var(--text-primary);font-weight:600}
+.nav-breadcrumb-sep{color:var(--text-muted);opacity:.55;font-size:13px;padding:0 2px}
+.nav-breadcrumb-desc-sep{color:var(--text-muted);opacity:.4;font-size:12px;padding:0 2px 0 6px}
+.nav-breadcrumb-desc{color:var(--text-muted);font-weight:400;font-style:italic;opacity:.88;letter-spacing:.15px}
+.nav-dd-wrap-light{position:relative}
+.nav-dd-btn-light{background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font:500 11.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--text-secondary);padding:8px 13px;transition:all .15s;white-space:nowrap}
+.nav-dd-btn-light:hover{color:var(--text-primary);border-color:var(--text-muted);background:rgba(0,0,0,.02)}
+[data-theme=dark] .nav-dd-btn-light:hover{background:rgba(255,255,255,.04)}
+.nav-dd-wrap-light.open .nav-dd-btn-light{color:var(--infared);border-color:rgba(229,35,33,.4);background:rgba(229,35,33,.05)}
+.nav-dd-panel-light{display:none;position:absolute;top:calc(100% + 8px);left:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;box-shadow:0 16px 48px rgba(0,0,0,.12);padding:10px 16px;min-width:460px;max-width:500px;z-index:200;white-space:normal}
+[data-theme=dark] .nav-dd-panel-light{background:var(--bg-panel);box-shadow:0 16px 48px rgba(0,0,0,.4)}
+.nav-dd-wrap-light.open .nav-dd-panel-light{display:block}
+.nav-dd-stratum{padding:10px 0}
+.nav-dd-stratum+.nav-dd-stratum{border-top:1px solid var(--border-light)}
+.nav-dd-stratum-head{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.nav-dd-stratum-badge{display:inline-block;padding:3px 8px;border-radius:4px;font:700 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.9px;text-transform:uppercase}
+.nav-dd-stratum-badge-design{color:var(--infared);background:rgba(229,35,33,.1)}
+.nav-dd-stratum-badge-diagnostic{color:var(--dawn);background:rgba(236,100,29,.12)}
+.nav-dd-stratum-badge-research{color:#0b8478;background:rgba(22,233,216,.14)}
+[data-theme=dark] .nav-dd-stratum-badge-research{color:var(--electric-blue,#16E9D8);background:rgba(22,233,216,.12)}
+.nav-dd-stratum-meta{font:400 10.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);letter-spacing:.2px}
+.nav-dd-ref{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:12px;align-items:center;padding:8px 10px;margin:2px -6px;border-radius:6px;text-decoration:none;transition:background .12s}
+.nav-dd-ref:hover{background:rgba(229,35,33,.04)}
+[data-theme=dark] .nav-dd-ref:hover{background:rgba(229,35,33,.09)}
+.nav-dd-ref-title{grid-column:1;grid-row:1;font:500 13px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-primary);letter-spacing:-.1px}
+.nav-dd-ref:hover .nav-dd-ref-title{color:var(--infared)}
+.nav-dd-ref-cite{grid-column:1;grid-row:2;font:400 11px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.nav-dd-ref-tag{display:inline-block;font:600 9.5px/1 -apple-system,sans-serif;letter-spacing:.4px;color:var(--text-secondary);background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:2px 5px}
+[data-theme=dark] .nav-dd-ref-tag{background:var(--bg);color:var(--text-body)}
+.nav-dd-ref-pdf{grid-column:2;grid-row:1 / span 2;align-self:center;font:700 9.5px/1 -apple-system,sans-serif;letter-spacing:.6px;color:var(--infared);background:rgba(229,35,33,.08);padding:6px 9px;border-radius:4px;text-transform:uppercase}
+.nav-dd-ref:hover .nav-dd-ref-pdf{background:var(--infared);color:#fff}
+.nav-dd-ref-sub{padding-left:22px;position:relative}
+.nav-dd-ref-sub::before{content:"";position:absolute;left:12px;top:16px;width:6px;height:1px;background:var(--border)}
+.nav-dd-ref-sub .nav-dd-ref-title{font-size:12.5px;font-weight:500}
+.nav-dd-ref-stage{display:inline-block;margin-left:8px;font:600 9.5px/1 -apple-system,sans-serif;letter-spacing:.4px;color:var(--text-secondary);background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:2px 5px;text-transform:uppercase}
+[data-theme=dark] .nav-dd-ref-stage{background:var(--bg)}
+.nav-zone-output{flex:0 0 auto;padding-right:4px}
+.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--infared);border:1px solid var(--infared);border-radius:6px;text-decoration:none;transition:all .15s;box-shadow:0 2px 6px rgba(229,35,33,.22);white-space:nowrap}
+.nav-tab-spec-big:hover{background:#c91e1c;border-color:#c91e1c;box-shadow:0 4px 12px rgba(229,35,33,.32);transform:translateY(-1px)}
+@media (max-width:1100px){.nav-pages{flex-wrap:wrap;padding:8px 14px}.nav-flow-arrow{display:none}}
+@media (max-width:700px){.nav-dd-panel-light,.nav-dd-panel-diag,.nav-dd-panel-design,.nav-dd-panel-research{position:fixed;left:8px;right:8px;min-width:0;max-width:none;top:auto}.nav-evidence-sub{flex-wrap:wrap}.nav-breadcrumb{padding:6px 14px;font-size:11px}}
+</style>
+</head>
+<body>
+<nav class="site-nav"><div class="nav-brand">
+<a href="index.html" class="nav-brand-home">
+<img src="assets/butterfly-white.png" alt="" class="nav-brand-logo">
+<span class="nav-brand-org"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</span>
+<span class="nav-brand-title">Cardano Reward System V2</span>
+<span class="nav-brand-sep" aria-hidden="true">—</span>
+<span class="nav-brand-subtitle">Specification for a Sustainable Successor</span>
+</a>
+<div class="nav-brand-right">
+<div class="nav-dd-wrap">
+<button class="nav-dd-btn" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')">Previous Analysis ▾</button>
+<div class="nav-dd-panel">
+<a href="pdf-viewer.html?file=references/spo-incentives-analysis_lopez-de-lara_2025.pdf" class="nav-dd-item"><span class="nav-dd-title">SPO Incentives Analysis</span><span class="nav-dd-meta">Lopez de Lara, 2025</span></a>
+</div></div>
+<div class="nav-dd-wrap">
+<button class="nav-dd-btn" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')">Research Papers ▾</button>
+<div class="nav-dd-panel">
+<a href="pdf-viewer.html?file=references/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf" class="nav-dd-item"><span class="nav-dd-title">Reward Sharing Schemes for Stake Pools</span><span class="nav-dd-meta">Brünjes, Kiayias et al., 2020</span></a>
+<a href="pdf-viewer.html?file=references/incentives-against-power-grabs_kiayias-et-al_2021.pdf" class="nav-dd-item"><span class="nav-dd-title">Stake Pool Incentives Against Power Grabs</span><span class="nav-dd-meta">Kiayias et al., 2021</span></a>
+<a href="pdf-viewer.html?file=references/removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf" class="nav-dd-item"><span class="nav-dd-title">Removing the Minimum Pool Cost</span><span class="nav-dd-meta">Stouka, Brünjes, Kiayias & Koutsoupias, 2022</span></a>
+<a href="pdf-viewer.html?file=references/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-item"><span class="nav-dd-title">Balancing Participation & Decentralization</span><span class="nav-dd-meta">Kiayias et al., 2024</span></a>
+</div></div>
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light theme" aria-label="Toggle theme">☀</button>
+</div>
+</div>
+<div class="nav-pages">
+
+<div class="nav-zone nav-zone-output">
+<a href="index.html" class="nav-tab-spec-big">V2 Specification</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<div class="nav-zone nav-zone-diag">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-diag" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Mainnet Diagnostic ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-diag">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-diagnostic">Mainnet Diagnostic</span>
+      <span class="nav-dd-stratum-meta">What mainnet is actually doing — synthesis, Reward-Flow evidence, and the prior report</span>
+    </div>
+    <a href="observatory.html" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">The Diagnostic<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Synthesis of observations across the reward pipeline</span>
+    </a>
+    <a href="census.html" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">The Staking Census<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Who holds stake — capital, participation<span class="nav-dd-ref-stage">Evidence</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Reward Flow</div>
+    <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
+      <span class="nav-dd-ref-title">Reserves<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Treasury & pool-pot distribution<span class="nav-dd-ref-stage">Stage 1</span></span>
+    </a>
+    <a href="pools.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
+      <span class="nav-dd-ref-title">Pools<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Distribution gaps across the pool population<span class="nav-dd-ref-stage">Stage 2</span></span>
+    </a>
+    <a href="operator.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
+      <span class="nav-dd-ref-title">Operators/Delegators<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">The operator's cut versus the delegator share<span class="nav-dd-ref-stage">Stage 3</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label">Past Analysis</div>
+    <a href="pdf-viewer.html?file=references/previous-analasys/spo-incentives-analysis_lopez-de-lara_2025.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Nov 2025 — Analysis of Cardano's Incentive Mechanism</span>
+      <span class="nav-dd-ref-cite">Lopez de Lara · prior mainnet diagnostic<span class="nav-dd-ref-tag">SD-L</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<div class="nav-zone nav-zone-design">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-design" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Design Support ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-design">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-design">Design Support</span>
+      <span class="nav-dd-stratum-meta">The intended mechanism — formal spec + the narrative it never came with</span>
+    </div>
+    <a href="intended-game.html" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">The Intended Game<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Plain-prose companion to SL-D1 — fills the narrative gap the formal spec left open</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/design-specs/delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Delegation Incentives Design Specification</span>
+      <span class="nav-dd-ref-cite">Kant · Brünjes · Coutts — 2019<span class="nav-dd-ref-tag">SL-D1</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<div class="nav-zone nav-zone-research">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-research" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Research Papers ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-research">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-research">Research Papers</span>
+      <span class="nav-dd-stratum-meta">Academic antecedents and adjacent work on reward schemes</span>
+    </div>
+    <a href="pdf-viewer.html?file=references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Reward Sharing Schemes for Stake Pools</span>
+      <span class="nav-dd-ref-cite">Brünjes · Kiayias · Koutsoupias · Stouka — 2020<span class="nav-dd-ref-tag">RSS-2020</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/research-papers/incentives-against-power-grabs_kiayias-et-al_2021.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Incentives Against Power Grabs</span>
+      <span class="nav-dd-ref-cite">Kiayias et al. — 2021<span class="nav-dd-ref-tag">IAPG</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/research-papers/removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Removing the Minimum Pool Cost</span>
+      <span class="nav-dd-ref-cite">Stouka · Brünjes · Kiayias · Koutsoupias — 2022<span class="nav-dd-ref-tag">RMPC</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Balancing Participation & Decentralization</span>
+      <span class="nav-dd-ref-cite">Kiayias et al. — 2024<span class="nav-dd-ref-tag">BPD</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="nav-breadcrumb"></div>
+</nav>
+<div class="pdf-toolbar" id="toolbar">
+  <span class="pdf-title" id="pdf-title">Loading document…</span>
+  <a id="pdf-download" href="#" download title="Download PDF">Download ↓</a>
+  <a id="pdf-newtab" href="#" target="_blank" title="Open in new tab">New tab ↗</a>
+</div>
+<iframe class="pdf-frame" id="pdf-frame"></iframe>
+<footer class="site-footer"><img src="assets/butterfly-white.png" alt=""><span class="cbu-dot" aria-hidden="true"></span>Input Output &middot; Cardano Business Unit</footer>
+<script>
+(function(){
+  /* Theme */
+  window.toggleTheme=function(){
+    var html=document.documentElement;
+    var next=html.getAttribute('data-theme')==='dark'?'light':'dark';
+    html.setAttribute('data-theme',next);
+    try{ localStorage.setItem('spo-theme',next); }catch(e){}
+    var btn=document.querySelector('.theme-toggle');
+    if(btn){ btn.textContent=next==='dark'?'☀':'☾'; btn.title=next==='dark'?'Switch to light theme':'Switch to dark theme'; }
+  };
+  (function(){
+    var saved;try{ saved=localStorage.getItem('spo-theme'); }catch(e){}
+    if(saved) document.documentElement.setAttribute('data-theme',saved);
+    var btn=document.querySelector('.theme-toggle');
+    if(btn){ var d=document.documentElement.getAttribute('data-theme')==='dark'; btn.textContent=d?'☀':'☾'; btn.title=d?'Switch to light theme':'Switch to dark theme'; }
+  })();
+
+  /* Dropdowns */
+  window.closeAllDd=function(except){
+    document.querySelectorAll('.nav-dd-wrap.open').forEach(function(w){
+      if(!w.contains(except)) w.classList.remove('open');
+    });
+  };
+  document.addEventListener('click',function(){ closeAllDd(null); });
+
+  /* PDF title lookup */
+  var titles = {};
+  titles["delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf"] = "Delegation & Incentives Design Spec";
+  titles["reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf"] = "Reward Sharing Schemes for Stake Pools";
+  titles["incentives-against-power-grabs_kiayias-et-al_2021.pdf"] = "Stake Pool Incentives Against Power Grabs";
+  titles["removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf"] = "Removing the Minimum Pool Cost";
+  titles["balancing-participation-decentralization_kiayias-et-al_2024.pdf"] = "Balancing Participation & Decentralization";
+  titles["spo-incentives-analysis_lopez-de-lara_2025.pdf"] = "SPO Incentives Analysis";
+
+  /* Load PDF from query string */
+  var params=new URLSearchParams(window.location.search);
+  var file=params.get('file')||'';
+  if(file){
+    document.getElementById('pdf-frame').src=file;
+    document.getElementById('pdf-download').href=file;
+    document.getElementById('pdf-newtab').href=file;
+    /* Resolve title from known PDFs or from filename */
+    var basename=file.split('/').pop();
+    var title=titles[basename]||basename.replace(/\.pdf$/i,'').replace(/[-_]/g,' ');
+    document.getElementById('pdf-title').textContent=title;
+    document.title=title+' — SPO Incentives';
+  } else {
+    document.getElementById('toolbar').style.display='none';
+    document.getElementById('pdf-frame').style.display='none';
+    var err=document.createElement('div');
+    err.className='pdf-error';
+    err.innerHTML='<div>No document specified.</div><a href="index.html">← Back to report</a>';
+    document.body.insertBefore(err,document.querySelector('.site-footer'));
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1191 @@
+:root {
+  --accent:#E52321;
+  --infared:#E52321;--dawn:#EC641D;--black:#1a1a1a;--white:#fff;
+  --electric-blue:#16E9D8;--acid-green:#06FF89;--volt-yellow:#F2FF58;
+  --cobalt-pulse:#2C4FFA;--ultraviolet:#A700FF;
+  --bg:#ffffff;--bg-warm:#faf9f7;--bg-panel:#f5f4f2;--bg-code:#f0efed;
+  --text-primary:#1a1a1a;--text-body:#3a3a3a;--text-secondary:#6b6b6b;--text-muted:#999;
+  --border:#e2e0dc;--border-light:#eceae6;
+}
+/* Dark theme overrides */
+[data-theme=dark]{
+  --bg:#0a0a0c;--bg-warm:#111113;--bg-panel:#1a1a1d;--bg-code:#242428;
+  --text-primary:#e4e4e7;--text-body:#a1a1aa;--text-secondary:#71717a;--text-muted:#52525b;
+  --border:#27272a;--border-light:#1f1f23;--black:#e4e4e7;--white:#0a0a0c;
+}
+[data-theme=dark] body{background:var(--bg-warm);color:var(--text-body)}
+[data-theme=dark] .nav-pages{background:var(--bg);border-bottom-color:var(--border)}
+[data-theme=dark] .nav-tab:hover{background:rgba(255,255,255,.06)}
+[data-theme=dark] .nav-tab.active{background:rgba(229,35,33,.12);color:var(--text-primary)}
+[data-theme=dark] .nav-col+.nav-col{border-left-color:var(--border)}
+[data-theme=dark] .nav-col-title{color:var(--infared)}
+[data-theme=dark] .nav-pdf-badge{background:rgba(229,35,33,.15)}
+[data-theme=dark] .content{background:var(--bg);border-color:var(--border-light)}
+[data-theme=dark] .content h2{background:linear-gradient(90deg,rgba(229,35,33,.1) 0%,transparent 60%)}
+[data-theme=dark] .content h3{background:linear-gradient(90deg,rgba(236,100,29,.08) 0%,transparent 50%)}
+[data-theme=dark] .content a{color:#f06050}
+[data-theme=dark] .content img{border-color:var(--border);filter:brightness(.92)}
+[data-theme=dark] .content code{background:var(--bg-code);color:#e87461}
+[data-theme=dark] .content pre{background:var(--bg-panel);border-color:var(--border)}
+[data-theme=dark] .content blockquote{background:var(--bg-panel);border-left-color:var(--accent)}
+[data-theme=dark] .content tr:hover td{background:var(--bg-panel)}
+[data-theme=dark] .toc-nav{background:var(--bg-panel);border-color:var(--border)}
+[data-theme=dark] .obs-card{background:var(--bg);border-color:var(--border)}
+[data-theme=dark] .obs-card-header{background:var(--bg-panel)}
+[data-theme=dark] .obs-card-header:hover{background:var(--bg-code)}
+[data-theme=dark] .obs-finding{background:var(--bg-panel)}
+[data-theme=dark] .obs-finding:hover{background:var(--bg-code)}
+[data-theme=dark] .table-wrap{border-color:var(--border)}
+[data-theme=dark] .back-top{background:var(--bg-panel);border-color:var(--border);color:var(--text-muted)}
+[data-theme=dark] .lightbox-overlay{background:rgba(0,0,0,.92)}
+/* Dark synth cards */
+[data-theme=dark] .synth-card{border-color:var(--border)}
+[data-theme=dark] .synth-card:hover{border-color:#3a3a3a}
+[data-theme=dark] .synth-card-head:hover{background:var(--bg-panel)}
+[data-theme=dark] .synth-f{background:var(--bg-panel)}
+[data-theme=dark] .synth-f:hover{background:var(--bg-code)}
+[data-theme=dark] .synth-stats{background:var(--bg-panel);border-color:var(--border)}
+[data-theme=dark] .synth-scope{background:var(--bg-panel)}
+[data-theme=dark] .synth-fref{background:var(--bg-code)}
+
+html{scroll-behavior:smooth;scroll-padding-top:56px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;background:var(--bg-warm);color:var(--text-body);line-height:1.78;-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+/* ── Site header: two bars ── */
+.site-nav{position:sticky;top:0;z-index:100;display:flex;flex-direction:column}
+
+/* Bar 1: brand identity */
+.nav-brand{background:#111;padding:0 28px;display:flex;align-items:center;min-height:36px;gap:12px}
+.nav-brand-home{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-brand-logo{height:18px;width:auto;opacity:.7;flex-shrink:0}
+.nav-brand-org{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.nav-brand-title{font:600 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.2px}
+.nav-brand-sep{color:rgba(255,255,255,.28);font:300 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0 2px}
+.nav-brand-subtitle{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.55)}
+@media (max-width:900px){.nav-brand-sep,.nav-brand-subtitle{display:none}}
+
+/* Brand bar right: dropdowns + theme toggle */
+.nav-brand-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+.theme-toggle{background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;cursor:pointer;padding:5px 8px;color:rgba(255,255,255,.5);font-size:14px;line-height:1;transition:color .15s,border-color .15s;display:flex;align-items:center}
+.theme-toggle:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.3)}
+.pdf-export{background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;cursor:pointer;padding:5px 9px;color:rgba(255,255,255,.55);font:700 10.5px/1 'Barlow',-apple-system,sans-serif;letter-spacing:1.2px;transition:color .15s,border-color .15s,background .15s}
+.pdf-export:hover{color:var(--infared);border-color:var(--infared);background:rgba(229,35,33,.08)}
+.nav-dd-wrap{position:relative}
+.nav-dd-btn{background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;cursor:pointer;font:400 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.5px;color:rgba(255,255,255,.5);padding:6px 12px;transition:color .15s,border-color .15s;white-space:nowrap}
+.nav-dd-btn:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.3)}
+.nav-dd-wrap.open .nav-dd-btn{color:#fff;border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.08)}
+.nav-dd-panel{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#1a1a1a;border:1px solid rgba(255,255,255,.1);border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.4);padding:8px 0;min-width:340px;z-index:200}
+.nav-dd-wrap.open .nav-dd-panel{display:block}
+.nav-dd-item{display:block;padding:10px 16px;text-decoration:none;transition:background .1s}
+.nav-dd-item:hover{background:rgba(255,255,255,.06)}
+.nav-dd-title{display:block;font:500 13px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:rgba(255,255,255,.85);border-bottom:none}
+.nav-dd-meta{display:block;font:400 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:rgba(255,255,255,.35);margin-top:3px}
+
+/* Bar 2: three-column navigation */
+.nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:stretch;padding:0;overflow-x:auto;white-space:nowrap}
+.nav-pages a{text-decoration:none;transition:color .15s,background .15s}
+
+/* Columns */
+.nav-col{display:flex;flex-direction:column;padding:8px 0 10px 20px;min-width:0}
+.nav-col+.nav-col{border-left:1px solid var(--border)}
+.nav-col-main{flex:1}
+
+/* Column title */
+.nav-col-title{font:700 9px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--infared);padding:2px 14px 6px 0;flex-shrink:0}
+.nav-col-title-link{text-decoration:none;cursor:pointer;transition:color .15s}
+.nav-col-title-link:hover{color:var(--dawn)}
+.nav-col-title-link.active{color:var(--dawn);border-bottom:none}
+
+/* Column links row */
+.nav-col-links{display:flex;align-items:center;gap:0;white-space:nowrap}
+.nav-col-links-wrap{flex-wrap:wrap;gap:0}
+
+/* Nav tabs */
+.nav-tab{display:flex;align-items:center;gap:5px;padding:4px 10px;font:500 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.3px;text-transform:uppercase;color:var(--text-muted);border-radius:4px}
+.nav-tab:hover{color:var(--text-primary);background:rgba(0,0,0,.04)}
+.nav-tab.active{color:var(--text-primary);font-weight:600;background:rgba(229,35,33,.06)}
+
+/* PDF links */
+.nav-pdf{font-size:11px;color:var(--text-muted);opacity:.8}
+.nav-pdf:hover{opacity:1}
+.nav-pdf-badge{display:inline-block;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--infared);background:rgba(229,35,33,.08);border-radius:3px;padding:2px 4px;margin-left:4px;vertical-align:middle}
+.nav-pdf-meta{font:400 10px/1 -apple-system,sans-serif;color:var(--text-muted);opacity:.6;margin-left:4px}
+
+/* Flow separator */
+.nav-flow-sep{width:1px;align-self:center;height:16px;background:var(--border);margin:0 6px;flex-shrink:0}
+
+/* Colored dots */
+.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* Flow arrows */
+.nav-arrow{font-size:11px;color:var(--dawn);opacity:.5;display:flex;align-items:center;padding:0 1px;flex-shrink:0}
+
+/* ── HERO — IOG Enlightenment gradient + discreet wallpaper + schematic overlay ── */
+.hero{position:relative;overflow:hidden;padding:28px 40px 56px;background:#000;border-bottom:none;isolation:isolate}
+/* Layer 1 (z=0): IOG wallpaper (fern arch, text-free crop) — full hero, cover */
+.hero::before{content:'';position:absolute;inset:0;z-index:0;
+  background:var(--hero-bg, url('iog-hero-bg.jpg')) center center / cover no-repeat;
+  opacity:.75;
+  pointer-events:none;
+  transition:opacity .4s ease}
+/* Layer 2 (z=0): soft left-side vignette to protect title readability, warm glow bottom-right */
+.hero::after{content:'';position:absolute;inset:0;z-index:0;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.6) 0%, rgba(0,0,0,.28) 28%, rgba(0,0,0,.05) 55%, transparent 75%),
+    radial-gradient(ellipse 60% 80% at 90% 110%, rgba(232,128,4,.22) 0%, transparent 60%);
+  pointer-events:none}
+.hero-schema{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:.9}
+.hero-topbar{position:relative;z-index:2;max-width:1400px;margin:0 auto 32px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.hero-full-logo{height:26px;width:auto;display:block;flex-shrink:0;filter:drop-shadow(0 0 12px rgba(229,35,33,.15))}
+.hero-division{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 12px;border:1px solid rgba(6,255,137,.35);border-radius:2px;background:rgba(0,0,0,.35);backdrop-filter:blur(2px)}
+.hero-division-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#06FF89;box-shadow:0 0 10px rgba(6,255,137,.8),0 0 3px #06FF89;flex-shrink:0}
+.hero-division-label{font-size:10px;font-weight:300;letter-spacing:2.8px;text-transform:uppercase;color:rgba(255,255,255,.88)}
+.hero-inner{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding-top:20px}
+.hero-eyebrow{font-size:10px;font-weight:300;letter-spacing:3.5px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:18px;padding-left:14px;border-left:2px solid var(--infared)}
+.hero h1{font-size:28px;font-weight:600;color:#fff;margin:0 0 8px;max-width:980px}
+.hero .sub{font-size:14px;font-weight:300;color:rgba(255,255,255,.55);max-width:880px}
+.hero-bottom-rule{position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent 0%,var(--infared) 8%,var(--dawn) 50%,var(--infared) 92%,transparent 100%);z-index:3}
+
+/* Footer — IOG corporate lock-up */
+.site-footer{background:#0a0a0a;color:rgba(255,255,255,.55);font-size:10px;font-weight:300;letter-spacing:2px;text-transform:uppercase;padding:22px 20px;display:flex;align-items:center;justify-content:center;gap:18px;border-top:1px solid rgba(229,35,33,.3)}
+.site-footer .footer-logo{height:16px;width:auto;opacity:.6}
+.site-footer .footer-division{display:inline-flex;align-items:center;color:rgba(255,255,255,.7)}
+
+/* ── CBU BRANDING — Cardano Business Unit dot (Engineering / Acid Green) ── */
+.cbu-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#06FF89;box-shadow:0 0 8px rgba(6,255,137,.7),0 0 2px rgba(6,255,137,1);vertical-align:middle;margin-right:6px;flex-shrink:0}
+
+/* ── NAV brand upgrade with IOG word marque ── */
+.nav-brand-wordmark{height:14px;width:auto;opacity:.85;flex-shrink:0}
+.nav-brand-sep-vr{display:inline-block;width:1px;height:14px;background:rgba(255,255,255,.18);margin:0 10px;flex-shrink:0}
+
+/* ── CONTENT ── */
+.content{max-width:1400px;margin:0 auto;padding:40px 56px 100px;min-height:80vh;
+  border-left:1px solid var(--border-light);border-right:1px solid var(--border-light);
+  /* Subtle IOG wash: warm infared glow at top + soft dawn at bottom, no grid */
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(ellipse 1100px 350px at 50% 0%, rgba(229,35,33,.035), transparent 75%),
+    radial-gradient(ellipse 900px 400px at 50% 100%, rgba(236,100,29,.025), transparent 75%);
+  background-repeat:no-repeat}
+[data-theme=dark] .content{background-image:
+  radial-gradient(ellipse 1100px 350px at 50% 0%, rgba(229,35,33,.07), transparent 75%),
+  radial-gradient(ellipse 900px 400px at 50% 100%, rgba(236,100,29,.05), transparent 75%)}
+/* Heading hierarchy — iog.io-inspired, Barlow for display.
+   H1: typography only (page title). H2 (§X): infared title + infared rule (full).
+   H3 (§X.X): dawn title + dawn rule (half length). H4+: plain small labels. */
+.content h1,.content h2,.content h3,.content h4,.content h5,.content h6{font-family:'Barlow',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.content h1{font-size:34px;font-weight:500;color:var(--text-primary);margin:0 0 28px;padding:0;border:none;background:none;letter-spacing:-.8px;line-height:1.15;position:relative}
+.content h1:first-child{margin-top:0}
+.content h2{font-size:24px;font-weight:500;color:var(--infared);margin:56px 0 22px;padding:0;border:none;background:none;display:flex;align-items:center;gap:24px;letter-spacing:-.4px;line-height:1.2;position:relative}
+.content h2::after{content:'';flex:1;height:1.5px;background:var(--infared);min-width:60px;opacity:.85}
+[data-theme=dark] .content h2{color:var(--infared)}
+[data-theme=dark] .content h2::after{background:var(--infared);opacity:.7}
+.content h3{font-size:18px;font-weight:600;color:var(--dawn,#EC641D);margin:40px 0 14px;padding:0;border:none;background:none;display:flex;align-items:center;gap:20px;letter-spacing:-.2px;line-height:1.25;position:relative}
+.content h3::after{content:'';flex:1;height:1px;background:var(--dawn,#EC641D);min-width:40px;opacity:.7}
+[data-theme=dark] .content h3{color:var(--dawn,#EC641D)}
+[data-theme=dark] .content h3::after{background:var(--dawn,#EC641D);opacity:.5}
+.content h4{font-size:15px;font-weight:600;color:var(--text-primary);margin:32px 0 12px;padding:0;border:none;background:none;display:flex;align-items:center;gap:16px;letter-spacing:-.1px;position:relative}
+.content h4::after{content:'';flex:1;height:1px;background:var(--border);min-width:40px;opacity:.9}
+[data-theme=dark] .content h4::after{background:var(--border)}
+.content h5{font-size:12.5px;font-weight:700;color:var(--text-secondary);margin:24px 0 10px;padding:0;border:none;background:none;display:flex;align-items:center;gap:14px;text-transform:uppercase;letter-spacing:1.2px;position:relative}
+.content h5::after{content:'';flex:1;height:1px;background:var(--border-light);min-width:40px}
+.content h6{font-size:13px;font-weight:600;color:var(--text-muted,var(--text-secondary));margin:20px 0 10px;padding:0;border:none;background:none;display:flex;align-items:center;gap:12px;font-style:italic;position:relative}
+.content h6::after{content:'';flex:1;height:1px;background:var(--border-light);min-width:40px;opacity:.6}
+.content p{margin:0 0 14px;font-size:15px;color:var(--text-body)}
+.content p strong{color:var(--text-primary);font-weight:600}
+.content a{color:var(--infared);text-decoration:none;border-bottom:1px solid rgba(229,35,33,.25)}
+.content a:hover{border-bottom-color:var(--infared)}
+
+/* Lists */
+.content ul,.content ol{margin:0 0 14px 20px;font-size:15px;color:var(--text-body)}
+.content li{margin-bottom:6px}
+.content li strong{color:var(--text-primary);font-weight:600}
+
+/* Tables */
+.content table{width:100%;border-collapse:collapse;margin:20px 0;font-size:12.5px;table-layout:auto}
+.content thead{position:sticky;top:0}
+.content th{background:var(--bg-panel);color:var(--text-primary);font-weight:600;text-align:left;padding:7px 9px;border:1px solid var(--border)}
+.content td{padding:7px 9px;border:1px solid var(--border);color:var(--text-body);vertical-align:top}
+.content th,.content td{word-break:break-word;overflow-wrap:break-word}
+.content tr:hover td{background:var(--bg-warm)}
+
+/* Blockquotes */
+.content blockquote{border-left:3px solid var(--accent);padding:12px 18px;margin:16px 0;background:var(--bg-panel);border-radius:0 6px 6px 0}
+.content blockquote p{margin:0;font-size:14px;color:var(--text-body)}
+.content blockquote strong{color:var(--text-primary)}
+
+/* Code */
+.content code{font-family:'SF Mono','Fira Code',monospace;font-size:13px;background:var(--bg-code);padding:2px 6px;border-radius:4px;color:#b33a1a}
+.content pre{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:16px 20px;overflow-x:auto;margin:16px 0}
+.content pre code{background:none;padding:0;font-size:13px;color:var(--text-body)}
+
+/* Images / figures */
+.content img{max-width:100%;height:auto;border-radius:6px;margin:16px 0;display:block;border:1px solid var(--border-light)}
+
+/* HR */
+.content hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+
+/* Emphasis / italic */
+.content em{color:var(--text-secondary);font-style:italic}
+
+/* MathJax */
+mjx-container{color:var(--text-primary)!important}
+mjx-container[display=true]{display:block!important;max-width:100%;margin:20px auto!important;text-align:center}
+
+/* TOC inside content */
+.content .toc{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin:20px 0}
+.content .toc ul{list-style:none;margin:0;padding:0}
+.content .toc li{margin:4px 0}
+.content .toc a{border-bottom:none;font-size:14px}
+
+/* TOC nav — visual hierarchy per depth level */
+.toc-nav{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:20px 28px;margin:20px 0}
+.toc-nav ul,.toc-nav ol{list-style:none;padding-left:0;margin:0;counter-reset:toc-item}
+/* Level 1: big, bold — section titles */
+.toc-nav > ul > li,.toc-nav > ol > li{margin-bottom:8px;counter-increment:toc-item}
+.toc-nav > ol > li::marker{color:var(--text-primary);font-weight:600}
+.toc-nav > ul > li > a,.toc-nav > ul > li > .toc-num,
+.toc-nav > ol > li > a,.toc-nav > ol > li > .toc-num{font-weight:600;font-size:16px;color:var(--text-primary)}
+/* Level 2: bold, slightly smaller */
+.toc-nav ul ul,.toc-nav ol ul,.toc-nav ul ol,.toc-nav ol ol{padding-left:20px;margin-top:4px;border-left:2px solid var(--border)}
+.toc-nav ul ul > li,.toc-nav ol ul > li,.toc-nav ul ol > li,.toc-nav ol ol > li{margin-bottom:4px}
+.toc-nav ul ul > li > a,.toc-nav ul ul > li > .toc-num,
+.toc-nav ol ul > li > a,.toc-nav ol ul > li > .toc-num,
+.toc-nav ul ol > li > a,.toc-nav ul ol > li > .toc-num,
+.toc-nav ol ol > li > a,.toc-nav ol ol > li > .toc-num{font-weight:600;font-size:14.5px;color:var(--text-body)}
+/* Level 3: medium weight, smaller still */
+.toc-nav ul ul ul,.toc-nav ol ul ul,.toc-nav ul ol ul,.toc-nav ol ol ul,
+.toc-nav ul ul ol,.toc-nav ol ul ol,.toc-nav ul ol ol,.toc-nav ol ol ol{padding-left:18px;border-left-color:var(--border-light)}
+.toc-nav ul ul ul > li,.toc-nav ol ol ol > li,
+.toc-nav ol ul ul > li,.toc-nav ul ol ul > li,.toc-nav ul ul ol > li{margin-bottom:3px}
+.toc-nav ul ul ul > li > a,.toc-nav ol ol ol > li > a,
+.toc-nav ol ul ul > li > a,.toc-nav ul ol ul > li > a,.toc-nav ul ul ol > li > a{font-weight:400;font-size:13.5px;color:var(--text-secondary)}
+.toc-nav a{border-bottom:none;color:inherit;text-decoration:none}
+.toc-nav a:hover{color:var(--infared)}
+.toc-nav .toc-num{display:inline-block;min-width:2.2em;font-variant-numeric:tabular-nums}
+/* Ordered-list numbering on the outer <ol> */
+.toc-nav > ol{list-style:decimal outside;padding-left:2em}
+.toc-nav > ol > li{padding-left:6px}
+
+/* ── Observation cards ── */
+.obs-cards{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+.obs-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg)}
+.obs-card-header{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;user-select:none;background:var(--bg-panel);transition:background .15s}
+.obs-card-header:hover{background:var(--bg-code)}
+.obs-card-num{font-weight:700;font-size:13px;color:var(--infared);min-width:28px}
+.obs-card-title{flex:1;font-weight:600;font-size:14.5px;color:var(--text-primary);line-height:1.4}
+.obs-card-arrow{font-size:14px;color:var(--text-muted);transition:transform .2s}
+.obs-card.collapsed .obs-card-arrow{transform:rotate(-90deg)}
+.obs-card-count{font-size:11px;color:var(--text-muted);background:var(--bg-warm);border:1px solid var(--border-light);border-radius:10px;padding:1px 8px;white-space:nowrap}
+.obs-card-body{padding:0 18px 14px;display:flex;flex-direction:column;gap:8px;padding-top:10px}
+.obs-card.collapsed .obs-card-body{display:none}
+.obs-finding{display:flex;align-items:baseline;gap:10px;padding:8px 12px;border-radius:6px;background:var(--bg-warm);font-size:13.5px;line-height:1.55}
+.obs-finding:hover{background:var(--bg-panel)}
+.obs-fid{font-weight:600;font-size:12px;color:var(--text-muted);min-width:36px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.obs-ftext{flex:1;color:var(--text-body)}
+.obs-ftext strong{color:var(--text-primary)}
+.obs-tag{font-size:10.5px;letter-spacing:.3px;text-transform:uppercase;border:1px solid;border-radius:4px;padding:1px 7px;white-space:nowrap;flex-shrink:0;font-weight:500}
+.obs-link[data-section]{cursor:pointer}
+.obs-link[data-section]:hover{background:var(--bg-panel);box-shadow:inset 3px 0 0 var(--infared)}
+.obs-link[data-section] .obs-fid{color:var(--infared)}
+
+/* ── Reading progress bar ── */
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--infared),var(--dawn));z-index:200;transition:width .1s linear;width:0}
+
+/* ── Collapsible sections ── */
+/* Arrow lives in the left-gutter of the heading. Headings are already
+   position:relative, and have left padding to reserve the arrow lane. */
+.section-toggle{cursor:pointer;user-select:none;padding-left:22px!important}
+.section-toggle::before{content:'▾';position:absolute;left:0;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-muted);transition:transform .2s;width:16px;text-align:center;line-height:1;pointer-events:none}
+h2.section-toggle::before{color:var(--infared);opacity:.7}
+h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
+.section-toggle.collapsed::before{transform:translateY(-50%) rotate(-90deg)}
+.section-body{transition:max-height .35s ease, opacity .25s ease;opacity:1}
+.section-body.collapsed{max-height:0!important;opacity:0;margin:0;padding:0;overflow:hidden}
+
+/* ── Collapsible TOC sub-lists ── */
+.toc-nav li{padding-left:18px;position:relative}
+.toc-nav .toc-toggle{cursor:pointer}
+.toc-nav .toc-toggle::before{content:'▾';position:absolute;left:0;top:1px;width:16px;font-size:13px;color:var(--text-secondary);transition:transform .2s;text-align:center}
+.toc-nav > ul > li.has-children > .toc-toggle::before{font-size:15px}
+.toc-nav .toc-toggle.collapsed::before{transform:rotate(-90deg)}
+.toc-nav ul.toc-collapsed{display:none}
+
+/* ── Image lightbox ── */
+.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;cursor:zoom-out}
+.lightbox-overlay.active{opacity:1;pointer-events:auto}
+.lightbox-overlay img{max-width:92vw;max-height:90vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5);object-fit:contain}
+.content img{cursor:zoom-in;transition:transform .2s, box-shadow .2s}
+.content img:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+
+/* ── Table wrapper ── */
+.table-wrap{position:relative;overflow:hidden;margin:20px 0;border:1px solid var(--border);border-radius:8px}
+.table-wrap table{margin:0;border:none;display:table;width:100%}
+.table-wrap th:first-child,.table-wrap td:first-child{border-left:none}
+.table-wrap th:last-child,.table-wrap td:last-child{border-right:none}
+.table-wrap tr:first-child th{border-top:none}
+.table-wrap tr:last-child td{border-bottom:none}
+
+/* ── Observatory / synthesis cards ── */
+.synth-stage{margin-bottom:40px}
+.synth-stage-title{font-size:20px;font-weight:700;color:var(--text-primary);margin:0 0 8px;padding:10px 0 10px 28px;border-left:4px solid;position:relative}
+.synth-stage-title a.synth-stage-link{color:inherit;text-decoration:none;border-bottom:none}
+.synth-stage-title a.synth-stage-link:hover{color:var(--infared)}
+.synth-stage-desc{font-size:14px;color:var(--text-secondary);line-height:1.7;max-width:860px;margin-bottom:16px}
+.synth-stats{display:flex;gap:20px;padding:14px 20px;background:var(--bg-panel);border:1px solid var(--border);border-radius:10px;margin-bottom:20px;overflow-x:auto;flex-wrap:wrap}
+.synth-stat{min-width:80px}
+.synth-stat-val{font-size:18px;font-weight:600;color:var(--text-primary)}
+.synth-stat-lbl{font-size:9.5px;font-weight:400;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-muted);margin-top:1px}
+.synth-cards{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.synth-group-label{font-size:10.5px;font-weight:400;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);margin:16px 0 6px;padding-left:2px;display:flex;align-items:center;gap:8px}
+.synth-group-label:first-child{margin-top:0}
+.synth-group-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.synth-card{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg)}
+.synth-card:hover{border-color:#ccc}
+.synth-card.open{border-color:var(--border)}
+.synth-card-head{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;user-select:none;transition:background .1s}
+.synth-card-head:hover{background:var(--bg-panel)}
+.synth-card-num{flex-shrink:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:12px;font-weight:700}
+.synth-card-title{flex:1;font-weight:500;font-size:14px;color:var(--text-primary);line-height:1.4}
+.synth-card-count{font-size:11px;color:var(--text-muted);background:var(--bg-panel);border:1px solid var(--border-light);border-radius:10px;padding:1px 7px;white-space:nowrap;flex-shrink:0}
+.synth-card-chev{font-size:14px;color:var(--text-muted);transition:transform .2s;flex-shrink:0}
+.synth-card.open .synth-card-chev{transform:rotate(180deg)}
+.synth-card-body{display:none;padding:0 16px 12px;flex-direction:column;gap:6px;padding-top:6px}
+.synth-card.open .synth-card-body{display:flex}
+.synth-f{display:flex;align-items:baseline;gap:8px;padding:6px 10px;border-radius:5px;background:var(--bg-warm);font-size:13px;line-height:1.6}
+.synth-f:hover{background:var(--bg-panel)}
+.synth-fid{font-weight:600;font-size:11.5px;color:var(--text-muted);min-width:34px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.synth-ft{flex:1;color:var(--text-body)}
+.synth-ft strong{color:var(--text-primary);font-weight:600}
+.synth-fref{font-size:10px;font-weight:500;letter-spacing:.3px;white-space:nowrap;padding:2px 6px;border-radius:3px;background:var(--bg-panel);color:var(--text-muted);flex-shrink:0}
+.synth-scope{background:var(--bg-panel);border-left:3px solid var(--dawn);padding:12px 16px;border-radius:0 6px 6px 0;font-size:12.5px;color:var(--text-secondary);line-height:1.7}
+.synth-scope strong{color:var(--text-primary);font-weight:500}
+
+/* ── Back to top ── */
+.back-top{position:fixed;bottom:24px;right:24px;width:40px;height:40px;border-radius:50%;background:var(--bg);border:1px solid var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity .3s;font-size:18px;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.back-top.visible{opacity:1}
+.back-top:hover{color:var(--infared);border-color:var(--infared)}
+
+/* Footer strip */
+.site-footer{background:#111;color:rgba(255,255,255,.35);font-size:11px;letter-spacing:.5px;text-transform:uppercase;text-align:center;padding:18px 20px;display:flex;align-items:center;justify-content:center;gap:10px}
+.site-footer img{height:14px;opacity:.4}
+
+@media(max-width:720px){
+  .hero{padding:32px 20px 28px} .content{padding:24px 20px 60px;border:none}
+  .content table{font-size:11px} .content th,.content td{padding:6px 7px}
+}
+
+/* ── OUTPUT ← INPUT nav (mirrors §1 Foundations diagram) ── */
+/* Flow (reading L→R): [V2 SPECIFICATION] ← Documents (Design / Diagnostic / Research) */
+.nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:10px 20px;overflow:visible;white-space:nowrap;gap:14px;position:relative;z-index:50}
+[data-theme=dark] .nav-pages{background:var(--bg)}
+.nav-zone{display:flex;align-items:center;gap:10px;flex-shrink:0}
+
+/* "OUTPUT ← INPUT" flow arrow — subtle, matches IOG's I/O directionality */
+.nav-flow-arrow{color:var(--text-muted);opacity:.4;font-size:15px;flex-shrink:0;padding:0 4px;user-select:none;font-weight:300}
+
+/* Small zone label above (inline with) each zone's content */
+.nav-zone-label{font:700 9px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);flex-shrink:0}
+.nav-zone-label-output{color:var(--infared);opacity:.9}
+
+/* ── Zones 2/3/4 · Mainnet Diagnostic ← Design Support ← Research Papers ── */
+/* Three distinct dropdowns, each with a single title; breadcrumb below conveys
+   the current location in the hierarchy so the dropdowns stay label-free.    */
+.nav-zone-diag,.nav-zone-design,.nav-zone-research{flex:0 0 auto}
+.nav-dd-btn-diag,.nav-dd-btn-design,.nav-dd-btn-research{min-width:0}
+/* Diagnostic = Dawn accent when the current page lives inside it */
+.nav-dd-btn-diag.active{color:var(--text-primary);border-color:rgba(236,100,29,.55);background:rgba(236,100,29,.08);font-weight:600}
+.nav-dd-wrap-light.open .nav-dd-btn-diag.active{border-color:rgba(236,100,29,.7);background:rgba(236,100,29,.14);color:var(--text-primary)}
+/* Design = Infared accent */
+.nav-dd-btn-design.active{color:var(--text-primary);border-color:rgba(229,35,33,.55);background:rgba(229,35,33,.08);font-weight:600}
+.nav-dd-wrap-light.open .nav-dd-btn-design.active{border-color:rgba(229,35,33,.7);background:rgba(229,35,33,.14);color:var(--text-primary)}
+/* Panels: diagnostic needs the most vertical space (The Diagnostic + Reward Flow sub-chain + SD-L) */
+.nav-dd-panel-diag{left:0;right:auto;min-width:500px;max-width:540px}
+.nav-dd-panel-design{left:0;right:auto;min-width:460px;max-width:500px}
+.nav-dd-panel-research{left:auto;right:0;min-width:460px;max-width:500px}
+
+/* Group label inside a dropdown panel (e.g., "Reward Flow" above the pipeline sub-items) */
+.nav-dd-ref-group-label{display:block;font:700 9.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-muted);padding:10px 10px 4px;margin-top:4px}
+
+/* ── Breadcrumb bar — single source of truth for "where am I" (lives inside .site-nav as its 3rd row) ── */
+.nav-breadcrumb{background:var(--bg-panel);border-bottom:1px solid var(--border);padding:7px 20px;font:400 11.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);display:flex;align-items:center;flex-wrap:wrap;gap:6px;letter-spacing:.1px}
+[data-theme=dark] .nav-breadcrumb{background:var(--bg)}
+.nav-breadcrumb:empty{display:none}
+.nav-breadcrumb-item{color:var(--text-secondary)}
+.nav-breadcrumb-current{color:var(--text-primary);font-weight:600}
+.nav-breadcrumb-sep{color:var(--text-muted);opacity:.55;font-size:13px;padding:0 2px}
+.nav-breadcrumb-desc-sep{color:var(--text-muted);opacity:.4;font-size:12px;padding:0 2px 0 6px}
+.nav-breadcrumb-desc{color:var(--text-muted);font-weight:400;font-style:italic;opacity:.88;letter-spacing:.15px}
+.nav-dd-wrap-light{position:relative}
+.nav-dd-btn-light{background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font:500 11.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--text-secondary);padding:8px 13px;transition:all .15s;white-space:nowrap}
+.nav-dd-btn-light:hover{color:var(--text-primary);border-color:var(--text-muted);background:rgba(0,0,0,.02)}
+[data-theme=dark] .nav-dd-btn-light:hover{background:rgba(255,255,255,.04)}
+.nav-dd-wrap-light.open .nav-dd-btn-light{color:var(--infared);border-color:rgba(229,35,33,.4);background:rgba(229,35,33,.05)}
+.nav-dd-panel-light{display:none;position:absolute;top:calc(100% + 8px);left:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;box-shadow:0 16px 48px rgba(0,0,0,.12);padding:10px 16px;min-width:460px;max-width:500px;z-index:200;white-space:normal}
+[data-theme=dark] .nav-dd-panel-light{background:var(--bg-panel);box-shadow:0 16px 48px rgba(0,0,0,.4)}
+.nav-dd-wrap-light.open .nav-dd-panel-light{display:block}
+.nav-dd-stratum{padding:10px 0}
+.nav-dd-stratum+.nav-dd-stratum{border-top:1px solid var(--border-light)}
+.nav-dd-stratum-head{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+.nav-dd-stratum-badge{display:inline-block;padding:3px 8px;border-radius:4px;font:700 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.9px;text-transform:uppercase}
+.nav-dd-stratum-badge-design{color:var(--infared);background:rgba(229,35,33,.1)}
+.nav-dd-stratum-badge-research{color:#0b8478;background:rgba(22,233,216,.14)}
+[data-theme=dark] .nav-dd-stratum-badge-research{color:var(--electric-blue,#16E9D8);background:rgba(22,233,216,.12)}
+.nav-dd-stratum-meta{font:400 10.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);letter-spacing:.2px}
+
+/* Rich reference row inside the dropdown: title + citation on the left, PDF chip on the right */
+.nav-dd-ref{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:12px;align-items:center;padding:8px 10px;margin:2px -6px;border-radius:6px;text-decoration:none;transition:background .12s}
+.nav-dd-ref:hover{background:rgba(229,35,33,.04)}
+[data-theme=dark] .nav-dd-ref:hover{background:rgba(229,35,33,.09)}
+.nav-dd-ref-title{grid-column:1;grid-row:1;font:500 13px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-primary);letter-spacing:-.1px}
+.nav-dd-ref:hover .nav-dd-ref-title{color:var(--infared)}
+.nav-dd-ref-cite{grid-column:1;grid-row:2;font:400 11px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.nav-dd-ref-tag{display:inline-block;font:600 9.5px/1 -apple-system,sans-serif;letter-spacing:.4px;color:var(--text-secondary);background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:2px 5px}
+[data-theme=dark] .nav-dd-ref-tag{background:var(--bg);color:var(--text-body)}
+.nav-dd-ref-new{display:inline-block;margin-left:8px;font:700 9px/1 -apple-system,sans-serif;letter-spacing:.7px;color:#0a8a80;background:rgba(22,233,216,.14);border:1px solid rgba(22,233,216,.45);border-radius:3px;padding:2px 5px;text-transform:uppercase;vertical-align:1px}
+[data-theme=dark] .nav-dd-ref-new{color:#16E9D8;background:rgba(22,233,216,.1);border-color:rgba(22,233,216,.35)}
+.nav-dd-ref-pdf{grid-column:2;grid-row:1 / span 2;align-self:center;font:700 9.5px/1 -apple-system,sans-serif;letter-spacing:.6px;color:var(--infared);background:rgba(229,35,33,.08);padding:6px 9px;border-radius:4px;text-transform:uppercase}
+.nav-dd-ref:hover .nav-dd-ref-pdf{background:var(--infared);color:#fff}
+
+/* Diagnostic stratum badge — Dawn (mainnet observation colour) */
+.nav-dd-stratum-badge-diagnostic{color:var(--dawn);background:rgba(236,100,29,.12)}
+
+/* Sub-items (Evidence chain under The Diagnostic) — indented, lighter, stage tag on the right */
+.nav-dd-ref-sub{padding-left:22px;position:relative}
+.nav-dd-ref-sub::before{content:"";position:absolute;left:12px;top:16px;width:6px;height:1px;background:var(--border)}
+/* Items inside the Reward-Flow group get a deeper indent so they read as children of the group label */
+.nav-dd-ref-group-label-flow{padding-left:16px}
+.nav-dd-ref-flow{padding-left:40px}
+.nav-dd-ref-flow::before{left:28px}
+.nav-dd-ref-sub .nav-dd-ref-title{font-size:12.5px;font-weight:500}
+.nav-dd-ref-stage{display:inline-block;margin-left:8px;font:600 9.5px/1 -apple-system,sans-serif;letter-spacing:.4px;color:var(--text-secondary);background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:2px 5px;text-transform:uppercase}
+[data-theme=dark] .nav-dd-ref-stage{background:var(--bg)}
+
+/* Active / parent-active state on rich-list item */
+.nav-dd-ref.active{background:rgba(22,233,216,.09);box-shadow:inset 3px 0 0 rgba(22,233,216,.7)}
+.nav-dd-ref.active .nav-dd-ref-title{color:var(--text-primary);font-weight:600}
+.nav-dd-ref.parent-active{background:rgba(22,233,216,.04);box-shadow:inset 3px 0 0 rgba(22,233,216,.35)}
+[data-theme=dark] .nav-dd-ref.active{background:rgba(22,233,216,.14)}
+[data-theme=dark] .nav-dd-ref.parent-active{background:rgba(22,233,216,.06)}
+
+/* ── Zone 1 · Output (primary CTA, left-anchored) ── */
+.nav-zone-output{flex:0 0 auto;padding-right:4px}
+.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--infared);border:1px solid var(--infared);border-radius:6px;text-decoration:none;transition:all .15s;box-shadow:0 2px 6px rgba(229,35,33,.22);white-space:nowrap}
+.nav-tab-spec-big:hover{background:#c91e1c;border-color:#c91e1c;box-shadow:0 4px 12px rgba(229,35,33,.32);transform:translateY(-1px)}
+.nav-tab-spec-big.active{box-shadow:0 3px 10px rgba(229,35,33,.38);outline:2px solid rgba(229,35,33,.2);outline-offset:2px}
+
+/* Responsive: wrap zones below 1100px; stack fully on phone */
+@media (max-width:1100px){
+  .nav-pages{flex-wrap:wrap;padding:8px 14px}
+  .nav-flow-arrow{display:none}
+}
+@media (max-width:700px){
+  .nav-dd-panel-light,.nav-dd-panel-diag,.nav-dd-panel-design,.nav-dd-panel-research{position:fixed;left:8px;right:8px;min-width:0;max-width:none;top:auto}
+  .nav-evidence-sub{flex-wrap:wrap}
+  .nav-breadcrumb{padding:6px 14px;font-size:11px}
+}
+
+/* ── Mermaid diagrams ─────────────────────────────────────── */
+.mermaid{position:relative;margin:22px 0;padding:18px;background:var(--bg-panel);border:1px solid var(--border);border-radius:6px;text-align:center;overflow-x:auto}
+.mermaid.mm-ready{cursor:zoom-in}
+.mermaid svg{max-width:100%;height:auto;display:inline-block}
+.mermaid .node rect,.mermaid .node polygon,.mermaid .node circle{stroke:var(--border);fill:var(--bg)}
+.mermaid .cluster rect{fill:rgba(229,35,33,.03);stroke:rgba(229,35,33,.25)}
+[data-theme=dark] .mermaid{background:var(--bg);border-color:var(--border)}
+
+/* Mermaid expand button (click to zoom) */
+.mermaid-expand{position:absolute;top:10px;right:10px;z-index:2;display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text-secondary);font:500 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;text-transform:uppercase;cursor:pointer;opacity:.7;transition:opacity .15s ease,background .15s ease,color .15s ease}
+.mermaid:hover .mermaid-expand{opacity:1}
+.mermaid-expand:hover{background:var(--text-primary);color:var(--bg);border-color:var(--text-primary);opacity:1}
+.mermaid-expand svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* Mermaid zoom overlay */
+.mermaid-zoom-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;opacity:0;transition:opacity .18s ease}
+.mermaid-zoom-overlay.active{display:flex;opacity:1}
+.mermaid-zoom-stage{position:absolute;inset:0;overflow:hidden;cursor:grab;display:flex;align-items:center;justify-content:center}
+.mermaid-zoom-stage.dragging{cursor:grabbing}
+.mermaid-zoom-stage>svg{max-width:none;max-height:none;transform-origin:center center;user-select:none;pointer-events:none}
+.mermaid-zoom-controls{position:absolute;top:18px;right:18px;display:flex;gap:8px;z-index:2}
+.mermaid-zoom-btn{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;cursor:pointer;font-size:18px;line-height:1;transition:background .15s ease}
+.mermaid-zoom-btn:hover{background:rgba(255,255,255,.18)}
+.mermaid-zoom-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.mermaid-zoom-hint{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.55);font:400 11px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.5px;text-transform:uppercase;pointer-events:none}
+
+/* ── GitHub-style admonitions ─────────────────────────────── */
+.admon{margin:20px 0;padding:14px 18px 16px;border-radius:6px;border-left:4px solid var(--text-muted);background:var(--bg-panel);font-size:14px;line-height:1.65}
+.admon-label{font-family:'Barlow',sans-serif;font-weight:600;font-size:11px;letter-spacing:.9px;text-transform:uppercase;margin-bottom:6px;color:var(--text-muted)}
+.admon p{margin:.4em 0}
+.admon p:last-child{margin-bottom:0}
+.admon-note{border-left-color:#2C4FFA}.admon-note .admon-label{color:#2C4FFA}
+.admon-tip{border-left-color:#06FF89}.admon-tip .admon-label{color:#058a4a}
+.admon-important{border-left-color:var(--infared,#E52321)}.admon-important .admon-label{color:var(--infared,#E52321)}
+.admon-warning{border-left-color:#FFBA36}.admon-warning .admon-label{color:#9c6500}
+.admon-caution{border-left-color:#FF532C}.admon-caution .admon-label{color:#FF532C}
+
+/* ── TOC floating panel ─────────────────────────────── */
+/* Hide the inline TOC block when the floating panel is active */
+body.has-toc-panel #table-of-contents,
+body.has-toc-panel #table-of-contents + .section-body,
+body.has-toc-panel > .content > .toc-nav,
+body.has-toc-panel .content > h2#table-of-contents + .section-body{display:none}
+
+/* Floating FAB — fixed, top-right, under the sticky nav */
+.toc-fab{position:fixed;top:96px;right:20px;width:44px;height:44px;border-radius:50%;
+  background:var(--bg);border:1px solid var(--border);color:var(--text-primary);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.08);z-index:300;
+  transition:color .15s,border-color .15s,box-shadow .2s,transform .15s}
+.toc-fab:hover{color:var(--infared);border-color:var(--infared);box-shadow:0 6px 18px rgba(229,35,33,.15);transform:translateY(-1px)}
+.toc-fab svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.toc-fab-label{display:none}
+[data-theme=dark] .toc-fab{background:var(--bg-panel)}
+
+/* Overlay */
+.toc-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;
+  transition:opacity .2s;z-index:400}
+body.toc-open .toc-overlay{opacity:1;pointer-events:auto}
+[data-theme=dark] .toc-overlay{background:rgba(0,0,0,.55)}
+
+/* Side panel */
+.toc-panel{position:fixed;top:0;right:0;height:100vh;width:560px;max-width:92vw;
+  background:var(--bg);border-left:1px solid var(--border);
+  box-shadow:-8px 0 32px rgba(0,0,0,.12);z-index:500;
+  transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column}
+body.toc-open .toc-panel{transform:translateX(0)}
+
+.toc-panel-header{display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid var(--border);background:var(--bg-panel);flex-shrink:0}
+.toc-panel-title{font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:1.8px;text-transform:uppercase;color:var(--infared)}
+.toc-panel-close{background:none;border:1px solid var(--border);border-radius:4px;
+  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--text-muted);transition:color .15s,border-color .15s}
+.toc-panel-close:hover{color:var(--infared);border-color:var(--infared)}
+.toc-panel-close svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round}
+
+.toc-panel-body{flex:1;overflow-y:auto;padding:20px 24px 40px;scrollbar-gutter:stable}
+.toc-panel-body::-webkit-scrollbar{width:8px}
+.toc-panel-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.toc-panel-body::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
+
+/* Panel-scoped TOC — reuse .toc-nav styling but stripped of the card chrome */
+.toc-panel .toc-nav{background:transparent;border:none;padding:0;margin:0}
+.toc-panel .toc-nav a{display:block;padding:3px 4px;border-radius:4px;transition:background .1s,color .1s}
+.toc-panel .toc-nav a:hover{background:var(--bg-panel);color:var(--infared)}
+.toc-panel .toc-nav a.toc-active{color:var(--infared);background:rgba(229,35,33,.08);font-weight:600}
+[data-theme=dark] .toc-panel .toc-nav a.toc-active{background:rgba(229,35,33,.15)}
+
+/* Responsive: full-width drawer on mobile, FAB moves to bottom-right */
+@media (max-width:720px){
+  .toc-fab{top:auto;bottom:80px;right:16px}
+  .toc-panel{width:100vw;max-width:100vw;border-left:none}
+}
+
+/* ──────────────────────────────────────────────────────────────────────
+   PRINT STYLESHEET — used by the "PDF" button (window.print) and Ctrl+P.
+   Strategy: hide all chrome, expand content full-width, force light theme,
+   keep figures/tables from breaking, disable fixed/sticky positioning.
+   ────────────────────────────────────────────────────────────────────── */
+@media print{
+  /* Force light theme for printing — dark-mode backgrounds waste ink */
+  :root,html,body,html[data-theme=dark],[data-theme=dark]{
+    --bg:#ffffff;--bg-warm:#ffffff;--bg-panel:#f5f5f5;--bg-code:#f5f5f5;
+    --text-primary:#000;--text-body:#222;--text-secondary:#333;--text-muted:#666;
+    --border:#ccc;--border-light:#e5e5e5;--border-strong:#aaa;
+    background:#fff!important;color:#000!important;
+  }
+  html,body{margin:0!important;padding:0!important;background:#fff!important}
+  /* Hide all site chrome */
+  .site-nav,.hero,.progress-bar,.back-to-top,.toc-fab,.toc-panel,.toc-overlay,
+  .nav-brand-right,.pdf-export,.theme-toggle,.lightbox-overlay{display:none!important}
+  /* Content: full-width, no side rules, no gradients */
+  .content{max-width:100%!important;width:100%!important;margin:0!important;
+    padding:12mm 14mm!important;border:none!important;background:#fff!important;
+    background-image:none!important;min-height:0!important}
+  /* Typography: darker, denser, with proper page breaks */
+  .content h1,.content h2,.content h3,.content h4,.content h5,.content h6{
+    color:#000!important;page-break-after:avoid;break-after:avoid-page}
+  .content h2{color:var(--infared)!important}
+  .content h2::after{background:var(--infared)!important;opacity:.7!important}
+  .content h3{color:var(--dawn)!important}
+  .content h3::after{background:var(--dawn)!important;opacity:.6!important}
+  .content p,.content li{orphans:3;widows:3}
+  /* Keep tables, figures, and admonitions from splitting badly */
+  .content table,.content figure,.obs-card,blockquote{
+    page-break-inside:avoid;break-inside:avoid}
+  /* Tables: thinner borders, full colour */
+  .content th,.content td{border:1px solid #888!important}
+  .content thead{position:static!important}
+  .content img,.content svg,.mermaid svg{max-width:100%!important;height:auto!important}
+  /* Show link URLs after the anchor text so PDF readers see the reference */
+  .content a[href^="http"]::after,.content a[href^="mailto:"]::after{
+    content:" [" attr(href) "]";font-size:.75em;color:#666;word-break:break-all}
+  .content a{color:#000!important;border-bottom:none!important;text-decoration:underline}
+  /* Hide JS-added collapse toggles — everything is expanded by beforeprint */
+  .section-toggle::before,.toc-toggle::before{display:none!important}
+  .section-toggle,.toc-toggle{padding-left:0!important}
+  .section-body{max-height:none!important;opacity:1!important}
+  /* Enforce printing of backgrounds on the elements that need them */
+  .obs-card,.admon,blockquote,code,pre{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  /* A4 default, ~16mm margins on all sides managed by @page */
+  @page{size:A4;margin:14mm}
+  @page:first{margin-top:10mm}
+}
+
+/* ── Observation tier badges + metric highlighting ───────────────────── */
+.obs-tier{font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  padding:2px 8px;border-radius:3px;font-weight:600;white-space:nowrap;
+  font-family:'Barlow',-apple-system,BlinkMacSystemFont,sans-serif;
+  border:1px solid transparent}
+.obs-tier-mechanism{background:rgba(229,35,33,.1);color:var(--infared);border-color:rgba(229,35,33,.22)}
+.obs-tier-concentration{background:rgba(236,100,29,.1);color:var(--dawn);border-color:rgba(236,100,29,.22)}
+.obs-tier-structure{background:rgba(236,100,29,.08);color:#c45310;border-color:rgba(236,100,29,.2)}
+.obs-tier-demand{background:rgba(22,233,216,.1);color:#0d8a82;border-color:rgba(22,233,216,.3)}
+.obs-tier-fees{background:rgba(44,79,250,.08);color:#2c4ffa;border-color:rgba(44,79,250,.2)}
+.obs-tier-sustainability{background:rgba(167,0,255,.08);color:#8421a2;border-color:rgba(167,0,255,.2)}
+.obs-tier-general{background:var(--bg-panel);color:var(--text-secondary);border-color:var(--border)}
+[data-theme=dark] .obs-tier-mechanism{background:rgba(229,35,33,.18);color:#f06050}
+[data-theme=dark] .obs-tier-concentration{background:rgba(236,100,29,.18);color:#f29a5e}
+[data-theme=dark] .obs-tier-structure{background:rgba(236,100,29,.12);color:#f29a5e}
+[data-theme=dark] .obs-tier-demand{background:rgba(22,233,216,.15);color:#5ed9ce}
+[data-theme=dark] .obs-tier-fees{background:rgba(44,79,250,.18);color:#6b8af7}
+[data-theme=dark] .obs-tier-sustainability{background:rgba(167,0,255,.18);color:#c471e0}
+[data-theme=dark] .obs-tier-general{background:var(--bg-panel);color:var(--text-muted)}
+
+/* Metric highlighting inside obs summaries and findings */
+.metric{background:rgba(229,35,33,.06);border-bottom:1px dotted rgba(229,35,33,.3);
+  padding:0 2px;color:var(--text-primary);font-variant-numeric:tabular-nums;
+  font-weight:500}
+[data-theme=dark] .metric{background:rgba(229,35,33,.12);border-bottom-color:rgba(240,96,80,.4)}
+
+/* ── Observation citation references (overlay-enabled) ───────────────── */
+.obs-ref{display:inline;color:var(--infared);text-decoration:none;
+  font-weight:500;border-bottom:1px dotted rgba(229,35,33,.45);
+  padding:0 1px;cursor:help;transition:background .12s,color .12s}
+.obs-ref:hover{background:rgba(229,35,33,.08);color:var(--infared);
+  border-bottom-color:var(--infared);border-bottom-style:solid}
+[data-theme=dark] .obs-ref{color:#f06050;border-bottom-color:rgba(240,96,80,.4)}
+[data-theme=dark] .obs-ref:hover{background:rgba(240,96,80,.15);color:#ff8070;border-bottom-color:#f06050}
+.obs-ref-range{font-variant-numeric:tabular-nums}
+
+/* Hover tooltip preview */
+.obs-tooltip{position:fixed;z-index:900;max-width:340px;min-width:220px;
+  background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  box-shadow:0 10px 30px rgba(0,0,0,.15);
+  padding:12px 14px;font-family:'Barlow',sans-serif;font-size:13px;
+  opacity:0;pointer-events:none;transform:translateY(4px);
+  transition:opacity .15s,transform .15s;color:var(--text-body)}
+.obs-tooltip.visible{opacity:1;transform:translateY(0)}
+.obs-tooltip-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.obs-tooltip-num{font-weight:700;font-size:12px;color:var(--infared)}
+.obs-tooltip-section{font-size:10.5px;color:var(--text-muted);letter-spacing:.4px;text-transform:uppercase}
+.obs-tooltip-tier{margin-left:auto}
+.obs-tooltip-title{font-weight:600;font-size:13.5px;line-height:1.35;color:var(--text-primary);margin-bottom:6px}
+.obs-tooltip-summary{font-size:12.5px;line-height:1.5;color:var(--text-body);
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.obs-tooltip-hint{margin-top:8px;padding-top:8px;border-top:1px solid var(--border-light);
+  font-size:10.5px;color:var(--text-muted);letter-spacing:.3px;text-transform:uppercase}
+[data-theme=dark] .obs-tooltip{background:var(--bg-panel);border-color:var(--border)}
+
+/* Side panel for full-detail view */
+.obs-panel{position:fixed;top:0;right:0;height:100vh;width:440px;max-width:94vw;
+  background:var(--bg);border-left:1px solid var(--border);
+  box-shadow:-10px 0 32px rgba(0,0,0,.16);z-index:700;
+  transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column}
+body.obs-panel-open .obs-panel{transform:translateX(0)}
+.obs-panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);opacity:0;
+  pointer-events:none;transition:opacity .2s;z-index:650}
+body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
+.obs-panel-header{display:flex;align-items:center;gap:12px;padding:18px 22px;
+  border-bottom:1px solid var(--border);background:var(--bg-panel);flex-shrink:0}
+.obs-panel-num{font-weight:700;font-size:14px;color:var(--infared);min-width:34px}
+.obs-panel-section-id{font-size:11px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text-muted);font-family:'Barlow',sans-serif}
+.obs-panel-close{margin-left:auto;background:none;border:1px solid var(--border);
+  border-radius:4px;width:30px;height:30px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;color:var(--text-muted);
+  transition:color .15s,border-color .15s}
+.obs-panel-close:hover{color:var(--infared);border-color:var(--infared)}
+.obs-panel-close svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round}
+.obs-panel-body{flex:1;overflow-y:auto;padding:22px 26px 40px;
+  scrollbar-gutter:stable;font-family:'Barlow',sans-serif}
+.obs-panel-title{font-size:20px;font-weight:500;color:var(--text-primary);
+  line-height:1.3;margin-bottom:14px;letter-spacing:-.2px}
+.obs-panel-tier-row{display:flex;gap:8px;align-items:center;margin-bottom:18px}
+.obs-panel-summary{font-size:14.5px;line-height:1.65;color:var(--text-body);
+  padding:16px 18px;background:var(--bg-warm);border-radius:8px;
+  border-left:3px solid var(--infared);margin-bottom:22px}
+.obs-panel-meta{border-top:1px solid var(--border);padding-top:18px}
+.obs-panel-meta-label{font-size:10.5px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:6px}
+.obs-panel-meta-val{font-size:13.5px;color:var(--text-body);margin-bottom:12px}
+.obs-panel-meta-val a{color:var(--infared);text-decoration:none;border-bottom:1px dotted rgba(229,35,33,.4)}
+.obs-panel-meta-val a:hover{border-bottom-style:solid}
+.obs-panel-cta{display:inline-flex;align-items:center;gap:8px;margin-top:10px;
+  padding:10px 16px;background:var(--infared);color:var(--white);
+  text-decoration:none;border-radius:6px;font-size:13px;font-weight:500;
+  letter-spacing:.3px;transition:background .15s}
+.obs-panel-cta:hover{background:#c41d1b;color:var(--white)}
+.obs-panel-cta svg{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none}
+
+[data-theme=dark] .obs-panel{background:var(--bg)}
+[data-theme=dark] .obs-panel-header{background:var(--bg-panel)}
+[data-theme=dark] .obs-panel-summary{background:var(--bg-panel)}
+
+@media (max-width:720px){
+  .obs-panel{width:100vw;max-width:100vw;border-left:none}
+  .obs-tooltip{max-width:calc(100vw - 24px)}
+}
+
+/* ==========================================================================
+   Findings & Observations synthesis page (findings.html)
+   ========================================================================== */
+
+.findings-page{max-width:1180px;margin:0 auto;padding:8px 4px 60px;font-family:'Barlow',sans-serif}
+.findings-intro{margin:0 0 22px;padding:18px 22px;
+  background:var(--bg-warm);border-left:3px solid var(--infared);
+  border-radius:8px;font-size:15px;line-height:1.65;color:var(--text-body)}
+.findings-intro p{margin:0}
+.findings-intro a{color:var(--infared);text-decoration:none;border-bottom:1px dotted rgba(229,35,33,.4)}
+.findings-intro a:hover{border-bottom-style:solid}
+
+.findings-stats{display:flex;gap:16px;margin:20px 0;flex-wrap:wrap}
+.findings-stat{flex:1;min-width:160px;padding:16px 20px;background:var(--bg);
+  border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;gap:4px}
+.findings-stat-num{font-size:28px;font-weight:500;color:var(--infared);letter-spacing:-.8px;line-height:1.1}
+.findings-stat-lbl{font-size:11.5px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted)}
+
+.findings-controls{display:flex;gap:14px;align-items:center;flex-wrap:wrap;
+  margin:18px 0 28px;padding:12px 14px;background:var(--bg);
+  border:1px solid var(--border);border-radius:10px;position:sticky;top:58px;z-index:10;
+  backdrop-filter:blur(6px)}
+.findings-search{flex:1;min-width:220px;padding:9px 14px;font-family:'Barlow',sans-serif;font-size:14px;
+  border:1px solid var(--border);border-radius:6px;background:var(--bg-warm);color:var(--text-primary);
+  transition:border-color .15s,background .15s}
+.findings-search:focus{outline:none;border-color:var(--infared);background:var(--bg)}
+.findings-chips{display:flex;gap:6px;flex-wrap:wrap}
+.findings-chip{cursor:pointer;border:1px solid var(--border);background:var(--bg);
+  color:var(--text-secondary);padding:5px 12px;border-radius:18px;font-size:12px;
+  font-family:'Barlow',sans-serif;font-weight:500;letter-spacing:.3px;
+  transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.findings-chip:hover{background:var(--bg-panel);color:var(--text-primary)}
+.findings-chip.active{background:var(--text-primary);color:var(--bg);border-color:var(--text-primary)}
+.findings-chip-dot{width:8px;height:8px;border-radius:50%;background:var(--text-muted)}
+.findings-chip-mechanism .findings-chip-dot{background:#E52321}
+.findings-chip-concentration .findings-chip-dot{background:#EC641D}
+.findings-chip-structure .findings-chip-dot{background:#c45310}
+.findings-chip-demand .findings-chip-dot{background:#16E9D8}
+.findings-chip-fees .findings-chip-dot{background:#2C4FFA}
+.findings-chip-sustainability .findings-chip-dot{background:#A700FF}
+.findings-chip-general .findings-chip-dot{background:#888}
+
+.findings-section{margin:42px 0 0}
+.findings-section-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+  padding-bottom:12px;margin-bottom:22px;border-bottom:2px solid var(--border)}
+.findings-section-num{font-size:28px;font-weight:500;color:var(--infared);letter-spacing:-.8px;
+  font-family:'Barlow',sans-serif}
+.findings-section-title{font-size:22px;font-weight:500;color:var(--text-primary);
+  margin:0;letter-spacing:-.3px}
+.findings-section-tagline{font-size:13px;color:var(--text-muted);letter-spacing:.2px}
+.findings-section-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:20px}
+
+.finding-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;
+  padding:22px 24px 18px;display:flex;flex-direction:column;gap:14px;
+  transition:border-color .15s,transform .15s,box-shadow .2s;position:relative}
+.finding-card:hover{border-color:var(--infared);box-shadow:0 6px 22px rgba(0,0,0,.05)}
+.finding-card.hidden{display:none}
+.finding-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.finding-card-parent{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-muted);font-weight:500}
+.finding-card-badge{font-size:10.5px;letter-spacing:.8px;text-transform:uppercase;font-weight:600;
+  padding:3px 10px;border-radius:12px;background:rgba(229,35,33,.1);color:var(--infared);
+  border:1px solid rgba(229,35,33,.22)}
+.finding-card-obs-only .finding-card-badge{background:var(--bg-panel);color:var(--text-muted);border-color:var(--border)}
+.finding-card-title{font-size:17px;font-weight:500;line-height:1.4;color:var(--text-primary);
+  margin:0;letter-spacing:-.2px}
+.finding-card-body{font-size:14px;line-height:1.65;color:var(--text-body)}
+.finding-card-body p{margin:0 0 10px}
+.finding-card-body p:last-child{margin-bottom:0}
+.finding-card-body strong{color:var(--text-primary);font-weight:600}
+.finding-card-body em{font-style:italic;color:var(--text-primary)}
+.finding-card-body .metric{background:rgba(229,35,33,.08);padding:1px 5px;border-radius:3px;
+  color:var(--infared);font-weight:600;font-variant-numeric:tabular-nums}
+.finding-card-body a{color:var(--infared);text-decoration:none;border-bottom:1px dotted rgba(229,35,33,.4)}
+.finding-card-body a:hover{border-bottom-style:solid}
+
+.finding-card-obs{margin-top:6px;padding-top:14px;border-top:1px solid var(--border)}
+.finding-card-obs-label{font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:8px;font-weight:500}
+.finding-card-obs-list{display:flex;flex-wrap:wrap;gap:6px}
+.finding-obs-chip{display:inline-flex !important;align-items:center;gap:6px;padding:4px 10px;
+  border:1px solid var(--border);border-radius:14px;text-decoration:none !important;font-size:11.5px;
+  background:var(--bg-warm);color:var(--text-body) !important;transition:all .12s;max-width:100%;
+  cursor:help;border-bottom:1px solid var(--border) !important}
+.finding-obs-chip:hover{background:var(--bg);border-color:var(--infared) !important;color:var(--text-primary) !important}
+.finding-obs-chip-num{font-weight:700;color:var(--infared);font-size:11px;letter-spacing:.2px}
+.finding-obs-chip-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+
+.finding-card-foot{border-top:1px dashed var(--border);padding-top:10px;margin-top:2px}
+.finding-jump{font-size:12.5px;color:var(--infared);text-decoration:none;letter-spacing:.2px;
+  border-bottom:1px dotted rgba(229,35,33,.4);transition:border-bottom-style .15s}
+.finding-jump:hover{border-bottom-style:solid}
+
+.finding-card-obs-only .obs-cards{margin:0}
+
+.findings-obs-registry{display:none !important}
+
+[data-theme=dark] .finding-card{background:var(--bg);border-color:var(--border)}
+[data-theme=dark] .finding-card-badge{background:rgba(229,35,33,.22);color:#f06050;border-color:rgba(229,35,33,.3)}
+[data-theme=dark] .finding-obs-chip{background:var(--bg-panel)}
+[data-theme=dark] .finding-obs-chip:hover{background:var(--bg-code)}
+[data-theme=dark] .findings-chip.active{background:var(--infared);color:var(--white);border-color:var(--infared)}
+
+/* Hero ref-item variant for the dropdown (Findings & Observations entry) */
+.nav-dd-ref-hero{background:linear-gradient(90deg,rgba(229,35,33,.06),transparent 70%);
+  border-left:3px solid var(--infared);padding-left:13px !important}
+.nav-dd-ref-hero .nav-dd-ref-title{color:var(--infared)}
+
+@media (max-width:860px){
+  .findings-section-body{grid-template-columns:1fr}
+  .findings-controls{position:static;top:auto}
+}
+
+/* ── F# finding-ref overlay ──────────────────────────────────────── */
+
+/* Inline citation anchor */
+.finding-ref{display:inline;color:var(--cobalt,#2C4FFA);text-decoration:none;
+  border-bottom:1px dotted rgba(44,79,250,.5);padding:0 1px;font-weight:500;
+  transition:background .15s,color .15s,border-bottom-color .15s;cursor:help}
+.finding-ref:hover{background:rgba(44,79,250,.08);color:#1a3ae0;
+  border-bottom-color:#1a3ae0}
+[data-theme=dark] .finding-ref{color:#7b93ff;border-bottom-color:rgba(123,147,255,.45)}
+[data-theme=dark] .finding-ref:hover{background:rgba(123,147,255,.15);color:#9cb0ff;border-bottom-color:#9cb0ff}
+
+/* Hidden registry — DOM-only source for overlay hydration */
+.findings-registry{display:none !important}
+
+/* Group-colour hints (F1, F2, F3…): cycle through the secondary palette */
+.finding-group-1{color:#2C4FFA}
+.finding-group-2{color:#A700FF}
+.finding-group-3{color:#EC641D}
+.finding-group-4{color:#E52321}
+.finding-group-5{color:#16E9D8}
+.finding-group-6{color:#06FF89}
+.finding-group-7{color:#FFBA36}
+
+/* Hover tooltip */
+.finding-tooltip{position:fixed;z-index:900;max-width:360px;min-width:240px;
+  padding:12px 14px;background:var(--bg);border:1px solid var(--border);
+  border-radius:8px;box-shadow:0 10px 32px rgba(0,0,0,.14);pointer-events:none;
+  opacity:0;transform:translateY(6px);transition:opacity .12s,transform .12s;
+  font-family:Barlow,system-ui,sans-serif}
+.finding-tooltip.visible{opacity:1;transform:translateY(0)}
+.finding-tooltip-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.finding-tooltip-id{font-weight:700;font-size:12.5px;letter-spacing:.2px}
+.finding-tooltip-src{font-size:10.5px;color:var(--text-muted);letter-spacing:.4px;text-transform:uppercase}
+.finding-tooltip-summary{font-size:13px;line-height:1.5;color:var(--text-body)}
+.finding-tooltip-summary strong{color:var(--text-primary)}
+.finding-tooltip-insight{margin-top:8px;padding:6px 8px;background:var(--bg-warm);
+  border-left:2px solid var(--cobalt,#2C4FFA);font-size:11.5px;color:var(--text-body);
+  font-style:italic;border-radius:2px}
+.finding-tooltip-hint{margin-top:8px;padding-top:8px;border-top:1px solid var(--border-light);
+  font-size:10.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+[data-theme=dark] .finding-tooltip{background:var(--bg-panel);border-color:var(--border)}
+
+/* Side panel */
+.finding-panel{position:fixed;top:0;right:0;height:100vh;width:440px;max-width:94vw;
+  background:var(--bg);border-left:1px solid var(--border);z-index:950;
+  transform:translateX(100%);transition:transform .26s cubic-bezier(.2,.8,.2,1);
+  display:flex;flex-direction:column;box-shadow:-8px 0 36px rgba(0,0,0,.18)}
+body.finding-panel-open .finding-panel{transform:translateX(0)}
+.finding-panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);opacity:0;
+  pointer-events:none;z-index:940;transition:opacity .2s}
+body.finding-panel-open .finding-panel-overlay{opacity:1;pointer-events:auto}
+.finding-panel-header{display:flex;align-items:center;gap:12px;padding:18px 22px;
+  border-bottom:1px solid var(--border);background:var(--bg-warm)}
+.finding-panel-id{font-weight:700;font-size:15px;min-width:42px}
+.finding-panel-src{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--text-muted)}
+.finding-panel-close{margin-left:auto;background:none;border:1px solid var(--border);
+  width:30px;height:30px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;color:var(--text-muted);transition:all .15s}
+.finding-panel-close:hover{color:var(--infared);border-color:var(--infared)}
+.finding-panel-close svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round}
+.finding-panel-body{flex:1;overflow-y:auto;padding:22px 26px 40px;display:flex;flex-direction:column;gap:16px}
+.finding-panel-summary{font-size:15px;line-height:1.65;color:var(--text-body)}
+.finding-panel-summary strong{color:var(--text-primary);font-weight:600}
+.finding-panel-insight-wrap{border-top:1px solid var(--border);padding-top:14px}
+.finding-panel-insight-label{font-size:10.5px;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:6px}
+.finding-panel-insight{font-size:13.5px;color:var(--text-body);font-style:italic;
+  padding:10px 12px;background:var(--bg-warm);border-left:3px solid var(--cobalt,#2C4FFA);border-radius:2px}
+.finding-panel-cta{display:inline-flex;align-items:center;gap:8px;margin-top:10px;
+  padding:9px 14px;background:var(--cobalt,#2C4FFA);color:var(--white);text-decoration:none;
+  border-radius:3px;font-size:13px;font-weight:500;transition:background .15s}
+.finding-panel-cta:hover{background:#1a3ae0;color:var(--white)}
+.finding-panel-cta svg{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none}
+[data-theme=dark] .finding-panel{background:var(--bg)}
+[data-theme=dark] .finding-panel-header{background:var(--bg-panel)}
+
+/* ── Cross-page DIA source overlay + compact §X.Y.2 view ── */
+
+/* Compact list view: one row per DIA.X.Y.O# that defers to a sub-report */
+.dia-obs-compact{list-style:none;padding:0;margin:18px 0 24px;
+  display:flex;flex-direction:column;gap:10px}
+.dia-obs-row{border:1px solid var(--border);border-radius:8px;padding:14px 16px;
+  background:var(--bg);transition:border-color .15s,box-shadow .15s}
+.dia-obs-row:hover{border-color:var(--infared);box-shadow:0 2px 10px rgba(229,35,33,.06)}
+.dia-obs-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.dia-obs-canon{display:inline-flex;align-items:center;padding:3px 10px;border-radius:4px;
+  background:var(--bg-panel);border:1px solid var(--border);
+  font:600 11px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.05em;color:var(--infared);text-decoration:none;
+  transition:background .15s,border-color .15s,color .15s}
+.dia-obs-canon:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
+.dia-obs-title{font:600 14px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary);flex:1 1 auto;min-width:0}
+.dia-obs-summary{margin:4px 0 10px;font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-secondary)}
+.dia-obs-findings{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.dia-obs-f{display:inline-flex;align-items:center;padding:2px 8px;border-radius:3px;
+  background:var(--bg-panel);border:1px solid var(--border);
+  font:500 10.5px/1.5 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.03em;color:var(--text-secondary);text-decoration:none;
+  transition:background .15s,border-color .15s,color .15s}
+.dia-obs-f:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
+.dia-obs-source-link{display:inline-flex;align-items:center;gap:4px;
+  font:500 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);text-decoration:none;padding-top:4px;
+  border-top:1px dashed var(--border);margin-top:4px;padding-top:8px}
+.dia-obs-source-link:hover{color:var(--infared)}
+
+/* Cross-page source overlay — the DIA.X.Y.O# link shows the source sub-report
+   observation's content in the side panel, with a "Jump to source" CTA. */
+.obs-ref-src{border-bottom-style:dashed}
+.obs-panel-source-xpage{display:flex;align-items:center;gap:6px;
+  font:500 11.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);margin-top:2px}
+.obs-panel-source-xpage strong{color:var(--text-primary);font-weight:600}
+
+/* Observation abstract — editorially-written gloss that reads as a single
+   lead paragraph above the findings list. Uses a left rule accent so it
+   clearly frames the observation rather than mimicking a finding. */
+.obs-panel-abstract{margin:12px 0 4px;padding:10px 14px;
+  border-left:3px solid var(--infared);
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--infared) 8%, transparent),
+    transparent 60%);
+  font:400 13.5px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary);border-radius:0 4px 4px 0}
+.obs-panel-abstract p{margin:0}
+.obs-panel-abstract p + p{margin-top:6px}
+.obs-panel-abstract strong{font-weight:700;color:var(--text-primary);
+  font-variant-numeric:tabular-nums}
+
+/* Source-panel findings list — hydrated from the bundled findings-registry.
+   One row per finding with the canonical id, its summary, and a small
+   cross-page jump arrow. The list sits between the obs summary and the
+   source meta row so the reader sees the concrete evidence next to the
+   high-level observation. */
+.obs-panel-findings-wrap{margin:18px 0 16px;
+  border-top:1px solid var(--border);padding-top:14px}
+.obs-panel-findings-head{display:flex;align-items:baseline;gap:8px;
+  margin-bottom:8px}
+.obs-panel-findings-label{font:600 10.5px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
+.obs-panel-findings-count{font:500 11px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--text-muted)}
+.obs-panel-findings{list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;gap:8px}
+.obs-panel-finding{border:1px solid var(--border);border-radius:6px;
+  padding:10px 12px;background:var(--bg-panel);
+  transition:border-color .15s}
+.obs-panel-finding:hover{border-color:var(--infared)}
+.obs-panel-finding-head{display:flex;align-items:center;gap:8px;
+  margin-bottom:4px}
+.obs-panel-finding-id{font:600 10.5px/1.3 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.04em;color:var(--infared);
+  padding:2px 7px;border-radius:3px;background:var(--bg);
+  border:1px solid var(--border)}
+.obs-panel-finding-jump{display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;border-radius:3px;color:var(--text-muted);
+  text-decoration:none;margin-left:auto;transition:color .15s,background .15s}
+.obs-panel-finding-jump svg{fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+.obs-panel-finding-jump:hover{color:var(--infared);background:var(--bg)}
+.obs-panel-finding-summary{font:400 12.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.obs-panel-finding-summary p{margin:0}
+.obs-panel-finding-summary p + p{margin-top:6px}
+/* Key numbers — bolded at the MD source, tinted and tabular-aligned here so
+   they scan as landmarks inside the short finding rows. */
+.obs-panel-finding-summary strong,
+.obs-panel-summary strong,
+.obs-panel-title strong{font-weight:700;color:var(--text-primary);
+  font-variant-numeric:tabular-nums}
+.obs-panel-finding-insight{margin-top:6px;padding-top:6px;
+  border-top:1px dashed var(--border);
+  font:400 12px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-secondary);font-style:italic}
+.obs-panel-finding-missing{color:var(--text-muted);font-style:italic}
+.obs-panel-finding-empty{border-style:dashed;color:var(--text-muted);
+  font-style:italic;text-align:center}
+
+/* Sub-report Mainnet Observations — O-grouped finding cards.
+   Replaces the flat 4-column MD table with one card per observation.
+   The card separates O-level content (header band + abstract) from
+   F-level content (numbered finding rows) so the reader can tell the
+   structure at a glance. */
+.sro-list{list-style:none;padding:0;margin:20px 0 28px;
+  display:flex;flex-direction:column;gap:18px}
+.sro-card{border:1px solid var(--border);border-radius:10px;
+  background:var(--bg);overflow:hidden;
+  transition:border-color .15s,box-shadow .15s}
+.sro-card:hover{border-color:var(--infared);
+  box-shadow:0 2px 12px rgba(229,35,33,.07)}
+.sro-card:target{border-color:var(--infared);
+  box-shadow:0 0 0 3px rgba(229,35,33,.12)}
+
+/* Header band — canonical id on the left, title centred, count on the
+   right. Slight Infrared wash so the O-scope reads as a distinct zone
+   from the F-scope finding rows below. */
+.sro-head{display:flex;align-items:center;gap:12px;
+  padding:12px 16px;
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--infared) 6%, transparent),
+    transparent 70%);
+  border-bottom:1px solid var(--border)}
+.sro-badge{display:inline-flex;align-items:center;flex-shrink:0;
+  padding:4px 10px;border-radius:4px;
+  background:var(--infared);color:#fff;
+  font:600 11px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.05em;text-decoration:none}
+.sro-title{flex:1 1 auto;min-width:0;margin:0;
+  font:600 15px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.sro-title strong{font-weight:700;color:var(--text-primary);
+  font-variant-numeric:tabular-nums}
+.sro-count{flex-shrink:0;
+  font:500 11px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.04em;color:var(--text-muted);
+  padding:3px 8px;border-radius:3px;background:var(--bg-panel);
+  border:1px solid var(--border)}
+
+/* Abstract — single editorial lead under the title, matches the
+   cross-page overlay's `.obs-panel-abstract` styling so the two read as
+   the same artefact. */
+.sro-abstract{margin:0;padding:12px 16px 14px;
+  border-left:3px solid var(--infared);
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--infared) 8%, transparent),
+    transparent 60%);
+  font:400 13.5px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.sro-abstract strong{font-weight:700;color:var(--text-primary);
+  font-variant-numeric:tabular-nums}
+
+/* Findings list — one row per F#, visually subordinate to the header
+   band. Hairline separators; no heavy grid so the reader scans evidence
+   first and meta second. */
+.sro-findings{list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column}
+.sro-finding{display:flex;align-items:flex-start;gap:12px;
+  padding:12px 16px;border-top:1px solid var(--border)}
+.sro-finding:first-child{border-top:none}
+.sro-finding:target{background:color-mix(in srgb, var(--infared) 5%, transparent)}
+.sro-fid{flex-shrink:0;align-self:flex-start;margin-top:2px;
+  padding:3px 9px;border-radius:3px;
+  background:var(--bg-panel);border:1px solid var(--border);
+  font:600 10.5px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.04em;color:var(--infared);text-decoration:none}
+.sro-body{flex:1 1 auto;min-width:0;
+  display:flex;flex-direction:column;gap:6px}
+.sro-evidence{font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.sro-evidence p{margin:0}
+.sro-evidence p + p{margin-top:6px}
+.sro-evidence strong{font-weight:700;color:var(--text-primary);
+  font-variant-numeric:tabular-nums}
+.sro-meta{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;
+  font:400 11.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+.sro-anchor{font-weight:500;color:var(--text-secondary)}
+.sro-anchor a{color:inherit;text-decoration:none;
+  border-bottom:1px dashed var(--border)}
+.sro-anchor a:hover{color:var(--infared);border-bottom-color:var(--infared)}
+.sro-nature{font-style:italic;color:var(--text-muted)}
+.sro-nature::before{content:"· ";color:var(--border);font-style:normal}
+
+/* Reader feedback — thumbs up/down per .sro-finding.
+   Sits in the .sro-meta row, far right, so it never competes with the
+   evidence text above. The buttons are visually quiet by default and
+   pulse on activation; the only persistent state is the `is-active`
+   highlight that confirms the click landed in this session. */
+.feedback-react{display:inline-flex;align-items:center;gap:4px;
+  margin-left:auto;padding-left:10px;
+  border-left:1px solid var(--border)}
+.feedback-react-btn{display:inline-flex;align-items:center;gap:4px;
+  padding:3px 8px;border-radius:4px;
+  background:transparent;border:1px solid transparent;
+  color:var(--text-muted);cursor:pointer;
+  font:500 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;
+  transition:color .15s,background .15s,border-color .15s,transform .15s}
+.feedback-react-btn svg{width:13px;height:13px;fill:none;
+  stroke:currentColor;stroke-width:1.4;
+  stroke-linecap:round;stroke-linejoin:round}
+.feedback-react-btn:hover{color:var(--text-primary);
+  background:var(--bg-panel);border-color:var(--border)}
+.feedback-react-up.is-active{color:var(--infared);
+  background:color-mix(in srgb, var(--infared) 10%, transparent);
+  border-color:color-mix(in srgb, var(--infared) 35%, transparent)}
+.feedback-react-down.is-active{color:#666;
+  background:var(--bg-panel);border-color:var(--border)}
+.feedback-react-pulse{transform:scale(1.08)}
+.feedback-react-label{font-variant-numeric:tabular-nums}
+@media (max-width:520px){
+  .feedback-react-label{display:none}
+  .feedback-react{padding-left:6px}
+}
+
+/* Per-page Giscus comments block — anchored below the article content,
+   above the site footer. Designed to look like an editorial footer note
+   rather than a forum widget so it doesn't fight with the report's
+   tone. */
+.page-feedback{max-width:880px;margin:48px auto 24px;
+  padding:28px 28px 8px;
+  border-top:1px solid var(--border);
+  background:linear-gradient(180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--infared) 3%, transparent) 100%)}
+.page-feedback-heading{margin:0 0 6px;
+  font:600 13px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-secondary)}
+.page-feedback-heading::before{content:"";display:inline-block;
+  width:18px;height:1px;background:var(--infared);
+  margin-right:8px;vertical-align:middle}
+.page-feedback-lede{margin:0 0 18px;
+  font:400 13px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+.page-feedback-lede a{color:var(--infared);text-decoration:none;
+  border-bottom:1px dashed var(--infared)}
+.page-feedback-lede a:hover{border-bottom-style:solid}
+.page-feedback .giscus,
+.page-feedback .giscus-frame{width:100%;border:none}
+.page-feedback .giscus-frame{min-height:200px}
+
+/* Responsive */
+@media (max-width:720px){
+  .dia-obs-row{padding:12px 14px}
+  .dia-obs-head{gap:6px}
+  .sro-head{flex-wrap:wrap;gap:8px;padding:10px 12px}
+  .sro-title{flex:1 1 100%;order:3}
+  .sro-count{order:2}
+  .sro-abstract{padding:10px 12px 12px}
+  .sro-finding{padding:10px 12px;gap:10px}
+  .page-feedback{margin:32px 16px 16px;padding:20px 18px 6px}
+}
+/* ── /Cross-page DIA source overlay + compact §X.Y.2 view ── */

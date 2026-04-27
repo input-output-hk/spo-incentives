@@ -1,0 +1,253 @@
+# Cardano mainnet db-sync stack for delegation analysis.
+#
+# ARM64-native where possible (Apple Silicon compatible).
+# - cardano-node 10.6.2: native ARM64
+# - mithril-bootstrap: ARM64 Alpine + aarch64 binary
+# - cardano-db-sync 13.6.0.4: amd64 via Rosetta (no ARM build available)
+#
+# Usage:
+#   cd spo-incentives/mainnet-indexer
+#   docker compose up -d
+#   docker compose logs -f
+#
+# PostgreSQL is exposed on localhost:5433 (not 5432 to avoid conflicts).
+# Connect with:
+#   psql -h localhost -p 5433 -U postgres -d cexplorer
+
+services:
+  postgres:
+    image: postgres:17.2-alpine
+    shm_size: 4g
+    environment:
+      - POSTGRES_LOGGING=true
+      - POSTGRES_DB_FILE=/run/secrets/postgres_db
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+      - POSTGRES_USER_FILE=/run/secrets/postgres_user
+    secrets:
+      - postgres_password
+      - postgres_user
+      - postgres_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command:
+      - -c
+      - maintenance_work_mem=1GB
+      - -c
+      - max_parallel_maintenance_workers=4
+      - -c
+      - work_mem=256MB
+      - -c
+      - shared_buffers=2GB
+      - -c
+      - effective_cache_size=4GB
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+  # Bootstrap node-db from a Mithril snapshot (~30-90 min first run).
+  # On subsequent starts the marker file exists and it exits immediately.
+  mithril-bootstrap:
+    image: debian:bookworm-slim
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        # Volume mounted at /mnt/node-db. Mithril creates a db/ subfolder
+        # inside --download-dir, so /mnt/node-db + db/ = the content the
+        # cardano-node sees at /data/db.
+        DB_DIR=/mnt/node-db/db
+
+        # Already bootstrapped — skip
+        if [ -d "$${DB_DIR}/immutable" ] && [ "$$(ls $${DB_DIR}/immutable/ 2>/dev/null | wc -l)" -gt 100 ]; then
+          echo "[mithril] Snapshot already present ($$(ls $${DB_DIR}/immutable/ | wc -l) chunks) — skipping."
+          exit 0
+        fi
+
+        echo "[mithril] Installing dependencies…"
+        apt-get update -qq && apt-get install -y -qq curl ca-certificates > /dev/null 2>&1
+
+        ARCH=$$(uname -m)
+        echo "[mithril] Detected arch: $${ARCH}"
+
+        MITHRIL_VERSION="2603.1"
+        if [ "$${ARCH}" = "aarch64" ] || [ "$${ARCH}" = "arm64" ]; then
+          TARBALL="mithril-$${MITHRIL_VERSION}-linux-arm64.tar.gz"
+        else
+          TARBALL="mithril-$${MITHRIL_VERSION}-linux-x64.tar.gz"
+        fi
+
+        URL="https://github.com/input-output-hk/mithril/releases/download/$${MITHRIL_VERSION}/$${TARBALL}"
+        echo "[mithril] Downloading $${URL} …"
+        curl -fSL "$${URL}" -o /tmp/mithril.tar.gz
+        tar xzf /tmp/mithril.tar.gz -C /usr/local/bin/
+        chmod +x /usr/local/bin/mithril-client
+        rm /tmp/mithril.tar.gz
+
+        # Clean any partial/stale data
+        rm -rf /mnt/node-db/*
+
+        echo "[mithril] Downloading mainnet snapshot (this takes 30-90 min)…"
+        export AGGREGATOR_ENDPOINT="https://aggregator.release-mainnet.api.mithril.network/aggregator"
+        export GENESIS_VERIFICATION_KEY="5b3139312c36362c3134302c3138352c3133382c31312c3233372c3230372c3235302c3134342c32372c322c3138382c33302c31322c38312c3135352c3230342c31302c3137392c37352c32332c3133382c3139362c3231372c352c31342c32302c35372c37392c33392c3137365d"
+        export ANCILLARY_VERIFICATION_KEY="5b32332c37312c39362c3133332c34372c3235332c3232362c3133362c3233352c35372c3136342c3130362c3138362c322c32312c32392c3132302c3136332c38392c3132312c3137372c3133382c3230382c3133382c3231342c39392c35382c32322c302c35382c332c36395d"
+        mithril-client cardano-db download --include-ancillary --download-dir /mnt/node-db latest
+
+        echo "[mithril] Bootstrap complete."
+    volumes:
+      - node-db:/mnt/node-db
+    restart: "no"
+
+  cardano-node:
+    image: ghcr.io/intersectmbo/cardano-node:10.6.2
+    environment:
+      - NETWORK=mainnet
+    volumes:
+      - node-db:/data
+      - node-ipc:/ipc
+    depends_on:
+      mithril-bootstrap:
+        condition: service_completed_successfully
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "test -S /ipc/node.socket"]
+      interval: 30s
+      timeout: 5s
+      retries: 20
+      start_period: 180s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+  # Instance A — pruned (staking tables only, no tx_out).
+  # Restored from IOG snapshot. Used for delegation/pool analysis.
+  cardano-db-sync:
+    platform: linux/amd64
+    image: ghcr.io/intersectmbo/cardano-db-sync:13.6.0.4
+    environment:
+      - NETWORK=mainnet
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - RESTORE_SNAPSHOT=
+      - RESTORE_RECREATE_DB=N
+      - EXTRA_DB_SYNC_ARGS=${EXTRA_DB_SYNC_ARGS:---skip-fix}
+    depends_on:
+      cardano-node:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    secrets:
+      - postgres_password
+      - postgres_user
+      - postgres_db
+    volumes:
+      - db-sync-data:/var/lib/cexplorer
+      - node-ipc:/node-ipc
+      - ./snapshots:/snapshots
+    restart: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+  # Instance B — full (tx_out enabled). Syncs from genesis via the same node.
+  # Used for UTxO analysis (§5 Non-Participants).
+  # Port 5434 on host.
+  # Start with: docker compose up -d postgres-full cardano-db-sync-full
+  postgres-full:
+    image: postgres:17.2-alpine
+    shm_size: 4g
+    environment:
+      - POSTGRES_LOGGING=true
+      - POSTGRES_DB_FILE=/run/secrets/postgres_db
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password
+      - POSTGRES_USER_FILE=/run/secrets/postgres_user
+    secrets:
+      - postgres_password
+      - postgres_user
+      - postgres_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-data-full:/var/lib/postgresql/data
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command:
+      - -c
+      - maintenance_work_mem=1GB
+      - -c
+      - max_parallel_maintenance_workers=4
+      - -c
+      - work_mem=256MB
+      - -c
+      - shared_buffers=2GB
+      - -c
+      - effective_cache_size=4GB
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    profiles:
+      - full
+
+  cardano-db-sync-full:
+    platform: linux/amd64
+    image: ghcr.io/intersectmbo/cardano-db-sync:13.6.0.4
+    environment:
+      - NETWORK=mainnet
+      - POSTGRES_HOST=postgres-full
+      - POSTGRES_PORT=5432
+      - RESTORE_SNAPSHOT=
+      - RESTORE_RECREATE_DB=N
+      - EXTRA_DB_SYNC_ARGS=--skip-fix
+    depends_on:
+      postgres-full:
+        condition: service_healthy
+    secrets:
+      - postgres_password
+      - postgres_user
+      - postgres_db
+    volumes:
+      - db-sync-data-full:/var/lib/cexplorer
+      - node-ipc:/node-ipc
+    restart: on-failure
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    profiles:
+      - full
+
+secrets:
+  postgres_db:
+    file: ./secrets/postgres_db
+  postgres_password:
+    file: ./secrets/postgres_password
+  postgres_user:
+    file: ./secrets/postgres_user
+
+volumes:
+  db-sync-data:
+  db-sync-data-full:
+  postgres-data:
+  postgres-data-full:
+  node-db:
+  node-ipc:

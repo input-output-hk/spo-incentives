@@ -1,0 +1,73 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - nhenin/report-cip-evaluation
+    paths:
+      - 'reward-system-spec/generated-website/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: python -m pip install --upgrade pip markdown
+
+      - name: Rebuild static site
+        # Re-runs build_site.py inside CI so the deployed HTML always
+        # reflects the current secret/var configuration. Reader-feedback
+        # integrations (Plausible, Giscus, finding reactions) inject only
+        # when the matching env vars are non-empty — see
+        # `reward-system-spec/generated-website/BUILD_FEEDBACK.md`.
+        working-directory: reward-system-spec/generated-website
+        env:
+          SPO_ANALYTICS_PROVIDER:   ${{ vars.SPO_ANALYTICS_PROVIDER }}
+          SPO_PLAUSIBLE_DOMAIN:     ${{ vars.SPO_PLAUSIBLE_DOMAIN }}
+          SPO_PLAUSIBLE_SCRIPT_URL: ${{ vars.SPO_PLAUSIBLE_SCRIPT_URL }}
+          SPO_UMAMI_WEBSITE_ID:     ${{ vars.SPO_UMAMI_WEBSITE_ID }}
+          SPO_UMAMI_SCRIPT_URL:     ${{ vars.SPO_UMAMI_SCRIPT_URL }}
+          SPO_GISCUS_REPO:          ${{ vars.SPO_GISCUS_REPO }}
+          SPO_GISCUS_REPO_ID:       ${{ vars.SPO_GISCUS_REPO_ID }}
+          SPO_GISCUS_CATEGORY:      ${{ vars.SPO_GISCUS_CATEGORY }}
+          SPO_GISCUS_CATEGORY_ID:   ${{ vars.SPO_GISCUS_CATEGORY_ID }}
+          SPO_GISCUS_MAPPING:       ${{ vars.SPO_GISCUS_MAPPING }}
+          SPO_GISCUS_THEME:         ${{ vars.SPO_GISCUS_THEME }}
+          SPO_GISCUS_LANG:          ${{ vars.SPO_GISCUS_LANG }}
+          SPO_REACTIONS_ENABLED:    ${{ vars.SPO_REACTIONS_ENABLED }}
+        run: python3 build_site.py
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: reward-system-spec/generated-website
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
