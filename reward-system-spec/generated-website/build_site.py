@@ -1767,35 +1767,41 @@ _CROSS_OBS_CSS = """
 .sro-nature::before{content:"· ";color:var(--border);font-style:normal}
 
 /* Reader feedback — thumbs up/down per .sro-finding.
-   Sits in the .sro-meta row, far right, so it never competes with the
-   evidence text above. The buttons are visually quiet by default and
-   pulse on activation; the only persistent state is the `is-active`
-   highlight that confirms the click landed in this session. */
-.feedback-react{display:inline-flex;align-items:center;gap:4px;
-  margin-left:auto;padding-left:10px;
+   Sits in the .sro-meta row, far right. Pill-shaped with a persistent
+   border so they read as buttons at a glance; hover lifts them into
+   Infrared, active state saturates. */
+.feedback-react{display:inline-flex;align-items:center;gap:6px;
+  margin-left:auto;padding-left:12px;
   border-left:1px solid var(--border)}
-.feedback-react-btn{display:inline-flex;align-items:center;gap:4px;
-  padding:3px 8px;border-radius:4px;
-  background:transparent;border:1px solid transparent;
-  color:var(--text-muted);cursor:pointer;
-  font:500 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+.feedback-react-btn{display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:14px;
+  background:var(--bg);border:1px solid var(--border);
+  color:var(--text-secondary);cursor:pointer;
+  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   letter-spacing:.02em;
-  transition:color .15s,background .15s,border-color .15s,transform .15s}
-.feedback-react-btn svg{width:13px;height:13px;fill:none;
-  stroke:currentColor;stroke-width:1.4;
+  transition:color .15s,background .15s,border-color .15s,transform .15s,box-shadow .15s}
+.feedback-react-btn svg{width:14px;height:14px;fill:none;
+  stroke:currentColor;stroke-width:1.6;
   stroke-linecap:round;stroke-linejoin:round}
-.feedback-react-btn:hover{color:var(--text-primary);
-  background:var(--bg-panel);border-color:var(--border)}
-.feedback-react-up.is-active{color:var(--infared);
+.feedback-react-up:hover{color:var(--infared);
   background:color-mix(in srgb, var(--infared) 10%, transparent);
-  border-color:color-mix(in srgb, var(--infared) 35%, transparent)}
-.feedback-react-down.is-active{color:#666;
-  background:var(--bg-panel);border-color:var(--border)}
-.feedback-react-pulse{transform:scale(1.08)}
+  border-color:var(--infared);
+  box-shadow:0 1px 6px rgba(229,35,33,.18)}
+.feedback-react-down:hover{color:#444;
+  background:var(--bg-panel);border-color:#888;
+  box-shadow:0 1px 6px rgba(0,0,0,.12)}
+.feedback-react-up.is-active{color:#fff;background:var(--infared);
+  border-color:var(--infared);font-weight:700;
+  box-shadow:0 1px 8px rgba(229,35,33,.30)}
+.feedback-react-down.is-active{color:#fff;background:#444;
+  border-color:#444;font-weight:700;
+  box-shadow:0 1px 8px rgba(0,0,0,.20)}
+.feedback-react-pulse{transform:scale(1.10)}
 .feedback-react-label{font-variant-numeric:tabular-nums}
 @media (max-width:520px){
   .feedback-react-label{display:none}
-  .feedback-react{padding-left:6px}
+  .feedback-react{padding-left:8px}
+  .feedback-react-btn{padding:5px 9px}
 }
 
 /* Per-page Giscus comments block — anchored below the article content,
