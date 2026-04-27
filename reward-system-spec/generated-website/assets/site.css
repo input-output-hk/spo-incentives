@@ -208,7 +208,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .content thead{position:sticky;top:0}
 .content th{background:var(--bg-panel);color:var(--text-primary);font-weight:600;text-align:left;padding:7px 9px;border:1px solid var(--border)}
 .content td{padding:7px 9px;border:1px solid var(--border);color:var(--text-body);vertical-align:top}
-.content th,.content td{word-break:break-word;overflow-wrap:break-word}
+.content th,.content td{word-break:normal;overflow-wrap:break-word}
 .content tr:hover td{background:var(--bg-warm)}
 
 /* Blockquotes */
@@ -504,6 +504,13 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 
 /* Layer synthesis row sits one indent shallower than the CIP children — visually the parent node */
 .nav-dd-ref-synthesis .nav-dd-ref-title{font-weight:600;color:var(--text-primary)}
+/* When the synthesis row has CIP children below, extend its bullet to
+   meet the children's vertical guide and add a downward stub from the
+   row centre to its bottom. This is what visually "anchors" the tree
+   to its parent — without it, the children's vertical line floats. */
+.nav-dd-ref-synthesis:has(+ .nav-dd-ref-deep)::before{width:14px}
+.nav-dd-ref-synthesis:has(+ .nav-dd-ref-deep)::after{content:"";position:absolute;
+  left:36px;top:50%;bottom:0;width:1px;background:var(--text-muted)}
 
 /* Active / parent-active state on rich-list item */
 .nav-dd-ref.active{background:rgba(22,233,216,.09);box-shadow:inset 3px 0 0 rgba(22,233,216,.7)}
