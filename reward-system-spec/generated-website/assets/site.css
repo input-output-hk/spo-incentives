@@ -50,29 +50,34 @@
 
 html{scroll-behavior:smooth;scroll-padding-top:96px}
 
-/* Anchor-target visual cue — header lands clear of the sticky nav and briefly flashes */
+/* Anchor-target visual cue — header lands clear of the sticky nav and flashes prominently */
 .content :target{scroll-margin-top:96px}
 .content h1:target,.content h2:target,.content h3:target,.content h4:target,.content h5:target,.content h6:target,
 .ev-card:target,.sro-card:target,.sro-finding:target{
-  animation:target-flash 2.6s ease-out
+  animation:target-flash 3.6s ease-out;
+  position:relative
 }
 @keyframes target-flash{
-  0%,10% {background-color:rgba(229,35,33,.16); box-shadow:inset 4px 0 0 var(--infared)}
-  100%   {background-color:transparent;          box-shadow:inset 4px 0 0 transparent}
+  0%      {background-color:rgba(242,255,88,.70); box-shadow:inset 10px 0 0 var(--infared), 0 0 0 3px var(--infared), 0 0 18px rgba(229,35,33,.35)}
+  18%     {background-color:rgba(242,255,88,.60); box-shadow:inset 10px 0 0 var(--infared), 0 0 0 3px var(--infared), 0 0 18px rgba(229,35,33,.35)}
+  40%     {background-color:rgba(229,35,33,.30);  box-shadow:inset 10px 0 0 var(--infared), 0 0 0 2px rgba(229,35,33,.45), 0 0 8px rgba(229,35,33,.18)}
+  100%    {background-color:transparent;           box-shadow:inset 10px 0 0 transparent,    0 0 0 0 transparent,            0 0 0 transparent}
 }
 [data-theme=dark] .content h1:target,[data-theme=dark] .content h2:target,[data-theme=dark] .content h3:target,[data-theme=dark] .content h4:target,[data-theme=dark] .content h5:target,[data-theme=dark] .content h6:target,
 [data-theme=dark] .ev-card:target,[data-theme=dark] .sro-card:target,[data-theme=dark] .sro-finding:target{
-  animation:target-flash-dark 2.6s ease-out
+  animation:target-flash-dark 3.6s ease-out
 }
 @keyframes target-flash-dark{
-  0%,10% {background-color:rgba(229,35,33,.22); box-shadow:inset 4px 0 0 #FF7A78}
-  100%   {background-color:transparent;          box-shadow:inset 4px 0 0 transparent}
+  0%      {background-color:rgba(242,255,88,.30); box-shadow:inset 10px 0 0 #FF7A78, 0 0 0 3px #FF7A78, 0 0 18px rgba(255,122,120,.45)}
+  18%     {background-color:rgba(242,255,88,.22); box-shadow:inset 10px 0 0 #FF7A78, 0 0 0 3px #FF7A78, 0 0 18px rgba(255,122,120,.45)}
+  40%     {background-color:rgba(229,35,33,.32);  box-shadow:inset 10px 0 0 #FF7A78, 0 0 0 2px rgba(255,122,120,.55), 0 0 8px rgba(255,122,120,.25)}
+  100%    {background-color:transparent;           box-shadow:inset 10px 0 0 transparent, 0 0 0 0 transparent,        0 0 0 transparent}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .content h1:target,.content h2:target,.content h3:target,.content h4:target,.content h5:target,.content h6:target,
   .ev-card:target,.sro-card:target,.sro-finding:target{
-    animation:none;background-color:rgba(229,35,33,.08);box-shadow:inset 4px 0 0 var(--infared)
+    animation:none;background-color:rgba(229,35,33,.18);box-shadow:inset 8px 0 0 var(--infared), 0 0 0 2px rgba(229,35,33,.45)
   }
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -527,57 +532,67 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
         │── CIP-0082                  ← deep (parent of deeper sub-doc)
         │   ╰── k-Parameter           ← .nav-dd-ref-deeper            */
 
-/* The tree connector is implemented as a solid border-left on the
-   children rows, plus an L-shaped horizontal connector at row centre
-   via ::before. border-left is the most predictable rendering path —
-   no pseudo-element positioning math, no z-index quirks. The parent
-   synthesis row gets a matching short border-left segment in its
-   bottom half so the tree visibly hangs from the parent. */
+/* Tree visual is just a continuous vertical guide on the left edge of
+   each child group — no L-connectors, no horizontal stubs. The single
+   continuous line + clear indent is enough to convey "child of the
+   row above"; that's the GitHub / Notion / VS Code file-tree pattern
+   and it ages much better than engineering-textbook ┴┬├ glyphs.
 
-/* Parent synthesis row — bottom half of the row gets a left border
-   that joins seamlessly with the first child's full-height border. */
+   Lines are drawn as background-gradients (not pseudo-elements or
+   border-left) because they need to overlap row boundaries seamlessly
+   to feel continuous from parent down to the last child. Anchor x is
+   16px (just past the small bullet glyph each .nav-dd-ref-sub already
+   carries), so the line picks up where the bullet ends without
+   competing with it.
+
+   Visual:
+       ─ CIP evaluation synthesis    ← parent (line begins here, bottom half)
+       │ CIP-0050                    ← deep
+       │ CIP-0037                    ← last deep (line ends here, top half)
+       │ ┐
+       │ │ CIP-0023
+       │ │ CIP-0082
+       │ │  ╰─ k-Parameter (deeper)
+*/
+
+/* Parent synthesis row — line on bottom half so it hands off to the
+   first child seamlessly. */
 .nav-dd-ref-synthesis-parent{
-  position:relative;
   background:linear-gradient(to bottom,
-    transparent 50%,
-    var(--text-muted) 50%) no-repeat 36px 0/2px 100%}
+    transparent 0,
+    transparent calc(50% - 1px),
+    var(--text-muted) calc(50% - 1px),
+    var(--text-muted) 100%) no-repeat 36px 0/2px 100%}
 
-/* Level-1 child (CIP entry) — full-height left border at the same
-   x position as the parent stub, so the lines visually join across
-   row boundaries. */
+/* Level-1 child — full-height vertical line at left:36px. */
 .nav-dd-ref-deep{
-  padding-left:56px;position:relative;
-  background:linear-gradient(to bottom,
-    var(--text-muted),
-    var(--text-muted)) no-repeat 36px 0/2px 100%}
-.nav-dd-ref-deep::before{content:"";position:absolute;
-  left:36px;top:50%;width:14px;height:2px;background:var(--text-muted);
-  transform:translateY(-50%)}
-.nav-dd-ref-deep-last{
-  /* Only top half of border visible — the bracket closes ┘-style. */
-  background:linear-gradient(to bottom,
-    var(--text-muted) 0,
-    var(--text-muted) 50%,
-    transparent 50%) no-repeat 36px 0/2px 100%}
+  padding-left:56px;
+  background:var(--text-muted) no-repeat 36px 0/2px 100%;
+  background-image:linear-gradient(var(--text-muted),var(--text-muted))}
 
-/* Level-2 sub-doc (e.g. k-Parameter under CIP-0082). Two visual
-   hierarchies stacked:
-   - The parent group's vertical line continues from row top to row
-     centre at left:36px (only the top half — k-Parameter closes the
-     fee-layer tree).
-   - An additional rounded L at left:56px points from CIP-0082's
-     column into the sub-doc title. */
-.nav-dd-ref-deeper{
-  padding-left:76px;position:relative;
+/* Last child of a sequence — line stops at row centre, closes the
+   bracket without dangling. */
+.nav-dd-ref-deep-last{
   background:linear-gradient(to bottom,
     var(--text-muted) 0,
-    var(--text-muted) 50%,
-    transparent 50%) no-repeat 36px 0/2px 100%}
-.nav-dd-ref-deeper::before{content:"";position:absolute;
-  left:56px;top:0;width:18px;height:calc(50% + 1px);
-  border-left:2px solid var(--text-muted);
-  border-bottom:2px solid var(--text-muted);
-  border-bottom-left-radius:6px}
+    var(--text-muted) calc(50% + 1px),
+    transparent calc(50% + 1px)) no-repeat 36px 0/2px 100%}
+
+/* Level-2 sub-doc — parent line continues to row centre; an extra
+   nested vertical at left:56px sits inside that, going from the row
+   top to its centre (closing the sub-tree at the same y-coord as the
+   outer one). Two parallel lines visually = two nesting levels. */
+.nav-dd-ref-deeper{
+  padding-left:76px;
+  background:
+    linear-gradient(to bottom,
+      var(--text-muted) 0,
+      var(--text-muted) calc(50% + 1px),
+      transparent calc(50% + 1px)) no-repeat 36px 0/2px 100%,
+    linear-gradient(to bottom,
+      var(--text-muted) 0,
+      var(--text-muted) calc(50% + 1px),
+      transparent calc(50% + 1px)) no-repeat 56px 0/2px 100%}
 
 /* Synthesis row title styling — shared by Forward "Draft in
    preparation" (no children) and the parent-of-CIPs synthesis rows. */
