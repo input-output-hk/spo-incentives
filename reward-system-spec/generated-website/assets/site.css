@@ -519,9 +519,13 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
    indented one level deeper than the synthesis row. No tree
    connector — readers infer hierarchy from the indent and the
    ordering alone, which keeps the dropdown calm and avoids fragile
-   pseudo-element drawing. */
+   pseudo-element drawing. The .nav-dd-ref-sub::before bullet is
+   re-aligned per level so it sits ~12px before each title rather
+   than floating at the menu's left edge. */
 .nav-dd-ref-deep{padding-left:56px}
+.nav-dd-ref-deep::before{left:44px}
 .nav-dd-ref-deeper{padding-left:76px}
+.nav-dd-ref-deeper::before{left:64px}
 
 /* Synthesis row title weight — used by both Forward 'Draft in
    preparation' and the per-layer parent rows. */
