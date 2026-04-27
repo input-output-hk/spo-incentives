@@ -1183,6 +1183,184 @@ body.finding-panel-open .finding-panel-overlay{opacity:1;pointer-events:auto}
 .page-feedback .giscus-frame{width:100%;border:none}
 .page-feedback .giscus-frame{min-height:200px}
 
+/* L3 — Persistent highlights from localStorage. Yellow-orange tint
+   chosen to read as "user-marked" rather than "editorial emphasis"
+   (which uses Infrared). */
+mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
+  color:inherit;padding:0 2px;border-radius:2px;
+  box-shadow:inset 0 -2px 0 color-mix(in srgb, #FFBA36 60%, transparent)}
+
+/* L3+L4 — Floating action bar that appears above a text selection.
+   Pinned to viewport via fixed positioning, follows the selection's
+   bounding rect on scroll. */
+.spo-selfab{position:absolute;z-index:1000;
+  display:flex;gap:1px;
+  background:#1a1a1a;color:#fff;border-radius:6px;
+  box-shadow:0 6px 24px rgba(0,0,0,.30);
+  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  user-select:none;overflow:hidden}
+.spo-selfab button{display:inline-flex;align-items:center;gap:6px;
+  padding:8px 12px;background:transparent;color:#fff;
+  border:none;cursor:pointer;
+  font:inherit;letter-spacing:.02em}
+.spo-selfab button:hover{background:rgba(255,255,255,.10)}
+.spo-selfab button + button{border-left:1px solid rgba(255,255,255,.12)}
+.spo-selfab button svg{width:12px;height:12px;
+  fill:currentColor;stroke:none}
+.spo-selfab-flash{background:var(--infared)!important}
+
+/* L5 — Save/Bookmark button alongside the reaction pair. Same pill
+   style; 'Saved' state uses Solar Amber tint to differ from the
+   Infrared 'Useful' state. */
+.spo-bookmark-btn{display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:14px;
+  background:var(--bg);border:1px solid var(--border);
+  color:var(--text-secondary);cursor:pointer;
+  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;
+  transition:color .15s,background .15s,border-color .15s,box-shadow .15s}
+.spo-bookmark-btn svg{width:14px;height:14px;
+  fill:currentColor;stroke:none}
+.spo-bookmark-btn:hover{color:#7d4f00;
+  background:color-mix(in srgb, #FFBA36 14%, transparent);
+  border-color:#FFBA36;
+  box-shadow:0 1px 6px rgba(255,186,54,.25)}
+.spo-bookmark-btn.is-active{color:#fff;background:#FFBA36;
+  border-color:#FFBA36;font-weight:700;
+  box-shadow:0 1px 8px rgba(255,186,54,.40)}
+
+/* L6 — Structured feedback form. Mirrors `.page-feedback` layout so
+   form + comments share visual weight in the page footer. */
+.page-form{max-width:880px;margin:48px auto 0;padding:28px 28px 20px;
+  border-top:1px solid var(--border);
+  background:linear-gradient(180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--infared) 3%, transparent) 100%)}
+.page-form-heading{margin:0 0 6px;
+  font:600 13px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-secondary)}
+.page-form-heading::before{content:"";display:inline-block;
+  width:18px;height:1px;background:var(--infared);
+  margin-right:8px;vertical-align:middle}
+.page-form-lede{margin:0 0 18px;
+  font:400 13px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+.page-form-form{display:flex;flex-direction:column;gap:14px}
+.page-form-label{display:flex;flex-direction:column;gap:6px;
+  font:600 12px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-secondary)}
+.page-form-label small{font-weight:400;color:var(--text-muted)}
+.page-form-form textarea,
+.page-form-form input{padding:8px 10px;border:1px solid var(--border);
+  border-radius:6px;background:var(--bg);color:var(--text-primary);
+  font:400 13.5px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  resize:vertical}
+.page-form-form textarea:focus,
+.page-form-form input:focus{outline:none;border-color:var(--infared);
+  box-shadow:0 0 0 3px rgba(229,35,33,.12)}
+.page-form-submit{align-self:flex-start;
+  padding:8px 18px;border-radius:6px;
+  background:var(--infared);color:#fff;border:none;cursor:pointer;
+  font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  transition:background .15s}
+.page-form-submit:hover{background:#c01b19}
+.page-form-submit:disabled{opacity:.6;cursor:not-allowed}
+.page-form-status{margin:0;
+  font:400 12.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);min-height:1em}
+.page-form-status.is-ok{color:#067d4a}
+.page-form-status.is-err{color:var(--infared)}
+
+/* L7 — Q&A inline. The "Ask the authors" button sits in the finding's
+   meta row; the composer + answers cascade below the row when opened. */
+.spo-qa-host{flex:0 0 100%;margin-top:8px;display:flex;flex-direction:column;gap:10px}
+.spo-qa-open{align-self:flex-start;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:14px;
+  background:transparent;border:1px dashed var(--border);
+  color:var(--text-muted);cursor:pointer;
+  font:600 11.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;transition:color .15s,border-color .15s,background .15s}
+.spo-qa-open svg{width:13px;height:13px;fill:currentColor;stroke:none}
+.spo-qa-open:hover{color:var(--infared);border-color:var(--infared);
+  background:color-mix(in srgb, var(--infared) 6%, transparent)}
+.spo-qa-form{display:flex;flex-direction:column;gap:8px;
+  padding:12px 14px;border:1px solid var(--border);border-radius:8px;
+  background:var(--bg-panel)}
+.spo-qa-form label{display:flex;flex-direction:column;gap:4px;
+  font:600 11.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-secondary)}
+.spo-qa-form small{font-weight:400;color:var(--text-muted)}
+.spo-qa-form textarea,
+.spo-qa-form input{padding:6px 10px;border:1px solid var(--border);
+  border-radius:5px;background:var(--bg);color:var(--text-primary);
+  font:400 13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  resize:vertical}
+.spo-qa-actions{display:flex;justify-content:flex-end;gap:8px}
+.spo-qa-cancel,.spo-qa-submit{
+  padding:6px 14px;border-radius:5px;border:none;cursor:pointer;
+  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.spo-qa-cancel{background:transparent;color:var(--text-muted);
+  border:1px solid var(--border)}
+.spo-qa-submit{background:var(--infared);color:#fff}
+.spo-qa-submit:disabled{opacity:.6;cursor:not-allowed}
+.spo-qa-status{margin:0;font:400 12px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+.spo-qa-status.is-ok{color:#067d4a}
+.spo-qa-status.is-err{color:var(--infared)}
+.spo-qa-answers{padding:10px 14px;border-left:3px solid var(--infared);
+  background:color-mix(in srgb, var(--infared) 4%, transparent);
+  border-radius:0 6px 6px 0}
+.spo-qa-answers h4{margin:0 0 8px;font:700 11px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--infared)}
+.spo-qa-answer{padding:6px 0}
+.spo-qa-answer + .spo-qa-answer{border-top:1px dashed var(--border);margin-top:6px}
+.spo-qa-answer-meta{font:600 11px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+.spo-qa-answer-body{margin-top:4px;font:400 13px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+
+/* L5 — Bookmarks page (my-bookmarks.html). Card-grouped by source page. */
+.bookmarks-page{max-width:880px;margin:24px auto 48px}
+.bookmarks-lede{font:400 14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);margin:0 0 20px}
+.bookmarks-empty{padding:40px 20px;border:1px dashed var(--border);
+  border-radius:8px;text-align:center;color:var(--text-muted);
+  font-style:italic}
+.bookmarks-group{margin-bottom:20px;border:1px solid var(--border);
+  border-radius:8px;overflow:hidden;background:var(--bg)}
+.bookmarks-group h2{margin:0;padding:10px 14px;
+  font:600 12px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--text-secondary);
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--infared) 6%, transparent),
+    transparent 70%);
+  border-bottom:1px solid var(--border)}
+.bookmarks-group ul{list-style:none;margin:0;padding:0}
+.bookmarks-group li{border-top:1px solid var(--border)}
+.bookmarks-group li:first-child{border-top:none}
+.bookmarks-group li a{display:flex;gap:12px;align-items:flex-start;
+  padding:10px 14px;text-decoration:none;color:inherit;
+  transition:background .15s}
+.bookmarks-group li a:hover{background:var(--bg-panel)}
+.bk-fid{flex-shrink:0;padding:3px 9px;border-radius:3px;
+  background:var(--bg-panel);border:1px solid var(--border);
+  font:600 10.5px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--infared);letter-spacing:.04em}
+.bk-text{font:400 13.5px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.bookmarks-actions{display:flex;gap:10px;justify-content:flex-end;
+  margin-top:12px}
+.bookmarks-clear,.bookmarks-export{padding:7px 14px;border-radius:6px;
+  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  cursor:pointer;border:1px solid var(--border);
+  background:var(--bg);color:var(--text-secondary);transition:all .15s}
+.bookmarks-export:hover{border-color:#FFBA36;color:#7d4f00;
+  background:color-mix(in srgb, #FFBA36 12%, transparent)}
+.bookmarks-clear:hover{border-color:var(--infared);color:var(--infared);
+  background:color-mix(in srgb, var(--infared) 8%, transparent)}
+
 /* Responsive */
 @media (max-width:720px){
   .dia-obs-row{padding:12px 14px}
@@ -1193,5 +1371,9 @@ body.finding-panel-open .finding-panel-overlay{opacity:1;pointer-events:auto}
   .sro-abstract{padding:10px 12px 12px}
   .sro-finding{padding:10px 12px;gap:10px}
   .page-feedback{margin:32px 16px 16px;padding:20px 18px 6px}
+  .page-form{margin:32px 16px 0;padding:20px 18px 16px}
+  .spo-selfab button{padding:8px 10px}
+  .spo-selfab button span{display:none}
+  .bookmarks-page{margin:16px}
 }
 /* ── /Cross-page DIA source overlay + compact §X.Y.2 view ── */

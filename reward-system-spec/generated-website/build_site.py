@@ -151,36 +151,36 @@ PAGES = [
         "slug": "fee-layer",
         "md": "solution-evaluation/operator-delegator/README.md",
         "html": "fee-layer.html",
-        "title": "Fee Layer & k-Lever — Solution Evaluation",
-        "hero_h1": "Fee Layer & k-Lever",
-        "hero_sub": "CIP-0023 + CIP-0082 + Standalone k-Raise",
+        "title": "Fee Layer — Solution Evaluation",
+        "hero_h1": "Fee Layer",
+        "hero_sub": "Operator/Member Split — CIP-0023 + CIP-0082",
         "active_nav": "fee-layer",
     },
     {
         "slug": "cip-0023",
         "md": "solution-evaluation/operator-delegator/cip-0023.md",
         "html": "cip-0023.html",
-        "title": "CIP-0023 — Updated minPoolCost & minPoolMargin",
+        "title": "CIP-0023 — Fair Min Fees",
         "hero_h1": "CIP-0023",
-        "hero_sub": "Updated minPoolCost and minPoolMargin",
+        "hero_sub": "Fair Min Fees — minPoolMargin Floor",
         "active_nav": "cip-0023",
     },
     {
         "slug": "cip-0082",
         "md": "solution-evaluation/operator-delegator/cip-0082.md",
         "html": "cip-0082.html",
-        "title": "CIP-0082 — Pool Reward Improvements",
+        "title": "CIP-0082 — Improved Rewards Scheme Parameters",
         "hero_h1": "CIP-0082",
-        "hero_sub": "Pool Reward Improvements (k-raise + Fee Layer)",
+        "hero_sub": "Improved Rewards Scheme Parameters — Margin Swap + k-Raises",
         "active_nav": "cip-0082",
     },
     {
         "slug": "k-parameter",
         "md": "solution-evaluation/operator-delegator/k-parameter.md",
         "html": "k-parameter.html",
-        "title": "The k-Parameter Standalone Lever",
-        "hero_h1": "The k-Parameter Lever",
-        "hero_sub": "Standalone k-Raise — What It Can and Cannot Do",
+        "title": "k-Parameter Mechanics — Companion to CIP-0082 Stages 3–4",
+        "hero_h1": "k-Parameter Mechanics",
+        "hero_sub": "Sub-Document of CIP-0082 — What Raising k Does to the Operator/Delegator Split",
         "active_nav": "k-parameter",
     },
 ]
@@ -302,6 +302,32 @@ GISCUS_LANG = _cfg("SPO_GISCUS_LANG", "en")
 
 REACTIONS_ENABLED = _cfg("SPO_REACTIONS_ENABLED", "1") not in ("0", "false", "no")
 
+# Hypothesis (web annotation overlay). When enabled, ships
+# https://hypothes.is/embed.js which adds a side panel allowing readers to
+# select text and attach inline annotations. Free, federated, no infra
+# required.
+HYPOTHESIS_ENABLED = _cfg("SPO_HYPOTHESIS_ENABLED", "0") in ("1", "true", "yes")
+
+# Personal highlights + bookmarks: client-side only, localStorage-backed,
+# enabled by default. No backend cost. The `my-bookmarks.html` aggregator
+# page is always built; readers see their own saved set when they visit.
+HIGHLIGHTS_ENABLED = _cfg("SPO_HIGHLIGHTS_ENABLED", "1") not in ("0", "false", "no")
+BOOKMARKS_ENABLED = _cfg("SPO_BOOKMARKS_ENABLED", "1") not in ("0", "false", "no")
+
+# Formspree (or compatible) endpoint for the structured feedback form.
+# Free tier 50 submissions/month. Set to a Cloudflare Worker URL with
+# MailChannels for unlimited free volume.
+FORM_ENDPOINT = _cfg("SPO_FORM_ENDPOINT", "")
+FORM_RECIPIENT_LABEL = _cfg(
+    "SPO_FORM_RECIPIENT_LABEL", "the IO Research ARC team"
+)
+
+# Cloudflare Worker endpoint exposing POST /qa and GET /qa/<finding-id>
+# for the inline Q&A feature. The Worker source lives in
+# `cloudflare-worker/qa-worker.js` and ships with deploy instructions in
+# BUILD_FEEDBACK.md.
+QA_ENDPOINT = _cfg("SPO_QA_ENDPOINT", "")
+
 
 def _render_analytics_head() -> str:
     """Return the `<head>` injection for the active analytics provider.
@@ -373,10 +399,7 @@ def _render_giscus_block() -> str:
 
 def _render_body_data_attrs() -> str:
     """Return space-prefixed attributes for the `<body>` tag. Used by the
-    feedback JS module to decide whether to inject reaction buttons and
-    whether analytics custom-event capture is wired up. The analytics
-    provider name is exposed via ``data-analytics`` so the JS can adapt
-    if a future provider needs different bookkeeping.
+    feedback JS module to decide which interaction layers to wire up.
     """
     parts = []
     if ACTIVE_ANALYTICS:
@@ -385,7 +408,72 @@ def _render_body_data_attrs() -> str:
         parts.append('data-reactions="1"')
     if GISCUS_REPO:
         parts.append('data-giscus="1"')
+    if HIGHLIGHTS_ENABLED:
+        parts.append('data-highlights="1"')
+    if BOOKMARKS_ENABLED:
+        parts.append('data-bookmarks="1"')
+    if QA_ENDPOINT:
+        parts.append(f'data-qa-endpoint="{_html.escape(QA_ENDPOINT)}"')
     return (" " + " ".join(parts)) if parts else ""
+
+
+def _render_hypothesis_head() -> str:
+    """Return the `<head>` injection that loads the Hypothesis annotation
+    overlay. Empty when disabled. The script is async-loaded; readers see
+    the `<` chevron on the right edge of the viewport.
+    """
+    if not HYPOTHESIS_ENABLED:
+        return ""
+    return (
+        '<script async '
+        'src="https://hypothes.is/embed.js" '
+        'crossorigin="anonymous"></script>'
+    )
+
+
+def _render_form_block() -> str:
+    """Return a structured-feedback `<form>` block for the page footer.
+    Empty when no endpoint is configured. Uses a plain HTML POST so the
+    form works without JS; the JS layer just adds inline error/success
+    feedback on top.
+    """
+    if not FORM_ENDPOINT:
+        return ""
+    return (
+        '<section class="page-form" aria-labelledby="page-form-heading" '
+        'data-form-endpoint="' + _html.escape(FORM_ENDPOINT) + '">'
+        '<h2 id="page-form-heading" class="page-form-heading">'
+        'Structured Feedback'
+        '</h2>'
+        '<p class="page-form-lede">Anything missing, contested, or '
+        'unclear? Use the form below — answers go to '
+        + _html.escape(FORM_RECIPIENT_LABEL) + '.</p>'
+        '<form class="page-form-form" method="POST" '
+        'action="' + _html.escape(FORM_ENDPOINT) + '">'
+        '<input type="hidden" name="_page" value="">'
+        '<label class="page-form-label">'
+        '<span>What was missing or contested in this analysis?</span>'
+        '<textarea name="missing" rows="3" required></textarea>'
+        '</label>'
+        '<label class="page-form-label">'
+        '<span>What new evidence would change your conclusion?</span>'
+        '<textarea name="counter" rows="2"></textarea>'
+        '</label>'
+        '<label class="page-form-label">'
+        '<span>Your name or handle '
+        '<small>(optional, lets us cite or follow up)</small></span>'
+        '<input type="text" name="who" autocomplete="off">'
+        '</label>'
+        '<label class="page-form-label">'
+        '<span>Email '
+        '<small>(optional, only used to reply)</small></span>'
+        '<input type="email" name="email" autocomplete="off">'
+        '</label>'
+        '<button type="submit" class="page-form-submit">Send feedback</button>'
+        '<p class="page-form-status" aria-live="polite"></p>'
+        '</form>'
+        '</section>'
+    )
 
 
 # --- Math protection ------------------------------------------------------
@@ -957,6 +1045,7 @@ window.MathJax = {{
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="assets/site.css?v={asset_ver}">
 {plausible_head}
+{hypothesis_head}
 </head>
 <body{body_data_attrs}>
 <div class="progress-bar" id="progress"></div>
@@ -983,41 +1072,41 @@ window.MathJax = {{
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
-      <span class="nav-dd-stratum-meta">CIP candidates evaluated against the V2 specification — what each delivers, regresses, and leaves blind</span>
+      <span class="nav-dd-stratum-meta">Five CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
     </div>
     <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero{cls_solution_eval}">
-      <span class="nav-dd-ref-title">The Solution Landscape</span>
-      <span class="nav-dd-ref-cite">Situation, candidates, conclusion — and the forward-pointer to the new proposal</span>
+      <span class="nav-dd-ref-title">Cross-CIP Analysis &amp; Verdict</span>
+      <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, no-go verdict on the bundle</span>
     </a>
-    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer</div>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
     <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_stake_cap}">
-      <span class="nav-dd-ref-title">Stake-Cap Layer Index<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">Pledge-as-binding-signal candidates, side by side<span class="nav-dd-ref-stage">Index</span></span>
+      <span class="nav-dd-ref-title">Layer index</span>
+      <span class="nav-dd-ref-cite">Two stake-cap shapes, same intent<span class="nav-dd-ref-stage">Index</span></span>
     </a>
     <a href="cip-0050.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_cip_0050}">
-      <span class="nav-dd-ref-title">CIP-0050<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">Pledge Leverage-Based Staking Rewards<span class="nav-dd-ref-stage">Hard Cap</span></span>
+      <span class="nav-dd-ref-title">CIP-0050 — Pledge Leverage</span>
+      <span class="nav-dd-ref-cite">Single hard cap on σ′ — capital-capability bias<span class="nav-dd-ref-stage">▼ No-go</span></span>
     </a>
     <a href="cip-0037.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_cip_0037}">
-      <span class="nav-dd-ref-title">CIP-0037<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">Dynamic Saturation Based on Pledge<span class="nav-dd-ref-stage">Cap + Floor</span></span>
+      <span class="nav-dd-ref-title">CIP-0037 — Dynamic Saturation</span>
+      <span class="nav-dd-ref-cite">Three-anchor curve with 20 % floor — same bias, softened<span class="nav-dd-ref-stage">▼ No-go</span></span>
     </a>
-    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Fee Layer &amp; k-Lever</div>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Fee Layer — Operator/Member Split</div>
     <a href="fee-layer.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_fee_layer}">
-      <span class="nav-dd-ref-title">Fee Layer Index<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">Operator/delegator pricing + the k-parameter lever<span class="nav-dd-ref-stage">Index</span></span>
+      <span class="nav-dd-ref-title">Layer index</span>
+      <span class="nav-dd-ref-cite">Pricing-as-viability conflation<span class="nav-dd-ref-stage">Index</span></span>
     </a>
     <a href="cip-0023.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_cip_0023}">
-      <span class="nav-dd-ref-title">CIP-0023<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">Updated minPoolCost &amp; minPoolMargin<span class="nav-dd-ref-stage">Fee Layer</span></span>
+      <span class="nav-dd-ref-title">CIP-0023 — Fair Min Fees</span>
+      <span class="nav-dd-ref-cite">minPoolMargin floor — subsumed by CIP-0082 stage 2<span class="nav-dd-ref-stage">⊂ Moot</span></span>
     </a>
     <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_cip_0082}">
-      <span class="nav-dd-ref-title">CIP-0082<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">Pool reward improvements (k-raise + fee-layer)<span class="nav-dd-ref-stage">Composite</span></span>
+      <span class="nav-dd-ref-title">CIP-0082 — Improved Rewards Scheme</span>
+      <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage">▼ No-go</span></span>
     </a>
     <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_k_parameter}">
-      <span class="nav-dd-ref-title">k-Parameter Lever<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">Standalone k-raise — what it can and cannot do<span class="nav-dd-ref-stage">Transversal</span></span>
+      <span class="nav-dd-ref-title">k-Parameter mechanics</span>
+      <span class="nav-dd-ref-cite">Sub-document of CIP-0082 stages 3–4<span class="nav-dd-ref-stage">Sub-doc</span></span>
     </a>
   </div>
 </div>
@@ -1179,6 +1268,7 @@ window.MathJax = {{
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
 <div class="content">{content}</div>
+{form_block}
 {giscus_block}
 <footer class="site-footer">
   <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="footer-logo">
@@ -1224,14 +1314,14 @@ BREADCRUMBS = {
     "treasury": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
     "pools": ["Mainnet Diagnostic", "Reward Flow", "Pools"],
     "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],
-    "solution-evaluation": ["Solution Evaluation", "The Solution Landscape"],
+    "solution-evaluation": ["Solution Evaluation", "Cross-CIP Analysis & Verdict"],
     "stake-cap": ["Solution Evaluation", "Stake-Cap Layer"],
     "cip-0050": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0050"],
     "cip-0037": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0037"],
-    "fee-layer": ["Solution Evaluation", "Fee Layer & k-Lever"],
-    "cip-0023": ["Solution Evaluation", "Fee Layer & k-Lever", "CIP-0023"],
-    "cip-0082": ["Solution Evaluation", "Fee Layer & k-Lever", "CIP-0082"],
-    "k-parameter": ["Solution Evaluation", "Fee Layer & k-Lever", "k-Parameter Lever"],
+    "fee-layer": ["Solution Evaluation", "Fee Layer"],
+    "cip-0023": ["Solution Evaluation", "Fee Layer", "CIP-0023"],
+    "cip-0082": ["Solution Evaluation", "Fee Layer", "CIP-0082"],
+    "k-parameter": ["Solution Evaluation", "Fee Layer", "k-Parameter Mechanics"],
 }
 
 
@@ -1317,7 +1407,9 @@ def render_shell(page: dict, content_html: str) -> str:
         breadcrumb_inner=breadcrumb_inner,
         asset_ver=asset_ver,
         plausible_head=_render_analytics_head(),
+        hypothesis_head=_render_hypothesis_head(),
         giscus_block=_render_giscus_block(),
+        form_block=_render_form_block(),
         body_data_attrs=_render_body_data_attrs(),
         **classes,
     )
@@ -1831,6 +1923,184 @@ _CROSS_OBS_CSS = """
 .page-feedback .giscus-frame{width:100%;border:none}
 .page-feedback .giscus-frame{min-height:200px}
 
+/* L3 — Persistent highlights from localStorage. Yellow-orange tint
+   chosen to read as "user-marked" rather than "editorial emphasis"
+   (which uses Infrared). */
+mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
+  color:inherit;padding:0 2px;border-radius:2px;
+  box-shadow:inset 0 -2px 0 color-mix(in srgb, #FFBA36 60%, transparent)}
+
+/* L3+L4 — Floating action bar that appears above a text selection.
+   Pinned to viewport via fixed positioning, follows the selection's
+   bounding rect on scroll. */
+.spo-selfab{position:absolute;z-index:1000;
+  display:flex;gap:1px;
+  background:#1a1a1a;color:#fff;border-radius:6px;
+  box-shadow:0 6px 24px rgba(0,0,0,.30);
+  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  user-select:none;overflow:hidden}
+.spo-selfab button{display:inline-flex;align-items:center;gap:6px;
+  padding:8px 12px;background:transparent;color:#fff;
+  border:none;cursor:pointer;
+  font:inherit;letter-spacing:.02em}
+.spo-selfab button:hover{background:rgba(255,255,255,.10)}
+.spo-selfab button + button{border-left:1px solid rgba(255,255,255,.12)}
+.spo-selfab button svg{width:12px;height:12px;
+  fill:currentColor;stroke:none}
+.spo-selfab-flash{background:var(--infared)!important}
+
+/* L5 — Save/Bookmark button alongside the reaction pair. Same pill
+   style; 'Saved' state uses Solar Amber tint to differ from the
+   Infrared 'Useful' state. */
+.spo-bookmark-btn{display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:14px;
+  background:var(--bg);border:1px solid var(--border);
+  color:var(--text-secondary);cursor:pointer;
+  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;
+  transition:color .15s,background .15s,border-color .15s,box-shadow .15s}
+.spo-bookmark-btn svg{width:14px;height:14px;
+  fill:currentColor;stroke:none}
+.spo-bookmark-btn:hover{color:#7d4f00;
+  background:color-mix(in srgb, #FFBA36 14%, transparent);
+  border-color:#FFBA36;
+  box-shadow:0 1px 6px rgba(255,186,54,.25)}
+.spo-bookmark-btn.is-active{color:#fff;background:#FFBA36;
+  border-color:#FFBA36;font-weight:700;
+  box-shadow:0 1px 8px rgba(255,186,54,.40)}
+
+/* L6 — Structured feedback form. Mirrors `.page-feedback` layout so
+   form + comments share visual weight in the page footer. */
+.page-form{max-width:880px;margin:48px auto 0;padding:28px 28px 20px;
+  border-top:1px solid var(--border);
+  background:linear-gradient(180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--infared) 3%, transparent) 100%)}
+.page-form-heading{margin:0 0 6px;
+  font:600 13px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-secondary)}
+.page-form-heading::before{content:"";display:inline-block;
+  width:18px;height:1px;background:var(--infared);
+  margin-right:8px;vertical-align:middle}
+.page-form-lede{margin:0 0 18px;
+  font:400 13px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+.page-form-form{display:flex;flex-direction:column;gap:14px}
+.page-form-label{display:flex;flex-direction:column;gap:6px;
+  font:600 12px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-secondary)}
+.page-form-label small{font-weight:400;color:var(--text-muted)}
+.page-form-form textarea,
+.page-form-form input{padding:8px 10px;border:1px solid var(--border);
+  border-radius:6px;background:var(--bg);color:var(--text-primary);
+  font:400 13.5px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  resize:vertical}
+.page-form-form textarea:focus,
+.page-form-form input:focus{outline:none;border-color:var(--infared);
+  box-shadow:0 0 0 3px rgba(229,35,33,.12)}
+.page-form-submit{align-self:flex-start;
+  padding:8px 18px;border-radius:6px;
+  background:var(--infared);color:#fff;border:none;cursor:pointer;
+  font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  transition:background .15s}
+.page-form-submit:hover{background:#c01b19}
+.page-form-submit:disabled{opacity:.6;cursor:not-allowed}
+.page-form-status{margin:0;
+  font:400 12.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);min-height:1em}
+.page-form-status.is-ok{color:#067d4a}
+.page-form-status.is-err{color:var(--infared)}
+
+/* L7 — Q&A inline. The "Ask the authors" button sits in the finding's
+   meta row; the composer + answers cascade below the row when opened. */
+.spo-qa-host{flex:0 0 100%;margin-top:8px;display:flex;flex-direction:column;gap:10px}
+.spo-qa-open{align-self:flex-start;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:14px;
+  background:transparent;border:1px dashed var(--border);
+  color:var(--text-muted);cursor:pointer;
+  font:600 11.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;transition:color .15s,border-color .15s,background .15s}
+.spo-qa-open svg{width:13px;height:13px;fill:currentColor;stroke:none}
+.spo-qa-open:hover{color:var(--infared);border-color:var(--infared);
+  background:color-mix(in srgb, var(--infared) 6%, transparent)}
+.spo-qa-form{display:flex;flex-direction:column;gap:8px;
+  padding:12px 14px;border:1px solid var(--border);border-radius:8px;
+  background:var(--bg-panel)}
+.spo-qa-form label{display:flex;flex-direction:column;gap:4px;
+  font:600 11.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-secondary)}
+.spo-qa-form small{font-weight:400;color:var(--text-muted)}
+.spo-qa-form textarea,
+.spo-qa-form input{padding:6px 10px;border:1px solid var(--border);
+  border-radius:5px;background:var(--bg);color:var(--text-primary);
+  font:400 13px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  resize:vertical}
+.spo-qa-actions{display:flex;justify-content:flex-end;gap:8px}
+.spo-qa-cancel,.spo-qa-submit{
+  padding:6px 14px;border-radius:5px;border:none;cursor:pointer;
+  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.spo-qa-cancel{background:transparent;color:var(--text-muted);
+  border:1px solid var(--border)}
+.spo-qa-submit{background:var(--infared);color:#fff}
+.spo-qa-submit:disabled{opacity:.6;cursor:not-allowed}
+.spo-qa-status{margin:0;font:400 12px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+.spo-qa-status.is-ok{color:#067d4a}
+.spo-qa-status.is-err{color:var(--infared)}
+.spo-qa-answers{padding:10px 14px;border-left:3px solid var(--infared);
+  background:color-mix(in srgb, var(--infared) 4%, transparent);
+  border-radius:0 6px 6px 0}
+.spo-qa-answers h4{margin:0 0 8px;font:700 11px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--infared)}
+.spo-qa-answer{padding:6px 0}
+.spo-qa-answer + .spo-qa-answer{border-top:1px dashed var(--border);margin-top:6px}
+.spo-qa-answer-meta{font:600 11px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+.spo-qa-answer-body{margin-top:4px;font:400 13px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+
+/* L5 — Bookmarks page (my-bookmarks.html). Card-grouped by source page. */
+.bookmarks-page{max-width:880px;margin:24px auto 48px}
+.bookmarks-lede{font:400 14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);margin:0 0 20px}
+.bookmarks-empty{padding:40px 20px;border:1px dashed var(--border);
+  border-radius:8px;text-align:center;color:var(--text-muted);
+  font-style:italic}
+.bookmarks-group{margin-bottom:20px;border:1px solid var(--border);
+  border-radius:8px;overflow:hidden;background:var(--bg)}
+.bookmarks-group h2{margin:0;padding:10px 14px;
+  font:600 12px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--text-secondary);
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--infared) 6%, transparent),
+    transparent 70%);
+  border-bottom:1px solid var(--border)}
+.bookmarks-group ul{list-style:none;margin:0;padding:0}
+.bookmarks-group li{border-top:1px solid var(--border)}
+.bookmarks-group li:first-child{border-top:none}
+.bookmarks-group li a{display:flex;gap:12px;align-items:flex-start;
+  padding:10px 14px;text-decoration:none;color:inherit;
+  transition:background .15s}
+.bookmarks-group li a:hover{background:var(--bg-panel)}
+.bk-fid{flex-shrink:0;padding:3px 9px;border-radius:3px;
+  background:var(--bg-panel);border:1px solid var(--border);
+  font:600 10.5px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--infared);letter-spacing:.04em}
+.bk-text{font:400 13.5px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.bookmarks-actions{display:flex;gap:10px;justify-content:flex-end;
+  margin-top:12px}
+.bookmarks-clear,.bookmarks-export{padding:7px 14px;border-radius:6px;
+  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  cursor:pointer;border:1px solid var(--border);
+  background:var(--bg);color:var(--text-secondary);transition:all .15s}
+.bookmarks-export:hover{border-color:#FFBA36;color:#7d4f00;
+  background:color-mix(in srgb, #FFBA36 12%, transparent)}
+.bookmarks-clear:hover{border-color:var(--infared);color:var(--infared);
+  background:color-mix(in srgb, var(--infared) 8%, transparent)}
+
 /* Responsive */
 @media (max-width:720px){
   .dia-obs-row{padding:12px 14px}
@@ -1841,6 +2111,10 @@ _CROSS_OBS_CSS = """
   .sro-abstract{padding:10px 12px 12px}
   .sro-finding{padding:10px 12px;gap:10px}
   .page-feedback{margin:32px 16px 16px;padding:20px 18px 6px}
+  .page-form{margin:32px 16px 0;padding:20px 18px 16px}
+  .spo-selfab button{padding:8px 10px}
+  .spo-selfab button span{display:none}
+  .bookmarks-page{margin:16px}
 }
 /* ── /Cross-page DIA source overlay + compact §X.Y.2 view ── */
 """
@@ -2185,6 +2459,516 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
       host.appendChild(makeBtn(canon,'up','Useful',SVG_UP));
       host.appendChild(makeBtn(canon,'down','Not useful',SVG_DOWN));
       if(meta){meta.appendChild(host);}else{li.appendChild(host);}
+    });
+  })();
+
+  /* ── L1: Passive engagement events ──
+     Captures scroll depth (25/50/75/100%), section dwell (>5s in
+     viewport), and outbound link clicks. All routed through spoTrack so
+     the analytics provider sees them as Plausible/Umami custom events.
+     No-op when spoTrack is not defined. */
+  (function initPassiveAnalytics(){
+    function track(name,props){
+      if(typeof window.spoTrack==='function'){
+        try{window.spoTrack(name,props||{});}catch(e){}
+      }
+    }
+    var pageId=location.pathname.split('/').pop()||'index.html';
+    var ref=document.referrer||'(direct)';
+    if(ref&&ref!=='(direct)'){
+      try{ref=new URL(ref).hostname;}catch(e){}
+    }
+
+    /* Page view supplement — analytics scripts capture pageviews
+       natively, but we add a "Page Entry" event with the referrer host
+       so the dashboard can split editorial entries (Twitter/forum) from
+       direct links and search engines. */
+    track('Page Entry',{page:pageId,referrer:ref});
+
+    /* Scroll depth — fire once per threshold, throttled. */
+    var thresholds=[25,50,75,100];
+    var hit={};
+    function onScroll(){
+      var doc=document.documentElement;
+      var scrolled=(window.scrollY+window.innerHeight)/doc.scrollHeight*100;
+      thresholds.forEach(function(t){
+        if(!hit[t]&&scrolled>=t){
+          hit[t]=true;
+          track('Scroll Depth',{page:pageId,depth:t});
+        }
+      });
+    }
+    var raf=null;
+    window.addEventListener('scroll',function(){
+      if(raf) return;
+      raf=requestAnimationFrame(function(){raf=null;onScroll();});
+    },{passive:true});
+
+    /* Section dwell — IntersectionObserver on every H2/H3, fires once
+       per (page, sectionId) when the section has been ≥50% in viewport
+       for 5 seconds cumulatively. */
+    var DWELL_MS=5000;
+    var dwell={};
+    var sentDwell={};
+    function tickDwell(){
+      var now=Date.now();
+      Object.keys(dwell).forEach(function(id){
+        var d=dwell[id];
+        if(d.visible){
+          d.acc+=now-(d.lastTick||now);
+          d.lastTick=now;
+          if(!sentDwell[id]&&d.acc>=DWELL_MS){
+            sentDwell[id]=true;
+            track('Section Read',{page:pageId,section:id,
+              ms:Math.round(d.acc)});
+          }
+        }
+      });
+    }
+    setInterval(tickDwell,1500);
+    if('IntersectionObserver' in window){
+      var io=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          var id=e.target.id;
+          if(!id) return;
+          if(!dwell[id]) dwell[id]={acc:0,visible:false};
+          if(e.isIntersecting){
+            dwell[id].visible=true;
+            dwell[id].lastTick=Date.now();
+          }else{
+            dwell[id].visible=false;
+          }
+        });
+      },{threshold:0.5});
+      document.querySelectorAll('h2[id], h3[id]').forEach(function(h){
+        io.observe(h);
+      });
+    }
+
+    /* Outbound link clicks — anything not on the same host. */
+    document.addEventListener('click',function(ev){
+      var a=ev.target&&ev.target.closest&&ev.target.closest('a[href]');
+      if(!a) return;
+      var href=a.getAttribute('href')||'';
+      if(!/^https?:\\/\\//.test(href)) return;
+      try{
+        var u=new URL(href);
+        if(u.host!==location.host){
+          track('Outbound Click',{page:pageId,host:u.host,
+            url:u.origin+u.pathname});
+        }
+      }catch(e){}
+    },true);
+  })();
+
+  /* ── L3 + L4: Selection FAB — Highlight + Quote ──
+     Floating action bar that appears when the reader selects ≥3
+     characters of text inside `.content`. Two actions:
+     - Highlight: persists in localStorage under spo:hl:<page>
+     - Quote: copies a markdown blockquote with permalink to the
+       clipboard and fires a Plausible custom event. */
+  (function initSelectionFab(){
+    var body=document.body;
+    if(!body) return;
+    var hlEnabled=body.getAttribute('data-highlights')==='1';
+    var content=document.querySelector('.content');
+    if(!content) return;
+
+    var fab=document.createElement('div');
+    fab.className='spo-selfab';
+    fab.setAttribute('role','toolbar');
+    fab.style.display='none';
+    fab.innerHTML=
+      '<button type="button" data-act="quote" title="Copy as Markdown quote">'
+      +'<svg viewBox="0 0 16 16"><path d="M3 5h4v4H4v2H3V5zm6 0h4v4h-3v2H9V5z"/></svg>'
+      +'<span>Quote</span></button>'
+      +(hlEnabled?
+        '<button type="button" data-act="hl" title="Highlight (saved in this browser)">'
+        +'<svg viewBox="0 0 16 16"><path d="M2 12l3-3 5 5-3 3H2v-5zm5-5l5-5 4 4-5 5-4-4z"/></svg>'
+        +'<span>Highlight</span></button>'
+        :'');
+    document.body.appendChild(fab);
+
+    var pageId=location.pathname.split('/').pop()||'index.html';
+    var HL_KEY='spo:hl:'+pageId;
+
+    function track(name,props){
+      if(typeof window.spoTrack==='function'){
+        try{window.spoTrack(name,props||{});}catch(e){}
+      }
+    }
+
+    function getSelText(){
+      var s=window.getSelection();
+      if(!s||s.rangeCount===0||s.isCollapsed) return null;
+      var r=s.getRangeAt(0);
+      if(!content.contains(r.commonAncestorContainer)) return null;
+      var txt=s.toString().trim();
+      if(txt.length<3) return null;
+      return {sel:s,range:r,text:txt};
+    }
+
+    function findEnclosingFinding(node){
+      while(node&&node!==document){
+        if(node.classList&&node.classList.contains('sro-finding')){
+          return node.getAttribute('data-finding');
+        }
+        if(node.tagName==='H2'||node.tagName==='H3'){
+          return node.id||null;
+        }
+        node=node.parentNode;
+      }
+      return null;
+    }
+
+    function permalink(node){
+      var anchor=findEnclosingFinding(node);
+      var base=location.origin+location.pathname;
+      return anchor?(base+'#'+anchor):base;
+    }
+
+    function showFab(){
+      var info=getSelText();
+      if(!info){fab.style.display='none';return;}
+      var rect=info.range.getBoundingClientRect();
+      fab.style.display='flex';
+      var top=window.scrollY+rect.top-fab.offsetHeight-8;
+      if(top<window.scrollY+8) top=window.scrollY+rect.bottom+8;
+      var left=window.scrollX+rect.left+(rect.width/2)-(fab.offsetWidth/2);
+      var maxLeft=window.scrollX+window.innerWidth-fab.offsetWidth-8;
+      if(left<window.scrollX+8) left=window.scrollX+8;
+      if(left>maxLeft) left=maxLeft;
+      fab.style.top=top+'px';
+      fab.style.left=left+'px';
+    }
+
+    document.addEventListener('mouseup',function(){setTimeout(showFab,1);});
+    document.addEventListener('selectionchange',function(){
+      if(window.getSelection().isCollapsed) fab.style.display='none';
+    });
+    document.addEventListener('scroll',function(){
+      if(fab.style.display!=='none') showFab();
+    },{passive:true});
+
+    fab.addEventListener('mousedown',function(ev){ev.preventDefault();});
+
+    fab.addEventListener('click',function(ev){
+      var btn=ev.target.closest('button[data-act]');
+      if(!btn) return;
+      var info=getSelText();
+      if(!info) return;
+      var act=btn.getAttribute('data-act');
+      var anchor=findEnclosingFinding(info.range.commonAncestorContainer);
+      var url=permalink(info.range.commonAncestorContainer);
+
+      if(act==='quote'){
+        var citation=anchor?('— ['+anchor+']('+url+')'):('— ['+pageId+']('+url+')');
+        var md='> '+info.text.replace(/\\n/g,'\\n> ')+'\\n\\n'+citation+'\\n';
+        if(navigator.clipboard&&navigator.clipboard.writeText){
+          navigator.clipboard.writeText(md).then(function(){
+            flashFab(btn,'Copied');
+            track('Quote Copied',{page:pageId,anchor:anchor||'(none)',
+              len:info.text.length});
+          },function(){flashFab(btn,'Failed');});
+        }else{flashFab(btn,'No clipboard');}
+      }else if(act==='hl'){
+        var rangeKey=anchor||'_';
+        var store={};
+        try{store=JSON.parse(localStorage.getItem(HL_KEY)||'{}');}catch(e){}
+        if(!store[rangeKey]) store[rangeKey]=[];
+        store[rangeKey].push({text:info.text,ts:Date.now()});
+        try{localStorage.setItem(HL_KEY,JSON.stringify(store));}catch(e){}
+        applyHighlight(info.range);
+        flashFab(btn,'Saved');
+        track('Highlight Saved',{page:pageId,anchor:anchor||'(none)',
+          len:info.text.length});
+      }
+      window.getSelection().removeAllRanges();
+      fab.style.display='none';
+    });
+
+    function flashFab(btn,label){
+      var span=btn.querySelector('span');
+      var prev=span.textContent;
+      span.textContent=label;
+      btn.classList.add('spo-selfab-flash');
+      setTimeout(function(){
+        span.textContent=prev;
+        btn.classList.remove('spo-selfab-flash');
+      },900);
+    }
+
+    function applyHighlight(range){
+      try{
+        var mark=document.createElement('mark');
+        mark.className='spo-hl';
+        range.surroundContents(mark);
+      }catch(e){
+        /* range crosses element boundaries — fall back to wrapping text
+           runs individually via TreeWalker. Skipped here for brevity:
+           the simple surroundContents covers single-paragraph picks. */
+      }
+    }
+
+    /* Re-apply persisted highlights on load. We use a coarse text-match
+       strategy rather than DOM-Range serialization: each saved snippet
+       is searched for in the current text content of its anchor scope.
+       Imperfect (skips duplicate matches, fails after edits) but
+       privacy-clean and dependency-free. */
+    if(hlEnabled){
+      try{
+        var saved=JSON.parse(localStorage.getItem(HL_KEY)||'{}');
+        Object.keys(saved).forEach(function(anchorId){
+          var scope=document;
+          if(anchorId!=='_'){
+            scope=document.querySelector(
+              '[data-finding="'+anchorId+'"], #'+CSS.escape(anchorId)
+            )||document;
+          }
+          (saved[anchorId]||[]).forEach(function(rec){
+            highlightText(scope,rec.text);
+          });
+        });
+      }catch(e){}
+    }
+
+    function highlightText(scope,needle){
+      if(!needle||needle.length<3) return;
+      var walker=document.createTreeWalker(scope,NodeFilter.SHOW_TEXT,null);
+      var node;
+      while((node=walker.nextNode())){
+        var idx=node.nodeValue.indexOf(needle);
+        if(idx>=0){
+          var r=document.createRange();
+          r.setStart(node,idx);
+          r.setEnd(node,idx+needle.length);
+          var mark=document.createElement('mark');
+          mark.className='spo-hl';
+          try{r.surroundContents(mark);}catch(e){}
+          return;
+        }
+      }
+    }
+  })();
+
+  /* ── L5: Bookmarks per .sro-finding ──
+     Adds a "Save" button to each finding's reactions row. Clicking
+     stores a record in localStorage; clicking again removes it. The
+     /my-bookmarks.html page reads this storage on load and renders a
+     consolidated list across all sub-reports. */
+  (function initBookmarks(){
+    var body=document.body;
+    if(!body||body.getAttribute('data-bookmarks')!=='1') return;
+    var BK_KEY='spo:bk';
+    var pageId=location.pathname.split('/').pop()||'index.html';
+
+    function load(){
+      try{return JSON.parse(localStorage.getItem(BK_KEY)||'{}');}
+      catch(e){return {};}
+    }
+    function save(s){try{localStorage.setItem(BK_KEY,JSON.stringify(s));}
+      catch(e){}}
+
+    function track(n,p){
+      if(typeof window.spoTrack==='function'){
+        try{window.spoTrack(n,p||{});}catch(e){}
+      }
+    }
+
+    function isSaved(canon){
+      var s=load(); return !!(s[canon]);
+    }
+    function toggleSave(canon,title,evidence){
+      var s=load();
+      if(s[canon]){delete s[canon];}
+      else{
+        s[canon]={page:pageId,title:title||'',evidence:evidence||'',
+          ts:Date.now()};
+      }
+      save(s);
+      return !!s[canon];
+    }
+
+    var SVG_BK='<svg viewBox="0 0 16 16" aria-hidden="true">'
+      +'<path d="M3 2h10v12l-5-3-5 3V2z"/></svg>';
+
+    function makeBtn(canon,title,evidence){
+      var b=document.createElement('button');
+      b.type='button';
+      b.className='spo-bookmark-btn';
+      b.setAttribute('data-finding',canon);
+      b.setAttribute('aria-pressed',isSaved(canon)?'true':'false');
+      b.innerHTML=SVG_BK+'<span>'+(isSaved(canon)?'Saved':'Save')+'</span>';
+      if(isSaved(canon)) b.classList.add('is-active');
+      b.addEventListener('click',function(ev){
+        ev.preventDefault();ev.stopPropagation();
+        var nowSaved=toggleSave(canon,title,evidence);
+        b.classList.toggle('is-active',nowSaved);
+        b.setAttribute('aria-pressed',nowSaved?'true':'false');
+        b.querySelector('span').textContent=nowSaved?'Saved':'Save';
+        track(nowSaved?'Bookmark Added':'Bookmark Removed',
+          {page:pageId,finding:canon});
+      });
+      return b;
+    }
+
+    document.querySelectorAll('.sro-finding[data-finding]').forEach(function(li){
+      if(li.querySelector('.spo-bookmark-btn')) return;
+      var canon=li.getAttribute('data-finding');
+      var title=(li.querySelector('.sro-evidence')||{}).textContent||'';
+      var meta=li.querySelector('.sro-meta');
+      var react=li.querySelector('.feedback-react');
+      var btn=makeBtn(canon,title.substring(0,140),title);
+      if(react){react.appendChild(btn);}
+      else if(meta){meta.appendChild(btn);}
+      else{li.appendChild(btn);}
+    });
+  })();
+
+  /* ── L6: Structured form — async submit + status feedback ──
+     The form is a plain HTML POST so it works without JS; this layer
+     just prevents the redirect, posts via fetch, and renders inline
+     success/error feedback. */
+  (function initStructuredForm(){
+    var section=document.querySelector('.page-form[data-form-endpoint]');
+    if(!section) return;
+    var form=section.querySelector('form');
+    var status=section.querySelector('.page-form-status');
+    var pageInput=form.querySelector('input[name="_page"]');
+    if(pageInput) pageInput.value=location.pathname.split('/').pop()||'index.html';
+
+    function track(n,p){
+      if(typeof window.spoTrack==='function'){
+        try{window.spoTrack(n,p||{});}catch(e){}
+      }
+    }
+
+    form.addEventListener('submit',function(ev){
+      ev.preventDefault();
+      var btn=form.querySelector('button[type=submit]');
+      btn.disabled=true;
+      status.textContent='Sending…';
+      status.className='page-form-status';
+      var data=new FormData(form);
+      fetch(form.action,{method:'POST',body:data,
+        headers:{'Accept':'application/json'}})
+        .then(function(r){
+          if(r.ok){
+            status.textContent='Thanks — your feedback was sent.';
+            status.classList.add('is-ok');
+            form.reset();
+            track('Form Submitted',{page:pageInput?pageInput.value:''});
+          }else{
+            status.textContent='Send failed — try again or post on Discussions.';
+            status.classList.add('is-err');
+          }
+        }).catch(function(){
+          status.textContent='Network error — your message was not sent.';
+          status.classList.add('is-err');
+        }).finally(function(){btn.disabled=false;});
+    });
+  })();
+
+  /* ── L7: Q&A inline — Ask the authors per finding ──
+     When data-qa-endpoint is set on body, attaches an "Ask the authors"
+     button to each .sro-finding. Click opens an inline composer; submit
+     POSTs to the configured Worker endpoint. The Worker stores the
+     question in KV and emails the team. Any answers (manually approved)
+     come back via GET and render inline below the finding. */
+  (function initQA(){
+    var body=document.body;
+    if(!body) return;
+    var endpoint=body.getAttribute('data-qa-endpoint');
+    if(!endpoint) return;
+    var pageId=location.pathname.split('/').pop()||'index.html';
+
+    function track(n,p){
+      if(typeof window.spoTrack==='function'){
+        try{window.spoTrack(n,p||{});}catch(e){}
+      }
+    }
+
+    function fetchAnswers(canon,host){
+      fetch(endpoint.replace(/\\/$/,'')+'/qa/'+encodeURIComponent(canon))
+        .then(function(r){return r.ok?r.json():{answers:[]};})
+        .then(function(data){
+          var answers=(data&&data.answers)||[];
+          if(!answers.length) return;
+          var box=document.createElement('div');
+          box.className='spo-qa-answers';
+          box.innerHTML='<h4>Authors\\' answers</h4>'+
+            answers.map(function(a){
+              return '<article class="spo-qa-answer">'
+                +'<div class="spo-qa-answer-meta">'
+                +(a.author||'IO Research')+' · '
+                +(a.date||'')+'</div>'
+                +'<div class="spo-qa-answer-body">'+(a.html||a.text||'')+'</div>'
+                +'</article>';
+            }).join('');
+          host.appendChild(box);
+        }).catch(function(){});
+    }
+
+    function attachComposer(canon,host){
+      var open=document.createElement('button');
+      open.type='button';
+      open.className='spo-qa-open';
+      open.innerHTML='<svg viewBox="0 0 16 16" aria-hidden="true">'
+        +'<path d="M3 4h10v7H7l-3 3v-3H3V4zm2 2v1h6V6H5zm0 3v1h4V9H5z"/></svg>'
+        +'<span>Ask the authors</span>';
+      host.appendChild(open);
+      open.addEventListener('click',function(){
+        if(host.querySelector('.spo-qa-form')){return;}
+        var form=document.createElement('form');
+        form.className='spo-qa-form';
+        form.innerHTML=
+          '<label>Your question about this finding<textarea name="q" rows="3" required></textarea></label>'
+          +'<label>Email <small>(optional, for the reply)</small><input type="email" name="email" autocomplete="off"></label>'
+          +'<div class="spo-qa-actions">'
+          +'<button type="button" class="spo-qa-cancel">Cancel</button>'
+          +'<button type="submit" class="spo-qa-submit">Send question</button>'
+          +'</div>'
+          +'<p class="spo-qa-status" aria-live="polite"></p>';
+        host.appendChild(form);
+        form.querySelector('.spo-qa-cancel').addEventListener('click',
+          function(){form.remove();});
+        form.addEventListener('submit',function(ev){
+          ev.preventDefault();
+          var status=form.querySelector('.spo-qa-status');
+          var btn=form.querySelector('.spo-qa-submit');
+          btn.disabled=true;status.textContent='Sending…';
+          var fd=new FormData(form);
+          fd.append('finding',canon);
+          fd.append('page',pageId);
+          fetch(endpoint.replace(/\\/$/,'')+'/qa',{
+            method:'POST',body:fd,
+            headers:{'Accept':'application/json'}
+          }).then(function(r){
+            if(r.ok){
+              status.textContent='Thanks — we will reply on this finding.';
+              status.classList.add('is-ok');
+              form.querySelector('textarea').value='';
+              track('QA Asked',{page:pageId,finding:canon});
+            }else{
+              status.textContent='Submit failed.';
+              status.classList.add('is-err');
+            }
+          }).catch(function(){
+            status.textContent='Network error.';
+            status.classList.add('is-err');
+          }).finally(function(){btn.disabled=false;});
+        });
+      });
+    }
+
+    document.querySelectorAll('.sro-finding[data-finding]').forEach(function(li){
+      if(li.querySelector('.spo-qa-open')) return;
+      var canon=li.getAttribute('data-finding');
+      var host=document.createElement('div');
+      host.className='spo-qa-host';
+      li.appendChild(host);
+      attachComposer(canon,host);
+      fetchAnswers(canon,host);
     });
   })();
   /* ── /Cross-page DIA source overlay ── */
@@ -4361,9 +5145,84 @@ def build_page(page: dict) -> Path:
     return out
 
 
+def build_bookmarks_page() -> Path:
+    """Build my-bookmarks.html — utility page that hydrates from the
+    reader's localStorage (`spo:bk`) and lists their saved findings.
+    Pure client-side: every reader sees their own private set, nothing
+    is sent to a server.
+    """
+    page = {
+        "slug": "my-bookmarks",
+        "html": "my-bookmarks.html",
+        "title": "My Bookmarks — SPO Incentives",
+        "hero_h1": "My Bookmarks",
+        "hero_sub": "Findings you've saved while reading",
+        "active_nav": None,
+    }
+    content_html = (
+        '<section class="bookmarks-page">'
+        '<p class="bookmarks-lede">'
+        'These are the findings you marked with the <strong>Save</strong> button '
+        'while reading the diagnostic sub-reports. They live only in your browser '
+        '— nothing is sent to a server. Clear them with the button at the bottom '
+        'or by clicking <em>Saved</em> on the original finding.'
+        '</p>'
+        '<div id="bookmarks-list" class="bookmarks-list" '
+        'data-empty-msg="You have not saved any findings yet. Open a sub-report '
+        '(Operators/Delegators, Pools, Reserves, Census) and click '
+        'Save next to a finding."></div>'
+        '<div class="bookmarks-actions">'
+        '<button type="button" id="bookmarks-clear" class="bookmarks-clear">'
+        'Clear all saved findings</button>'
+        '<button type="button" id="bookmarks-export" class="bookmarks-export">'
+        'Copy as Markdown</button>'
+        '</div>'
+        '</section>'
+        '<script>(function(){'
+        'function slugify(s){return s.toLowerCase().replace(/\\./g,"-");}'
+        'function hydrate(){'
+        'var list=document.getElementById("bookmarks-list");'
+        'var raw={};try{raw=JSON.parse(localStorage.getItem("spo:bk")||"{}");}catch(e){}'
+        'var keys=Object.keys(raw);'
+        'if(!keys.length){'
+        'list.innerHTML="<p class=\\"bookmarks-empty\\">"+list.dataset.emptyMsg+"</p>";'
+        'return;}'
+        'var byPage={};keys.forEach(function(k){'
+        'var rec=raw[k];var p=rec.page||"index.html";'
+        'if(!byPage[p])byPage[p]=[];'
+        'byPage[p].push(Object.assign({finding:k},rec));});'
+        'list.innerHTML=Object.keys(byPage).sort().map(function(p){'
+        'return "<section class=\\"bookmarks-group\\"><h2>"+p+"</h2><ul>"+'
+        'byPage[p].sort(function(a,b){return (a.ts||0)-(b.ts||0);})'
+        '.map(function(b){'
+        'var url=p+"#"+slugify(b.finding);'
+        'return "<li><a href=\\""+url+"\\"><span class=\\"bk-fid\\">"+b.finding+"</span>"+'
+        '"<span class=\\"bk-text\\">"+(b.title||b.evidence||"")+"</span></a></li>";}).join("")+'
+        '"</ul></section>";'
+        '}).join("");}'
+        'hydrate();'
+        'document.getElementById("bookmarks-clear").addEventListener("click",function(){'
+        'if(confirm("Remove all saved findings?")){localStorage.removeItem("spo:bk");hydrate();}});'
+        'document.getElementById("bookmarks-export").addEventListener("click",function(){'
+        'var raw={};try{raw=JSON.parse(localStorage.getItem("spo:bk")||"{}");}catch(e){}'
+        'var lines=Object.keys(raw).map(function(k){var r=raw[k];'
+        'return "- ["+k+"]("+(r.page||"")+"#"+slugify(k)+")"+'
+        '(r.title?" — "+r.title.substring(0,140):"");}).join("\\n");'
+        'if(navigator.clipboard&&navigator.clipboard.writeText){'
+        'navigator.clipboard.writeText(lines);'
+        'this.textContent="Copied";'
+        'var btn=this;setTimeout(function(){btn.textContent="Copy as Markdown";},1500);}});'
+        '})();</script>'
+    )
+    full = render_shell(page, content_html)
+    out = SITE_DIR / "my-bookmarks.html"
+    out.write_text(full)
+    return out
+
+
 def main(argv: list[str]) -> int:
     slugs = [a for a in argv[1:] if not a.startswith("-")]
-    valid_slugs = {p["slug"] for p in PAGES} | {"findings"}
+    valid_slugs = {p["slug"] for p in PAGES} | {"findings", "my-bookmarks"}
     wanted = PAGES if not slugs else [p for p in PAGES if p["slug"] in slugs]
     if slugs:
         missing = set(slugs) - valid_slugs
@@ -4393,6 +5252,14 @@ def main(argv: list[str]) -> int:
         print(f"  {'findings':16s} ← diagnostic/README.md (synthesis)")
         findings_out = build_findings_page()
         print(f"  {' ':16s}  → {findings_out.relative_to(SITE_DIR)}")
+
+    # Bookmarks page — utility page, hydrates from the reader's local
+    # storage and lists their saved findings. Always built so the
+    # `Save` button has a target.
+    if not slugs or "my-bookmarks" in slugs:
+        print(f"  {'my-bookmarks':16s} ← (localStorage hydrator)")
+        bookmarks_out = build_bookmarks_page()
+        print(f"  {' ':16s}  → {bookmarks_out.relative_to(SITE_DIR)}")
     print("Done.")
     return 0
 
