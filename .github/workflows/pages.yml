@@ -29,6 +29,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: python -m pip install --upgrade pip markdown
+
+      - name: Rebuild static site
+        # Re-runs build_site.py inside CI so the deployed HTML always
+        # reflects the current secret/var configuration. Reader-feedback
+        # integrations (Plausible, Giscus, finding reactions) inject only
+        # when the matching env vars are non-empty — see
+        # `reward-system-spec/generated-website/BUILD_FEEDBACK.md`.
+        working-directory: reward-system-spec/generated-website
+        env:
+          SPO_PLAUSIBLE_DOMAIN:     ${{ vars.SPO_PLAUSIBLE_DOMAIN }}
+          SPO_PLAUSIBLE_SCRIPT_URL: ${{ vars.SPO_PLAUSIBLE_SCRIPT_URL }}
+          SPO_GISCUS_REPO:          ${{ vars.SPO_GISCUS_REPO }}
+          SPO_GISCUS_REPO_ID:       ${{ vars.SPO_GISCUS_REPO_ID }}
+          SPO_GISCUS_CATEGORY:      ${{ vars.SPO_GISCUS_CATEGORY }}
+          SPO_GISCUS_CATEGORY_ID:   ${{ vars.SPO_GISCUS_CATEGORY_ID }}
+          SPO_GISCUS_MAPPING:       ${{ vars.SPO_GISCUS_MAPPING }}
+          SPO_GISCUS_THEME:         ${{ vars.SPO_GISCUS_THEME }}
+          SPO_GISCUS_LANG:          ${{ vars.SPO_GISCUS_LANG }}
+          SPO_REACTIONS_ENABLED:    ${{ vars.SPO_REACTIONS_ENABLED }}
+        run: python3 build_site.py
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
