@@ -211,6 +211,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .content th,.content td{word-break:normal;overflow-wrap:break-word}
 .content tr:hover td{background:var(--bg-warm)}
 
+/* ── Evidence base cards (V2 spec) — §3.x.x.x and §4.x.x.x ── */
+.ev-list{display:flex;flex-direction:column;gap:8px;margin:18px 0 28px}
+.ev-card{display:grid;grid-template-columns:160px 1fr;gap:18px;padding:14px 18px;border:1px solid var(--border);border-radius:8px;background:var(--bg);transition:border-color .15s,box-shadow .15s}
+.ev-card:hover{border-color:rgba(229,35,33,.35);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+[data-theme=dark] .ev-card{border-color:#2a2a2a}
+[data-theme=dark] .ev-card:hover{border-color:rgba(229,35,33,.45);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.ev-label{font:600 11px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-transform:uppercase;letter-spacing:.6px;color:var(--infared);align-self:start;padding-top:3px}
+.ev-content{min-width:0}
+.ev-body{font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-body);margin:0}
+.ev-body strong{color:var(--text-primary);font-weight:700}
+.ev-sources{margin:8px 0 0;font:italic 400 11.5px/1.4 -apple-system,sans-serif;color:var(--text-muted)}
+.ev-sources a{color:var(--text-muted);text-decoration:underline;text-decoration-color:rgba(229,35,33,.3);text-underline-offset:2px}
+.ev-sources a:hover{color:var(--infared);text-decoration-color:var(--infared)}
+@media (max-width:640px){.ev-card{grid-template-columns:1fr;gap:6px}.ev-label{padding-top:0}}
+
 /* Blockquotes */
 .content blockquote{border-left:3px solid var(--accent);padding:12px 18px;margin:16px 0;background:var(--bg-panel);border-radius:0 6px 6px 0}
 .content blockquote p{margin:0;font-size:14px;color:var(--text-body)}
@@ -469,48 +484,59 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .nav-dd-ref-stage-soon{color:#5a4d00;background:rgba(242,255,88,.32);border-color:rgba(242,255,88,.6)}
 [data-theme=dark] .nav-dd-ref-stage-soon{color:#F2FF58;background:rgba(242,255,88,.10);border-color:rgba(242,255,88,.4)}
 
-/* Tree nesting: per-CIP entries indent under their CIP-evaluation
-   synthesis with an explicit guide. Each child draws a full-height
-   vertical line on the left plus an L-connector at vertical centre;
-   the last child in a sequence cuts the vertical line off at centre
-   so the bracket closes ┘-style instead of dangling past the row.
-   Lines use --text-muted (not --border) so they read clearly against
-   the white menu background. */
+/* ── Tree nesting for the Solution Evaluation dropdown ──
+   Static-class design — no :has() selectors. build_site.py marks the
+   parent synthesis row with .nav-dd-ref-synthesis-parent and the last
+   child of each tree group with .nav-dd-ref-deep-last. Lines are 2px
+   solid in --text-muted for clear visibility on the white menu.
+
+   Visual layout:
+       ─┐ CIP evaluation synthesis    ← .nav-dd-ref-synthesis-parent
+        │── CIP-0050                  ← .nav-dd-ref-deep
+        └── CIP-0037                  ← .nav-dd-ref-deep .nav-dd-ref-deep-last
+
+   With sub-doc nesting (Fee Layer):
+       ─┐ CIP evaluation synthesis
+        │── CIP-0023                  ← deep
+        │── CIP-0082                  ← deep (parent of deeper sub-doc)
+        │   ╰── k-Parameter           ← .nav-dd-ref-deeper            */
+
+/* Parent synthesis row — extend its existing left-bullet (defined on
+   .nav-dd-ref-sub::before) so it reaches the children's vertical
+   line, and add a downward stub from row centre to row bottom. The
+   stub butts up against the first child's full-height line so the
+   tree visibly hangs from the parent without a gap. */
+.nav-dd-ref-synthesis-parent::before{width:14px!important;
+  background:var(--text-muted)!important;opacity:1!important}
+.nav-dd-ref-synthesis-parent::after{content:"";position:absolute;
+  left:36px;top:50%;bottom:0;width:2px;background:var(--text-muted)}
+
+/* Level-1 child (CIP entry) — full-height vertical line + L-connector
+   at row centre. The last child of each group cuts the vertical line
+   off at centre via .nav-dd-ref-deep-last. */
 .nav-dd-ref-deep{padding-left:56px;position:relative}
 .nav-dd-ref-deep::before{content:"";position:absolute;
-  left:36px;top:0;bottom:0;width:1px;background:var(--text-muted)}
+  left:36px;top:0;bottom:0;width:2px;background:var(--text-muted)}
 .nav-dd-ref-deep::after{content:"";position:absolute;
-  left:36px;top:50%;width:14px;height:1px;background:var(--text-muted)}
-/* Last entry of the tree (next sibling is neither deep nor deeper):
-   vertical line stops at centre. The deeper class is a sub-doc nested
-   under a deep row, so when CIP-0082 has k-Parameter as its next
-   sibling, CIP-0082's vertical line should still continue. */
-.nav-dd-ref-deep:has(+ :not(.nav-dd-ref-deep, .nav-dd-ref-deeper))::before,
-.nav-dd-ref-deep:last-child::before{bottom:auto;height:50%}
+  left:36px;top:50%;width:14px;height:2px;background:var(--text-muted)}
+.nav-dd-ref-deep-last::before{bottom:auto;height:50%}
 
-/* Sub-doc nested one level deeper (e.g. k-Parameter mechanics under
-   CIP-0082). The parent group's vertical line continues through this
-   row; an additional L from the parent CIP's indent points to this
-   row's title with a rounded corner so the two-level hierarchy reads
-   at a glance. */
+/* Level-2 sub-doc (e.g. k-Parameter under CIP-0082) — the parent
+   tree's vertical line continues from row top to row centre (and
+   stops there since the sub-doc closes the tree). An additional
+   rounded L at the deeper indent points to the sub-doc title. */
 .nav-dd-ref-deeper{padding-left:76px;position:relative}
 .nav-dd-ref-deeper::before{content:"";position:absolute;
-  left:36px;top:0;height:50%;width:1px;background:var(--text-muted)}
+  left:36px;top:0;height:50%;width:2px;background:var(--text-muted)}
 .nav-dd-ref-deeper::after{content:"";position:absolute;
   left:56px;top:0;width:18px;height:50%;
-  border-left:1px solid var(--text-muted);
-  border-bottom:1px solid var(--text-muted);
+  border-left:2px solid var(--text-muted);
+  border-bottom:2px solid var(--text-muted);
   border-bottom-left-radius:6px}
 
-/* Layer synthesis row sits one indent shallower than the CIP children — visually the parent node */
+/* Synthesis row title styling — shared by Forward "Draft in
+   preparation" (no children) and the parent-of-CIPs synthesis rows. */
 .nav-dd-ref-synthesis .nav-dd-ref-title{font-weight:600;color:var(--text-primary)}
-/* When the synthesis row has CIP children below, extend its bullet to
-   meet the children's vertical guide and add a downward stub from the
-   row centre to its bottom. This is what visually "anchors" the tree
-   to its parent — without it, the children's vertical line floats. */
-.nav-dd-ref-synthesis:has(+ .nav-dd-ref-deep)::before{width:14px}
-.nav-dd-ref-synthesis:has(+ .nav-dd-ref-deep)::after{content:"";position:absolute;
-  left:36px;top:50%;bottom:0;width:1px;background:var(--text-muted)}
 
 /* Active / parent-active state on rich-list item */
 .nav-dd-ref.active{background:rgba(22,233,216,.09);box-shadow:inset 3px 0 0 rgba(22,233,216,.7)}
