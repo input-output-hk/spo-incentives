@@ -561,6 +561,15 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
    only background-image draws — the cells stay transparent everywhere
    except along the 2px-wide guide. */
 
+/* The .nav-dd-ref-sub::before bullet (small "─" mark) is the
+   inheritance from the Reward-Flow nav items — for tree members it
+   creates a stray dash that competes with the vertical guide. Hide
+   it on synthesis-parents and tree children so the line is the only
+   hierarchy mark. */
+.nav-dd-ref-synthesis-parent::before,
+.nav-dd-ref-deep::before,
+.nav-dd-ref-deeper::before{display:none}
+
 /* Parent synthesis row — line on bottom half, hands off to the first
    child seamlessly. */
 .nav-dd-ref-synthesis-parent{
