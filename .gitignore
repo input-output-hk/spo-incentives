@@ -20,5 +20,16 @@ data/
 *.duckdb
 *.duckdb.wal
 
+# Python bytecode caches.
+__pycache__/
+*.pyc
+*.pyo
+
+# Raw Cardano blocks fetched by the nakamoto-revaluation pipeline. Each
+# file is ~25 MB and is reproducible via
+# `reward-system-spec/diagnostic/sub-flows/nakamoto-revaluation/edi-replication/scripts/01_fetch_blocks_koios.py`.
+reward-system-spec/diagnostic/sub-flows/nakamoto-revaluation/edi-replication/inputs/*.ndjson
+reward-system-spec/diagnostic/sub-flows/nakamoto-revaluation/edi-replication/inputs_*/*.ndjson
+
 # OS generated files
 .DS_Store
