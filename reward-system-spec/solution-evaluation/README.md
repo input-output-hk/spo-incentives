@@ -171,7 +171,7 @@ None of the four CIPs was written to target these, because they were drafted bef
 
 Five mechanical observations stitch the per-CIP analyses into a single cross-CIP readout. Each is grounded in a specific formula property or a specific mainnet measurement; no behavioural prediction is made unless flagged as such.
 
-**F1 — CIP-0082 stage 2 inverts operator viability for the population it claims to help.** A Sub-viable single-pool operator, who today earns ~12 410 ₳/yr from `minPoolCost = 170`, would earn ~**1 365 ₳/yr** under `minPoolRate = 3 %` — a **9× revenue cut**. A Saturated pool gains **4×**. On the n-MPO fleet axis, the transfer compounds: a sub-viable single-pool operator gains **+431 ₳/yr**; an 11+-pool MPO entity gains **+200 000 ₳/yr**. The reform claims §3.1 viability but the mechanical effect is a regressive transfer up the operator-fleet distribution.
+**F1 — CIP-0082 stage 2 inverts operator viability for the population it claims to help.** A Sub-viable single-pool operator, who today earns ~12 410 ₳/yr from `minPoolCost = 170`, would earn ~**1 365 ₳/yr** under `minPoolRate = 3 %` — a **9× revenue cut**. A Saturated pool gains **4×**. On the n-MPO fleet axis, the transfer compounds: a sub-viable single-pool operator gains **+431 ₳/yr**; an 11+-pool MPO entity gains **+200 000 ₳/yr**. The reform claims §3.1 viability but the mechanical effect is a regressive transfer up the operator-fleet distribution. This is the consequence of using a pricing parameter (`minPoolRate`) as a viability instrument — the conceptual critique is laid out in [§5.2](#52-cip-0082).
 
 **F2 — Both stake-cap CIPs share a capital-capability bias.** Custodial-by-extraction stake (57 entities, 2.04 B ₳ — about **21 %** of productive stake) holds custodied retail funds the operator legally cannot self-pledge. For this segment, every stake-cap reform produces a reward cut with no recourse — under CIP-0050 the σ′ collapses to zero; under CIP-0037 it's clipped to the 20 % floor. Custodial-by-pledge entities (10 entities, 1.59 B ₳) sit *above* the cap regardless and are unaffected. The reform pressures pools that are not the actual concentration concern.
 
@@ -189,8 +189,8 @@ Read across the four candidates, and through the simplification into two effecti
 |---|:---:|---|---|
 | **CIP-0050** | ▼ no-go | Capital-capability bias — Custodial-by-extraction segment cannot self-pledge; σ′ collapses to zero | [`cip-0050.md`](pools-distribution/cip-0050.md) · [F2](#44-cross-cip-findings) |
 | **CIP-0037** | ▼ no-go | Same capital-capability bias; softened by 20 % floor but not removed | [`cip-0037.md`](pools-distribution/cip-0037.md) · [F2](#44-cross-cip-findings) |
-| **CIP-0023** | ⊂ moot | Subsumed by CIP-0082 stage 2 — strictly less mechanism, same regression | [`cip-0023.md`](operator-delegator/cip-0023.md) · [F3](#44-cross-cip-findings) |
-| **CIP-0082 stage 2** | ▼ no-go | Inverts Operator Viability — Sub-viable **−9×** revenue, **+200 k ₳/yr** to 11+-pool MPO entity | [`cip-0082.md`](operator-delegator/cip-0082.md) · [F1](#44-cross-cip-findings) |
+| **CIP-0023** | ⊂ moot | Same pricing/viability conflation as CIP-0082 stage 2, smaller calibration — strictly less mechanism, same regression | [`cip-0023.md`](operator-delegator/cip-0023.md) · [F3](#44-cross-cip-findings) |
+| **CIP-0082 stage 2** | ▼ no-go | Conflates **pricing** with **viability** — `minPoolRate` bolts the viability function onto the operator's commission, producing a regressive transfer (Sub-viable **−9×**, **+200 k ₳/yr** to MPO entities) | [`cip-0082.md`](operator-delegator/cip-0082.md) · [F1](#44-cross-cip-findings) |
 | **CIP-0082 stages 3–4** | ▼ no-go | `k`-raise on a 3-epoch cadence regenerates the 2020 MPO-fleet absorption pattern | [`k-parameter.md`](operator-delegator/k-parameter.md) · [F4](#44-cross-cip-findings) |
 
 ### 5.1 Stake-cap CIPs (CIP-0050 / CIP-0037)
@@ -201,17 +201,30 @@ The verdict is no-go, but the underlying intent is sound. The [new proposal](#6-
 
 ### 5.2 CIP-0082
 
-The four-stage package fails on two of its stages.
+The four-stage package fails on two of its stages, but the underlying intuition on stage 2 is *half-right* and worth naming explicitly — because the principled separation it gets wrong is what the new proposal needs to get right.
 
-**Stage 2 (Margin swap, hard fork).** Inverts operator viability for the population it claims to help. A Sub-viable single-pool operator loses **9× revenue** under `minPoolRate = 3 %` versus today's `minPoolCost = 170` (12 410 → 1 365 ₳/yr); on the n-MPO axis, the same reform transfers **+200 000 ₳/yr** to an 11+-pool MPO entity ([§4.4 / F1](#44-cross-cip-findings)). The stated milestone is Operator Viability; the mechanical effect is a regressive transfer up the operator-fleet distribution. See [`cip-0082.md`](operator-delegator/cip-0082.md).
+**The half that is right: removing `minPoolCost` is the correct move.** The flat-ADA floor is a regressive instrument on both sides of the split. On the delegator side, it pins net ROS at zero for every pool whose epochal reward does not reach the floor (today's Dormant and Sub-production tiers — 100 % fee-consumed). On the operator side, it pins sub-viable operator income at exactly the floor regardless of stake. CIP-0023 and CIP-0082 both correctly identify `minPoolCost` as a problem.
 
-**Stages 3–4 (`k`: 500 → 750 → 1000 on a 3-epoch cadence).** Reproduce the August 2020 outcome under the current weak-pledge regime. The only previous `k` change in Cardano's history (`k: 150 → 500`) produced today's MPO landscape: 85 entities operating 901 pools that hold 75.4 % of participating stake. The proposed cadence leaves no window to activate a stake-cap layer in between, so the new pool slots fire in exactly the regressive regime ([§4.4 / F4](#44-cross-cip-findings)). The mechanics are in [`k-parameter.md`](operator-delegator/k-parameter.md).
+**The half that is wrong: replacing `minPoolCost` with `minPoolRate = 3 %` bolts a viability function onto a pricing tool.** A rate floor is not a relief mechanism — it is a *commission constraint*. By forcing every operator into a 3 % minimum margin, stage 2 conflates two functions that V2 needs to keep separate:
+
+- **Pricing** (`minPoolCost`, `poolRate`, `minPoolRate`) — the operator's competitive lever. Pricing is what delegators read to distinguish between operators; it should remain a free-market signal that operators set as they choose, including down to zero in markets where the operator is willing to compete on cost alone.
+- **Viability** — the structural minimum a productive operator must clear to cover operational cost. This is a backstop, not a price; it must respond to *who is producing blocks*, not *who has registered a fee schedule*.
+
+The principled separation is laid out in [`operator-delegator/README.md` Executive summary](operator-delegator/README.md#executive-summary): pricing tools should remain fully flexible competitive levers; the **viability floor belongs on the reward-distribution layer (pre-split)**, not on the fee-split layer (post-split). Stake-cap instruments ([`pools-distribution/`](pools-distribution/README.md)) act on the right layer — they reshape the reward-eligible stake $\sigma'$ before the formula applies, leaving operator pricing untouched.
+
+The mechanical consequence of mixing pricing and viability is the regressive transfer in [§4.4 / F1](#44-cross-cip-findings): Sub-viable single-pool operators lose **9× revenue** under `minPoolRate = 3 %` versus today's `minPoolCost = 170 ₳`; an 11+-pool MPO entity gains **+200 000 ₳/yr** — because a proportional rate floor multiplies pool reward, and pool reward grows with σ. The reform claims Operator Viability; the mechanical effect is a regressive transfer up the operator-fleet distribution, *because the wrong layer was used*. Detailed mechanics in [`cip-0082.md`](operator-delegator/cip-0082.md).
+
+**Stages 3–4 (`k`: 500 → 750 → 1000 on a 3-epoch cadence)** reproduce the August 2020 outcome under the current weak-pledge regime. The only previous `k` change in Cardano's history (`k: 150 → 500`) produced today's MPO landscape: 85 entities operating 901 pools that hold 75.4 % of participating stake. The proposed cadence leaves no window to activate a stake-cap layer in between, so the new pool slots fire in exactly the regressive regime ([§4.4 / F4](#44-cross-cip-findings)). The mechanics are in [`k-parameter.md`](operator-delegator/k-parameter.md).
 
 Stage 1 (floor halving, already shipped) is the only stage that survives this evaluation — and it is also the only stage whose mechanical effect is bounded.
 
 ### 5.3 CIP-0023
 
-Subsumed by CIP-0082 stage 2 ([§4.4 / F3](#44-cross-cip-findings)) — same intent, less aggressive primitive. Inherits the same regressive transfer up the operator-fleet distribution, with strictly less mechanism. No independent verdict is needed: if Stage 2 is a no-go, CIP-0023 is too. See [`cip-0023.md`](operator-delegator/cip-0023.md).
+CIP-0023 introduces `minPoolMargin` — mechanically identical to CIP-0082 stage 2's `minPoolRate`, and credited as the conceptual seed by CIP-0082's own author. It inherits both halves of stage 2's intuition: the *correct* half (the flat-fee `minPoolCost` is a regressive instrument that needs relief at the small-pool end) and the *incorrect* half (the relief is engineered as a margin-floor — a pricing parameter — rather than as a viability primitive on the reward-distribution layer).
+
+The principled critique in [§5.2](#52-cip-0082) applies in full. CIP-0023's own per-pool data documents the same regressive transfer at smaller calibration: pool-axis amplification of **52×** (Δ at Saturated 357.5 ₳/ep vs Δ at Sub-viable 6.8 ₳/ep) and operator-fleet amplification of **502×** under the standalone variant (216 298 ₳/yr to an 11+-pool MPO entity vs 431 ₳/yr to a sub-viable single-pool operator). The full readout is in [`cip-0023.md` §3.2](operator-delegator/cip-0023.md), and the structural relation to stage 2 is summarised in [§4.4 / F3](#44-cross-cip-findings).
+
+No independent verdict is needed: if Stage 2 is a no-go, CIP-0023 is too — same conceptual error (pricing-as-viability), less mechanism.
 
 ### 5.4 Sub-aspects untouched by the bundle
 
@@ -227,7 +240,13 @@ The four pre-existing CIPs were drafted before V2 surfaced these as separable pr
 
 The four pre-existing CIPs each respond to a partial framing of the problem. Treated as a package, **they do not close the V2 milestone set**, and the pieces that do engage individual milestones do so through mechanisms that regress on milestones they do not target. The bundle is not a viable path to V2 as it stands.
 
-This is not a rejection of the underlying intents. CIP-0050 and CIP-0037 capture a real Pledge milestone goal; CIP-0023 and CIP-0082 stage 2 react to a real fee-layer dispersion problem. What the evaluation rejects is the **mechanical realisation** each picks — and the structural caveats are not parameter tunings but objections that the chosen primitives cannot accommodate. The design space needs a fresh proposal that addresses the caveats together rather than in isolation, see [§6 Toward a new proposal](#6-toward-a-new-proposal).
+This is not a rejection of the underlying intents. CIP-0050 and CIP-0037 capture a real Pledge milestone goal; CIP-0023 and CIP-0082 stage 2 correctly identify `minPoolCost` as a regressive flat fee that needs to go. What the evaluation rejects is the **mechanical realisation** each picks. The pattern across the bundle is the same: every candidate puts its instrument **on the wrong layer**.
+
+- **Fee-layer CIPs (CIP-0023 / CIP-0082 stage 2)** address viability by tightening pricing parameters (`minPoolMargin`, `minPoolRate`). The viability function belongs on the reward-distribution layer (pre-split); pricing must remain free for operators to compete in an open market. Conflating the two produces the regressive transfer documented in [§5.2](#52-cip-0082).
+- **Stake-cap CIPs (CIP-0050 / CIP-0037)** act on the right layer (pre-split, σ′) but with a primitive that ignores the capital structure of the segments they target ([§5.1](#51-stake-cap-cips-cip-0050-cip-0037)).
+- **Pool-count expansion (CIP-0082 stages 3–4)** addresses Deconcentration by raising `k` without a stake-cap precondition, so the new pool slots fire in the same MPO-fleet absorption regime that produced today's concentration ([§5.2](#52-cip-0082)).
+
+The design space therefore needs a fresh proposal that respects three separations: pricing free-market levers stay flexible; the viability backstop lives on the reward-distribution layer; and pool-count expansion is gated on a stake-cap precondition. See [§6 Toward a new proposal](#6-toward-a-new-proposal).
 
 ## 6. Toward a new proposal
 
