@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Bookmarks — SPO Incentives</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem('spo-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<script>(function(){var bgs=['iog-hero-bg-01.jpg','iog-hero-bg-02.jpg','iog-hero-bg-03.jpg'];var pick=bgs[Math.floor(Math.random()*bgs.length)];document.documentElement.style.setProperty('--hero-bg','url("'+pick+'")');})();</script>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="assets/site.css?v=1777295517">
+
+
+</head>
+<body data-highlights="1" data-bookmarks="1">
+<div class="progress-bar" id="progress"></div>
+<nav class="site-nav"><div class="nav-brand">
+<a href="index.html" class="nav-brand-home">
+<img src="assets/iog-word-marque-white.png" alt="Input | Output Group" class="nav-brand-wordmark">
+<span class="nav-brand-sep-vr" aria-hidden="true"></span>
+<span class="nav-brand-org"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</span>
+<span class="nav-brand-sep" aria-hidden="true">/</span>
+<span class="nav-brand-title">Cardano Reward System V2</span>
+</a>
+<div class="nav-brand-right">
+<button class="pdf-export" onclick="printAsPdf()" title="Save this page as PDF" aria-label="Save as PDF">PDF</button>
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light theme" aria-label="Toggle theme">☀</button>
+</div>
+</div>
+<div class="nav-pages">
+
+<!-- Zone 1 (left anchor) — Solution Evaluation: CIP candidates evaluated against V2 -->
+<div class="nav-zone nav-zone-solution">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-solution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Solution Evaluation ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-solution">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
+      <span class="nav-dd-stratum-meta">Five CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
+    </div>
+    <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero">
+      <span class="nav-dd-ref-title">Cross-CIP Analysis &amp; Verdict</span>
+      <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, no-go verdict on the bundle</span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Forward — New Proposal</div>
+    <a href="solution-evaluation.html#5-toward-a-new-proposal" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
+      <span class="nav-dd-ref-title">Draft in preparation</span>
+      <span class="nav-dd-ref-cite">V2 spec target with the structural caveats addressed<span class="nav-dd-ref-stage nav-dd-ref-stage-soon">Soon</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
+    <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
+      <span class="nav-dd-ref-title">Layer synthesis</span>
+      <span class="nav-dd-ref-cite">Two stake-cap shapes, same intent<span class="nav-dd-ref-stage">Index</span></span>
+    </a>
+    <a href="cip-0050.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
+      <span class="nav-dd-ref-title">CIP-0050 — Pledge Leverage</span>
+      <span class="nav-dd-ref-cite">σ′ clip leaves A(ν, π) bottleneck unfixed<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+    </a>
+    <a href="cip-0037.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
+      <span class="nav-dd-ref-title">CIP-0037 — Dynamic Saturation</span>
+      <span class="nav-dd-ref-cite">Same as CIP-0050 plus 20 % floor — A still unfixed<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Fee Layer — Operator/Member Split</div>
+    <a href="fee-layer.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
+      <span class="nav-dd-ref-title">Layer synthesis</span>
+      <span class="nav-dd-ref-cite">Pricing-as-viability conflation<span class="nav-dd-ref-stage">Index</span></span>
+    </a>
+    <a href="cip-0023.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
+      <span class="nav-dd-ref-title">CIP-0023 — Fair Min Fees</span>
+      <span class="nav-dd-ref-cite">minPoolMargin floor — subsumed by CIP-0082 stage 2<span class="nav-dd-ref-stage">⊂ Moot</span></span>
+    </a>
+    <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
+      <span class="nav-dd-ref-title">CIP-0082 — Improved Rewards Scheme</span>
+      <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+    </a>
+    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
+      <span class="nav-dd-ref-title">k-Parameter mechanics</span>
+      <span class="nav-dd-ref-cite">Sub-document of CIP-0082 stages 3–4<span class="nav-dd-ref-stage">Sub-doc</span></span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
+<div class="nav-zone nav-zone-output">
+<a href="index.html" class="nav-tab-spec-big">V2 Specification</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 3 — Mainnet Diagnostic (observed reality) -->
+<div class="nav-zone nav-zone-diag">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-diag" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Mainnet Diagnostic ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-diag">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-diagnostic">Mainnet Diagnostic</span>
+      <span class="nav-dd-stratum-meta">What mainnet is actually doing — synthesis, Reward-Flow evidence, and the prior report</span>
+    </div>
+    <a href="findings.html" class="nav-dd-ref nav-dd-ref-hero">
+      <span class="nav-dd-ref-title">Findings &amp; Observations<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Every diagnostic finding paired with its mainnet evidence — one-page synthesis</span>
+    </a>
+    <a href="observatory.html" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">The Diagnostic</span>
+      <span class="nav-dd-ref-cite">Full narrative — observations, problem induction, and sub-report links</span>
+    </a>
+    <a href="census.html" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">The Staking Census<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Who holds stake — capital, participation<span class="nav-dd-ref-stage">Evidence</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Reward Flow</div>
+    <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
+      <span class="nav-dd-ref-title">Reserves<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Treasury & pool-pot distribution<span class="nav-dd-ref-stage">Stage 1</span></span>
+    </a>
+    <a href="pools.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
+      <span class="nav-dd-ref-title">Pools<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Distribution gaps across the pool population<span class="nav-dd-ref-stage">Stage 2</span></span>
+    </a>
+    <a href="operator.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
+      <span class="nav-dd-ref-title">Operators/Delegators<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">The operator's cut versus the delegator share<span class="nav-dd-ref-stage">Stage 3</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label">Past Analysis</div>
+    <a href="pdf-viewer.html?file=references/previous-analasys/spo-incentives-analysis_lopez-de-lara_2025.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Nov 2025 — Analysis of Cardano's Incentive Mechanism</span>
+      <span class="nav-dd-ref-cite">Lopez de Lara · prior mainnet diagnostic<span class="nav-dd-ref-tag">SD-L</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 4 — Design Support (intended mechanism) -->
+<div class="nav-zone nav-zone-design">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-design" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Design Support ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-design">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-design">Design Support</span>
+      <span class="nav-dd-stratum-meta">The intended mechanism — formal spec + the narrative it never came with</span>
+    </div>
+    <a href="intended-game.html" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">The Intended Game<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Plain-prose companion to SL-D1 — fills the narrative gap the formal spec left open</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/design-specs/delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Delegation Incentives Design Specification</span>
+      <span class="nav-dd-ref-cite">Kant · Brünjes · Coutts — 2019<span class="nav-dd-ref-tag">SL-D1</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 5 — Research Papers (academic foundations) -->
+<div class="nav-zone nav-zone-research">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-research" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Research Papers ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-research">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-research">Research Papers</span>
+      <span class="nav-dd-stratum-meta">Academic antecedents and adjacent work on reward schemes</span>
+    </div>
+    <a href="pdf-viewer.html?file=references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Reward Sharing Schemes for Stake Pools</span>
+      <span class="nav-dd-ref-cite">Brünjes · Kiayias · Koutsoupias · Stouka — 2020<span class="nav-dd-ref-tag">RSS-2020</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/research-papers/incentives-against-power-grabs_kiayias-et-al_2021.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Incentives Against Power Grabs</span>
+      <span class="nav-dd-ref-cite">Kiayias et al. — 2021<span class="nav-dd-ref-tag">IAPG</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/research-papers/removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Removing the Minimum Pool Cost</span>
+      <span class="nav-dd-ref-cite">Stouka · Brünjes · Kiayias · Koutsoupias — 2022<span class="nav-dd-ref-tag">RMPC</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="pdf-viewer.html?file=references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Balancing Participation & Decentralization</span>
+      <span class="nav-dd-ref-cite">Kiayias et al. — 2024<span class="nav-dd-ref-tag">BPD</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="nav-breadcrumb"></div>
+</nav>
+<div class="hero">
+  <svg class="hero-schema" viewBox="0 0 1400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <pattern id="heroGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,.06)" stroke-width=".5"/>
+      </pattern>
+    </defs>
+    <rect width="1400" height="400" fill="url(#heroGrid)"/>
+    <g class="hero-schema-marks" stroke="rgba(229,35,33,.5)" stroke-width=".8" fill="none">
+      <path d="M 0 60 L 120 60 L 140 80 L 260 80"/>
+      <path d="M 1400 320 L 1260 320 L 1240 300 L 1120 300"/>
+      <circle cx="140" cy="80" r="3" fill="#E52321"/>
+      <circle cx="1240" cy="300" r="3" fill="#E52321"/>
+    </g>
+    <g stroke="rgba(22,233,216,.28)" stroke-width=".6" fill="none">
+      <path d="M 40 340 L 180 340 L 200 320 L 320 320"/>
+      <circle cx="200" cy="320" r="2.5" fill="#16E9D8"/>
+    </g>
+  </svg>
+  <div class="hero-topbar">
+    <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="hero-full-logo">
+    <div class="hero-division">
+      <span class="hero-division-dot" aria-hidden="true"></span>
+      <span class="hero-division-label">Cardano Business Unit</span>
+    </div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">V2 Reward System &middot; Technical Specification</div>
+    <h1>My Bookmarks</h1>
+    <div class="sub">Findings you've saved while reading</div>
+  </div>
+  <div class="hero-bottom-rule" aria-hidden="true"></div>
+</div>
+<div class="content"><section class="bookmarks-page"><p class="bookmarks-lede">These are the findings you marked with the <strong>Save</strong> button while reading the diagnostic sub-reports. They live only in your browser — nothing is sent to a server. Clear them with the button at the bottom or by clicking <em>Saved</em> on the original finding.</p><div id="bookmarks-list" class="bookmarks-list" data-empty-msg="You have not saved any findings yet. Open a sub-report (Operators/Delegators, Pools, Reserves, Census) and click Save next to a finding."></div><div class="bookmarks-actions"><button type="button" id="bookmarks-clear" class="bookmarks-clear">Clear all saved findings</button><button type="button" id="bookmarks-export" class="bookmarks-export">Copy as Markdown</button></div></section><script>(function(){function slugify(s){return s.toLowerCase().replace(/\./g,"-");}function hydrate(){var list=document.getElementById("bookmarks-list");var raw={};try{raw=JSON.parse(localStorage.getItem("spo:bk")||"{}");}catch(e){}var keys=Object.keys(raw);if(!keys.length){list.innerHTML="<p class=\"bookmarks-empty\">"+list.dataset.emptyMsg+"</p>";return;}var byPage={};keys.forEach(function(k){var rec=raw[k];var p=rec.page||"index.html";if(!byPage[p])byPage[p]=[];byPage[p].push(Object.assign({finding:k},rec));});list.innerHTML=Object.keys(byPage).sort().map(function(p){return "<section class=\"bookmarks-group\"><h2>"+p+"</h2><ul>"+byPage[p].sort(function(a,b){return (a.ts||0)-(b.ts||0);}).map(function(b){var url=p+"#"+slugify(b.finding);return "<li><a href=\""+url+"\"><span class=\"bk-fid\">"+b.finding+"</span>"+"<span class=\"bk-text\">"+(b.title||b.evidence||"")+"</span></a></li>";}).join("")+"</ul></section>";}).join("");}hydrate();document.getElementById("bookmarks-clear").addEventListener("click",function(){if(confirm("Remove all saved findings?")){localStorage.removeItem("spo:bk");hydrate();}});document.getElementById("bookmarks-export").addEventListener("click",function(){var raw={};try{raw=JSON.parse(localStorage.getItem("spo:bk")||"{}");}catch(e){}var lines=Object.keys(raw).map(function(k){var r=raw[k];return "- ["+k+"]("+(r.page||"")+"#"+slugify(k)+")"+(r.title?" — "+r.title.substring(0,140):"");}).join("\n");if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(lines);this.textContent="Copied";var btn=this;setTimeout(function(){btn.textContent="Copy as Markdown";},1500);}});})();</script></div>
+
+
+<footer class="site-footer">
+  <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="footer-logo">
+  <div class="footer-division"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</div>
+</footer>
+<div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
+<a href="#" class="back-top" id="btt">&uarr;</a>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+<script>
+if (window.mermaid) {
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    securityLevel: 'loose',
+    themeVariables: { fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' },
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' }
+  });
+}
+</script>
+<script src="assets/site.js?v=1777295517"></script>
+</body>
+</html>

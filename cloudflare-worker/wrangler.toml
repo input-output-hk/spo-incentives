@@ -1,0 +1,18 @@
+name = "spo-qa"
+main = "qa-worker.js"
+compatibility_date = "2026-04-27"
+
+# Replace <ID> below after running: wrangler kv:namespace create QA
+[[kv_namespaces]]
+binding = "QA"
+id = "<paste-id-from-wrangler-output>"
+
+# Public-facing config (vars are visible in Cloudflare dashboard).
+[vars]
+ALLOWED_ORIGIN = "https://input-output-hk.github.io"
+FROM_EMAIL = "qa@yourdomain.tld"
+TO_EMAIL = "research@iohk.io"
+
+# ADMIN_TOKEN is a secret — set it with:
+#   wrangler secret put ADMIN_TOKEN
+# Used to authenticate POST /qa/answer requests from the moderation flow.

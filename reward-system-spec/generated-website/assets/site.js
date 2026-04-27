@@ -1229,6 +1229,516 @@
       if(meta){meta.appendChild(host);}else{li.appendChild(host);}
     });
   })();
+
+  /* ── L1: Passive engagement events ──
+     Captures scroll depth (25/50/75/100%), section dwell (>5s in
+     viewport), and outbound link clicks. All routed through spoTrack so
+     the analytics provider sees them as Plausible/Umami custom events.
+     No-op when spoTrack is not defined. */
+  (function initPassiveAnalytics(){
+    function track(name,props){
+      if(typeof window.spoTrack==='function'){
+        try{window.spoTrack(name,props||{});}catch(e){}
+      }
+    }
+    var pageId=location.pathname.split('/').pop()||'index.html';
+    var ref=document.referrer||'(direct)';
+    if(ref&&ref!=='(direct)'){
+      try{ref=new URL(ref).hostname;}catch(e){}
+    }
+
+    /* Page view supplement — analytics scripts capture pageviews
+       natively, but we add a "Page Entry" event with the referrer host
+       so the dashboard can split editorial entries (Twitter/forum) from
+       direct links and search engines. */
+    track('Page Entry',{page:pageId,referrer:ref});
+
+    /* Scroll depth — fire once per threshold, throttled. */
+    var thresholds=[25,50,75,100];
+    var hit={};
+    function onScroll(){
+      var doc=document.documentElement;
+      var scrolled=(window.scrollY+window.innerHeight)/doc.scrollHeight*100;
+      thresholds.forEach(function(t){
+        if(!hit[t]&&scrolled>=t){
+          hit[t]=true;
+          track('Scroll Depth',{page:pageId,depth:t});
+        }
+      });
+    }
+    var raf=null;
+    window.addEventListener('scroll',function(){
+      if(raf) return;
+      raf=requestAnimationFrame(function(){raf=null;onScroll();});
+    },{passive:true});
+
+    /* Section dwell — IntersectionObserver on every H2/H3, fires once
+       per (page, sectionId) when the section has been ≥50% in viewport
+       for 5 seconds cumulatively. */
+    var DWELL_MS=5000;
+    var dwell={};
+    var sentDwell={};
+    function tickDwell(){
+      var now=Date.now();
+      Object.keys(dwell).forEach(function(id){
+        var d=dwell[id];
+        if(d.visible){
+          d.acc+=now-(d.lastTick||now);
+          d.lastTick=now;
+          if(!sentDwell[id]&&d.acc>=DWELL_MS){
+            sentDwell[id]=true;
+            track('Section Read',{page:pageId,section:id,
+              ms:Math.round(d.acc)});
+          }
+        }
+      });
+    }
+    setInterval(tickDwell,1500);
+    if('IntersectionObserver' in window){
+      var io=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          var id=e.target.id;
+          if(!id) return;
+          if(!dwell[id]) dwell[id]={acc:0,visible:false};
+          if(e.isIntersecting){
+            dwell[id].visible=true;
+            dwell[id].lastTick=Date.now();
+          }else{
+            dwell[id].visible=false;
+          }
+        });
+      },{threshold:0.5});
+      document.querySelectorAll('h2[id], h3[id]').forEach(function(h){
+        io.observe(h);
+      });
+    }
+
+    /* Outbound link clicks — anything not on the same host. */
+    document.addEventListener('click',function(ev){
+      var a=ev.target&&ev.target.closest&&ev.target.closest('a[href]');
+      if(!a) return;
+      var href=a.getAttribute('href')||'';
+      if(!/^https?:\/\//.test(href)) return;
+      try{
+        var u=new URL(href);
+        if(u.host!==location.host){
+          track('Outbound Click',{page:pageId,host:u.host,
+            url:u.origin+u.pathname});
+        }
+      }catch(e){}
+    },true);
+  })();
+
+  /* ── L3 + L4: Selection FAB — Highlight + Quote ──
+     Floating action bar that appears when the reader selects ≥3
+     characters of text inside `.content`. Two actions:
+     - Highlight: persists in localStorage under spo:hl:<page>
+     - Quote: copies a markdown blockquote with permalink to the
+       clipboard and fires a Plausible custom event. */
+  (function initSelectionFab(){
+    var body=document.body;
+    if(!body) return;
+    var hlEnabled=body.getAttribute('data-highlights')==='1';
+    var content=document.querySelector('.content');
+    if(!content) return;
+
+    var fab=document.createElement('div');
+    fab.className='spo-selfab';
+    fab.setAttribute('role','toolbar');
+    fab.style.display='none';
+    fab.innerHTML=
+      '<button type="button" data-act="quote" title="Copy as Markdown quote">'
+      +'<svg viewBox="0 0 16 16"><path d="M3 5h4v4H4v2H3V5zm6 0h4v4h-3v2H9V5z"/></svg>'
+      +'<span>Quote</span></button>'
+      +(hlEnabled?
+        '<button type="button" data-act="hl" title="Highlight (saved in this browser)">'
+        +'<svg viewBox="0 0 16 16"><path d="M2 12l3-3 5 5-3 3H2v-5zm5-5l5-5 4 4-5 5-4-4z"/></svg>'
+        +'<span>Highlight</span></button>'
+        :'');
+    document.body.appendChild(fab);
+
+    var pageId=location.pathname.split('/').pop()||'index.html';
+    var HL_KEY='spo:hl:'+pageId;
+
+    function track(name,props){
+      if(typeof window.spoTrack==='function'){
+        try{window.spoTrack(name,props||{});}catch(e){}
+      }
+    }
+
+    function getSelText(){
+      var s=window.getSelection();
+      if(!s||s.rangeCount===0||s.isCollapsed) return null;
+      var r=s.getRangeAt(0);
+      if(!content.contains(r.commonAncestorContainer)) return null;
+      var txt=s.toString().trim();
+      if(txt.length<3) return null;
+      return {sel:s,range:r,text:txt};
+    }
+
+    function findEnclosingFinding(node){
+      while(node&&node!==document){
+        if(node.classList&&node.classList.contains('sro-finding')){
+          return node.getAttribute('data-finding');
+        }
+        if(node.tagName==='H2'||node.tagName==='H3'){
+          return node.id||null;
+        }
+        node=node.parentNode;
+      }
+      return null;
+    }
+
+    function permalink(node){
+      var anchor=findEnclosingFinding(node);
+      var base=location.origin+location.pathname;
+      return anchor?(base+'#'+anchor):base;
+    }
+
+    function showFab(){
+      var info=getSelText();
+      if(!info){fab.style.display='none';return;}
+      var rect=info.range.getBoundingClientRect();
+      fab.style.display='flex';
+      var top=window.scrollY+rect.top-fab.offsetHeight-8;
+      if(top<window.scrollY+8) top=window.scrollY+rect.bottom+8;
+      var left=window.scrollX+rect.left+(rect.width/2)-(fab.offsetWidth/2);
+      var maxLeft=window.scrollX+window.innerWidth-fab.offsetWidth-8;
+      if(left<window.scrollX+8) left=window.scrollX+8;
+      if(left>maxLeft) left=maxLeft;
+      fab.style.top=top+'px';
+      fab.style.left=left+'px';
+    }
+
+    document.addEventListener('mouseup',function(){setTimeout(showFab,1);});
+    document.addEventListener('selectionchange',function(){
+      if(window.getSelection().isCollapsed) fab.style.display='none';
+    });
+    document.addEventListener('scroll',function(){
+      if(fab.style.display!=='none') showFab();
+    },{passive:true});
+
+    fab.addEventListener('mousedown',function(ev){ev.preventDefault();});
+
+    fab.addEventListener('click',function(ev){
+      var btn=ev.target.closest('button[data-act]');
+      if(!btn) return;
+      var info=getSelText();
+      if(!info) return;
+      var act=btn.getAttribute('data-act');
+      var anchor=findEnclosingFinding(info.range.commonAncestorContainer);
+      var url=permalink(info.range.commonAncestorContainer);
+
+      if(act==='quote'){
+        var citation=anchor?('— ['+anchor+']('+url+')'):('— ['+pageId+']('+url+')');
+        var md='> '+info.text.replace(/\n/g,'\n> ')+'\n\n'+citation+'\n';
+        if(navigator.clipboard&&navigator.clipboard.writeText){
+          navigator.clipboard.writeText(md).then(function(){
+            flashFab(btn,'Copied');
+            track('Quote Copied',{page:pageId,anchor:anchor||'(none)',
+              len:info.text.length});
+          },function(){flashFab(btn,'Failed');});
+        }else{flashFab(btn,'No clipboard');}
+      }else if(act==='hl'){
+        var rangeKey=anchor||'_';
+        var store={};
+        try{store=JSON.parse(localStorage.getItem(HL_KEY)||'{}');}catch(e){}
+        if(!store[rangeKey]) store[rangeKey]=[];
+        store[rangeKey].push({text:info.text,ts:Date.now()});
+        try{localStorage.setItem(HL_KEY,JSON.stringify(store));}catch(e){}
+        applyHighlight(info.range);
+        flashFab(btn,'Saved');
+        track('Highlight Saved',{page:pageId,anchor:anchor||'(none)',
+          len:info.text.length});
+      }
+      window.getSelection().removeAllRanges();
+      fab.style.display='none';
+    });
+
+    function flashFab(btn,label){
+      var span=btn.querySelector('span');
+      var prev=span.textContent;
+      span.textContent=label;
+      btn.classList.add('spo-selfab-flash');
+      setTimeout(function(){
+        span.textContent=prev;
+        btn.classList.remove('spo-selfab-flash');
+      },900);
+    }
+
+    function applyHighlight(range){
+      try{
+        var mark=document.createElement('mark');
+        mark.className='spo-hl';
+        range.surroundContents(mark);
+      }catch(e){
+        /* range crosses element boundaries — fall back to wrapping text
+           runs individually via TreeWalker. Skipped here for brevity:
+           the simple surroundContents covers single-paragraph picks. */
+      }
+    }
+
+    /* Re-apply persisted highlights on load. We use a coarse text-match
+       strategy rather than DOM-Range serialization: each saved snippet
+       is searched for in the current text content of its anchor scope.
+       Imperfect (skips duplicate matches, fails after edits) but
+       privacy-clean and dependency-free. */
+    if(hlEnabled){
+      try{
+        var saved=JSON.parse(localStorage.getItem(HL_KEY)||'{}');
+        Object.keys(saved).forEach(function(anchorId){
+          var scope=document;
+          if(anchorId!=='_'){
+            scope=document.querySelector(
+              '[data-finding="'+anchorId+'"], #'+CSS.escape(anchorId)
+            )||document;
+          }
+          (saved[anchorId]||[]).forEach(function(rec){
+            highlightText(scope,rec.text);
+          });
+        });
+      }catch(e){}
+    }
+
+    function highlightText(scope,needle){
+      if(!needle||needle.length<3) return;
+      var walker=document.createTreeWalker(scope,NodeFilter.SHOW_TEXT,null);
+      var node;
+      while((node=walker.nextNode())){
+        var idx=node.nodeValue.indexOf(needle);
+        if(idx>=0){
+          var r=document.createRange();
+          r.setStart(node,idx);
+          r.setEnd(node,idx+needle.length);
+          var mark=document.createElement('mark');
+          mark.className='spo-hl';
+          try{r.surroundContents(mark);}catch(e){}
+          return;
+        }
+      }
+    }
+  })();
+
+  /* ── L5: Bookmarks per .sro-finding ──
+     Adds a "Save" button to each finding's reactions row. Clicking
+     stores a record in localStorage; clicking again removes it. The
+     /my-bookmarks.html page reads this storage on load and renders a
+     consolidated list across all sub-reports. */
+  (function initBookmarks(){
+    var body=document.body;
+    if(!body||body.getAttribute('data-bookmarks')!=='1') return;
+    var BK_KEY='spo:bk';
+    var pageId=location.pathname.split('/').pop()||'index.html';
+
+    function load(){
+      try{return JSON.parse(localStorage.getItem(BK_KEY)||'{}');}
+      catch(e){return {};}
+    }
+    function save(s){try{localStorage.setItem(BK_KEY,JSON.stringify(s));}
+      catch(e){}}
+
+    function track(n,p){
+      if(typeof window.spoTrack==='function'){
+        try{window.spoTrack(n,p||{});}catch(e){}
+      }
+    }
+
+    function isSaved(canon){
+      var s=load(); return !!(s[canon]);
+    }
+    function toggleSave(canon,title,evidence){
+      var s=load();
+      if(s[canon]){delete s[canon];}
+      else{
+        s[canon]={page:pageId,title:title||'',evidence:evidence||'',
+          ts:Date.now()};
+      }
+      save(s);
+      return !!s[canon];
+    }
+
+    var SVG_BK='<svg viewBox="0 0 16 16" aria-hidden="true">'
+      +'<path d="M3 2h10v12l-5-3-5 3V2z"/></svg>';
+
+    function makeBtn(canon,title,evidence){
+      var b=document.createElement('button');
+      b.type='button';
+      b.className='spo-bookmark-btn';
+      b.setAttribute('data-finding',canon);
+      b.setAttribute('aria-pressed',isSaved(canon)?'true':'false');
+      b.innerHTML=SVG_BK+'<span>'+(isSaved(canon)?'Saved':'Save')+'</span>';
+      if(isSaved(canon)) b.classList.add('is-active');
+      b.addEventListener('click',function(ev){
+        ev.preventDefault();ev.stopPropagation();
+        var nowSaved=toggleSave(canon,title,evidence);
+        b.classList.toggle('is-active',nowSaved);
+        b.setAttribute('aria-pressed',nowSaved?'true':'false');
+        b.querySelector('span').textContent=nowSaved?'Saved':'Save';
+        track(nowSaved?'Bookmark Added':'Bookmark Removed',
+          {page:pageId,finding:canon});
+      });
+      return b;
+    }
+
+    document.querySelectorAll('.sro-finding[data-finding]').forEach(function(li){
+      if(li.querySelector('.spo-bookmark-btn')) return;
+      var canon=li.getAttribute('data-finding');
+      var title=(li.querySelector('.sro-evidence')||{}).textContent||'';
+      var meta=li.querySelector('.sro-meta');
+      var react=li.querySelector('.feedback-react');
+      var btn=makeBtn(canon,title.substring(0,140),title);
+      if(react){react.appendChild(btn);}
+      else if(meta){meta.appendChild(btn);}
+      else{li.appendChild(btn);}
+    });
+  })();
+
+  /* ── L6: Structured form — async submit + status feedback ──
+     The form is a plain HTML POST so it works without JS; this layer
+     just prevents the redirect, posts via fetch, and renders inline
+     success/error feedback. */
+  (function initStructuredForm(){
+    var section=document.querySelector('.page-form[data-form-endpoint]');
+    if(!section) return;
+    var form=section.querySelector('form');
+    var status=section.querySelector('.page-form-status');
+    var pageInput=form.querySelector('input[name="_page"]');
+    if(pageInput) pageInput.value=location.pathname.split('/').pop()||'index.html';
+
+    function track(n,p){
+      if(typeof window.spoTrack==='function'){
+        try{window.spoTrack(n,p||{});}catch(e){}
+      }
+    }
+
+    form.addEventListener('submit',function(ev){
+      ev.preventDefault();
+      var btn=form.querySelector('button[type=submit]');
+      btn.disabled=true;
+      status.textContent='Sending…';
+      status.className='page-form-status';
+      var data=new FormData(form);
+      fetch(form.action,{method:'POST',body:data,
+        headers:{'Accept':'application/json'}})
+        .then(function(r){
+          if(r.ok){
+            status.textContent='Thanks — your feedback was sent.';
+            status.classList.add('is-ok');
+            form.reset();
+            track('Form Submitted',{page:pageInput?pageInput.value:''});
+          }else{
+            status.textContent='Send failed — try again or post on Discussions.';
+            status.classList.add('is-err');
+          }
+        }).catch(function(){
+          status.textContent='Network error — your message was not sent.';
+          status.classList.add('is-err');
+        }).finally(function(){btn.disabled=false;});
+    });
+  })();
+
+  /* ── L7: Q&A inline — Ask the authors per finding ──
+     When data-qa-endpoint is set on body, attaches an "Ask the authors"
+     button to each .sro-finding. Click opens an inline composer; submit
+     POSTs to the configured Worker endpoint. The Worker stores the
+     question in KV and emails the team. Any answers (manually approved)
+     come back via GET and render inline below the finding. */
+  (function initQA(){
+    var body=document.body;
+    if(!body) return;
+    var endpoint=body.getAttribute('data-qa-endpoint');
+    if(!endpoint) return;
+    var pageId=location.pathname.split('/').pop()||'index.html';
+
+    function track(n,p){
+      if(typeof window.spoTrack==='function'){
+        try{window.spoTrack(n,p||{});}catch(e){}
+      }
+    }
+
+    function fetchAnswers(canon,host){
+      fetch(endpoint.replace(/\/$/,'')+'/qa/'+encodeURIComponent(canon))
+        .then(function(r){return r.ok?r.json():{answers:[]};})
+        .then(function(data){
+          var answers=(data&&data.answers)||[];
+          if(!answers.length) return;
+          var box=document.createElement('div');
+          box.className='spo-qa-answers';
+          box.innerHTML='<h4>Authors\' answers</h4>'+
+            answers.map(function(a){
+              return '<article class="spo-qa-answer">'
+                +'<div class="spo-qa-answer-meta">'
+                +(a.author||'IO Research')+' · '
+                +(a.date||'')+'</div>'
+                +'<div class="spo-qa-answer-body">'+(a.html||a.text||'')+'</div>'
+                +'</article>';
+            }).join('');
+          host.appendChild(box);
+        }).catch(function(){});
+    }
+
+    function attachComposer(canon,host){
+      var open=document.createElement('button');
+      open.type='button';
+      open.className='spo-qa-open';
+      open.innerHTML='<svg viewBox="0 0 16 16" aria-hidden="true">'
+        +'<path d="M3 4h10v7H7l-3 3v-3H3V4zm2 2v1h6V6H5zm0 3v1h4V9H5z"/></svg>'
+        +'<span>Ask the authors</span>';
+      host.appendChild(open);
+      open.addEventListener('click',function(){
+        if(host.querySelector('.spo-qa-form')){return;}
+        var form=document.createElement('form');
+        form.className='spo-qa-form';
+        form.innerHTML=
+          '<label>Your question about this finding<textarea name="q" rows="3" required></textarea></label>'
+          +'<label>Email <small>(optional, for the reply)</small><input type="email" name="email" autocomplete="off"></label>'
+          +'<div class="spo-qa-actions">'
+          +'<button type="button" class="spo-qa-cancel">Cancel</button>'
+          +'<button type="submit" class="spo-qa-submit">Send question</button>'
+          +'</div>'
+          +'<p class="spo-qa-status" aria-live="polite"></p>';
+        host.appendChild(form);
+        form.querySelector('.spo-qa-cancel').addEventListener('click',
+          function(){form.remove();});
+        form.addEventListener('submit',function(ev){
+          ev.preventDefault();
+          var status=form.querySelector('.spo-qa-status');
+          var btn=form.querySelector('.spo-qa-submit');
+          btn.disabled=true;status.textContent='Sending…';
+          var fd=new FormData(form);
+          fd.append('finding',canon);
+          fd.append('page',pageId);
+          fetch(endpoint.replace(/\/$/,'')+'/qa',{
+            method:'POST',body:fd,
+            headers:{'Accept':'application/json'}
+          }).then(function(r){
+            if(r.ok){
+              status.textContent='Thanks — we will reply on this finding.';
+              status.classList.add('is-ok');
+              form.querySelector('textarea').value='';
+              track('QA Asked',{page:pageId,finding:canon});
+            }else{
+              status.textContent='Submit failed.';
+              status.classList.add('is-err');
+            }
+          }).catch(function(){
+            status.textContent='Network error.';
+            status.classList.add('is-err');
+          }).finally(function(){btn.disabled=false;});
+        });
+      });
+    }
+
+    document.querySelectorAll('.sro-finding[data-finding]').forEach(function(li){
+      if(li.querySelector('.spo-qa-open')) return;
+      var canon=li.getAttribute('data-finding');
+      var host=document.createElement('div');
+      host.className='spo-qa-host';
+      li.appendChild(host);
+      attachComposer(canon,host);
+      fetchAnswers(canon,host);
+    });
+  })();
   /* ── /Cross-page DIA source overlay ── */
 
 })();

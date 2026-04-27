@@ -58,6 +58,12 @@ jobs:
           SPO_GISCUS_THEME:         ${{ vars.SPO_GISCUS_THEME }}
           SPO_GISCUS_LANG:          ${{ vars.SPO_GISCUS_LANG }}
           SPO_REACTIONS_ENABLED:    ${{ vars.SPO_REACTIONS_ENABLED }}
+          SPO_HYPOTHESIS_ENABLED:   ${{ vars.SPO_HYPOTHESIS_ENABLED }}
+          SPO_HIGHLIGHTS_ENABLED:   ${{ vars.SPO_HIGHLIGHTS_ENABLED }}
+          SPO_BOOKMARKS_ENABLED:    ${{ vars.SPO_BOOKMARKS_ENABLED }}
+          SPO_FORM_ENDPOINT:        ${{ vars.SPO_FORM_ENDPOINT }}
+          SPO_FORM_RECIPIENT_LABEL: ${{ vars.SPO_FORM_RECIPIENT_LABEL }}
+          SPO_QA_ENDPOINT:          ${{ vars.SPO_QA_ENDPOINT }}
         run: python3 build_site.py
 
       - name: Setup Pages
