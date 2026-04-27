@@ -1085,7 +1085,7 @@ window.MathJax = {{
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
     <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis{cls_stake_cap}">
-      <span class="nav-dd-ref-title">Layer synthesis</span>
+      <span class="nav-dd-ref-title">CIP evaluation synthesis</span>
       <span class="nav-dd-ref-cite">Two stake-cap shapes, same intent<span class="nav-dd-ref-stage">Index</span></span>
     </a>
     <a href="cip-0050.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_cip_0050}">
@@ -1098,7 +1098,7 @@ window.MathJax = {{
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Fee Layer — Operator/Member Split</div>
     <a href="fee-layer.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis{cls_fee_layer}">
-      <span class="nav-dd-ref-title">Layer synthesis</span>
+      <span class="nav-dd-ref-title">CIP evaluation synthesis</span>
       <span class="nav-dd-ref-cite">Pricing-as-viability conflation<span class="nav-dd-ref-stage">Index</span></span>
     </a>
     <a href="cip-0023.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_cip_0023}">
@@ -1109,7 +1109,7 @@ window.MathJax = {{
       <span class="nav-dd-ref-title">CIP-0082 — Improved Rewards Scheme</span>
       <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
     </a>
-    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_k_parameter}">
+    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deeper{cls_k_parameter}">
       <span class="nav-dd-ref-title">k-Parameter mechanics</span>
       <span class="nav-dd-ref-cite">Sub-document of CIP-0082 stages 3–4<span class="nav-dd-ref-stage">Sub-doc</span></span>
     </a>

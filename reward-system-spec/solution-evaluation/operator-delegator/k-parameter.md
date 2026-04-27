@@ -1,6 +1,6 @@
 # `k` parameter — Changing the scalar without revising the function that uses it
 
-> **Status:** Active 2026/04/23. Companion to CIP-0082.S3. **Scope:** mechanical effect of raising `k` on the operator/delegator split **when the reward function $\hat f'(\nu, \pi, \bar p) = \bar p \cdot P_{\max} \cdot E(\nu, \pi)$ is held fixed** — only the scalar `k` moves, which flows through to $P_{\max} = R/k$ and $z_0 = 1/k$. Any evaluation that also changes the function itself (CIP-0050 via $\sigma'$ clipping, CIP-0037 via a new saturation curve) is out of scope and lives in [`../pools-distribution/`](../pools-distribution/README.md).
+**Scope:** mechanical effect of raising `k` on the operator/delegator split **when the reward function $\hat f'(\nu, \pi, \bar p) = \bar p \cdot P_{\max} \cdot E(\nu, \pi)$ is held fixed** — only the scalar `k` moves, which flows through to $P_{\max} = R/k$ and $z_0 = 1/k$. Any evaluation that also changes the function itself (CIP-0050 via $\sigma'$ clipping, CIP-0037 via a new saturation curve) is out of scope and lives in [`../pools-distribution/`](../pools-distribution/README.md).
 
 The `k` parameter — `stakePoolTargetNum` in the Cardano protocol — sets the **target number of pools** the network is calibrated for. It enters the SL-D1 reward formula in two derived places: the per-pool saturation threshold `z₀ = 1/k` and the per-pool reward ceiling `P_max = R/k`. Raising `k` mechanically compresses both: the saturation cap drops (more pools, smaller ceiling each) and the reward ceiling shrinks proportionally.
 
@@ -40,17 +40,17 @@ The Executive summary below packages the verdict; the Findings summary table aft
   - [1.4 What the `k`-lever mechanically does vs what CIP-0082 advertises](#14-what-the-k-lever-mechanically-does-vs-what-cip-0082-advertises)
 - [2. Mechanism](#2-mechanism)
   - [2.1 Formulas inherited from the sub-flows](#21-formulas-inherited-from-the-sub-flows)
-  - [2.2 What `k` moves — and what it does not](#22-what-k-moves--and-what-it-does-not)
+  - [2.2 What `k` moves — and what it does not](#22-what-k-moves-and-what-it-does-not)
   - [2.3 Updated calibration at current parameters (epoch ~623, 2026/04)](#23-updated-calibration-at-current-parameters-epoch-623-202604)
     - [2.3.1 Pool reward across nine tiers](#231-pool-reward-across-nine-tiers-hollow-pool-epoch)
-    - [2.3.2 Operator annualised revenue across nine tiers](#232-operator-annualised-revenue-across-nine-tiers-hollow-minpoolcost--170-yr)
+    - [2.3.2 Operator annualised revenue across nine tiers](#232-operator-annualised-revenue-across-nine-tiers-hollow-minpoolcost-170-yr)
     - [2.3.3 Delegator net ROS across nine tiers](#233-delegator-net-ros-across-nine-tiers-yr)
-    - [2.3.4 Pledge-amplification channel](#234-pledge-amplification-channel-self-pledged-pools-bonus-from-lambda_max-api-nu)
+    - [2.3.4 Pledge-amplification channel](#234-pledge-amplification-channel-self-pledged-pools-bonus-from-math56)
     - [2.3.5 Per-entity revenue by n-MPO bracket](#235-per-entity-revenue-by-n-mpo-bracket-hollow-yr)
 - [3. Limits of a standalone `k`-raise](#3-limits-of-a-standalone-k-raise)
-  - [3.1 S1 — Top-tail compression + narrow pledge amplification; bottom unchanged](#31-k-levers1--top-tail-compression--narrow-pledge-amplification-bottom-unchanged)
-  - [3.2 S2 — A fine tool for a narrow delegator segment, insufficient on the operator side](#32-k-levers2--a-fine-tool-for-a-narrow-delegator-segment-and-insufficient-on-the-operator-side-because-the-formula-is-unchanged)
-  - [3.3 S3 — MPO fleet absorption under weak pledge](#33-k-levers3--mpo-fleet-absorption-under-weak-pledge)
+  - [3.1 S1 — Top-tail compression + narrow pledge amplification; bottom unchanged](#31-k-levers1-top-tail-compression-narrow-pledge-amplification-bottom-unchanged)
+  - [3.2 S2 — A fine tool for a narrow delegator segment, insufficient on the operator side](#32-k-levers2-a-fine-tool-for-a-narrow-delegator-segment-and-insufficient-on-the-operator-side-because-the-formula-is-unchanged)
+  - [3.3 S3 — MPO fleet absorption under weak pledge](#33-k-levers3-mpo-fleet-absorption-under-weak-pledge)
   - [3.4 References](#34-references)
 
 ## Findings summary
@@ -182,7 +182,7 @@ $$\hat f' = \bar p \cdot \frac{R}{k} \cdot \lambda_{\text{size}} \cdot \nu = \ba
 **The `k` cancels.** For any hollow pool staying below saturation at the new `k`, the absolute reward is invariant. This is the key mechanical result that refutes the "k-raise pushes the viability line up" framing.
 
 - **The production threshold.** From [pools-distribution §4.1.2.1](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#4121-block-production-threshold), the stake needed to produce $n$ blocks/epoch reliably is $\text{stake}_n \approx n \cdot S_{\text{active}} / (L \cdot f)$, where $L = 432\,000$ slots/epoch and $f = 0.05$ are fixed protocol constants. **No `k` in the formula.** The ~3 M ₳ "3-block threshold" and ~1 M ₳ "1-block threshold" are functions of Praos slot mechanics and participation ($S_{\text{active}}$) — not of `k`. A k-raise does not shift them.
-- **The viability threshold.** From [§4.1.2.2](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#4122-viability-threshold), break-even stake = Fixed cost / (Reward per ADA per epoch) = $c / (R \lambda_{\text{size}} / \text{CircSupply})$. **No `k` in the formula** for hollow pools. At today's `minPoolCost = 170`, break-even ≈ 0.54 M ₳; at `minPoolCost = 340`, ≈ 1.09 M ₳. Neither number responds to `k`.
+- **The viability threshold.** From the [pools-distribution viability-threshold derivation](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#4122-viability-threshold), break-even stake = Fixed cost / (Reward per ADA per epoch) = $c / (R \lambda_{\text{size}} / \text{CircSupply})$. **No `k` in the formula** for hollow pools. At today's `minPoolCost = 170`, break-even ≈ 0.54 M ₳; at `minPoolCost = 340`, ≈ 1.09 M ₳. Neither number responds to `k`.
 
 **Structural consequence.** Of the three thresholds that structure the nine-tier taxonomy (production, viability, saturation), **`k` acts on only one — saturation.** The sub-production tier (< ~1 M ₳) stays where it is under any k-raise; the sub-viable tier (< ~3 M ₳ or more precisely < 0.54 M ₳ for break-even at minPoolCost=170) stays where it is; only the upper saturation line $z_0$ moves. A k-raise is strictly an upper-tail reparameterisation — it does not rescue any pool at the production or viability boundary.
 
@@ -333,3 +333,5 @@ The behavioural alternative to the amplified-pledge-signal channel is **MPO flee
 - **Companion evaluation:** [`cip-0082.md`](cip-0082.md) §3.3 — same structural critique applied to CIP-0082 stages 3–4 (where the k-raise is sequenced after the Margin swap). The standalone analysis here is the baseline; cip-0082.md §3.3 adds the flat-yield interaction (the Margin swap removes the ROS signal the k-raise depends on).
 - **Stake-cap pairing candidates (precondition for a constructive k-raise):** [`../pools-distribution/cip-0050.md`](../pools-distribution/cip-0050.md), [`../pools-distribution/cip-0037.md`](../pools-distribution/cip-0037.md). Note: those CIPs *change the reward formula* (CIP-0050 via σ′ clipping, CIP-0037 via a new saturation curve); once either is active, the analysis in this doc no longer directly applies.
 - **Canonical source:** [Pledging & rewards reference](https://docs.cardano.org/about-cardano/learn/pledging-rewards) (Cardano docs).
+
+> **Status:** Active 2026/04/23. Companion to CIP-0082 stages 3–4.

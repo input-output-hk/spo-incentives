@@ -48,7 +48,38 @@
 [data-theme=dark] .synth-scope{background:var(--bg-panel)}
 [data-theme=dark] .synth-fref{background:var(--bg-code)}
 
-html{scroll-behavior:smooth;scroll-padding-top:56px}
+html{scroll-behavior:smooth;scroll-padding-top:150px}
+
+/* Anchor-target visual cue — header lands clear of the sticky nav and flashes prominently */
+.content :target{scroll-margin-top:150px}
+.content h1:target,.content h2:target,.content h3:target,.content h4:target,.content h5:target,.content h6:target,
+.ev-card:target,.sro-card:target,.sro-finding:target{
+  animation:target-flash 3.6s ease-out;
+  position:relative
+}
+@keyframes target-flash{
+  0%      {background-color:rgba(242,255,88,.70); box-shadow:inset 10px 0 0 var(--infared), 0 0 0 3px var(--infared), 0 0 18px rgba(229,35,33,.35)}
+  18%     {background-color:rgba(242,255,88,.60); box-shadow:inset 10px 0 0 var(--infared), 0 0 0 3px var(--infared), 0 0 18px rgba(229,35,33,.35)}
+  40%     {background-color:rgba(229,35,33,.30);  box-shadow:inset 10px 0 0 var(--infared), 0 0 0 2px rgba(229,35,33,.45), 0 0 8px rgba(229,35,33,.18)}
+  100%    {background-color:transparent;           box-shadow:inset 10px 0 0 transparent,    0 0 0 0 transparent,            0 0 0 transparent}
+}
+[data-theme=dark] .content h1:target,[data-theme=dark] .content h2:target,[data-theme=dark] .content h3:target,[data-theme=dark] .content h4:target,[data-theme=dark] .content h5:target,[data-theme=dark] .content h6:target,
+[data-theme=dark] .ev-card:target,[data-theme=dark] .sro-card:target,[data-theme=dark] .sro-finding:target{
+  animation:target-flash-dark 3.6s ease-out
+}
+@keyframes target-flash-dark{
+  0%      {background-color:rgba(242,255,88,.30); box-shadow:inset 10px 0 0 #FF7A78, 0 0 0 3px #FF7A78, 0 0 18px rgba(255,122,120,.45)}
+  18%     {background-color:rgba(242,255,88,.22); box-shadow:inset 10px 0 0 #FF7A78, 0 0 0 3px #FF7A78, 0 0 18px rgba(255,122,120,.45)}
+  40%     {background-color:rgba(229,35,33,.32);  box-shadow:inset 10px 0 0 #FF7A78, 0 0 0 2px rgba(255,122,120,.55), 0 0 8px rgba(255,122,120,.25)}
+  100%    {background-color:transparent;           box-shadow:inset 10px 0 0 transparent, 0 0 0 0 transparent,        0 0 0 transparent}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .content h1:target,.content h2:target,.content h3:target,.content h4:target,.content h5:target,.content h6:target,
+  .ev-card:target,.sro-card:target,.sro-finding:target{
+    animation:none;background-color:rgba(229,35,33,.18);box-shadow:inset 8px 0 0 var(--infared), 0 0 0 2px rgba(229,35,33,.45)
+  }
+}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;background:var(--bg-warm);color:var(--text-body);line-height:1.78;-webkit-font-smoothing:antialiased}
 
@@ -208,8 +239,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .content thead{position:sticky;top:0}
 .content th{background:var(--bg-panel);color:var(--text-primary);font-weight:600;text-align:left;padding:7px 9px;border:1px solid var(--border)}
 .content td{padding:7px 9px;border:1px solid var(--border);color:var(--text-body);vertical-align:top}
-.content th,.content td{word-break:break-word;overflow-wrap:break-word}
+.content th,.content td{word-break:normal;overflow-wrap:break-word}
 .content tr:hover td{background:var(--bg-warm)}
+
+/* ── Evidence base cards (V2 spec) — §3.x.x.x and §4.x.x.x ── */
+.ev-list{display:flex;flex-direction:column;gap:8px;margin:18px 0 28px}
+.ev-card{display:grid;grid-template-columns:160px 1fr;gap:18px;padding:14px 18px;border:1px solid var(--border);border-radius:8px;background:var(--bg);transition:border-color .15s,box-shadow .15s}
+.ev-card:hover{border-color:rgba(229,35,33,.35);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+[data-theme=dark] .ev-card{border-color:#2a2a2a}
+[data-theme=dark] .ev-card:hover{border-color:rgba(229,35,33,.45);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.ev-label{font:600 11px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-transform:uppercase;letter-spacing:.6px;color:var(--infared);align-self:start;padding-top:3px}
+.ev-content{min-width:0}
+.ev-body{font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-body);margin:0}
+.ev-body strong{color:var(--text-primary);font-weight:700}
+.ev-sources{margin:8px 0 0;font:italic 400 11.5px/1.4 -apple-system,sans-serif;color:var(--text-muted)}
+.ev-sources a{color:var(--text-muted);text-decoration:underline;text-decoration-color:rgba(229,35,33,.3);text-underline-offset:2px}
+.ev-sources a:hover{color:var(--infared);text-decoration-color:var(--infared)}
+@media (max-width:640px){.ev-card{grid-template-columns:1fr;gap:6px}.ev-label{padding-top:0}}
 
 /* Blockquotes */
 .content blockquote{border-left:3px solid var(--accent);padding:12px 18px;margin:16px 0;background:var(--bg-panel);border-radius:0 6px 6px 0}
@@ -437,8 +483,8 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 
 /* Rich reference row inside the dropdown: title + citation on the left, PDF chip on the right */
 .nav-dd-ref{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:12px;align-items:center;padding:8px 10px;margin:2px -6px;border-radius:6px;text-decoration:none;transition:background .12s}
-.nav-dd-ref:hover{background:rgba(229,35,33,.04)}
-[data-theme=dark] .nav-dd-ref:hover{background:rgba(229,35,33,.09)}
+.nav-dd-ref:hover{background-color:rgba(229,35,33,.04)}
+[data-theme=dark] .nav-dd-ref:hover{background-color:rgba(229,35,33,.09)}
 .nav-dd-ref-title{grid-column:1;grid-row:1;font:500 13px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-primary);letter-spacing:-.1px}
 .nav-dd-ref:hover .nav-dd-ref-title{color:var(--infared)}
 .nav-dd-ref-cite{grid-column:1;grid-row:2;font:400 11px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
@@ -469,18 +515,28 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .nav-dd-ref-stage-soon{color:#5a4d00;background:rgba(242,255,88,.32);border-color:rgba(242,255,88,.6)}
 [data-theme=dark] .nav-dd-ref-stage-soon{color:#F2FF58;background:rgba(242,255,88,.10);border-color:rgba(242,255,88,.4)}
 
-/* Tree nesting: per-CIP entries nested under their layer synthesis get a deeper indent */
-.nav-dd-ref-deep{padding-left:56px;position:relative}
-.nav-dd-ref-deep::before{content:"";position:absolute;left:44px;top:16px;width:6px;height:1px;background:var(--border)}
-/* Layer synthesis row sits one indent shallower than the CIP children — visually the parent node */
+/* CIP children of each layer's evaluation synthesis are simply
+   indented one level deeper than the synthesis row. No tree
+   connector — readers infer hierarchy from the indent and the
+   ordering alone, which keeps the dropdown calm and avoids fragile
+   pseudo-element drawing. The .nav-dd-ref-sub::before bullet is
+   re-aligned per level so it sits ~12px before each title rather
+   than floating at the menu's left edge. */
+.nav-dd-ref-deep{padding-left:56px}
+.nav-dd-ref-deep::before{left:44px}
+.nav-dd-ref-deeper{padding-left:76px}
+.nav-dd-ref-deeper::before{left:64px}
+
+/* Synthesis row title weight — used by both Forward 'Draft in
+   preparation' and the per-layer parent rows. */
 .nav-dd-ref-synthesis .nav-dd-ref-title{font-weight:600;color:var(--text-primary)}
 
 /* Active / parent-active state on rich-list item */
-.nav-dd-ref.active{background:rgba(22,233,216,.09);box-shadow:inset 3px 0 0 rgba(22,233,216,.7)}
+.nav-dd-ref.active{background-color:rgba(22,233,216,.09);box-shadow:inset 3px 0 0 rgba(22,233,216,.7)}
 .nav-dd-ref.active .nav-dd-ref-title{color:var(--text-primary);font-weight:600}
-.nav-dd-ref.parent-active{background:rgba(22,233,216,.04);box-shadow:inset 3px 0 0 rgba(22,233,216,.35)}
-[data-theme=dark] .nav-dd-ref.active{background:rgba(22,233,216,.14)}
-[data-theme=dark] .nav-dd-ref.parent-active{background:rgba(22,233,216,.06)}
+.nav-dd-ref.parent-active{background-color:rgba(22,233,216,.04);box-shadow:inset 3px 0 0 rgba(22,233,216,.35)}
+[data-theme=dark] .nav-dd-ref.active{background-color:rgba(22,233,216,.14)}
+[data-theme=dark] .nav-dd-ref.parent-active{background-color:rgba(22,233,216,.06)}
 
 /* ── Zone 1 · Output (primary CTA, left-anchored) ── */
 .nav-zone-output{flex:0 0 auto;padding-right:4px}
