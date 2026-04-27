@@ -1,17 +1,10 @@
 #!/usr/bin/env python3
 """
-Foundations overview — the §1 hero diagram.
+Foundations overview — minimal version.
 
-Maps the documents the V2 Specification reasons from:
-  · Design artefacts (SL-D1, The Intended Game)
-  · Research papers (RSS, IAPG, RMPC, BPD)
-  · Community antecedent (SD-L)
-  · Diagnostic sub-reports (TPP, PDG, OC, SC) → The Diagnostic
-  · Cardano Constitution v2
-
-All flow into the V2 Specification node on the right.
-The dashed arrow marks the research papers as 'inspiration only'.
-The ★ marks the two novel companion documents.
+Five inputs feed the V2 Specification, mediated by the Diagnostic.
+The detail (which paper, which sub-report) lives in the prose; the figure
+carries only the structural skeleton.
 
 Outputs: figures/foundations_overview.png
 """
@@ -27,85 +20,56 @@ from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 REPORT_DIR = Path(__file__).resolve().parent.parent
 FIG_DIR = REPORT_DIR / "figures"
 
-# ── IOG Brand Palette ──
 BG_COLOR = "#FFFFFF"
 TEXT_COLOR = "#1A1A1A"
-TEXT_DIM = "#444444"
-TEXT_MUTED = "#888888"
+TEXT_DIM = "#555555"
 
 INFARED = "#E52321"
 DAWN = "#EC641D"
 ELECTRIC_BLUE = "#0DBFB0"
 COBALT_PULSE = "#2C4FFA"
-EVIDENCE_OLIVE = "#9CAA00"
 RESEARCH_GREY = "#888888"
+EVIDENCE_OLIVE = "#9CAA00"
 
 
-def draw_node(ax, x, y, w, h, title, sub_lines, accent, fill, novel=False, dark=False):
-    """Draw a single rounded node with title + subtitle lines."""
+def draw_node(ax, x, y, w, h, title, subtitle, accent, novel=False, dark=False):
     box = FancyBboxPatch(
         (x - w / 2, y - h / 2),
         w, h,
-        boxstyle="round,pad=0.02,rounding_size=0.10",
-        linewidth=2.0 if dark else 1.6,
-        edgecolor=accent,
-        facecolor=fill,
+        boxstyle="round,pad=0.02,rounding_size=0.14",
+        linewidth=2.2, edgecolor=accent,
+        facecolor="#000000" if dark else "#FFFFFF",
     )
     ax.add_patch(box)
 
     title_color = "#FFFFFF" if dark else TEXT_COLOR
     sub_color = "#CCCCCC" if dark else TEXT_DIM
 
-    # Title — at top of box
     star = "★ " if novel else ""
     ax.text(
-        x, y + h / 2 - 0.32,
+        x, y + 0.18,
         star + title,
         ha="center", va="center",
-        fontsize=10, fontweight="bold", color=title_color,
+        fontsize=14, fontweight="bold", color=title_color,
     )
-
-    # Subtitle lines, distributed in remaining space
-    n = len(sub_lines)
-    if n == 0:
-        return
-    body_top = y + h / 2 - 0.65
-    body_bottom = y - h / 2 + 0.18
-    if n == 1:
-        ys = [(body_top + body_bottom) / 2]
-    else:
-        step = (body_top - body_bottom) / (n - 1)
-        ys = [body_top - i * step for i in range(n)]
-
-    for txt, y_line in zip(sub_lines, ys):
-        ax.text(
-            x, y_line, txt,
-            ha="center", va="center",
-            fontsize=8, color=sub_color, style="italic",
-        )
-
-
-def category_label(ax, x_left, y, label, color):
-    """Small caps category label on the left margin."""
     ax.text(
-        x_left, y, label,
-        ha="left", va="center",
-        fontsize=9.5, fontweight="bold", color=color,
+        x, y - 0.28,
+        subtitle,
+        ha="center", va="center",
+        fontsize=10, color=sub_color, style="italic",
     )
 
 
-def arrow(ax, p_from, p_to, label=None, dashed=False, color=None,
-          label_pos=0.5, label_offset=(0, 0.18), curve=0.0):
-    color = color or TEXT_DIM
+def arrow(ax, p_from, p_to, label, color, dashed=False, curve=0.0,
+          label_pos=0.5, label_offset=(0, 0.30)):
     style = "--" if dashed else "-"
     a = FancyArrowPatch(
         p_from, p_to,
-        arrowstyle="-|>,head_length=8,head_width=5.5",
-        linewidth=1.5,
-        linestyle=style,
+        arrowstyle="-|>,head_length=12,head_width=8",
+        linewidth=2.0, linestyle=style,
         color=color,
         connectionstyle=f"arc3,rad={curve}",
-        shrinkA=3, shrinkB=4,
+        shrinkA=4, shrinkB=6,
     )
     ax.add_patch(a)
     if label:
@@ -114,15 +78,15 @@ def arrow(ax, p_from, p_to, label=None, dashed=False, color=None,
         ax.text(
             mx, my, label,
             ha="center", va="center",
-            fontsize=8, color=color, style="italic",
-            bbox=dict(facecolor=BG_COLOR, edgecolor="none", pad=1.5),
+            fontsize=10, color=color, style="italic",
+            bbox=dict(facecolor=BG_COLOR, edgecolor="none", pad=2.0),
         )
 
 
 def main():
     FIG_DIR.mkdir(parents=True, exist_ok=True)
 
-    fig_w, fig_h = 17.0, 11.0
+    fig_w, fig_h = 16.0, 11.0
     fig, ax = plt.subplots(figsize=(fig_w, fig_h))
     fig.patch.set_facecolor(BG_COLOR)
     ax.set_facecolor(BG_COLOR)
@@ -131,198 +95,107 @@ def main():
     ax.set_aspect("equal")
     ax.axis("off")
 
-    # Header
     fig.text(
-        0.5, 0.965,
+        0.5, 0.96,
         "Foundations — what the V2 Specification reasons from",
         ha="center", va="center",
         fontsize=16, fontweight="bold", color=TEXT_COLOR,
     )
     fig.text(
-        0.5, 0.935,
-        "Solid arrows = substantive dependencies   ·   Dashed = inspiration only   ·   ★ = novel companion document written for this spec",
+        0.5, 0.928,
+        "Solid arrow = substantive dependency  ·  Dashed = inspiration only  ·  ★ = novel companion document",
         ha="center", va="center",
-        fontsize=10, color=TEXT_DIM, style="italic",
+        fontsize=10.5, color=TEXT_DIM, style="italic",
     )
 
-    # ── Column layout ──
-    # Col A (x ≈ 2.3): left sources — design, research, antecedent, governance
-    # Col B (x ≈ 7.0): evidence sub-reports
-    # Col C (x ≈ 11.5): The Diagnostic (synthesizer)
-    # Col D (x ≈ 15.2): V2 Specification (target)
+    # Layout: 3 columns
+    col_left = 3.0
+    col_mid = 8.5
+    col_right = 13.5
 
-    col_a_x = 2.7
-    col_b_x = 7.5
-    col_c_x = 11.7
-    col_d_x = 15.0
+    node_w, node_h = 4.6, 1.0
 
-    node_w_a = 3.6
-    node_h_a = 1.20
-
-    # ── Column A — ordered top to bottom ──
-    # 1. Design artefacts (2 nodes)
-    cat_y = 9.7
-    category_label(ax, 0.4, cat_y, "DESIGN ARTEFACTS", INFARED)
-    draw_node(
-        ax, col_a_x, 9.10, node_w_a, node_h_a,
-        "SL-D1  ·  2019",
-        ["Delegation Incentives Design Spec",
-         "Kant · Brünjes · Coutts"],
-        accent=INFARED, fill="#FFE9E8",
-    )
-    draw_node(
-        ax, col_a_x, 7.70, node_w_a, node_h_a,
-        "The Intended Game",
-        ["normative baseline",
-         "written for this spec"],
-        accent=INFARED, fill="#FFE9E8", novel=True,
-    )
-
-    # 2. Research papers (4 nodes — compact pair)
-    cat_y = 6.85
-    category_label(ax, 0.4, cat_y, "RESEARCH PAPERS", RESEARCH_GREY)
-    research = [
-        ("RSS  ·  2020", "Reward Sharing Schemes"),
-        ("IAPG  ·  2021", "Incentives Against Power Grabs"),
-        ("RMPC  ·  2022", "Removing min-pool-cost"),
-        ("BPD  ·  2024", "Participation × Decentralization"),
+    # LEFT — five input categories, vertically stacked
+    inputs = [
+        ("Design baseline",     "SL-D1 · The Intended Game",            INFARED, True),
+        ("Research papers",     "RSS · IAPG · RMPC · BPD",              RESEARCH_GREY, False),
+        ("Community antecedent","SD-L · 2025",                          DAWN, False),
+        ("Diagnostic evidence", "4 sub-reports · findings → observations", EVIDENCE_OLIVE, False),
+        ("Cardano Constitution v2", "tenets · parameter guardrails",     COBALT_PULSE, False),
     ]
-    for i, (title, sub) in enumerate(research):
-        rx = col_a_x - 0.95 + (i % 2) * 1.95
-        ry = 6.30 - (i // 2) * 0.65
-        ax.text(
-            rx, ry + 0.13, title,
-            ha="center", va="center",
-            fontsize=8.5, fontweight="bold", color=TEXT_COLOR,
-        )
-        ax.text(
-            rx, ry - 0.13, sub,
-            ha="center", va="center",
-            fontsize=7.5, color=TEXT_DIM, style="italic",
-        )
 
-    # 3. Community antecedent
-    cat_y = 4.65
-    category_label(ax, 0.4, cat_y, "COMMUNITY ANTECEDENT", DAWN)
+    y_top = 9.5
+    y_step = 1.7
+    input_centers = []
+    for i, (title, sub, color, novel) in enumerate(inputs):
+        y = y_top - i * y_step
+        draw_node(ax, col_left, y, node_w, node_h, title, sub, color, novel=novel)
+        input_centers.append((col_left, y, color, title))
+
+    # MID — The Diagnostic
+    diag_y = (y_top + (y_top - 4 * y_step)) / 2  # vertical centre of the inputs
     draw_node(
-        ax, col_a_x, 4.05, node_w_a, node_h_a,
-        "SD-L  ·  2025",
-        ["Incentive Mechanism Analysis",
-         "Carlos Lopez de Lara"],
-        accent=DAWN, fill="#FFEFD9",
-    )
-
-    # 4. Governance
-    cat_y = 2.55
-    category_label(ax, 0.4, cat_y, "GOVERNANCE", COBALT_PULSE)
-    draw_node(
-        ax, col_a_x, 1.95, node_w_a, node_h_a,
-        "Cardano Constitution v2",
-        ["tenets · parameter guardrails",
-         "ratified epoch 609"],
-        accent=COBALT_PULSE, fill="#E8ECFF",
-    )
-
-    # ── Column B — evidence sub-reports ──
-    cat_y = 9.7
-    category_label(ax, col_b_x - 1.9, cat_y, "DIAGNOSTIC SUB-REPORTS", EVIDENCE_OLIVE)
-    evidence = [
-        ("Treasury & Pool Pots", "epoch budget · reserve · fees", "backs §1.1"),
-        ("Pools Distribution Gaps", "reward curve · pledge · tiers", "backs §1.2"),
-        ("The Operator's Cut", "intra-pool split · commission", "backs §1.3"),
-        ("The Staking Census", "populations · submitters", "backs §2.1–§2.2"),
-    ]
-    evidence_centers = []
-    for i, (title, sub, backs) in enumerate(evidence):
-        ey = 8.85 - i * 1.55
-        draw_node(
-            ax, col_b_x, ey, 4.0, 1.20,
-            title,
-            [sub, backs],
-            accent=EVIDENCE_OLIVE, fill="#FCFFE0",
-        )
-        evidence_centers.append((col_b_x, ey))
-
-    # ── Column C — The Diagnostic ──
-    diag_y = 5.5
-    category_label(ax, col_c_x - 1.5, 9.7, "DIAGNOSTIC SYNTHESIS", ELECTRIC_BLUE)
-    draw_node(
-        ax, col_c_x, diag_y, 3.0, 2.2,
+        ax, col_mid, diag_y, 3.6, 1.4,
         "The Diagnostic",
-        ["holistic audit",
-         "problem induction",
-         "written for this spec"],
-        accent=ELECTRIC_BLUE, fill="#DFFAF7", novel=True,
+        "holistic audit · problem induction",
+        ELECTRIC_BLUE, novel=True,
     )
 
-    # ── Column D — V2 Specification ──
-    spec_y = 5.5
-    category_label(ax, col_d_x - 1.2, 9.7, "TARGET", INFARED)
+    # RIGHT — V2 Specification
+    spec_y = diag_y
     draw_node(
-        ax, col_d_x, spec_y, 2.6, 2.2,
+        ax, col_right, spec_y, 3.4, 1.6,
         "V2 Specification",
-        ["milestones",
-         "KPIs"],
-        accent=INFARED, fill="#000000", dark=True,
+        "milestones · KPIs",
+        INFARED, dark=True,
     )
 
-    # ── Arrows ──
-    # Design → Spec
-    arrow(ax,
-          (col_a_x + node_w_a / 2, 9.10), (col_d_x - 1.3, spec_y + 0.7),
-          label="original design", color=INFARED,
-          label_pos=0.7, label_offset=(0, 0.20), curve=-0.1)
-    arrow(ax,
-          (col_a_x + node_w_a / 2, 7.70), (col_d_x - 1.3, spec_y + 0.4),
-          label="intended equilibrium", color=INFARED,
-          label_pos=0.7, label_offset=(0, 0.20), curve=-0.05)
+    # Arrows from inputs — no labels, colour matches source box
+    diag_left = col_mid - 1.8
+    spec_left = col_right - 1.7
+    diag_right = col_mid + 1.8
 
-    # Research → Spec (combined dashed arrow from research block centroid)
+    # Design → Spec (direct, solid red)
     arrow(ax,
-          (col_a_x + node_w_a / 2, 6.0), (col_d_x - 1.3, spec_y + 0.15),
-          label="light inspiration", dashed=True, color=RESEARCH_GREY,
-          label_pos=0.6, label_offset=(0, 0.18), curve=-0.05)
+          (col_left + node_w / 2, input_centers[0][1]), (spec_left, spec_y + 0.45),
+          None, INFARED, curve=-0.15)
+
+    # Research → Spec (dashed grey)
+    arrow(ax,
+          (col_left + node_w / 2, input_centers[1][1]), (spec_left, spec_y + 0.20),
+          None, RESEARCH_GREY, dashed=True, curve=-0.10)
 
     # Antecedent → Diagnostic
     arrow(ax,
-          (col_a_x + node_w_a / 2, 4.05), (col_c_x - 1.5, diag_y - 0.6),
-          label="starting point · extended by", color=DAWN,
-          label_pos=0.55, label_offset=(0, -0.22), curve=0.05)
+          (col_left + node_w / 2, input_centers[2][1]), (diag_left, diag_y + 0.10),
+          None, DAWN, curve=0.05)
 
-    # Evidence → Diagnostic (4 arrows)
-    for ec in evidence_centers:
-        arrow(ax,
-              (ec[0] + 2.0, ec[1]), (col_c_x - 1.5, diag_y),
-              color=EVIDENCE_OLIVE)
+    # Evidence → Diagnostic
+    arrow(ax,
+          (col_left + node_w / 2, input_centers[3][1]), (diag_left, diag_y - 0.10),
+          None, EVIDENCE_OLIVE, curve=-0.05)
 
     # Diagnostic → Spec
     arrow(ax,
-          (col_c_x + 1.5, diag_y), (col_d_x - 1.3, spec_y),
-          label="induced problems", color=ELECTRIC_BLUE,
-          label_pos=0.5, label_offset=(0, 0.20))
+          (diag_right, diag_y), (spec_left, spec_y),
+          None, ELECTRIC_BLUE)
 
-    # Governance → Spec
+    # Constitution → Spec (governance)
     arrow(ax,
-          (col_a_x + node_w_a / 2, 1.95), (col_d_x - 1.3, spec_y - 0.7),
-          label="tenets & guardrails", color=COBALT_PULSE,
-          label_pos=0.65, label_offset=(0, -0.22), curve=0.10)
+          (col_left + node_w / 2, input_centers[4][1]), (spec_left, spec_y - 0.45),
+          None, COBALT_PULSE, curve=0.10)
 
-    # ── Legend ──
-    legend_y = 0.45
-    items = [
-        ("design / spec", INFARED),
-        ("antecedent", DAWN),
-        ("evidence", EVIDENCE_OLIVE),
-        ("diagnostic (novel)", ELECTRIC_BLUE),
-        ("governance", COBALT_PULSE),
-        ("research", RESEARCH_GREY),
-    ]
-    x = 0.6
-    for label, color in items:
-        ax.add_patch(mpatches.Rectangle((x, legend_y), 0.32, 0.18, color=color))
-        ax.text(x + 0.45, legend_y + 0.09, label,
-                fontsize=8.5, color=TEXT_DIM, va="center")
-        x += 2.2 if label != "diagnostic (novel)" else 2.6
+    # Caption explaining the flow
+    fig.text(
+        0.5, 0.04,
+        "Each input flows to its destination via a same-colour arrow.  "
+        "Three sources feed the Diagnostic (community antecedent, evidence sub-reports);  "
+        "the Diagnostic + Design baseline + Constitution feed the V2 Specification directly;  "
+        "research papers contribute as inspiration only (dashed).",
+        ha="center", va="center",
+        fontsize=10, color=TEXT_DIM, style="italic",
+        wrap=True,
+    )
 
     out_path = FIG_DIR / "foundations_overview.png"
     fig.savefig(out_path, dpi=180, bbox_inches="tight", facecolor=BG_COLOR)
