@@ -608,11 +608,11 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .nav-dd-ref-synthesis .nav-dd-ref-title{font-weight:600;color:var(--text-primary)}
 
 /* Active / parent-active state on rich-list item */
-.nav-dd-ref.active{background:rgba(22,233,216,.09);box-shadow:inset 3px 0 0 rgba(22,233,216,.7)}
+.nav-dd-ref.active{background-color:rgba(22,233,216,.09);box-shadow:inset 3px 0 0 rgba(22,233,216,.7)}
 .nav-dd-ref.active .nav-dd-ref-title{color:var(--text-primary);font-weight:600}
-.nav-dd-ref.parent-active{background:rgba(22,233,216,.04);box-shadow:inset 3px 0 0 rgba(22,233,216,.35)}
-[data-theme=dark] .nav-dd-ref.active{background:rgba(22,233,216,.14)}
-[data-theme=dark] .nav-dd-ref.parent-active{background:rgba(22,233,216,.06)}
+.nav-dd-ref.parent-active{background-color:rgba(22,233,216,.04);box-shadow:inset 3px 0 0 rgba(22,233,216,.35)}
+[data-theme=dark] .nav-dd-ref.active{background-color:rgba(22,233,216,.14)}
+[data-theme=dark] .nav-dd-ref.parent-active{background-color:rgba(22,233,216,.06)}
 
 /* ── Zone 1 · Output (primary CTA, left-anchored) ── */
 .nav-zone-output{flex:0 0 auto;padding-right:4px}
