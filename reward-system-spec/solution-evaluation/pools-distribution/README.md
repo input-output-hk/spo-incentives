@@ -1,7 +1,5 @@
 # Pools distribution — Stake-cap layer
 
-> **Status:** Active 2026/04/23. Subfolder of [`../README.md`](../README.md). Candidates that act on the stake-cap layer of the Cardano reward pipeline.
-
 This folder evaluates the CIPs that act on the **stake-cap layer** of the Cardano reward pipeline — the reward-eligible pool stake $\sigma'$ that enters the SL-D1 reward formula. The fee split that runs *after* the formula is left untouched ([`../operator-delegator/`](../operator-delegator/README.md)); what changes is the allocation envelope itself.
 
 The two CIPs in scope ([CIP-0050](cip-0050.md), [CIP-0037](cip-0037.md)) target what the [mainnet diagnostic](../../diagnostic/README.md) flags as a **broken signal**: pledge is priced as irrelevant by the operator population. Mainnet evidence: POL.O2.F2 shows pledge yield is structurally dominated by passive-delegation yield (0.68 %/yr vs ~2.3 %/yr); POL.O2.F1 reports 78 % of staked ADA sits in pools with pledge ratio < 1 %; POL.O4.F3 finds 41 of 48 capital-sufficient MPOs forfeit the pledge bonus. Both CIPs make pledge **binding** on the reward formula — without sufficient pledge, the pool's reward-eligible stake is clipped.
@@ -344,3 +342,5 @@ Stake-cap reforms tighten the viability envelope for undercapitalised independen
 - **Standalone `k`-lever analysis (held-formula-fixed assumption):** [`../operator-delegator/k-parameter.md`](../operator-delegator/k-parameter.md).
 - **Head-to-head:** CIP-0050-vs-0037 comparison maintained as a separate working document.
 - **Solution-evaluation landing + cross-CIP conclusion:** [`../README.md`](../README.md).
+
+> **Status:** Active 2026/04/23. Subfolder of [`../README.md`](../README.md). Candidates that act on the stake-cap layer of the Cardano reward pipeline.

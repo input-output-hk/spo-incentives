@@ -1,7 +1,5 @@
 # Operator / Delegator — Fee layer
 
-> **Status:** Active 2026/04/23. Subfolder of [`../README.md`](../README.md). Candidates that act on the fee layer of the Cardano reward pipeline.
-
 This folder evaluates the CIPs that act on the **fee layer** of the Cardano reward pipeline — the operator/member split that runs *after* the SL-D1 reward formula has already produced a per-pool allocation. The reward envelope is left untouched by these candidates; what changes is how the resulting pool reward is divided between the operator's take and the delegators' share.
 
 The two CIPs in scope ([CIP-0023](cip-0023.md), [CIP-0082](cip-0082.md)) target what the [mainnet diagnostic](../../diagnostic/README.md) flags as **the priority-1 problem for any V2 reform: small-operator viability**. Mainnet today: 73 % of productive pools sit below the ~3 M ₳ viability line, and no single-pool retail operator earns a competitive wage (OPE.O6.F4, POL.O3.F1). Both CIPs correctly identify this population as the target. They differ on the instrument used (margin floor vs rate floor) and whether `minPoolCost` survives the reform.
@@ -89,3 +87,5 @@ The Executive summary below packages the verdict shared by both CIPs: they corre
 - **Cross-layer subfolder:** [`../pools-distribution/README.md`](../pools-distribution/README.md).
 - **Transversal lever in this folder:** [`k-parameter.md`](k-parameter.md) — standalone `k`-raise analysis; see also companion §2 above.
 - **Solution-evaluation landing + cross-CIP conclusion:** [`../README.md`](../README.md).
+
+> **Status:** Active 2026/04/23. Subfolder of [`../README.md`](../README.md). Candidates that act on the fee layer of the Cardano reward pipeline.
