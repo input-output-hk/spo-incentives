@@ -1128,26 +1128,27 @@
     });
   })();
 
-  /* ── Reader feedback: Plausible custom events + finding reactions ──
-     Fires custom Plausible events for overlay engagement and injects a
-     thumbs up/down control under each `.sro-finding`. The script is a
-     no-op when Plausible is not configured (the body has no
-     `data-plausible="1"`). Per-session idempotency via sessionStorage so
-     hammering a button only counts once per (page, finding, sentiment)
-     in a given session — keeps the dashboard signal clean. */
+  /* ── Reader feedback: analytics custom events + finding reactions ──
+     Provider-agnostic: calls into `window.spoTrack(name, propsFlat)`,
+     a global injected by the analytics head bridge that maps to either
+     Plausible or Umami transparently. The script is a no-op when no
+     analytics provider is configured (the body has no `data-analytics`
+     attribute). Per-session idempotency via sessionStorage so hammering
+     a button only counts once per (page, finding, sentiment) in a given
+     session — keeps the dashboard signal clean. */
   (function initReaderFeedback(){
-    function p(){
-      if(typeof window.plausible==='function'){
-        try{window.plausible.apply(window,arguments);}catch(e){}
+    function track(name,props){
+      if(typeof window.spoTrack==='function'){
+        try{window.spoTrack(name,props||{});}catch(e){}
       }
     }
     var body=document.body;
     if(!body) return;
-    var hasPlausible=body.getAttribute('data-plausible')==='1';
     var hasReactions=body.getAttribute('data-reactions')==='1';
+    var pageId=location.pathname.split('/').pop()||'index.html';
 
-    /* Overlay engagement events — captured even when Plausible is not
-       configured the listener is cheap; the p() helper guards the call. */
+    /* Overlay engagement events — listener is cheap; the track() helper
+       guards the call when no provider is configured. */
     document.addEventListener('click',function(ev){
       var t=ev.target;
       if(!t||!t.closest) return;
@@ -1155,15 +1156,13 @@
       if(or){
         var canon=or.getAttribute('data-obs')||or.getAttribute('data-obs-src')||
                    or.getAttribute('data-canon')||or.textContent.trim();
-        p('Overlay Open',{props:{kind:'observation',target:canon,
-          page:location.pathname.split('/').pop()||'index.html'}});
+        track('Overlay Open',{kind:'observation',target:canon,page:pageId});
         return;
       }
       var fr=t.closest('.finding-ref');
       if(fr){
         var fid=fr.getAttribute('data-finding')||fr.textContent.trim();
-        p('Overlay Open',{props:{kind:'finding',target:fid,
-          page:location.pathname.split('/').pop()||'index.html'}});
+        track('Overlay Open',{kind:'finding',target:fid,page:pageId});
       }
     },true);
 
@@ -1200,8 +1199,7 @@
           b.classList.add('is-active');
           return;
         }
-        p('Finding Reaction',{props:{finding:canon,sentiment:sent,
-          page:location.pathname.split('/').pop()||'index.html'}});
+        track('Finding Reaction',{finding:canon,sentiment:sent,page:pageId});
         markSent(canon,sent);
         b.classList.add('is-active');
         b.classList.add('feedback-react-pulse');

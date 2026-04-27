@@ -257,10 +257,40 @@ def _cfg(name: str, default: str = "") -> str:
     return _os.environ.get(name, "").strip() or default
 
 
+# Provider selector. Leave empty to auto-detect from the configured fields:
+# Umami wins if both Umami and Plausible are partially configured. Set to
+# "plausible", "umami" or "none" to force a specific outcome.
+ANALYTICS_PROVIDER = _cfg("SPO_ANALYTICS_PROVIDER", "")
+
 PLAUSIBLE_DOMAIN = _cfg("SPO_PLAUSIBLE_DOMAIN", "")
 PLAUSIBLE_SCRIPT_URL = _cfg(
     "SPO_PLAUSIBLE_SCRIPT_URL", "https://plausible.io/js/script.js"
 )
+
+# Umami — self-hostable, free, Postgres-only. The website id is shown in
+# the Umami dashboard under Settings → Websites. The script URL points to
+# `<your-umami-host>/script.js`.
+UMAMI_WEBSITE_ID = _cfg("SPO_UMAMI_WEBSITE_ID", "")
+UMAMI_SCRIPT_URL = _cfg("SPO_UMAMI_SCRIPT_URL", "")
+
+
+def _resolve_analytics_provider() -> str:
+    """Pick the active provider. Explicit setting wins; otherwise prefer
+    whichever has its required fields populated, with Umami beating
+    Plausible when both are partial (Umami is the free-by-default path).
+    """
+    if ANALYTICS_PROVIDER == "none":
+        return ""
+    if ANALYTICS_PROVIDER in ("plausible", "umami"):
+        return ANALYTICS_PROVIDER
+    if UMAMI_WEBSITE_ID and UMAMI_SCRIPT_URL:
+        return "umami"
+    if PLAUSIBLE_DOMAIN:
+        return "plausible"
+    return ""
+
+
+ACTIVE_ANALYTICS = _resolve_analytics_provider()
 
 GISCUS_REPO = _cfg("SPO_GISCUS_REPO", "")
 GISCUS_REPO_ID = _cfg("SPO_GISCUS_REPO_ID", "")
@@ -273,20 +303,36 @@ GISCUS_LANG = _cfg("SPO_GISCUS_LANG", "en")
 REACTIONS_ENABLED = _cfg("SPO_REACTIONS_ENABLED", "1") not in ("0", "false", "no")
 
 
-def _render_plausible_head() -> str:
-    """Return the `<head>` injection for Plausible. Empty when the domain is
-    not configured. Bundles a tiny stub so `plausible(...)` calls fired
-    before the deferred script loads are queued and replayed.
+def _render_analytics_head() -> str:
+    """Return the `<head>` injection for the active analytics provider.
+
+    Both providers expose a unified ``window.spoTrack(name, propsFlat)`` so
+    the rest of the bundled JS does not care which one is wired up. Empty
+    string when no provider is configured.
     """
-    if not PLAUSIBLE_DOMAIN:
-        return ""
-    return (
-        f'<script defer data-domain="{_html.escape(PLAUSIBLE_DOMAIN)}" '
-        f'src="{_html.escape(PLAUSIBLE_SCRIPT_URL)}"></script>'
-        '<script>window.plausible=window.plausible||function()'
-        '{(window.plausible.q=window.plausible.q||[]).push(arguments)}'
-        '</script>'
-    )
+    if ACTIVE_ANALYTICS == "plausible":
+        if not PLAUSIBLE_DOMAIN:
+            return ""
+        return (
+            f'<script defer data-domain="{_html.escape(PLAUSIBLE_DOMAIN)}" '
+            f'src="{_html.escape(PLAUSIBLE_SCRIPT_URL)}"></script>'
+            '<script>window.plausible=window.plausible||function()'
+            '{(window.plausible.q=window.plausible.q||[]).push(arguments)};'
+            'window.spoTrack=function(n,p){try{window.plausible(n,'
+            '{props:p||{}});}catch(e){}}'
+            '</script>'
+        )
+    if ACTIVE_ANALYTICS == "umami":
+        if not (UMAMI_WEBSITE_ID and UMAMI_SCRIPT_URL):
+            return ""
+        return (
+            f'<script defer data-website-id="{_html.escape(UMAMI_WEBSITE_ID)}" '
+            f'src="{_html.escape(UMAMI_SCRIPT_URL)}"></script>'
+            '<script>window.spoTrack=function(n,p){try{if(window.umami&&'
+            'window.umami.track){window.umami.track(n,p||{});}}catch(e){}}'
+            '</script>'
+        )
+    return ""
 
 
 def _render_giscus_block() -> str:
@@ -328,12 +374,14 @@ def _render_giscus_block() -> str:
 def _render_body_data_attrs() -> str:
     """Return space-prefixed attributes for the `<body>` tag. Used by the
     feedback JS module to decide whether to inject reaction buttons and
-    whether Plausible custom-event capture is wired up.
+    whether analytics custom-event capture is wired up. The analytics
+    provider name is exposed via ``data-analytics`` so the JS can adapt
+    if a future provider needs different bookkeeping.
     """
     parts = []
-    if PLAUSIBLE_DOMAIN:
-        parts.append('data-plausible="1"')
-    if REACTIONS_ENABLED and PLAUSIBLE_DOMAIN:
+    if ACTIVE_ANALYTICS:
+        parts.append(f'data-analytics="{ACTIVE_ANALYTICS}"')
+    if REACTIONS_ENABLED and ACTIVE_ANALYTICS:
         parts.append('data-reactions="1"')
     if GISCUS_REPO:
         parts.append('data-giscus="1"')
@@ -1268,7 +1316,7 @@ def render_shell(page: dict, content_html: str) -> str:
         cls_design_trigger=cls_design_trigger,
         breadcrumb_inner=breadcrumb_inner,
         asset_ver=asset_ver,
-        plausible_head=_render_plausible_head(),
+        plausible_head=_render_analytics_head(),
         giscus_block=_render_giscus_block(),
         body_data_attrs=_render_body_data_attrs(),
         **classes,
@@ -2032,26 +2080,27 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
     });
   })();
 
-  /* ── Reader feedback: Plausible custom events + finding reactions ──
-     Fires custom Plausible events for overlay engagement and injects a
-     thumbs up/down control under each `.sro-finding`. The script is a
-     no-op when Plausible is not configured (the body has no
-     `data-plausible="1"`). Per-session idempotency via sessionStorage so
-     hammering a button only counts once per (page, finding, sentiment)
-     in a given session — keeps the dashboard signal clean. */
+  /* ── Reader feedback: analytics custom events + finding reactions ──
+     Provider-agnostic: calls into `window.spoTrack(name, propsFlat)`,
+     a global injected by the analytics head bridge that maps to either
+     Plausible or Umami transparently. The script is a no-op when no
+     analytics provider is configured (the body has no `data-analytics`
+     attribute). Per-session idempotency via sessionStorage so hammering
+     a button only counts once per (page, finding, sentiment) in a given
+     session — keeps the dashboard signal clean. */
   (function initReaderFeedback(){
-    function p(){
-      if(typeof window.plausible==='function'){
-        try{window.plausible.apply(window,arguments);}catch(e){}
+    function track(name,props){
+      if(typeof window.spoTrack==='function'){
+        try{window.spoTrack(name,props||{});}catch(e){}
       }
     }
     var body=document.body;
     if(!body) return;
-    var hasPlausible=body.getAttribute('data-plausible')==='1';
     var hasReactions=body.getAttribute('data-reactions')==='1';
+    var pageId=location.pathname.split('/').pop()||'index.html';
 
-    /* Overlay engagement events — captured even when Plausible is not
-       configured the listener is cheap; the p() helper guards the call. */
+    /* Overlay engagement events — listener is cheap; the track() helper
+       guards the call when no provider is configured. */
     document.addEventListener('click',function(ev){
       var t=ev.target;
       if(!t||!t.closest) return;
@@ -2059,15 +2108,13 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
       if(or){
         var canon=or.getAttribute('data-obs')||or.getAttribute('data-obs-src')||
                    or.getAttribute('data-canon')||or.textContent.trim();
-        p('Overlay Open',{props:{kind:'observation',target:canon,
-          page:location.pathname.split('/').pop()||'index.html'}});
+        track('Overlay Open',{kind:'observation',target:canon,page:pageId});
         return;
       }
       var fr=t.closest('.finding-ref');
       if(fr){
         var fid=fr.getAttribute('data-finding')||fr.textContent.trim();
-        p('Overlay Open',{props:{kind:'finding',target:fid,
-          page:location.pathname.split('/').pop()||'index.html'}});
+        track('Overlay Open',{kind:'finding',target:fid,page:pageId});
       }
     },true);
 
@@ -2104,8 +2151,7 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
           b.classList.add('is-active');
           return;
         }
-        p('Finding Reaction',{props:{finding:canon,sentiment:sent,
-          page:location.pathname.split('/').pop()||'index.html'}});
+        track('Finding Reaction',{finding:canon,sentiment:sent,page:pageId});
         markSent(canon,sent);
         b.classList.add('is-active');
         b.classList.add('feedback-react-pulse');

@@ -45,8 +45,11 @@ jobs:
         # `reward-system-spec/generated-website/BUILD_FEEDBACK.md`.
         working-directory: reward-system-spec/generated-website
         env:
+          SPO_ANALYTICS_PROVIDER:   ${{ vars.SPO_ANALYTICS_PROVIDER }}
           SPO_PLAUSIBLE_DOMAIN:     ${{ vars.SPO_PLAUSIBLE_DOMAIN }}
           SPO_PLAUSIBLE_SCRIPT_URL: ${{ vars.SPO_PLAUSIBLE_SCRIPT_URL }}
+          SPO_UMAMI_WEBSITE_ID:     ${{ vars.SPO_UMAMI_WEBSITE_ID }}
+          SPO_UMAMI_SCRIPT_URL:     ${{ vars.SPO_UMAMI_SCRIPT_URL }}
           SPO_GISCUS_REPO:          ${{ vars.SPO_GISCUS_REPO }}
           SPO_GISCUS_REPO_ID:       ${{ vars.SPO_GISCUS_REPO_ID }}
           SPO_GISCUS_CATEGORY:      ${{ vars.SPO_GISCUS_CATEGORY }}
