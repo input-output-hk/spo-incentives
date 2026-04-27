@@ -469,9 +469,20 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .nav-dd-ref-stage-soon{color:#5a4d00;background:rgba(242,255,88,.32);border-color:rgba(242,255,88,.6)}
 [data-theme=dark] .nav-dd-ref-stage-soon{color:#F2FF58;background:rgba(242,255,88,.10);border-color:rgba(242,255,88,.4)}
 
-/* Tree nesting: per-CIP entries nested under their layer synthesis get a deeper indent */
+/* Tree nesting: per-CIP entries indent under their CIP-evaluation
+   synthesis with an explicit guide. Each child draws a full-height
+   vertical line on the left plus an L-connector at vertical centre;
+   the last child in a sequence cuts the vertical line off at centre
+   so the bracket closes ┘-style instead of dangling past the row. */
 .nav-dd-ref-deep{padding-left:56px;position:relative}
-.nav-dd-ref-deep::before{content:"";position:absolute;left:44px;top:16px;width:6px;height:1px;background:var(--border)}
+.nav-dd-ref-deep::before{content:"";position:absolute;
+  left:36px;top:0;bottom:0;width:1px;background:var(--border)}
+.nav-dd-ref-deep::after{content:"";position:absolute;
+  left:36px;top:50%;width:14px;height:1px;background:var(--border)}
+/* Last deep entry of a sequence (next sibling is not deep): vertical
+   line stops at centre. */
+.nav-dd-ref-deep:has(+ :not(.nav-dd-ref-deep))::before,
+.nav-dd-ref-deep:last-child::before{bottom:auto;height:50%}
 /* Layer synthesis row sits one indent shallower than the CIP children — visually the parent node */
 .nav-dd-ref-synthesis .nav-dd-ref-title{font-weight:600;color:var(--text-primary)}
 

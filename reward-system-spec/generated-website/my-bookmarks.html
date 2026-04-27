@@ -20,11 +20,11 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777296788">
-
+<link rel="stylesheet" href="assets/site.css?v=1777297111">
+<script defer data-website-id="791f3295-e5ab-4a38-af87-55835f711d11" src="https://cloud.umami.is/script.js"></script><script>window.spoTrack=function(n,p){try{if(window.umami&&window.umami.track){window.umami.track(n,p||{});}}catch(e){}}</script>
 
 </head>
-<body data-highlights="1" data-bookmarks="1">
+<body data-analytics="umami" data-reactions="1" data-giscus="1" data-highlights="1" data-bookmarks="1">
 <div class="progress-bar" id="progress"></div>
 <nav class="site-nav"><div class="nav-brand">
 <a href="index.html" class="nav-brand-home">
@@ -251,7 +251,7 @@ window.MathJax = {
 </div>
 <div class="content"><section class="bookmarks-page"><p class="bookmarks-lede">These are the findings you marked with the <strong>Save</strong> button while reading the diagnostic sub-reports. They live only in your browser — nothing is sent to a server. Clear them with the button at the bottom or by clicking <em>Saved</em> on the original finding.</p><div id="bookmarks-list" class="bookmarks-list" data-empty-msg="You have not saved any findings yet. Open a sub-report (Operators/Delegators, Pools, Reserves, Census) and click Save next to a finding."></div><div class="bookmarks-actions"><button type="button" id="bookmarks-clear" class="bookmarks-clear">Clear all saved findings</button><button type="button" id="bookmarks-export" class="bookmarks-export">Copy as Markdown</button></div></section><script>(function(){function slugify(s){return s.toLowerCase().replace(/\./g,"-");}function hydrate(){var list=document.getElementById("bookmarks-list");var raw={};try{raw=JSON.parse(localStorage.getItem("spo:bk")||"{}");}catch(e){}var keys=Object.keys(raw);if(!keys.length){list.innerHTML="<p class=\"bookmarks-empty\">"+list.dataset.emptyMsg+"</p>";return;}var byPage={};keys.forEach(function(k){var rec=raw[k];var p=rec.page||"index.html";if(!byPage[p])byPage[p]=[];byPage[p].push(Object.assign({finding:k},rec));});list.innerHTML=Object.keys(byPage).sort().map(function(p){return "<section class=\"bookmarks-group\"><h2>"+p+"</h2><ul>"+byPage[p].sort(function(a,b){return (a.ts||0)-(b.ts||0);}).map(function(b){var url=p+"#"+slugify(b.finding);return "<li><a href=\""+url+"\"><span class=\"bk-fid\">"+b.finding+"</span>"+"<span class=\"bk-text\">"+(b.title||b.evidence||"")+"</span></a></li>";}).join("")+"</ul></section>";}).join("");}hydrate();document.getElementById("bookmarks-clear").addEventListener("click",function(){if(confirm("Remove all saved findings?")){localStorage.removeItem("spo:bk");hydrate();}});document.getElementById("bookmarks-export").addEventListener("click",function(){var raw={};try{raw=JSON.parse(localStorage.getItem("spo:bk")||"{}");}catch(e){}var lines=Object.keys(raw).map(function(k){var r=raw[k];return "- ["+k+"]("+(r.page||"")+"#"+slugify(k)+")"+(r.title?" — "+r.title.substring(0,140):"");}).join("\n");if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(lines);this.textContent="Copied";var btn=this;setTimeout(function(){btn.textContent="Copy as Markdown";},1500);}});})();</script></div>
 
-
+<section class="page-feedback" aria-labelledby="page-feedback-heading"><h2 id="page-feedback-heading" class="page-feedback-heading">Reader Feedback</h2><p class="page-feedback-lede">Comments and reactions are anchored to this page. Sign in with GitHub to post — threads live in the <a href="https://github.com/input-output-hk/spo-incentives/discussions" rel="noopener">project Discussions</a>.</p><div class="giscus" data-giscus></div><script src="https://giscus.app/client.js" data-repo="input-output-hk/spo-incentives" data-repo-id="R_kgDOP8tN7g" data-category="Announcements" data-category-id="DIC_kwDOP8tN7s4CxjSd" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="en" data-loading="lazy" crossorigin="anonymous" async></script></section>
 <footer class="site-footer">
   <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="footer-logo">
   <div class="footer-division"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</div>
@@ -270,6 +270,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777296788"></script>
+<script src="assets/site.js?v=1777297111"></script>
 </body>
 </html>
