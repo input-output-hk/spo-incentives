@@ -2290,6 +2290,8 @@ def sync_figures() -> None:
     """
     source_roots = [
         # (src_dir_rel_to_REPO_ROOT, dst_dir_rel_to_SITE_DIR)
+        # V2 spec hero / foundations figures used by the root README.
+        ("figures", "figures"),
         ("diagnostic/main-flow/figures", "main-flow/figures"),
         ("diagnostic/sub-flows/census/mainnet-analysis/figures",
          "sub-flows/census/mainnet-analysis/figures"),
