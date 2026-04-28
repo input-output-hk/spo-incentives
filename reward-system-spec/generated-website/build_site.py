@@ -302,6 +302,15 @@ GISCUS_LANG = _cfg("SPO_GISCUS_LANG", "en")
 
 REACTIONS_ENABLED = _cfg("SPO_REACTIONS_ENABLED", "1") not in ("0", "false", "no")
 
+# Optional authorship + build-date stamp shown discreetly in the
+# navigation bar. Both default to the values below when the env vars
+# are unset. Empty string disables the stamp.
+BUILD_AUTHOR = _cfg("SPO_BUILD_AUTHOR", "Nicolas Henin")
+BUILD_DATE = _cfg(
+    "SPO_BUILD_DATE",
+    time.strftime("%Y/%m/%d"),
+)
+
 # Hypothesis (web annotation overlay). When enabled, ships
 # https://hypothes.is/embed.js which adds a side panel allowing readers to
 # select text and attach inline annotations. Free, federated, no infra
@@ -395,6 +404,28 @@ def _render_giscus_block() -> str:
         'async></script>'
         '</section>'
     )
+
+
+def _render_build_stamp() -> str:
+    """Discreet edited-on / authored-by chip in the nav-brand right.
+    Empty when SPO_BUILD_AUTHOR is set to '' (allowing CI/branded
+    builds to drop it). Date and author are independently optional.
+    """
+    if not (BUILD_DATE or BUILD_AUTHOR):
+        return ""
+    parts = []
+    if BUILD_DATE:
+        parts.append(
+            f'<span class="nav-build-date" title="Last built">'
+            f'{_html.escape(BUILD_DATE)}</span>'
+        )
+    if BUILD_AUTHOR:
+        parts.append(
+            f'<span class="nav-build-author" title="Author">'
+            f'{_html.escape(BUILD_AUTHOR)}</span>'
+        )
+    return '<div class="nav-build-stamp" aria-label="Build info">' + \
+        ''.join(parts) + '</div>'
 
 
 def _render_body_data_attrs() -> str:
@@ -1064,6 +1095,7 @@ window.MathJax = {{
 </span>
 </a>
 <div class="nav-brand-right">
+{build_stamp}
 <button class="pdf-export" onclick="printAsPdf()" title="Save this page as PDF" aria-label="Save as PDF">PDF</button>
 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light theme" aria-label="Toggle theme">☀</button>
 </div>
@@ -1523,6 +1555,7 @@ def render_shell(page: dict, content_html: str) -> str:
         hypothesis_head=_render_hypothesis_head(),
         giscus_block=_render_giscus_block(),
         form_block=_render_form_block(),
+        build_stamp=_render_build_stamp(),
         body_data_attrs=_render_body_data_attrs(),
         **classes,
     )
