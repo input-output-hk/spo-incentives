@@ -47,9 +47,9 @@ PAGES = [
         "slug": "index",
         "md": "README.md",
         "html": "index.html",
-        "title": "The Cardano Reward System V2 — Specification for a Sustainable Successor",
-        "hero_h1": "The Cardano Reward System V2",
-        "hero_sub": "Specification for a Sustainable Successor",
+        "title": "Cardano Reward System — Proposal for Specification V2",
+        "hero_h1": "Proposal for Specification V2",
+        "hero_sub": "Based on Mainnet Evidence and Prior Work",
         "active_nav": "spec",
     },
     {
@@ -1471,11 +1471,8 @@ def _render_breadcrumb(active: str, description: str = "") -> str:
 # Never repeat the page H1 or sub. Empty string means no eyebrow (the H1
 # carries enough context on its own — used for zone-landing pages).
 _HERO_EYEBROW = {
-    # V2 Spec landing — eyebrow names the three pillars the spec
-    # synthesises, mirroring the site's three main zones (Mainnet
-    # Diagnostic / Solution Evaluation / V2 Specification). Doesn't
-    # repeat the H1 or sub.
-    "spec": "Diagnostic &middot; Evaluation &middot; Design",
+    # V2 Spec landing.
+    "spec": "Cardano Reward System",
     # Sub-flow + cross-flow pages: parent zone only.
     "intended-game": "Design Support",
     "findings": "Mainnet Diagnostic",

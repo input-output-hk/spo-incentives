@@ -218,7 +218,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .hero-division-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#06FF89;box-shadow:0 0 10px rgba(6,255,137,.8),0 0 3px #06FF89;flex-shrink:0}
 .hero-division-label{font-size:10px;font-weight:300;letter-spacing:2.8px;text-transform:uppercase;color:rgba(255,255,255,.88)}
 .hero-inner{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding-top:20px}
-.hero-eyebrow{font-size:13px;font-weight:300;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.62);margin-bottom:24px;padding-left:14px;border-left:2px solid var(--infared)}
+.hero-eyebrow{font-size:16px;font-weight:400;letter-spacing:3.6px;text-transform:uppercase;color:rgba(255,255,255,.78);margin-bottom:26px;padding-left:14px;border-left:2px solid var(--infared)}
 /* When the eyebrow text is empty (zone-landing pages where the H1 is
    self-introducing), collapse the whole element so the red rule above
    the h1 doesn't render either. */
