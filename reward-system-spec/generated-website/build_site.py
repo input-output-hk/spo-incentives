@@ -1329,8 +1329,10 @@ window.MathJax = {{
       <span class="hero-cardano-text">Cardano</span>
     </div>
     <div class="hero-division">
+      <span class="hero-by">by</span>
+      <img src="assets/iog-full-logo-white.png" alt="Input | Output" class="hero-iog-logo">
       <span class="hero-division-dot" aria-hidden="true"></span>
-      <span class="hero-division-label">A specification by Input&nbsp;|&nbsp;Output · Cardano Business Unit</span>
+      <span class="hero-division-label">Cardano Business Unit</span>
     </div>
   </div>
   <div class="hero-inner">

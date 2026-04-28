@@ -189,6 +189,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .hero-cardano-text{font:600 22px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   letter-spacing:.18em;text-transform:uppercase;color:#fff}
 .hero-division{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 12px;border:1px solid rgba(6,255,137,.35);border-radius:2px;background:rgba(0,0,0,.35);backdrop-filter:blur(2px)}
+/* IOG attribution lock-up: small 'by' word + the full butterfly+wordmark
+   logo. Sits inside .hero-division so the 'by' anchors it as authorial
+   credit rather than as a competing brand mark. */
+.hero-by{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.15em;text-transform:lowercase;color:rgba(255,255,255,.55);
+  font-style:italic;flex-shrink:0}
+.hero-iog-logo{height:18px;width:auto;display:block;flex-shrink:0;
+  filter:drop-shadow(0 0 6px rgba(255,255,255,.10))}
 .hero-division-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#06FF89;box-shadow:0 0 10px rgba(6,255,137,.8),0 0 3px #06FF89;flex-shrink:0}
 .hero-division-label{font-size:10px;font-weight:300;letter-spacing:2.8px;text-transform:uppercase;color:rgba(255,255,255,.88)}
 .hero-inner{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding-top:20px}
