@@ -1,4 +1,9 @@
 :root {
+  /* Cardano-aligned typography. Chivo for display / headings (Cardano
+     marketing heritage); Inter for body / UI (de-facto Web3 reading
+     face). Both loaded via Google Fonts in the page <head>. */
+  --font-display:'Chivo','Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --font-body:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --accent:#E52321;
   --infared:#E52321;--dawn:#EC641D;--black:#1a1a1a;--white:#fff;
   /* Official Cardano palette (cardano.org/brand-assets) — Blue, Black, White, Paper */
@@ -92,7 +97,7 @@ html{scroll-behavior:smooth;scroll-padding-top:150px}
   }
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;background:var(--bg-warm);color:var(--text-body);line-height:1.78;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);background:var(--bg-warm);color:var(--text-body);line-height:1.78;-webkit-font-smoothing:antialiased}
 
 /* ── NAV ── */
 /* ── Site header: two bars ── */
@@ -102,10 +107,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .nav-brand{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%),var(--bg);padding:8px 28px 8px;display:flex;align-items:center;min-height:48px;gap:14px;border-bottom:0}
 .nav-brand-home{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-brand-logo{height:18px;width:auto;opacity:.7;flex-shrink:0}
-.nav-brand-org{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4)}
-.nav-brand-title{font:600 19px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.2px}
-.nav-brand-sep{color:rgba(255,255,255,.28);font:300 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0 2px}
-.nav-brand-subtitle{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.nav-brand-org{font:300 10px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.nav-brand-title{font:600 19px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.2px}
+.nav-brand-sep{color:rgba(255,255,255,.28);font:300 14px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0 2px}
+.nav-brand-subtitle{font:300 10px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.55)}
 @media (max-width:900px){.nav-brand-sep,.nav-brand-subtitle{display:none}}
 
 /* Brand bar right: dropdowns + theme toggle */
@@ -127,19 +132,19 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .theme-toggle{background:rgba(255,255,255,.85);border:1px solid rgba(0,51,173,.4);border-radius:4px;cursor:pointer;padding:5px 8px;color:var(--cardano-blue);font-size:14px;line-height:1;transition:color .15s,border-color .15s,background .15s;display:flex;align-items:center}
 .theme-toggle:hover{background:#fff;border-color:var(--cardano-blue);color:#001a6b}
 .theme-toggle:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.3)}
-.pdf-export{background:rgba(255,255,255,.85);border:1px solid rgba(0,51,173,.4);border-radius:4px;cursor:pointer;padding:5px 9px;color:var(--cardano-blue);font:700 10.5px/1 'Barlow',-apple-system,sans-serif;letter-spacing:1.2px;transition:color .15s,border-color .15s,background .15s}
+.pdf-export{background:rgba(255,255,255,.85);border:1px solid rgba(0,51,173,.4);border-radius:4px;cursor:pointer;padding:5px 9px;color:var(--cardano-blue);font:700 10.5px/1 'Chivo',-apple-system,sans-serif;letter-spacing:1.2px;transition:color .15s,border-color .15s,background .15s}
 .pdf-export:hover{background:#fff;border-color:var(--cardano-blue);color:#001a6b}
 .pdf-export:hover{color:var(--infared);border-color:var(--infared);background:rgba(229,35,33,.08)}
 .nav-dd-wrap{position:relative}
-.nav-dd-btn{background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;cursor:pointer;font:400 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.5px;color:rgba(255,255,255,.5);padding:6px 12px;transition:color .15s,border-color .15s;white-space:nowrap}
+.nav-dd-btn{background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;cursor:pointer;font:400 11px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.5px;color:rgba(255,255,255,.5);padding:6px 12px;transition:color .15s,border-color .15s;white-space:nowrap}
 .nav-dd-btn:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.3)}
 .nav-dd-wrap.open .nav-dd-btn{color:#fff;border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.08)}
 .nav-dd-panel{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#1a1a1a;border:1px solid rgba(255,255,255,.1);border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.4);padding:8px 0;min-width:340px;z-index:200}
 .nav-dd-wrap.open .nav-dd-panel{display:block}
 .nav-dd-item{display:block;padding:10px 16px;text-decoration:none;transition:background .1s}
 .nav-dd-item:hover{background:rgba(255,255,255,.06)}
-.nav-dd-title{display:block;font:500 13px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:rgba(255,255,255,.85);border-bottom:none}
-.nav-dd-meta{display:block;font:400 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:rgba(255,255,255,.35);margin-top:3px}
+.nav-dd-title{display:block;font:500 13px/1.35 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:rgba(255,255,255,.85);border-bottom:none}
+.nav-dd-meta{display:block;font:400 11px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:rgba(255,255,255,.35);margin-top:3px}
 
 /* Bar 2: three-column navigation */
 .nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:stretch;padding:0;overflow-x:auto;white-space:nowrap}
@@ -151,7 +156,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .nav-col-main{flex:1}
 
 /* Column title */
-.nav-col-title{font:700 9px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--infared);padding:2px 14px 6px 0;flex-shrink:0}
+.nav-col-title{font:700 9px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--infared);padding:2px 14px 6px 0;flex-shrink:0}
 .nav-col-title-link{text-decoration:none;cursor:pointer;transition:color .15s}
 .nav-col-title-link:hover{color:var(--dawn)}
 .nav-col-title-link.active{color:var(--dawn);border-bottom:none}
@@ -161,7 +166,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .nav-col-links-wrap{flex-wrap:wrap;gap:0}
 
 /* Nav tabs */
-.nav-tab{display:flex;align-items:center;gap:5px;padding:4px 10px;font:500 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.3px;text-transform:uppercase;color:var(--text-muted);border-radius:4px}
+.nav-tab{display:flex;align-items:center;gap:5px;padding:4px 10px;font:500 12px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.3px;text-transform:uppercase;color:var(--text-muted);border-radius:4px}
 .nav-tab:hover{color:var(--text-primary);background:rgba(0,0,0,.04)}
 .nav-tab.active{color:var(--text-primary);font-weight:600;background:rgba(229,35,33,.06)}
 
@@ -211,13 +216,13 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .hero-cardano-mark{display:inline-flex;align-items:center;gap:10px;flex-shrink:0;
   filter:drop-shadow(0 0 14px rgba(255,255,255,.15))}
 .hero-cardano-symbol{width:30px;height:30px;color:#fff;flex-shrink:0}
-.hero-cardano-text{font:600 22px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+.hero-cardano-text{font:600 22px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   letter-spacing:.18em;text-transform:uppercase;color:#fff}
 .hero-division{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 12px;border:1px solid rgba(6,255,137,.35);border-radius:2px;background:rgba(0,0,0,.35);backdrop-filter:blur(2px)}
 /* IOG attribution lock-up: small 'by' word + the full butterfly+wordmark
    logo. Sits inside .hero-division so the 'by' anchors it as authorial
    credit rather than as a competing brand mark. */
-.hero-by{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+.hero-by{font:300 10px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   letter-spacing:.15em;text-transform:lowercase;color:rgba(255,255,255,.55);
   font-style:italic;flex-shrink:0}
 .hero-iog-logo{height:18px;width:auto;display:block;flex-shrink:0;
@@ -230,7 +235,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
    self-introducing), collapse the whole element so the red rule above
    the h1 doesn't render either. */
 .hero-eyebrow:empty{display:none}
-.hero h1{font-size:50px;font-weight:600;line-height:1.08;color:#fff;margin:0 0 18px;max-width:980px;letter-spacing:-.8px}
+.hero h1{font-family:var(--font-display);font-size:50px;font-weight:600;line-height:1.08;color:#fff;margin:0 0 18px;max-width:980px;letter-spacing:-.8px}
 .hero .sub{font-size:20px;font-weight:300;line-height:1.35;color:rgba(255,255,255,.72);max-width:880px}
 .hero-bottom-rule{position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent 0%,var(--infared) 8%,var(--dawn) 50%,var(--infared) 92%,transparent 100%);z-index:3}
 
@@ -238,7 +243,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 /* Site footer — 4-column grid (brand · spec nav · repo · authorship)
    over a Cardano-blue base, separated from the bottom strip by a thin
    white-alpha rule. Stacks on narrow viewports. */
-.site-footer{background:var(--cardano-blue);color:rgba(255,255,255,.78);font-family:'Barlow',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:42px 40px 22px;border-top:1px solid rgba(255,255,255,.10)}
+.site-footer{background:var(--cardano-blue);color:rgba(255,255,255,.78);font-family:'Chivo','Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:42px 40px 22px;border-top:1px solid rgba(255,255,255,.10)}
 .site-footer .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:48px;max-width:1400px;margin:0 auto;align-items:start}
 .site-footer .footer-col{display:flex;flex-direction:column;gap:14px}
 /* Brand column */
@@ -250,7 +255,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .site-footer .footer-network-link{font-size:11px;font-weight:300;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.55);text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:color .15s}
 .site-footer .footer-network-link:hover{color:rgba(255,255,255,.95)}
 /* Heading + link list shared across nav/repo cols */
-.site-footer .footer-heading{font:300 11px/1 'Barlow',-apple-system,sans-serif;letter-spacing:2.4px;text-transform:uppercase;color:rgba(255,255,255,.5);margin:0 0 4px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.12)}
+.site-footer .footer-heading{font:300 11px/1 'Chivo',-apple-system,sans-serif;letter-spacing:2.4px;text-transform:uppercase;color:rgba(255,255,255,.5);margin:0 0 4px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.12)}
 .site-footer .footer-links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
 .site-footer .footer-links a{color:rgba(255,255,255,.78);font-size:13px;font-weight:300;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:color .15s,border-color .15s;border-bottom:1px solid transparent;padding-bottom:1px}
 .site-footer .footer-links a:hover{color:#fff;border-bottom-color:rgba(6,255,137,.5)}
@@ -259,7 +264,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .site-footer .footer-iog{display:inline-block;text-decoration:none}
 .site-footer .footer-iog-mark{height:18px;width:auto;opacity:.85;display:block}
 .site-footer .footer-iog-mark:hover{opacity:1}
-.site-footer .footer-iog-org{font:300 11px/1.4 'Barlow',-apple-system,sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,.7);display:inline-flex;align-items:center;gap:7px}
+.site-footer .footer-iog-org{font:300 11px/1.4 'Chivo',-apple-system,sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,.7);display:inline-flex;align-items:center;gap:7px}
 .site-footer .footer-iog-org .cbu-dot{width:6px;height:6px;border-radius:50%;background:#06FF89;box-shadow:0 0 6px rgba(6,255,137,.6);flex-shrink:0}
 .site-footer .footer-meta{display:flex;flex-direction:column;gap:5px;margin-top:6px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)}
 .site-footer .footer-meta-row{display:flex;gap:10px;font-size:11px;line-height:1.4;align-items:baseline}
@@ -269,7 +274,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .site-footer .footer-meta-val a:hover{color:#fff;border-bottom-color:rgba(6,255,137,.5)}
 /* Bottom rule + strip */
 .site-footer .footer-rule{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18) 20%,rgba(255,255,255,.18) 80%,transparent);max-width:1400px;margin:38px auto 18px}
-.site-footer .footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:18px;max-width:1400px;margin:0 auto;font:300 10px/1.4 'Barlow',-apple-system,sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.site-footer .footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:18px;max-width:1400px;margin:0 auto;font:300 10px/1.4 'Chivo',-apple-system,sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.45)}
 .site-footer .footer-copy{flex:1}
 .site-footer .footer-tag{flex-shrink:0}
 @media (max-width:980px){
@@ -287,10 +292,10 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 
 /* Cardano logomark in the brand bar — Cardano is the primary identity */
 .cardano-mark{height:32px;width:auto;flex-shrink:0;margin-right:12px;filter:drop-shadow(0 0 6px rgba(125,160,255,.18))}
-.nav-brand-title-cardano{font:600 19px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.6px;flex-shrink:0}
+.nav-brand-title-cardano{font:600 19px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.6px;flex-shrink:0}
 
 /* IOG / CBU attribution — secondary, after a vertical divider */
-.nav-brand-attribution{display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.55);flex-shrink:0;font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.4px;text-transform:uppercase}
+.nav-brand-attribution{display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.55);flex-shrink:0;font:300 10px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.4px;text-transform:uppercase}
 .nav-brand-attribution-prefix{opacity:.6;font-style:italic;text-transform:none;letter-spacing:.3px;font-size:10px}
 .nav-brand-attribution-sep{opacity:.4;color:rgba(255,255,255,.4);font-size:11px}
 .nav-brand-attribution .nav-brand-wordmark{height:13px;opacity:.75}
@@ -320,7 +325,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 /* Heading hierarchy — iog.io-inspired, Barlow for display.
    H1: typography only (page title). H2 (§X): infared title + infared rule (full).
    H3 (§X.X): dawn title + dawn rule (half length). H4+: plain small labels. */
-.content h1,.content h2,.content h3,.content h4,.content h5,.content h6{font-family:'Barlow',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.content h1,.content h2,.content h3,.content h4,.content h5,.content h6{font-family:'Chivo','Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 .content h1{font-size:34px;font-weight:500;color:var(--text-primary);margin:0 0 28px;padding:0 0 0 18px;border:none;background:none;letter-spacing:-.8px;line-height:1.15;position:relative;border-left:3px solid var(--cardano-blue)}
 .content h1:first-child{margin-top:0}
 /* H2 — primary section heading. Cardano blue text with a matching
@@ -368,9 +373,9 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .ev-card:hover{border-color:rgba(229,35,33,.35);box-shadow:0 1px 3px rgba(0,0,0,.04)}
 [data-theme=dark] .ev-card{border-color:#2a2a2a}
 [data-theme=dark] .ev-card:hover{border-color:rgba(229,35,33,.45);box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.ev-label{font:600 11px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-transform:uppercase;letter-spacing:.6px;color:var(--infared);align-self:start;padding-top:3px}
+.ev-label{font:600 11px/1.3 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-transform:uppercase;letter-spacing:.6px;color:var(--infared);align-self:start;padding-top:3px}
 .ev-content{min-width:0}
-.ev-body{font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-body);margin:0}
+.ev-body{font:400 13.5px/1.55 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-body);margin:0}
 .ev-body strong{color:var(--text-primary);font-weight:700}
 .ev-sources{margin:8px 0 0;font:italic 400 11.5px/1.4 -apple-system,sans-serif;color:var(--text-muted)}
 .ev-sources a{color:var(--text-muted);text-decoration:underline;text-decoration-color:rgba(229,35,33,.3);text-underline-offset:2px}
@@ -553,7 +558,7 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .nav-flow-arrow-light{color:#fff;opacity:1;text-shadow:0 1px 2px rgba(0,0,0,.25),0 0 6px rgba(0,51,173,.35);font-weight:700}
 
 /* Small zone label above (inline with) each zone's content */
-.nav-zone-label{font:700 9px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);flex-shrink:0}
+.nav-zone-label{font:700 9px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);flex-shrink:0}
 .nav-zone-label-output{color:var(--infared);opacity:.9}
 
 /* ── Zones 2/3/4 · Mainnet Diagnostic ← Design Support ← Research Papers ── */
@@ -583,10 +588,10 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .nav-dd-panel-constitution{left:0;right:auto;min-width:480px;max-width:520px}
 
 /* Group label inside a dropdown panel (e.g., "Reward Flow" above the pipeline sub-items) */
-.nav-dd-ref-group-label{display:block;font:700 9.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-muted);padding:10px 10px 4px;margin-top:4px}
+.nav-dd-ref-group-label{display:block;font:700 9.5px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-muted);padding:10px 10px 4px;margin-top:4px}
 
 /* ── Breadcrumb bar — single source of truth for "where am I" (lives inside .site-nav as its 3rd row) ── */
-.nav-breadcrumb{background:var(--bg);border-bottom:1px solid var(--border);padding:7px 20px;font:400 11.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);display:flex;align-items:center;flex-wrap:wrap;gap:6px;letter-spacing:.1px}
+.nav-breadcrumb{background:var(--bg);border-bottom:1px solid var(--border);padding:7px 20px;font:400 11.5px/1.3 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);display:flex;align-items:center;flex-wrap:wrap;gap:6px;letter-spacing:.1px}
 [data-theme=dark] .nav-breadcrumb{background:var(--bg)}
 .nav-breadcrumb:empty{display:none}
 .nav-breadcrumb-item{color:var(--text-secondary)}
@@ -595,7 +600,7 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .nav-breadcrumb-desc-sep{color:var(--text-muted);opacity:.4;font-size:12px;padding:0 2px 0 6px}
 .nav-breadcrumb-desc{color:var(--text-muted);font-weight:400;font-style:italic;opacity:.88;letter-spacing:.15px}
 .nav-dd-wrap-light{position:relative}
-.nav-dd-btn-light{background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font:500 11.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--text-secondary);padding:8px 13px;transition:all .15s;white-space:nowrap}
+.nav-dd-btn-light{background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font:500 11.5px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--text-secondary);padding:8px 13px;transition:all .15s;white-space:nowrap}
 .nav-dd-btn-light:hover{color:var(--text-primary);border-color:var(--text-muted);background:rgba(0,0,0,.02)}
 [data-theme=dark] .nav-dd-btn-light:hover{background:rgba(255,255,255,.04)}
 .nav-dd-wrap-light.open .nav-dd-btn-light{color:var(--infared);border-color:rgba(229,35,33,.4);background:rgba(229,35,33,.05)}
@@ -605,19 +610,19 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .nav-dd-stratum{padding:10px 0}
 .nav-dd-stratum+.nav-dd-stratum{border-top:1px solid var(--border-light)}
 .nav-dd-stratum-head{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px}
-.nav-dd-stratum-badge{display:inline-block;padding:3px 8px;border-radius:4px;font:700 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.9px;text-transform:uppercase}
+.nav-dd-stratum-badge{display:inline-block;padding:3px 8px;border-radius:4px;font:700 10px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.9px;text-transform:uppercase}
 .nav-dd-stratum-badge-design{color:var(--infared);background:rgba(229,35,33,.1)}
 .nav-dd-stratum-badge-research{color:#0b8478;background:rgba(22,233,216,.14)}
 [data-theme=dark] .nav-dd-stratum-badge-research{color:var(--electric-blue,#16E9D8);background:rgba(22,233,216,.12)}
-.nav-dd-stratum-meta{font:400 10.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);letter-spacing:.2px}
+.nav-dd-stratum-meta{font:400 10.5px/1.3 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);letter-spacing:.2px}
 
 /* Rich reference row inside the dropdown: title + citation on the left, PDF chip on the right */
 .nav-dd-ref{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:12px;align-items:center;padding:8px 10px;margin:2px -6px;border-radius:6px;text-decoration:none;transition:background .12s}
 .nav-dd-ref:hover{background-color:rgba(229,35,33,.04)}
 [data-theme=dark] .nav-dd-ref:hover{background-color:rgba(229,35,33,.09)}
-.nav-dd-ref-title{grid-column:1;grid-row:1;font:500 13px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-primary);letter-spacing:-.1px}
+.nav-dd-ref-title{grid-column:1;grid-row:1;font:500 13px/1.3 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-primary);letter-spacing:-.1px}
 .nav-dd-ref:hover .nav-dd-ref-title{color:var(--infared)}
-.nav-dd-ref-cite{grid-column:1;grid-row:2;font:400 11px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.nav-dd-ref-cite{grid-column:1;grid-row:2;font:400 11px/1.35 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
 .nav-dd-ref-tag{display:inline-block;font:600 9.5px/1 -apple-system,sans-serif;letter-spacing:.4px;color:var(--text-secondary);background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:2px 5px}
 [data-theme=dark] .nav-dd-ref-tag{background:var(--bg);color:var(--text-body)}
 .nav-dd-ref-new{display:inline-block;margin-left:8px;font:700 9px/1 -apple-system,sans-serif;letter-spacing:.7px;color:#0a8a80;background:rgba(22,233,216,.14);border:1px solid rgba(22,233,216,.45);border-radius:3px;padding:2px 5px;text-transform:uppercase;vertical-align:1px}
@@ -673,7 +678,7 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 /* V2 Specification — Cardano blue solid CTA. The whole nav points
    at this destination, so it gets the brand colour at full saturation
    instead of a tinted pill. */
-.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px solid var(--cardano-blue);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap;box-shadow:0 2px 6px var(--cardano-blue-soft)}
+.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px solid var(--cardano-blue);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap;box-shadow:0 2px 6px var(--cardano-blue-soft)}
 .nav-tab-spec-big:hover{background:#0028a0;border-color:#0028a0;box-shadow:0 4px 14px var(--cardano-blue-glow)}
 .nav-tab-spec-big.active{background:#001f80;border-color:#001f80;box-shadow:0 3px 12px var(--cardano-blue-glow)}
 [data-theme=dark] .nav-tab-spec-big{background:var(--cardano-blue);border-color:var(--cardano-blue);color:#fff}
@@ -684,7 +689,7 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
    pipeline aims at. Cardano blue with a dashed border to signal it is
    the future state, not a clickable target yet. */
 .nav-zone-implementation{flex:0 0 auto}
-.nav-tab-implementation{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px dashed rgba(255,255,255,.55);border-radius:6px;cursor:default;transition:all .15s;box-shadow:0 2px 6px var(--cardano-blue-soft);white-space:nowrap;position:relative}
+.nav-tab-implementation{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px dashed rgba(255,255,255,.55);border-radius:6px;cursor:default;transition:all .15s;box-shadow:0 2px 6px var(--cardano-blue-soft);white-space:nowrap;position:relative}
 .nav-tab-implementation::after{content:"future";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:var(--cardano-blue);padding:3px 5px;border-radius:3px;border:1px solid var(--cardano-blue)}
 [data-theme=dark] .nav-tab-implementation::after{background:#1a1a1a;color:#7B91FF;border-color:#7B91FF}
 .nav-tab-implementation:hover{background:#0028a0;box-shadow:0 4px 12px var(--cardano-blue-glow)}
@@ -748,7 +753,7 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 [data-theme=dark] .mermaid{background:var(--bg);border-color:var(--border)}
 
 /* Mermaid expand button (click to zoom) */
-.mermaid-expand{position:absolute;top:10px;right:10px;z-index:2;display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text-secondary);font:500 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;text-transform:uppercase;cursor:pointer;opacity:.7;transition:opacity .15s ease,background .15s ease,color .15s ease}
+.mermaid-expand{position:absolute;top:10px;right:10px;z-index:2;display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--text-secondary);font:500 11px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;text-transform:uppercase;cursor:pointer;opacity:.7;transition:opacity .15s ease,background .15s ease,color .15s ease}
 .mermaid:hover .mermaid-expand{opacity:1}
 .mermaid-expand:hover{background:var(--text-primary);color:var(--bg);border-color:var(--text-primary);opacity:1}
 .mermaid-expand svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
@@ -763,11 +768,11 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .mermaid-zoom-btn{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;cursor:pointer;font-size:18px;line-height:1;transition:background .15s ease}
 .mermaid-zoom-btn:hover{background:rgba(255,255,255,.18)}
 .mermaid-zoom-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
-.mermaid-zoom-hint{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.55);font:400 11px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.5px;text-transform:uppercase;pointer-events:none}
+.mermaid-zoom-hint{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.55);font:400 11px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.5px;text-transform:uppercase;pointer-events:none}
 
 /* ── GitHub-style admonitions ─────────────────────────────── */
 .admon{margin:20px 0;padding:14px 18px 16px;border-radius:6px;border-left:4px solid var(--text-muted);background:var(--bg-panel);font-size:14px;line-height:1.65}
-.admon-label{font-family:'Barlow',sans-serif;font-weight:600;font-size:11px;letter-spacing:.9px;text-transform:uppercase;margin-bottom:6px;color:var(--text-muted)}
+.admon-label{font-family:'Chivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:.9px;text-transform:uppercase;margin-bottom:6px;color:var(--text-muted)}
 .admon p{margin:.4em 0}
 .admon p:last-child{margin-bottom:0}
 .admon-note{border-left-color:#2C4FFA}.admon-note .admon-label{color:#2C4FFA}
@@ -810,7 +815,7 @@ body.toc-open .toc-panel{transform:translateX(0)}
 
 .toc-panel-header{display:flex;align-items:center;justify-content:space-between;
   padding:16px 20px;border-bottom:1px solid var(--border);background:var(--bg-panel);flex-shrink:0}
-.toc-panel-title{font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+.toc-panel-title{font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   letter-spacing:1.8px;text-transform:uppercase;color:var(--infared)}
 .toc-panel-close{background:none;border:1px solid var(--border);border-radius:4px;
   width:30px;height:30px;display:flex;align-items:center;justify-content:center;
@@ -895,7 +900,7 @@ body.toc-open .toc-panel{transform:translateX(0)}
 /* ── Observation tier badges + metric highlighting ───────────────────── */
 .obs-tier{font-size:10px;letter-spacing:1px;text-transform:uppercase;
   padding:2px 8px;border-radius:3px;font-weight:600;white-space:nowrap;
-  font-family:'Barlow',-apple-system,BlinkMacSystemFont,sans-serif;
+  font-family:'Chivo',-apple-system,BlinkMacSystemFont,sans-serif;
   border:1px solid transparent}
 .obs-tier-mechanism{background:rgba(229,35,33,.1);color:var(--infared);border-color:rgba(229,35,33,.22)}
 .obs-tier-concentration{background:rgba(236,100,29,.1);color:var(--dawn);border-color:rgba(236,100,29,.22)}
@@ -932,7 +937,7 @@ body.toc-open .toc-panel{transform:translateX(0)}
 .obs-tooltip{position:fixed;z-index:900;max-width:340px;min-width:220px;
   background:var(--bg);border:1px solid var(--border);border-radius:8px;
   box-shadow:0 10px 30px rgba(0,0,0,.15);
-  padding:12px 14px;font-family:'Barlow',sans-serif;font-size:13px;
+  padding:12px 14px;font-family:'Chivo',sans-serif;font-size:13px;
   opacity:0;pointer-events:none;transform:translateY(4px);
   transition:opacity .15s,transform .15s;color:var(--text-body)}
 .obs-tooltip.visible{opacity:1;transform:translateY(0)}
@@ -961,7 +966,7 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
   border-bottom:1px solid var(--border);background:var(--bg-panel);flex-shrink:0}
 .obs-panel-num{font-weight:700;font-size:14px;color:var(--infared);min-width:34px}
 .obs-panel-section-id{font-size:11px;letter-spacing:1px;text-transform:uppercase;
-  color:var(--text-muted);font-family:'Barlow',sans-serif}
+  color:var(--text-muted);font-family:'Chivo',sans-serif}
 .obs-panel-close{margin-left:auto;background:none;border:1px solid var(--border);
   border-radius:4px;width:30px;height:30px;display:flex;align-items:center;
   justify-content:center;cursor:pointer;color:var(--text-muted);
@@ -969,7 +974,7 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
 .obs-panel-close:hover{color:var(--infared);border-color:var(--infared)}
 .obs-panel-close svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round}
 .obs-panel-body{flex:1;overflow-y:auto;padding:22px 26px 40px;
-  scrollbar-gutter:stable;font-family:'Barlow',sans-serif}
+  scrollbar-gutter:stable;font-family:'Chivo',sans-serif}
 .obs-panel-title{font-size:20px;font-weight:500;color:var(--text-primary);
   line-height:1.3;margin-bottom:14px;letter-spacing:-.2px}
 .obs-panel-tier-row{display:flex;gap:8px;align-items:center;margin-bottom:18px}
@@ -1002,7 +1007,7 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
    Findings & Observations synthesis page (findings.html)
    ========================================================================== */
 
-.findings-page{max-width:1180px;margin:0 auto;padding:8px 4px 60px;font-family:'Barlow',sans-serif}
+.findings-page{max-width:1180px;margin:0 auto;padding:8px 4px 60px;font-family:'Chivo',sans-serif}
 .findings-intro{margin:0 0 22px;padding:18px 22px;
   background:var(--bg-warm);border-left:3px solid var(--infared);
   border-radius:8px;font-size:15px;line-height:1.65;color:var(--text-body)}
@@ -1020,14 +1025,14 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
   margin:18px 0 28px;padding:12px 14px;background:var(--bg);
   border:1px solid var(--border);border-radius:10px;position:sticky;top:58px;z-index:10;
   backdrop-filter:blur(6px)}
-.findings-search{flex:1;min-width:220px;padding:9px 14px;font-family:'Barlow',sans-serif;font-size:14px;
+.findings-search{flex:1;min-width:220px;padding:9px 14px;font-family:'Chivo',sans-serif;font-size:14px;
   border:1px solid var(--border);border-radius:6px;background:var(--bg-warm);color:var(--text-primary);
   transition:border-color .15s,background .15s}
 .findings-search:focus{outline:none;border-color:var(--infared);background:var(--bg)}
 .findings-chips{display:flex;gap:6px;flex-wrap:wrap}
 .findings-chip{cursor:pointer;border:1px solid var(--border);background:var(--bg);
   color:var(--text-secondary);padding:5px 12px;border-radius:18px;font-size:12px;
-  font-family:'Barlow',sans-serif;font-weight:500;letter-spacing:.3px;
+  font-family:'Chivo',sans-serif;font-weight:500;letter-spacing:.3px;
   transition:all .15s;display:inline-flex;align-items:center;gap:6px}
 .findings-chip:hover{background:var(--bg-panel);color:var(--text-primary)}
 .findings-chip.active{background:var(--text-primary);color:var(--bg);border-color:var(--text-primary)}
@@ -1044,7 +1049,7 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
 .findings-section-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
   padding-bottom:12px;margin-bottom:22px;border-bottom:2px solid var(--border)}
 .findings-section-num{font-size:28px;font-weight:500;color:var(--infared);letter-spacing:-.8px;
-  font-family:'Barlow',sans-serif}
+  font-family:'Chivo',sans-serif}
 .findings-section-title{font-size:22px;font-weight:500;color:var(--text-primary);
   margin:0;letter-spacing:-.3px}
 .findings-section-tagline{font-size:13px;color:var(--text-muted);letter-spacing:.2px}
