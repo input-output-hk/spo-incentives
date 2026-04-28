@@ -1529,7 +1529,8 @@ def render_shell(page: dict, content_html: str) -> str:
     cls_diag_trigger = " active" if active in DIAG_ACTIVE else ""
     cls_solution_trigger = " active" if active in SOLUTION_ACTIVE else ""
     cls_design_trigger = " active" if active in DESIGN_ACTIVE else ""
-    breadcrumb_inner = _render_breadcrumb(active, page.get("hero_sub", ""))
+    # Don't repeat hero_sub in the breadcrumb — the hero already shows it.
+    breadcrumb_inner = _render_breadcrumb(active, "")
     # Cache-bust CSS/JS using the max mtime of the two asset files so
     # browsers pick up changes without a hard-refresh.
     assets_dir = SITE_DIR / "assets"
