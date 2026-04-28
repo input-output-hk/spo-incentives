@@ -20,7 +20,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777378912">
+<link rel="stylesheet" href="assets/site.css?v=1777379272">
 
 
 </head>
@@ -299,25 +299,53 @@ window.MathJax = {
 </div>
 <div class="content"><div class="findings-page"><div class="findings-intro"><p>This page consolidates every <strong>finding</strong> (a problem statement induced from evidence) together with the <strong>observations</strong> that support it. Each finding links back to the full reasoning on <a href="observatory.html">The Diagnostic — Mainnet Observatory</a>; each observation can be clicked for its full text.</p></div><div class="findings-stats"><div class="findings-stat"><span class="findings-stat-num">0</span><span class="findings-stat-lbl">findings</span></div><div class="findings-stat"><span class="findings-stat-num">0</span><span class="findings-stat-lbl">mainnet observations</span></div><div class="findings-stat"><span class="findings-stat-num">0</span><span class="findings-stat-lbl">pipeline sections</span></div></div><div class="findings-controls"><input type="search" class="findings-search" placeholder="Search findings and observations…" aria-label="Search"><div class="findings-chips" role="toolbar" aria-label="Filter by tier"><button class="findings-chip active" data-tier="*">All</button></div></div><div class="findings-obs-registry" hidden aria-hidden="true"></div></div></div>
 
-
 <footer class="site-footer">
-  <a href="https://cardano.org" class="footer-cardano-mark" rel="noopener" target="_blank" title="For the Cardano network">
-    <svg class="footer-cardano-symbol" viewBox="0 0 64 64" aria-hidden="true">
-      <g fill="currentColor">
-        <circle cx="32" cy="10" r="3"/><circle cx="32" cy="54" r="3"/>
-        <circle cx="51.05" cy="21" r="3"/><circle cx="12.94" cy="21" r="3"/>
-        <circle cx="51.05" cy="43" r="3"/><circle cx="12.94" cy="43" r="3"/>
-      </g>
-      <g fill="currentColor" opacity="0.5">
-        <circle cx="22.5" cy="14.5" r="2"/><circle cx="41.5" cy="14.5" r="2"/>
-        <circle cx="22.5" cy="49.5" r="2"/><circle cx="41.5" cy="49.5" r="2"/>
-        <circle cx="55.5" cy="32" r="2"/><circle cx="8.5" cy="32" r="2"/>
-      </g>
-    </svg>
-    <span>For the Cardano network</span>
-  </a>
-  <span class="footer-sep" aria-hidden="true">·</span>
-  <span class="footer-attribution">Specification by Input&nbsp;|&nbsp;Output · Cardano Business Unit</span>
+  <div class="footer-grid">
+    <div class="footer-col footer-col-brand">
+      <a href="index.html" class="footer-cardano-mark" title="Cardano Reward System V2 — home">
+        <svg class="footer-cardano-symbol" viewBox="0 0 64 64" aria-hidden="true"><g fill="currentColor"><circle cx="32" cy="10" r="3"/><circle cx="32" cy="54" r="3"/><circle cx="51.05" cy="21" r="3"/><circle cx="12.94" cy="21" r="3"/><circle cx="51.05" cy="43" r="3"/><circle cx="12.94" cy="43" r="3"/></g><g fill="currentColor" opacity="0.5"><circle cx="22.5" cy="14.5" r="2"/><circle cx="41.5" cy="14.5" r="2"/><circle cx="22.5" cy="49.5" r="2"/><circle cx="41.5" cy="49.5" r="2"/><circle cx="55.5" cy="32" r="2"/><circle cx="8.5" cy="32" r="2"/></g></svg>
+        <span class="footer-cardano-label">Cardano Reward System V2</span>
+      </a>
+      <p class="footer-tagline">An evidence-driven proposal for Cardano&rsquo;s incentive mechanism.</p>
+      <a href="https://cardano.org" class="footer-network-link" rel="noopener" target="_blank">
+        For the Cardano network<span class="footer-ext" aria-hidden="true">↗</span>
+      </a>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Specification</h4>
+      <ul class="footer-links">
+        <li><a href="index.html">V2 Specification</a></li>
+        <li><a href="intended-game.html">The Intended Game</a></li>
+        <li><a href="findings.html">Mainnet Diagnostic</a></li>
+        <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Repository</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/input-output-hk/spo-incentives" rel="noopener" target="_blank">View on GitHub<span class="footer-ext" aria-hidden="true">↗</span></a></li><li><a href="https://github.com/input-output-hk/spo-incentives/issues/new" rel="noopener" target="_blank">File an issue<span class="footer-ext" aria-hidden="true">↗</span></a></li><li><a href="https://github.com/input-output-hk/spo-incentives/discussions" rel="noopener" target="_blank">Discussions<span class="footer-ext" aria-hidden="true">↗</span></a></li><li><a href="https://github.com/input-output-hk/spo-incentives/blob/main/LICENSE" rel="noopener" target="_blank">License<span class="footer-ext" aria-hidden="true">↗</span></a></li>
+      </ul>
+    </div>
+    <div class="footer-col footer-col-meta">
+      <h4 class="footer-heading">Built by</h4>
+      <a href="https://iohk.io" class="footer-iog" rel="noopener" target="_blank" title="Input | Output Group">
+        <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="footer-iog-mark">
+      </a>
+      <div class="footer-iog-org">
+        <span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit
+      </div>
+      <div class="footer-meta">
+        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/04/28</span></div>
+        <div class="footer-meta-row"><span class="footer-meta-key">Author</span><span class="footer-meta-val"><a href="https://www.linkedin.com/in/nhenin/" rel="noopener" target="_blank">Nicolas Henin<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
+        <div class="footer-meta-row"><span class="footer-meta-key">Source</span><span class="footer-meta-val"><a href="https://github.com/input-output-hk/spo-incentives" rel="noopener" target="_blank">input-output-hk/spo-incentives<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-rule" aria-hidden="true"></div>
+  <div class="footer-bottom">
+    <span class="footer-copy">&copy; 2026 Input Output Group &middot; Released under an open licence</span>
+    <span class="footer-tag">Built by I|O Group &middot; For the Cardano network</span>
+  </div>
 </footer>
 <div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
 <a href="#" class="back-top" id="btt">&uarr;</a>
@@ -333,6 +361,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777378912"></script>
+<script src="assets/site.js?v=1777379272"></script>
 </body>
 </html>

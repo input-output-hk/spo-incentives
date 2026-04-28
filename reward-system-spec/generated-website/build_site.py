@@ -302,6 +302,16 @@ GISCUS_LANG = _cfg("SPO_GISCUS_LANG", "en")
 
 REACTIONS_ENABLED = _cfg("SPO_REACTIONS_ENABLED", "1") not in ("0", "false", "no")
 
+# Canonical "source of truth" repo for the spec — used by the footer
+# (View on GitHub, file an issue, Discussions). Falls back to the
+# Giscus repo when set so a single env var can drive everything.
+GITHUB_REPO = _cfg("SPO_GITHUB_REPO", _cfg("SPO_GISCUS_REPO", "input-output-hk/spo-incentives"))
+# Optional tagline shown next to the footer brand block.
+FOOTER_TAGLINE = _cfg(
+    "SPO_FOOTER_TAGLINE",
+    "An evidence-driven proposal for Cardano&rsquo;s incentive mechanism.",
+)
+
 # Optional authorship + build-date stamp shown discreetly in the
 # navigation bar. Both default to the values below when the env vars
 # are unset. Empty string disables the stamp.
@@ -408,6 +418,121 @@ def _render_giscus_block() -> str:
         'async></script>'
         '</section>'
     )
+
+
+def _render_footer() -> str:
+    """4-column site footer with project context, navigation, repo
+    links and authorship. Reads GITHUB_REPO / FOOTER_TAGLINE / build
+    info from the module-level config (env-overridable)."""
+    repo = GITHUB_REPO
+    repo_url = f"https://github.com/{repo}" if repo else ""
+    issues_url = f"{repo_url}/issues" if repo_url else ""
+    discussions_url = f"{repo_url}/discussions" if repo_url else ""
+    license_url = f"{repo_url}/blob/main/LICENSE" if repo_url else ""
+
+    cardano_mark_svg = (
+        '<svg class="footer-cardano-symbol" viewBox="0 0 64 64" aria-hidden="true">'
+        '<g fill="currentColor">'
+        '<circle cx="32" cy="10" r="3"/><circle cx="32" cy="54" r="3"/>'
+        '<circle cx="51.05" cy="21" r="3"/><circle cx="12.94" cy="21" r="3"/>'
+        '<circle cx="51.05" cy="43" r="3"/><circle cx="12.94" cy="43" r="3"/>'
+        '</g>'
+        '<g fill="currentColor" opacity="0.5">'
+        '<circle cx="22.5" cy="14.5" r="2"/><circle cx="41.5" cy="14.5" r="2"/>'
+        '<circle cx="22.5" cy="49.5" r="2"/><circle cx="41.5" cy="49.5" r="2"/>'
+        '<circle cx="55.5" cy="32" r="2"/><circle cx="8.5" cy="32" r="2"/>'
+        '</g>'
+        '</svg>'
+    )
+
+    repo_short = _html.escape(repo) if repo else ""
+    repo_links_html = ""
+    if repo_url:
+        repo_links_html = (
+            f'<li><a href="{_html.escape(repo_url)}" rel="noopener" target="_blank">View on GitHub<span class="footer-ext" aria-hidden="true">↗</span></a></li>'
+            f'<li><a href="{_html.escape(issues_url)}/new" rel="noopener" target="_blank">File an issue<span class="footer-ext" aria-hidden="true">↗</span></a></li>'
+            f'<li><a href="{_html.escape(discussions_url)}" rel="noopener" target="_blank">Discussions<span class="footer-ext" aria-hidden="true">↗</span></a></li>'
+            f'<li><a href="{_html.escape(license_url)}" rel="noopener" target="_blank">License<span class="footer-ext" aria-hidden="true">↗</span></a></li>'
+        )
+
+    build_date_html = ""
+    if BUILD_DATE:
+        build_date_html = (
+            f'<div class="footer-meta-row"><span class="footer-meta-key">Edition</span>'
+            f'<span class="footer-meta-val">{_html.escape(BUILD_DATE)}</span></div>'
+        )
+    author_html = ""
+    if BUILD_AUTHOR:
+        if BUILD_AUTHOR_URL:
+            author_link = (
+                f'<a href="{_html.escape(BUILD_AUTHOR_URL)}" '
+                f'rel="noopener" target="_blank">{_html.escape(BUILD_AUTHOR)}'
+                f'<span class="footer-ext" aria-hidden="true">↗</span></a>'
+            )
+        else:
+            author_link = _html.escape(BUILD_AUTHOR)
+        author_html = (
+            f'<div class="footer-meta-row"><span class="footer-meta-key">Author</span>'
+            f'<span class="footer-meta-val">{author_link}</span></div>'
+        )
+
+    repo_short_html = ""
+    if repo_short and repo_url:
+        repo_short_html = (
+            f'<div class="footer-meta-row"><span class="footer-meta-key">Source</span>'
+            f'<span class="footer-meta-val">'
+            f'<a href="{_html.escape(repo_url)}" rel="noopener" target="_blank">'
+            f'{repo_short}<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>'
+        )
+
+    return f"""<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col footer-col-brand">
+      <a href="index.html" class="footer-cardano-mark" title="Cardano Reward System V2 — home">
+        {cardano_mark_svg}
+        <span class="footer-cardano-label">Cardano Reward System V2</span>
+      </a>
+      <p class="footer-tagline">{FOOTER_TAGLINE}</p>
+      <a href="https://cardano.org" class="footer-network-link" rel="noopener" target="_blank">
+        For the Cardano network<span class="footer-ext" aria-hidden="true">↗</span>
+      </a>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Specification</h4>
+      <ul class="footer-links">
+        <li><a href="index.html">V2 Specification</a></li>
+        <li><a href="intended-game.html">The Intended Game</a></li>
+        <li><a href="findings.html">Mainnet Diagnostic</a></li>
+        <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Repository</h4>
+      <ul class="footer-links">
+        {repo_links_html}
+      </ul>
+    </div>
+    <div class="footer-col footer-col-meta">
+      <h4 class="footer-heading">Built by</h4>
+      <a href="https://iohk.io" class="footer-iog" rel="noopener" target="_blank" title="Input | Output Group">
+        <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="footer-iog-mark">
+      </a>
+      <div class="footer-iog-org">
+        <span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit
+      </div>
+      <div class="footer-meta">
+        {build_date_html}
+        {author_html}
+        {repo_short_html}
+      </div>
+    </div>
+  </div>
+  <div class="footer-rule" aria-hidden="true"></div>
+  <div class="footer-bottom">
+    <span class="footer-copy">&copy; {time.strftime('%Y')} Input Output Group &middot; Released under an open licence</span>
+    <span class="footer-tag">Built by I|O Group &middot; For the Cardano network</span>
+  </div>
+</footer>"""
 
 
 def _render_build_author_html() -> str:
@@ -1353,27 +1478,8 @@ window.MathJax = {{
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
 <div class="content">{content}</div>
-{form_block}
 {giscus_block}
-<footer class="site-footer">
-  <a href="https://cardano.org" class="footer-cardano-mark" rel="noopener" target="_blank" title="For the Cardano network">
-    <svg class="footer-cardano-symbol" viewBox="0 0 64 64" aria-hidden="true">
-      <g fill="currentColor">
-        <circle cx="32" cy="10" r="3"/><circle cx="32" cy="54" r="3"/>
-        <circle cx="51.05" cy="21" r="3"/><circle cx="12.94" cy="21" r="3"/>
-        <circle cx="51.05" cy="43" r="3"/><circle cx="12.94" cy="43" r="3"/>
-      </g>
-      <g fill="currentColor" opacity="0.5">
-        <circle cx="22.5" cy="14.5" r="2"/><circle cx="41.5" cy="14.5" r="2"/>
-        <circle cx="22.5" cy="49.5" r="2"/><circle cx="41.5" cy="49.5" r="2"/>
-        <circle cx="55.5" cy="32" r="2"/><circle cx="8.5" cy="32" r="2"/>
-      </g>
-    </svg>
-    <span>For the Cardano network</span>
-  </a>
-  <span class="footer-sep" aria-hidden="true">·</span>
-  <span class="footer-attribution">Specification by Input&nbsp;|&nbsp;Output · Cardano Business Unit</span>
-</footer>
+{footer_block}
 <div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
 <a href="#" class="back-top" id="btt">&uarr;</a>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
@@ -1564,9 +1670,11 @@ def render_shell(page: dict, content_html: str) -> str:
         plausible_head=_render_analytics_head(),
         hypothesis_head=_render_hypothesis_head(),
         giscus_block=_render_giscus_block(),
-        form_block=_render_form_block(),
+        # Contact form retired — readers go to GitHub Discussions
+        # (linked from the footer) for any structured feedback.
         hero_build_date=_html.escape(BUILD_DATE) if BUILD_DATE else "",
         hero_build_author_html=_render_build_author_html(),
+        footer_block=_render_footer(),
         body_data_attrs=_render_body_data_attrs(),
         **classes,
     )

@@ -228,16 +228,52 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .hero-bottom-rule{position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent 0%,var(--infared) 8%,var(--dawn) 50%,var(--infared) 92%,transparent 100%);z-index:3}
 
 /* Footer — IOG corporate lock-up */
-.site-footer{background:var(--cardano-blue);color:rgba(255,255,255,.75);font-size:10px;font-weight:300;letter-spacing:2px;text-transform:uppercase;padding:22px 20px;display:flex;align-items:center;justify-content:center;gap:18px;border-top:1px solid rgba(255,255,255,.10)}
-.site-footer .footer-logo{height:16px;width:auto;opacity:.6}
-.site-footer .footer-cardano-mark{display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.85);text-decoration:none;letter-spacing:1.5px;transition:color .15s}
-.site-footer .footer-cardano-mark:hover{color:#fff}
-.site-footer .footer-cardano-symbol{width:18px;height:18px;color:currentColor;flex-shrink:0}
-.site-footer .footer-attribution{color:rgba(255,255,255,.55);font-size:11px;letter-spacing:1.2px}
-.site-footer .footer-division{display:inline-flex;align-items:center;color:rgba(255,255,255,.7)}
-.site-footer .footer-sep{color:rgba(255,255,255,.25);margin:0 4px}
-.site-footer .footer-cardano{display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.85);text-decoration:none;letter-spacing:1.5px;transition:color .15s}
-.site-footer .footer-cardano:hover{color:#fff}
+/* Site footer — 4-column grid (brand · spec nav · repo · authorship)
+   over a Cardano-blue base, separated from the bottom strip by a thin
+   white-alpha rule. Stacks on narrow viewports. */
+.site-footer{background:var(--cardano-blue);color:rgba(255,255,255,.78);font-family:'Barlow',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:42px 40px 22px;border-top:1px solid rgba(255,255,255,.10)}
+.site-footer .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:48px;max-width:1400px;margin:0 auto;align-items:start}
+.site-footer .footer-col{display:flex;flex-direction:column;gap:14px}
+/* Brand column */
+.site-footer .footer-cardano-mark{display:inline-flex;align-items:center;gap:10px;color:#fff;text-decoration:none;transition:color .15s}
+.site-footer .footer-cardano-mark:hover{color:rgba(255,255,255,.85)}
+.site-footer .footer-cardano-symbol{width:24px;height:24px;color:currentColor;flex-shrink:0}
+.site-footer .footer-cardano-label{font-size:14px;font-weight:500;letter-spacing:.3px}
+.site-footer .footer-tagline{font-size:13px;font-weight:300;line-height:1.5;color:rgba(255,255,255,.62);margin:0;max-width:320px}
+.site-footer .footer-network-link{font-size:11px;font-weight:300;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.55);text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:color .15s}
+.site-footer .footer-network-link:hover{color:rgba(255,255,255,.95)}
+/* Heading + link list shared across nav/repo cols */
+.site-footer .footer-heading{font:300 11px/1 'Barlow',-apple-system,sans-serif;letter-spacing:2.4px;text-transform:uppercase;color:rgba(255,255,255,.5);margin:0 0 4px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.12)}
+.site-footer .footer-links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+.site-footer .footer-links a{color:rgba(255,255,255,.78);font-size:13px;font-weight:300;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:color .15s,border-color .15s;border-bottom:1px solid transparent;padding-bottom:1px}
+.site-footer .footer-links a:hover{color:#fff;border-bottom-color:rgba(6,255,137,.5)}
+.site-footer .footer-ext{font-size:9px;opacity:.55;display:inline-block;transform:translateY(-1px)}
+/* Authorship column */
+.site-footer .footer-iog{display:inline-block;text-decoration:none}
+.site-footer .footer-iog-mark{height:18px;width:auto;opacity:.85;display:block}
+.site-footer .footer-iog-mark:hover{opacity:1}
+.site-footer .footer-iog-org{font:300 11px/1.4 'Barlow',-apple-system,sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:rgba(255,255,255,.7);display:inline-flex;align-items:center;gap:7px}
+.site-footer .footer-iog-org .cbu-dot{width:6px;height:6px;border-radius:50%;background:#06FF89;box-shadow:0 0 6px rgba(6,255,137,.6);flex-shrink:0}
+.site-footer .footer-meta{display:flex;flex-direction:column;gap:5px;margin-top:6px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)}
+.site-footer .footer-meta-row{display:flex;gap:10px;font-size:11px;line-height:1.4;align-items:baseline}
+.site-footer .footer-meta-key{color:rgba(255,255,255,.45);font-weight:300;letter-spacing:1.4px;text-transform:uppercase;font-size:10px;flex:0 0 56px}
+.site-footer .footer-meta-val{color:rgba(255,255,255,.85);font-weight:300}
+.site-footer .footer-meta-val a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18);transition:border-color .15s,color .15s;display:inline-flex;align-items:center;gap:3px}
+.site-footer .footer-meta-val a:hover{color:#fff;border-bottom-color:rgba(6,255,137,.5)}
+/* Bottom rule + strip */
+.site-footer .footer-rule{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.18) 20%,rgba(255,255,255,.18) 80%,transparent);max-width:1400px;margin:38px auto 18px}
+.site-footer .footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:18px;max-width:1400px;margin:0 auto;font:300 10px/1.4 'Barlow',-apple-system,sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.site-footer .footer-copy{flex:1}
+.site-footer .footer-tag{flex-shrink:0}
+@media (max-width:980px){
+  .site-footer{padding:32px 24px 18px}
+  .site-footer .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
+  .site-footer .footer-col-brand{grid-column:1 / -1}
+  .site-footer .footer-bottom{flex-direction:column;align-items:flex-start;gap:8px}
+}
+@media (max-width:560px){
+  .site-footer .footer-grid{grid-template-columns:1fr;gap:28px}
+}
 
 /* ── CBU BRANDING — Cardano Business Unit dot (Engineering / Acid Green) ── */
 .cbu-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.7),0 0 2px rgba(255,255,255,.9);vertical-align:middle;margin-right:6px;flex-shrink:0}
@@ -485,9 +521,8 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .back-top.visible{opacity:1}
 .back-top:hover{color:var(--infared);border-color:var(--infared)}
 
-/* Footer strip */
-.site-footer{background:#111;color:rgba(255,255,255,.35);font-size:11px;letter-spacing:.5px;text-transform:uppercase;text-align:center;padding:18px 20px;display:flex;align-items:center;justify-content:center;gap:10px}
-.site-footer img{height:14px;opacity:.4}
+/* (legacy minimal footer rule removed — see the 4-column grid above
+   under "Site footer".) */
 
 @media(max-width:720px){
   .hero{padding:32px 20px 28px} .content{padding:24px 20px 60px;border:none}
