@@ -1471,8 +1471,11 @@ def _render_breadcrumb(active: str, description: str = "") -> str:
 # Never repeat the page H1 or sub. Empty string means no eyebrow (the H1
 # carries enough context on its own — used for zone-landing pages).
 _HERO_EYEBROW = {
-    # V2 Spec landing — h1 + sub already self-introduce; eyebrow off.
-    "spec": "",
+    # V2 Spec landing — eyebrow names the three pillars the spec
+    # synthesises, mirroring the site's three main zones (Mainnet
+    # Diagnostic / Solution Evaluation / V2 Specification). Doesn't
+    # repeat the H1 or sub.
+    "spec": "Diagnostic &middot; Evaluation &middot; Design",
     # Sub-flow + cross-flow pages: parent zone only.
     "intended-game": "Design Support",
     "findings": "Mainnet Diagnostic",
