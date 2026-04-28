@@ -218,9 +218,13 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .hero-division-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#06FF89;box-shadow:0 0 10px rgba(6,255,137,.8),0 0 3px #06FF89;flex-shrink:0}
 .hero-division-label{font-size:10px;font-weight:300;letter-spacing:2.8px;text-transform:uppercase;color:rgba(255,255,255,.88)}
 .hero-inner{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding-top:20px}
-.hero-eyebrow{font-size:11.5px;font-weight:300;letter-spacing:3.8px;text-transform:uppercase;color:rgba(255,255,255,.62);margin-bottom:22px;padding-left:14px;border-left:2px solid var(--infared)}
-.hero h1{font-size:38px;font-weight:600;line-height:1.12;color:#fff;margin:0 0 14px;max-width:980px;letter-spacing:-.5px}
-.hero .sub{font-size:17px;font-weight:300;line-height:1.35;color:rgba(255,255,255,.7);max-width:880px}
+.hero-eyebrow{font-size:13px;font-weight:300;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.62);margin-bottom:24px;padding-left:14px;border-left:2px solid var(--infared)}
+/* When the eyebrow text is empty (zone-landing pages where the H1 is
+   self-introducing), collapse the whole element so the red rule above
+   the h1 doesn't render either. */
+.hero-eyebrow:empty{display:none}
+.hero h1{font-size:50px;font-weight:600;line-height:1.08;color:#fff;margin:0 0 18px;max-width:980px;letter-spacing:-.8px}
+.hero .sub{font-size:20px;font-weight:300;line-height:1.35;color:rgba(255,255,255,.72);max-width:880px}
 .hero-bottom-rule{position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent 0%,var(--infared) 8%,var(--dawn) 50%,var(--infared) 92%,transparent 100%);z-index:3}
 
 /* Footer — IOG corporate lock-up */

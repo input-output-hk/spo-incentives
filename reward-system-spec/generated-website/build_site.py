@@ -308,7 +308,7 @@ REACTIONS_ENABLED = _cfg("SPO_REACTIONS_ENABLED", "1") not in ("0", "false", "no
 BUILD_AUTHOR = _cfg("SPO_BUILD_AUTHOR", "Nicolas Henin")
 BUILD_AUTHOR_URL = _cfg(
     "SPO_BUILD_AUTHOR_URL",
-    "https://www.linkedin.com/in/nicolashenin/",
+    "https://www.linkedin.com/in/nhenin/",
 )
 BUILD_DATE = _cfg(
     "SPO_BUILD_DATE",
@@ -1467,23 +1467,27 @@ def _render_breadcrumb(active: str, description: str = "") -> str:
     return rendered
 
 
-# Eyebrow text per zone — what reads above the page H1 in the hero.
-# Keyed by active_nav slug; the eyebrow names the zone the page lives in
-# rather than the project umbrella ('V2 Specification').
+# Eyebrow text per zone — strictly the PARENT context the reader is in.
+# Never repeat the page H1 or sub. Empty string means no eyebrow (the H1
+# carries enough context on its own — used for zone-landing pages).
 _HERO_EYEBROW = {
-    "spec": "V2 Reward System &middot; Technical Specification",
-    "intended-game": "Design Support &middot; The Intended Game",
-    "findings": "Mainnet Diagnostic &middot; Synthesis",
+    # V2 Spec landing — h1 + sub already self-introduce; eyebrow off.
+    "spec": "",
+    # Sub-flow + cross-flow pages: parent zone only.
+    "intended-game": "Design Support",
+    "findings": "Mainnet Diagnostic",
     "observatory": "Mainnet Diagnostic",
-    "census": "Mainnet Diagnostic &middot; The Staking Census",
-    "treasury": "Mainnet Diagnostic &middot; Reward Flow",
-    "pools": "Mainnet Diagnostic &middot; Reward Flow",
-    "operator": "Mainnet Diagnostic &middot; Reward Flow",
-    "solution-evaluation": "Solution Evaluation &middot; The Landscape",
-    "stake-cap": "Solution Evaluation &middot; Stake-Cap Layer",
+    "census": "Mainnet Diagnostic",
+    "treasury": "Mainnet Diagnostic",
+    "pools": "Mainnet Diagnostic",
+    "operator": "Mainnet Diagnostic",
+    "solution-evaluation": "Solution Evaluation",
+    "stake-cap": "Solution Evaluation",
+    "fee-layer": "Solution Evaluation",
+    # CIP pages keep the layer in the eyebrow because the H1 is just the
+    # CIP number — the layer name adds genuine context, no overlap.
     "cip-0050": "Solution Evaluation &middot; Stake-Cap Layer",
     "cip-0037": "Solution Evaluation &middot; Stake-Cap Layer",
-    "fee-layer": "Solution Evaluation &middot; Fee Layer",
     "cip-0023": "Solution Evaluation &middot; Fee Layer",
     "cip-0082": "Solution Evaluation &middot; Fee Layer",
     "k-parameter": "Solution Evaluation &middot; Fee Layer",
