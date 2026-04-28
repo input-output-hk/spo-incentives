@@ -1306,10 +1306,31 @@ window.MathJax = {{
     </g>
   </svg>
   <div class="hero-topbar">
-    <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="hero-full-logo">
+    <div class="hero-cardano-mark" aria-label="Cardano">
+      <svg class="hero-cardano-symbol" viewBox="0 0 64 64" aria-hidden="true">
+        <!-- Cardano-inspired hex-C: three pairs of dots arranged in a circle -->
+        <g fill="currentColor">
+          <circle cx="32" cy="10" r="3"/>
+          <circle cx="32" cy="54" r="3"/>
+          <circle cx="51.05" cy="21" r="3"/>
+          <circle cx="12.94" cy="21" r="3"/>
+          <circle cx="51.05" cy="43" r="3"/>
+          <circle cx="12.94" cy="43" r="3"/>
+        </g>
+        <g fill="currentColor" opacity="0.5">
+          <circle cx="22.5" cy="14.5" r="2"/>
+          <circle cx="41.5" cy="14.5" r="2"/>
+          <circle cx="22.5" cy="49.5" r="2"/>
+          <circle cx="41.5" cy="49.5" r="2"/>
+          <circle cx="55.5" cy="32" r="2"/>
+          <circle cx="8.5" cy="32" r="2"/>
+        </g>
+      </svg>
+      <span class="hero-cardano-text">Cardano</span>
+    </div>
     <div class="hero-division">
       <span class="hero-division-dot" aria-hidden="true"></span>
-      <span class="hero-division-label">Cardano Business Unit</span>
+      <span class="hero-division-label">A specification by Input&nbsp;|&nbsp;Output · Cardano Business Unit</span>
     </div>
   </div>
   <div class="hero-inner">
@@ -1323,10 +1344,23 @@ window.MathJax = {{
 {form_block}
 {giscus_block}
 <footer class="site-footer">
-  <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="footer-logo">
-  <div class="footer-division"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</div>
+  <a href="https://cardano.org" class="footer-cardano-mark" rel="noopener" target="_blank" title="For the Cardano network">
+    <svg class="footer-cardano-symbol" viewBox="0 0 64 64" aria-hidden="true">
+      <g fill="currentColor">
+        <circle cx="32" cy="10" r="3"/><circle cx="32" cy="54" r="3"/>
+        <circle cx="51.05" cy="21" r="3"/><circle cx="12.94" cy="21" r="3"/>
+        <circle cx="51.05" cy="43" r="3"/><circle cx="12.94" cy="43" r="3"/>
+      </g>
+      <g fill="currentColor" opacity="0.5">
+        <circle cx="22.5" cy="14.5" r="2"/><circle cx="41.5" cy="14.5" r="2"/>
+        <circle cx="22.5" cy="49.5" r="2"/><circle cx="41.5" cy="49.5" r="2"/>
+        <circle cx="55.5" cy="32" r="2"/><circle cx="8.5" cy="32" r="2"/>
+      </g>
+    </svg>
+    <span>For the Cardano network</span>
+  </a>
   <span class="footer-sep" aria-hidden="true">·</span>
-  <a href="https://cardano.org" class="footer-cardano" rel="noopener" target="_blank" title="For the Cardano network"><span class="ouroboros" aria-hidden="true"></span>For the Cardano network</a>
+  <span class="footer-attribution">Specification by Input&nbsp;|&nbsp;Output · Cardano Business Unit</span>
 </footer>
 <div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
 <a href="#" class="back-top" id="btt">&uarr;</a>
