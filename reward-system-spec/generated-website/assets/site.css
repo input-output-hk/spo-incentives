@@ -440,7 +440,18 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 /* Three distinct dropdowns, each with a single title; breadcrumb below conveys
    the current location in the hierarchy so the dropdowns stay label-free.    */
 .nav-zone-diag,.nav-zone-design,.nav-zone-research{flex:0 0 auto}
-.nav-dd-btn-diag,.nav-dd-btn-design,.nav-dd-btn-research{min-width:0}
+.nav-dd-btn-diag,.nav-dd-btn-design,.nav-dd-btn-research,.nav-dd-btn-constitution{min-width:0}
+
+/* Constitution zone — Cobalt Pulse (governance blue, distinct from V2 red and diag Dawn) */
+.nav-zone-constitution{flex:0 0 auto}
+.nav-dd-btn-constitution{color:#2C4FFA;border:1px solid rgba(44,79,250,.35);background:rgba(44,79,250,.05)}
+.nav-dd-btn-constitution:hover{background:rgba(44,79,250,.10);border-color:rgba(44,79,250,.55)}
+.nav-dd-wrap-light.open .nav-dd-btn-constitution{background:rgba(44,79,250,.14);border-color:rgba(44,79,250,.7);color:#1a3ad8}
+.nav-dd-stratum-badge-constitution{color:#2C4FFA;background:rgba(44,79,250,.12)}
+[data-theme=dark] .nav-dd-btn-constitution{color:#7B91FF;border-color:rgba(123,145,255,.35);background:rgba(123,145,255,.05)}
+[data-theme=dark] .nav-dd-btn-constitution:hover{background:rgba(123,145,255,.10);border-color:rgba(123,145,255,.55)}
+[data-theme=dark] .nav-dd-wrap-light.open .nav-dd-btn-constitution{background:rgba(123,145,255,.14);border-color:rgba(123,145,255,.7);color:#A8B6FF}
+[data-theme=dark] .nav-dd-stratum-badge-constitution{color:#7B91FF;background:rgba(123,145,255,.16)}
 /* Diagnostic = Dawn accent when the current page lives inside it */
 .nav-dd-btn-diag.active{color:var(--text-primary);border-color:rgba(236,100,29,.55);background:rgba(236,100,29,.08);font-weight:600}
 .nav-dd-wrap-light.open .nav-dd-btn-diag.active{border-color:rgba(236,100,29,.7);background:rgba(236,100,29,.14);color:var(--text-primary)}
@@ -451,6 +462,7 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .nav-dd-panel-diag{left:0;right:auto;min-width:500px;max-width:540px}
 .nav-dd-panel-design{left:0;right:auto;min-width:460px;max-width:500px}
 .nav-dd-panel-research{left:auto;right:0;min-width:460px;max-width:500px}
+.nav-dd-panel-constitution{left:0;right:auto;min-width:480px;max-width:520px}
 
 /* Group label inside a dropdown panel (e.g., "Reward Flow" above the pipeline sub-items) */
 .nav-dd-ref-group-label{display:block;font:700 9.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-muted);padding:10px 10px 4px;margin-top:4px}
@@ -540,9 +552,34 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 
 /* ── Zone 1 · Output (primary CTA, left-anchored) ── */
 .nav-zone-output{flex:0 0 auto;padding-right:4px}
-.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--infared);border:1px solid var(--infared);border-radius:6px;text-decoration:none;transition:all .15s;box-shadow:0 2px 6px rgba(229,35,33,.22);white-space:nowrap}
-.nav-tab-spec-big:hover{background:#c91e1c;border-color:#c91e1c;box-shadow:0 4px 12px rgba(229,35,33,.32);transform:translateY(-1px)}
-.nav-tab-spec-big.active{box-shadow:0 3px 10px rgba(229,35,33,.38);outline:2px solid rgba(229,35,33,.2);outline-offset:2px}
+/* V2 Specification — Dawn-tinted tab (was solid Infared, demoted to fit the gradient) */
+.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#a4380a;background:rgba(236,100,29,.10);border:1px solid rgba(236,100,29,.45);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap}
+.nav-tab-spec-big:hover{background:rgba(236,100,29,.18);border-color:rgba(236,100,29,.65);color:#7a2806}
+.nav-tab-spec-big.active{background:rgba(236,100,29,.22);border-color:var(--dawn);color:#5e1f04;box-shadow:0 2px 6px rgba(236,100,29,.18)}
+[data-theme=dark] .nav-tab-spec-big{color:#FFB07A;background:rgba(236,100,29,.12);border-color:rgba(236,100,29,.4)}
+[data-theme=dark] .nav-tab-spec-big:hover{background:rgba(236,100,29,.20);border-color:rgba(236,100,29,.6);color:#FFC698}
+[data-theme=dark] .nav-tab-spec-big.active{background:rgba(236,100,29,.28);border-color:var(--dawn);color:#FFD9B8}
+
+/* Implementation — far-left placeholder, the destination this whole pipeline is aiming at */
+.nav-zone-implementation{flex:0 0 auto}
+.nav-tab-implementation{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--infared);border:1px dashed rgba(255,255,255,.55);border-radius:6px;cursor:default;transition:all .15s;box-shadow:0 2px 6px rgba(229,35,33,.22);white-space:nowrap;position:relative}
+.nav-tab-implementation::after{content:"future";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:var(--infared);padding:3px 5px;border-radius:3px;border:1px solid var(--infared)}
+[data-theme=dark] .nav-tab-implementation::after{background:#1a1a1a;color:#FF7A78;border-color:#FF7A78}
+.nav-tab-implementation:hover{background:#c91e1c;box-shadow:0 4px 12px rgba(229,35,33,.32)}
+
+/* Resting-state hue tint for each dropdown button — produces a right-to-left gradient */
+.nav-dd-btn-solution{color:#a8120f;border-color:rgba(229,35,33,.30);background:rgba(229,35,33,.04)}
+.nav-dd-btn-solution:hover{background:rgba(229,35,33,.10);border-color:rgba(229,35,33,.55);color:var(--infared)}
+.nav-dd-btn-diag{color:#a4380a;border-color:rgba(236,100,29,.30);background:rgba(236,100,29,.04)}
+.nav-dd-btn-diag:hover{background:rgba(236,100,29,.10);border-color:rgba(236,100,29,.55);color:#7a2806}
+.nav-dd-btn-design{color:#0a6e3e;border-color:rgba(6,255,137,.35);background:rgba(6,255,137,.04)}
+.nav-dd-btn-design:hover{background:rgba(6,255,137,.10);border-color:rgba(6,255,137,.6);color:#0a5f36}
+.nav-dd-btn-research{color:#0a6f76;border-color:rgba(22,233,216,.35);background:rgba(22,233,216,.04)}
+.nav-dd-btn-research:hover{background:rgba(22,233,216,.10);border-color:rgba(22,233,216,.6);color:#08585e}
+[data-theme=dark] .nav-dd-btn-solution{color:#FF7A78;border-color:rgba(229,35,33,.35);background:rgba(229,35,33,.05)}
+[data-theme=dark] .nav-dd-btn-diag{color:#FFB07A;border-color:rgba(236,100,29,.35);background:rgba(236,100,29,.05)}
+[data-theme=dark] .nav-dd-btn-design{color:#5BFFAD;border-color:rgba(6,255,137,.35);background:rgba(6,255,137,.05)}
+[data-theme=dark] .nav-dd-btn-research{color:#5BE8DC;border-color:rgba(22,233,216,.35);background:rgba(22,233,216,.05)}
 
 /* Responsive: wrap zones below 1100px; stack fully on phone */
 @media (max-width:1100px){
@@ -550,7 +587,7 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
   .nav-flow-arrow{display:none}
 }
 @media (max-width:700px){
-  .nav-dd-panel-light,.nav-dd-panel-diag,.nav-dd-panel-design,.nav-dd-panel-research{position:fixed;left:8px;right:8px;min-width:0;max-width:none;top:auto}
+  .nav-dd-panel-light,.nav-dd-panel-diag,.nav-dd-panel-design,.nav-dd-panel-research,.nav-dd-panel-constitution{position:fixed;left:8px;right:8px;min-width:0;max-width:none;top:auto}
   .nav-evidence-sub{flex-wrap:wrap}
   .nav-breadcrumb{padding:6px 14px;font-size:11px}
 }
@@ -617,7 +654,7 @@ body.toc-open .toc-overlay{opacity:1;pointer-events:auto}
 [data-theme=dark] .toc-overlay{background:rgba(0,0,0,.55)}
 
 /* Side panel */
-.toc-panel{position:fixed;top:0;right:0;height:100vh;width:560px;max-width:92vw;
+.toc-panel{position:fixed;top:0;right:0;height:100vh;width:760px;max-width:96vw;
   background:var(--bg);border-left:1px solid var(--border);
   box-shadow:-8px 0 32px rgba(0,0,0,.12);z-index:500;
   transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
