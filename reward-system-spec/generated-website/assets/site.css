@@ -482,11 +482,11 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 [data-theme=dark] .nav-dd-wrap-light.open .nav-dd-btn-constitution{background:rgba(123,145,255,.14);border-color:rgba(123,145,255,.7);color:#A8B6FF}
 [data-theme=dark] .nav-dd-stratum-badge-constitution{color:#7B91FF;background:rgba(123,145,255,.16)}
 /* Diagnostic = Dawn accent when the current page lives inside it */
-.nav-dd-btn-diag.active{color:var(--text-primary);border-color:var(--text-muted);background:rgba(0,0,0,.04);font-weight:600}
-.nav-dd-wrap-light.open .nav-dd-btn-diag.active{border-color:var(--text-muted);background:rgba(0,0,0,.06);color:var(--text-primary)}
+.nav-dd-btn-diag.active{color:var(--text-primary);font-weight:600}
+.nav-dd-wrap-light.open .nav-dd-btn-diag.active{color:var(--text-primary)}
 /* Design = Infared accent */
-.nav-dd-btn-design.active{color:var(--text-primary);border-color:var(--text-muted);background:rgba(0,0,0,.04);font-weight:600}
-.nav-dd-wrap-light.open .nav-dd-btn-design.active{border-color:var(--text-muted);background:rgba(0,0,0,.06);color:var(--text-primary)}
+.nav-dd-btn-design.active{color:var(--text-primary);font-weight:600}
+.nav-dd-wrap-light.open .nav-dd-btn-design.active{color:var(--text-primary)}
 /* Panels: diagnostic needs the most vertical space (The Diagnostic + Reward Flow sub-chain + SD-L) */
 .nav-dd-panel-diag{left:0;right:auto;min-width:500px;max-width:540px}
 .nav-dd-panel-design{left:0;right:auto;min-width:460px;max-width:500px}
