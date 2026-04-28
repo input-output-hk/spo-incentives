@@ -427,25 +427,33 @@ mjx-container[display=true]{display:block!important;max-width:100%;margin:20px a
 .toc-nav ul,.toc-nav ol{list-style:none;padding-left:0;margin:0;counter-reset:toc-item}
 /* Level 1: big, bold — section titles */
 .toc-nav > ul > li,.toc-nav > ol > li{margin-bottom:8px;counter-increment:toc-item}
-.toc-nav > ol > li::marker{color:var(--text-primary);font-weight:600}
+.toc-nav > ol > li::marker{color:var(--cardano-blue-2);font-weight:600}
+/* Mirror the page heading colour ladder so the reader gets a visual
+   echo between TOC depth and the section colour they'll land on. */
 .toc-nav > ul > li > a,.toc-nav > ul > li > .toc-num,
-.toc-nav > ol > li > a,.toc-nav > ol > li > .toc-num{font-weight:600;font-size:16px;color:var(--text-primary)}
+.toc-nav > ol > li > a,.toc-nav > ol > li > .toc-num{font-weight:600;font-size:16px;color:var(--cardano-blue-2)}
 /* Level 2: bold, slightly smaller */
 .toc-nav ul ul,.toc-nav ol ul,.toc-nav ul ol,.toc-nav ol ol{padding-left:20px;margin-top:4px;border-left:2px solid var(--border)}
 .toc-nav ul ul > li,.toc-nav ol ul > li,.toc-nav ul ol > li,.toc-nav ol ol > li{margin-bottom:4px}
+/* depth 2 → matches H3 colour (#6394E2) */
 .toc-nav ul ul > li > a,.toc-nav ul ul > li > .toc-num,
 .toc-nav ol ul > li > a,.toc-nav ol ul > li > .toc-num,
 .toc-nav ul ol > li > a,.toc-nav ul ol > li > .toc-num,
-.toc-nav ol ol > li > a,.toc-nav ol ol > li > .toc-num{font-weight:600;font-size:14.5px;color:var(--text-body)}
+.toc-nav ol ol > li > a,.toc-nav ol ol > li > .toc-num{font-weight:600;font-size:14.5px;color:#6394E2}
 /* Level 3: medium weight, smaller still */
 .toc-nav ul ul ul,.toc-nav ol ul ul,.toc-nav ul ol ul,.toc-nav ol ol ul,
 .toc-nav ul ul ol,.toc-nav ol ul ol,.toc-nav ul ol ol,.toc-nav ol ol ol{padding-left:18px;border-left-color:var(--border-light)}
 .toc-nav ul ul ul > li,.toc-nav ol ol ol > li,
 .toc-nav ol ul ul > li,.toc-nav ul ol ul > li,.toc-nav ul ul ol > li{margin-bottom:3px}
+/* depth 3+ → matches H4/H5 colour (#88AEEC) */
 .toc-nav ul ul ul > li > a,.toc-nav ol ol ol > li > a,
-.toc-nav ol ul ul > li > a,.toc-nav ul ol ul > li > a,.toc-nav ul ul ol > li > a{font-weight:400;font-size:13.5px;color:var(--text-secondary)}
+.toc-nav ol ul ul > li > a,.toc-nav ul ol ul > li > a,.toc-nav ul ul ol > li > a{font-weight:500;font-size:13.5px;color:#88AEEC}
+/* depth 4 (rare — e.g. 3.1.1.1) → paler still */
+.toc-nav ul ul ul ul > li > a,.toc-nav ol ol ol ol > li > a,
+.toc-nav ul ul ul ol > li > a,.toc-nav ul ul ol ul > li > a,
+.toc-nav ul ol ul ul > li > a,.toc-nav ol ul ul ul > li > a{color:#A4C0F0}
 .toc-nav a{border-bottom:none;color:inherit;text-decoration:none}
-.toc-nav a:hover{color:var(--infared)}
+.toc-nav a:hover{color:var(--cardano-blue);text-decoration:underline;text-decoration-color:var(--cardano-link-line);text-underline-offset:3px}
 .toc-nav .toc-num{display:inline-block;min-width:2.2em;font-variant-numeric:tabular-nums}
 /* Ordered-list numbering on the outer <ol> */
 .toc-nav > ol{list-style:decimal outside;padding-left:2em}
@@ -808,7 +816,7 @@ body.has-toc-panel .content > h2#table-of-contents + .section-body{display:none}
   display:flex;align-items:center;justify-content:center;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.08);z-index:300;
   transition:color .15s,border-color .15s,box-shadow .2s,transform .15s}
-.toc-fab:hover{color:var(--infared);border-color:var(--infared);box-shadow:0 6px 18px rgba(229,35,33,.15);transform:translateY(-1px)}
+.toc-fab:hover{color:var(--cardano-blue);border-color:var(--cardano-blue);box-shadow:0 6px 18px var(--cardano-blue-glow);transform:translateY(-1px)}
 .toc-fab svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .toc-fab-label{display:none}
 [data-theme=dark] .toc-fab{background:var(--bg-panel)}
@@ -830,11 +838,11 @@ body.toc-open .toc-panel{transform:translateX(0)}
 .toc-panel-header{display:flex;align-items:center;justify-content:space-between;
   padding:16px 20px;border-bottom:1px solid var(--border);background:var(--bg-panel);flex-shrink:0}
 .toc-panel-title{font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  letter-spacing:1.8px;text-transform:uppercase;color:var(--infared)}
+  letter-spacing:1.8px;text-transform:uppercase;color:var(--cardano-blue)}
 .toc-panel-close{background:none;border:1px solid var(--border);border-radius:4px;
   width:30px;height:30px;display:flex;align-items:center;justify-content:center;
   cursor:pointer;color:var(--text-muted);transition:color .15s,border-color .15s}
-.toc-panel-close:hover{color:var(--infared);border-color:var(--infared)}
+.toc-panel-close:hover{color:var(--cardano-blue);border-color:var(--cardano-blue)}
 .toc-panel-close svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round}
 
 .toc-panel-body{flex:1;overflow-y:auto;padding:20px 24px 40px;scrollbar-gutter:stable}
@@ -850,9 +858,9 @@ body.toc-open .toc-panel{transform:translateX(0)}
 .toc-panel .toc-nav li > ul,
 .toc-panel .toc-nav li > ol{flex:0 0 100%;min-width:0}
 .toc-panel .toc-nav a{display:inline-block;flex:1 1 auto;min-width:0;padding:3px 4px;border-radius:4px;transition:background .1s,color .1s}
-.toc-panel .toc-nav a:hover{background:var(--bg-panel);color:var(--infared)}
-.toc-panel .toc-nav a.toc-active{color:var(--infared);background:rgba(229,35,33,.08);font-weight:600}
-[data-theme=dark] .toc-panel .toc-nav a.toc-active{background:rgba(229,35,33,.15)}
+.toc-panel .toc-nav a:hover{background:var(--cardano-blue-soft);color:var(--cardano-blue);text-decoration:none}
+.toc-panel .toc-nav a.toc-active{color:var(--cardano-blue);background:var(--cardano-blue-soft);font-weight:700;box-shadow:inset 3px 0 0 var(--cardano-blue)}
+[data-theme=dark] .toc-panel .toc-nav a.toc-active{background:rgba(110,151,255,.15);color:#8FB1FF;box-shadow:inset 3px 0 0 #8FB1FF}
 
 /* Responsive: full-width drawer on mobile, FAB moves to bottom-right */
 @media (max-width:720px){
