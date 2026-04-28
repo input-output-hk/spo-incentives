@@ -47,9 +47,9 @@ PAGES = [
         "slug": "index",
         "md": "README.md",
         "html": "index.html",
-        "title": "The Cardano Reward System V2 — Specification for a Sustainable Successor",
-        "hero_h1": "The Cardano Reward System V2",
-        "hero_sub": "Specification for a Sustainable Successor",
+        "title": "Cardano Reward System — Proposal for Specification V2",
+        "hero_h1": "Proposal for Specification V2",
+        "hero_sub": "Based on Mainnet Evidence and Prior Work",
         "active_nav": "spec",
     },
     {
@@ -58,7 +58,7 @@ PAGES = [
         "html": "intended-game.html",
         "title": "The Intended Game — SPO Incentives",
         "hero_h1": "The Intended Game",
-        "hero_sub": "A Narrative Description of the Consensus Incentive Mechanism",
+        "hero_sub": "Plain-prose companion to the formal SL-D1 design spec",
         "active_nav": "intended-game",
     },
     {
@@ -66,8 +66,8 @@ PAGES = [
         "md": "diagnostic/README.md",
         "html": "observatory.html",
         "title": "The Diagnostic — Mainnet Observatory",
-        "hero_h1": "The Diagnostic — Mainnet Observatory",
-        "hero_sub": "Synthesis of Observations Across the Reward Pipeline",
+        "hero_h1": "The Diagnostic",
+        "hero_sub": "Observations, problem induction, and links to the sub-reports",
         "active_nav": "observatory",
     },
     {
@@ -77,7 +77,7 @@ PAGES = [
         "html": "census.html",
         "title": "The Staking Census — SPO Incentives",
         "hero_h1": "The Staking Census",
-        "hero_sub": "Populations, Capital, and Participation",
+        "hero_sub": "Who holds stake — capital, distribution, participation",
         "active_nav": "census",
     },
     {
@@ -85,9 +85,9 @@ PAGES = [
         "code": "TRE",
         "md": "diagnostic/sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md",
         "html": "treasury.html",
-        "title": "Treasury & Pool Pots Distribution — SPO Incentives",
-        "hero_h1": "Treasury & Pool Pots Distribution",
-        "hero_sub": "Mainnet Analysis — Stage 1",
+        "title": "Reserves — Treasury & Pool Pots Distribution",
+        "hero_h1": "Reserves",
+        "hero_sub": "Treasury and pool-pot distribution — Reward Flow stage 1",
         "active_nav": "treasury",
     },
     {
@@ -95,9 +95,9 @@ PAGES = [
         "code": "POL",
         "md": "diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md",
         "html": "pools.html",
-        "title": "The Pools Pot Distribution Gaps — SPO Incentives",
-        "hero_h1": "The Pools Pot Distribution Gaps",
-        "hero_sub": "Mainnet Analysis — Stage 2",
+        "title": "Pools — Distribution Gaps",
+        "hero_h1": "The Pool Distribution Gaps",
+        "hero_sub": "Where stake concentrates across the pool population — Reward Flow stage 2",
         "active_nav": "pools",
     },
     {
@@ -105,9 +105,9 @@ PAGES = [
         "code": "OPE",
         "md": "diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md",
         "html": "operator.html",
-        "title": "The Operator's Cut — SPO Incentives",
+        "title": "Operators / Delegators — The Operator's Cut",
         "hero_h1": "The Operator's Cut",
-        "hero_sub": "Mainnet Analysis — Stage 3",
+        "hero_sub": "The operator's revenue versus the delegator's share — Reward Flow stage 3",
         "active_nav": "operator",
     },
     # --- Solution Evaluation -------------------------------------------------
@@ -115,18 +115,18 @@ PAGES = [
         "slug": "solution-evaluation",
         "md": "solution-evaluation/README.md",
         "html": "solution-evaluation.html",
-        "title": "Solution Evaluation — SPO Incentives",
-        "hero_h1": "Solution Evaluation",
-        "hero_sub": "CIP Candidates Against the V2 Specification",
+        "title": "Cross-CIP Analysis & Verdict — V2 Reward System",
+        "hero_h1": "Cross-CIP Analysis & Verdict",
+        "hero_sub": "Coverage matrix, cumulative findings, no-go verdict on the bundle",
         "active_nav": "solution-evaluation",
     },
     {
         "slug": "stake-cap",
         "md": "solution-evaluation/pools-distribution/README.md",
         "html": "stake-cap.html",
-        "title": "Stake-Cap Layer — Solution Evaluation",
-        "hero_h1": "Stake-Cap Layer",
-        "hero_sub": "CIP-0050 + CIP-0037 — Pledge as Binding Signal",
+        "title": "CIP Evaluation Synthesis — Stake-Cap Layer",
+        "hero_h1": "CIP Evaluation Synthesis",
+        "hero_sub": "Two stake-cap shapes, same intent — CIP-0050 + CIP-0037",
         "active_nav": "stake-cap",
     },
     {
@@ -134,8 +134,8 @@ PAGES = [
         "md": "solution-evaluation/pools-distribution/cip-0050.md",
         "html": "cip-0050.html",
         "title": "CIP-0050 — Pledge Leverage-Based Staking Rewards",
-        "hero_h1": "CIP-0050",
-        "hero_sub": "Pledge Leverage-Based Staking Rewards",
+        "hero_h1": "CIP-0050 — Pledge Leverage",
+        "hero_sub": "σ′ clip leaves A(ν, π) bottleneck unfixed",
         "active_nav": "cip-0050",
     },
     {
@@ -143,17 +143,17 @@ PAGES = [
         "md": "solution-evaluation/pools-distribution/cip-0037.md",
         "html": "cip-0037.html",
         "title": "CIP-0037 — Dynamic Saturation Based on Pledge",
-        "hero_h1": "CIP-0037",
-        "hero_sub": "Dynamic Saturation Based on Pledge",
+        "hero_h1": "CIP-0037 — Dynamic Saturation",
+        "hero_sub": "Same as CIP-0050 plus a 20 % floor — A(ν, π) still unfixed",
         "active_nav": "cip-0037",
     },
     {
         "slug": "fee-layer",
         "md": "solution-evaluation/operator-delegator/README.md",
         "html": "fee-layer.html",
-        "title": "Fee Layer — Solution Evaluation",
-        "hero_h1": "Fee Layer",
-        "hero_sub": "Operator/Member Split — CIP-0023 + CIP-0082",
+        "title": "CIP Evaluation Synthesis — Fee Layer",
+        "hero_h1": "CIP Evaluation Synthesis",
+        "hero_sub": "Pricing-as-viability conflation — CIP-0023 + CIP-0082",
         "active_nav": "fee-layer",
     },
     {
@@ -161,17 +161,17 @@ PAGES = [
         "md": "solution-evaluation/operator-delegator/cip-0023.md",
         "html": "cip-0023.html",
         "title": "CIP-0023 — Fair Min Fees",
-        "hero_h1": "CIP-0023",
-        "hero_sub": "Fair Min Fees — minPoolMargin Floor",
+        "hero_h1": "CIP-0023 — Fair Min Fees",
+        "hero_sub": "minPoolMargin floor — subsumed by CIP-0082 stage 2",
         "active_nav": "cip-0023",
     },
     {
         "slug": "cip-0082",
         "md": "solution-evaluation/operator-delegator/cip-0082.md",
         "html": "cip-0082.html",
-        "title": "CIP-0082 — Improved Rewards Scheme Parameters",
-        "hero_h1": "CIP-0082",
-        "hero_sub": "Improved Rewards Scheme Parameters — Margin Swap + k-Raises",
+        "title": "CIP-0082 — Improved Rewards Scheme",
+        "hero_h1": "CIP-0082 — Improved Rewards Scheme",
+        "hero_sub": "Margin swap + k-raises — inverts viability, regenerates 2020",
         "active_nav": "cip-0082",
     },
     {
@@ -180,7 +180,7 @@ PAGES = [
         "html": "k-parameter.html",
         "title": "k-Parameter Mechanics — Companion to CIP-0082 Stages 3–4",
         "hero_h1": "k-Parameter Mechanics",
-        "hero_sub": "Sub-Document of CIP-0082 — What Raising k Does to the Operator/Delegator Split",
+        "hero_sub": "What raising k does to the operator/delegator split",
         "active_nav": "k-parameter",
     },
 ]
@@ -302,6 +302,19 @@ GISCUS_LANG = _cfg("SPO_GISCUS_LANG", "en")
 
 REACTIONS_ENABLED = _cfg("SPO_REACTIONS_ENABLED", "1") not in ("0", "false", "no")
 
+# Optional authorship + build-date stamp shown discreetly in the
+# navigation bar. Both default to the values below when the env vars
+# are unset. Empty string disables the stamp.
+BUILD_AUTHOR = _cfg("SPO_BUILD_AUTHOR", "Nicolas Henin")
+BUILD_AUTHOR_URL = _cfg(
+    "SPO_BUILD_AUTHOR_URL",
+    "https://www.linkedin.com/in/nhenin/",
+)
+BUILD_DATE = _cfg(
+    "SPO_BUILD_DATE",
+    time.strftime("%Y/%m/%d"),
+)
+
 # Hypothesis (web annotation overlay). When enabled, ships
 # https://hypothes.is/embed.js which adds a side panel allowing readers to
 # select text and attach inline annotations. Free, federated, no infra
@@ -395,6 +408,25 @@ def _render_giscus_block() -> str:
         'async></script>'
         '</section>'
     )
+
+
+def _render_build_author_html() -> str:
+    """Return the author span used inside the hero build-info badge.
+    When SPO_BUILD_AUTHOR_URL is set the name is wrapped in an external
+    link (LinkedIn by default). Empty string disables the author.
+    """
+    if not BUILD_AUTHOR:
+        return ""
+    name_html = _html.escape(BUILD_AUTHOR)
+    if BUILD_AUTHOR_URL:
+        return (
+            f'<a class="hero-division-author" '
+            f'href="{_html.escape(BUILD_AUTHOR_URL)}" '
+            f'target="_blank" rel="noopener noreferrer" '
+            f'title="Author profile (opens in new tab)">'
+            f'{name_html}</a>'
+        )
+    return f'<span class="hero-division-author">{name_html}</span>'
 
 
 def _render_body_data_attrs() -> str:
@@ -1058,7 +1090,7 @@ window.MathJax = {{
 <span class="nav-brand-sep-vr" aria-hidden="true"></span>
 <span class="nav-brand-attribution">
   <span class="nav-brand-attribution-prefix">by</span>
-  <img src="assets/iog-word-marque-white.png" alt="Input | Output Group" class="nav-brand-wordmark">
+  <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="nav-brand-wordmark">
   <span class="nav-brand-attribution-sep" aria-hidden="true">·</span>
   <span class="nav-brand-org"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</span>
 </span>
@@ -1305,17 +1337,18 @@ window.MathJax = {{
       <circle cx="200" cy="320" r="2.5" fill="#16E9D8"/>
     </g>
   </svg>
-  <div class="hero-topbar">
-    <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="hero-full-logo">
-    <div class="hero-division">
-      <span class="hero-division-dot" aria-hidden="true"></span>
-      <span class="hero-division-label">Cardano Business Unit</span>
-    </div>
-  </div>
   <div class="hero-inner">
-    <div class="hero-eyebrow">V2 Reward System &middot; Technical Specification</div>
+    <div class="hero-eyebrow">{hero_eyebrow}</div>
     <h1>{hero_h1}</h1>
     <div class="sub">{hero_sub}</div>
+  </div>
+  <div class="hero-bottombar">
+    <div class="hero-division" aria-label="Build info">
+      <span class="hero-division-dot" aria-hidden="true"></span>
+      <span class="hero-division-label">{hero_build_date}</span>
+      <span class="hero-division-sep" aria-hidden="true">·</span>
+      {hero_build_author_html}
+    </div>
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
@@ -1323,10 +1356,23 @@ window.MathJax = {{
 {form_block}
 {giscus_block}
 <footer class="site-footer">
-  <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="footer-logo">
-  <div class="footer-division"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</div>
+  <a href="https://cardano.org" class="footer-cardano-mark" rel="noopener" target="_blank" title="For the Cardano network">
+    <svg class="footer-cardano-symbol" viewBox="0 0 64 64" aria-hidden="true">
+      <g fill="currentColor">
+        <circle cx="32" cy="10" r="3"/><circle cx="32" cy="54" r="3"/>
+        <circle cx="51.05" cy="21" r="3"/><circle cx="12.94" cy="21" r="3"/>
+        <circle cx="51.05" cy="43" r="3"/><circle cx="12.94" cy="43" r="3"/>
+      </g>
+      <g fill="currentColor" opacity="0.5">
+        <circle cx="22.5" cy="14.5" r="2"/><circle cx="41.5" cy="14.5" r="2"/>
+        <circle cx="22.5" cy="49.5" r="2"/><circle cx="41.5" cy="49.5" r="2"/>
+        <circle cx="55.5" cy="32" r="2"/><circle cx="8.5" cy="32" r="2"/>
+      </g>
+    </svg>
+    <span>For the Cardano network</span>
+  </a>
   <span class="footer-sep" aria-hidden="true">·</span>
-  <a href="https://cardano.org" class="footer-cardano" rel="noopener" target="_blank" title="For the Cardano network"><span class="ouroboros" aria-hidden="true"></span>For the Cardano network</a>
+  <span class="footer-attribution">Specification by Input&nbsp;|&nbsp;Output · Cardano Business Unit</span>
 </footer>
 <div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
 <a href="#" class="back-top" id="btt">&uarr;</a>
@@ -1391,10 +1437,10 @@ BREADCRUMBS = {
     "pools": ["Mainnet Diagnostic", "Reward Flow", "Pools"],
     "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],
     "solution-evaluation": ["Solution Evaluation", "Cross-CIP Analysis & Verdict"],
-    "stake-cap": ["Solution Evaluation", "Stake-Cap Layer"],
+    "stake-cap": ["Solution Evaluation", "Stake-Cap Layer", "CIP Evaluation Synthesis"],
     "cip-0050": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0050"],
     "cip-0037": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0037"],
-    "fee-layer": ["Solution Evaluation", "Fee Layer"],
+    "fee-layer": ["Solution Evaluation", "Fee Layer", "CIP Evaluation Synthesis"],
     "cip-0023": ["Solution Evaluation", "Fee Layer", "CIP-0023"],
     "cip-0082": ["Solution Evaluation", "Fee Layer", "CIP-0082"],
     "k-parameter": ["Solution Evaluation", "Fee Layer", "k-Parameter Mechanics"],
@@ -1419,6 +1465,34 @@ def _render_breadcrumb(active: str, description: str = "") -> str:
             f'<span class="nav-breadcrumb-desc">{_html.escape(description)}</span>'
         )
     return rendered
+
+
+# Eyebrow text per zone — strictly the PARENT context the reader is in.
+# Never repeat the page H1 or sub. Empty string means no eyebrow (the H1
+# carries enough context on its own — used for zone-landing pages).
+_HERO_EYEBROW = {
+    # V2 Spec landing.
+    "spec": "Cardano Reward System",
+    # Sub-flow + cross-flow pages: parent zone only.
+    "intended-game": "Design Support",
+    "findings": "Mainnet Diagnostic",
+    "observatory": "Mainnet Diagnostic",
+    "census": "Mainnet Diagnostic",
+    "treasury": "Mainnet Diagnostic",
+    "pools": "Mainnet Diagnostic",
+    "operator": "Mainnet Diagnostic",
+    "solution-evaluation": "Solution Evaluation",
+    "stake-cap": "Solution Evaluation",
+    "fee-layer": "Solution Evaluation",
+    # CIP pages keep the layer in the eyebrow because the H1 is just the
+    # CIP number — the layer name adds genuine context, no overlap.
+    "cip-0050": "Solution Evaluation &middot; Stake-Cap Layer",
+    "cip-0037": "Solution Evaluation &middot; Stake-Cap Layer",
+    "cip-0023": "Solution Evaluation &middot; Fee Layer",
+    "cip-0082": "Solution Evaluation &middot; Fee Layer",
+    "k-parameter": "Solution Evaluation &middot; Fee Layer",
+    "my-bookmarks": "Reader Tools",
+}
 
 
 def render_shell(page: dict, content_html: str) -> str:
@@ -1459,7 +1533,8 @@ def render_shell(page: dict, content_html: str) -> str:
     cls_diag_trigger = " active" if active in DIAG_ACTIVE else ""
     cls_solution_trigger = " active" if active in SOLUTION_ACTIVE else ""
     cls_design_trigger = " active" if active in DESIGN_ACTIVE else ""
-    breadcrumb_inner = _render_breadcrumb(active, page.get("hero_sub", ""))
+    # Don't repeat hero_sub in the breadcrumb — the hero already shows it.
+    breadcrumb_inner = _render_breadcrumb(active, "")
     # Cache-bust CSS/JS using the max mtime of the two asset files so
     # browsers pick up changes without a hard-refresh.
     assets_dir = SITE_DIR / "assets"
@@ -1476,6 +1551,9 @@ def render_shell(page: dict, content_html: str) -> str:
         title=page["title"],
         hero_h1=page["hero_h1"],
         hero_sub=page["hero_sub"],
+        hero_eyebrow=_HERO_EYEBROW.get(
+            active, "V2 Reward System &middot; Technical Specification"
+        ),
         hero_banner=BANNER_VARIANTS.get(active, "fluid"),
         content=content_html,
         cls_diag_trigger=cls_diag_trigger,
@@ -1487,6 +1565,8 @@ def render_shell(page: dict, content_html: str) -> str:
         hypothesis_head=_render_hypothesis_head(),
         giscus_block=_render_giscus_block(),
         form_block=_render_form_block(),
+        hero_build_date=_html.escape(BUILD_DATE) if BUILD_DATE else "",
+        hero_build_author_html=_render_build_author_html(),
         body_data_attrs=_render_body_data_attrs(),
         **classes,
     )

@@ -92,7 +92,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .site-nav{position:sticky;top:0;z-index:100;display:flex;flex-direction:column}
 
 /* Bar 1: brand identity */
-.nav-brand{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%),var(--bg);padding:12px 28px 10px;display:flex;align-items:center;min-height:60px;gap:14px;border-bottom:0}
+.nav-brand{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%),var(--bg);padding:8px 28px 8px;display:flex;align-items:center;min-height:48px;gap:14px;border-bottom:0}
 .nav-brand-home{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-brand-logo{height:18px;width:auto;opacity:.7;flex-shrink:0}
 .nav-brand-org{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4)}
@@ -103,6 +103,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 
 /* Brand bar right: dropdowns + theme toggle */
 .nav-brand-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+/* Hero build-info badge — same chrome as the CARDANO BUSINESS UNIT
+   chip used to be (green dot prefix, green border, dark translucent
+   fill). Date in CAPS / wide tracking like the original CBU label;
+   author in Title Case (proper noun, not a label). */
+.hero-division-sep{color:rgba(255,255,255,.35);padding:0 2px;
+  letter-spacing:0;font-weight:300}
+/* Author chip — same CBU label treatment as the date (UPPERCASE,
+   wide tracking) but rendered as a link to the author's profile. */
+.hero-division-author{font-size:10px;font-weight:300;letter-spacing:2.8px;
+  text-transform:uppercase;color:rgba(255,255,255,.88);
+  text-decoration:none;border-bottom:1px solid rgba(6,255,137,.0);
+  transition:color .15s,border-color .15s}
+a.hero-division-author:hover,a.hero-division-author:focus-visible{
+  color:#fff;border-bottom-color:rgba(6,255,137,.6);outline:none}
 .theme-toggle{background:rgba(255,255,255,.85);border:1px solid rgba(0,51,173,.4);border-radius:4px;cursor:pointer;padding:5px 8px;color:var(--cardano-blue);font-size:14px;line-height:1;transition:color .15s,border-color .15s,background .15s;display:flex;align-items:center}
 .theme-toggle:hover{background:#fff;border-color:var(--cardano-blue);color:#001a6b}
 .theme-toggle:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.3)}
@@ -160,7 +174,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .nav-arrow{font-size:11px;color:var(--dawn);opacity:.5;display:flex;align-items:center;padding:0 1px;flex-shrink:0}
 
 /* ── HERO — Cardano-blue bandeau using official cardano.org banner asset ── */
-.hero{position:relative;overflow:hidden;padding:28px 40px 56px;background:var(--cardano-blue);border-bottom:1px solid rgba(255,255,255,.12);isolation:isolate}
+.hero{position:relative;overflow:hidden;padding:44px 40px 64px;background:var(--cardano-blue);border-bottom:1px solid rgba(255,255,255,.12);isolation:isolate}
 /* Layer 1 (z=0): cardano.org banner asset — positioned right, sized to contain so the design stays visible */
 .hero::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
   background:url('cardano/hero-header-fluid-blue.png') right center / auto 100% no-repeat;
@@ -180,19 +194,46 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .hero[data-banner="fluid-red"]::before{background-image:url('cardano/hero-header-fluid-red.svg')}
 .hero-schema{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:.9}
 .hero-topbar{position:relative;z-index:2;max-width:1400px;margin:0 auto 32px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+/* Build-info badge sits AT THE BOTTOM-RIGHT of the hero, after the
+   eyebrow + h1 + sub block. justify-content:flex-end pins the chip to
+   the right edge of the 1400px column. */
+.hero-bottombar{position:relative;z-index:2;max-width:1400px;margin:28px auto 0;display:flex;align-items:center;justify-content:flex-end;gap:24px}
 .hero-full-logo{height:26px;width:auto;display:block;flex-shrink:0;filter:drop-shadow(0 0 12px rgba(229,35,33,.15))}
+/* Cardano wordmark — primary brand for the report. White on the dark
+   hero, paired with the small IO Group attribution badge on the right. */
+.hero-cardano-mark{display:inline-flex;align-items:center;gap:10px;flex-shrink:0;
+  filter:drop-shadow(0 0 14px rgba(255,255,255,.15))}
+.hero-cardano-symbol{width:30px;height:30px;color:#fff;flex-shrink:0}
+.hero-cardano-text{font:600 22px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.18em;text-transform:uppercase;color:#fff}
 .hero-division{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 12px;border:1px solid rgba(6,255,137,.35);border-radius:2px;background:rgba(0,0,0,.35);backdrop-filter:blur(2px)}
+/* IOG attribution lock-up: small 'by' word + the full butterfly+wordmark
+   logo. Sits inside .hero-division so the 'by' anchors it as authorial
+   credit rather than as a competing brand mark. */
+.hero-by{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.15em;text-transform:lowercase;color:rgba(255,255,255,.55);
+  font-style:italic;flex-shrink:0}
+.hero-iog-logo{height:18px;width:auto;display:block;flex-shrink:0;
+  filter:drop-shadow(0 0 6px rgba(255,255,255,.10))}
 .hero-division-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#06FF89;box-shadow:0 0 10px rgba(6,255,137,.8),0 0 3px #06FF89;flex-shrink:0}
 .hero-division-label{font-size:10px;font-weight:300;letter-spacing:2.8px;text-transform:uppercase;color:rgba(255,255,255,.88)}
 .hero-inner{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding-top:20px}
-.hero-eyebrow{font-size:10px;font-weight:300;letter-spacing:3.5px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:18px;padding-left:14px;border-left:2px solid var(--infared)}
-.hero h1{font-size:28px;font-weight:600;color:#fff;margin:0 0 8px;max-width:980px}
-.hero .sub{font-size:14px;font-weight:300;color:rgba(255,255,255,.55);max-width:880px}
+.hero-eyebrow{font-size:16px;font-weight:400;letter-spacing:3.6px;text-transform:uppercase;color:rgba(255,255,255,.78);margin-bottom:26px;padding-left:14px;border-left:2px solid var(--infared)}
+/* When the eyebrow text is empty (zone-landing pages where the H1 is
+   self-introducing), collapse the whole element so the red rule above
+   the h1 doesn't render either. */
+.hero-eyebrow:empty{display:none}
+.hero h1{font-size:50px;font-weight:600;line-height:1.08;color:#fff;margin:0 0 18px;max-width:980px;letter-spacing:-.8px}
+.hero .sub{font-size:20px;font-weight:300;line-height:1.35;color:rgba(255,255,255,.72);max-width:880px}
 .hero-bottom-rule{position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent 0%,var(--infared) 8%,var(--dawn) 50%,var(--infared) 92%,transparent 100%);z-index:3}
 
 /* Footer — IOG corporate lock-up */
 .site-footer{background:var(--cardano-blue);color:rgba(255,255,255,.75);font-size:10px;font-weight:300;letter-spacing:2px;text-transform:uppercase;padding:22px 20px;display:flex;align-items:center;justify-content:center;gap:18px;border-top:1px solid rgba(255,255,255,.10)}
 .site-footer .footer-logo{height:16px;width:auto;opacity:.6}
+.site-footer .footer-cardano-mark{display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.85);text-decoration:none;letter-spacing:1.5px;transition:color .15s}
+.site-footer .footer-cardano-mark:hover{color:#fff}
+.site-footer .footer-cardano-symbol{width:18px;height:18px;color:currentColor;flex-shrink:0}
+.site-footer .footer-attribution{color:rgba(255,255,255,.55);font-size:11px;letter-spacing:1.2px}
 .site-footer .footer-division{display:inline-flex;align-items:center;color:rgba(255,255,255,.7)}
 .site-footer .footer-sep{color:rgba(255,255,255,.25);margin:0 4px}
 .site-footer .footer-cardano{display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.85);text-decoration:none;letter-spacing:1.5px;transition:color .15s}
@@ -581,20 +622,24 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 
 /* ── Zone 1 · Output (primary CTA, left-anchored) ── */
 .nav-zone-output{flex:0 0 auto;padding-right:4px}
-/* V2 Specification — Dawn-tinted tab (was solid Infared, demoted to fit the gradient) */
-.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#a4380a;background:rgba(255,255,255,.94);border:1px solid rgba(236,100,29,.6);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap;box-shadow:inset 0 0 0 999px rgba(236,100,29,.06)}
-.nav-tab-spec-big:hover{background:#fff;border-color:rgba(236,100,29,.85);color:#7a2806;box-shadow:inset 0 0 0 999px rgba(236,100,29,.12)}
-.nav-tab-spec-big.active{background:#fff;border-color:var(--dawn);color:#5e1f04;box-shadow:inset 0 0 0 999px rgba(236,100,29,.18),0 2px 6px rgba(236,100,29,.25)}
-[data-theme=dark] .nav-tab-spec-big{color:#FFB07A;background:rgba(236,100,29,.12);border-color:rgba(236,100,29,.4)}
-[data-theme=dark] .nav-tab-spec-big:hover{background:rgba(236,100,29,.20);border-color:rgba(236,100,29,.6);color:#FFC698}
-[data-theme=dark] .nav-tab-spec-big.active{background:rgba(236,100,29,.28);border-color:var(--dawn);color:#FFD9B8}
+/* V2 Specification — Cardano blue solid CTA. The whole nav points
+   at this destination, so it gets the brand colour at full saturation
+   instead of a tinted pill. */
+.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px solid var(--cardano-blue);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap;box-shadow:0 2px 6px var(--cardano-blue-soft)}
+.nav-tab-spec-big:hover{background:#0028a0;border-color:#0028a0;box-shadow:0 4px 14px var(--cardano-blue-glow)}
+.nav-tab-spec-big.active{background:#001f80;border-color:#001f80;box-shadow:0 3px 12px var(--cardano-blue-glow)}
+[data-theme=dark] .nav-tab-spec-big{background:var(--cardano-blue);border-color:var(--cardano-blue);color:#fff}
+[data-theme=dark] .nav-tab-spec-big:hover{background:#1d49c4;border-color:#1d49c4}
+[data-theme=dark] .nav-tab-spec-big.active{background:#0040d3;border-color:#0040d3}
 
-/* Implementation — far-left placeholder, the destination this whole pipeline is aiming at */
+/* Implementation — far-left teaser of the destination this whole
+   pipeline aims at. Cardano blue with a dashed border to signal it is
+   the future state, not a clickable target yet. */
 .nav-zone-implementation{flex:0 0 auto}
-.nav-tab-implementation{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--infared);border:1px dashed rgba(255,255,255,.55);border-radius:6px;cursor:default;transition:all .15s;box-shadow:0 2px 6px rgba(229,35,33,.22);white-space:nowrap;position:relative}
-.nav-tab-implementation::after{content:"future";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:var(--infared);padding:3px 5px;border-radius:3px;border:1px solid var(--infared)}
-[data-theme=dark] .nav-tab-implementation::after{background:#1a1a1a;color:#FF7A78;border-color:#FF7A78}
-.nav-tab-implementation:hover{background:#c91e1c;box-shadow:0 4px 12px rgba(229,35,33,.32)}
+.nav-tab-implementation{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px dashed rgba(255,255,255,.55);border-radius:6px;cursor:default;transition:all .15s;box-shadow:0 2px 6px var(--cardano-blue-soft);white-space:nowrap;position:relative}
+.nav-tab-implementation::after{content:"future";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:var(--cardano-blue);padding:3px 5px;border-radius:3px;border:1px solid var(--cardano-blue)}
+[data-theme=dark] .nav-tab-implementation::after{background:#1a1a1a;color:#7B91FF;border-color:#7B91FF}
+.nav-tab-implementation:hover{background:#0028a0;box-shadow:0 4px 12px var(--cardano-blue-glow)}
 
 /* Resting-state hue tint for each dropdown button — opaque white-base + colored border + tint overlay so they stay readable on the Cardano-blue gradient */
 /* All zone dropdown buttons share the same neutral chrome. The

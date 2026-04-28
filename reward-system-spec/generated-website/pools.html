@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Pools Pot Distribution Gaps — SPO Incentives</title>
+<title>Pools — Distribution Gaps</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
 <script>try{var t=localStorage.getItem('spo-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <script>(function(){var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fluid-red'];var pick=v[Math.floor(Math.random()*v.length)];document.addEventListener('DOMContentLoaded',function(){var h=document.querySelector('.hero');if(h)h.setAttribute('data-banner',pick);});})();</script>
@@ -20,11 +20,11 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777374796">
-<script defer data-website-id="791f3295-e5ab-4a38-af87-55835f711d11" src="https://cloud.umami.is/script.js"></script><script>window.spoTrack=function(n,p){try{if(window.umami&&window.umami.track){window.umami.track(n,p||{});}}catch(e){}}</script>
+<link rel="stylesheet" href="assets/site.css?v=1777378912">
+
 
 </head>
-<body data-analytics="umami" data-reactions="1" data-giscus="1" data-highlights="1" data-bookmarks="1">
+<body data-highlights="1" data-bookmarks="1">
 <div class="progress-bar" id="progress"></div>
 <nav class="site-nav"><div class="nav-brand">
 <a href="index.html" class="nav-brand-home">
@@ -35,7 +35,7 @@ window.MathJax = {
 <span class="nav-brand-sep-vr" aria-hidden="true"></span>
 <span class="nav-brand-attribution">
   <span class="nav-brand-attribution-prefix">by</span>
-  <img src="assets/iog-word-marque-white.png" alt="Input | Output Group" class="nav-brand-wordmark">
+  <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="nav-brand-wordmark">
   <span class="nav-brand-attribution-sep" aria-hidden="true">·</span>
   <span class="nav-brand-org"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</span>
 </span>
@@ -261,7 +261,7 @@ window.MathJax = {
 </div>
 
 </div>
-<div class="nav-breadcrumb"><span class="nav-breadcrumb-item">Mainnet Diagnostic</span><span class="nav-breadcrumb-sep" aria-hidden="true">›</span><span class="nav-breadcrumb-item">Reward Flow</span><span class="nav-breadcrumb-sep" aria-hidden="true">›</span><span class="nav-breadcrumb-item nav-breadcrumb-current">Pools</span><span class="nav-breadcrumb-desc-sep" aria-hidden="true">—</span><span class="nav-breadcrumb-desc">Mainnet Analysis — Stage 2</span></div>
+<div class="nav-breadcrumb"><span class="nav-breadcrumb-item">Mainnet Diagnostic</span><span class="nav-breadcrumb-sep" aria-hidden="true">›</span><span class="nav-breadcrumb-item">Reward Flow</span><span class="nav-breadcrumb-sep" aria-hidden="true">›</span><span class="nav-breadcrumb-item nav-breadcrumb-current">Pools</span></div>
 </nav>
 <div class="hero" data-banner="braid">
   <svg class="hero-schema" viewBox="0 0 1400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -282,17 +282,18 @@ window.MathJax = {
       <circle cx="200" cy="320" r="2.5" fill="#16E9D8"/>
     </g>
   </svg>
-  <div class="hero-topbar">
-    <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="hero-full-logo">
-    <div class="hero-division">
-      <span class="hero-division-dot" aria-hidden="true"></span>
-      <span class="hero-division-label">Cardano Business Unit</span>
-    </div>
-  </div>
   <div class="hero-inner">
-    <div class="hero-eyebrow">V2 Reward System &middot; Technical Specification</div>
-    <h1>The Pools Pot Distribution Gaps</h1>
-    <div class="sub">Mainnet Analysis — Stage 2</div>
+    <div class="hero-eyebrow">Mainnet Diagnostic</div>
+    <h1>The Pool Distribution Gaps</h1>
+    <div class="sub">Where stake concentrates across the pool population — Reward Flow stage 2</div>
+  </div>
+  <div class="hero-bottombar">
+    <div class="hero-division" aria-label="Build info">
+      <span class="hero-division-dot" aria-hidden="true"></span>
+      <span class="hero-division-label">2026/04/28</span>
+      <span class="hero-division-sep" aria-hidden="true">·</span>
+      <a class="hero-division-author" href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)">Nicolas Henin</a>
+    </div>
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
@@ -3122,12 +3123,25 @@ python3 build_mpo_progression_analysis.py
 <hr>
 <p><em>Last updated: 2026/04/21 — upstream reference aligned to epoch 623; pool-level snapshot remains at epoch 616/618 pending Koios pool-history refresh.</em></p><div class="findings-registry" aria-hidden="true" hidden><div class="finding-detail" id="finding-pol-o1-f1" data-finding="POL.O1.F1" data-short="F1.1" data-group="1" data-href="#361-current-snapshot"><div class="finding-detail-id">POL.O1.F1</div><div class="finding-detail-summary">Only 6.79M of 15.53M ADA/epoch reaches operators and delegators — 44% distribution efficiency</div><div class="finding-detail-insight">Epoch 616</div><span class="finding-detail-src">§3.6.1</span></div><div class="finding-detail" id="finding-pol-o1-f2" data-finding="POL.O1.F2" data-short="F1.2" data-group="1" data-href="../../../README.md#31-overview"><div class="finding-detail-id">POL.O1.F2</div><div class="finding-detail-summary">The participation gap (unstaked ADA) alone returns 4.91M ADA/epoch — 31.6% of the pot</div><div class="finding-detail-insight">Upstream — outside formula control</div><span class="finding-detail-src">§3.1</span></div><div class="finding-detail" id="finding-pol-o1-f3" data-finding="POL.O1.F3" data-short="F1.3" data-group="1" data-href="#341-why-pledge-matters-and-why-this-is-not-zero-sum"><div class="finding-detail-id">POL.O1.F3</div><div class="finding-detail-summary">The unused pledge-incentive budget returns 3.43M ADA/epoch — 22.1% of the pot, 95.6% of the bonus budget wasted</div><div class="finding-detail-insight">Addressable by formula reform</div><span class="finding-detail-src">§3.4.1</span></div><div class="finding-detail" id="finding-pol-o1-f4" data-finding="POL.O1.F4" data-short="F1.4" data-group="1" data-href="#361-current-snapshot"><div class="finding-detail-id">POL.O1.F4</div><div class="finding-detail-summary">These two causes together (53.7% of pot) dwarf all others: pledge-not-met confiscation (2.1%), performance (0.5%), oversaturation (0.3%) are secondary</div><div class="finding-detail-insight">The reform priority is clear</div><span class="finding-detail-src">§3.6.1</span></div><div class="finding-detail" id="finding-pol-o2-f1" data-finding="POL.O2.F1" data-short="F2.1" data-group="2" data-href="#344-the-evidence-on-mainnet"><div class="finding-detail-id">POL.O2.F1</div><div class="finding-detail-summary">78% of staked ADA sits in pools with pledge ratio &lt; 1%; stake-weighted median ratio is 0.07%</div><div class="finding-detail-insight">Structural — pledge is absent where stake concentrates</div><span class="finding-detail-src">§3.4.4</span></div><div class="finding-detail" id="finding-pol-o2-f2" data-finding="POL.O2.F2" data-short="F2.2" data-group="2" data-href="#342-the-playing-field-what-pledge-actually-buys"><div class="finding-detail-id">POL.O2.F2</div><div class="finding-detail-summary">Yield on pledge capital is 0.68%/yr at best (full saturation) — below passive delegation yield of 2.3%/yr</div><div class="finding-detail-insight">Economically irrational to pledge</div><span class="finding-detail-src">§3.4.2</span></div><div class="finding-detail" id="finding-pol-o2-f3" data-finding="POL.O2.F3" data-short="F2.3" data-group="2" data-href="#361-current-snapshot"><div class="finding-detail-id">POL.O2.F3</div><div class="finding-detail-summary">3.4M ADA/epoch (22% of pot) is reserved for pledge bonus but returns to reserve unused</div><div class="finding-detail-insight">Structural cost of maintaining a₀ = 0.3</div><span class="finding-detail-src">§3.6.1</span></div><div class="finding-detail" id="finding-pol-o3-f1" data-finding="POL.O3.F1" data-short="F3.1" data-group="3" data-href="#4121-production-threshold"><div class="finding-detail-id">POL.O3.F1</div><div class="finding-detail-summary">Regular block production requires ~3M ADA stake (~3 blocks/epoch) — the emergent viability boundary</div><div class="finding-detail-insight">Structural — not a protocol parameter</div><span class="finding-detail-src">§4.1.2.1</span></div><div class="finding-detail" id="finding-pol-o3-f2" data-finding="POL.O3.F2" data-short="F3.2" data-group="3" data-href="#4122-viability-threshold"><div class="finding-detail-id">POL.O3.F2</div><div class="finding-detail-summary">Below 1.1M ADA, the 340 ADA fixed cost exceeds pool reward — operators are in economic loss</div><div class="finding-detail-insight">1,987 below-viability pools affected</div><span class="finding-detail-src">§4.1.2.2</span></div><div class="finding-detail" id="finding-pol-o3-f3" data-finding="POL.O3.F3" data-short="F3.3" data-group="3" data-href="#4123-saturation-threshold"><div class="finding-detail-id">POL.O3.F3</div><div class="finding-detail-summary">Only 8 pools reach the saturation threshold (z₀ = 77M ADA) — the cap designed for 500 pools is nearly inactive</div><div class="finding-detail-insight">1.6% of design target</div><span class="finding-detail-src">§4.1.2.3</span></div><div class="finding-detail" id="finding-pol-o3-f4" data-finding="POL.O3.F4" data-short="F3.4" data-group="3" data-href="#4123-saturation-threshold"><div class="finding-detail-id">POL.O3.F4</div><div class="finding-detail-summary">Active stake fills only 56.5% of theoretical capacity (k × z₀) — at most 282 pools could saturate</div><div class="finding-detail-insight">Capital constraint</div><span class="finding-detail-src">§4.1.2.3</span></div><div class="finding-detail" id="finding-pol-o3-f5" data-finding="POL.O3.F5" data-short="F3.5" data-group="3" data-href="#415-conclusion"><div class="finding-detail-id">POL.O3.F5</div><div class="finding-detail-summary">Tier boundaries are dynamic — they shift with active stake, fixed costs, and k; any CIP evaluation must track where they move</div><div class="finding-detail-insight">Framework — not a snapshot</div><span class="finding-detail-src">§4.1.5</span></div><div class="finding-detail" id="finding-pol-o3-f6" data-finding="POL.O3.F6" data-short="F3.6" data-group="3" data-href="#415-conclusion"><div class="finding-detail-id">POL.O3.F6</div><div class="finding-detail-summary">CIPs targeting k reshape the upper tail; CIPs targeting fees reshape the lower tail — reforms hit different tiers</div><div class="finding-detail-insight">Asymmetric reform impact</div><span class="finding-detail-src">§4.1.5</span></div><div class="finding-detail" id="finding-pol-o4-f1" data-finding="POL.O4.F1" data-short="F4.1" data-group="4" data-href="../../../README.md#211-problem-statement"><div class="finding-detail-id">POL.O4.F1</div><div class="finding-detail-summary">85 MPO entities operate 901 pools holding 16.4B ADA — 75.4% of participating stake</div><div class="finding-detail-insight">Structural — concentration</div><span class="finding-detail-src">§2.1.1</span></div><div class="finding-detail" id="finding-pol-o4-f2" data-finding="POL.O4.F2" data-short="F4.2" data-group="4" data-href="../../../README.md#212-structural-enforce-the-production-threshold"><div class="finding-detail-id">POL.O4.F2</div><div class="finding-detail-summary">48 capital-sufficient MPOs (14.5B ADA) could play the pledge game; 37 capital-insufficient MPOs (1.74B ADA) cannot</div><div class="finding-detail-insight">Scale determines access</div><span class="finding-detail-src">§2.1.2</span></div><div class="finding-detail" id="finding-pol-o4-f3" data-finding="POL.O4.F3" data-short="F4.3" data-group="4" data-href="#4241-pledge-compliance-classification"><div class="finding-detail-id">POL.O4.F3</div><div class="finding-detail-summary">41 of 48 capital-sufficient MPOs are non-compliant — they forfeit ~550K ADA/epoch in pledge bonus</div><div class="finding-detail-insight">Strategic non-response</div><span class="finding-detail-src">§4.2.4.1</span></div><div class="finding-detail" id="finding-pol-o4-f4" data-finding="POL.O4.F4" data-short="F4.4" data-group="4" data-href="#4242-structural-non-compliance-cex-and-ivaas"><div class="finding-detail-id">POL.O4.F4</div><div class="finding-detail-summary">CEX + IVaaS alone hold 7.4B ADA (19.2% of supply) at structurally zero pledge</div><div class="finding-detail-insight">Custodial constraint</div><span class="finding-detail-src">§4.2.4.2</span></div><div class="finding-detail" id="finding-pol-o4-f5" data-finding="POL.O4.F5" data-short="F4.5" data-group="4" data-href="#4244-pledge-compliance-pool-tier"><div class="finding-detail-id">POL.O4.F5</div><div class="finding-detail-summary">Capital-sufficient non-compliance is a scale phenomenon — 82.9% of capital-sufficient viable MPO stake, &gt;99% of 12B ADA in viable-and-above pools</div><div class="finding-detail-insight">Non-compliance spans every viable tier</div><span class="finding-detail-src">§4.2.4.4</span></div><div class="finding-detail" id="finding-pol-o4-f6" data-finding="POL.O4.F6" data-short="F4.6" data-group="4" data-href="#4244-pledge-compliance-pool-tier"><div class="finding-detail-id">POL.O4.F6</div><div class="finding-detail-summary">Non-compliance is spread across the full tier spectrum — no single-tier fix exists; any parameter change ripples across all tiers</div><div class="finding-detail-insight">Reform constraint</div><span class="finding-detail-src">§4.2.4.4</span></div><div class="finding-detail" id="finding-pol-o4-f7" data-finding="POL.O4.F7" data-short="F4.7" data-group="4" data-href="#4243-the-cost-of-non-compliance"><div class="finding-detail-id">POL.O4.F7</div><div class="finding-detail-summary">3 exemplary MPOs capture 82% of bonus ADA among pledging entities — but CF pledges by mandate; the mechanism's output rests on 2 private entities (67% of pledging bonus)</div><div class="finding-detail-insight">A Sybil-resistance tool for 500 pools is a transfer to two</div><span class="finding-detail-src">§4.2.4.3</span></div><div class="finding-detail" id="finding-pol-o5-f1" data-finding="POL.O5.F1" data-short="F5.1" data-group="5" data-href="../../../README.md#221-problem-statement"><div class="finding-detail-id">POL.O5.F1</div><div class="finding-detail-summary">The <a href="https://github.com/input-output-hk/spo-incentives/blob/main/report.pdf"><em>Incentive Mechanism Analysis</em></a>'s 741 healthy pools collapse to 283 independent viable operators once MPO fleet members are removed — the other 61% were fleet pools</div><div class="finding-detail-insight">The competitive field is 3× smaller than headline</div><span class="finding-detail-src">§2.2.1</span></div><div class="finding-detail" id="finding-pol-o5-f2" data-finding="POL.O5.F2" data-short="F5.2" data-group="5" data-href="../../../README.md#222-specification"><div class="finding-detail-id">POL.O5.F2</div><div class="finding-detail-summary">78% of independent single-pool stake is non-compliant — the pledge signal is correctly priced as irrelevant at their scale</div><div class="finding-detail-insight">Rational non-compliance</div><span class="finding-detail-src">§2.2.2</span></div><div class="finding-detail" id="finding-pol-o5-f3" data-finding="POL.O5.F3" data-short="F5.3" data-group="5" data-href="../../../README.md#222-specification"><div class="finding-detail-id">POL.O5.F3</div><div class="finding-detail-summary">561 marginal single-pool operators (16% of single-pool stake) partially pledge — the narrow policy-sensitive population</div><div class="finding-detail-insight">Target for parameter reform</div><span class="finding-detail-src">§2.2.2</span></div><div class="finding-detail" id="finding-pol-o5-f4" data-finding="POL.O5.F4" data-short="F5.4" data-group="5" data-href="#433-historical-evolution-has-the-single-pool-landscape-always-looked-like-this"><div class="finding-detail-id">POL.O5.F4</div><div class="finding-detail-summary">Independent operators' share of active stake has fallen from 28.0% to 25.0% since epoch 583 — internal pledge composition barely changed</div><div class="finding-detail-insight">Slow structural decline</div><span class="finding-detail-src">§4.3.3</span></div><div class="finding-detail" id="finding-pol-o6-f1" data-finding="POL.O6.F1" data-short="F6.1" data-group="6" data-href="../../../README.md#231-make-the-base-yield-competitive"><div class="finding-detail-id">POL.O6.F1</div><div class="finding-detail-summary">78 of 85 MPO entities (13.74B ADA, 63% of active stake) are outside the pledge-response path — multi-game optimization, not calibration failure</div><div class="finding-detail-insight">Structural + strategic</div><span class="finding-detail-src">§2.3.1</span></div><div class="finding-detail" id="finding-pol-o6-f2" data-finding="POL.O6.F2" data-short="F6.2" data-group="6" data-href="#4242-structural-non-compliance-cex-and-ivaas"><div class="finding-detail-id">POL.O6.F2</div><div class="finding-detail-summary">CEX cannot pledge custodied funds; IVaaS cannot pledge client assets; community fleets choose not to — three distinct mechanisms</div><div class="finding-detail-insight">Architectural vs strategic</div><span class="finding-detail-src">§4.2.4.2</span></div><div class="finding-detail" id="finding-pol-o6-f3" data-finding="POL.O6.F3" data-short="F6.3" data-group="6" data-href="#444-the-incentive-responsive-field"><div class="finding-detail-id">POL.O6.F3</div><div class="finding-detail-summary">The filtered proxy (single-pool operators + retained MPOs) holds 7.89B ADA — only 36% of active stake responds to the pledge signal</div><div class="finding-detail-insight">The actual incentive-responsive arena</div><span class="finding-detail-src">§4.4.4</span></div></div></div>
 
-<section class="page-feedback" aria-labelledby="page-feedback-heading"><h2 id="page-feedback-heading" class="page-feedback-heading">Reader Feedback</h2><p class="page-feedback-lede">Comments and reactions are anchored to this page. Sign in with GitHub to post — threads live in the <a href="https://github.com/input-output-hk/spo-incentives/discussions" rel="noopener">project Discussions</a>.</p><div class="giscus" data-giscus></div><script src="https://giscus.app/client.js" data-repo="input-output-hk/spo-incentives" data-repo-id="R_kgDOP8tN7g" data-category="Announcements" data-category-id="DIC_kwDOP8tN7s4CxjSd" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="en" data-loading="lazy" crossorigin="anonymous" async></script></section>
+
 <footer class="site-footer">
-  <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="footer-logo">
-  <div class="footer-division"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</div>
+  <a href="https://cardano.org" class="footer-cardano-mark" rel="noopener" target="_blank" title="For the Cardano network">
+    <svg class="footer-cardano-symbol" viewBox="0 0 64 64" aria-hidden="true">
+      <g fill="currentColor">
+        <circle cx="32" cy="10" r="3"/><circle cx="32" cy="54" r="3"/>
+        <circle cx="51.05" cy="21" r="3"/><circle cx="12.94" cy="21" r="3"/>
+        <circle cx="51.05" cy="43" r="3"/><circle cx="12.94" cy="43" r="3"/>
+      </g>
+      <g fill="currentColor" opacity="0.5">
+        <circle cx="22.5" cy="14.5" r="2"/><circle cx="41.5" cy="14.5" r="2"/>
+        <circle cx="22.5" cy="49.5" r="2"/><circle cx="41.5" cy="49.5" r="2"/>
+        <circle cx="55.5" cy="32" r="2"/><circle cx="8.5" cy="32" r="2"/>
+      </g>
+    </svg>
+    <span>For the Cardano network</span>
+  </a>
   <span class="footer-sep" aria-hidden="true">·</span>
-  <a href="https://cardano.org" class="footer-cardano" rel="noopener" target="_blank" title="For the Cardano network"><span class="ouroboros" aria-hidden="true"></span>For the Cardano network</a>
+  <span class="footer-attribution">Specification by Input&nbsp;|&nbsp;Output · Cardano Business Unit</span>
 </footer>
 <div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
 <a href="#" class="back-top" id="btt">&uarr;</a>
@@ -3143,6 +3157,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777374796"></script>
+<script src="assets/site.js?v=1777378912"></script>
 </body>
 </html>
