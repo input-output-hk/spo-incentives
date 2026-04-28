@@ -1029,7 +1029,7 @@ TEMPLATE = """<!DOCTYPE html>
 <title>{title}</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
 <script>try{{var t=localStorage.getItem('spo-theme');if(t)document.documentElement.setAttribute('data-theme',t)}}catch(e){{}}</script>
-<script>(function(){{var bgs=['iog-hero-bg-01.jpg','iog-hero-bg-02.jpg','iog-hero-bg-03.jpg'];var pick=bgs[Math.floor(Math.random()*bgs.length)];document.documentElement.style.setProperty('--hero-bg','url("'+pick+'")');}})();</script>
+<script>(function(){{var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fluid-red'];var pick=v[Math.floor(Math.random()*v.length)];document.addEventListener('DOMContentLoaded',function(){{var h=document.querySelector('.hero');if(h)h.setAttribute('data-banner',pick);}});}})();</script>
 <script>
 window.MathJax = {{
   tex: {{
@@ -1051,11 +1051,17 @@ window.MathJax = {{
 <div class="progress-bar" id="progress"></div>
 <nav class="site-nav"><div class="nav-brand">
 <a href="index.html" class="nav-brand-home">
-<img src="assets/iog-word-marque-white.png" alt="Input | Output Group" class="nav-brand-wordmark">
-<span class="nav-brand-sep-vr" aria-hidden="true"></span>
-<span class="nav-brand-org"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</span>
+<img src="assets/cardano/cardano-logomark-white.svg" alt="Cardano" class="cardano-mark">
+<span class="nav-brand-title-cardano">Cardano</span>
 <span class="nav-brand-sep" aria-hidden="true">/</span>
-<span class="nav-brand-title">Cardano Reward System V2</span>
+<span class="nav-brand-title">Reward System V2</span>
+<span class="nav-brand-sep-vr" aria-hidden="true"></span>
+<span class="nav-brand-attribution">
+  <span class="nav-brand-attribution-prefix">by</span>
+  <img src="assets/iog-word-marque-white.png" alt="Input | Output Group" class="nav-brand-wordmark">
+  <span class="nav-brand-attribution-sep" aria-hidden="true">·</span>
+  <span class="nav-brand-org"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</span>
+</span>
 </a>
 <div class="nav-brand-right">
 <button class="pdf-export" onclick="printAsPdf()" title="Save this page as PDF" aria-label="Save as PDF">PDF</button>
@@ -1063,6 +1069,13 @@ window.MathJax = {{
 </div>
 </div>
 <div class="nav-pages">
+
+<!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
+<div class="nav-zone nav-zone-implementation">
+<span class="nav-tab-implementation" title="Future destination — engineering implementation of the V2 specification">Implementation ?</span>
+</div>
+
+<span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
 
 <!-- Zone 1 (left anchor) — Solution Evaluation: CIP candidates evaluated against V2 -->
 <div class="nav-zone nav-zone-solution">
@@ -1118,11 +1131,45 @@ window.MathJax = {{
 </div>
 </div>
 
-<span class="nav-flow-arrow" aria-hidden="true">←</span>
+<span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
 
 <!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
 <div class="nav-zone nav-zone-output">
 <a href="index.html" class="nav-tab-spec-big{cls_spec}">V2 Specification</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 2.5 — Cardano Constitution (the governance ceiling V2 must respect) -->
+<div class="nav-zone nav-zone-constitution">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-constitution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Constitution ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-constitution">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-constitution">Cardano Constitution v2</span>
+      <span class="nav-dd-stratum-meta">The governance document the protocol operates under (ratified at epoch 609) — every milestone in the V2 spec must comply with it</span>
+    </div>
+    <a href="pdf-viewer.html?file=references/governance/cardano-constitution-2.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Cardano Blockchain Ecosystem Constitution</span>
+      <span class="nav-dd-ref-cite">IntersectMBO — ratified at epoch 609 (v2)<span class="nav-dd-ref-tag">CONST-2</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="references/governance/cardano-constitution-2.pdf" class="nav-dd-ref nav-dd-ref-sub" download>
+      <span class="nav-dd-ref-title">Download the PDF</span>
+      <span class="nav-dd-ref-cite">Local copy on this site<span class="nav-dd-ref-stage">Download</span></span>
+    </a>
+    <a href="https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2" class="nav-dd-ref nav-dd-ref-sub" rel="noopener" target="_blank">
+      <span class="nav-dd-ref-title">Source on GitHub</span>
+      <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
+    </a>
+    <a href="index.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the V2 spec</span>
+      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 spec</span></span>
+    </a>
+  </div>
+</div>
+</div>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
@@ -1239,7 +1286,7 @@ window.MathJax = {{
 </div>
 <div class="nav-breadcrumb">{breadcrumb_inner}</div>
 </nav>
-<div class="hero">
+<div class="hero" data-banner="{hero_banner}">
   <svg class="hero-schema" viewBox="0 0 1400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <pattern id="heroGrid" width="40" height="40" patternUnits="userSpaceOnUse">
@@ -1278,6 +1325,8 @@ window.MathJax = {{
 <footer class="site-footer">
   <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="footer-logo">
   <div class="footer-division"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</div>
+  <span class="footer-sep" aria-hidden="true">·</span>
+  <a href="https://cardano.org" class="footer-cardano" rel="noopener" target="_blank" title="For the Cardano network"><span class="ouroboros" aria-hidden="true"></span>For the Cardano network</a>
 </footer>
 <div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
 <a href="#" class="back-top" id="btt">&uarr;</a>
@@ -1310,6 +1359,28 @@ DESIGN_ACTIVE = {"intended-game"}
 
 # Breadcrumb shown beneath the nav to convey hierarchical location.
 # Each entry: list of crumbs from most-general → most-specific.
+# Per-page Cardano banner variant — picks one of the official cardano.org
+# hero-header SVG/PNG assets (in assets/cardano/). Maps slug → variant key
+# (matching the data-banner CSS selector). Default is "fluid" if absent.
+BANNER_VARIANTS = {
+    "spec":                "fluid",       # V2 spec — the flagship document
+    "intended-game":       "starburst",   # narrative / conceptual
+    "findings":            "overlap",     # synthesis of multiple findings
+    "observatory":         "dots",        # the diagnostic — matches cardano.org research page
+    "census":              "dots",        # Mainnet census evidence
+    "treasury":            "braid",       # Treasury & pool-pots
+    "pools":               "braid",       # Pools-distribution layer
+    "operator":            "braid",       # Operator-delegator split
+    "solution-evaluation": "overlap",     # cross-CIP analysis & verdict
+    "stake-cap":           "dots",        # stake-cap layer index
+    "fee-layer":           "dots",        # fee layer index
+    "cip-0050":            "braid",
+    "cip-0037":            "braid",
+    "cip-0023":            "braid",
+    "cip-0082":            "braid",
+    "k-parameter":         "starburst",   # transversal lever
+}
+
 BREADCRUMBS = {
     "spec": ["V2 Specification"],
     "intended-game": ["Design Support", "The Intended Game"],
@@ -1405,6 +1476,7 @@ def render_shell(page: dict, content_html: str) -> str:
         title=page["title"],
         hero_h1=page["hero_h1"],
         hero_sub=page["hero_sub"],
+        hero_banner=BANNER_VARIANTS.get(active, "fluid"),
         content=content_html,
         cls_diag_trigger=cls_diag_trigger,
         cls_solution_trigger=cls_solution_trigger,

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Document Viewer — SPO Incentives</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
 <script>try{var t=localStorage.getItem('spo-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <style>
 :root {
@@ -93,8 +94,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .nav-flow-arrow{color:var(--text-muted);opacity:.4;font-size:15px;flex-shrink:0;padding:0 4px;user-select:none;font-weight:300}
 .nav-zone-label{font:700 9px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);flex-shrink:0}
 .nav-zone-label-output{color:var(--infared);opacity:.9}
-.nav-zone-diag,.nav-zone-design,.nav-zone-research{flex:0 0 auto}
-.nav-dd-btn-diag,.nav-dd-btn-design,.nav-dd-btn-research{min-width:0}
+.nav-zone-diag,.nav-zone-design,.nav-zone-research,.nav-zone-constitution{flex:0 0 auto}
+.nav-dd-btn-diag,.nav-dd-btn-design,.nav-dd-btn-research,.nav-dd-btn-constitution{min-width:0}
+.nav-dd-btn-constitution{color:#2C4FFA;border:1px solid rgba(44,79,250,.35);background:rgba(44,79,250,.05)}
+.nav-dd-btn-constitution:hover{background:rgba(44,79,250,.10);border-color:rgba(44,79,250,.55)}
+.nav-dd-wrap-light.open .nav-dd-btn-constitution{background:rgba(44,79,250,.14);border-color:rgba(44,79,250,.7);color:#1a3ad8}
+.nav-dd-stratum-badge-constitution{color:#2C4FFA;background:rgba(44,79,250,.12)}
+.nav-dd-panel-constitution{left:0;right:auto;min-width:480px;max-width:520px}
+[data-theme=dark] .nav-dd-btn-constitution{color:#7B91FF;border-color:rgba(123,145,255,.35);background:rgba(123,145,255,.05)}
+[data-theme=dark] .nav-dd-btn-constitution:hover{background:rgba(123,145,255,.10);border-color:rgba(123,145,255,.55)}
+[data-theme=dark] .nav-dd-wrap-light.open .nav-dd-btn-constitution{background:rgba(123,145,255,.14);border-color:rgba(123,145,255,.7);color:#A8B6FF}
+[data-theme=dark] .nav-dd-stratum-badge-constitution{color:#7B91FF;background:rgba(123,145,255,.16)}
 .nav-dd-btn-diag.active{color:var(--text-primary);border-color:rgba(236,100,29,.55);background:rgba(236,100,29,.08);font-weight:600}
 .nav-dd-btn-design.active{color:var(--text-primary);border-color:rgba(229,35,33,.55);background:rgba(229,35,33,.08);font-weight:600}
 .nav-dd-panel-diag{left:0;right:auto;min-width:500px;max-width:540px}
@@ -147,8 +157,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .nav-dd-ref-stage{display:inline-block;margin-left:8px;font:600 9.5px/1 -apple-system,sans-serif;letter-spacing:.4px;color:var(--text-secondary);background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:2px 5px;text-transform:uppercase}
 [data-theme=dark] .nav-dd-ref-stage{background:var(--bg)}
 .nav-zone-output{flex:0 0 auto;padding-right:4px}
-.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--infared);border:1px solid var(--infared);border-radius:6px;text-decoration:none;transition:all .15s;box-shadow:0 2px 6px rgba(229,35,33,.22);white-space:nowrap}
-.nav-tab-spec-big:hover{background:#c91e1c;border-color:#c91e1c;box-shadow:0 4px 12px rgba(229,35,33,.32);transform:translateY(-1px)}
+.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#a4380a;background:rgba(236,100,29,.10);border:1px solid rgba(236,100,29,.45);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap}
+.nav-tab-spec-big:hover{background:rgba(236,100,29,.18);border-color:rgba(236,100,29,.65);color:#7a2806}
+.nav-zone-implementation{flex:0 0 auto}
+.nav-tab-implementation{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--infared);border:1px dashed rgba(255,255,255,.55);border-radius:6px;cursor:default;transition:all .15s;box-shadow:0 2px 6px rgba(229,35,33,.22);white-space:nowrap;position:relative}
+.nav-tab-implementation::after{content:"future";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:var(--infared);padding:3px 5px;border-radius:3px;border:1px solid var(--infared)}
+.nav-tab-implementation:hover{background:#c91e1c}
+.nav-dd-btn-diag{color:#a4380a;border-color:rgba(236,100,29,.30);background:rgba(236,100,29,.04)}
+.nav-dd-btn-diag:hover{background:rgba(236,100,29,.10);border-color:rgba(236,100,29,.55);color:#7a2806}
+.nav-dd-btn-design{color:#0a6e3e;border-color:rgba(6,255,137,.35);background:rgba(6,255,137,.04)}
+.nav-dd-btn-design:hover{background:rgba(6,255,137,.10);border-color:rgba(6,255,137,.6);color:#0a5f36}
+.nav-dd-btn-research{color:#0a6f76;border-color:rgba(22,233,216,.35);background:rgba(22,233,216,.04)}
+.nav-dd-btn-research:hover{background:rgba(22,233,216,.10);border-color:rgba(22,233,216,.6);color:#08585e}
 @media (max-width:1100px){.nav-pages{flex-wrap:wrap;padding:8px 14px}.nav-flow-arrow{display:none}}
 @media (max-width:700px){.nav-dd-panel-light,.nav-dd-panel-diag,.nav-dd-panel-design,.nav-dd-panel-research{position:fixed;left:8px;right:8px;min-width:0;max-width:none;top:auto}.nav-evidence-sub{flex-wrap:wrap}.nav-breadcrumb{padding:6px 14px;font-size:11px}}
 </style>
@@ -156,33 +176,121 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 <body>
 <nav class="site-nav"><div class="nav-brand">
 <a href="index.html" class="nav-brand-home">
-<img src="assets/butterfly-white.png" alt="" class="nav-brand-logo">
-<span class="nav-brand-org"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</span>
-<span class="nav-brand-title">Cardano Reward System V2</span>
-<span class="nav-brand-sep" aria-hidden="true">—</span>
-<span class="nav-brand-subtitle">Specification for a Sustainable Successor</span>
+<img src="assets/cardano/cardano-logomark-white.svg" alt="Cardano" class="cardano-mark">
+<span class="nav-brand-title-cardano">Cardano</span>
+<span class="nav-brand-sep" aria-hidden="true">/</span>
+<span class="nav-brand-title">Reward System V2</span>
+<span class="nav-brand-sep-vr" aria-hidden="true"></span>
+<span class="nav-brand-attribution">
+  <span class="nav-brand-attribution-prefix">by</span>
+  <img src="assets/iog-word-marque-white.png" alt="Input | Output Group" class="nav-brand-wordmark">
+  <span class="nav-brand-attribution-sep" aria-hidden="true">·</span>
+  <span class="nav-brand-org"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</span>
+</span>
 </a>
 <div class="nav-brand-right">
-<div class="nav-dd-wrap">
-<button class="nav-dd-btn" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')">Previous Analysis ▾</button>
-<div class="nav-dd-panel">
-<a href="pdf-viewer.html?file=references/spo-incentives-analysis_lopez-de-lara_2025.pdf" class="nav-dd-item"><span class="nav-dd-title">SPO Incentives Analysis</span><span class="nav-dd-meta">Lopez de Lara, 2025</span></a>
-</div></div>
-<div class="nav-dd-wrap">
-<button class="nav-dd-btn" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')">Research Papers ▾</button>
-<div class="nav-dd-panel">
-<a href="pdf-viewer.html?file=references/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf" class="nav-dd-item"><span class="nav-dd-title">Reward Sharing Schemes for Stake Pools</span><span class="nav-dd-meta">Brünjes, Kiayias et al., 2020</span></a>
-<a href="pdf-viewer.html?file=references/incentives-against-power-grabs_kiayias-et-al_2021.pdf" class="nav-dd-item"><span class="nav-dd-title">Stake Pool Incentives Against Power Grabs</span><span class="nav-dd-meta">Kiayias et al., 2021</span></a>
-<a href="pdf-viewer.html?file=references/removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf" class="nav-dd-item"><span class="nav-dd-title">Removing the Minimum Pool Cost</span><span class="nav-dd-meta">Stouka, Brünjes, Kiayias & Koutsoupias, 2022</span></a>
-<a href="pdf-viewer.html?file=references/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-item"><span class="nav-dd-title">Balancing Participation & Decentralization</span><span class="nav-dd-meta">Kiayias et al., 2024</span></a>
-</div></div>
+<button class="pdf-export" onclick="printAsPdf()" title="Save this page as PDF" aria-label="Save as PDF">PDF</button>
 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light theme" aria-label="Toggle theme">☀</button>
 </div>
 </div>
 <div class="nav-pages">
 
+<div class="nav-zone nav-zone-implementation">
+<span class="nav-tab-implementation" title="Future destination — engineering implementation of the V2 specification">Implementation ?</span>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<div class="nav-zone nav-zone-solution">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-solution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Solution Evaluation ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-solution">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
+      <span class="nav-dd-stratum-meta">Five CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
+    </div>
+    <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero">
+      <span class="nav-dd-ref-title">Cross-CIP Analysis &amp; Verdict</span>
+      <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, no-go verdict on the bundle</span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Forward — New Proposal</div>
+    <a href="solution-evaluation.html#5-toward-a-new-proposal" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
+      <span class="nav-dd-ref-title">Draft in preparation</span>
+      <span class="nav-dd-ref-cite">V2 spec target with the structural caveats addressed<span class="nav-dd-ref-stage nav-dd-ref-stage-soon">Soon</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
+    <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
+      <span class="nav-dd-ref-title">CIP evaluation synthesis</span>
+      <span class="nav-dd-ref-cite">Two stake-cap shapes, same intent<span class="nav-dd-ref-stage">Index</span></span>
+    </a>
+    <a href="cip-0050.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
+      <span class="nav-dd-ref-title">CIP-0050 — Pledge Leverage</span>
+      <span class="nav-dd-ref-cite">σ′ clip leaves A(ν, π) bottleneck unfixed<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+    </a>
+    <a href="cip-0037.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
+      <span class="nav-dd-ref-title">CIP-0037 — Dynamic Saturation</span>
+      <span class="nav-dd-ref-cite">Same as CIP-0050 plus 20 % floor — A still unfixed<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Fee Layer — Operator/Member Split</div>
+    <a href="fee-layer.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
+      <span class="nav-dd-ref-title">CIP evaluation synthesis</span>
+      <span class="nav-dd-ref-cite">Pricing-as-viability conflation<span class="nav-dd-ref-stage">Index</span></span>
+    </a>
+    <a href="cip-0023.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
+      <span class="nav-dd-ref-title">CIP-0023 — Fair Min Fees</span>
+      <span class="nav-dd-ref-cite">minPoolMargin floor — subsumed by CIP-0082 stage 2<span class="nav-dd-ref-stage">⊂ Moot</span></span>
+    </a>
+    <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
+      <span class="nav-dd-ref-title">CIP-0082 — Improved Rewards Scheme</span>
+      <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+    </a>
+    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deeper">
+      <span class="nav-dd-ref-title">k-Parameter mechanics</span>
+      <span class="nav-dd-ref-cite">Sub-document of CIP-0082 stages 3–4<span class="nav-dd-ref-stage">Sub-doc</span></span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
 <div class="nav-zone nav-zone-output">
 <a href="index.html" class="nav-tab-spec-big">V2 Specification</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<div class="nav-zone nav-zone-constitution">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-constitution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Constitution ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-constitution">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-constitution">Cardano Constitution v2</span>
+      <span class="nav-dd-stratum-meta">The governance document the protocol operates under (ratified at epoch 609) — every milestone in the V2 spec must comply with it</span>
+    </div>
+    <a href="pdf-viewer.html?file=references/governance/cardano-constitution-2.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Cardano Blockchain Ecosystem Constitution</span>
+      <span class="nav-dd-ref-cite">IntersectMBO — ratified at epoch 609 (v2)<span class="nav-dd-ref-tag">CONST-2</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="references/governance/cardano-constitution-2.pdf" class="nav-dd-ref nav-dd-ref-sub" download>
+      <span class="nav-dd-ref-title">Download the PDF</span>
+      <span class="nav-dd-ref-cite">Local copy on this site<span class="nav-dd-ref-stage">Download</span></span>
+    </a>
+    <a href="https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2" class="nav-dd-ref nav-dd-ref-sub" rel="noopener" target="_blank">
+      <span class="nav-dd-ref-title">Source on GitHub</span>
+      <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
+    </a>
+    <a href="index.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the V2 spec</span>
+      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 spec</span></span>
+    </a>
+  </div>
+</div>
+</div>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
@@ -298,7 +406,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
   <a id="pdf-newtab" href="#" target="_blank" title="Open in new tab">New tab ↗</a>
 </div>
 <iframe class="pdf-frame" id="pdf-frame"></iframe>
-<footer class="site-footer"><img src="assets/butterfly-white.png" alt=""><span class="cbu-dot" aria-hidden="true"></span>Input Output &middot; Cardano Business Unit</footer>
+<footer class="site-footer"><img src="assets/butterfly-white.png" alt=""><span class="cbu-dot" aria-hidden="true"></span>Input Output &middot; Cardano Business Unit <span class="footer-sep" aria-hidden="true">·</span> <a href="https://cardano.org" class="footer-cardano" rel="noopener" target="_blank" title="For the Cardano network"><span class="ouroboros" aria-hidden="true"></span>For the Cardano network</a></footer>
 <script>
 (function(){
   /* Theme */

@@ -34,24 +34,24 @@ The Executive summary below packages the verdict; the Findings summary table aft
 - [Executive summary](#executive-summary)
 - [Findings summary](#findings-summary)
 - [1. Introduction](#1-introduction)
-  - [1.1 Identity card](#11-identity-card)
-  - [1.2 Origin and context](#12-origin-and-context)
-  - [1.3 Related diagnostic findings](#13-related-diagnostic-findings)
-  - [1.4 What the `k`-lever mechanically does vs what CIP-0082 advertises](#14-what-the-k-lever-mechanically-does-vs-what-cip-0082-advertises)
+  - [1.1. Identity card](#11-identity-card)
+  - [1.2. Origin and context](#12-origin-and-context)
+  - [1.3. Related diagnostic findings](#13-related-diagnostic-findings)
+  - [1.4. What the `k`-lever mechanically does vs what CIP-0082 advertises](#14-what-the-k-lever-mechanically-does-vs-what-cip-0082-advertises)
 - [2. Mechanism](#2-mechanism)
-  - [2.1 Formulas inherited from the sub-flows](#21-formulas-inherited-from-the-sub-flows)
-  - [2.2 What `k` moves — and what it does not](#22-what-k-moves-and-what-it-does-not)
-  - [2.3 Updated calibration at current parameters (epoch ~623, 2026/04)](#23-updated-calibration-at-current-parameters-epoch-623-202604)
-    - [2.3.1 Pool reward across nine tiers](#231-pool-reward-across-nine-tiers-hollow-pool-epoch)
-    - [2.3.2 Operator annualised revenue across nine tiers](#232-operator-annualised-revenue-across-nine-tiers-hollow-minpoolcost-170-yr)
-    - [2.3.3 Delegator net ROS across nine tiers](#233-delegator-net-ros-across-nine-tiers-yr)
-    - [2.3.4 Pledge-amplification channel](#234-pledge-amplification-channel-self-pledged-pools-bonus-from-math56)
-    - [2.3.5 Per-entity revenue by n-MPO bracket](#235-per-entity-revenue-by-n-mpo-bracket-hollow-yr)
+  - [2.1. Formulas inherited from the sub-flows](#21-formulas-inherited-from-the-sub-flows)
+  - [2.2. What `k` moves — and what it does not](#22-what-k-moves-and-what-it-does-not)
+  - [2.3. Updated calibration at current parameters (epoch ~623, 2026/04)](#23-updated-calibration-at-current-parameters-epoch-623-202604)
+    - [2.3.1. Pool reward across nine tiers](#231-pool-reward-across-nine-tiers-hollow-pool-epoch)
+    - [2.3.2. Operator annualised revenue across nine tiers](#232-operator-annualised-revenue-across-nine-tiers-hollow-minpoolcost-170-yr)
+    - [2.3.3. Delegator net ROS across nine tiers](#233-delegator-net-ros-across-nine-tiers-yr)
+    - [2.3.4. Pledge-amplification channel](#234-pledge-amplification-channel-self-pledged-pools-bonus-from-math56)
+    - [2.3.5. Per-entity revenue by n-MPO bracket](#235-per-entity-revenue-by-n-mpo-bracket-hollow-yr)
 - [3. Limits of a standalone `k`-raise](#3-limits-of-a-standalone-k-raise)
-  - [3.1 S1 — Top-tail compression + narrow pledge amplification; bottom unchanged](#31-k-levers1-top-tail-compression-narrow-pledge-amplification-bottom-unchanged)
-  - [3.2 S2 — A fine tool for a narrow delegator segment, insufficient on the operator side](#32-k-levers2-a-fine-tool-for-a-narrow-delegator-segment-and-insufficient-on-the-operator-side-because-the-formula-is-unchanged)
-  - [3.3 S3 — MPO fleet absorption under weak pledge](#33-k-levers3-mpo-fleet-absorption-under-weak-pledge)
-  - [3.4 References](#34-references)
+  - [3.1. S1 — Top-tail compression + narrow pledge amplification; bottom unchanged](#31-k-levers1-top-tail-compression-narrow-pledge-amplification-bottom-unchanged)
+  - [3.2. S2 — A fine tool for a narrow delegator segment, insufficient on the operator side](#32-k-levers2-a-fine-tool-for-a-narrow-delegator-segment-and-insufficient-on-the-operator-side-because-the-formula-is-unchanged)
+  - [3.3. S3 — MPO fleet absorption under weak pledge](#33-k-levers3-mpo-fleet-absorption-under-weak-pledge)
+  - [3.4. References](#34-references)
 
 ## Findings summary
 
@@ -77,7 +77,7 @@ CIP / lever evaluations use a three-level taxonomy mirroring the diagnostic's `S
 
 `k` (protocol parameter `stakePoolTargetNum`) is the scalar that sets Cardano's **target pool population**. It is not a CIP; it is an existing parameter whose adjustment is proposed recurrently in governance discussions and is embedded as stages 3–4 of CIP-0082. This doc evaluates a raise of `k` considered **in isolation** — no accompanying change to the reward formula, no accompanying stake-cap layer.
 
-### 1.1 Identity card
+### 1.1. Identity card
 
 | Field | Value |
 | --- | --- |
@@ -88,13 +88,13 @@ CIP / lever evaluations use a three-level taxonomy mirroring the diagnostic's `S
 | Layer | Neither fee nor stake-cap — sets the scalar of the existing SL-D1 reward formula |
 | Reference | [Pledging & rewards reference](https://docs.cardano.org/about-cardano/learn/pledging-rewards) |
 
-### 1.2 Origin and context
+### 1.2. Origin and context
 
 **Historical moves.** `k` has been raised exactly once in Cardano's live protocol history: **`k: 150 → 500`** in August 2020, roughly one year after Shelley launch. The raise was motivated by the same nominal argument that recurs today — more pools → more decentralisation. The recorded post-event outcome was the emergence of the multi-pool-operator (MPO) pattern: existing operators registered additional pools to capture the new slots, and by 2022 the MPO fleet landscape had stabilised at the form the diagnostic documents today (POL.O4.F1).
 
 **Current governance discussions.** Raising `k` is (i) embedded as stages 3–4 of CIP-0082 (`500 → 750 → 1000`), (ii) occasionally advanced as a standalone governance proposal outside the CIP-0082 package. This doc covers the standalone case; the CIP-0082-embedded case is analysed in [`cip-0082.md`](cip-0082.md) §3.3.
 
-### 1.3 Related diagnostic findings
+### 1.3. Related diagnostic findings
 
 A standalone `k`-raise touches the operator/delegator split through the pool-reward ceiling $P_{\max} = R/k$ and the saturation threshold $z_0 = 1/k$. The advertised mechanism — "amplified pledge bonus steers delegation toward small pledged pools" — relies on a chain of behaviours the diagnostic measures directly. Seven findings bear on the analysis.
 
@@ -110,7 +110,7 @@ A standalone `k`-raise touches the operator/delegator split through the pool-rew
 
 **What the diagnostic says about the population at the "pledge + scale" intersection.** The operators reaching high pledge ratios at meaningful scale are precisely the **"Custodial-by-pledge" segment** from [operator-delegator §4.3.3](../../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md) — 10 entities, 36 pools, 1.59 B ADA in total, only **122 delegations** across all of them. Their pledge ratio is high precisely *because* they do not compete for external delegation: the "delegated" stake is almost entirely affiliated capital (foundation treasury, protocol treasury, or closely-held funds). Named examples in the diagnostic include Cardano Foundation (93.9 % pledge ratio), Chuck/Bux (81.1 %), Liqwid (73.9 %) — all **private / treasury-affiliated pools**, not retail-delegation-capturing pools. The diagnostic is explicit: compliant class pools exist, "but only for operators who *own* their delegated stake". The "size + high pledge + active retail delegation capture" triad the k-raise mechanism implicitly targets is **structurally empty on mainnet** — the population that would make the k-raise redistribute does not exist.
 
-### 1.4 What the `k`-lever mechanically does vs what CIP-0082 advertises
+### 1.4. What the `k`-lever mechanically does vs what CIP-0082 advertises
 
 CIP-0082 stages 3–4 articulate the advertised mechanism directly:
 
@@ -140,7 +140,7 @@ The chain breaks at **three of the four steps**. Moreover, the one step that doe
 
 This section imports the simplified reward formula from [pools-distribution §2.3](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#233-simplified-reward-function) and the operator/member split formula from [operator-delegator §1.1.1](../../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md) — the only formulas that matter for a standalone `k`-raise. **Nothing about them changes when `k` moves.** What changes is the scalar `k` itself and two derived quantities.
 
-### 2.1 Formulas inherited from the sub-flows
+### 2.1. Formulas inherited from the sub-flows
 
 **Pool reward** (hollow or pledged, below or above saturation):
 
@@ -160,7 +160,7 @@ $$r_{\text{mem}} = (1-m)(\hat f' - c)\,\rho_{\text{mem}}$$
 
 with $c$ = `minPoolCost`, $m$ = pool margin, $\rho_{\text{op}} = s / \sigma$ = pledge-to-stake ratio, $\rho_{\text{mem}} = 1 - \rho_{\text{op}}$. For $\hat f' \le c$, the operator absorbs the entire pool reward and the delegator share is zero.
 
-### 2.2 What `k` moves — and what it does not
+### 2.2. What `k` moves — and what it does not
 
 A standalone `k`-raise modifies only the scalar $k$. The formulas above are unchanged. The derived quantities shift:
 
@@ -190,11 +190,11 @@ $$\hat f' = \bar p \cdot \frac{R}{k} \cdot \lambda_{\text{size}} \cdot \nu = \ba
 
 > **Finding k-lever.S1.F3 [B] — Hollow pools below saturation see zero mechanical change under a `k`-raise.** The formula collapses to $\hat f' = \bar p \cdot R \cdot \lambda_{\text{size}} \cdot \sigma_{\text{abs}} / \text{CircSupply}$ — the scalar `k` disappears. Consequently, operator revenue (capped at `minPoolCost`) and delegator ROS are both invariant for the entire Sub-viable, Sub-production, and Dormant populations. The `k`-raise's rationale that it "helps small pools" has no mechanical foundation in the formula; any positive effect must come through a behavioural channel, not the reward mechanism.
 
-### 2.3 Updated calibration at current parameters (epoch ~623, 2026/04)
+### 2.3. Updated calibration at current parameters (epoch ~623, 2026/04)
 
 All calibrations use today's parameters: $R \approx 15.53$ M ₳/epoch (PoolsPot), CircSupply × $z_0$ ≈ 38.49 B ₳, $a_0 = 0.3$, `minPoolCost = 170 ₳`, 73 epochs/year. Hollow-pool convention ($\bar p = 1$, $\pi = 0$, declared $m = 0$) matches CIP-0023 and CIP-0082 worked calibrations. Representative σ per tier follows the canonical nine-tier taxonomy from [pools-distribution §4.1.3](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#413-tier-definitions).
 
-#### 2.3.1 Pool reward across nine tiers (hollow pool, ₳/epoch)
+#### 2.3.1. Pool reward across nine tiers (hollow pool, ₳/epoch)
 
 The ceiling $P_{\max} = R/k$ shrinks with `k`; the envelope $E(0, \nu) = \lambda_{\text{size}} \nu$ clips at $\nu = 1$ (saturation). Rewards below the new saturation are k-invariant; rewards at or above it are pinned to $P_{\max} \cdot \lambda_{\text{size}}$.
 
@@ -212,7 +212,7 @@ The ceiling $P_{\max} = R/k$ shrinks with `k`; the envelope $E(0, \nu) = \lambda
 
 > **Finding k-lever.S1.F1 [R] — Top-tail compression.** At $k: 500 \to 1000$, every pool with σ above the new $z_0 = 38.5$ M ₳ converges to the same ceiling of ≈ 11 942 ₳/ep — a **–50 %** reward cut for today's Saturated-tier pools, and smaller cuts for Large-healthy. The k-raise acts exclusively on the upper tail. The rest of the nine-tier distribution is inert.
 
-#### 2.3.2 Operator annualised revenue across nine tiers (hollow, `minPoolCost = 170`, ₳/yr)
+#### 2.3.2. Operator annualised revenue across nine tiers (hollow, `minPoolCost = 170`, ₳/yr)
 
 Under today's fee structure, the operator take is the minimum of $\hat f'$ and `minPoolCost` for hollow pools. Since `minPoolCost = 170` < $\hat f'$ for every tier from Sub-viable up, **operator take is invariant**: 170 × 73 = **12 410 ₳/yr**. Sub-threshold tiers (Dormant, Sub-production) absorb the entire — unchanged — pool reward.
 
@@ -229,7 +229,7 @@ Under today's fee structure, the operator take is the minimum of $\hat f'$ and `
 
 **Operator revenue is fully invariant under a standalone `k`-raise** across every productive tier. The cap-at-`minPoolCost` structure eats the top-tail compression entirely. This is the isolation property of `k` in the current fee regime.
 
-#### 2.3.3 Delegator net ROS across nine tiers (%/yr)
+#### 2.3.3. Delegator net ROS across nine tiers (%/yr)
 
 Delegator net ROS = $(\hat f' - c)/\sigma \times 73$ under hollow / full-delegation assumption. Sub-threshold tiers pay 100 % to fee (ROS = 0). Above break-even, ROS shrinks one-for-one with the cap compression.
 
@@ -246,7 +246,7 @@ Delegator net ROS = $(\hat f' - c)/\sigma \times 73$ under hollow / full-delegat
 
 **Reading.** The k-raise is a **delegator-side regression at the top** and a **non-event at the bottom**. A delegator at a Saturated pool sees ROS halve (2.26 % → 1.12 %) across $k: 500 \to 1000$; a delegator at a Sub-viable or Healthy pool sees no change at all. The instrument does not redirect ROS — it extinguishes it above the new $z_0$.
 
-#### 2.3.4 Pledge-amplification channel (self-pledged pools, bonus from $\lambda_{\text{pledge}} A(\nu, \pi)$)
+#### 2.3.4. Pledge-amplification channel (self-pledged pools, bonus from $\lambda_{\text{pledge}} A(\nu, \pi)$)
 
 For pools with meaningful self-pledge, the envelope's second term contributes an additional reward on top of the hollow base. Under full self-pledge ($\pi = 1$), $A(\nu, 1) = \nu^3$. Since $\nu$ doubles when $k$ doubles (for fixed $\sigma_{\text{abs}}$) and $P_{\max}$ halves, the absolute bonus scales **linearly in `k`**.
 
@@ -260,7 +260,7 @@ For a fully self-pledged pool at σ = 15 M ₳ (Healthy tier):
 
 > **Finding k-lever.S1.F2 [D] — Pledge-bonus amplification for self-pledged pools.** A fully self-pledged 15 M pool's bonus grows from 28 ₳/ep at $k = 500$ to 218 ₳/ep at $k = 1000$ — **7.7× amplification in absolute terms**. Annualised: +20 660 ₳/yr operator revenue for a fully self-pledged 15 M pool. This is the *only* genuinely positive mechanical effect a standalone k-raise delivers.
 
-#### 2.3.5 Per-entity revenue by n-MPO bracket (hollow, ₳/yr)
+#### 2.3.5. Per-entity revenue by n-MPO bracket (hollow, ₳/yr)
 
 Mean pools/entity and mean pool stake from [operator-delegator §4.4](../../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#44-operator-profitability-versus-delegator-return) (retail hollow segment, epoch 623; 73 epochs/yr).
 
@@ -281,7 +281,7 @@ Mean pools/entity and mean pool stake from [operator-delegator §4.4](../../diag
 
 Three structural limits — one per synthesis finding, each tied to the mechanical analysis of §2.
 
-### 3.1 k-lever.S1 — Top-tail compression + narrow pledge amplification; bottom unchanged
+### 3.1. k-lever.S1 — Top-tail compression + narrow pledge amplification; bottom unchanged
 
 **What the k-raise mechanically does** is the sum of three effects, already quantified in §2.3:
 
@@ -291,7 +291,7 @@ Three structural limits — one per synthesis finding, each tied to the mechanic
 
 **The arithmetic invariance at the bottom corrects a common misreading.** Earlier iterations of this evaluation, and several governance discussions, conclude that a k-raise "pushes the viability line up" or "makes sub-threshold pools worse". This is not what the formula does when only `k` changes. What pushes the viability line up is a change in the fee structure (e.g. `minPoolCost` increase) or the reward pot (e.g. reserve depletion lowering $R$) — not a change in `k`. The k-raise does reshape the upper tail (POL.O3.F6), but the diagnostic's §3.1 population sits in the lower tail — untouched.
 
-### 3.2 k-lever.S2 — A fine tool for a narrow delegator segment, and insufficient on the operator side because the formula is unchanged
+### 3.2. k-lever.S2 — A fine tool for a narrow delegator segment, and insufficient on the operator side because the formula is unchanged
 
 The CIP-0082 rationale states the redistribution hypothesis explicitly (stages 3–4):
 
@@ -314,7 +314,7 @@ Taken at face value, this is a **ROS-based redistribution claim**: delegators ch
 
 **Composite reading.** The CIP-0082 k-raise is not a wrong instrument in the abstract — it is a *narrow* instrument meeting a *narrow* audience on the demand side, and an *insufficient* instrument on the supply side because it leaves the formula that explains the non-pledge equilibrium unchanged. On the demand side it reaches only the ROS-responsive fraction of the retail-volatile segment — single-digit-percent of productive stake. On the supply side it amplifies a reward that is dominated by passive delegation yield *under the same formula that made pledge dominated in the first place*. The redistribution the CIP advertises would require either (a) a much larger ROS-responsive delegator market than the census documents, or (b) a reward-formula change that flips the pledge-vs-delegation opportunity cost. A standalone k-raise delivers neither.
 
-### 3.3 k-lever.S3 — MPO fleet absorption under weak pledge
+### 3.3. k-lever.S3 — MPO fleet absorption under weak pledge
 
 The behavioural alternative to the amplified-pledge-signal channel is **MPO fleet absorption**: existing multi-pool operators register additional pools to capture the new slots, regardless of pledge signal. Two anchors establish this pattern — one empirical (Cardano's only previous k-raise), one structural (the economics of fleet expansion on current mainnet).
 
@@ -324,7 +324,7 @@ The behavioural alternative to the amplified-pledge-signal channel is **MPO flee
 
 **Precondition.** The regression is conditional on weak pledge. Once a stake-cap layer binds (CIP-0050's `L` or CIP-0037's dynamic saturation), MPO fleet expansion is structurally foreclosed — the k-raise then becomes a decentralisation lever (by forcing new entrants to capture the new slots). This is the CIP-0050 "synergy" argument. It is also the reason the correct sequence is: fee-layer → stake-cap → k-recalibration (step 3). **A standalone k-raise before step 2 is operating in the regressive regime.**
 
-### 3.4 References
+### 3.4. References
 
 - **Missing-CPS anchors:** V2 [§3.1 operator viability](../../README.md#31-guarantee-operator-viability-across-the-entire-productive-population), [§3.4 concentration](../../README.md#34-reduce-the-concentration-effects-that-distort-both-populations).
 - **Formulas inherited:** [pools-distribution §2.3 simplified reward function](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#23-reward-function) ($\hat f'$, $P_{\max}$, $E$, $A$); [operator-delegator §1.1.1 split formula](../../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md) ($r_{\text{op}}$, $r_{\text{mem}}$).
