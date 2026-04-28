@@ -482,11 +482,11 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 [data-theme=dark] .nav-dd-wrap-light.open .nav-dd-btn-constitution{background:rgba(123,145,255,.14);border-color:rgba(123,145,255,.7);color:#A8B6FF}
 [data-theme=dark] .nav-dd-stratum-badge-constitution{color:#7B91FF;background:rgba(123,145,255,.16)}
 /* Diagnostic = Dawn accent when the current page lives inside it */
-.nav-dd-btn-diag.active{color:var(--text-primary);border-color:rgba(236,100,29,.55);background:rgba(236,100,29,.08);font-weight:600}
-.nav-dd-wrap-light.open .nav-dd-btn-diag.active{border-color:rgba(236,100,29,.7);background:rgba(236,100,29,.14);color:var(--text-primary)}
+.nav-dd-btn-diag.active{color:var(--text-primary);border-color:var(--text-muted);background:rgba(0,0,0,.04);font-weight:600}
+.nav-dd-wrap-light.open .nav-dd-btn-diag.active{border-color:var(--text-muted);background:rgba(0,0,0,.06);color:var(--text-primary)}
 /* Design = Infared accent */
-.nav-dd-btn-design.active{color:var(--text-primary);border-color:rgba(229,35,33,.55);background:rgba(229,35,33,.08);font-weight:600}
-.nav-dd-wrap-light.open .nav-dd-btn-design.active{border-color:rgba(229,35,33,.7);background:rgba(229,35,33,.14);color:var(--text-primary)}
+.nav-dd-btn-design.active{color:var(--text-primary);border-color:var(--text-muted);background:rgba(0,0,0,.04);font-weight:600}
+.nav-dd-wrap-light.open .nav-dd-btn-design.active{border-color:var(--text-muted);background:rgba(0,0,0,.06);color:var(--text-primary)}
 /* Panels: diagnostic needs the most vertical space (The Diagnostic + Reward Flow sub-chain + SD-L) */
 .nav-dd-panel-diag{left:0;right:auto;min-width:500px;max-width:540px}
 .nav-dd-panel-design{left:0;right:auto;min-width:460px;max-width:500px}
@@ -597,18 +597,39 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .nav-tab-implementation:hover{background:#c91e1c;box-shadow:0 4px 12px rgba(229,35,33,.32)}
 
 /* Resting-state hue tint for each dropdown button — opaque white-base + colored border + tint overlay so they stay readable on the Cardano-blue gradient */
-.nav-dd-btn-solution{color:#a8120f;border-color:rgba(229,35,33,.7);background:#fff;box-shadow:inset 0 0 0 999px rgba(229,35,33,.04),0 2px 6px rgba(0,51,173,.18);font-weight:600}
-.nav-dd-btn-solution:hover{background:#fff;border-color:rgba(229,35,33,.9);color:var(--infared);box-shadow:inset 0 0 0 999px rgba(229,35,33,.10),0 3px 10px rgba(0,51,173,.28)}
-.nav-dd-btn-diag{color:#a4380a;border-color:rgba(236,100,29,.7);background:#fff;box-shadow:inset 0 0 0 999px rgba(236,100,29,.04),0 2px 6px rgba(0,51,173,.18);font-weight:600}
-.nav-dd-btn-diag:hover{background:#fff;border-color:rgba(236,100,29,.9);color:#7a2806;box-shadow:inset 0 0 0 999px rgba(236,100,29,.10),0 3px 10px rgba(0,51,173,.28)}
-.nav-dd-btn-design{color:#0a6e3e;border-color:rgba(6,180,100,.8);background:#fff;box-shadow:inset 0 0 0 999px rgba(6,255,137,.05),0 2px 6px rgba(0,51,173,.18);font-weight:600}
-.nav-dd-btn-design:hover{background:#fff;border-color:rgba(6,180,100,.95);color:#0a5f36;box-shadow:inset 0 0 0 999px rgba(6,255,137,.10),0 3px 10px rgba(0,51,173,.28)}
-.nav-dd-btn-research{color:#0a6f76;border-color:rgba(22,180,170,.8);background:#fff;box-shadow:inset 0 0 0 999px rgba(22,233,216,.05),0 2px 6px rgba(0,51,173,.18);font-weight:600}
-.nav-dd-btn-research:hover{background:#fff;border-color:rgba(22,180,170,.95);color:#08585e;box-shadow:inset 0 0 0 999px rgba(22,233,216,.10),0 3px 10px rgba(0,51,173,.28)}
-/* Constitution — placed last so it wins over .nav-dd-btn-light base; matches visual weight of solution/diag/design/research */
-.nav-dd-btn-constitution{color:#1c3ad6;border:1px solid rgba(44,79,250,.7);background:#fff;box-shadow:inset 0 0 0 999px rgba(44,79,250,.04),0 2px 6px rgba(0,51,173,.18);font-weight:600}
-.nav-dd-btn-constitution:hover{background:#fff;border-color:rgba(44,79,250,.9);color:#0f2bb5;box-shadow:inset 0 0 0 999px rgba(44,79,250,.10),0 3px 10px rgba(0,51,173,.28)}
-.nav-dd-wrap-light.open .nav-dd-btn-constitution{background:#fff;border-color:#2C4FFA;color:#0a1f8e;box-shadow:inset 0 0 0 999px rgba(44,79,250,.14),0 3px 10px rgba(0,51,173,.32)}
+/* All zone dropdown buttons share the same neutral chrome. The
+   section's brand colour shows up inside the panel (group label
+   badges, accents) — not on the button itself. Only the V2 Spec
+   destination keeps its dawn-orange pill since it is the focal
+   target of the whole nav. */
+.nav-dd-btn-solution,
+.nav-dd-btn-diag,
+.nav-dd-btn-design,
+.nav-dd-btn-research,
+.nav-dd-btn-constitution{
+  color:var(--text-secondary);
+  border:1px solid var(--border);
+  background:#fff;
+  box-shadow:0 1px 3px rgba(0,0,0,.06);
+  font-weight:500}
+.nav-dd-btn-solution:hover,
+.nav-dd-btn-diag:hover,
+.nav-dd-btn-design:hover,
+.nav-dd-btn-research:hover,
+.nav-dd-btn-constitution:hover{
+  color:var(--text-primary);
+  border-color:var(--text-muted);
+  background:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.10)}
+.nav-dd-wrap-light.open .nav-dd-btn-solution,
+.nav-dd-wrap-light.open .nav-dd-btn-diag,
+.nav-dd-wrap-light.open .nav-dd-btn-design,
+.nav-dd-wrap-light.open .nav-dd-btn-research,
+.nav-dd-wrap-light.open .nav-dd-btn-constitution{
+  color:var(--text-primary);
+  border-color:var(--text-muted);
+  background:#fff;
+  box-shadow:0 3px 10px rgba(0,0,0,.12)}
 [data-theme=dark] .nav-dd-btn-solution{color:#FF7A78;border-color:rgba(255,122,120,.55);background:rgba(20,20,24,.85);box-shadow:inset 0 0 0 999px rgba(229,35,33,.10)}
 [data-theme=dark] .nav-dd-btn-diag{color:#FFB07A;border-color:rgba(255,176,122,.55);background:rgba(20,20,24,.85);box-shadow:inset 0 0 0 999px rgba(236,100,29,.10)}
 [data-theme=dark] .nav-dd-btn-design{color:#5BFFAD;border-color:rgba(91,255,173,.55);background:rgba(20,20,24,.85);box-shadow:inset 0 0 0 999px rgba(6,255,137,.10)}
@@ -711,7 +732,12 @@ body.toc-open .toc-panel{transform:translateX(0)}
 
 /* Panel-scoped TOC — reuse .toc-nav styling but stripped of the card chrome */
 .toc-panel .toc-nav{background:transparent;border:none;padding:0;margin:0}
-.toc-panel .toc-nav a{display:block;padding:3px 4px;border-radius:4px;transition:background .1s,color .1s}
+/* li uses flex so a bare number prefix (e.g. "2.1") stays inline with the link;
+   nested ul/ol claim full width and wrap to the row below. */
+.toc-panel .toc-nav li{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:6px}
+.toc-panel .toc-nav li > ul,
+.toc-panel .toc-nav li > ol{flex:0 0 100%;min-width:0}
+.toc-panel .toc-nav a{display:inline-block;flex:1 1 auto;min-width:0;padding:3px 4px;border-radius:4px;transition:background .1s,color .1s}
 .toc-panel .toc-nav a:hover{background:var(--bg-panel);color:var(--infared)}
 .toc-panel .toc-nav a.toc-active{color:var(--infared);background:rgba(229,35,33,.08);font-weight:600}
 [data-theme=dark] .toc-panel .toc-nav a.toc-active{background:rgba(229,35,33,.15)}
