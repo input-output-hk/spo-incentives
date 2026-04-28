@@ -1,6 +1,10 @@
 :root {
   --accent:#E52321;
   --infared:#E52321;--dawn:#EC641D;--black:#1a1a1a;--white:#fff;
+  /* Official Cardano palette (cardano.org/brand-assets) — Blue, Black, White, Paper */
+  --cardano-blue:#0033AD;--cardano-blue-soft:rgba(0,51,173,.12);--cardano-blue-glow:rgba(0,51,173,.45);
+  --cardano-black:#000000;--cardano-paper:#f8f8f5;
+  --cardano-red:#ff5553;--cardano-green:#3b7982;
   --electric-blue:#16E9D8;--acid-green:#06FF89;--volt-yellow:#F2FF58;
   --cobalt-pulse:#2C4FFA;--ultraviolet:#A700FF;
   --bg:#ffffff;--bg-warm:#faf9f7;--bg-panel:#f5f4f2;--bg-code:#f0efed;
@@ -88,7 +92,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .site-nav{position:sticky;top:0;z-index:100;display:flex;flex-direction:column}
 
 /* Bar 1: brand identity */
-.nav-brand{background:#111;padding:0 28px;display:flex;align-items:center;min-height:36px;gap:12px}
+.nav-brand{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%);padding:0 28px;display:flex;align-items:center;min-height:36px;gap:12px;border-bottom:0}
 .nav-brand-home{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-brand-logo{height:18px;width:auto;opacity:.7;flex-shrink:0}
 .nav-brand-org{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4)}
@@ -99,9 +103,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 
 /* Brand bar right: dropdowns + theme toggle */
 .nav-brand-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
-.theme-toggle{background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;cursor:pointer;padding:5px 8px;color:rgba(255,255,255,.5);font-size:14px;line-height:1;transition:color .15s,border-color .15s;display:flex;align-items:center}
+.theme-toggle{background:rgba(255,255,255,.85);border:1px solid rgba(0,51,173,.4);border-radius:4px;cursor:pointer;padding:5px 8px;color:var(--cardano-blue);font-size:14px;line-height:1;transition:color .15s,border-color .15s,background .15s;display:flex;align-items:center}
+.theme-toggle:hover{background:#fff;border-color:var(--cardano-blue);color:#001a6b}
 .theme-toggle:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.3)}
-.pdf-export{background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;cursor:pointer;padding:5px 9px;color:rgba(255,255,255,.55);font:700 10.5px/1 'Barlow',-apple-system,sans-serif;letter-spacing:1.2px;transition:color .15s,border-color .15s,background .15s}
+.pdf-export{background:rgba(255,255,255,.85);border:1px solid rgba(0,51,173,.4);border-radius:4px;cursor:pointer;padding:5px 9px;color:var(--cardano-blue);font:700 10.5px/1 'Barlow',-apple-system,sans-serif;letter-spacing:1.2px;transition:color .15s,border-color .15s,background .15s}
+.pdf-export:hover{background:#fff;border-color:var(--cardano-blue);color:#001a6b}
 .pdf-export:hover{color:var(--infared);border-color:var(--infared);background:rgba(229,35,33,.08)}
 .nav-dd-wrap{position:relative}
 .nav-dd-btn{background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;cursor:pointer;font:400 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.5px;color:rgba(255,255,255,.5);padding:6px 12px;transition:color .15s,border-color .15s;white-space:nowrap}
@@ -153,20 +159,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 /* Flow arrows */
 .nav-arrow{font-size:11px;color:var(--dawn);opacity:.5;display:flex;align-items:center;padding:0 1px;flex-shrink:0}
 
-/* ── HERO — IOG Enlightenment gradient + discreet wallpaper + schematic overlay ── */
-.hero{position:relative;overflow:hidden;padding:28px 40px 56px;background:#000;border-bottom:none;isolation:isolate}
-/* Layer 1 (z=0): IOG wallpaper (fern arch, text-free crop) — full hero, cover */
-.hero::before{content:'';position:absolute;inset:0;z-index:0;
-  background:var(--hero-bg, url('iog-hero-bg.jpg')) center center / cover no-repeat;
-  opacity:.75;
-  pointer-events:none;
-  transition:opacity .4s ease}
-/* Layer 2 (z=0): soft left-side vignette to protect title readability, warm glow bottom-right */
-.hero::after{content:'';position:absolute;inset:0;z-index:0;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.6) 0%, rgba(0,0,0,.28) 28%, rgba(0,0,0,.05) 55%, transparent 75%),
-    radial-gradient(ellipse 60% 80% at 90% 110%, rgba(232,128,4,.22) 0%, transparent 60%);
-  pointer-events:none}
+/* ── HERO — Cardano-blue bandeau using official cardano.org banner asset ── */
+.hero{position:relative;overflow:hidden;padding:28px 40px 56px;background:var(--cardano-blue);border-bottom:1px solid rgba(255,255,255,.12);isolation:isolate}
+/* Layer 1 (z=0): cardano.org banner asset — positioned right, sized to contain so the design stays visible */
+.hero::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:url('cardano/hero-header-fluid-blue.png') right center / auto 100% no-repeat;
+  opacity:1}
+/* Layer 2 (z=0): narrow left vignette only — cover ~25 % so the right-side banner stays visible */
+.hero::after{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(90deg, var(--cardano-blue) 0%, rgba(0,51,173,.65) 18%, transparent 38%)}
+/* Per-page banner variants — set data-banner on the .hero element to swap the asset.
+   All variants below are tested visible on the Cardano blue background. */
+.hero[data-banner="braid"]::before{background-image:url('cardano/hero-header-braid-blue.svg')}
+.hero[data-banner="braid-red"]::before{background-image:url('cardano/hero-header-braid-red-blue.svg')}
+.hero[data-banner="dots"]::before{background-image:url('cardano/hero-header-dots.webp')}
+.hero[data-banner="overlap"]::before{background-image:url('cardano/hero-header-overlap.png')}
+.hero[data-banner="zoom"]::before{background-image:url('cardano/hero-header-zoom.png')}
+.hero[data-banner="zoom-full"]::before{background-image:url('cardano/hero-header-zoom-full.png')}
+.hero[data-banner="ada"]::before{background-image:url('cardano/hero-header-ada.webp')}
+.hero[data-banner="fluid-red"]::before{background-image:url('cardano/hero-header-fluid-red.svg')}
 .hero-schema{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:.9}
 .hero-topbar{position:relative;z-index:2;max-width:1400px;margin:0 auto 32px;display:flex;align-items:center;justify-content:space-between;gap:24px}
 .hero-full-logo{height:26px;width:auto;display:block;flex-shrink:0;filter:drop-shadow(0 0 12px rgba(229,35,33,.15))}
@@ -180,12 +191,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .hero-bottom-rule{position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent 0%,var(--infared) 8%,var(--dawn) 50%,var(--infared) 92%,transparent 100%);z-index:3}
 
 /* Footer — IOG corporate lock-up */
-.site-footer{background:#0a0a0a;color:rgba(255,255,255,.55);font-size:10px;font-weight:300;letter-spacing:2px;text-transform:uppercase;padding:22px 20px;display:flex;align-items:center;justify-content:center;gap:18px;border-top:1px solid rgba(229,35,33,.3)}
+.site-footer{background:var(--cardano-blue);color:rgba(255,255,255,.75);font-size:10px;font-weight:300;letter-spacing:2px;text-transform:uppercase;padding:22px 20px;display:flex;align-items:center;justify-content:center;gap:18px;border-top:1px solid rgba(255,255,255,.10)}
 .site-footer .footer-logo{height:16px;width:auto;opacity:.6}
 .site-footer .footer-division{display:inline-flex;align-items:center;color:rgba(255,255,255,.7)}
+.site-footer .footer-sep{color:rgba(255,255,255,.25);margin:0 4px}
+.site-footer .footer-cardano{display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.85);text-decoration:none;letter-spacing:1.5px;transition:color .15s}
+.site-footer .footer-cardano:hover{color:#fff}
 
 /* ── CBU BRANDING — Cardano Business Unit dot (Engineering / Acid Green) ── */
-.cbu-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#06FF89;box-shadow:0 0 8px rgba(6,255,137,.7),0 0 2px rgba(6,255,137,1);vertical-align:middle;margin-right:6px;flex-shrink:0}
+.cbu-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.7),0 0 2px rgba(255,255,255,.9);vertical-align:middle;margin-right:6px;flex-shrink:0}
+
+/* Cardano logomark in the brand bar — Cardano is the primary identity */
+.cardano-mark{height:26px;width:auto;flex-shrink:0;margin-right:10px;filter:drop-shadow(0 0 6px rgba(125,160,255,.18))}
+.nav-brand-title-cardano{font:600 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.6px;flex-shrink:0}
+
+/* IOG / CBU attribution — secondary, after a vertical divider */
+.nav-brand-attribution{display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.55);flex-shrink:0;font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.4px;text-transform:uppercase}
+.nav-brand-attribution-prefix{opacity:.6;font-style:italic;text-transform:none;letter-spacing:.3px;font-size:10px}
+.nav-brand-attribution-sep{opacity:.4;color:rgba(255,255,255,.4);font-size:11px}
+.nav-brand-attribution .nav-brand-wordmark{height:13px;opacity:.75}
+.nav-brand-attribution .nav-brand-org{font-weight:300;font-size:9.5px;letter-spacing:1.8px;color:rgba(255,255,255,.55)}
+
+/* Subtle Ouroboros mark — inline SVG-friendly ring used as a decorative anchor in the footer */
+.ouroboros{display:inline-block;width:14px;height:14px;border:1.5px solid #fff;border-radius:50%;border-right-color:transparent;border-bottom-color:rgba(255,255,255,.5);box-shadow:0 0 6px rgba(255,255,255,.35);vertical-align:middle;flex-shrink:0;animation:ouroboros-rotate 12s linear infinite}
+@keyframes ouroboros-rotate{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.ouroboros{animation:none}}
 
 /* ── NAV brand upgrade with IOG word marque ── */
 .nav-brand-wordmark{height:14px;width:auto;opacity:.85;flex-shrink:0}
@@ -425,12 +455,13 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 
 /* ── OUTPUT ← INPUT nav (mirrors §1 Foundations diagram) ── */
 /* Flow (reading L→R): [V2 SPECIFICATION] ← Documents (Design / Diagnostic / Research) */
-.nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:10px 20px;overflow:visible;white-space:nowrap;gap:14px;position:relative;z-index:50}
-[data-theme=dark] .nav-pages{background:var(--bg)}
+.nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:10px 20px;overflow:visible;white-space:nowrap;gap:14px;position:relative;z-index:50}
+[data-theme=dark] .nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 20%,rgba(0,51,173,.75) 30%,rgba(0,51,173,.40) 50%,rgba(0,51,173,.12) 70%,var(--bg) 92%)}
 .nav-zone{display:flex;align-items:center;gap:10px;flex-shrink:0}
 
 /* "OUTPUT ← INPUT" flow arrow — subtle, matches IOG's I/O directionality */
-.nav-flow-arrow{color:var(--text-muted);opacity:.4;font-size:15px;flex-shrink:0;padding:0 4px;user-select:none;font-weight:300}
+.nav-flow-arrow{color:var(--cardano-blue);opacity:.7;font-size:18px;flex-shrink:0;padding:0 4px;user-select:none;font-weight:600;text-shadow:0 0 4px rgba(255,255,255,.6)}
+.nav-flow-arrow-light{color:#fff;opacity:1;text-shadow:0 1px 2px rgba(0,0,0,.25),0 0 6px rgba(0,51,173,.35);font-weight:700}
 
 /* Small zone label above (inline with) each zone's content */
 .nav-zone-label{font:700 9px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);flex-shrink:0}
@@ -444,7 +475,7 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 
 /* Constitution zone — Cobalt Pulse (governance blue, distinct from V2 red and diag Dawn) */
 .nav-zone-constitution{flex:0 0 auto}
-.nav-dd-btn-constitution{color:#2C4FFA;border:1px solid rgba(44,79,250,.35);background:rgba(44,79,250,.05)}
+.nav-dd-btn-constitution{color:#2C4FFA;border:1px solid rgba(44,79,250,.45);background:rgba(255,255,255,.92);box-shadow:inset 0 0 0 999px rgba(44,79,250,.05)}
 .nav-dd-btn-constitution:hover{background:rgba(44,79,250,.10);border-color:rgba(44,79,250,.55)}
 .nav-dd-wrap-light.open .nav-dd-btn-constitution{background:rgba(44,79,250,.14);border-color:rgba(44,79,250,.7);color:#1a3ad8}
 .nav-dd-stratum-badge-constitution{color:#2C4FFA;background:rgba(44,79,250,.12)}
@@ -468,7 +499,7 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .nav-dd-ref-group-label{display:block;font:700 9.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-muted);padding:10px 10px 4px;margin-top:4px}
 
 /* ── Breadcrumb bar — single source of truth for "where am I" (lives inside .site-nav as its 3rd row) ── */
-.nav-breadcrumb{background:var(--bg-panel);border-bottom:1px solid var(--border);padding:7px 20px;font:400 11.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);display:flex;align-items:center;flex-wrap:wrap;gap:6px;letter-spacing:.1px}
+.nav-breadcrumb{background:var(--bg);border-bottom:1px solid var(--border);padding:7px 20px;font:400 11.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);display:flex;align-items:center;flex-wrap:wrap;gap:6px;letter-spacing:.1px}
 [data-theme=dark] .nav-breadcrumb{background:var(--bg)}
 .nav-breadcrumb:empty{display:none}
 .nav-breadcrumb-item{color:var(--text-secondary)}
@@ -553,9 +584,9 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 /* ── Zone 1 · Output (primary CTA, left-anchored) ── */
 .nav-zone-output{flex:0 0 auto;padding-right:4px}
 /* V2 Specification — Dawn-tinted tab (was solid Infared, demoted to fit the gradient) */
-.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#a4380a;background:rgba(236,100,29,.10);border:1px solid rgba(236,100,29,.45);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap}
-.nav-tab-spec-big:hover{background:rgba(236,100,29,.18);border-color:rgba(236,100,29,.65);color:#7a2806}
-.nav-tab-spec-big.active{background:rgba(236,100,29,.22);border-color:var(--dawn);color:#5e1f04;box-shadow:0 2px 6px rgba(236,100,29,.18)}
+.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#a4380a;background:rgba(255,255,255,.94);border:1px solid rgba(236,100,29,.6);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap;box-shadow:inset 0 0 0 999px rgba(236,100,29,.06)}
+.nav-tab-spec-big:hover{background:#fff;border-color:rgba(236,100,29,.85);color:#7a2806;box-shadow:inset 0 0 0 999px rgba(236,100,29,.12)}
+.nav-tab-spec-big.active{background:#fff;border-color:var(--dawn);color:#5e1f04;box-shadow:inset 0 0 0 999px rgba(236,100,29,.18),0 2px 6px rgba(236,100,29,.25)}
 [data-theme=dark] .nav-tab-spec-big{color:#FFB07A;background:rgba(236,100,29,.12);border-color:rgba(236,100,29,.4)}
 [data-theme=dark] .nav-tab-spec-big:hover{background:rgba(236,100,29,.20);border-color:rgba(236,100,29,.6);color:#FFC698}
 [data-theme=dark] .nav-tab-spec-big.active{background:rgba(236,100,29,.28);border-color:var(--dawn);color:#FFD9B8}
@@ -567,19 +598,19 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 [data-theme=dark] .nav-tab-implementation::after{background:#1a1a1a;color:#FF7A78;border-color:#FF7A78}
 .nav-tab-implementation:hover{background:#c91e1c;box-shadow:0 4px 12px rgba(229,35,33,.32)}
 
-/* Resting-state hue tint for each dropdown button — produces a right-to-left gradient */
-.nav-dd-btn-solution{color:#a8120f;border-color:rgba(229,35,33,.30);background:rgba(229,35,33,.04)}
-.nav-dd-btn-solution:hover{background:rgba(229,35,33,.10);border-color:rgba(229,35,33,.55);color:var(--infared)}
-.nav-dd-btn-diag{color:#a4380a;border-color:rgba(236,100,29,.30);background:rgba(236,100,29,.04)}
-.nav-dd-btn-diag:hover{background:rgba(236,100,29,.10);border-color:rgba(236,100,29,.55);color:#7a2806}
-.nav-dd-btn-design{color:#0a6e3e;border-color:rgba(6,255,137,.35);background:rgba(6,255,137,.04)}
-.nav-dd-btn-design:hover{background:rgba(6,255,137,.10);border-color:rgba(6,255,137,.6);color:#0a5f36}
-.nav-dd-btn-research{color:#0a6f76;border-color:rgba(22,233,216,.35);background:rgba(22,233,216,.04)}
-.nav-dd-btn-research:hover{background:rgba(22,233,216,.10);border-color:rgba(22,233,216,.6);color:#08585e}
-[data-theme=dark] .nav-dd-btn-solution{color:#FF7A78;border-color:rgba(229,35,33,.35);background:rgba(229,35,33,.05)}
-[data-theme=dark] .nav-dd-btn-diag{color:#FFB07A;border-color:rgba(236,100,29,.35);background:rgba(236,100,29,.05)}
-[data-theme=dark] .nav-dd-btn-design{color:#5BFFAD;border-color:rgba(6,255,137,.35);background:rgba(6,255,137,.05)}
-[data-theme=dark] .nav-dd-btn-research{color:#5BE8DC;border-color:rgba(22,233,216,.35);background:rgba(22,233,216,.05)}
+/* Resting-state hue tint for each dropdown button — opaque white-base + colored border + tint overlay so they stay readable on the Cardano-blue gradient */
+.nav-dd-btn-solution{color:#a8120f;border-color:rgba(229,35,33,.55);background:rgba(255,255,255,.94);box-shadow:inset 0 0 0 999px rgba(229,35,33,.04)}
+.nav-dd-btn-solution:hover{background:#fff;border-color:rgba(229,35,33,.8);color:var(--infared);box-shadow:inset 0 0 0 999px rgba(229,35,33,.10)}
+.nav-dd-btn-diag{color:#a4380a;border-color:rgba(236,100,29,.55);background:rgba(255,255,255,.94);box-shadow:inset 0 0 0 999px rgba(236,100,29,.04)}
+.nav-dd-btn-diag:hover{background:#fff;border-color:rgba(236,100,29,.8);color:#7a2806;box-shadow:inset 0 0 0 999px rgba(236,100,29,.10)}
+.nav-dd-btn-design{color:#0a6e3e;border-color:rgba(6,180,100,.65);background:rgba(255,255,255,.94);box-shadow:inset 0 0 0 999px rgba(6,255,137,.05)}
+.nav-dd-btn-design:hover{background:#fff;border-color:rgba(6,180,100,.85);color:#0a5f36;box-shadow:inset 0 0 0 999px rgba(6,255,137,.10)}
+.nav-dd-btn-research{color:#0a6f76;border-color:rgba(22,180,170,.65);background:rgba(255,255,255,.94);box-shadow:inset 0 0 0 999px rgba(22,233,216,.05)}
+.nav-dd-btn-research:hover{background:#fff;border-color:rgba(22,180,170,.85);color:#08585e;box-shadow:inset 0 0 0 999px rgba(22,233,216,.10)}
+[data-theme=dark] .nav-dd-btn-solution{color:#FF7A78;border-color:rgba(255,122,120,.55);background:rgba(20,20,24,.85);box-shadow:inset 0 0 0 999px rgba(229,35,33,.10)}
+[data-theme=dark] .nav-dd-btn-diag{color:#FFB07A;border-color:rgba(255,176,122,.55);background:rgba(20,20,24,.85);box-shadow:inset 0 0 0 999px rgba(236,100,29,.10)}
+[data-theme=dark] .nav-dd-btn-design{color:#5BFFAD;border-color:rgba(91,255,173,.55);background:rgba(20,20,24,.85);box-shadow:inset 0 0 0 999px rgba(6,255,137,.10)}
+[data-theme=dark] .nav-dd-btn-research{color:#5BE8DC;border-color:rgba(91,232,220,.55);background:rgba(20,20,24,.85);box-shadow:inset 0 0 0 999px rgba(22,233,216,.10)}
 
 /* Responsive: wrap zones below 1100px; stack fully on phone */
 @media (max-width:1100px){

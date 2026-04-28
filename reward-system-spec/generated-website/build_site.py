@@ -1029,7 +1029,7 @@ TEMPLATE = """<!DOCTYPE html>
 <title>{title}</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
 <script>try{{var t=localStorage.getItem('spo-theme');if(t)document.documentElement.setAttribute('data-theme',t)}}catch(e){{}}</script>
-<script>(function(){{var bgs=['iog-hero-bg-01.jpg','iog-hero-bg-02.jpg','iog-hero-bg-03.jpg'];var pick=bgs[Math.floor(Math.random()*bgs.length)];document.documentElement.style.setProperty('--hero-bg','url("'+pick+'")');}})();</script>
+<script>(function(){{var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fluid-red'];var pick=v[Math.floor(Math.random()*v.length)];document.addEventListener('DOMContentLoaded',function(){{var h=document.querySelector('.hero');if(h)h.setAttribute('data-banner',pick);}});}})();</script>
 <script>
 window.MathJax = {{
   tex: {{
@@ -1051,11 +1051,17 @@ window.MathJax = {{
 <div class="progress-bar" id="progress"></div>
 <nav class="site-nav"><div class="nav-brand">
 <a href="index.html" class="nav-brand-home">
-<img src="assets/iog-word-marque-white.png" alt="Input | Output Group" class="nav-brand-wordmark">
-<span class="nav-brand-sep-vr" aria-hidden="true"></span>
-<span class="nav-brand-org"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</span>
+<img src="assets/cardano/cardano-logomark-white.svg" alt="Cardano" class="cardano-mark">
+<span class="nav-brand-title-cardano">Cardano</span>
 <span class="nav-brand-sep" aria-hidden="true">/</span>
-<span class="nav-brand-title">Cardano Reward System V2</span>
+<span class="nav-brand-title">Reward System V2</span>
+<span class="nav-brand-sep-vr" aria-hidden="true"></span>
+<span class="nav-brand-attribution">
+  <span class="nav-brand-attribution-prefix">by</span>
+  <img src="assets/iog-word-marque-white.png" alt="Input | Output Group" class="nav-brand-wordmark">
+  <span class="nav-brand-attribution-sep" aria-hidden="true">·</span>
+  <span class="nav-brand-org"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</span>
+</span>
 </a>
 <div class="nav-brand-right">
 <button class="pdf-export" onclick="printAsPdf()" title="Save this page as PDF" aria-label="Save as PDF">PDF</button>
@@ -1069,7 +1075,7 @@ window.MathJax = {{
 <span class="nav-tab-implementation" title="Future destination — engineering implementation of the V2 specification">Implementation ?</span>
 </div>
 
-<span class="nav-flow-arrow" aria-hidden="true">←</span>
+<span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
 
 <!-- Zone 1 (left anchor) — Solution Evaluation: CIP candidates evaluated against V2 -->
 <div class="nav-zone nav-zone-solution">
@@ -1125,7 +1131,7 @@ window.MathJax = {{
 </div>
 </div>
 
-<span class="nav-flow-arrow" aria-hidden="true">←</span>
+<span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
 
 <!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
 <div class="nav-zone nav-zone-output">
@@ -1280,7 +1286,7 @@ window.MathJax = {{
 </div>
 <div class="nav-breadcrumb">{breadcrumb_inner}</div>
 </nav>
-<div class="hero">
+<div class="hero" data-banner="{hero_banner}">
   <svg class="hero-schema" viewBox="0 0 1400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <pattern id="heroGrid" width="40" height="40" patternUnits="userSpaceOnUse">
@@ -1319,6 +1325,8 @@ window.MathJax = {{
 <footer class="site-footer">
   <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="footer-logo">
   <div class="footer-division"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</div>
+  <span class="footer-sep" aria-hidden="true">·</span>
+  <a href="https://cardano.org" class="footer-cardano" rel="noopener" target="_blank" title="For the Cardano network"><span class="ouroboros" aria-hidden="true"></span>For the Cardano network</a>
 </footer>
 <div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
 <a href="#" class="back-top" id="btt">&uarr;</a>
@@ -1351,6 +1359,28 @@ DESIGN_ACTIVE = {"intended-game"}
 
 # Breadcrumb shown beneath the nav to convey hierarchical location.
 # Each entry: list of crumbs from most-general → most-specific.
+# Per-page Cardano banner variant — picks one of the official cardano.org
+# hero-header SVG/PNG assets (in assets/cardano/). Maps slug → variant key
+# (matching the data-banner CSS selector). Default is "fluid" if absent.
+BANNER_VARIANTS = {
+    "spec":                "fluid",       # V2 spec — the flagship document
+    "intended-game":       "starburst",   # narrative / conceptual
+    "findings":            "overlap",     # synthesis of multiple findings
+    "observatory":         "dots",        # the diagnostic — matches cardano.org research page
+    "census":              "dots",        # Mainnet census evidence
+    "treasury":            "braid",       # Treasury & pool-pots
+    "pools":               "braid",       # Pools-distribution layer
+    "operator":            "braid",       # Operator-delegator split
+    "solution-evaluation": "overlap",     # cross-CIP analysis & verdict
+    "stake-cap":           "dots",        # stake-cap layer index
+    "fee-layer":           "dots",        # fee layer index
+    "cip-0050":            "braid",
+    "cip-0037":            "braid",
+    "cip-0023":            "braid",
+    "cip-0082":            "braid",
+    "k-parameter":         "starburst",   # transversal lever
+}
+
 BREADCRUMBS = {
     "spec": ["V2 Specification"],
     "intended-game": ["Design Support", "The Intended Game"],
@@ -1446,6 +1476,7 @@ def render_shell(page: dict, content_html: str) -> str:
         title=page["title"],
         hero_h1=page["hero_h1"],
         hero_sub=page["hero_sub"],
+        hero_banner=BANNER_VARIANTS.get(active, "fluid"),
         content=content_html,
         cls_diag_trigger=cls_diag_trigger,
         cls_solution_trigger=cls_solution_trigger,
