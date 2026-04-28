@@ -1058,7 +1058,7 @@ window.MathJax = {{
 <span class="nav-brand-sep-vr" aria-hidden="true"></span>
 <span class="nav-brand-attribution">
   <span class="nav-brand-attribution-prefix">by</span>
-  <img src="assets/iog-word-marque-white.png" alt="Input | Output Group" class="nav-brand-wordmark">
+  <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="nav-brand-wordmark">
   <span class="nav-brand-attribution-sep" aria-hidden="true">·</span>
   <span class="nav-brand-org"><span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit</span>
 </span>
@@ -1305,36 +1305,9 @@ window.MathJax = {{
       <circle cx="200" cy="320" r="2.5" fill="#16E9D8"/>
     </g>
   </svg>
-  <div class="hero-topbar">
-    <div class="hero-cardano-mark" aria-label="Cardano">
-      <svg class="hero-cardano-symbol" viewBox="0 0 64 64" aria-hidden="true">
-        <!-- Cardano-inspired hex-C: three pairs of dots arranged in a circle -->
-        <g fill="currentColor">
-          <circle cx="32" cy="10" r="3"/>
-          <circle cx="32" cy="54" r="3"/>
-          <circle cx="51.05" cy="21" r="3"/>
-          <circle cx="12.94" cy="21" r="3"/>
-          <circle cx="51.05" cy="43" r="3"/>
-          <circle cx="12.94" cy="43" r="3"/>
-        </g>
-        <g fill="currentColor" opacity="0.5">
-          <circle cx="22.5" cy="14.5" r="2"/>
-          <circle cx="41.5" cy="14.5" r="2"/>
-          <circle cx="22.5" cy="49.5" r="2"/>
-          <circle cx="41.5" cy="49.5" r="2"/>
-          <circle cx="55.5" cy="32" r="2"/>
-          <circle cx="8.5" cy="32" r="2"/>
-        </g>
-      </svg>
-      <span class="hero-cardano-text">Cardano</span>
-    </div>
-    <div class="hero-division">
-      <span class="hero-by">by</span>
-      <img src="assets/iog-full-logo-white.png" alt="Input | Output" class="hero-iog-logo">
-      <span class="hero-division-dot" aria-hidden="true"></span>
-      <span class="hero-division-label">Cardano Business Unit</span>
-    </div>
-  </div>
+  <!-- Banner authorship lives in the header above; the hero focuses on
+       the page-specific eyebrow + h1 + subtitle. -->
+
   <div class="hero-inner">
     <div class="hero-eyebrow">V2 Reward System &middot; Technical Specification</div>
     <h1>{hero_h1}</h1>
