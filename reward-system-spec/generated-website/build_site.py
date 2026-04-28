@@ -306,6 +306,10 @@ REACTIONS_ENABLED = _cfg("SPO_REACTIONS_ENABLED", "1") not in ("0", "false", "no
 # navigation bar. Both default to the values below when the env vars
 # are unset. Empty string disables the stamp.
 BUILD_AUTHOR = _cfg("SPO_BUILD_AUTHOR", "Nicolas Henin")
+BUILD_AUTHOR_URL = _cfg(
+    "SPO_BUILD_AUTHOR_URL",
+    "https://www.linkedin.com/in/nicolashenin/",
+)
 BUILD_DATE = _cfg(
     "SPO_BUILD_DATE",
     time.strftime("%Y/%m/%d"),
@@ -406,26 +410,23 @@ def _render_giscus_block() -> str:
     )
 
 
-def _render_build_stamp() -> str:
-    """Discreet edited-on / authored-by chip in the nav-brand right.
-    Empty when SPO_BUILD_AUTHOR is set to '' (allowing CI/branded
-    builds to drop it). Date and author are independently optional.
+def _render_build_author_html() -> str:
+    """Return the author span used inside the hero build-info badge.
+    When SPO_BUILD_AUTHOR_URL is set the name is wrapped in an external
+    link (LinkedIn by default). Empty string disables the author.
     """
-    if not (BUILD_DATE or BUILD_AUTHOR):
+    if not BUILD_AUTHOR:
         return ""
-    parts = []
-    if BUILD_DATE:
-        parts.append(
-            f'<span class="nav-build-date" title="Last built">'
-            f'{_html.escape(BUILD_DATE)}</span>'
+    name_html = _html.escape(BUILD_AUTHOR)
+    if BUILD_AUTHOR_URL:
+        return (
+            f'<a class="hero-division-author" '
+            f'href="{_html.escape(BUILD_AUTHOR_URL)}" '
+            f'target="_blank" rel="noopener noreferrer" '
+            f'title="Author profile (opens in new tab)">'
+            f'{name_html}</a>'
         )
-    if BUILD_AUTHOR:
-        parts.append(
-            f'<span class="nav-build-author" title="Author">'
-            f'{_html.escape(BUILD_AUTHOR)}</span>'
-        )
-    return '<div class="nav-build-stamp" aria-label="Build info">' + \
-        ''.join(parts) + '</div>'
+    return f'<span class="hero-division-author">{name_html}</span>'
 
 
 def _render_body_data_attrs() -> str:
@@ -1336,19 +1337,18 @@ window.MathJax = {{
       <circle cx="200" cy="320" r="2.5" fill="#16E9D8"/>
     </g>
   </svg>
-  <div class="hero-topbar">
-    <div class="hero-division" aria-label="Build info">
-      <span class="hero-division-dot" aria-hidden="true"></span>
-      <span class="hero-division-label">{hero_build_date}</span>
-      <span class="hero-division-sep" aria-hidden="true">·</span>
-      <span class="hero-division-author">{hero_build_author}</span>
-    </div>
-  </div>
-
   <div class="hero-inner">
     <div class="hero-eyebrow">{hero_eyebrow}</div>
     <h1>{hero_h1}</h1>
     <div class="sub">{hero_sub}</div>
+  </div>
+  <div class="hero-bottombar">
+    <div class="hero-division" aria-label="Build info">
+      <span class="hero-division-dot" aria-hidden="true"></span>
+      <span class="hero-division-label">{hero_build_date}</span>
+      <span class="hero-division-sep" aria-hidden="true">·</span>
+      {hero_build_author_html}
+    </div>
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
@@ -1561,7 +1561,7 @@ def render_shell(page: dict, content_html: str) -> str:
         giscus_block=_render_giscus_block(),
         form_block=_render_form_block(),
         hero_build_date=_html.escape(BUILD_DATE) if BUILD_DATE else "",
-        hero_build_author=_html.escape(BUILD_AUTHOR) if BUILD_AUTHOR else "",
+        hero_build_author_html=_render_build_author_html(),
         body_data_attrs=_render_body_data_attrs(),
         **classes,
     )
