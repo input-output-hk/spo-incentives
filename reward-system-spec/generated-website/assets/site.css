@@ -3,6 +3,13 @@
   --infared:#E52321;--dawn:#EC641D;--black:#1a1a1a;--white:#fff;
   /* Official Cardano palette (cardano.org/brand-assets) — Blue, Black, White, Paper */
   --cardano-blue:#0033AD;--cardano-blue-soft:rgba(0,51,173,.12);--cardano-blue-glow:rgba(0,51,173,.45);
+  /* Cardano-family secondary blue used for h3 / hover states / accents.
+     Lighter, brighter than --cardano-blue so it pairs cleanly without
+     leaving the brand family. */
+  --cardano-blue-2:#1F5BC6;--cardano-blue-2-soft:rgba(31,91,198,.10);
+  /* Soft underline tone for body links — the same blue but at low alpha
+     so paragraphs of links don't feel like a wall of underlines. */
+  --cardano-link-line:rgba(0,51,173,.28);
   --cardano-black:#000000;--cardano-paper:#f8f8f5;
   --cardano-red:#ff5553;--cardano-green:#3b7982;
   --electric-blue:#16E9D8;--acid-green:#06FF89;--volt-yellow:#F2FF58;
@@ -25,8 +32,8 @@
 [data-theme=dark] .nav-col-title{color:var(--infared)}
 [data-theme=dark] .nav-pdf-badge{background:rgba(229,35,33,.15)}
 [data-theme=dark] .content{background:var(--bg);border-color:var(--border-light)}
-[data-theme=dark] .content h2{background:linear-gradient(90deg,rgba(229,35,33,.1) 0%,transparent 60%)}
-[data-theme=dark] .content h3{background:linear-gradient(90deg,rgba(236,100,29,.08) 0%,transparent 50%)}
+[data-theme=dark] .content h2{background:linear-gradient(90deg,rgba(110,151,255,.10) 0%,transparent 60%)}
+[data-theme=dark] .content h3{background:linear-gradient(90deg,rgba(157,182,240,.08) 0%,transparent 50%)}
 [data-theme=dark] .content a{color:#f06050}
 [data-theme=dark] .content img{border-color:var(--border);filter:brightness(.92)}
 [data-theme=dark] .content code{background:var(--bg-code);color:#e87461}
@@ -314,16 +321,20 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
    H1: typography only (page title). H2 (§X): infared title + infared rule (full).
    H3 (§X.X): dawn title + dawn rule (half length). H4+: plain small labels. */
 .content h1,.content h2,.content h3,.content h4,.content h5,.content h6{font-family:'Barlow',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.content h1{font-size:34px;font-weight:500;color:var(--text-primary);margin:0 0 28px;padding:0;border:none;background:none;letter-spacing:-.8px;line-height:1.15;position:relative}
+.content h1{font-size:34px;font-weight:500;color:var(--text-primary);margin:0 0 28px;padding:0 0 0 18px;border:none;background:none;letter-spacing:-.8px;line-height:1.15;position:relative;border-left:3px solid var(--cardano-blue)}
 .content h1:first-child{margin-top:0}
-.content h2{font-size:24px;font-weight:500;color:var(--infared);margin:56px 0 22px;padding:0;border:none;background:none;display:flex;align-items:center;gap:24px;letter-spacing:-.4px;line-height:1.2;position:relative}
-.content h2::after{content:'';flex:1;height:1.5px;background:var(--infared);min-width:60px;opacity:.85}
-[data-theme=dark] .content h2{color:var(--infared)}
-[data-theme=dark] .content h2::after{background:var(--infared);opacity:.7}
-.content h3{font-size:18px;font-weight:600;color:var(--dawn,#EC641D);margin:40px 0 14px;padding:0;border:none;background:none;display:flex;align-items:center;gap:20px;letter-spacing:-.2px;line-height:1.25;position:relative}
-.content h3::after{content:'';flex:1;height:1px;background:var(--dawn,#EC641D);min-width:40px;opacity:.7}
-[data-theme=dark] .content h3{color:var(--dawn,#EC641D)}
-[data-theme=dark] .content h3::after{background:var(--dawn,#EC641D);opacity:.5}
+/* H2 — primary section heading. Cardano blue text with a matching
+   trailing rule, replacing the previous IOG-red treatment. */
+.content h2{font-size:24px;font-weight:500;color:var(--cardano-blue);margin:56px 0 22px;padding:0;border:none;background:none;display:flex;align-items:center;gap:24px;letter-spacing:-.4px;line-height:1.2;position:relative}
+.content h2::after{content:'';flex:1;height:1.5px;background:var(--cardano-blue);min-width:60px;opacity:.85}
+[data-theme=dark] .content h2{color:#6E97FF}
+[data-theme=dark] .content h2::after{background:#6E97FF;opacity:.55}
+/* H3 — sub-section heading. Lighter Cardano-family blue so the two
+   levels read as a hierarchy without leaving the brand. */
+.content h3{font-size:18px;font-weight:600;color:var(--cardano-blue-2);margin:40px 0 14px;padding:0;border:none;background:none;display:flex;align-items:center;gap:20px;letter-spacing:-.2px;line-height:1.25;position:relative}
+.content h3::after{content:'';flex:1;height:1px;background:var(--cardano-blue-2);min-width:40px;opacity:.55}
+[data-theme=dark] .content h3{color:#9DB6F0}
+[data-theme=dark] .content h3::after{background:#9DB6F0;opacity:.4}
 .content h4{font-size:15px;font-weight:600;color:var(--text-primary);margin:32px 0 12px;padding:0;border:none;background:none;display:flex;align-items:center;gap:16px;letter-spacing:-.1px;position:relative}
 .content h4::after{content:'';flex:1;height:1px;background:var(--border);min-width:40px;opacity:.9}
 [data-theme=dark] .content h4::after{background:var(--border)}
@@ -333,8 +344,10 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .content h6::after{content:'';flex:1;height:1px;background:var(--border-light);min-width:40px;opacity:.6}
 .content p{margin:0 0 14px;font-size:15px;color:var(--text-body)}
 .content p strong{color:var(--text-primary);font-weight:600}
-.content a{color:var(--infared);text-decoration:none;border-bottom:1px solid rgba(229,35,33,.25)}
-.content a:hover{border-bottom-color:var(--infared)}
+.content a{color:var(--cardano-blue);text-decoration:none;border-bottom:1px solid var(--cardano-link-line)}
+.content a:hover{border-bottom-color:var(--cardano-blue);color:#001a6b}
+[data-theme=dark] .content a{color:#6E97FF;border-bottom-color:rgba(110,151,255,.30)}
+[data-theme=dark] .content a:hover{color:#A8C0F7;border-bottom-color:#6E97FF}
 
 /* Lists */
 .content ul,.content ol{margin:0 0 14px 20px;font-size:15px;color:var(--text-body)}
