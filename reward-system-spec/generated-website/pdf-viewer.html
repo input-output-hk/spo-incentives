@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Document Viewer — SPO Incentives</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
 <script>try{var t=localStorage.getItem('spo-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <style>
 :root {
@@ -190,6 +191,61 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 
 <div class="nav-zone nav-zone-implementation">
 <span class="nav-tab-implementation" title="Future destination — engineering implementation of the V2 specification">Implementation ?</span>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<div class="nav-zone nav-zone-solution">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-solution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Solution Evaluation ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-solution">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
+      <span class="nav-dd-stratum-meta">Five CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
+    </div>
+    <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero">
+      <span class="nav-dd-ref-title">Cross-CIP Analysis &amp; Verdict</span>
+      <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, no-go verdict on the bundle</span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Forward — New Proposal</div>
+    <a href="solution-evaluation.html#5-toward-a-new-proposal" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
+      <span class="nav-dd-ref-title">Draft in preparation</span>
+      <span class="nav-dd-ref-cite">V2 spec target with the structural caveats addressed<span class="nav-dd-ref-stage nav-dd-ref-stage-soon">Soon</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
+    <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
+      <span class="nav-dd-ref-title">CIP evaluation synthesis</span>
+      <span class="nav-dd-ref-cite">Two stake-cap shapes, same intent<span class="nav-dd-ref-stage">Index</span></span>
+    </a>
+    <a href="cip-0050.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
+      <span class="nav-dd-ref-title">CIP-0050 — Pledge Leverage</span>
+      <span class="nav-dd-ref-cite">σ′ clip leaves A(ν, π) bottleneck unfixed<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+    </a>
+    <a href="cip-0037.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
+      <span class="nav-dd-ref-title">CIP-0037 — Dynamic Saturation</span>
+      <span class="nav-dd-ref-cite">Same as CIP-0050 plus 20 % floor — A still unfixed<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+    </a>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Fee Layer — Operator/Member Split</div>
+    <a href="fee-layer.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
+      <span class="nav-dd-ref-title">CIP evaluation synthesis</span>
+      <span class="nav-dd-ref-cite">Pricing-as-viability conflation<span class="nav-dd-ref-stage">Index</span></span>
+    </a>
+    <a href="cip-0023.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
+      <span class="nav-dd-ref-title">CIP-0023 — Fair Min Fees</span>
+      <span class="nav-dd-ref-cite">minPoolMargin floor — subsumed by CIP-0082 stage 2<span class="nav-dd-ref-stage">⊂ Moot</span></span>
+    </a>
+    <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
+      <span class="nav-dd-ref-title">CIP-0082 — Improved Rewards Scheme</span>
+      <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+    </a>
+    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deeper">
+      <span class="nav-dd-ref-title">k-Parameter mechanics</span>
+      <span class="nav-dd-ref-cite">Sub-document of CIP-0082 stages 3–4<span class="nav-dd-ref-stage">Sub-doc</span></span>
+    </a>
+  </div>
+</div>
+</div>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
