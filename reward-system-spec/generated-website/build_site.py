@@ -126,7 +126,7 @@ PAGES = [
         "html": "stake-cap.html",
         "title": "CIP Evaluation Synthesis — Stake-Cap Layer",
         "hero_h1": "CIP Evaluation Synthesis",
-        "hero_sub": "Stake-Cap Layer — CIP-0050 + CIP-0037 — Pledge as Binding Signal",
+        "hero_sub": "Two stake-cap shapes, same intent — CIP-0050 + CIP-0037",
         "active_nav": "stake-cap",
     },
     {
@@ -153,7 +153,7 @@ PAGES = [
         "html": "fee-layer.html",
         "title": "CIP Evaluation Synthesis — Fee Layer",
         "hero_h1": "CIP Evaluation Synthesis",
-        "hero_sub": "Fee Layer — Operator/Member Split — CIP-0023 + CIP-0082",
+        "hero_sub": "Pricing-as-viability conflation — CIP-0023 + CIP-0082",
         "active_nav": "fee-layer",
     },
     {
