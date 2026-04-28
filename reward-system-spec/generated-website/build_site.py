@@ -1095,7 +1095,6 @@ window.MathJax = {{
 </span>
 </a>
 <div class="nav-brand-right">
-{build_stamp}
 <button class="pdf-export" onclick="printAsPdf()" title="Save this page as PDF" aria-label="Save as PDF">PDF</button>
 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light theme" aria-label="Toggle theme">☀</button>
 </div>
@@ -1337,8 +1336,14 @@ window.MathJax = {{
       <circle cx="200" cy="320" r="2.5" fill="#16E9D8"/>
     </g>
   </svg>
-  <!-- Banner authorship lives in the header above; the hero focuses on
-       the page-specific eyebrow + h1 + subtitle. -->
+  <div class="hero-topbar">
+    <div class="hero-division" aria-label="Build info">
+      <span class="hero-division-dot" aria-hidden="true"></span>
+      <span class="hero-division-label">{hero_build_date}</span>
+      <span class="hero-division-sep" aria-hidden="true">·</span>
+      <span class="hero-division-author">{hero_build_author}</span>
+    </div>
+  </div>
 
   <div class="hero-inner">
     <div class="hero-eyebrow">{hero_eyebrow}</div>
@@ -1555,7 +1560,8 @@ def render_shell(page: dict, content_html: str) -> str:
         hypothesis_head=_render_hypothesis_head(),
         giscus_block=_render_giscus_block(),
         form_block=_render_form_block(),
-        build_stamp=_render_build_stamp(),
+        hero_build_date=_html.escape(BUILD_DATE) if BUILD_DATE else "",
+        hero_build_author=_html.escape(BUILD_AUTHOR) if BUILD_AUTHOR else "",
         body_data_attrs=_render_body_data_attrs(),
         **classes,
     )

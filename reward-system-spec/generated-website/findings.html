@@ -20,11 +20,11 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777377488">
-<script defer data-website-id="791f3295-e5ab-4a38-af87-55835f711d11" src="https://cloud.umami.is/script.js"></script><script>window.spoTrack=function(n,p){try{if(window.umami&&window.umami.track){window.umami.track(n,p||{});}}catch(e){}}</script>
+<link rel="stylesheet" href="assets/site.css?v=1777377843">
+
 
 </head>
-<body data-analytics="umami" data-reactions="1" data-giscus="1" data-highlights="1" data-bookmarks="1">
+<body data-highlights="1" data-bookmarks="1">
 <div class="progress-bar" id="progress"></div>
 <nav class="site-nav"><div class="nav-brand">
 <a href="index.html" class="nav-brand-home">
@@ -41,7 +41,6 @@ window.MathJax = {
 </span>
 </a>
 <div class="nav-brand-right">
-<div class="nav-build-stamp" aria-label="Build info"><span class="nav-build-date" title="Last built">2026/04/28</span><span class="nav-build-author" title="Author">Nicolas Henin</span></div>
 <button class="pdf-export" onclick="printAsPdf()" title="Save this page as PDF" aria-label="Save as PDF">PDF</button>
 <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light theme" aria-label="Toggle theme">☀</button>
 </div>
@@ -283,8 +282,14 @@ window.MathJax = {
       <circle cx="200" cy="320" r="2.5" fill="#16E9D8"/>
     </g>
   </svg>
-  <!-- Banner authorship lives in the header above; the hero focuses on
-       the page-specific eyebrow + h1 + subtitle. -->
+  <div class="hero-topbar">
+    <div class="hero-division" aria-label="Build info">
+      <span class="hero-division-dot" aria-hidden="true"></span>
+      <span class="hero-division-label">2026/04/28</span>
+      <span class="hero-division-sep" aria-hidden="true">·</span>
+      <span class="hero-division-author">Nicolas Henin</span>
+    </div>
+  </div>
 
   <div class="hero-inner">
     <div class="hero-eyebrow">Mainnet Diagnostic &middot; Synthesis</div>
@@ -295,7 +300,7 @@ window.MathJax = {
 </div>
 <div class="content"><div class="findings-page"><div class="findings-intro"><p>This page consolidates every <strong>finding</strong> (a problem statement induced from evidence) together with the <strong>observations</strong> that support it. Each finding links back to the full reasoning on <a href="observatory.html">The Diagnostic — Mainnet Observatory</a>; each observation can be clicked for its full text.</p></div><div class="findings-stats"><div class="findings-stat"><span class="findings-stat-num">0</span><span class="findings-stat-lbl">findings</span></div><div class="findings-stat"><span class="findings-stat-num">0</span><span class="findings-stat-lbl">mainnet observations</span></div><div class="findings-stat"><span class="findings-stat-num">0</span><span class="findings-stat-lbl">pipeline sections</span></div></div><div class="findings-controls"><input type="search" class="findings-search" placeholder="Search findings and observations…" aria-label="Search"><div class="findings-chips" role="toolbar" aria-label="Filter by tier"><button class="findings-chip active" data-tier="*">All</button></div></div><div class="findings-obs-registry" hidden aria-hidden="true"></div></div></div>
 
-<section class="page-feedback" aria-labelledby="page-feedback-heading"><h2 id="page-feedback-heading" class="page-feedback-heading">Reader Feedback</h2><p class="page-feedback-lede">Comments and reactions are anchored to this page. Sign in with GitHub to post — threads live in the <a href="https://github.com/input-output-hk/spo-incentives/discussions" rel="noopener">project Discussions</a>.</p><div class="giscus" data-giscus></div><script src="https://giscus.app/client.js" data-repo="input-output-hk/spo-incentives" data-repo-id="R_kgDOP8tN7g" data-category="Announcements" data-category-id="DIC_kwDOP8tN7s4CxjSd" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="en" data-loading="lazy" crossorigin="anonymous" async></script></section>
+
 <footer class="site-footer">
   <a href="https://cardano.org" class="footer-cardano-mark" rel="noopener" target="_blank" title="For the Cardano network">
     <svg class="footer-cardano-symbol" viewBox="0 0 64 64" aria-hidden="true">
@@ -329,6 +334,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777377488"></script>
+<script src="assets/site.js?v=1777377843"></script>
 </body>
 </html>
