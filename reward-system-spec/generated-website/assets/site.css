@@ -92,11 +92,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .site-nav{position:sticky;top:0;z-index:100;display:flex;flex-direction:column}
 
 /* Bar 1: brand identity */
-.nav-brand{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%);padding:0 28px;display:flex;align-items:center;min-height:36px;gap:12px;border-bottom:0}
+.nav-brand{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%),var(--bg);padding:12px 28px 10px;display:flex;align-items:center;min-height:60px;gap:14px;border-bottom:0}
 .nav-brand-home{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-brand-logo{height:18px;width:auto;opacity:.7;flex-shrink:0}
 .nav-brand-org{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4)}
-.nav-brand-title{font:600 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.2px}
+.nav-brand-title{font:600 19px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.2px}
 .nav-brand-sep{color:rgba(255,255,255,.28);font:300 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0 2px}
 .nav-brand-subtitle{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.55)}
 @media (max-width:900px){.nav-brand-sep,.nav-brand-subtitle{display:none}}
@@ -202,8 +202,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .cbu-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.7),0 0 2px rgba(255,255,255,.9);vertical-align:middle;margin-right:6px;flex-shrink:0}
 
 /* Cardano logomark in the brand bar — Cardano is the primary identity */
-.cardano-mark{height:26px;width:auto;flex-shrink:0;margin-right:10px;filter:drop-shadow(0 0 6px rgba(125,160,255,.18))}
-.nav-brand-title-cardano{font:600 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.6px;flex-shrink:0}
+.cardano-mark{height:32px;width:auto;flex-shrink:0;margin-right:12px;filter:drop-shadow(0 0 6px rgba(125,160,255,.18))}
+.nav-brand-title-cardano{font:600 19px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.6px;flex-shrink:0}
 
 /* IOG / CBU attribution — secondary, after a vertical divider */
 .nav-brand-attribution{display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.55);flex-shrink:0;font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.4px;text-transform:uppercase}
@@ -455,8 +455,8 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 
 /* ── OUTPUT ← INPUT nav (mirrors §1 Foundations diagram) ── */
 /* Flow (reading L→R): [V2 SPECIFICATION] ← Documents (Design / Diagnostic / Research) */
-.nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:10px 20px;overflow:visible;white-space:nowrap;gap:14px;position:relative;z-index:50}
-[data-theme=dark] .nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 20%,rgba(0,51,173,.75) 30%,rgba(0,51,173,.40) 50%,rgba(0,51,173,.12) 70%,var(--bg) 92%)}
+.nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%),var(--bg);border-bottom:0;display:flex;align-items:center;padding:10px 20px;overflow:visible;white-space:nowrap;gap:14px;position:relative;z-index:50}
+[data-theme=dark] .nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 20%,rgba(0,51,173,.75) 30%,rgba(0,51,173,.40) 50%,rgba(0,51,173,.12) 70%,var(--bg) 92%),var(--bg)}
 .nav-zone{display:flex;align-items:center;gap:10px;flex-shrink:0}
 
 /* "OUTPUT ← INPUT" flow arrow — subtle, matches IOG's I/O directionality */
@@ -475,9 +475,7 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 
 /* Constitution zone — Cobalt Pulse (governance blue, distinct from V2 red and diag Dawn) */
 .nav-zone-constitution{flex:0 0 auto}
-.nav-dd-btn-constitution{color:#2C4FFA;border:1px solid rgba(44,79,250,.45);background:rgba(255,255,255,.92);box-shadow:inset 0 0 0 999px rgba(44,79,250,.05)}
-.nav-dd-btn-constitution:hover{background:rgba(44,79,250,.10);border-color:rgba(44,79,250,.55)}
-.nav-dd-wrap-light.open .nav-dd-btn-constitution{background:rgba(44,79,250,.14);border-color:rgba(44,79,250,.7);color:#1a3ad8}
+/* Constitution rules moved below .nav-dd-btn-light (line ~511) so they win the cascade */
 .nav-dd-stratum-badge-constitution{color:#2C4FFA;background:rgba(44,79,250,.12)}
 [data-theme=dark] .nav-dd-btn-constitution{color:#7B91FF;border-color:rgba(123,145,255,.35);background:rgba(123,145,255,.05)}
 [data-theme=dark] .nav-dd-btn-constitution:hover{background:rgba(123,145,255,.10);border-color:rgba(123,145,255,.55)}
@@ -599,14 +597,18 @@ h3.section-toggle::before{color:var(--dawn,#EC641D);opacity:.75}
 .nav-tab-implementation:hover{background:#c91e1c;box-shadow:0 4px 12px rgba(229,35,33,.32)}
 
 /* Resting-state hue tint for each dropdown button — opaque white-base + colored border + tint overlay so they stay readable on the Cardano-blue gradient */
-.nav-dd-btn-solution{color:#a8120f;border-color:rgba(229,35,33,.55);background:rgba(255,255,255,.94);box-shadow:inset 0 0 0 999px rgba(229,35,33,.04)}
-.nav-dd-btn-solution:hover{background:#fff;border-color:rgba(229,35,33,.8);color:var(--infared);box-shadow:inset 0 0 0 999px rgba(229,35,33,.10)}
-.nav-dd-btn-diag{color:#a4380a;border-color:rgba(236,100,29,.55);background:rgba(255,255,255,.94);box-shadow:inset 0 0 0 999px rgba(236,100,29,.04)}
-.nav-dd-btn-diag:hover{background:#fff;border-color:rgba(236,100,29,.8);color:#7a2806;box-shadow:inset 0 0 0 999px rgba(236,100,29,.10)}
-.nav-dd-btn-design{color:#0a6e3e;border-color:rgba(6,180,100,.65);background:rgba(255,255,255,.94);box-shadow:inset 0 0 0 999px rgba(6,255,137,.05)}
-.nav-dd-btn-design:hover{background:#fff;border-color:rgba(6,180,100,.85);color:#0a5f36;box-shadow:inset 0 0 0 999px rgba(6,255,137,.10)}
-.nav-dd-btn-research{color:#0a6f76;border-color:rgba(22,180,170,.65);background:rgba(255,255,255,.94);box-shadow:inset 0 0 0 999px rgba(22,233,216,.05)}
-.nav-dd-btn-research:hover{background:#fff;border-color:rgba(22,180,170,.85);color:#08585e;box-shadow:inset 0 0 0 999px rgba(22,233,216,.10)}
+.nav-dd-btn-solution{color:#a8120f;border-color:rgba(229,35,33,.7);background:#fff;box-shadow:inset 0 0 0 999px rgba(229,35,33,.04),0 2px 6px rgba(0,51,173,.18);font-weight:600}
+.nav-dd-btn-solution:hover{background:#fff;border-color:rgba(229,35,33,.9);color:var(--infared);box-shadow:inset 0 0 0 999px rgba(229,35,33,.10),0 3px 10px rgba(0,51,173,.28)}
+.nav-dd-btn-diag{color:#a4380a;border-color:rgba(236,100,29,.7);background:#fff;box-shadow:inset 0 0 0 999px rgba(236,100,29,.04),0 2px 6px rgba(0,51,173,.18);font-weight:600}
+.nav-dd-btn-diag:hover{background:#fff;border-color:rgba(236,100,29,.9);color:#7a2806;box-shadow:inset 0 0 0 999px rgba(236,100,29,.10),0 3px 10px rgba(0,51,173,.28)}
+.nav-dd-btn-design{color:#0a6e3e;border-color:rgba(6,180,100,.8);background:#fff;box-shadow:inset 0 0 0 999px rgba(6,255,137,.05),0 2px 6px rgba(0,51,173,.18);font-weight:600}
+.nav-dd-btn-design:hover{background:#fff;border-color:rgba(6,180,100,.95);color:#0a5f36;box-shadow:inset 0 0 0 999px rgba(6,255,137,.10),0 3px 10px rgba(0,51,173,.28)}
+.nav-dd-btn-research{color:#0a6f76;border-color:rgba(22,180,170,.8);background:#fff;box-shadow:inset 0 0 0 999px rgba(22,233,216,.05),0 2px 6px rgba(0,51,173,.18);font-weight:600}
+.nav-dd-btn-research:hover{background:#fff;border-color:rgba(22,180,170,.95);color:#08585e;box-shadow:inset 0 0 0 999px rgba(22,233,216,.10),0 3px 10px rgba(0,51,173,.28)}
+/* Constitution — placed last so it wins over .nav-dd-btn-light base; matches visual weight of solution/diag/design/research */
+.nav-dd-btn-constitution{color:#1c3ad6;border:1px solid rgba(44,79,250,.7);background:#fff;box-shadow:inset 0 0 0 999px rgba(44,79,250,.04),0 2px 6px rgba(0,51,173,.18);font-weight:600}
+.nav-dd-btn-constitution:hover{background:#fff;border-color:rgba(44,79,250,.9);color:#0f2bb5;box-shadow:inset 0 0 0 999px rgba(44,79,250,.10),0 3px 10px rgba(0,51,173,.28)}
+.nav-dd-wrap-light.open .nav-dd-btn-constitution{background:#fff;border-color:#2C4FFA;color:#0a1f8e;box-shadow:inset 0 0 0 999px rgba(44,79,250,.14),0 3px 10px rgba(0,51,173,.32)}
 [data-theme=dark] .nav-dd-btn-solution{color:#FF7A78;border-color:rgba(255,122,120,.55);background:rgba(20,20,24,.85);box-shadow:inset 0 0 0 999px rgba(229,35,33,.10)}
 [data-theme=dark] .nav-dd-btn-diag{color:#FFB07A;border-color:rgba(255,176,122,.55);background:rgba(20,20,24,.85);box-shadow:inset 0 0 0 999px rgba(236,100,29,.10)}
 [data-theme=dark] .nav-dd-btn-design{color:#5BFFAD;border-color:rgba(91,255,173,.55);background:rgba(20,20,24,.85);box-shadow:inset 0 0 0 999px rgba(6,255,137,.10)}
