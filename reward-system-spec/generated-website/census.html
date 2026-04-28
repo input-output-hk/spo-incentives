@@ -20,7 +20,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777299621">
+<link rel="stylesheet" href="assets/site.css?v=1777360508">
 <script defer data-website-id="791f3295-e5ab-4a38-af87-55835f711d11" src="https://cloud.umami.is/script.js"></script><script>window.spoTrack=function(n,p){try{if(window.umami&&window.umami.track){window.umami.track(n,p||{});}}catch(e){}}</script>
 
 </head>
@@ -100,6 +100,40 @@ window.MathJax = {
 <!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
 <div class="nav-zone nav-zone-output">
 <a href="index.html" class="nav-tab-spec-big">V2 Specification</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 2.5 — Cardano Constitution (the governance ceiling V2 must respect) -->
+<div class="nav-zone nav-zone-constitution">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-constitution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Constitution ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-constitution">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-constitution">Cardano Constitution v2</span>
+      <span class="nav-dd-stratum-meta">The governance document the protocol operates under (ratified at epoch 609) — every milestone in the V2 spec must comply with it</span>
+    </div>
+    <a href="pdf-viewer.html?file=references/governance/cardano-constitution-2.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Cardano Blockchain Ecosystem Constitution</span>
+      <span class="nav-dd-ref-cite">IntersectMBO — ratified at epoch 609 (v2)<span class="nav-dd-ref-tag">CONST-2</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="references/governance/cardano-constitution-2.pdf" class="nav-dd-ref nav-dd-ref-sub" download>
+      <span class="nav-dd-ref-title">Download the PDF</span>
+      <span class="nav-dd-ref-cite">Local copy on this site<span class="nav-dd-ref-stage">Download</span></span>
+    </a>
+    <a href="https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2" class="nav-dd-ref nav-dd-ref-sub" rel="noopener" target="_blank">
+      <span class="nav-dd-ref-title">Source on GitHub</span>
+      <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
+    </a>
+    <a href="index.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the V2 spec</span>
+      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 spec</span></span>
+    </a>
+  </div>
+</div>
+</div>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
@@ -261,71 +295,71 @@ window.MathJax = {
 </li>
 <li><a href="#2-the-ada-supply">The ADA Supply</a></li>
 <li><a href="#3-pool-operators">Pool Operators</a><ul>
-<li><a href="#31-raw-query">3.1 Raw query</a></li>
-<li><a href="#32-cleaning-production-threshold">3.2 Cleaning — production threshold</a></li>
-<li><a href="#33-cleaning-entity-attribution">3.3 Cleaning — entity attribution</a></li>
-<li><a href="#34-operator-landscape">3.4 Operator landscape</a><ul>
-<li><a href="#341-epoch-623-snapshot">3.4.1 Epoch 623 snapshot</a></li>
-<li><a href="#342-multi-pool-operator-fleet-structure">3.4.2 Multi-pool operator fleet structure</a></li>
-<li><a href="#343-historical-decomposition-productive-vs-sub-threshold-pools">3.4.3 Historical decomposition — productive vs sub-threshold pools</a></li>
+<li><a href="#31-raw-query">3.1. Raw query</a></li>
+<li><a href="#32-cleaning-production-threshold">3.2. Cleaning — production threshold</a></li>
+<li><a href="#33-cleaning-entity-attribution">3.3. Cleaning — entity attribution</a></li>
+<li><a href="#34-operator-landscape">3.4. Operator landscape</a><ul>
+<li><a href="#341-epoch-623-snapshot">3.4.1. Epoch 623 snapshot</a></li>
+<li><a href="#342-multi-pool-operator-fleet-structure">3.4.2. Multi-pool operator fleet structure</a></li>
+<li><a href="#343-historical-decomposition-productive-vs-sub-threshold-pools">3.4.3. Historical decomposition — productive vs sub-threshold pools</a></li>
 </ul>
 </li>
-<li><a href="#35-population-dynamics-entries-exits-and-turnover">3.5 Population dynamics — entries, exits, and turnover</a><ul>
-<li><a href="#351-entries-and-exits">3.5.1 Entries and exits</a></li>
-<li><a href="#352-entity-lifecycle">3.5.2 Entity lifecycle</a></li>
-<li><a href="#353-cohort-decomposition-who-holds-the-productive-set">3.5.3 Cohort decomposition — who holds the productive set?</a></li>
-<li><a href="#354-the-independent-pipeline-what-the-mechanism-was-designed-to-produce">3.5.4 The independent pipeline — what the mechanism was designed to produce</a></li>
+<li><a href="#35-population-dynamics-entries-exits-and-turnover">3.5. Population dynamics — entries, exits, and turnover</a><ul>
+<li><a href="#351-entries-and-exits">3.5.1. Entries and exits</a></li>
+<li><a href="#352-entity-lifecycle">3.5.2. Entity lifecycle</a></li>
+<li><a href="#353-cohort-decomposition-who-holds-the-productive-set">3.5.3. Cohort decomposition — who holds the productive set?</a></li>
+<li><a href="#354-the-independent-pipeline-what-the-mechanism-was-designed-to-produce">3.5.4. The independent pipeline — what the mechanism was designed to produce</a></li>
 </ul>
 </li>
-<li><a href="#36-pool-size-variability-how-stable-is-a-pools-stake">3.6 Pool size variability — how stable is a pool's stake?</a></li>
+<li><a href="#36-pool-size-variability-how-stable-is-a-pools-stake">3.6. Pool size variability — how stable is a pool's stake?</a></li>
 </ul>
 </li>
 <li><a href="#4-delegators">Delegators</a><ul>
-<li><a href="#41-raw-query">4.1 Raw query</a></li>
-<li><a href="#42-cleaning-zero-balance-certificates">4.2 Cleaning — zero-balance certificates</a></li>
-<li><a href="#43-cleaning-non-productive-pools">4.3 Cleaning — non-productive pools</a></li>
-<li><a href="#44-delegator-landscape">4.4 Delegator landscape</a><ul>
-<li><a href="#441-epoch-623-snapshot">4.4.1 Epoch 623 snapshot</a></li>
-<li><a href="#442-stake-distribution-among-delegators">4.4.2 Stake distribution among delegators</a></li>
-<li><a href="#443-historical-evolution-who-joined-and-where-is-the-capital">4.4.3 Historical evolution — who joined and where is the capital?</a></li>
+<li><a href="#41-raw-query">4.1. Raw query</a></li>
+<li><a href="#42-cleaning-zero-balance-certificates">4.2. Cleaning — zero-balance certificates</a></li>
+<li><a href="#43-cleaning-non-productive-pools">4.3. Cleaning — non-productive pools</a></li>
+<li><a href="#44-delegator-landscape">4.4. Delegator landscape</a><ul>
+<li><a href="#441-epoch-623-snapshot">4.4.1. Epoch 623 snapshot</a></li>
+<li><a href="#442-stake-distribution-among-delegators">4.4.2. Stake distribution among delegators</a></li>
+<li><a href="#443-historical-evolution-who-joined-and-where-is-the-capital">4.4.3. Historical evolution — who joined and where is the capital?</a></li>
 </ul>
 </li>
-<li><a href="#45-population-dynamics-delegator-entries-and-exits">4.5 Population dynamics — delegator entries and exits</a></li>
-<li><a href="#46-delegation-churn-pool-switching-behaviour">4.6 Delegation churn — pool switching behaviour</a><ul>
-<li><a href="#461-certificate-composition-and-temporal-regimes">4.6.1 Certificate composition and temporal regimes</a></li>
-<li><a href="#462-tenure-distribution">4.6.2 Tenure distribution</a></li>
-<li><a href="#463-who-switches-a-size-stratified-view">4.6.3 Who switches? A size-stratified view</a></li>
-<li><a href="#464-flow-corridors-and-retail-lens">4.6.4 Flow corridors and retail lens</a></li>
+<li><a href="#45-population-dynamics-delegator-entries-and-exits">4.5. Population dynamics — delegator entries and exits</a></li>
+<li><a href="#46-delegation-churn-pool-switching-behaviour">4.6. Delegation churn — pool switching behaviour</a><ul>
+<li><a href="#461-certificate-composition-and-temporal-regimes">4.6.1. Certificate composition and temporal regimes</a></li>
+<li><a href="#462-tenure-distribution">4.6.2. Tenure distribution</a></li>
+<li><a href="#463-who-switches-a-size-stratified-view">4.6.3. Who switches? A size-stratified view</a></li>
+<li><a href="#464-flow-corridors-and-retail-lens">4.6.4. Flow corridors and retail lens</a></li>
 </ul>
 </li>
-<li><a href="#47-switch-motivation-and-loyalty-profiles">4.7 Switch motivation and loyalty profiles</a><ul>
-<li><a href="#471-net-ros-does-not-differentiate">4.7.1 Net ROS does not differentiate</a></li>
-<li><a href="#472-operator-take-is-symmetric">4.7.2 Operator take is symmetric</a></li>
-<li><a href="#473-pool-size-is-the-only-asymmetric-signal">4.7.3 Pool size is the only asymmetric signal</a></li>
-<li><a href="#474-loyal-delegators-and-their-pools">4.7.4 Loyal delegators and their pools</a></li>
+<li><a href="#47-switch-motivation-and-loyalty-profiles">4.7. Switch motivation and loyalty profiles</a><ul>
+<li><a href="#471-net-ros-does-not-differentiate">4.7.1. Net ROS does not differentiate</a></li>
+<li><a href="#472-operator-take-is-symmetric">4.7.2. Operator take is symmetric</a></li>
+<li><a href="#473-pool-size-is-the-only-asymmetric-signal">4.7.3. Pool size is the only asymmetric signal</a></li>
+<li><a href="#474-loyal-delegators-and-their-pools">4.7.4. Loyal delegators and their pools</a></li>
 </ul>
 </li>
-<li><a href="#48-credential-type-key-versus-script">4.8 Credential type — key versus script</a></li>
+<li><a href="#48-credential-type-key-versus-script">4.8. Credential type — key versus script</a></li>
 </ul>
 </li>
 <li><a href="#5-non-participants">Non-Participants</a><ul>
-<li><a href="#51-circulating-supply-decomposition">5.1 Circulating supply decomposition</a></li>
-<li><a href="#52-anatomy-of-the-non-participant-population">5.2 Anatomy of the non-participant population</a><ul>
-<li><a href="#521-fine-grained-utxo-decomposition-at-epoch-623">5.2.1 Fine-grained UTxO decomposition at epoch 623</a></li>
+<li><a href="#51-circulating-supply-decomposition">5.1. Circulating supply decomposition</a></li>
+<li><a href="#52-anatomy-of-the-non-participant-population">5.2. Anatomy of the non-participant population</a><ul>
+<li><a href="#521-fine-grained-utxo-decomposition-at-epoch-623">5.2.1. Fine-grained UTxO decomposition at epoch 623</a></li>
 </ul>
 </li>
-<li><a href="#53-dormancy-vintage">5.3 Dormancy vintage</a></li>
-<li><a href="#54-what-the-non-participant-population-likely-contains">5.4 What the non-participant population likely contains</a></li>
+<li><a href="#53-dormancy-vintage">5.3. Dormancy vintage</a></li>
+<li><a href="#54-what-the-non-participant-population-likely-contains">5.4. What the non-participant population likely contains</a></li>
 </ul>
 </li>
 <li><a href="#6-transaction-submitters">Transaction Submitters</a><ul>
-<li><a href="#61-what-the-analysis-must-establish">6.1 What the analysis must establish</a></li>
-<li><a href="#62-data-sources-and-methodology">6.2 Data sources and methodology</a></li>
-<li><a href="#63-findings">6.3 Findings</a><ul>
-<li><a href="#631-volume-and-population-size">6.3.1 Volume and population size</a></li>
-<li><a href="#632-submitter-population-decomposition">6.3.2 Submitter population decomposition</a></li>
-<li><a href="#633-fee-revenue-decomposition-who-pays">6.3.3 Fee revenue decomposition — who pays</a></li>
-<li><a href="#634-transaction-composition-script-vs-simple">6.3.4 Transaction composition — script vs simple</a></li>
+<li><a href="#61-what-the-analysis-must-establish">6.1. What the analysis must establish</a></li>
+<li><a href="#62-data-sources-and-methodology">6.2. Data sources and methodology</a></li>
+<li><a href="#63-findings">6.3. Findings</a><ul>
+<li><a href="#631-volume-and-population-size">6.3.1. Volume and population size</a></li>
+<li><a href="#632-submitter-population-decomposition">6.3.2. Submitter population decomposition</a></li>
+<li><a href="#633-fee-revenue-decomposition-who-pays">6.3.3. Fee revenue decomposition — who pays</a></li>
+<li><a href="#634-transaction-composition-script-vs-simple">6.3.4. Transaction composition — script vs simple</a></li>
 </ul>
 </li>
 </ul>
@@ -338,10 +372,10 @@ window.MathJax = {
 </ul>
 </li>
 <li><a href="#8-bridges-to-companion-analyses">Bridges to Companion Analyses</a><ul>
-<li><a href="#81-distribution-efficiency-epoch-616">8.1 Distribution efficiency (epoch 616)</a></li>
-<li><a href="#82-operators-cut-epoch-614">8.2 Operator's cut (epoch 614)</a></li>
-<li><a href="#83-main-report-epochs-548583">8.3 Main report (epochs 548–583)</a></li>
-<li><a href="#84-reconciliation-summary">8.4 Reconciliation summary</a></li>
+<li><a href="#81-distribution-efficiency-epoch-616">8.1. Distribution efficiency (epoch 616)</a></li>
+<li><a href="#82-operators-cut-epoch-614">8.2. Operator's cut (epoch 614)</a></li>
+<li><a href="#83-main-report-epochs-548583">8.3. Main report (epochs 548–583)</a></li>
+<li><a href="#84-reconciliation-summary">8.4. Reconciliation summary</a></li>
 </ul>
 </li>
 </ol>
@@ -424,12 +458,12 @@ window.MathJax = {
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o7-f1" data-finding="CEN.O7.F1" data-short="<a class="finding-ref" href="#finding-cen-o7-f1" data-finding="CEN.O7.F1" data-short="F7.1" data-group="7" title="CEN.O7.F1 · hover for summary, click for detail">CEN.O7.F1</a>" data-group="7" title="CEN.O7.F1 · hover for summary, click for detail">CEN.O7.F1</a> — The staking rate is structurally declining despite persistent net delegator inflows.</strong> The rate has fallen from 71% (epoch ~260) to 59% (epoch 623) — a 12 pp loss over ~360 epochs. The decline is driven entirely by supply-side expansion: circulating ADA grew from ~32B to ~37B while staked ADA grew from ~23B to ~22B. The non-participant pool is growing faster than the staking pool.</p>
 </blockquote>
 <h2 id="3-pool-operators">3. Pool Operators</h2>
-<h3 id="31-raw-query">3.1 Raw query</h3>
+<h3 id="31-raw-query">3.1. Raw query</h3>
 <p>The pool count from epoch_stake peaked at <strong>3,160</strong> (epoch 331) and currently stands at <strong>2,877</strong>.</p>
 <p>This counts only pools that appear in the staking snapshot with non-zero delegated stake — the registration-certificate count of <strong>5,919</strong> includes <strong>3,042 empty pools</strong> and is discarded (see <a href="observatory.html#21-guarantee-operator-viability-across-the-entire-productive-population">§2.1</a> for the full rationale).</p>
 <p><img alt="Pool count — cleaned" src="sub-flows/census/mainnet-analysis/figures/pool_count_clean.png"></p>
 <p>The <strong>k=500</strong> reference line shows the protocol's target number of pools (the saturation parameter). The actual pool count has been <strong>~5.8× k</strong> since epoch 330, though many of these pools carry <strong>negligible stake</strong>.</p>
-<h3 id="32-cleaning-production-threshold">3.2 Cleaning — production threshold</h3>
+<h3 id="32-cleaning-production-threshold">3.2. Cleaning — production threshold</h3>
 <p>Block production on Cardano is a <strong>lottery</strong>: each slot, a pool is selected to produce a block with probability proportional to its share of total staked ADA.</p>
 <p>With ~21,600 slots per epoch, a pool holding stake σ out of a total S expects to be elected for λ = 21,600 × σ / S blocks per epoch. The number of blocks actually produced follows a <strong>Poisson distribution</strong> with parameter λ.</p>
 <p>A pool that expects <strong>fewer than one block per epoch</strong> (λ &lt; 1) faces variance that dominates the signal: its realised reward swings between zero and a windfall, making yield <strong>unpredictable</strong> for both the operator and delegators.</p>
@@ -515,7 +549,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o1-f1" data-finding="CEN.O1.F1" data-short="<a class="finding-ref" href="#finding-cen-o1-f1" data-finding="CEN.O1.F1" data-short="F1.1" data-group="1" title="CEN.O1.F1 · hover for summary, click for detail">CEN.O1.F1</a>" data-group="1" title="CEN.O1.F1 · hover for summary, click for detail">CEN.O1.F1</a> — Two-thirds of pools are below the production threshold and carry 0.86% of stake.</strong> The 1,926 sub-threshold pools are economically irrelevant to consensus but not to their 59,940 delegators, who earn intermittent rewards and would be better served by redelegating. The median sub-threshold pool holds 2,547 ADA.</p>
 </blockquote>
-<h3 id="33-cleaning-entity-attribution">3.3 Cleaning — entity attribution</h3>
+<h3 id="33-cleaning-entity-attribution">3.3. Cleaning — entity attribution</h3>
 <p>The <strong>951 productive pools are not 951 independent operators</strong>. Many pools share a controlling entity — detectable on-chain through shared <code>pool_owner</code> keys, and off-chain through metadata, ticker naming patterns, relay DNS, reward addresses, and public disclosures.</p>
 <p>This cleaning pass groups pools by entity to reveal the <strong>true operator landscape</strong>.</p>
 <p><strong>On-chain grouping</strong> (shared owner keys across productive pools): <strong>943 single-pool operators</strong> and <strong>4 entities</strong> sharing keys across 8 pools. On-chain keys are a <strong>lower bound</strong> — most multi-pool operators use separate keys per pool.</p>
@@ -555,9 +589,9 @@ window.MathJax = {
 - <a href="sub-flows/census/mainnet-analysis/data/mpo_entity_archetypes.csv"><code>data/mpo_entity_archetypes.csv</code></a> — entity → archetype
 - <a href="sub-flows/census/mainnet-analysis/data/entity_stake_summary_623.csv"><code>data/entity_stake_summary_623.csv</code></a> — per-entity stake at epoch 623
 - <a href="docs/mpo_entity_profiles.md"><code>docs/mpo_entity_profiles.md</code></a> — detailed entity profiles</p>
-<h3 id="34-operator-landscape">3.4 Operator landscape</h3>
+<h3 id="34-operator-landscape">3.4. Operator landscape</h3>
 <p>All figures and tables in this section refer to <strong>productive pools only</strong> — the <strong>952 pools</strong> above the production threshold at epoch 623, carrying <strong>99.1% of staked ADA</strong>. The 1,925 sub-threshold pools (0.9% of stake) are excluded.</p>
-<h4 id="341-epoch-623-snapshot">3.4.1 Epoch 623 snapshot</h4>
+<h4 id="341-epoch-623-snapshot">3.4.1. Epoch 623 snapshot</h4>
 <table>
 <thead>
 <tr>
@@ -614,7 +648,7 @@ window.MathJax = {
 </tbody>
 </table>
 <p>The entity attribution is a <strong>current-epoch snapshot</strong> and a <strong>lower bound</strong> — entities using entirely separate infrastructure and branding for each pool remain invisible. The real multi-pool operator count is <strong>certainly higher than 73</strong>.</p>
-<h4 id="342-multi-pool-operator-fleet-structure">3.4.2 Multi-pool operator fleet structure</h4>
+<h4 id="342-multi-pool-operator-fleet-structure">3.4.2. Multi-pool operator fleet structure</h4>
 <p>The <strong>83 identified entities</strong> operate <strong>475 productive pools</strong> — but their fleet sizes vary from <strong>1 to 41 pools</strong>. The <strong>n-MPO</strong> notation denotes the number of productive pools an entity manages.</p>
 <p><img alt="Operator landscape" src="sub-flows/census/mainnet-analysis/figures/operator_landscape.png"></p>
 <p><strong>Fleet size distribution</strong> (panel A):</p>
@@ -690,21 +724,21 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o1-f5" data-finding="CEN.O1.F5" data-short="<a class="finding-ref" href="#finding-cen-o1-f5" data-finding="CEN.O1.F5" data-short="F1.5" data-group="1" title="CEN.O1.F5 · hover for summary, click for detail">CEN.O1.F5</a>" data-group="1" title="CEN.O1.F5 · hover for summary, click for detail">CEN.O1.F5</a> — CEX + IVaaS (10 entities, 181 pools) hold 7.40B ADA — 34.3% of productive stake at structurally zero pledge.</strong> These entities' delegation source — custodied retail balances and institutional client assets — makes pledge economically meaningless. Their dominance sets a floor on how much of the stake landscape is unreachable by pledge-based incentive mechanisms.</p>
 </blockquote>
-<h4 id="343-historical-decomposition-productive-vs-sub-threshold-pools">3.4.3 Historical decomposition — productive vs sub-threshold pools</h4>
+<h4 id="343-historical-decomposition-productive-vs-sub-threshold-pools">3.4.3. Historical decomposition — productive vs sub-threshold pools</h4>
 <p>The production threshold — the minimum stake a pool needs to expect at least one block per epoch — <strong>rises mechanically with total staked ADA</strong>. At epoch 211 (Shelley launch), a pool needed roughly <strong>470K ADA</strong>; by epoch 623 the threshold has crossed <strong>1M ADA</strong>.</p>
 <p>The number of pools that clear this threshold has remained <strong>remarkably stable around 900–1,000</strong> since epoch 300, while the sub-threshold tail grew from near zero to almost <strong>2,000 pools</strong> by epoch 330 and has hovered there since.</p>
 <p>The productive share of pools has therefore fallen from <strong>near 100%</strong> in early Shelley to roughly <strong>33%</strong> today — yet productive pools continue to control <strong>over 99%</strong> of staked ADA throughout the entire history.</p>
 <p><img alt="Operator landscape — historical decomposition" src="sub-flows/census/mainnet-analysis/figures/operator_landscape_history.png"></p>
 <p>The top panel shows the staked-ADA split between productive and sub-threshold pools (left axis) alongside the production threshold itself (red line, right axis).</p>
 <p>The bottom panel shows the pool-count decomposition, with the productive share (purple line, right axis) declining as the long tail of sub-threshold pools <strong>inflated the denominator without capturing meaningful stake</strong>. The <strong>k=500</strong> reference line marks the protocol's target pool count.</p>
-<h3 id="35-population-dynamics-entries-exits-and-turnover">3.5 Population dynamics — entries, exits, and turnover</h3>
+<h3 id="35-population-dynamics-entries-exits-and-turnover">3.5. Population dynamics — entries, exits, and turnover</h3>
 <p>The near-constant stock of <strong>~950 productive pools</strong> masks significant underlying churn. This section decomposes the aggregate into three views:</p>
 <ul>
 <li><strong>the entry/exit flow</strong>;</li>
 <li><strong>the entity-level lifecycle</strong> that drives it;</li>
 <li><strong>the stake variability</strong> that pools experience even while they remain in the productive set.</li>
 </ul>
-<h4 id="351-entries-and-exits">3.5.1 Entries and exits</h4>
+<h4 id="351-entries-and-exits">3.5.1. Entries and exits</h4>
 <p>Tracking individual pools across consecutive epochs — counting those that cross the production threshold upward (<strong>entries</strong>) and those that fall below it or disappear (<strong>exits</strong>) — reveals the turnover that the aggregate count obscures.</p>
 <p><img alt="Population dynamics — productive pool entries and exits" src="sub-flows/census/mainnet-analysis/figures/pool_population_dynamics.png"></p>
 <p>The early Shelley period (epochs 212–300) saw <strong>rapid net growth</strong> as the pool population expanded from <strong>~450 to ~1,000</strong> productive pools. Growth epochs outnumbered decline epochs roughly <strong>2∶1</strong> during this phase.</p>
@@ -714,12 +748,12 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o1-f3" data-finding="CEN.O1.F3" data-short="<a class="finding-ref" href="#finding-cen-o1-f3" data-finding="CEN.O1.F3" data-short="F1.3" data-group="1" title="CEN.O1.F3 · hover for summary, click for detail">CEN.O1.F3</a>" data-group="1" title="CEN.O1.F3 · hover for summary, click for detail">CEN.O1.F3</a> — The productive pool set is a quasi-equilibrium: ~950 pools since epoch 300, with 1.7% turnover per epoch.</strong> 3,497 entries against 3,070 exits balance to a near-zero net flow. The apparent stability of the aggregate conceals a replacement process where departing pools are continuously substituted by new entrants.</p>
 </blockquote>
-<h4 id="352-entity-lifecycle">3.5.2 Entity lifecycle</h4>
+<h4 id="352-entity-lifecycle">3.5.2. Entity lifecycle</h4>
 <p>Part of the churn is driven by <strong>entity-level dynamics</strong>. The entity lifecycle analysis (<a href="sub-flows/census/mainnet-analysis/data/entity_lifecycle_623.csv"><code>data/entity_lifecycle_623.csv</code></a>) classifies the 85 named entities into four phases — <strong>dead, declining, stable, and growing</strong> — based on their stake trajectory and productive-pool retention.</p>
 <p>Declining and dead entities contract their pool fleets, <strong>feeding the exit side</strong>; growing entities and new independent single-pool operators <strong>feed the entry side</strong>. The entity-level decline trajectories are visualised in the figures below.</p>
 <p><img alt="Entity lifecycle — declining entities" src="sub-flows/census/mainnet-analysis/figures/entity_lifecycle_decline.png"></p>
 <p><img alt="Entity lifecycle — growing entities" src="sub-flows/census/mainnet-analysis/figures/entity_lifecycle_growth.png"></p>
-<h4 id="353-cohort-decomposition-who-holds-the-productive-set">3.5.3 Cohort decomposition — who holds the productive set?</h4>
+<h4 id="353-cohort-decomposition-who-holds-the-productive-set">3.5.3. Cohort decomposition — who holds the productive set?</h4>
 <p>The entries-and-exits view (<a href="#351-entries-and-exits">§3.5.1 — Entries and exits</a>) treats the productive pool set as a <strong>homogeneous stock</strong>. This section decomposes it into two populations — pools operated by <strong>identified multi-pool entities</strong> and <strong>independent single-pool operators</strong> — and tracks each cohort's pool count and stake share across the full history.</p>
 <p>The underlying data is in <a href="sub-flows/census/mainnet-analysis/data/cohort_population_dynamics.csv"><code>data/cohort_population_dynamics.csv</code></a>, derived by subtracting the per-epoch entity aggregate (<a href="sub-flows/census/mainnet-analysis/data/entity_stake_history.csv"><code>data/entity_stake_history.csv</code></a>) from the productive totals in <a href="sub-flows/census/mainnet-analysis/data/operator_landscape_history.csv"><code>data/operator_landscape_history.csv</code></a>.</p>
 <p><img alt="Cohort population dynamics" src="sub-flows/census/mainnet-analysis/figures/cohort_population_dynamics.png"></p>
@@ -815,7 +849,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o1-f7" data-finding="CEN.O1.F7" data-short="<a class="finding-ref" href="#finding-cen-o1-f7" data-finding="CEN.O1.F7" data-short="F1.7" data-group="1" title="CEN.O1.F7 · hover for summary, click for detail">CEN.O1.F7</a>" data-group="1" title="CEN.O1.F7 · hover for summary, click for detail">CEN.O1.F7</a> — Multi-pool entities grew from 23 (epoch 210) to 85 (epoch 623), expanding from 135 to 660 productive pools and from 65% to 75.6% of productive stake.</strong> The mid-tier fleets (6–20 pools) tripled their entity count and nearly doubled their stake share. The ~950-pool quasi-equilibrium is increasingly populated by entity-operated pools substituting for departing independents.</p>
 </blockquote>
-<h4 id="354-the-independent-pipeline-what-the-mechanism-was-designed-to-produce">3.5.4 The independent pipeline — what the mechanism was designed to produce</h4>
+<h4 id="354-the-independent-pipeline-what-the-mechanism-was-designed-to-produce">3.5.4. The independent pipeline — what the mechanism was designed to produce</h4>
 <p>The Cardano reward mechanism was designed to produce a <strong>progression path for operators</strong>: entry with an initial pledge, delegation-driven growth, and eventually full commitment as an established pool (<a href="intended-game.html#32-operators-from-first-pledge-to-full-commitment"><em>The Intended Game</em> §3.2</a>).</p>
 <p>The independent single-pool operator segment is the population where this trajectory <strong>should</strong> be observable — small operators entering, building reputation, attracting delegation, and graduating into established entities.</p>
 <p><strong>The data shows the opposite.</strong> The independent population contracted from <strong>555 to 291 pools</strong> while its stake share fell from <strong>39.1% to 24.4%</strong>.</p>
@@ -826,7 +860,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o1-f8" data-finding="CEN.O1.F8" data-short="<a class="finding-ref" href="#finding-cen-o1-f8" data-finding="CEN.O1.F8" data-short="F1.8" data-group="1" title="CEN.O1.F8 · hover for summary, click for detail">CEN.O1.F8</a>" data-group="1" title="CEN.O1.F8 · hover for summary, click for detail">CEN.O1.F8</a> — The mechanism's designed progression path — from new independent operator to established entity — has no observable expression in the mainnet data.</strong> The independent segment is contracting in both pool count and stake share, and the replacement pools that sustain the ~950-pool total are entity-operated. The growth path described in the formal design (<a href="intended-game.html#32-operators-from-first-pledge-to-full-commitment"><em>The Intended Game</em> §3.2</a>) exists as a theoretical property of the intended equilibrium but not as an empirical feature of the observed one.</p>
 </blockquote>
-<h3 id="36-pool-size-variability-how-stable-is-a-pools-stake">3.6 Pool size variability — how stable is a pool's stake?</h3>
+<h3 id="36-pool-size-variability-how-stable-is-a-pools-stake">3.6. Pool size variability — how stable is a pool's stake?</h3>
 <p>The entry/exit analysis tracks whether a pool is <em>in</em> the productive set; this section asks <strong>how much its stake fluctuates while it stays there</strong>.</p>
 <p>A pool that survives all <strong>73 epochs</strong> of the last year (epochs 551–623) may nonetheless experience <strong>large swings in delegation</strong>, with consequences for block production regularity and operator revenue predictability.</p>
 <p><img alt="Pool size variability" src="sub-flows/census/mainnet-analysis/figures/pool_size_variability.png"></p>
@@ -851,7 +885,7 @@ window.MathJax = {
 <p><strong>Implications for delegators.</strong> A pool's stake stability matters because it affects <strong>block-production regularity</strong> and, by extension, the <strong>consistency of epoch rewards</strong>.</p>
 <p>Delegators in low-CV pools experience <strong>smoother returns</strong>; those in high-CV pools face <strong>more variance</strong>. The data in <code>data/pool_size_variability.csv</code> provides per-pool CV, min, max, and range for further analysis; <code>data/pool_cv_by_segment.csv</code> gives the segment-level aggregate.</p>
 <h2 id="4-delegators">4. Delegators</h2>
-<h3 id="41-raw-query">4.1 Raw query</h3>
+<h3 id="41-raw-query">4.1. Raw query</h3>
 <p>Two db-sync tables count delegators in different ways:</p>
 <table>
 <thead>
@@ -876,7 +910,7 @@ window.MathJax = {
 </table>
 <p>The gap: <strong>~493K addresses</strong> hold an active delegation certificate but have <strong>zero balance</strong> in the epoch_stake snapshot. Similarly, <strong>~3,042 registered pools</strong> have delegation certificates pointing at them but carry <strong>no actual stake</strong>.</p>
 <p><img alt="Delegator count — cleaned" src="sub-flows/census/mainnet-analysis/figures/delegator_count_clean.png"></p>
-<h3 id="42-cleaning-zero-balance-certificates">4.2 Cleaning — zero-balance certificates</h3>
+<h3 id="42-cleaning-zero-balance-certificates">4.2. Cleaning — zero-balance certificates</h3>
 <p>A delegation certificate is a <em>declaration of intent</em>: it records on-chain that an address wishes to delegate to a given pool, but it <strong>does not lock any funds</strong>. The ADA remains freely spendable.</p>
 <p>An epoch_stake row, by contrast, is <em>capital at work</em> — it reflects the actual balance present at the snapshot boundary. An address with a certificate but <strong>no ADA earns no rewards</strong> and does not participate in consensus.</p>
 <p>The gap between the two views arises because delegation certificates are <strong>never automatically revoked</strong>. When an address is emptied — typically because the holder transferred funds to an exchange, moved to another wallet, or simply stopped using Cardano — the certificate persists as a <strong>residual record</strong> pointing at a pool with zero backing stake. These orphaned records are the <strong>"certificate ghosts"</strong> removed in this step.</p>
@@ -905,11 +939,11 @@ window.MathJax = {
 </tbody>
 </table>
 <p><strong>After cleaning:</strong> 1,355,035 delegations, 21.75B ADA across 2,877 pools.</p>
-<h3 id="43-cleaning-non-productive-pools">4.3 Cleaning — non-productive pools</h3>
+<h3 id="43-cleaning-non-productive-pools">4.3. Cleaning — non-productive pools</h3>
 <p>The <strong>1,925 pools</strong> below the production threshold (<a href="observatory.html#32-the-structural-requirement">§3.2 — The structural requirement</a>) carry <strong>59,937 delegations</strong> and <strong>0.19B ADA</strong>. These delegators earn <strong>intermittent and unpredictable rewards</strong>. Removing them aligns the delegator population with the productive operator landscape.</p>
 <p><strong>After cleaning:</strong> 1,295,098 delegations, 21.57B ADA across 952 productive pools.</p>
-<h3 id="44-delegator-landscape">4.4 Delegator landscape</h3>
-<h4 id="441-epoch-623-snapshot">4.4.1 Epoch 623 snapshot</h4>
+<h3 id="44-delegator-landscape">4.4. Delegator landscape</h3>
+<h4 id="441-epoch-623-snapshot">4.4.1. Epoch 623 snapshot</h4>
 <p>After the two cleaning passes (<a href="observatory.html#21-guarantee-operator-viability-across-the-entire-productive-population">§2.1</a>–4.3), the delegator population at epoch 623 is:</p>
 <table>
 <thead>
@@ -966,7 +1000,7 @@ window.MathJax = {
 </tbody>
 </table>
 <p>The <strong>1,295,098 productive pool delegations</strong> are the cleaned population handed to the companion <a href="sub-flows/operator-delegator-distribution/mainnet-analysis"><em>Operator's Cut</em></a> analysis, which decomposes them further into <strong>operator self-stake, custodial, and retail segments</strong>.</p>
-<h4 id="442-stake-distribution-among-delegators">4.4.2 Stake distribution among delegators</h4>
+<h4 id="442-stake-distribution-among-delegators">4.4.2. Stake distribution among delegators</h4>
 <p>The <strong>1.36M delegations</strong> carry <strong>21.75B ADA</strong> — but the distribution across individual delegations is <strong>extremely unequal</strong>.</p>
 <p><img alt="Delegator stake distribution" src="sub-flows/census/mainnet-analysis/figures/delegator_stake_distribution.png"></p>
 <p><strong>Size buckets:</strong></p>
@@ -1088,7 +1122,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o3-f2" data-finding="CEN.O3.F2" data-short="<a class="finding-ref" href="#finding-cen-o3-f2" data-finding="CEN.O3.F2" data-short="F3.2" data-group="3" title="CEN.O3.F2 · hover for summary, click for detail">CEN.O3.F2</a>" data-group="3" title="CEN.O3.F2 · hover for summary, click for detail">CEN.O3.F2</a> — 1,000 delegators (0.07% of the population) control 57% of staked ADA.</strong> The top 10,000 (0.74%) control 79.2%. The staking economy is effectively governed by the capital allocation decisions of a few thousand addresses — whose identity (individual whale, exchange hot wallet, institutional custodian) determines whether the protocol's delegation signal reflects genuine preference or operational logistics.</p>
 </blockquote>
-<h4 id="443-historical-evolution-who-joined-and-where-is-the-capital">4.4.3 Historical evolution — who joined and where is the capital?</h4>
+<h4 id="443-historical-evolution-who-joined-and-where-is-the-capital">4.4.3. Historical evolution — who joined and where is the capital?</h4>
 <p><img alt="Delegator historical evolution" src="sub-flows/census/mainnet-analysis/figures/delegator_historical_evolution.png"></p>
 <p>The three panels trace how the delegator population, its stake composition, and its concentration structure evolved from Shelley launch (epoch 210) to epoch 623.</p>
 <p><strong>Panel A — Population growth by size tier.</strong> The delegator count grew from <strong>17K</strong> (epoch 210) to <strong>1.36M</strong> (epoch 623). Virtually all growth comes from the <strong>micro-delegator tier</strong> (&lt; 1K ADA, cyan): this tier expanded from ~1,500 to ~1.05M, <strong>absorbing 96% of new entrants</strong>.</p>
@@ -1101,7 +1135,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o3-f3" data-finding="CEN.O3.F3" data-short="<a class="finding-ref" href="#finding-cen-o3-f3" data-finding="CEN.O3.F3" data-short="F3.3" data-group="3" title="CEN.O3.F3 · hover for summary, click for detail">CEN.O3.F3</a>" data-group="3" title="CEN.O3.F3 · hover for summary, click for detail">CEN.O3.F3</a> — Stake concentration crystallised by epoch 300 and has not moved since.</strong> The top-1% share has been stable at 78–82% for over 300 epochs, despite a 9× growth in delegator count. Growth since epoch 300 has come almost exclusively from the &lt; 1K tier — 600K new micro-delegators who collectively added 0.06B ADA (0.3% of stake). The economic weight of the staking system was set in its first ~90 epochs. Concentration is now a structural feature, not a trend.</p>
 </blockquote>
-<h3 id="45-population-dynamics-delegator-entries-and-exits">4.5 Population dynamics — delegator entries and exits</h3>
+<h3 id="45-population-dynamics-delegator-entries-and-exits">4.5. Population dynamics — delegator entries and exits</h3>
 <p>Applying the same epoch-over-epoch tracking used for pools in <a href="#35-population-dynamics-entries-exits-and-turnover">§3.5 — Population dynamics — entries, exits, and turnover</a>, but at the <strong>delegator level</strong>: for each epoch, count addresses that appear in a productive pool's delegation set for the first time (<strong>entries</strong>) and those that disappear from it (<strong>exits</strong>). Only delegators to pools above the production threshold are counted.</p>
 <p><img alt="Population dynamics — productive-pool delegator entries and exits" src="sub-flows/census/mainnet-analysis/figures/delegator_population_dynamics.png"></p>
 <p>The delegator population tells a <strong>fundamentally different story</strong> from the pool population. Where the productive pool count stabilised early and has fluctuated within a narrow band since epoch 300, the delegator count grew <strong>almost monotonically</strong> from <strong>~28,700</strong> (epoch 212) to <strong>~1,295,000</strong> (epoch 623).</p>
@@ -1114,10 +1148,10 @@ window.MathJax = {
 </ul>
 <p>The turnover rate (gross entries + exits as a share of the active population) averages around <strong>0.5% per epoch</strong> but spikes markedly during protocol upgrades and market events, revealing that the apparently stable stock masks <strong>episodic surges of rebalancing</strong>.</p>
 <p>Unlike pool dynamics, where entries and exits are roughly balanced post-epoch 300, delegator dynamics remain <strong>structurally asymmetric</strong> — entries consistently exceed exits — reflecting <strong>ongoing organic adoption</strong> even as the growth rate decelerates.</p>
-<h3 id="46-delegation-churn-pool-switching-behaviour">4.6 Delegation churn — pool switching behaviour</h3>
+<h3 id="46-delegation-churn-pool-switching-behaviour">4.6. Delegation churn — pool switching behaviour</h3>
 <p>The population dynamics above track whether delegators are <em>in</em> the productive set; this section tracks what they do <em>within</em> it — <strong>how often they switch pools, who switches, and why</strong>.</p>
 <p>The <code>delegation</code> table records every delegation certificate ever submitted on-chain (<strong>3,491,680 certificates</strong> across the Shelley era). Each certificate binds a stake address to a pool; a new certificate from the same address to a different pool constitutes a <strong>redelegation (pool switch)</strong>.</p>
-<h4 id="461-certificate-composition-and-temporal-regimes">4.6.1 Certificate composition and temporal regimes</h4>
+<h4 id="461-certificate-composition-and-temporal-regimes">4.6.1. Certificate composition and temporal regimes</h4>
 <p><img alt="Delegation churn — pool switching behaviour" src="sub-flows/census/mainnet-analysis/figures/delegation_churn.png"></p>
 <p>Of the <strong>3.49M delegation certificates</strong> submitted between epochs 210 and 623:</p>
 <table>
@@ -1161,7 +1195,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o4-f1" data-finding="CEN.O4.F1" data-short="<a class="finding-ref" href="#finding-cen-o4-f1" data-finding="CEN.O4.F1" data-short="F4.1" data-group="4" title="CEN.O4.F1 · hover for summary, click for detail">CEN.O4.F1</a>" data-group="4" title="CEN.O4.F1 · hover for summary, click for detail">CEN.O4.F1</a> — The delegation market has matured through three distinct regimes.</strong> Redelegation activity fell from 2,000–3,500 per epoch in early Shelley to 600–800 in the current regime — a 75% decline that marks the transition from experimentation to a settled market.</p>
 </blockquote>
-<h4 id="462-tenure-distribution">4.6.2 Tenure distribution</h4>
+<h4 id="462-tenure-distribution">4.6.2. Tenure distribution</h4>
 <p>The tenure distribution confirms a bimodal structure:</p>
 <table>
 <thead>
@@ -1192,7 +1226,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o4-f2" data-finding="CEN.O4.F2" data-short="<a class="finding-ref" href="#finding-cen-o4-f2" data-finding="CEN.O4.F2" data-short="F4.2" data-group="4" title="CEN.O4.F2 · hover for summary, click for detail">CEN.O4.F2</a>" data-group="4" title="CEN.O4.F2 · hover for summary, click for detail">CEN.O4.F2</a> — The delegator base is structurally bimodal.</strong> 42% of delegations have persisted for over 2.7 years, while 21% last less than 25 days. The middle ground (37%) distributes roughly uniformly. The loyal majority anchors pool economics; the volatile tail generates most of the churn signal.</p>
 </blockquote>
-<h4 id="463-who-switches-a-size-stratified-view">4.6.3 Who switches? A size-stratified view</h4>
+<h4 id="463-who-switches-a-size-stratified-view">4.6.3. Who switches? A size-stratified view</h4>
 <p>Crossing tenure with delegator stake size at epoch 623 reveals a <strong>clear gradient</strong>: <em>the larger the delegation, the more active the delegator.</em></p>
 <p><img alt="Tenure and switching by delegation size" src="sub-flows/census/mainnet-analysis/figures/tenure_by_stake_size.png"></p>
 <p><strong>Switching activity by size cohort:</strong></p>
@@ -1248,7 +1282,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o5-f2" data-finding="CEN.O5.F2" data-short="<a class="finding-ref" href="#finding-cen-o5-f2" data-finding="CEN.O5.F2" data-short="F5.2" data-group="5" title="CEN.O5.F2 · hover for summary, click for detail">CEN.O5.F2</a>" data-group="5" title="CEN.O5.F2 · hover for summary, click for detail">CEN.O5.F2</a> — The network's capital is disproportionately held by its most mobile delegators.</strong> Whales (1M+ ADA) hold 14.1B of the 21.8B staked total, yet only 38% of their stake sits in loyal delegations. Pool operators who depend on a few large delegations face structurally higher stake instability than those with a broad base of small, loyal delegators.</p>
 </blockquote>
-<h4 id="464-flow-corridors-and-retail-lens">4.6.4 Flow corridors and retail lens</h4>
+<h4 id="464-flow-corridors-and-retail-lens">4.6.4. Flow corridors and retail lens</h4>
 <p>The top pool-to-pool flows (<code>data/delegation_flow_matrix.csv</code>) reveal that the <strong>highest-volume corridors are between pools controlled by the same entity</strong> — particularly within IOG's pool fleet and between major exchange operators.</p>
 <p><em>A significant share of observed "switching" is internal rebalancing by multi-pool operators rather than genuine delegator choice.</em></p>
 <p><strong>Retail-only filter.</strong> Restricting to retail pools (margin &lt; 99.9%, excluding private and custodial-by-extraction pools — same filter as the companion <a href="sub-flows/operator-delegator-distribution/mainnet-analysis"><em>Operator's Cut</em></a> <a href="observatory.html#23-maintain-and-diversify-a-competitive-delegator-yield">§2.3</a>) yields near-identical results:</p>
@@ -1287,12 +1321,12 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o4-f3" data-finding="CEN.O4.F3" data-short="<a class="finding-ref" href="#finding-cen-o4-f3" data-finding="CEN.O4.F3" data-short="F4.3" data-group="4" title="CEN.O4.F3 · hover for summary, click for detail">CEN.O4.F3</a>" data-group="4" title="CEN.O4.F3 · hover for summary, click for detail">CEN.O4.F3</a> — Custodial and private pools contribute negligible churn.</strong> The retail-only filter produces near-identical aggregate metrics — 40.0% switch rate, 42.4% loyal tenure. Observed switching is a retail-market phenomenon.</p>
 </blockquote>
-<h3 id="47-switch-motivation-and-loyalty-profiles">4.7 Switch motivation and loyalty profiles</h3>
+<h3 id="47-switch-motivation-and-loyalty-profiles">4.7. Switch motivation and loyalty profiles</h3>
 <p>The previous section established <em>who</em> switches and <em>how often</em>. This section asks <em>why</em> delegators move and <em>where</em> loyal delegators stay.</p>
 <p>The companion <a href="sub-flows/operator-delegator-distribution/mainnet-analysis"><em>Operator's Cut</em></a> (<a href="observatory.html#33-problem-induction">§3.3 — Problem Induction</a>) established that <strong>margin alone is a poor proxy</strong> for what a delegator pays — the <strong>operator take</strong> (combining fixed cost and margin into a single composite fee) and the resulting <strong>net ROS</strong> (delegator yield after fees) are the correct metrics.</p>
 <p>Finding F3.10 further showed that net ROS is <strong>near-homogeneous across the hollow segment</strong> (8–22 bps of spread). The analysis below uses these metrics rather than raw margin to assess switch motivation.</p>
 <p><img alt="Switch motivation — operator take × ROS × size" src="sub-flows/census/mainnet-analysis/figures/switch_motivation_ros.png"></p>
-<h4 id="471-net-ros-does-not-differentiate">4.7.1 Net ROS does not differentiate</h4>
+<h4 id="471-net-ros-does-not-differentiate">4.7.1. Net ROS does not differentiate</h4>
 <p>For each of the <strong>top 500 pool-to-pool flow corridors</strong> (<strong>170,064 matched switches</strong>), the origin and destination pools are compared on <strong>operator take, net ROS, and pool size</strong> using the reward-split snapshot at epoch 614.</p>
 <p><strong>Net ROS direction:</strong></p>
 <table>
@@ -1321,7 +1355,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o6-f1" data-finding="CEN.O6.F1" data-short="<a class="finding-ref" href="#finding-cen-o6-f1" data-finding="CEN.O6.F1" data-short="F6.1" data-group="6" title="CEN.O6.F1 · hover for summary, click for detail">CEN.O6.F1</a>" data-group="6" title="CEN.O6.F1 · hover for summary, click for detail">CEN.O6.F1</a> — Net ROS cannot explain switching: half of all switches produce zero yield change.</strong> The median ROS differential between origin and destination pool is +0.02 bps. The signal is too weak to detect, let alone optimise — consistent with F3.10 of the Operator's Cut, which found that gross ROS varies by less than 3 bps across 90% of the non-custodial market.</p>
 </blockquote>
-<h4 id="472-operator-take-is-symmetric">4.7.2 Operator take is symmetric</h4>
+<h4 id="472-operator-take-is-symmetric">4.7.2. Operator take is symmetric</h4>
 <p><strong>Operator take direction</strong> (threshold: ±1 pp):</p>
 <table>
 <thead>
@@ -1350,7 +1384,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o6-f2" data-finding="CEN.O6.F2" data-short="<a class="finding-ref" href="#finding-cen-o6-f2" data-finding="CEN.O6.F2" data-short="F6.2" data-group="6" title="CEN.O6.F2 · hover for summary, click for detail">CEN.O6.F2</a>" data-group="6" title="CEN.O6.F2 · hover for summary, click for detail">CEN.O6.F2</a> — Operator take is equally balanced across switch directions.</strong> 30.8% of switches go to a cheaper pool, 31.5% to a more expensive one, and 37.7% to a similar-take pool. No take-based optimisation pattern is detectable.</p>
 </blockquote>
-<h4 id="473-pool-size-is-the-only-asymmetric-signal">4.7.3 Pool size is the only asymmetric signal</h4>
+<h4 id="473-pool-size-is-the-only-asymmetric-signal">4.7.3. Pool size is the only asymmetric signal</h4>
 <p><strong>Take × size</strong> (panel B) reveals the one systematic pattern in the data:</p>
 <table>
 <thead>
@@ -1379,7 +1413,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o6-f3" data-finding="CEN.O6.F3" data-short="<a class="finding-ref" href="#finding-cen-o6-f3" data-finding="CEN.O6.F3" data-short="F6.3" data-group="6" title="CEN.O6.F3 · hover for summary, click for detail">CEN.O6.F3</a>" data-group="6" title="CEN.O6.F3 · hover for summary, click for detail">CEN.O6.F3</a> — Pool size, not price, is the only asymmetric signal in switching behaviour.</strong> Moves to smaller pools correlate with higher take acceptance (21.5%), while moves to larger pools correlate with take neutrality (21.0%). This is consistent with F3.11 of the Operator's Cut: delegation concentration is driven by pool visibility, not return optimisation.</p>
 </blockquote>
-<h4 id="474-loyal-delegators-and-their-pools">4.7.4 Loyal delegators and their pools</h4>
+<h4 id="474-loyal-delegators-and-their-pools">4.7.4. Loyal delegators and their pools</h4>
 <p>The margin-band distribution across loyalty segments confirms that fee levels segment the market at entry, not during tenure:</p>
 <table>
 <thead>
@@ -1418,7 +1452,7 @@ window.MathJax = {
 </blockquote>
 <p><strong>The top 20 pools by loyal-delegation count</strong> (<code>data/loyal_delegator_pools.csv</code>) are <strong>overwhelmingly single-pool operators</strong> with margins of <strong>2–4%</strong> and fixed costs of <strong>340–400 ADA</strong>.</p>
 <p>Average tenure among their loyal delegations ranges from <strong>290 to 362 epochs</strong> (roughly <strong>4 to 5 years</strong>). These pools support <strong>10,000–36,000 delegators each</strong> and have operated <strong>since the early Shelley era</strong> — their delegator bases crystallised early and have remained <strong>remarkably stable</strong>.</p>
-<h3 id="48-credential-type-key-versus-script">4.8 Credential type — key versus script</h3>
+<h3 id="48-credential-type-key-versus-script">4.8. Credential type — key versus script</h3>
 <p>The on-chain transaction carries <strong>no metadata identifying the originating wallet software</strong> — a <code>stake_delegation_certificate</code> is identical regardless of the interface that submitted it.</p>
 <p>The credential type, however, is encoded in the stake address: <code>stake1u…</code> for <strong>key-based</strong> credentials (wallet controlled by a private key) and <code>stake17…</code> for <strong>script-based</strong> credentials (smart contract, multisig, or governance script). This is the <strong>finest on-chain classification available</strong> for delegator provenance.</p>
 <p>From <code>stake_account_census_623.csv</code> (epoch 623, db-sync):</p>
@@ -1459,7 +1493,7 @@ window.MathJax = {
 </blockquote>
 <p><em>Data: <code>data/stake_account_census_623.csv</code>; per-pool credential breakdown in <code>operator-delegator-distribution/mainnet-analysis/data/delegator_credential_by_pool.csv</code>.</em></p>
 <h2 id="5-non-participants">5. Non-Participants</h2>
-<h3 id="51-circulating-supply-decomposition">5.1 Circulating supply decomposition</h3>
+<h3 id="51-circulating-supply-decomposition">5.1. Circulating supply decomposition</h3>
 <p>Before isolating non-participants, the circulating supply itself must be decomposed.</p>
 <p>The Koios <code>totals</code> endpoint (cross-checked against <code>ada_pots</code> in db-sync) records the key components that sum to circulating ADA: <strong>UTxO balances</strong>, <strong>unclaimed reward-account balances</strong>, and <strong>protocol deposits</strong>. Combining these with the staked amount from <code>epoch_stake</code> yields:</p>
 <table>
@@ -1508,7 +1542,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o7-f2" data-finding="CEN.O7.F2" data-short="<a class="finding-ref" href="#finding-cen-o7-f2" data-finding="CEN.O7.F2" data-short="F7.2" data-group="7" title="CEN.O7.F2 · hover for summary, click for detail">CEN.O7.F2</a>" data-group="7" title="CEN.O7.F2 · hover for summary, click for detail">CEN.O7.F2</a> — 14.355B ADA (39.8% of circulating supply) does not participate in staking.</strong> The non-participant pool has been stable at 36–39% for over 300 epochs. As <a href="#52-anatomy-of-the-non-participant-population">§5.2 — Anatomy of the non-participant population</a> demonstrates, only 134.6M ADA (0.37% of circulation) is <em>addressable</em> by incentive changes — registered stake credentials that have not delegated. The remaining 14.2B has no stake credential and is structurally excluded from the delegation system without protocol-level changes.</p>
 </blockquote>
-<h3 id="52-anatomy-of-the-non-participant-population">5.2 Anatomy of the non-participant population</h3>
+<h3 id="52-anatomy-of-the-non-participant-population">5.2. Anatomy of the non-participant population</h3>
 <p>The <strong>14.355B</strong> non-participant ADA is <strong>not a monolithic block</strong> of disengaged holders. It divides into <strong>structurally distinct populations</strong> based on whether a stake credential exists and, if so, whether it has been registered and delegated.</p>
 <p>The classification pipeline (<code>15_utxo_from_koios.py</code>) combines two data sources:</p>
 <ul>
@@ -1594,7 +1628,7 @@ window.MathJax = {
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o7-f2" data-finding="CEN.O7.F2" data-short="<a class="finding-ref" href="#finding-cen-o7-f2" data-finding="CEN.O7.F2" data-short="F7.2" data-group="7" title="CEN.O7.F2 · hover for summary, click for detail">CEN.O7.F2</a>" data-group="7" title="CEN.O7.F2 · hover for summary, click for detail">CEN.O7.F2</a> — The non-participant floor is structural, not behavioural.</strong> Only 134.6M ADA (0.37% of circulation) belongs to registered stake credentials that have not delegated. The remaining 14.2B ADA in non-participant addresses has no stake credential at all. Incentive-mechanism changes (reward adjustments, fee-structure reforms) can at most shift the 0.37% addressable pool. Moving the other 39.4% requires structural protocol changes: enabling enterprise-address staking, mandating staking-capable script addresses in DeFi standards, or introducing delegation-by-default for newly minted base addresses.</p>
 </blockquote>
 <p><img alt="Non-participant decomposition" src="sub-flows/census/mainnet-analysis/figures/non_participant_decomposition.png"></p>
-<h4 id="521-fine-grained-utxo-decomposition-at-epoch-623">5.2.1 Fine-grained UTxO decomposition at epoch 623</h4>
+<h4 id="521-fine-grained-utxo-decomposition-at-epoch-623">5.2.1. Fine-grained UTxO decomposition at epoch 623</h4>
 <p>Instance B's full db-sync (synced from genesis to epoch 626) provides <code>tx_out</code> data that enables a <strong>per-UTxO address-type classification</strong> impossible with Koios alone. Querying all unspent outputs and classifying by bech32 address prefix yields the <strong>definitive decomposition</strong>:</p>
 <table>
 <thead>
@@ -1660,7 +1694,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding F5.3 — The 14.2B "no stake credential" residual is dominated by two legacy populations, not by active DeFi.</strong> Byron addresses (1.32B) and enterprise addresses (1.04B) together account for 2.36B ADA in identified UTxOs. The remaining ~11.9B gap between the UTxO-level total and the account-level residual reflects addresses with stake credentials that are registered but not delegated, plus rounding from the ~3-epoch lag between Instance B's tip and epoch 623. Script-no-cred (91M) is a small and slowly growing fraction.</p>
 </blockquote>
-<h3 id="53-dormancy-vintage">5.3 Dormancy vintage</h3>
+<h3 id="53-dormancy-vintage">5.3. Dormancy vintage</h3>
 <p>Among the non-delegated UTxOs, the creation date of each output provides a <strong>rough proxy</strong> for how "alive" the controlling wallet is.</p>
 <p>A UTxO created in the <strong>pre-Shelley era</strong> (before epoch 208) and never moved since suggests a <strong>dormant or lost</strong> wallet. A UTxO created <strong>recently but not delegated</strong> suggests an active user who has consciously opted out of staking — or an exchange hot wallet cycling funds.</p>
 <p>Instance B's full db-sync (synced from genesis to epoch 626) provides <code>tx_out</code> creation timestamps for all unspent outputs. The query isolates UTxOs in addresses with no stake credential (enterprise, script-no-staking-cred, and Byron-era) and groups them by <strong>creation-epoch vintage</strong>:</p>
@@ -1753,7 +1787,7 @@ window.MathJax = {
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o5-f2" data-finding="CEN.O5.F2" data-short="F5.2" data-group="5" title="CEN.O5.F2 · hover for summary, click for detail">CEN.O5.F2</a> — The no-credential UTxO set is temporally polarised: 37% is pre-staking-era dormant output, 44% is from the last 73 epochs.</strong> The dormant fraction (927.7M ADA) has eroded from 1,127M at epoch 376 — wallets awaken at ~0.8M ADA per epoch. The recent fraction (1,110M ADA in epochs 550–623) reflects active enterprise-address cycling. The middle eras are almost entirely spent, confirming that the no-credential population splits cleanly into "probably lost" and "operationally active" — with very little in between.</p>
 </blockquote>
 <p><img alt="Dormancy vintage" src="sub-flows/census/mainnet-analysis/figures/dormancy_vintage_623.png"></p>
-<h3 id="54-what-the-non-participant-population-likely-contains">5.4 What the non-participant population likely contains</h3>
+<h3 id="54-what-the-non-participant-population-likely-contains">5.4. What the non-participant population likely contains</h3>
 <p>The <strong>14.215B ADA</strong> in the "no stake credential" residual category cannot be further decomposed on-chain without a full UTxO dump (blocked by the TxIx bug; see <a href="#52-anatomy-of-the-non-participant-population">§5.2 — Anatomy of the non-participant population</a> methodology note). However, the <strong>major constituents are identifiable by elimination</strong>:</p>
 <p><strong>Exchange custody (likely dominant).</strong> Centralised exchanges hold ADA in <strong>enterprise addresses</strong> (hot and cold wallets). Some exchanges stake user ADA through their own pools (Coinbase, Binance — visible in <a href="observatory.html#33-problem-induction">§3.3 — Problem Induction</a> entity attribution), but the <strong>custodial ADA that is <em>not</em> staked sits in enterprise addresses by design</strong>.</p>
 <p>Enterprise addresses <strong>structurally cannot delegate</strong>; this is the <strong>largest single contributor</strong> to the 14.2B residual. The epoch 623 decomposition (<a href="#521-fine-grained-utxo-decomposition-at-epoch-623">§5.2.1 — Fine-grained UTxO decomposition at epoch 623</a>) shows that enterprise addresses account for <strong>1,037M ADA (42%)</strong> of identified no-credential UTxOs, Byron-era legacy addresses <strong>1,321M ADA (54%)</strong>, and script-no-staking-credential <strong>91M ADA (4%)</strong>. Exchange cold-wallet identification requires cross-referencing with known address clusters, which is deferred to a companion analysis.</p>
@@ -1772,7 +1806,7 @@ window.MathJax = {
 <blockquote>
 <p><em>If fee revenue is dominated by addresses that do not participate in staking, the reward mechanism funds itself from a constituency it does not reward.</em></p>
 </blockquote>
-<h3 id="61-what-the-analysis-must-establish">6.1 What the analysis must establish</h3>
+<h3 id="61-what-the-analysis-must-establish">6.1. What the analysis must establish</h3>
 <p><strong>Five questions</strong> define the analytical scope. Each maps to a finding that the main report's §2 needs.</p>
 <p><strong>Population size and breadth.</strong> How many distinct addresses submit transactions per epoch? How does this compare to the <strong>1.355M active delegations</strong>? Is the fee-generating population <strong>larger, smaller, or roughly the same</strong> as the staking population — and how has the ratio evolved since Shelley?</p>
 <p><strong>Concentration.</strong> Does fee revenue follow the same <strong>power-law pattern</strong> as delegation stake (Gini 0.976, §4)? If the top 100 addresses generate the majority of fees, the sustainability of the entire pipeline depends on a <strong>handful of actors</strong> — and the identity of those actors (DEX contracts, exchange hot wallets, known entities) determines whether the fee base is <strong>diversified or fragile</strong>.</p>
@@ -1782,22 +1816,22 @@ window.MathJax = {
 <p>If the fee base is dominated by enterprise addresses and script addresses that <strong>structurally cannot delegate</strong> (§5), the pipeline <strong>taxes a constituency it excludes from rewards</strong>. The CIP-19 address-type prefix provides a first-order classification: base addresses (<code>addr1q</code>) have a staking part; enterprise addresses (<code>addr1v</code>) do not. Cross-referencing top fee payers with <code>epoch_stake</code> delegation status completes the picture.</p>
 <p><strong>Growth trajectory.</strong> Is the fee-generating population <strong>expanding, contracting, or stable</strong>? Is growth driven by <strong>new addresses entering</strong> (breadth) or by <strong>higher activity from existing ones</strong> (intensity)?</p>
 <p>Comparing submitter growth to the delegator growth curve (<a href="observatory.html#24-reduce-the-concentration-effects-that-distort-both-populations">§2.4</a>) and to the staking-rate decline (CEN.O7) establishes whether the two populations are <strong>diverging</strong> — and in which direction.</p>
-<h3 id="62-data-sources-and-methodology">6.2 Data sources and methodology</h3>
+<h3 id="62-data-sources-and-methodology">6.2. Data sources and methodology</h3>
 <p>The analysis requires <code>tx</code> (fee, block reference, script size), <code>tx_in</code> + <code>tx_out</code> (source addresses), and <code>block</code> (epoch attribution) from db-sync Instance A at epoch 623.</p>
 <p>The submitter-identification heuristic is <strong>the first input of each transaction</strong> (the address that pays the fee). For multi-input transactions this is an <strong>approximation</strong> — but it covers the vast majority of cases and matches the convention used by wallet software and block explorers.</p>
 <p>The reproduction scripts are in <code>scripts/15_tx_epoch_summary.sql</code> through <code>scripts/20_submitter_growth.sql</code>.</p>
 <blockquote>
 <p><strong>Data coverage.</strong> Two db-sync instances feed the analysis. <strong>Instance A</strong> (pruned, epoch 623) provides script-size classification for the full Shelley era (epochs 208–622). <strong>Instance B</strong> (full, epoch 626) retains unpruned <code>tx_out</code> rows, enabling address resolution for submitter identification across the entire Shelley era (epochs 208–623). All findings in §6.3.1–6.3.3 and §6.3.5 now use Instance B for both aggregate and address-level metrics. Instance A remains the source for §6.3.4 (script vs simple composition).</p>
 </blockquote>
-<h3 id="63-findings">6.3 Findings</h3>
-<h4 id="631-volume-and-population-size">6.3.1 Volume and population size</h4>
+<h3 id="63-findings">6.3. Findings</h3>
+<h4 id="631-volume-and-population-size">6.3.1. Volume and population size</h4>
 <p><img alt="Transaction volume and submitter population" src="sub-flows/census/mainnet-analysis/figures/submitter_volume_623.png"></p>
 <p>The top panel overlays two series across the full Shelley era (epochs 208–623): <strong>per-epoch transaction count</strong> (blue area) and <strong>unique submitter addresses</strong> (red line), both from Instance B. The bottom panel tracks <strong>fee revenue per epoch</strong>.</p>
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o6-f1" data-finding="CEN.O6.F1" data-short="F6.1" data-group="6" title="CEN.O6.F1 · hover for summary, click for detail">CEN.O6.F1</a> — The submitter population peaked at 790K addresses (epoch 304) and has since contracted by 96%, while transaction volume fell by 93%.</strong> The submitter population grew in step with transaction count through early Shelley, peaking at 790,335 unique addresses and 1,566,974 transactions at epoch 304 — the CNFT minting frenzy. From epoch 310 onward the population collapsed faster than volume: by epoch 384, unique submitters had fallen to 101K while transactions remained above 330K. The decline continued through the post-Alonzo era: by epoch 500, 58K submitters generated 217K transactions; at epoch 623, 30,505 submitters generated 105,851 transactions. The ratio of unique addresses to transactions — a consolidation measure — fell from 0.88 (epoch 210) to 0.31 (epoch 384) to 0.29 (epoch 623). The fee base has consolidated dramatically: a population one twenty-sixth the size of its peak still sustains two thirds of the per-epoch transaction rate seen during 2023–2024.</p>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o6-f2" data-finding="CEN.O6.F2" data-short="F6.2" data-group="6" title="CEN.O6.F2 · hover for summary, click for detail">CEN.O6.F2</a> — Transaction volume across the full Shelley era totals 117.6M transactions and 37.7M ADA in cumulative fees.</strong> Over the recent 6-epoch window (epochs 618–623), throughput averaged 118,922 transactions per epoch with 38,003 ADA in fees and 32,707 unique submitters — a lower baseline than the Alonzo-era peaks but consistent with the 2024–2025 steady state. The all-time peak occurred at epoch 304 (1,566,974 tx, 790,335 submitters, 308,294 ADA in fees). These aggregates establish the absolute scale of the fee-generating economy, but say nothing about who generates it — that requires the address-level decomposition below.</p>
 </blockquote>
-<h4 id="632-submitter-population-decomposition">6.3.2 Submitter population decomposition</h4>
+<h4 id="632-submitter-population-decomposition">6.3.2. Submitter population decomposition</h4>
 <p><img alt="Population decomposition by address type" src="sub-flows/census/mainnet-analysis/figures/submitter_population_623.png"></p>
 <p>The stacked area chart decomposes the submitter population by <strong>CIP-19 address type</strong> across the full Shelley era (epochs 208–623). Base-key addresses (blue) dominate the area; the remaining types are layered above.</p>
 <p><strong>Three structural transitions</strong> span the timeline.</p>
@@ -1809,7 +1843,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o6-f3" data-finding="CEN.O6.F3" data-short="F6.3" data-group="6" title="CEN.O6.F3 · hover for summary, click for detail">CEN.O6.F3</a> — By address count, the submitter population remains overwhelmingly stakeable, but the script segment has grown structurally.</strong> At epoch 623, 73.4% of unique submitters are base-key (<code>addr1q</code>) addresses carrying a staking credential, 9.9% are enterprise-key (<code>addr1v</code>), 8.3% are base-script (<code>addr1z</code>), 6.3% are legacy Byron, 1.7% are enterprise-script (<code>addr1w</code>), and 0.3% are base-other. Compared to the earlier snapshot at epoch 384 (87% base-key, &lt;1% script), the shift is clear: base-key's share dropped 14 pp while base-script grew from 0.4% to 8.3%. The count-based picture, however, remains misleading — the small script population punches far above its weight in fee terms, as the next figure reveals.</p>
 </blockquote>
-<h4 id="633-fee-revenue-decomposition-who-pays">6.3.3 Fee revenue decomposition — who pays</h4>
+<h4 id="633-fee-revenue-decomposition-who-pays">6.3.3. Fee revenue decomposition — who pays</h4>
 <p><img alt="Fee revenue share by submitter address type" src="sub-flows/census/mainnet-analysis/figures/submitter_fee_decomp_623.png"></p>
 <p>The stacked area chart shows the <strong>percentage share of fee revenue</strong> by address type across epochs 208–623. Unlike the population chart above, the composition here is <strong>far more contested</strong>: base-key addresses (blue) hold <strong>less than half the area</strong> by epoch 623, with script and enterprise types filling the remainder.</p>
 <p>The story changes dramatically when measured by <strong>fees rather than headcount</strong>. At epoch 300 (early post-Alonzo), base-key addresses generated <strong>69%</strong> of all fees. By epoch 340, that share had dropped to <strong>62%</strong>, and <strong>enterprise-script addresses — just 197 addresses — had risen from near-zero to 25%</strong> of fee revenue.</p>
@@ -1819,7 +1853,7 @@ window.MathJax = {
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o6-f4" data-finding="CEN.O6.F4" data-short="F6.4" data-group="6" title="CEN.O6.F4 · hover for summary, click for detail">CEN.O6.F4</a> — Roughly 30% of fee revenue is generated by addresses that structurally cannot participate in delegation, and this share has been stable since the Alonzo era.</strong> At epoch 623, enterprise-script addresses (529 addresses, <code>addr1w</code>) generate 18.6% of fees and enterprise-key addresses (3,027, <code>addr1v</code>) generate 11.5%, totalling 30.1%. These addresses have no staking credential — the reward mechanism taxes a constituency it excludes. The non-stakeable fee share has oscillated between 18% and 44% since epoch 300, averaging ~25%. The structural floor is set by DeFi contract activity; the ceiling by speculative episodes. At no point since Alonzo has the non-stakeable share fallen below 14%.</p>
 <p><strong>Finding <a class="finding-ref" href="#finding-cen-o6-f5" data-finding="CEN.O6.F5" data-short="F6.5" data-group="6" title="CEN.O6.F5 · hover for summary, click for detail">CEN.O6.F5</a> — Script addresses represent 10% of submitters but generate 35% of fee revenue.</strong> At epoch 623, 529 enterprise-script addresses and 2,544 base-script addresses (3,073 total, 10.1% of the population) together generated 11,480 ADA in fees — 34.9% of the epoch total. The average enterprise-script submitter pays 11.6 ADA per epoch in fees; the average base-key submitter pays 0.69 ADA — a 17× premium reflecting Plutus execution costs. This concentration has intensified since epoch 384, when script addresses generated 33% of fees from 0.7% of the population. The script share of the population has grown tenfold (from 0.7% to 10%) while their fee share held steady, meaning the per-address premium has moderated but the structural dependency on script activity has deepened: the pipeline's fee revenue is coupled to the continued operation of roughly 3,000 smart contracts.</p>
 </blockquote>
-<h4 id="634-transaction-composition-script-vs-simple">6.3.4 Transaction composition — script vs simple</h4>
+<h4 id="634-transaction-composition-script-vs-simple">6.3.4. Transaction composition — script vs simple</h4>
 <p><img alt="Transaction volume and script activity" src="sub-flows/census/mainnet-analysis/figures/tx_type_composition_623.png"></p>
 <p>The top panel overlays transaction volume as a stacked area (simple in blue, script in red) across epochs 208–623. The bottom panel tracks the <strong>script share of transaction count</strong> (blue line) and <strong>fee revenue</strong> (red line). Three hard-fork boundaries are annotated.</p>
 <p>Script transactions first appeared at <strong>epoch 290 (Alonzo HFC)</strong>, initially at <strong>0.09%</strong> of volume. Activity <strong>exploded</strong> between epochs 308 and 340, reaching a peak script share of <strong>29.2%</strong> (epoch 355) and a peak script fee share of <strong>61.7%</strong> (epoch 330).</p>
@@ -1829,7 +1863,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding F6.7 — Script transactions represent 12.6% of post-Alonzo transaction count but 29.7% of cumulative fees — the DeFi economy pays 2.4× the per-transaction rate.</strong> The fee premium peaked above 3× during the Alonzo era (epochs 310–340), when fewer than 30% of transactions commanded over 60% of fees. The premium has moderated to ~1.5× in recent epochs, but remains structurally above parity. For the sustainability argument, this means per-transaction fee intensity is coupled to script adoption — a variable the current incentive design does not address.</p>
 </blockquote>
-<h4 id="635-fee-concentration">6.3.5 Fee concentration</h4>
+<h4 id="635-fee-concentration">6.3.5. Fee concentration</h4>
 <p><img alt="Fee concentration" src="sub-flows/census/mainnet-analysis/figures/fee_concentration_623.png"></p>
 <p>The figure shows the distribution of fee revenue across submitter tiers for <strong>epochs 618–623</strong> (recent window, Instance B).</p>
 <blockquote>
@@ -2033,7 +2067,7 @@ window.MathJax = {
 </ol>
 <h2 id="8-bridges-to-companion-analyses">8. Bridges to Companion Analyses</h2>
 <p>This census provides the <strong>population denominators</strong> that the companion reports take as inputs. Below, each key statistic in the other documents is traced back to its census origin — and <strong>discrepancies between documents are made explicit</strong>.</p>
-<h3 id="81-distribution-efficiency-epoch-616">8.1 Distribution efficiency (epoch 616)</h3>
+<h3 id="81-distribution-efficiency-epoch-616">8.1. Distribution efficiency (epoch 616)</h3>
 <p>The pools-distribution analysis (<code>pools-distribution/mainnet-analysis/</code>) decomposes the pools pot into <strong>three channels</strong> at epoch 616:</p>
 <table>
 <thead>
@@ -2063,7 +2097,7 @@ window.MathJax = {
 </table>
 <p>The participation gap is a <em>direct function of the staking rate measured in this census</em>. Every percentage point the staking rate drops increases the gap by <strong>~0.77 pp</strong> (via the λ_size multiplier).</p>
 <p><strong>Epoch drift.</strong> The distribution analysis uses epoch 616, this census goes to 623. The staking rate moved from <strong>~59.3% (616)</strong> to <strong>59.0% (623)</strong> — a <strong>0.3 pp decline</strong> over 7 epochs. The participation gap is therefore <strong>slightly worse at 623</strong> than the 33.5% reported at 616.</p>
-<h3 id="82-operators-cut-epoch-614">8.2 Operator's cut (epoch 614)</h3>
+<h3 id="82-operators-cut-epoch-614">8.2. Operator's cut (epoch 614)</h3>
 <p>The operator-delegator analysis (<code>operator-delegator-distribution/mainnet-analysis/</code>) reports <strong>1,270,903 active delegation relationships</strong> at epoch 614. The census epoch_stake count at 614 would be <strong>~1,353K</strong> (interpolating from the time-series).</p>
 <p>The difference arises because the operator analysis filters to <strong>pools that actually earned rewards in the epoch</strong>, excluding pools with zero blocks.</p>
 <table>
@@ -2092,7 +2126,7 @@ window.MathJax = {
 </tr>
 </tbody>
 </table>
-<h3 id="83-main-report-epochs-548583">8.3 Main report (epochs 548–583)</h3>
+<h3 id="83-main-report-epochs-548583">8.3. Main report (epochs 548–583)</h3>
 <p>The main report (<code>spo_incentives/report.tex</code>) uses an <strong>older analysis window</strong> (epochs 548–583) and Koios-sourced data:</p>
 <table>
 <thead>
@@ -2125,7 +2159,7 @@ window.MathJax = {
 </tr>
 </tbody>
 </table>
-<h3 id="84-reconciliation-summary">8.4 Reconciliation summary</h3>
+<h3 id="84-reconciliation-summary">8.4. Reconciliation summary</h3>
 <p>The companion documents were built at <strong>different epochs with different data sources</strong>. This census standardises on <strong>db-sync at epoch 623</strong> and <strong>epoch_stake as the counting method</strong>.</p>
 <p>The key numerical shifts when porting companion stats to census methodology:</p>
 <table>
@@ -2185,6 +2219,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777299621"></script>
+<script src="assets/site.js?v=1777360508"></script>
 </body>
 </html>

@@ -20,7 +20,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777299621">
+<link rel="stylesheet" href="assets/site.css?v=1777360508">
 <script defer data-website-id="791f3295-e5ab-4a38-af87-55835f711d11" src="https://cloud.umami.is/script.js"></script><script>window.spoTrack=function(n,p){try{if(window.umami&&window.umami.track){window.umami.track(n,p||{});}}catch(e){}}</script>
 
 </head>
@@ -100,6 +100,40 @@ window.MathJax = {
 <!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
 <div class="nav-zone nav-zone-output">
 <a href="index.html" class="nav-tab-spec-big">V2 Specification</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 2.5 — Cardano Constitution (the governance ceiling V2 must respect) -->
+<div class="nav-zone nav-zone-constitution">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-constitution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Constitution ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-constitution">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-constitution">Cardano Constitution v2</span>
+      <span class="nav-dd-stratum-meta">The governance document the protocol operates under (ratified at epoch 609) — every milestone in the V2 spec must comply with it</span>
+    </div>
+    <a href="pdf-viewer.html?file=references/governance/cardano-constitution-2.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Cardano Blockchain Ecosystem Constitution</span>
+      <span class="nav-dd-ref-cite">IntersectMBO — ratified at epoch 609 (v2)<span class="nav-dd-ref-tag">CONST-2</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="references/governance/cardano-constitution-2.pdf" class="nav-dd-ref nav-dd-ref-sub" download>
+      <span class="nav-dd-ref-title">Download the PDF</span>
+      <span class="nav-dd-ref-cite">Local copy on this site<span class="nav-dd-ref-stage">Download</span></span>
+    </a>
+    <a href="https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2" class="nav-dd-ref nav-dd-ref-sub" rel="noopener" target="_blank">
+      <span class="nav-dd-ref-title">Source on GitHub</span>
+      <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
+    </a>
+    <a href="index.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the V2 spec</span>
+      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 spec</span></span>
+    </a>
+  </div>
+</div>
+</div>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
@@ -406,33 +440,33 @@ window.MathJax = {
 <li><a href="#executive-summary">Executive summary</a></li>
 <li><a href="#findings-summary">Findings summary</a></li>
 <li><a href="#1-introduction">1. Introduction</a><ul>
-<li><a href="#11-identity-card">1.1 Identity card</a></li>
-<li><a href="#12-origin-and-context">1.2 Origin and context</a></li>
-<li><a href="#13-related-diagnostic-findings">1.3 Related diagnostic findings</a></li>
-<li><a href="#14-missing-cpss-mapping-to-v2-3">1.4 Missing CPSs — mapping to V2 §3</a></li>
+<li><a href="#11-identity-card">1.1. Identity card</a></li>
+<li><a href="#12-origin-and-context">1.2. Origin and context</a></li>
+<li><a href="#13-related-diagnostic-findings">1.3. Related diagnostic findings</a></li>
+<li><a href="#14-missing-cpss-mapping-to-v2-3">1.4. Missing CPSs — mapping to V2 §3</a></li>
 </ul>
 </li>
 <li><a href="#2-mechanism">2. Mechanism</a><ul>
-<li><a href="#21-four-stages-and-the-worked-calibration-from-the-cip-rationale">2.1 Four stages and the worked calibration from the CIP rationale</a></li>
-<li><a href="#22-updated-calibration-at-current-parameters-epoch-623-202604">2.2 Updated calibration at current parameters (epoch ~623, 2026/04)</a></li>
+<li><a href="#21-four-stages-and-the-worked-calibration-from-the-cip-rationale">2.1. Four stages and the worked calibration from the CIP rationale</a></li>
+<li><a href="#22-updated-calibration-at-current-parameters-epoch-623-202604">2.2. Updated calibration at current parameters (epoch ~623, 2026/04)</a></li>
 </ul>
 </li>
 <li><a href="#3-limits-of-cip-0082-as-a-standalone-proposal">3. Limits of CIP-0082 as a standalone proposal</a><ul>
-<li><a href="#31-margin-swap-inverts-operator-revenue-across-the-viability-line-more-aggressively-than-cip-0023">3.1 Margin swap inverts operator revenue across the viability line — more aggressively than CIP-0023</a><ul>
-<li><a href="#311-pool-axis-per-pool-across-the-nine-canonical-tiers">3.1.1 Pool axis — Δ per pool across the nine canonical tiers</a></li>
-<li><a href="#312-operator-axis-per-entity-by-n-mpo-bracket">3.1.2 Operator axis — Δ per entity by n-MPO bracket</a></li>
-<li><a href="#313-reading">3.1.3 Reading</a></li>
+<li><a href="#31-margin-swap-inverts-operator-revenue-across-the-viability-line-more-aggressively-than-cip-0023">3.1. Margin swap inverts operator revenue across the viability line — more aggressively than CIP-0023</a><ul>
+<li><a href="#311-pool-axis-per-pool-across-the-nine-canonical-tiers">3.1.1. Pool axis — Δ per pool across the nine canonical tiers</a></li>
+<li><a href="#312-operator-axis-per-entity-by-n-mpo-bracket">3.1.2. Operator axis — Δ per entity by n-MPO bracket</a></li>
+<li><a href="#313-reading">3.1.3. Reading</a></li>
 </ul>
 </li>
-<li><a href="#32-pool-count-expansions-the-standalone-k-lever-analysis">3.2 Pool-count expansions — standalone <code>k</code>-lever analysis in <code>k-parameter.md</code></a></li>
-<li><a href="#33-references">3.3 References</a></li>
+<li><a href="#32-pool-count-expansions-the-standalone-k-lever-analysis">3.2. Pool-count expansions — standalone <code>k</code>-lever analysis in <code>k-parameter.md</code></a></li>
+<li><a href="#33-references">3.3. References</a></li>
 </ul>
 </li>
 </ul>
 </nav>
 <h2 id="1-introduction">1. Introduction</h2>
 <p><strong>CIP-0082 — "Improved Rewards Scheme Parameters".</strong> A 2022 proposal to reform the reward-sharing scheme via four sequenced protocol actions: halve, then delete <code>minPoolCost</code>; introduce a proportional margin floor <code>minPoolRate</code>; raise the pool-count target <code>k</code> in two stages. The author frames the package as a fairness-and-decentralisation reform unlocking the pledge benefit that the current <code>minPoolCost</code> floor occludes.</p>
-<h3 id="11-identity-card">1.1 Identity card</h3>
+<h3 id="11-identity-card">1.1. Identity card</h3>
 <table>
 <thead>
 <tr>
@@ -483,12 +517,12 @@ window.MathJax = {
 </tr>
 </tbody>
 </table>
-<h3 id="12-origin-and-context">1.2 Origin and context</h3>
+<h3 id="12-origin-and-context">1.2. Origin and context</h3>
 <p><strong>Authorship and moment.</strong> Written in early 2022 by Tobias Fancee. The worked calibration in the CIP uses epoch-385 parameters (<code>minPoolCost = 340</code>, <code>a_0 = 0.3</code>, <code>k = 500</code>, rewards ≈ 31.2 M ₳/epoch, saturation ≈ 64 M ₳). The author's central observation: a 10 M ₳ community pool and a saturated pool both pay the same 340 ₳ flat fee, and the effective fee rate hyperbola penalises small productive pools. The CIP aggregates into one package three reforms the community had been discussing separately — <code>minPoolCost</code> reduction, <code>minPoolMargin</code> / <code>minPoolRate</code> introduction (crediting CIP-0023 explicitly), and <code>k</code> raises to amplify the pledge benefit.</p>
 <p><strong>Stage 1 is already retired on mainnet.</strong> In the Conway era, governance action DIA.1.3 halved <code>minPoolCost</code> from 340 to <strong>170 ₳</strong> — the exact change proposed in stage 1. The live content of CIP-0082 as a governance item is therefore <strong>stages 2–4</strong>. The CIP text preserves stage 1 as documentation; this evaluation treats it as a completed milestone and scopes the analysis to stages 2–4.</p>
 <p><strong>Hard-fork requirement.</strong> Stage 2 is the non-trivial change: a hard fork that deletes <code>minPoolCost</code>, introduces <code>minPoolRate</code>, and modifies the pool-fee calculation to $poolRateEff = \max(poolRate, minPoolRate)$ — a rule change preserving existing pool registration certificates without re-registration. Stages 3 and 4 are parameter updates only.</p>
 <p><strong>Historical placement.</strong> The CIP explicitly credits CIP-0023 for the margin-floor instrument: <em>"<code>minPoolRate</code> was originally proposed in CIP-0023."</em> CIP-0082 stage 2 is therefore mechanically equivalent to a <em>paired variant</em> of CIP-0023 (reduction of <code>minPoolCost</code> + introduction of a margin floor) — with the reduction taken to zero and the margin set to 3 % (vs CIP-0023's illustrative 50 ₳ + 1.5 %). The comparison with CIP-0023 paired is used as the structural reference in §3.1.</p>
-<h3 id="13-related-diagnostic-findings">1.3 Related diagnostic findings</h3>
+<h3 id="13-related-diagnostic-findings">1.3. Related diagnostic findings</h3>
 <p>CIP-0082's four stages touch three layers of the reward pipeline: fee (stages 1–2), saturation and tier boundaries (stages 3–4), and — indirectly — the pledge signal via k-raise amplification of $a_0$. Five findings across the operator-delegator-distribution and pools-distribution mainnet analyses are the CIP's direct targets.</p>
 <table>
 <thead>
@@ -526,7 +560,7 @@ window.MathJax = {
 </tr>
 </tbody>
 </table>
-<h3 id="14-missing-cpss-mapping-to-v2-3">1.4 Missing CPSs — mapping to V2 §3</h3>
+<h3 id="14-missing-cpss-mapping-to-v2-3">1.4. Missing CPSs — mapping to V2 §3</h3>
 <p>CIP-0082 ships without a formal CPS. Read for what it actually addresses, the CIP operates on <strong>four</strong> distinct V2 §3 specifications simultaneously — two as primary claims, two indirect.</p>
 <table>
 <thead>
@@ -613,7 +647,7 @@ window.MathJax = {
 </tr>
 </tbody>
 </table>
-<h3 id="21-four-stages-and-the-worked-calibration-from-the-cip-rationale">2.1 Four stages and the worked calibration from the CIP rationale</h3>
+<h3 id="21-four-stages-and-the-worked-calibration-from-the-cip-rationale">2.1. Four stages and the worked calibration from the CIP rationale</h3>
 <p>CIP-0082 sequences four on-chain actions. Each has a distinct mechanical role, which is easier to hold in mind once named:</p>
 <table>
 <thead>
@@ -765,7 +799,7 @@ window.MathJax = {
 <p><strong>Why the dispersion drifts <em>back up</em> at stages 3–4.</strong> The <strong>pool-count expansions</strong> do not change the fee rule — the 3 % margin still applies everywhere, so the fee-regressivity component stays at zero. What the k-raises do is shrink $z_0 = \text{Supply}/k$, which makes the pledge-benefit coefficient $a_0$ bite harder per unit of pool reward. The saturated 1 M-pledge pool pulls slightly further ahead of the 100 K-pledge baseline — 0.016 → 0.024 → 0.031 pp. This is the <em>intended</em> effect: the author states explicitly that the k-raises are there to "increase the effect of the pledge benefit on rewards". The dispersion creep is not a regression of the fee scheme; it's pledge differentiation activating more strongly, by design.</p>
 <p><strong>Why saturated-pool operator revenue falls 1081 → 720 → 543 across stages 2 → 3 → 4.</strong> The pool-count expansions also halve saturation each time. Total reward pot is unchanged; more pools are sharing the same pot, so the per-pool reward at saturation shrinks. The saturated-pool operator's 3 % share shrinks with it — 1081 ₳/ep at $k = 500$, 720 at $k = 750$, 543 at $k = 1000$. This has nothing to do with the fee mechanism; it is arithmetic on the $1/k$ saturation size.</p>
 <p><strong>What the three rows together do not show.</strong> All three metrics look at the <em>delegator side</em>. The corresponding <em>operator-side</em> picture — absolute ADA revenue per pool under the Margin swap — runs in the opposite direction: the 3 % margin produces a revenue stream that scales linearly with pool size, inverting the transfer across the viability line. This is the structural issue quantified in §3.1.</p>
-<h3 id="22-updated-calibration-at-current-parameters-epoch-623-202604">2.2 Updated calibration at current parameters (epoch ~623, 2026/04)</h3>
+<h3 id="22-updated-calibration-at-current-parameters-epoch-623-202604">2.2. Updated calibration at current parameters (epoch ~623, 2026/04)</h3>
 <p>Stage 1 is retired (mainnet <code>minPoolCost = 170</code>; see §1.2). Stages 2–4 are the forward-looking content. Calibration below uses today's parameters: $z_0 = 77$ M ₳ at $k = 500$, hollow-pool yield at saturation ≈ 2.275 %/yr (≈ 24 000 ₳/epoch at saturation), $a_0 = 0.3$, total reward pot $P \approx 12$ M ₳/epoch. Representative σ per tier follows the canonical nine-tier taxonomy from <a href="pools.html#413-tier-definitions">pools-distribution §4.1.3</a>. All figures below assume a <strong>hollow pool</strong> (<code>poolRate ≈ 0</code>, pledge ≈ 0), matching the CIP's own worked calibration.</p>
 <p>The fee-rate picture would show 3 % everywhere from the Margin swap onward — not useful. The two axes that actually move across stages are <strong>delegator net ROS</strong> and <strong>operator annualised revenue</strong>, and they move in opposite directions. Both are shown below.</p>
 <p><strong>How the reward floor moves with k.</strong> Below saturation, per-ADA gross yield is constant at ≈ 2.275 %/yr regardless of σ or $k$ (the reward curve is size-proportional). <em>Above</em> saturation the per-pool reward caps at $P/k$ — so every k-raise <em>halves</em> the effective reward-per-ADA for pools stranded above the new cap. At $k = 500$, $P/k = 24\,000$ ₳/ep. At $k = 750$, $16\,000$. At $k = 1\,000$, $12\,000$. Pools above the new $z_0$ see their yield — and the operator's 3 % cut of it — shrink one-for-one.</p>
@@ -1055,9 +1089,9 @@ window.MathJax = {
 <p><strong>Putting it together.</strong> The Margin swap buys the delegator-side equalisation (ROS floor at 2.21 %) at the cost of an operator-side regression (small-pool operator revenue cut ~9×). The subsequent k-raises leave the delegator-side gain intact for small pools but damage it for pools above the shrinking $z_0$ — and on the operator side, they trim the top of the transfer without returning any of it to the tiers the CIP's primary V2 §3.1 claim says to protect. The full quantification of the cross-tier and cross-fleet operator-revenue transfer is in §3.1.</p>
 <h2 id="3-limits-of-cip-0082-as-a-standalone-proposal">3. Limits of CIP-0082 as a standalone proposal</h2>
 <p>Three structural limits — one per active-stage grouping of the remaining content.</p>
-<h3 id="31-margin-swap-inverts-operator-revenue-across-the-viability-line-more-aggressively-than-cip-0023">3.1 Margin swap inverts operator revenue across the viability line — more aggressively than CIP-0023</h3>
+<h3 id="31-margin-swap-inverts-operator-revenue-across-the-viability-line-more-aggressively-than-cip-0023">3.1. Margin swap inverts operator revenue across the viability line — more aggressively than CIP-0023</h3>
 <p>The <strong>Margin swap</strong> (stage 2) is mechanically equivalent to CIP-0023's <strong>paired variant</strong> (reduction of <code>minPoolCost</code> + introduction of a margin floor) at the extreme calibration: <code>minPoolCost → 0</code>, <code>minPoolRate = 3 %</code> vs CIP-0023's illustrative 50 ₳ + 1.5 %. The structural effect is the same — delegator-side fee dispersion collapses; operator-side per-pool revenue scales with $R(\sigma)$ and the transfer inverts across the viability line — but the magnitude is roughly doubled on both sides.</p>
-<h4 id="311-pool-axis-per-pool-across-the-nine-canonical-tiers">3.1.1 Pool axis — Δ per pool across the nine canonical tiers</h4>
+<h4 id="311-pool-axis-per-pool-across-the-nine-canonical-tiers">3.1.1. Pool axis — Δ per pool across the nine canonical tiers</h4>
 <p>Convention as in §2.2: declared margin ≈ 0, $R(\sigma) \approx 24\,000 \times \sigma / 77\text{M}$ below saturation. Column "Δ CIP-0023 paired" carries the CIP-0023 §3.2.1 numbers for reference.</p>
 <table>
 <thead>
@@ -1166,7 +1200,7 @@ window.MathJax = {
 </tbody>
 </table>
 <p>The inversion pattern is identical to CIP-0023 paired, but the magnitudes are <strong>2.0 – 2.5× larger on both sides of the viability line</strong>. Saturated-pool operators gain <strong>+550 ₳/ep</strong> under the <strong>Margin swap</strong> (vs +239 under CIP-0023 paired); Sub-viable operators lose <strong>–151 ₳/ep</strong> (vs –111). Sub-production pools — untouched by CIP-0023 standalone — lose <strong>–151 ₳/ep</strong> here because <code>minPoolCost</code> is gone entirely: every productive pool becomes a proportional-margin contributor, including the tiers that previously collected the full pool reward as the fixed fee.</p>
-<h4 id="312-operator-axis-per-entity-by-n-mpo-bracket">3.1.2 Operator axis — Δ per entity by n-MPO bracket</h4>
+<h4 id="312-operator-axis-per-entity-by-n-mpo-bracket">3.1.2. Operator axis — Δ per entity by n-MPO bracket</h4>
 <p>Per-pool Δ stacks over the operator's fleet. Mean pools per entity and mean pool stake from <a href="operator.html#44-operator-profitability-versus-delegator-return">operator-delegator §4.4</a> (retail hollow segment, epoch 623; 73 epochs/yr). Column "Δ CIP-0023 paired" carries the CIP-0023 §3.2.2 numbers for reference.</p>
 <table>
 <thead>
@@ -1256,10 +1290,10 @@ window.MathJax = {
 </tbody>
 </table>
 <p>The transfer is <strong>~4× larger on the operator-fleet axis than CIP-0023's paired variant</strong> (200 K vs 50 K ₳/yr for the 11+ pool MPO bracket). Sub-viable single-pool operators lose ~11 000 ₳/yr — roughly three months' operator cost floor stripped annually from the population the CIP's primary CPS (V2 §3.1) identifies as needing support.</p>
-<h4 id="313-reading">3.1.3 Reading</h4>
+<h4 id="313-reading">3.1.3. Reading</h4>
 <p><strong>The Margin swap delivers on the delegator side and regresses on the operator side</strong> (<strong>CIP-0082.S1</strong>). The effective-fee-rate story is clean (flat 3 % everywhere — §2.2). The operator-revenue story runs opposite: every MPO bracket is a net winner; every sub-viable and sub-production single-pool operator is a net loser; and MPO entities compound the transfer across their fleets — 19 pools × +142 ₳/ep gives the dominant per-entity uplift in the table.</p>
 <p>This is the same structural critique CIP-0023 paired faces (<a href="cip-0023.html#323-reading-why-this-fails-the-missing-cps">see cip-0023.md §3.2.3</a>) scaled up roughly ~4×. The scaling follows from the choice of <code>minPoolCost = 0</code> + <code>minPoolRate = 3 %</code> vs CIP-0023 paired's 50 + 1.5 %.</p>
-<h3 id="32-pool-count-expansions-the-standalone-k-lever-analysis">3.2 Pool-count expansions — the standalone <code>k</code>-lever analysis</h3>
+<h3 id="32-pool-count-expansions-the-standalone-k-lever-analysis">3.2. Pool-count expansions — the standalone <code>k</code>-lever analysis</h3>
 <p>CIP-0082 stages 3–4 raise <code>k</code> from 500 → 750 → 1000 without changing the reward formula. The standalone evaluation of that lever — its mechanical effect on the operator / delegator split, its delegator-market assumptions, and its structural limits — lives in a companion file, <a href="k-parameter.html"><code>k-parameter.md</code></a>. A summary of the three synthesis findings established there, reproduced here for reference:</p>
 <table>
 <thead>
@@ -1288,7 +1322,7 @@ window.MathJax = {
 </tbody>
 </table>
 <p><strong>What CIP-0082 adds on top of the standalone critique.</strong> CIP-0082 stages 3–4 fire <strong>6 epochs after the Margin swap</strong> (stage 2) in the CIP's own 3-epoch-interval timeline — no stake-cap layer can be negotiated, voted, and activated in that window. The k-raise therefore fires <strong>in exactly the regime <code>k-parameter.md</code> identifies as regressive</strong>: weak pledge, MPO-dominated fleet, empirically non-yield-following delegator base. CIP-0082 does not embed the precondition the lever needs to flip from regressive to constructive (an active stake-cap layer — CIP-0050's <code>L</code> or CIP-0037's dynamic saturation). Stages 3–4 are therefore not safe to fire in the sequence CIP-0082 proposes. <strong>The package either needs to acquire a stake-cap layer between stage 2 and stage 3 or to remove stages 3–4.</strong></p>
-<h3 id="33-references">3.3 References</h3>
+<h3 id="33-references">3.3. References</h3>
 <ul>
 <li><strong>Missing-CPS anchors:</strong> §1.4 of this file; V2 <a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">§3.1 operator viability</a>, <a href="index.html#33-maintain-and-diversify-a-competitive-delegator-yield">§3.3 delegator yield</a>, <a href="index.html#32-restore-the-notion-of-pledge-among-operators">§3.2 pledge signal</a>, <a href="index.html#34-reduce-the-concentration-effects-that-distort-both-populations">§3.4 concentration</a>.</li>
 <li><strong>Numerical baselines:</strong> §2.2 of this file (per-pool reward derivation at $z_0 = 77$ M ₳); <a href="operator.html#44-operator-profitability-versus-delegator-return">operator-delegator §4.4</a> (n-MPO brackets); <a href="pools.html#413-tier-definitions">pools-distribution §4.1.3</a> (nine-tier taxonomy).</li>
@@ -1322,6 +1356,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777299621"></script>
+<script src="assets/site.js?v=1777360508"></script>
 </body>
 </html>

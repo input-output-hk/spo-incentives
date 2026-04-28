@@ -20,7 +20,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777299621">
+<link rel="stylesheet" href="assets/site.css?v=1777360508">
 <script defer data-website-id="791f3295-e5ab-4a38-af87-55835f711d11" src="https://cloud.umami.is/script.js"></script><script>window.spoTrack=function(n,p){try{if(window.umami&&window.umami.track){window.umami.track(n,p||{});}}catch(e){}}</script>
 
 </head>
@@ -100,6 +100,40 @@ window.MathJax = {
 <!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
 <div class="nav-zone nav-zone-output">
 <a href="index.html" class="nav-tab-spec-big">V2 Specification</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 2.5 — Cardano Constitution (the governance ceiling V2 must respect) -->
+<div class="nav-zone nav-zone-constitution">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-constitution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Constitution ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-constitution">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-constitution">Cardano Constitution v2</span>
+      <span class="nav-dd-stratum-meta">The governance document the protocol operates under (ratified at epoch 609) — every milestone in the V2 spec must comply with it</span>
+    </div>
+    <a href="pdf-viewer.html?file=references/governance/cardano-constitution-2.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Cardano Blockchain Ecosystem Constitution</span>
+      <span class="nav-dd-ref-cite">IntersectMBO — ratified at epoch 609 (v2)<span class="nav-dd-ref-tag">CONST-2</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="references/governance/cardano-constitution-2.pdf" class="nav-dd-ref nav-dd-ref-sub" download>
+      <span class="nav-dd-ref-title">Download the PDF</span>
+      <span class="nav-dd-ref-cite">Local copy on this site<span class="nav-dd-ref-stage">Download</span></span>
+    </a>
+    <a href="https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2" class="nav-dd-ref nav-dd-ref-sub" rel="noopener" target="_blank">
+      <span class="nav-dd-ref-title">Source on GitHub</span>
+      <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
+    </a>
+    <a href="index.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the V2 spec</span>
+      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 spec</span></span>
+    </a>
+  </div>
+</div>
+</div>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
@@ -257,40 +291,40 @@ window.MathJax = {
 <li><a href="#what-this-document-is-for">What this document is for</a></li>
 <li><a href="#1-the-design-objective">1. The design objective</a></li>
 <li><a href="#2-the-players">2. The players</a><ul>
-<li><a href="#21-transaction-submitters-the-source-of-economic-demand">2.1 Transaction submitters — the source of economic demand</a><ul>
-<li><a href="#211-why-they-matter">2.1.1 Why they matter</a></li>
-<li><a href="#212-how-they-feed-the-game">2.1.2 How they feed the game</a></li>
-<li><a href="#213-a-latent-constraint-marginal-today-existential-tomorrow">2.1.3 A latent constraint — marginal today, existential tomorrow</a></li>
+<li><a href="#21-transaction-submitters-the-source-of-economic-demand">2.1. Transaction submitters — the source of economic demand</a><ul>
+<li><a href="#211-why-they-matter">2.1.1. Why they matter</a></li>
+<li><a href="#212-how-they-feed-the-game">2.1.2. How they feed the game</a></li>
+<li><a href="#213-a-latent-constraint-marginal-today-existential-tomorrow">2.1.3. A latent constraint — marginal today, existential tomorrow</a></li>
 </ul>
 </li>
-<li><a href="#22-operators-capital-at-risk">2.2 Operators — capital at risk</a><ul>
-<li><a href="#221-an-open-seat-at-the-deflationary-table">2.2.1 An open seat at the deflationary table</a></li>
-<li><a href="#222-the-participation-constraint">2.2.2 The participation constraint</a></li>
-<li><a href="#223-pledge-as-the-primary-instrument">2.2.3 Pledge as the primary instrument</a></li>
-<li><a href="#224-the-arc-from-newcomer-to-pillar">2.2.4 The arc from newcomer to pillar</a></li>
+<li><a href="#22-operators-capital-at-risk">2.2. Operators — capital at risk</a><ul>
+<li><a href="#221-an-open-seat-at-the-deflationary-table">2.2.1. An open seat at the deflationary table</a></li>
+<li><a href="#222-the-participation-constraint">2.2.2. The participation constraint</a></li>
+<li><a href="#223-pledge-as-the-primary-instrument">2.2.3. Pledge as the primary instrument</a></li>
+<li><a href="#224-the-arc-from-newcomer-to-pillar">2.2.4. The arc from newcomer to pillar</a></li>
 </ul>
 </li>
-<li><a href="#23-delegators-the-oversight-layer">2.3 Delegators — the oversight layer</a><ul>
-<li><a href="#231-yield-seeking-with-minimal-effort">2.3.1 Yield-seeking with minimal effort</a></li>
-<li><a href="#232-liquid-delegation-as-continuous-approval">2.3.2 Liquid delegation as continuous approval</a></li>
-<li><a href="#233-the-delegator-as-ethical-arbiter">2.3.3 The delegator as ethical arbiter</a></li>
-<li><a href="#234-myopic-and-non-myopic-delegation">2.3.4 Myopic and non-myopic delegation</a></li>
+<li><a href="#23-delegators-the-oversight-layer">2.3. Delegators — the oversight layer</a><ul>
+<li><a href="#231-yield-seeking-with-minimal-effort">2.3.1. Yield-seeking with minimal effort</a></li>
+<li><a href="#232-liquid-delegation-as-continuous-approval">2.3.2. Liquid delegation as continuous approval</a></li>
+<li><a href="#233-the-delegator-as-ethical-arbiter">2.3.3. The delegator as ethical arbiter</a></li>
+<li><a href="#234-myopic-and-non-myopic-delegation">2.3.4. Myopic and non-myopic delegation</a></li>
 </ul>
 </li>
-<li><a href="#24-the-dependency-chain">2.4 The dependency chain</a></li>
+<li><a href="#24-the-dependency-chain">2.4. The dependency chain</a></li>
 </ul>
 </li>
 <li><a href="#3-the-progression">3. The progression</a><ul>
-<li><a href="#31-transaction-submitters-from-subsidy-to-self-sufficiency">3.1 Transaction submitters — from subsidy to self-sufficiency</a></li>
-<li><a href="#32-operators-from-first-pledge-to-full-commitment">3.2 Operators — from first pledge to full commitment</a></li>
-<li><a href="#33-delegators-from-passive-yield-to-active-oversight">3.3 Delegators — from passive yield to active oversight</a></li>
-<li><a href="#34-the-security-properties-the-equilibrium-must-satisfy">3.4 The security properties the equilibrium must satisfy</a><ul>
-<li><a href="#341-accountability-the-bond-and-the-enforcer">3.4.1 Accountability — the bond and the enforcer</a></li>
-<li><a href="#342-delegation-as-counter-power-the-protocols-substitute-for-governance">3.4.2 Delegation as counter-power — the protocol's substitute for governance</a></li>
-<li><a href="#343-sybil-resistance-making-fragmentation-expensive">3.4.3 Sybil resistance — making fragmentation expensive</a></li>
-<li><a href="#344-decentralisation-more-than-a-pool-count">3.4.4 Decentralisation — more than a pool count</a></li>
-<li><a href="#345-the-properties-are-not-independent">3.4.5 The properties are not independent</a></li>
-<li><a href="#346-the-structural-requirement">3.4.6 The structural requirement</a></li>
+<li><a href="#31-transaction-submitters-from-subsidy-to-self-sufficiency">3.1. Transaction submitters — from subsidy to self-sufficiency</a></li>
+<li><a href="#32-operators-from-first-pledge-to-full-commitment">3.2. Operators — from first pledge to full commitment</a></li>
+<li><a href="#33-delegators-from-passive-yield-to-active-oversight">3.3. Delegators — from passive yield to active oversight</a></li>
+<li><a href="#34-the-security-properties-the-equilibrium-must-satisfy">3.4. The security properties the equilibrium must satisfy</a><ul>
+<li><a href="#341-accountability-the-bond-and-the-enforcer">3.4.1. Accountability — the bond and the enforcer</a></li>
+<li><a href="#342-delegation-as-counter-power-the-protocols-substitute-for-governance">3.4.2. Delegation as counter-power — the protocol's substitute for governance</a></li>
+<li><a href="#343-sybil-resistance-making-fragmentation-expensive">3.4.3. Sybil resistance — making fragmentation expensive</a></li>
+<li><a href="#344-decentralisation-more-than-a-pool-count">3.4.4. Decentralisation — more than a pool count</a></li>
+<li><a href="#345-the-properties-are-not-independent">3.4.5. The properties are not independent</a></li>
+<li><a href="#346-the-structural-requirement">3.4.6. The structural requirement</a></li>
 </ul>
 </li>
 </ul>
@@ -359,53 +393,53 @@ window.MathJax = {
 </tr>
 </tbody>
 </table>
-<h3 id="21-transaction-submitters-the-source-of-economic-demand">2.1 Transaction submitters — the source of economic demand</h3>
-<h4 id="211-why-they-matter">2.1.1 Why they matter</h4>
+<h3 id="21-transaction-submitters-the-source-of-economic-demand">2.1. Transaction submitters — the source of economic demand</h3>
+<h4 id="211-why-they-matter">2.1.1. Why they matter</h4>
 <p>Transaction submitters need reliable, censorship-resistant settlement. They do not participate in the staking game directly — they are <em>users</em> of the service that the game produces. Their willingness to pay fees is a revealed-preference signal: it measures the real-world value the network delivers.</p>
-<h4 id="212-how-they-feed-the-game">2.1.2 How they feed the game</h4>
+<h4 id="212-how-they-feed-the-game">2.1.2. How they feed the game</h4>
 <p>They submit transactions and pay fees. Those fees — together with the monetary expansion draw from the reserve — fund the epoch pot that the reward pipeline distributes (<a href="observatory.html#11-treasury-pool-pots-distribution">§1.1 — Treasury &amp; Pool Pots Distribution</a>). Transaction submitters are the reason the system exists: without them, there is no economic activity to secure, and no sustainable revenue to fund the operators who secure it.</p>
-<h4 id="213-a-latent-constraint-marginal-today-existential-tomorrow">2.1.3 A latent constraint — marginal today, existential tomorrow</h4>
-<p>In the current regime, transaction fees are negligible (~0.19% of the epoch pot — <a href="observatory.html#112-mainnet-observations">§1.1.2 — Mainnet Observations</a> <a class="obs-ref obs-ref-src" href="treasury.html#1-mainnet-observations" data-obs="obs-112-1" data-tier="fees" data-obs-src="TRE.O1" data-obs-page="treasury.html" data-obs-href="treasury.html#1-mainnet-observations">(TRE.O1)</a>). The game is almost entirely funded by monetary expansion from a depleting reserve.</p>
-<p>As the reserve crosses its half-life and expansion shrinks (<a href="observatory.html#112-mainnet-observations">§1.1.2 — Mainnet Observations</a> <a class="obs-ref obs-ref-src" href="treasury.html#1-mainnet-observations" data-obs="obs-112-2" data-tier="sustainability" data-obs-src="TRE.O2" data-obs-page="treasury.html" data-obs-href="treasury.html#1-mainnet-observations">(TRE.O2)</a>), the system's economic viability progressively shifts onto fee revenue.</p>
+<h4 id="213-a-latent-constraint-marginal-today-existential-tomorrow">2.1.3. A latent constraint — marginal today, existential tomorrow</h4>
+<p>In the current regime, transaction fees are negligible (~0.19% of the epoch pot — <a href="observatory.html#112-mainnet-observations">§1.1.2 — Mainnet Observations</a> (DIA.1.1.O1)). The game is almost entirely funded by monetary expansion from a depleting reserve.</p>
+<p>As the reserve crosses its half-life and expansion shrinks (<a href="observatory.html#112-mainnet-observations">§1.1.2 — Mainnet Observations</a> (DIA.1.1.O2)), the system's economic viability progressively shifts onto fee revenue.</p>
 <div class="admon admon-note"><div class="admon-label">Note</div><p>Transaction submitters are a <strong>latent constraint</strong>: marginal today, existential tomorrow. Their long-term participation is what makes the staking game <em>sustainably worth playing</em> for every other participant.</p></div>
-<h3 id="22-operators-capital-at-risk">2.2 Operators — capital at risk</h3>
-<h4 id="221-an-open-seat-at-the-deflationary-table">2.2.1 An open seat at the deflationary table</h4>
+<h3 id="22-operators-capital-at-risk">2.2. Operators — capital at risk</h3>
+<h4 id="221-an-open-seat-at-the-deflationary-table">2.2.1. An open seat at the deflationary table</h4>
 <p>A prospective operator believes in Cardano. ADA has a capped supply and a depleting reserve — it is structurally deflationary.</p>
 <p>From this perspective, the consensus game looks like an investment thesis, not a job offer: by operating a pool, an operator continuously accumulates an asset whose scarcity increases mechanically over time. The nominal yield in ADA, compounded by the deflationary trajectory of the asset itself, makes the expected real return deeply attractive on a long horizon.</p>
 <p>And critically, the entry should be <em>accessible</em> — the mechanism is supposed to let anyone with conviction and a realistic initial stake begin building this position. Not an exclusive club; an open, meritocratic game where commitment is the competitive edge.</p>
 <blockquote>
 <p>This is the narrative that attracts operators: a credible, long-term capital accumulation path anchored in consensus participation, open to anyone who believes in the technology.</p>
 </blockquote>
-<h4 id="222-the-participation-constraint">2.2.2 The participation constraint</h4>
+<h4 id="222-the-participation-constraint">2.2.2. The participation constraint</h4>
 <p>Operators seek a return on two forms of capital: the ADA they pledge and the infrastructure they maintain. A rational operator enters the game when the expected reward — block production fees, pool margin, and stake-proportional share — exceeds the combined opportunity cost of pledged capital and operational expenses. In mechanism-design terms, the <em>participation constraint</em> must be satisfied: the operator must be better off running a pool than simply delegating the same ADA.</p>
-<h4 id="223-pledge-as-the-primary-instrument">2.2.3 Pledge as the primary instrument</h4>
+<h4 id="223-pledge-as-the-primary-instrument">2.2.3. Pledge as the primary instrument</h4>
 <p>The operator's primary strategic instrument is <strong>pledge</strong>: personal capital locked into the pool.</p>
 <p>Pledge serves as the protocol's <em>commitment mechanism</em> — the signal through which an operator demonstrates alignment with the network's interests. An operator who pledges significant ADA has more to lose from protocol failure or malicious behaviour than one who pledges nothing. This "skin in the game" is the protocol's primary defence against Sybil attacks.</p>
 <p>Operators also set a <em>margin</em> (their fee) and maintain infrastructure quality (uptime, latency) — but the reward curve at this layer is primarily sensitive to pledge and total stake, not operational quality.</p>
-<h4 id="224-the-arc-from-newcomer-to-pillar">2.2.4 The arc from newcomer to pillar</h4>
+<h4 id="224-the-arc-from-newcomer-to-pillar">2.2.4. The arc from newcomer to pillar</h4>
 <p>A new operator starts with a small pledge, minimal delegation, and sub-viable block production. Over time, the intended trajectory is one of <em>increasing commitment</em>: as the operator builds reputation and attracts delegation, they pledge more, their pool grows, and they earn a larger share of the pools pot. The mechanism should make each step up in pledge produce a measurable competitive advantage — visible to delegators and economically meaningful to the operator — so that the progression from "new pool" to "established pool" to "fully committed pool" is a legible arc that both players can follow.</p>
-<h3 id="23-delegators-the-oversight-layer">2.3 Delegators — the oversight layer</h3>
-<h4 id="231-yield-seeking-with-minimal-effort">2.3.1 Yield-seeking with minimal effort</h4>
+<h3 id="23-delegators-the-oversight-layer">2.3. Delegators — the oversight layer</h3>
+<h4 id="231-yield-seeking-with-minimal-effort">2.3.1. Yield-seeking with minimal effort</h4>
 <p>Delegators seek yield on their ADA holdings with minimal effort and risk. They do not produce blocks and bear no operational cost. Their entire strategic space reduces to a single decision: <em>which pool to delegate to</em>. A rational delegator maximises risk-adjusted return, favouring pools with high expected yield, reliable performance, and trustworthy operators.</p>
 <p>The natural selection metric is the <strong>annualised return on stake (ROS)</strong> — the single number that aggregates pool performance, operator fees, and saturation into a comparable yield figure. But the formula's structure ensures that the yield spread between well-run pools is narrow — a few tenths of a percent. This narrow spread is a design consequence, not an accident: it means that yield alone cannot meaningfully differentiate most of the pool landscape. A second criterion enters — one the formula does not price but that the mechanism depends on.</p>
-<h4 id="232-liquid-delegation-as-continuous-approval">2.3.2 Liquid delegation as continuous approval</h4>
+<h4 id="232-liquid-delegation-as-continuous-approval">2.3.2. Liquid delegation as continuous approval</h4>
 <p>Their strategic instrument is <strong>liquid delegation</strong>: the ability to freely choose a pool — and freely withdraw at any time.</p>
 <p>This makes delegation a <em>continuous approval signal</em>. No operator can capture stake permanently; an operator who underperforms or behaves badly faces immediate capital flight.</p>
 <div class="admon admon-important"><div class="admon-label">Important</div><p>Liquid delegation is the protocol's <strong>accountability mechanism</strong> and its primary anti-monopoly tool. But this mechanism only functions if pools <em>need</em> delegators — if operators depend on community-sourced stake to reach their optimal reward. Without this dependency, delegators have no leverage and the accountability channel collapses.</p></div>
-<h4 id="233-the-delegator-as-ethical-arbiter">2.3.3 The delegator as ethical arbiter</h4>
+<h4 id="233-the-delegator-as-ethical-arbiter">2.3.3. The delegator as ethical arbiter</h4>
 <p>Because the yield spread between well-run pools is narrow, the delegator's choice is not purely economic — it is partly an expression of values. Two pools that offer identical ROS may differ in ways the formula does not capture but that matter to the delegator and to the network:</p>
 <p><strong>Commitment.</strong> A pool where the operator has pledged meaningful personal capital is structurally more aligned with the delegator's interest than one where the operator pledges nothing. The operator has more to lose, the accountability channel is active, and the pool is less likely to change strategy abruptly.</p>
 <p><strong>Independence.</strong> Delegating to an independent single-pool operator contributes to decentralisation in a way that delegating to the tenth pool of a large multi-pool operator (MPO) fleet does not. The protocol does not distinguish between the two — the formula treats every pool identically — but the delegator who values a decentralised network may deliberately choose the independent operator.</p>
 <p><strong>Transparency and conduct.</strong> Operators differ in how they communicate fee changes, maintain infrastructure, and engage with the community. These are reputational signals that the protocol does not encode but that delegators can observe and act on. A delegator who exits a pool after a surprise margin increase is exercising the accountability mechanism — even if the formal yield difference is negligible.</p>
 <p>The delegator, in this sense, acts as an <strong>ethical arbiter</strong> of the pool landscape. Where the formula is indifferent, the delegator is not. The mechanism's long-term health depends on enough delegators treating this ethical dimension as part of their decision — supporting commitment, independence, and transparency beyond what yield alone would justify.</p>
-<h4 id="234-myopic-and-non-myopic-delegation">2.3.4 Myopic and non-myopic delegation</h4>
+<h4 id="234-myopic-and-non-myopic-delegation">2.3.4. Myopic and non-myopic delegation</h4>
 <p>The formal literature distinguishes two delegator models that map directly onto the yield-vs-ethics tension above.</p>
 <p>A <strong>myopic</strong> delegator optimises for the <em>current epoch</em>. The decision is purely backward-looking: which pool delivered the highest ROS last epoch? The myopic delegator treats delegation as a spot market — move to the best-yielding pool, every epoch, ignoring second-order effects. Under this model, delegation flows toward the largest, most reliable, lowest-fee pools. The myopic delegator has no reason to consider pledge, operator commitment, or network-level properties: none of these affect the per-ADA yield in the next five days.</p>
 <p>A <strong>non-myopic</strong> delegator anticipates the <em>downstream effects</em> of delegation decisions. This delegator recognises that moving stake into a pool changes the pool's size, affects its yield through saturation dynamics, and — in aggregate — shapes the pool landscape. Brünjes &amp; Kiayias (2020) prove that the <em>k</em>-pool equilibrium holds under non-myopic play: delegators who factor in the long-term consequences of their delegation converge on a distribution of <em>k</em> pools.</p>
 <p>The non-myopic delegator is the one for whom the ethical dimension of pool selection is not a luxury but a rational strategy: supporting committed, independent operators produces a more decentralised, more accountable network — which is a more valuable network — which sustains the yield the delegator depends on.</p>
 <div class="admon admon-important"><div class="admon-label">Important</div><p>The mechanism implicitly <em>assumes</em> non-myopic delegation. The equilibrium results in the formal literature require delegators who look past the current epoch. But the information environment the mechanism creates — where yield differences between pools are negligible, where pledge is invisible, where pool size is the dominant signal — rewards myopic behaviour. The mechanism needs non-myopic delegators to reach its intended equilibrium, but it provides myopic delegators with no reason to become non-myopic.</p></div>
 <p>This is the core tension in the delegator's role. The ethical arbitration that the mechanism depends on operates <em>outside</em> the formula, sustained only by the delegator's understanding that the network they help shape is the network they depend on.</p>
-<h3 id="24-the-dependency-chain">2.4 The dependency chain</h3>
+<h3 id="24-the-dependency-chain">2.4. The dependency chain</h3>
 <p>These three roles form a dependency chain:</p>
 <pre><code>Transaction submitters          Operators                    Delegators
   generate economic    ──▶    commit capital &amp;     ──▶    select &amp; police
@@ -419,19 +453,19 @@ window.MathJax = {
 <p><br></p>
 <h2 id="3-the-progression">3. The progression</h2>
 <p>Each player class experiences the game through its own trajectory — entry, progression, and endgame. A well-designed mechanism makes each trajectory <em>individually rational</em> at every stage, so that no player has a reason to drop out or deviate.</p>
-<h3 id="31-transaction-submitters-from-subsidy-to-self-sufficiency">3.1 Transaction submitters — from subsidy to self-sufficiency</h3>
+<h3 id="31-transaction-submitters-from-subsidy-to-self-sufficiency">3.1. Transaction submitters — from subsidy to self-sufficiency</h3>
 <p><strong>Entry.</strong> Early adopters use the network for basic settlement. Transaction volume is low, and fees contribute negligibly to the epoch pot. The game is almost entirely funded by monetary expansion from the reserve — a bootstrap subsidy that makes staking rewards viable before organic demand exists.</p>
 <p><strong>Progression.</strong> As the network matures, transaction volume and diversity grow. Fee revenue increases, gradually reducing dependence on the reserve. The ratio of fees to expansion becomes a measure of the system's economic maturity.</p>
 <p><strong>Endgame.</strong> Fee revenue fully replaces monetary expansion as the primary funding source for the epoch pot. The staking game is self-sustaining: operators and delegators are paid by the economic activity they secure, not by a depleting reserve. The protocol has achieved <em>economic self-sufficiency</em>.</p>
-<h3 id="32-operators-from-first-pledge-to-full-commitment">3.2 Operators — from first pledge to full commitment</h3>
+<h3 id="32-operators-from-first-pledge-to-full-commitment">3.2. Operators — from first pledge to full commitment</h3>
 <p><strong>Entry.</strong> A new operator registers a pool, pledges an initial amount, and begins attracting delegation. The mechanism must make this <em>individually rational</em>: the expected payoff should offer a credible path forward — not just survival, but growth — so that the <em>participation constraint</em> is met from the start.</p>
 <p><strong>Progression.</strong> As the operator builds reputation and delegation, the mechanism should reward increasing pledge commitment. Each step up in pledge should produce a measurable competitive advantage — visible to delegators, economically meaningful to the operator. The progression from "new pool" to "established pool" to "fully committed pool" should be a legible arc that both operators and delegators can follow.</p>
 <p><strong>Endgame.</strong> The operator has committed deeply (high pledge) and earned broad delegation. Their pool captures the maximum reward the protocol offers. This state should require <em>both</em> high pledge and high delegation to reach — it cannot be attained by capital alone or by delegation alone.</p>
-<h3 id="33-delegators-from-passive-yield-to-active-oversight">3.3 Delegators — from passive yield to active oversight</h3>
+<h3 id="33-delegators-from-passive-yield-to-active-oversight">3.3. Delegators — from passive yield to active oversight</h3>
 <p><strong>Entry.</strong> A new delegator selects a pool and allocates stake. Early on, differentiation between pools is low — delegation may be driven by brand, community ties, or social signals rather than on-chain metrics. The mechanism must still make participation <em>individually rational</em>: delegation yield should exceed the opportunity cost of holding idle ADA.</p>
 <p><strong>Progression.</strong> As the pool landscape matures and the mechanism produces legible differences between pools, delegators increasingly differentiate on <em>commitment-based criteria</em>: pledge level, track record, margin policy. Delegation flows toward the most committed operators and away from uncommitted ones. The accountability mechanism becomes active — delegators are now <em>policing</em> operator behaviour through capital reallocation.</p>
 <p><strong>Endgame.</strong> Delegators act as an efficient market for operator commitment — and as ethical arbiters of the pool landscape (<a href="#233-the-delegator-as-ethical-arbiter">§2.3.3 — The delegator as ethical arbiter</a>). Capital moves fluidly to the pools that best combine commitment and performance, and exits quickly from those that fall short. The accountability mechanism operates at full power: no operator can sustain high rewards without continuous community approval. This endgame requires non-myopic delegation (<a href="#234-myopic-and-non-myopic-delegation">§2.3.4 — Myopic and non-myopic delegation</a>): delegators who factor in commitment, independence, and network health — not only current-epoch yield — into their allocation decisions.</p>
-<h3 id="34-the-security-properties-the-equilibrium-must-satisfy">3.4 The security properties the equilibrium must satisfy</h3>
+<h3 id="34-the-security-properties-the-equilibrium-must-satisfy">3.4. The security properties the equilibrium must satisfy</h3>
 <p>The three trajectories above describe individual paths. But the protocol does not care which path any single operator or delegator takes — it cares whether the <em>equilibrium</em> that emerges from the aggregate of all rational choices preserves the security invariants defined in <a href="#1-the-design-objective">§1</a>.</p>
 <p>The formal literature — <em>Reward Sharing Schemes for Stake Pools</em> (Brünjes, Kiayias et al., 2020) and the SL-D1 engineering specification (Kant, Brünjes &amp; Coutts, 2019) — defines these invariants implicitly through the constraints the reward function must satisfy: the equilibrium must exhibit <em>k</em> independent block producers, each bearing a non-trivial personal cost, subject to continuous community oversight, with no single entity able to capture a dominant share of consensus power. Four properties encode these invariants. They are not a menu of desirable features — they are load-bearing elements of the security argument. Losing any one degrades the model; losing two or more can break it.</p>
 <table>
@@ -465,7 +499,7 @@ window.MathJax = {
 </tr>
 </tbody>
 </table>
-<h4 id="341-accountability-the-bond-and-the-enforcer">3.4.1 Accountability — the bond and the enforcer</h4>
+<h4 id="341-accountability-the-bond-and-the-enforcer">3.4.1. Accountability — the bond and the enforcer</h4>
 <p>The Ouroboros security model assumes that block producers are <em>identifiable</em> and have <em>something to lose</em>. Accountability is the property that connects a block-producing identity to a real economic cost: if the operator misbehaves — equivocates, censors, goes offline — there must exist a mechanism through which that behaviour imposes a loss on the operator that is proportional to the damage it causes.</p>
 <p>Cardano's consensus layer does not implement slashing. Unlike protocols that destroy a validator's deposit upon detectable misbehaviour, Ouroboros relies on an indirect accountability structure built from two components that operate at different time-scales:</p>
 <p><strong>Pledge as a static bond.</strong> Capital registered in the pool certificate creates a visible, on-chain commitment. It is not locked in the custodial sense — the operator retains the keys — but it is <em>declared</em>: the protocol observes it at every epoch boundary, and failure to maintain the declared amount triggers a total reward wipe for that epoch (the pledge-unmet penalty). This bond serves a signalling function: an operator who has pledged substantial capital has an observable, verifiable stake in the pool's continued operation. The cost of abandoning or sabotaging the pool includes forfeiting the competitive position that pledge confers.</p>
@@ -474,27 +508,27 @@ window.MathJax = {
 <blockquote>
 <p>A system that relies on only one component is fragile. Pledge without delegation produces accountability that is entirely self-referential: the operator answers to no one but themselves. Delegation without pledge produces accountability without cost: the operator can walk away from a misbehaving pool and register a new one at zero loss. The security model requires both — a floor of personal exposure <em>and</em> a continuous external check.</p>
 </blockquote>
-<h4 id="342-delegation-as-counter-power-the-protocols-substitute-for-governance">3.4.2 Delegation as counter-power — the protocol's substitute for governance</h4>
+<h4 id="342-delegation-as-counter-power-the-protocols-substitute-for-governance">3.4.2. Delegation as counter-power — the protocol's substitute for governance</h4>
 <p>Delegation in the SL-D1 design is not merely a capital-routing mechanism. It is the protocol's substitute for the governance layer that Cardano does not have at the consensus level.</p>
 <p>The formal design separates control over <em>funds</em> (payment keys) from rights in the <em>PoS protocol</em> (staking keys). A delegator who assigns their staking key to a pool does not transfer custody — they grant a revocable licence to include their stake in the pool's block-production weight. The revocation is non-consensual: the protocol processes it without requiring the operator's approval. This makes delegation a <em>continuous approval signal</em> rather than a one-time capital commitment.</p>
 <p>The disciplinary power of this mechanism depends on a structural condition: <strong>the operator must need delegators more than delegators need the operator.</strong> If a pool is filled entirely with the operator's own capital, delegator exit is irrelevant — there are no delegators to leave. If a pool is filled entirely by external delegation, delegator exit destroys the operator's income — but only if the operator has something at stake that makes rebuilding costly. The ratio between owner stake and delegated stake determines the <em>leverage</em> delegators have over the operator.</p>
 <div class="admon admon-note"><div class="admon-label">Note</div><p>The pledge/delegation ratio is not an accounting detail — it defines the <strong>power structure</strong> within the pool. For the credible exit threat to function, both parties must have real stakes: the operator cannot be replaced without cost (their pledge and infrastructure matter), and the delegators cannot be ignored without cost (their departure shrinks the pool materially). This mutual dependency is the structural condition the mechanism must produce.</p></div>
-<h4 id="343-sybil-resistance-making-fragmentation-expensive">3.4.3 Sybil resistance — making fragmentation expensive</h4>
+<h4 id="343-sybil-resistance-making-fragmentation-expensive">3.4.3. Sybil resistance — making fragmentation expensive</h4>
 <p>The <em>k</em>-pool target assumes that <em>k</em> pools represent <em>k</em> <em>independent</em> block-producing entities. Sybil resistance is the property that makes this assumption defensible: creating additional block-producing identities must carry a cost high enough that fragmentation is economically dominated by honest, single-pool operation.</p>
 <p>Brünjes &amp; Kiayias (2020, §4) formalise this through the pledge parameter <em>a₀</em>. The reward function <em>r(σ, λ)</em> includes a pledge-sensitive component — the <em>λ_pledge · A(ν, π)</em> term — designed so that splitting capital across <em>n</em> pools dilutes the pledge bonus per pool. An attacker who fragments into <em>n</em> identities must commit capital linearly: each pool requires its own pledge to earn the bonus. The intended cost of a Sybil attack scales as <em>O(n)</em> in committed capital.</p>
 <p>This defence has a quantitative precondition: <strong>the pledge bonus must be large enough that forfeiting it is costly.</strong> If the bonus is negligible, the Sybil tax approaches zero — an attacker who registers additional pools forgoes a bonus that was worth nothing to begin with. The formal mechanism exists; whether its economic bite is sufficient is a question of parameter calibration.</p>
 <p>There is a subtlety in <em>how</em> the Sybil cost operates. When the cost comes from the pledge mechanism itself — forfeiting a meaningful bonus by fragmenting — it is the <em>design</em> that provides the defence. When the cost comes from raw capital requirements alone — an attacker simply running out of money — the defence is incidental, not engineered. The mechanism should ensure that the Sybil cost operates through the reward structure, not merely through wealth constraints that exist independently of the protocol.</p>
-<h4 id="344-decentralisation-more-than-a-pool-count">3.4.4 Decentralisation — more than a pool count</h4>
+<h4 id="344-decentralisation-more-than-a-pool-count">3.4.4. Decentralisation — more than a pool count</h4>
 <p>Decentralisation is the property that the <em>k</em>-pool target is supposed to produce: consensus power distributed across many independent entities, with no single actor or coordinated group able to dominate block production.</p>
 <p>This requires more than a count of pools. A network with 500 pool certificates but a handful of controlling entities is not decentralised in any security-relevant sense — it merely <em>appears</em> decentralised at the certificate level while concentrating power at the entity level. Decentralisation requires that pools be operated by <em>distinct, economically independent</em> actors.</p>
 <p>The entry barrier determines who can participate. If the barrier is too high — requiring enormous personal capital per pool — the operator set shrinks to a small, wealthy elite, and block production becomes permissioned by wealth. If the barrier is too low — requiring no meaningful commitment — entry is cheap, but competitive dynamics drive concentration through brand, convenience, and scale rather than through commitment. In both cases, the resulting equilibrium fails the decentralisation test, though for different structural reasons.</p>
 <p>The mechanism must calibrate the barrier so that <em>commitment</em> — not wealth alone and not zero-cost entry — determines who can participate. The entry requirement should be high enough to be meaningful but low enough that operators of moderate means can enter, with delegation providing the growth path beyond the initial commitment.</p>
-<h4 id="345-the-properties-are-not-independent">3.4.5 The properties are not independent</h4>
+<h4 id="345-the-properties-are-not-independent">3.4.5. The properties are not independent</h4>
 <p>These four properties interact, and the interactions constrain the design space.</p>
 <p><strong>Accountability × delegation-as-counter-power</strong> are two faces of the same disciplinary structure. In a system without slashing, the <em>only</em> continuous enforcement mechanism is delegator exit. Pledge creates the <em>precondition</em> for that mechanism to have force — the operator must have something at stake — but delegation creates the <em>mechanism itself</em>. Accountability without delegation is a bond with no enforcer. Delegation without accountability is a vote with no consequence. Neither alone produces the discipline the protocol requires; together, they form a closed feedback loop.</p>
 <p><strong>Sybil resistance × decentralisation</strong> are in tension. A higher Sybil cost (requiring more pledge per pool) raises the entry barrier, which can reduce the number of independent operators. A lower Sybil cost (requiring less pledge) lowers the barrier but makes fragmentation cheap. The mechanism must find a calibration where the pledge requirement is high enough to impose a real cost on fragmentation but low enough — with delegation providing the remaining stake — that operators of moderate means can still enter and compete.</p>
 <p><strong>Decentralisation × delegation-as-counter-power</strong> reinforce each other when the equilibrium satisfies both. More independent operators means more choices for delegators, which strengthens the exit threat, which improves accountability, which makes the operator landscape more trustworthy, which attracts more delegation to committed pools. This is the virtuous cycle that §4 describes. It requires all four properties to be present simultaneously — remove any one, and the cycle breaks.</p>
-<h4 id="346-the-structural-requirement">3.4.6 The structural requirement</h4>
+<h4 id="346-the-structural-requirement">3.4.6. The structural requirement</h4>
 <p>Taken together, the four properties impose a specific structural requirement on the equilibrium the mechanism must produce:</p>
 <div class="admon admon-important"><div class="admon-label">Important</div><p><strong>Each pool must combine meaningful operator commitment with meaningful external delegation.</strong></p><p>Operator commitment (pledge) is required for accountability and Sybil resistance — it creates the bond that makes misbehaviour costly and fragmentation expensive. External delegation is required for counter-power and decentralisation — it creates the oversight mechanism and ensures that the entry barrier does not exclude operators of moderate means.</p></div>
 <p>An equilibrium where operators fund pools entirely from their own capital satisfies accountability in a narrow sense but eliminates delegation's disciplinary role and restricts participation to the capital-rich. An equilibrium where operators commit nothing satisfies no property — the bond is absent, the Sybil defence is gone, and concentration emerges through market dynamics unchecked by any commitment signal.</p>
@@ -551,6 +585,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777299621"></script>
+<script src="assets/site.js?v=1777360508"></script>
 </body>
 </html>

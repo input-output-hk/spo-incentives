@@ -16,7 +16,7 @@ The architecture introduces one new governance parameter ($\mu$, ViabilityPackag
 
 ## 1. The coupling thesis
 
-### 1.1 Why the dependency-chained reading fails
+### 1.1. Why the dependency-chained reading fails
 
 The current V2 reading orders the milestones as a chain: viability ([§3.1](../README.md#31-guarantee-operator-viability-across-the-entire-productive-population)) precedes pledge ([§3.2](../README.md#32-restore-the-notion-of-pledge-among-operators)) precedes delegator yield ([§3.3](../README.md#33-maintain-and-diversify-a-competitive-delegator-yield)) precedes concentration ([§3.4](../README.md#34-reduce-the-concentration-effects-that-distort-both-populations)). The synthesis composes the candidate package the same way: *fee-layer first*, *stake-cap second*, *k raises last*.
 
@@ -28,7 +28,7 @@ Two structural objections emerge from re-reading the Diagnostic against the four
 
 The conclusion is not that the V2 milestone ordering is wrong — it is that **the candidate reward function cannot be a stack**: the fee structure and the pledge structure are two cuts of the same surface and must be co-designed.
 
-### 1.2 The unified problem statement
+### 1.2. The unified problem statement
 
 A reward function $f$ over a per-pool tuple $(\sigma, p, \pi)$ — with entity-level state acknowledged but its incorporation deferred (§4.4) — is a **coupled solution** if and only if:
 
@@ -46,7 +46,7 @@ The whiteboard takes C1 ∧ C2 ∧ C3 as the **joint admissibility predicate** a
 
 The proposal must satisfy a fixed set of constraints that come from the V2 specification, the Cardano Constitution, and the *Intended Game* security properties. They are not negotiable; they are the boundary conditions of the design space.
 
-### 2.1 Hard constraints from the V2 specification
+### 2.1. Hard constraints from the V2 specification
 
 | Origin | Constraint | Quantitative target |
 |---|---|---|
@@ -57,7 +57,7 @@ The proposal must satisfy a fixed set of constraints that come from the V2 speci
 | [§3.2.2 R3](../README.md#322-specification) — custodial recognition | The mechanism must distinguish architectural inability to pledge from strategic choice | Custodial population (CEX + IVaaS) must remain viable without pledging delegated capital |
 | [§3.2.2 R4](../README.md#322-specification) — governable pledge | Pledge parameters must be reviewable through Conway-era governance, with awareness of fiat/ADA asymmetry | Parameter review cadence; oracle-informed adjustment instrument |
 
-### 2.2 Hard constraints from the Cardano Constitution
+### 2.2. Hard constraints from the Cardano Constitution
 
 | Parameter | Constitutional bound | Implication |
 |---|---|---|
@@ -67,7 +67,7 @@ The proposal must satisfy a fixed set of constraints that come from the V2 speci
 | $\rho$ (monetary expansion) | [0.001, 0.005] (ME-01–05) | The funding envelope is bounded; the proposal must operate within the existing $R$ |
 | $\tau$ (treasury cut) | [0.1, 0.3] (TC-01–05) | Treasury share is bounded; the proposal cannot fund itself by taking from the treasury without governance approval |
 
-### 2.3 Security properties from *The Intended Game*
+### 2.3. Security properties from *The Intended Game*
 
 The four security properties of [*The Intended Game* §3.4](../the-intended-game/README.md) are **derivation premises**, not design choices. The pledge component of the formula must answer to them — its presence, shape, and weight are downstream of these properties.
 
@@ -97,7 +97,7 @@ The whiteboard treats the following pathologies as **pre-conditions to forbid**.
 
 The whiteboard restructures the macro split of the epoch pot to take the viability injection out of the per-pool envelope $E$ entirely. The viability package becomes a *channel*, not an envelope component: a dedicated subsidy that flows directly to qualified operators without being subject to fee, margin, or delegator split. The envelope $E$ reverts to its current Shelley two-term form (size + pledge), with the pledge term redesigned per §4.4.
 
-### 4.1 The macro split — viability as a separate channel inside PoolsPot
+### 4.1. The macro split — viability as a separate channel inside PoolsPot
 
 The current Shelley macro split assembles the epoch pot from three sources and divides it 80/20 between pools and treasury:
 
@@ -122,7 +122,7 @@ with $\mu \in [0, 1]$ a new governance parameter. Treasury is untouched. The cho
 
 The constitutional handle is a single new top-level fraction $\mu$ — *not* a new envelope coefficient. The encoding of the per-pool reward stays at the existing Shelley form, with $a_0 \in [0.1, 1.0]$ alone parameterising the pledge influence. No constitutional amendment on the envelope is required; only a parameter-update action introducing $\mu$ as a governable fraction.
 
-#### 4.1.1 Numerical sizing at $\mu = 20\%$
+#### 4.1.1. Numerical sizing at $\mu = 20\%$
 
 For mainnet at epoch 623 (per [treasury-and-pool-pots-distribution mainnet-analysis](../diagnostic/sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md)):
 
@@ -138,7 +138,7 @@ For $N_q \approx 460$ qualified pools (the §3 [283 viable single-pool + ~180 vi
 
 The implication: $\mu = 20\%$ is a working starting point, not a target. The actual calibration depends on what the design wants the pack to *cover* — bare cost floor, professional wage, or a graduated allocation between the two. See OQ7.
 
-#### 4.1.2 Per-pool reward formula — outer structure
+#### 4.1.2. Per-pool reward formula — outer structure
 
 $$
 \hat f'(\nu,\, \pi,\, \bar p) \;=\; \bar p \cdot P_{\max} \cdot E(\nu,\, \pi)
@@ -148,11 +148,11 @@ with $P_{\max} = z_0 \cdot RewardPot^{\text{epoch}} = z_0 \cdot (1-\mu) \cdot Po
 
 Why $\bar p$ stays. The performance multiplier is the protocol's only on-chain signal of *delivered* work in the current epoch. Conditioning the per-pool envelope on it preserves three structural properties: sub-threshold pools cannot earn (Poisson-sparse production drives $\bar p \to 0$), absentee operators cannot earn, and the per-pool envelope is gated by demonstrated production. $\bar p$ is a precondition, not a parameter — it remains identical to current Shelley.
 
-#### 4.1.3 ViabilityPackage distribution — outline
+#### 4.1.3. ViabilityPackage distribution — outline
 
 The package is distributed to pools that satisfy two gates: the structural production threshold ($\nu \geq \nu_{\min}$) and the per-epoch production gate ($n_t \geq 1$ — pool produced at least one block in the current epoch, using SL-D1's existing $n$ variable). The distribution rule is the subject of §4.3 (where pack form, phase-out, and properties are treated). Because the package lives *outside* the per-pool reward formula, its distribution is freely shaped — no convex-coefficient constraint with $\lambda_{\text{size}}$ or $\lambda_{\text{pledge}}$, no impact on delegator yield channels.
 
-#### 4.1.4 Notation against SL-D1
+#### 4.1.4. Notation against SL-D1
 
 The proposed signature extends SL-D1 §5.5.1 Eq.(1) without breaking it.
 
@@ -169,7 +169,7 @@ The proposed signature extends SL-D1 §5.5.1 Eq.(1) without breaking it.
 
 **No new ledger state.** The ViabilityPackage channel uses the per-epoch block count $n$ (already exposed by SL-D1 §5.5.1 in the derivation of $\bar p$) for its eligibility gate. No cumulative or lifetime counter is required. The only addition to the protocol parameter set is $\mu$ — a single rational fraction governable through Conway parameter-update actions.
 
-### 4.2 The envelope $E$ — Shelley two-term form retained
+### 4.2. The envelope $E$ — Shelley two-term form retained
 
 With viability promoted to a separate channel (§4.1), the envelope $E$ that distributes $RewardPot^{\text{epoch}}$ across pools reverts to the Shelley two-term shape:
 
@@ -198,7 +198,7 @@ This decouples three concerns that previously shared one budget surface:
 
 Each is governable independently. Raising $\mu$ (more viability) reduces $RewardPot$ proportionally — both the size and pledge terms shrink in absolute ADA. Raising $a_0$ (more pledge influence) reshapes the size/pledge split inside $E$ — without touching the viability channel.
 
-### 4.3 The ViabilityPackage channel — pack distribution rule
+### 4.3. The ViabilityPackage channel — pack distribution rule
 
 The ViabilityPackage channel is the budget pot $\mu \cdot PoolsPot^{\text{epoch}}$ that flows directly to qualified operator reward accounts, parallel to (not part of) the per-pool envelope. The channel is defined by three rules: who qualifies (eligibility), how much each qualified pool receives (injection rule), and how the budget closes (sizing identity).
 
@@ -216,7 +216,7 @@ where:
 
 The pack is *not* gated by $\bar p$ as a multiplier — it is gated by $n_t \geq 1$ as an indicator. A pool that produces at least one block in the epoch qualifies, regardless of whether $\bar p$ is high or low.
 
-#### 4.3.1 Why the per-epoch production gate
+#### 4.3.1. Why the per-epoch production gate
 
 The per-epoch gate ($n_t \geq 1$) composes with the production threshold ($\nu \geq \nu_{\min}$) to form a two-layer admission system:
 
@@ -230,7 +230,7 @@ Four properties follow:
 - **Sybil-resistant by Poisson.** An entity that registers a Sybil pool at exactly $\nu_{\min}$ has $\lambda = 1$ block/epoch, so $P(n_t \geq 1) \approx 63\%$. The pool collects the pack only ~2 epochs out of 3. This is a real, structural cost on fragmentation — see §4.4.
 - **Variance is real, but bounded.** A small pool legitimately at the production threshold misses the pack ~37% of epochs. The pack is therefore a *probabilistic* income, not a guaranteed one. Larger pools (above viability threshold ~3M ADA, $\lambda \geq 3$) collect ≥ 95% of epochs.
 
-#### 4.3.2 Empirical N_q and budget closure
+#### 4.3.2. Empirical N_q and budget closure
 
 The eligible-set size $N_q$ in any given epoch is the count of pools satisfying both gates simultaneously. From the diagnostic ([census/mainnet-analysis/README.md L234](../diagnostic/sub-flows/census/mainnet-analysis/README.md), [pools-distribution/mainnet-analysis/README.md L1410](../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md), [single-spo/README.md](../diagnostic/sub-flows/census/mainnet-analysis/single-spo/README.md)) at epoch 623:
 
@@ -262,7 +262,7 @@ For the working configuration $\mu = 20\%$, $N_q \approx 900$, $PoolsPot \approx
 
 This **clears the §4.5 lower bound** of \$7,160/year operator floor with margin — covering infrastructure plus skilled labour at standard DevOps rates plus a credible part-time wage. At higher ADA prices, the surplus grows: at ADA = $1.00$, the same 250K ADA/year delivers ~$250K/year per operator.
 
-#### 4.3.3 Two-tier coverage decomposition
+#### 4.3.3. Two-tier coverage decomposition
 
 The pack quantity $X_p$ is not an opaque ADA figure — it is the protocol's response to a fiat-denominated operating cost that decomposes into two semantically distinct tiers, taken from the diagnostic [§4.5 — *Is operator revenue competitive?*](../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#45-is-operator-revenue-competitive--a-market-benchmark) and finding [OPE.O6.F4](../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#454-implications).
 
@@ -346,7 +346,7 @@ Taking the [§4.5.1](../diagnostic/sub-flows/operator-delegator-distribution/mai
 
 The working configuration ($\mu = 20\%$, $N_q = 900$) delivers $X_0 \approx 3,420$ ADA/epoch — sitting **above the high anchor** at the stress price. The pack at $\mu = 20\%$ is generous; a tighter calibration ($\mu \approx 12\%$) would land precisely on the §4.5.1 mid-range cost target. The CIP draft will need to converge on a specific value; $\mu = 20\%$ remains a working figure.
 
-#### 4.3.4 Phase-out shape and the monotonicity invariant
+#### 4.3.4. Phase-out shape and the monotonicity invariant
 
 The pack design imposes two coupled requirements on the phase-out: *the injection must decay as the pool grows* (anti-regressive intent), and *the operator must always benefit from growing* (no perverse incentive to stay small). The two requirements resolve to a closed bound once $X_0$, $\nu^*$, and the envelope coefficients are fixed.
 
@@ -430,7 +430,7 @@ The monotonicity bound and the budget identity give governance four coupled leve
 
 Three independent paths: $\mu$ (budget), $X_0$ (intensity), $\nu^*$ (coverage breadth). The CIP draft must pick a calibration on these three; the working configuration $(\mu = 20\%, X_0 \approx 3,420, \nu^* = 15\text{M})$ is illustrative.
 
-#### 4.3.5 Edge cases and parameters to resolve
+#### 4.3.5. Edge cases and parameters to resolve
 
 The pack framing leaves four sub-questions. They do not gate the architecture's feasibility but they shape its calibration.
 
@@ -439,7 +439,7 @@ The pack framing leaves four sub-questions. They do not gate the architecture's 
 - **Denomination of $X_0$.** Three options. *(a)* ADA-fixed: governable but drifts with price (same pathology as current $minPoolCost$). *(b)* Fiat-anchored via oracle: addresses [§3.1.3 R3](../README.md#313-economic-every-productive-pool-must-be-profitable) directly but introduces an oracle dependency. *(c)* Hybrid: ADA-fixed with periodic governance review against a fiat reference. The governance-grade rebalance of §4.3.3 (P3 rule d) is a (c)-class instrument operating on $\mu$.
 - **Per-pool target vs dilution.** Two budget-rule alternatives. *(i) Target-fixed*: $X_0$ set as governance parameter; if $N_q \cdot X_0 > \mu \cdot PoolsPot$, the system either tops up from reserve or dilutes proportionally. *(ii) Dilution-floating*: $X_0 = \mu \cdot PoolsPot / N_q$ derived from budget closure; $X_0$ varies with $N_q$ each epoch. The whiteboard adopts (ii) for simplicity — automatic Sybil dilution defence (cf. §4.4) — but (i) is preferable if $X_0$ stability matters for operator planning.
 
-#### 4.3.6 Fallback alternatives if the pack does not pan out
+#### 4.3.6. Fallback alternatives if the pack does not pan out
 
 If the per-epoch-gate + linear-phase-out design hits a blocker, four continuous-form alternatives remain available as channel-distribution rules:
 
@@ -452,7 +452,7 @@ If the per-epoch-gate + linear-phase-out design hits a blocker, four continuous-
 
 The whiteboard's working hypothesis is *linear ramp with per-epoch gate $n_t \geq 1$*. The fallbacks differ along two dimensions: (i) whether the qualifying gate is per-epoch ($n_t$) or structural only ($\nu \geq \nu_{\min}$), and (ii) whether the per-pool injection is flat (V1), declining linearly with a hard terminal (working hypothesis, V2), continuous-fiat (V3), or saturation-tapered without terminal (V4).
 
-### 4.4 The pledge term $A$ — redesign with 50/50 saturation and a plateau
+### 4.4. The pledge term $A$ — redesign with 50/50 saturation and a plateau
 
 The current $A(\nu, \pi) = \nu^2 \pi [1 - \pi(1 - \nu)]$ has its peak at $(\nu = 1,\, \pi = 1)$ — *saturated, fully self-pledged*. That endgame is exactly what the Cardano consensus model is **not** designed to reward: a 100%-pledged saturated pool is a *private* pool, with no external delegation and therefore no [delegation-as-counter-power](../the-intended-game/README.md#342-delegation-as-counter-power) accountability mechanism. The Intended Game [§3.4.6](../the-intended-game/README.md#346-the-structural-requirement) explicitly requires *both* meaningful operator commitment (pledge) *and* meaningful external delegation; pledge alone destroys the second leg, and the reward function should not pay for it.
 
@@ -464,7 +464,7 @@ $$
 
 This is the rising half of a parabola, capped at its peak. It is C¹-continuous at $\pi = 0.5$ (the slope vanishes there and stays zero), the factor $\nu$ (linear, *not* $\nu^2$) removes the small-pool quadratic penalty diagnosed in [solution-evaluation/pools-distribution/README §2.2.1](../solution-evaluation/pools-distribution/README.md).
 
-#### 4.4.1 Why this shape
+#### 4.4.1. Why this shape
 
 Four structural properties motivate the redesign jointly:
 
@@ -473,7 +473,7 @@ Four structural properties motivate the redesign jointly:
 - **Zero at $\pi = 0$.** The custodial branch still earns nothing on this term. It reaches viability through $V$, by design (cf. §4.3 and [§3.2.2 R3](../README.md#322-specification)).
 - **Linear in $\nu$.** Replaces the quadratic outer factor $\nu^2$. A pool at half-saturation now earns half the pledge bonus, not a quarter. Small pools are no longer doubly-penalised.
 
-#### 4.4.2 Impacts on operator strategy
+#### 4.4.2. Impacts on operator strategy
 
 The redesign produces measurable shifts across the eight relevant configurations:
 
@@ -506,14 +506,14 @@ Eight implications follow from this table.
 
 **I8 — A subtle Sybil-tax concern emerges at very-low pledge.** The concave shape near $\pi = 0$ behaves like $4\pi$, *four times* the slope of the current Shelley $\pi$ (linear at saturation). An MPO fragmenting capital across many pools at uniformly low π earns *more* commitment bonus per pool under the new shape than under the current one. This is the opposite of the [§3.2.2 R2](../README.md#322-specification) entity-level Sybil tax. The redesign does not, on its own, strengthen the Sybil property — it makes the bonus accessible to small pools by softening the very-low-pledge edge. The Sybil tax remains an entity-level concern that requires the deferred §4.4.3 primitive.
 
-#### 4.4.3 What stays deferred
+#### 4.4.3. What stays deferred
 
 Two structural concerns are still out of scope for this whiteboard iteration:
 
 - **Entity-level evaluation ([§3.2.2 R2](../README.md#322-specification)).** $A_{\text{new}}$ remains pool-local. The entity-aggregate identity $(\Pi_{\text{ent}}, \Sigma_{\text{ent}})$ that would make the Sybil tax bite at the fleet level requires an entity-identity primitive (CIP-0161 / CPS-0021 CPD class), absent from the protocol. The whiteboard's V pack lives entirely in $V$ and is unaffected.
 - **Custodial transparency in $A$.** Whether custodial registration should additionally appear as a transparency signal in $A$ — beyond simply being absent from it — remains parked alongside OQ2/OQ3.
 
-#### 4.4.4 The Sybil-steepening question (OQ6)
+#### 4.4.4. The Sybil-steepening question (OQ6)
 
 Impact I8 introduces a real concern: the proposed concave rise rewards very-low-pledge configurations relatively heavily. The shape was *intentional* — it makes the bonus accessible to small operators who can pledge 5–20% but not 50% — but it also softens the implicit Sybil tax at the very-low-π edge. A higher-exponent rise preserves the plateau at $\pi \geq 0.5$ while steepening the climb from $\pi = 0$. Three candidate shapes for the rising portion (all capped above 0.5):
 
@@ -534,7 +534,7 @@ Mid-position option: a *threshold + concave rise* — $A = 0$ for $\pi < \pi_{\m
 
 The choice is OQ6, and it is the natural sequel to the Sybil-tax deferral of §4.4.3. *In the present iteration, the proposed shape is the working hypothesis*; it carries the tradeoff explicitly and pushes harder Sybil work onto the entity-level primitive.
 
-### 4.5 Governance levers — $\mu$ at the macro level, $a_0$ at the envelope level
+### 4.5. Governance levers — $\mu$ at the macro level, $a_0$ at the envelope level
 
 The two-channel architecture exposes two governance parameters operating at different levels of the reward pipeline. They are *independent* in the sense that adjusting one does not automatically force the other.
 
@@ -570,13 +570,13 @@ The current Shelley calibration is the limiting case $\mu = 0$, $a_0 = 0.3$, $A 
 
 The channel architecture is *strictly less invasive* on the existing constitutional surface. The §4.4.3 pledge-stability-under-stress invariant, which previously required a coupled $(a_0, b_0)$ update, now requires only a $\mu$ update — $a_0$ is held constant by *not touching it*.
 
-### 4.6 Split-resistance — analysed across both channels
+### 4.6. Split-resistance — analysed across both channels
 
 A reward function passes the **split-resistance invariant** when no operator gains by splitting a single pool of stake $\Sigma$ into two pools of stake $\Sigma/2$ (or, more generally, $N$ pools of stake $\Sigma/N$). The invariant is the per-pool projection of the [§3.2.2 R2](../README.md#322-specification) entity-level Sybil-tax requirement: in the absence of an entity-identity primitive (parked as a follow-up CIP per §4.4.3), the invariant is the only structural defence against fragmentation.
 
 With the channel architecture, the invariant must be checked against *both* the envelope and the ViabilityPackage channel. The envelope passes cleanly; the channel still has a residual leak, but bounded by the per-epoch production gate and population dilution.
 
-#### 4.6.1 Envelope channel — split-neutral by construction
+#### 4.6.1. Envelope channel — split-neutral by construction
 
 Setup. An operator with total stake $\Sigma$ and pledge $P$ compares operating one pool ($\nu_1 = \Sigma/z_0$, $\pi_1 = P/\Sigma$) versus two pools, each with stake $\Sigma/2$ and pledge $P/2$ ($\nu_2 = \nu_1/2$, $\pi_2 = \pi_1$).
 
@@ -587,7 +587,7 @@ Setup. An operator with total stake $\Sigma$ and pledge $P$ compares operating o
 
 Both envelope terms are linear in $\nu$ (with the new $A$ shape), and the pledge ratio $\pi$ is preserved under proportional splitting. The envelope's contribution to total reward is *exactly the same* whether the operator runs one pool or N pools — the entire $RewardPot$ portion of the formula is split-neutral. This is the structural payoff of the channel architecture: fragmentation cannot multiply the size or pledge mass.
 
-#### 4.6.2 ViabilityPackage channel — bounded leak, two mitigation mechanisms
+#### 4.6.2. ViabilityPackage channel — bounded leak, two mitigation mechanisms
 
 The channel pays $X_p = X_0 \cdot (\text{phase-out factor}) \cdot \mathbb{1}[\nu \geq \nu_{\min}] \cdot \mathbb{1}[n_t \geq 1]$ per qualified pool. Splitting a pool from stake $\Sigma$ to two of stake $\Sigma/2$ has two competing effects on the channel:
 
@@ -618,7 +618,7 @@ The leak survives only when the unified pool sits *above* the phase-out terminal
 
 The combination of per-epoch gate, population dilution, and the realistic operating cost makes N-way fragmentation *net negative* across a wide range of configurations — a sharp improvement over the envelope-coupled architecture's worst case (+125K ADA/year).
 
-#### 4.6.3 Why the channel architecture improves the leak structure
+#### 4.6.3. Why the channel architecture improves the leak structure
 
 Three factors compose to make the channel-based leak smaller than the envelope-based leak it replaces:
 
@@ -626,7 +626,7 @@ Three factors compose to make the channel-based leak smaller than the envelope-b
 - **Per-epoch gate.** $\mathbb{1}[n_t \geq 1]$ damps the leak by Poisson factors that scale with $1 - e^{-\lambda}$. Splitting halves $\lambda$ per pool, which dampens the eligibility probability super-linearly at low $\lambda$.
 - **Operating-cost matching.** When $X_0$ is calibrated to match operating cost per §4.3.3, the marginal cost of an additional pool exactly offsets the marginal pack income. Net Sybil surplus is sensitive only to the *over-payment* of $X_0$ above operating cost.
 
-#### 4.6.4 Why a residual leak persists, and the resolution path
+#### 4.6.4. Why a residual leak persists, and the resolution path
 
 Even with all three damping mechanisms, the leak is non-zero in specific regions — specifically at the seams of the phase-out and the per-epoch gate, where small fragmentation can still extract value when the unified pool sits in a no-pack zone and splits land in active-pack zones.
 

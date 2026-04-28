@@ -28,13 +28,13 @@ The σ′ clip changes *who can earn the V1 reward*; it does not repair what `A`
 
 - [1. Stake-cap formulas](#1-stake-cap-formulas)
 - [2. Why a new instrument when V1 already has a pledge lever?](#2-why-a-new-instrument-when-v1-already-has-a-pledge-lever)
-  - [2.1 The `a₀` lever rebalances, it doesn't tilt](#21-the-a0-lever-rebalances-it-doesnt-tilt)
-  - [2.2 The deeper bottleneck — A(ν, π) itself](#22-the-deeper-bottleneck-a-itself)
-    - [2.2.1 Anatomy of the function — before any numbers](#221-anatomy-of-the-function-before-any-numbers)
-    - [2.2.2 What A actually pays — three operators across three pledge levels](#222-what-a-actually-pays-three-operators-across-three-pledge-levels)
-    - [2.2.3 The cubic ν³ — visualised](#223-the-cubic-3-visualised)
-    - [2.2.4 What this means for the CIP critique](#224-what-this-means-for-the-cip-critique)
-  - [2.3 What this implies for the CIP candidates in this folder](#23-what-this-implies-for-the-cip-candidates-in-this-folder)
+  - [2.1. The `a₀` lever rebalances, it doesn't tilt](#21-the-a0-lever-rebalances-it-doesnt-tilt)
+  - [2.2. The deeper bottleneck — A(ν, π) itself](#22-the-deeper-bottleneck-a-itself)
+    - [2.2.1. Anatomy of the function — before any numbers](#221-anatomy-of-the-function-before-any-numbers)
+    - [2.2.2. What A actually pays — three operators across three pledge levels](#222-what-a-actually-pays-three-operators-across-three-pledge-levels)
+    - [2.2.3. The cubic ν³ — visualised](#223-the-cubic-3-visualised)
+    - [2.2.4. What this means for the CIP critique](#224-what-this-means-for-the-cip-critique)
+  - [2.3. What this implies for the CIP candidates in this folder](#23-what-this-implies-for-the-cip-candidates-in-this-folder)
 - [3. Candidates](#3-candidates)
 - [4. Composition](#4-composition)
 - [5. Interaction with `k`](#5-interaction-with-k)
@@ -92,7 +92,7 @@ A reading shortcut: when you see **ν** in the formula, think *"how big is the p
 
 The natural question is therefore: *why propose CIP-0050 / CIP-0037 instead of just raising `a₀`?* The answer requires looking at three nested layers — the lever's **shape**, the bonus function's **structure**, and what no proposal currently touches.
 
-### 2.1 The `a₀` lever rebalances, it doesn't tilt
+### 2.1. The `a₀` lever rebalances, it doesn't tilt
 
 Raising `a₀` shifts more weight from the base term ($\lambda_{\text{size}}\nu$) onto the bonus term ($\lambda_{\text{pledge}}A$). For a low-pledge pool this *reduces* the base by more than the bonus can recover — the operator is punished smoothly, not catalysed.
 
@@ -102,11 +102,11 @@ Panel (a). For a Healthy pool ($\sigma = 15$ M, $\nu \approx 0.222$): raising $a
 
 Panel (b). CIP-0050 and CIP-0037 don't touch $(λ_{\min}, λ_{\max})$. They clip $\sigma'$ before the reward formula runs, so the penalty hits the **base term** $λ_{\min} \cdot \nu'$ — which is structurally *much larger* than $λ_{\max} \cdot A$ at any reasonable pool size. That is why their cliff is steep where `a₀` tweaks barely move the needle.
 
-### 2.2 The deeper bottleneck — A(ν, π) itself
+### 2.2. The deeper bottleneck — A(ν, π) itself
 
 Both `a₀` (rebalancing) and CIP-0050 / CIP-0037 (clipping) operate **around** the A function. Neither modifies it. So before plugging any numbers in, dissect the function itself: what does it say structurally?
 
-#### 2.2.1 Anatomy of the function — before any numbers
+#### 2.2.1. Anatomy of the function — before any numbers
 
 ![Structural anatomy of A(ν, π) — heatmap on the unit square + non-monotonicity in π for ν < 0.5](figures/cip_levers_04_A_structural_anatomy.png)
 
@@ -172,7 +172,7 @@ Panel (b) of the figure shows this: each curve is A at fixed ν as a function of
 
 These are pre-empirical defects: they hold regardless of mainnet data, regardless of what `a₀` is set to, regardless of CIP reforms acting on σ′. They are properties of the algebra. With this in hand, the next subsection puts numbers on what they mean for actual operators.
 
-#### 2.2.2 What A actually pays — three operators across three pledge levels
+#### 2.2.2. What A actually pays — three operators across three pledge levels
 
 **Cast.** Three honest operators, all running pools of different sizes:
 
@@ -224,7 +224,7 @@ Furthermore — and this is pathology (iv) made tangible — Bob is on the *wron
 
 Panel (a) is Scenario C as a bar chart at log scale (the disparity is too large for linear axes). Panel (b) re-expresses the same disparity as a "bonus yield" — bonus per ADA of pledge per year — and overlays the passive-delegation yield (~2.3 %/yr from POL.O2.F2) the operator gives up by locking that pledge: Bob's pledge yields **0.0007 %/yr** in bonus, Charles's **0.038 %/yr**, Alice's **0.77 %/yr**. All three are below passive delegation, but Bob is by far the most penalised.
 
-#### 2.2.3 The cubic ν³ — visualised
+#### 2.2.3. The cubic ν³ — visualised
 
 Combine the corner-collapse from (ii) with the non-monotone pathology from (iv): the operator who gives the *strongest possible signal* (full self-pledge, $\pi = 1$) is paid by $\nu^3$ — a destruction operator on sub-unit numbers, layered on top of the permanent $\nu^2$ size penalty.
 
@@ -245,7 +245,7 @@ Panel (c) makes the cubic crush tangible in dollars. Bob's 2 M pool, fully self-
 
 Compare to the **passive-delegation alternative**: if Bob delegates that 2 M instead of pledging it, he earns ~46 000 ₳/yr at 2.3 %/yr. Under the current cubic, pledging costs him ~46 000 ₳/yr in opportunity for 14 ₳/yr in bonus. *Pledging is a 3 286× loss for him.* Under a linear A, the bonus alone (15 529 ₳/yr) would be a third of his opportunity cost — pledging would still lose, but less catastrophically. Under the scale-free kernel, pledging would be net positive even for the smallest operator.
 
-#### 2.2.4 What this means for the CIP critique
+#### 2.2.4. What this means for the CIP critique
 
 Walking through the structural anatomy and the three scenarios reveals one cumulative argument:
 
@@ -260,7 +260,7 @@ A reform that touched A directly — replacing the kernel with one that doesn't 
 
 This reading extends the formal critique at [diagnostic / pools-distribution §2.3.5](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#235-reader-friendly-reward-function): *"the bonus term $\lambda_{\text{pledge}}A(\nu, \pi)$ is non-linear and asymmetric in its two inputs. The outer factor $\nu^2$ imposes a quadratic size penalty that holds at every pledge ratio; at full self-pledge ($\pi = 1$) the inner factor degenerates and the bonus collapses to $\lambda_{\text{pledge}}\nu^3$ — the cubic that suppresses the bonus structurally for any pool below saturation."*
 
-### 2.3 What this implies for the CIP candidates in this folder
+### 2.3. What this implies for the CIP candidates in this folder
 
 The two CIPs in this folder accept the V1 reward formula as given and patch around it via $\sigma'$ clipping. Three honest readings follow from §2.1 and §2.2:
 

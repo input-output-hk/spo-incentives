@@ -20,7 +20,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777299621">
+<link rel="stylesheet" href="assets/site.css?v=1777360508">
 <script defer data-website-id="791f3295-e5ab-4a38-af87-55835f711d11" src="https://cloud.umami.is/script.js"></script><script>window.spoTrack=function(n,p){try{if(window.umami&&window.umami.track){window.umami.track(n,p||{});}}catch(e){}}</script>
 
 </head>
@@ -100,6 +100,40 @@ window.MathJax = {
 <!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
 <div class="nav-zone nav-zone-output">
 <a href="index.html" class="nav-tab-spec-big">V2 Specification</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 2.5 — Cardano Constitution (the governance ceiling V2 must respect) -->
+<div class="nav-zone nav-zone-constitution">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-constitution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Constitution ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-constitution">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-constitution">Cardano Constitution v2</span>
+      <span class="nav-dd-stratum-meta">The governance document the protocol operates under (ratified at epoch 609) — every milestone in the V2 spec must comply with it</span>
+    </div>
+    <a href="pdf-viewer.html?file=references/governance/cardano-constitution-2.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Cardano Blockchain Ecosystem Constitution</span>
+      <span class="nav-dd-ref-cite">IntersectMBO — ratified at epoch 609 (v2)<span class="nav-dd-ref-tag">CONST-2</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="references/governance/cardano-constitution-2.pdf" class="nav-dd-ref nav-dd-ref-sub" download>
+      <span class="nav-dd-ref-title">Download the PDF</span>
+      <span class="nav-dd-ref-cite">Local copy on this site<span class="nav-dd-ref-stage">Download</span></span>
+    </a>
+    <a href="https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2" class="nav-dd-ref nav-dd-ref-sub" rel="noopener" target="_blank">
+      <span class="nav-dd-ref-title">Source on GitHub</span>
+      <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
+    </a>
+    <a href="index.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the V2 spec</span>
+      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 spec</span></span>
+    </a>
+  </div>
+</div>
+</div>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
@@ -272,15 +306,15 @@ window.MathJax = {
 <ul>
 <li><a href="#1-stake-cap-formulas">1. Stake-cap formulas</a></li>
 <li><a href="#2-why-a-new-instrument-when-v1-already-has-a-pledge-lever">2. Why a new instrument when V1 already has a pledge lever?</a><ul>
-<li><a href="#21-the-a0-lever-rebalances-it-doesnt-tilt">2.1 The <code>a₀</code> lever rebalances, it doesn't tilt</a></li>
-<li><a href="#22-the-deeper-bottleneck-a-itself">2.2 The deeper bottleneck — A(ν, π) itself</a><ul>
-<li><a href="#221-anatomy-of-the-function-before-any-numbers">2.2.1 Anatomy of the function — before any numbers</a></li>
-<li><a href="#222-what-a-actually-pays-three-operators-across-three-pledge-levels">2.2.2 What A actually pays — three operators across three pledge levels</a></li>
-<li><a href="#223-the-cubic-3-visualised">2.2.3 The cubic ν³ — visualised</a></li>
-<li><a href="#224-what-this-means-for-the-cip-critique">2.2.4 What this means for the CIP critique</a></li>
+<li><a href="#21-the-a0-lever-rebalances-it-doesnt-tilt">2.1. The <code>a₀</code> lever rebalances, it doesn't tilt</a></li>
+<li><a href="#22-the-deeper-bottleneck-a-itself">2.2. The deeper bottleneck — A(ν, π) itself</a><ul>
+<li><a href="#221-anatomy-of-the-function-before-any-numbers">2.2.1. Anatomy of the function — before any numbers</a></li>
+<li><a href="#222-what-a-actually-pays-three-operators-across-three-pledge-levels">2.2.2. What A actually pays — three operators across three pledge levels</a></li>
+<li><a href="#223-the-cubic-3-visualised">2.2.3. The cubic ν³ — visualised</a></li>
+<li><a href="#224-what-this-means-for-the-cip-critique">2.2.4. What this means for the CIP critique</a></li>
 </ul>
 </li>
-<li><a href="#23-what-this-implies-for-the-cip-candidates-in-this-folder">2.3 What this implies for the CIP candidates in this folder</a></li>
+<li><a href="#23-what-this-implies-for-the-cip-candidates-in-this-folder">2.3. What this implies for the CIP candidates in this folder</a></li>
 </ul>
 </li>
 <li><a href="#3-candidates">3. Candidates</a></li>
@@ -366,14 +400,14 @@ window.MathJax = {
 <p>ν and π are <strong>structurally independent</strong> — pool size and commitment fraction can vary freely, each on its own [0, 1] interval. The operating mainnet population sits very near the π = 0 axis: 78 % of staked ADA is in pools with π &lt; 1 % (POL.O2.F1).</p>
 <p>A reading shortcut: when you see <strong>ν</strong> in the formula, think <em>"how big is the pool relative to one full V1 pool"</em>. When you see <strong>π</strong>, think <em>"how much of the pool is the operator's own ADA"</em>.</p>
 <p>The natural question is therefore: <em>why propose CIP-0050 / CIP-0037 instead of just raising <code>a₀</code>?</em> The answer requires looking at three nested layers — the lever's <strong>shape</strong>, the bonus function's <strong>structure</strong>, and what no proposal currently touches.</p>
-<h3 id="21-the-a0-lever-rebalances-it-doesnt-tilt">2.1 The <code>a₀</code> lever rebalances, it doesn't tilt</h3>
+<h3 id="21-the-a0-lever-rebalances-it-doesnt-tilt">2.1. The <code>a₀</code> lever rebalances, it doesn't tilt</h3>
 <p>Raising <code>a₀</code> shifts more weight from the base term ($\lambda_{\text{size}}\nu$) onto the bonus term ($\lambda_{\text{pledge}}A$). For a low-pledge pool this <em>reduces</em> the base by more than the bonus can recover — the operator is punished smoothly, not catalysed.</p>
 <p><img alt="V1 levers vs CIP-0050 / CIP-0037 — Healthy pool" src="solution-evaluation/pools-distribution/figures/cip_levers_01_smooth_vs_hard.png"></p>
 <p>Panel (a). For a Healthy pool ($\sigma = 15$ M, $\nu \approx 0.222$): raising $a_0$ from <code>0.3</code> → <code>1.0</code> drops the zero-pledge reward to <strong>65 %</strong> of baseline; raising to <code>3.0</code> drops it to <strong>32 %</strong>. The bonus barely recovers across the full pledge range — even at 600 k of self-pledge the higher-<code>a₀</code> curves stay below baseline. <strong>The <code>a₀</code> lever cannot make pledge "matter more" without first making low-pledge pools earn less.</strong></p>
 <p>Panel (b). CIP-0050 and CIP-0037 don't touch $(λ_{\min}, λ_{\max})$. They clip $\sigma'$ before the reward formula runs, so the penalty hits the <strong>base term</strong> $λ_{\min} \cdot \nu'$ — which is structurally <em>much larger</em> than $λ_{\max} \cdot A$ at any reasonable pool size. That is why their cliff is steep where <code>a₀</code> tweaks barely move the needle.</p>
-<h3 id="22-the-deeper-bottleneck-a-itself">2.2 The deeper bottleneck — A(ν, π) itself</h3>
+<h3 id="22-the-deeper-bottleneck-a-itself">2.2. The deeper bottleneck — A(ν, π) itself</h3>
 <p>Both <code>a₀</code> (rebalancing) and CIP-0050 / CIP-0037 (clipping) operate <strong>around</strong> the A function. Neither modifies it. So before plugging any numbers in, dissect the function itself: what does it say structurally?</p>
-<h4 id="221-anatomy-of-the-function-before-any-numbers">2.2.1 Anatomy of the function — before any numbers</h4>
+<h4 id="221-anatomy-of-the-function-before-any-numbers">2.2.1. Anatomy of the function — before any numbers</h4>
 <p><img alt="Structural anatomy of A(ν, π) — heatmap on the unit square + non-monotonicity in π for ν &lt; 0.5" src="solution-evaluation/pools-distribution/figures/cip_levers_04_A_structural_anatomy.png"></p>
 <p><strong>(i) The factorisation: pure size factor × pledge-intensity factor.</strong></p>
 <p>A admits a clean multiplicative decomposition:</p>
@@ -474,7 +508,7 @@ window.MathJax = {
 <li>The intended MPO-splitting penalty (the $-\pi^2(1-\nu)$ term) is achieved at the cost of (1)–(3).</li>
 </ol>
 <p>These are pre-empirical defects: they hold regardless of mainnet data, regardless of what <code>a₀</code> is set to, regardless of CIP reforms acting on σ′. They are properties of the algebra. With this in hand, the next subsection puts numbers on what they mean for actual operators.</p>
-<h4 id="222-what-a-actually-pays-three-operators-across-three-pledge-levels">2.2.2 What A actually pays — three operators across three pledge levels</h4>
+<h4 id="222-what-a-actually-pays-three-operators-across-three-pledge-levels">2.2.2. What A actually pays — three operators across three pledge levels</h4>
 <p><strong>Cast.</strong> Three honest operators, all running pools of different sizes:</p>
 <ul>
 <li><strong>Bob</strong> runs a Sub-viable 2 M ADA pool ($\nu \approx 0.03$).</li>
@@ -584,7 +618,7 @@ window.MathJax = {
 <p>Furthermore — and this is pathology (iv) made tangible — Bob is on the <em>wrong side</em> of the maximum. His optimal pledge ratio is $\pi^* = 1/[2(1-\nu)] = 1/(2 \cdot 0.9703) \approx 0.515$ (about 51 % of his pool, $p^* \approx 1.03$ M ADA). At full self-pledge he earns 14 ₳/yr; at the interior optimum he would earn ~122 ₳/yr — <strong>8.7× more bonus by withholding half his potential pledge</strong>. The formula explicitly incentivises him to <em>under-commit</em>.</p>
 <p><img alt="The pledge bonus paradox — A(ν, π) at full self-pledge" src="solution-evaluation/pools-distribution/figures/cip_levers_02_A_anatomy.png"></p>
 <p>Panel (a) is Scenario C as a bar chart at log scale (the disparity is too large for linear axes). Panel (b) re-expresses the same disparity as a "bonus yield" — bonus per ADA of pledge per year — and overlays the passive-delegation yield (~2.3 %/yr from POL.O2.F2) the operator gives up by locking that pledge: Bob's pledge yields <strong>0.0007 %/yr</strong> in bonus, Charles's <strong>0.038 %/yr</strong>, Alice's <strong>0.77 %/yr</strong>. All three are below passive delegation, but Bob is by far the most penalised.</p>
-<h4 id="223-the-cubic-3-visualised">2.2.3 The cubic ν³ — visualised</h4>
+<h4 id="223-the-cubic-3-visualised">2.2.3. The cubic ν³ — visualised</h4>
 <p>Combine the corner-collapse from (ii) with the non-monotone pathology from (iv): the operator who gives the <em>strongest possible signal</em> (full self-pledge, $\pi = 1$) is paid by $\nu^3$ — a destruction operator on sub-unit numbers, layered on top of the permanent $\nu^2$ size penalty.</p>
 <p><img alt="The cubic crush — why ν³ destroys small-pool pledge" src="solution-evaluation/pools-distribution/figures/cip_levers_03_cubic_crush.png"></p>
 <p>Panel (a) shows <code>ν³</code> (red) versus quadratic <code>ν²</code> (orange) and linear <code>ν</code> (green, "fair share"). On linear axes, the cubic curve hugs zero until <code>ν ≈ 0.5</code> and then leaps to 1 at full saturation — so anyone running a pool below half-saturation is in the flat region where pledge barely matters.</p>
@@ -622,7 +656,7 @@ window.MathJax = {
 </tbody>
 </table>
 <p>Compare to the <strong>passive-delegation alternative</strong>: if Bob delegates that 2 M instead of pledging it, he earns ~46 000 ₳/yr at 2.3 %/yr. Under the current cubic, pledging costs him ~46 000 ₳/yr in opportunity for 14 ₳/yr in bonus. <em>Pledging is a 3 286× loss for him.</em> Under a linear A, the bonus alone (15 529 ₳/yr) would be a third of his opportunity cost — pledging would still lose, but less catastrophically. Under the scale-free kernel, pledging would be net positive even for the smallest operator.</p>
-<h4 id="224-what-this-means-for-the-cip-critique">2.2.4 What this means for the CIP critique</h4>
+<h4 id="224-what-this-means-for-the-cip-critique">2.2.4. What this means for the CIP critique</h4>
 <p>Walking through the structural anatomy and the three scenarios reveals one cumulative argument:</p>
 <ol>
 <li><strong>The function is structurally awkward</strong> before any data is plugged in (§2.2.1). Permanent quadratic size penalty $\nu^2$, non-monotonic in $\pi$ for sub-half-saturation pools, and at full self-pledge it collapses to a cubic.</li>
@@ -633,7 +667,7 @@ window.MathJax = {
 <p>CIP-0050 and CIP-0037 modify the <em>enforcement</em> of pledge (clip $\sigma'$ if pledge is too low) but not the <em>pricing</em> of pledge inside A. After their reform, the relative bonus disparity across operator sizes remains identical; the non-monotone regime for $\nu < 0.5$ remains identical; the cubic collapse at full self-pledge remains identical. They patch around A without touching it.</p>
 <p>A reform that touched A directly — replacing the kernel with one that doesn't impose the quadratic size penalty $\nu^2$ at every pledge ratio, or that doesn't cube small pools at full commitment — would be the most structural way to repair the pledge signal at its source. <strong>No CIP currently in scope proposes this.</strong> This is the deepest critique of both candidates in this folder: they accept A as given and patch around it, when A is the load-bearing piece of the pledge incentive.</p>
 <p>This reading extends the formal critique at <a href="pools.html#235-reader-friendly-reward-function">diagnostic / pools-distribution §2.3.5</a>: <em>"the bonus term $\lambda_{\text{pledge}}A(\nu, \pi)$ is non-linear and asymmetric in its two inputs. The outer factor $\nu^2$ imposes a quadratic size penalty that holds at every pledge ratio; at full self-pledge ($\pi = 1$) the inner factor degenerates and the bonus collapses to $\lambda_{\text{pledge}}\nu^3$ — the cubic that suppresses the bonus structurally for any pool below saturation."</em></p>
-<h3 id="23-what-this-implies-for-the-cip-candidates-in-this-folder">2.3 What this implies for the CIP candidates in this folder</h3>
+<h3 id="23-what-this-implies-for-the-cip-candidates-in-this-folder">2.3. What this implies for the CIP candidates in this folder</h3>
 <p>The two CIPs in this folder accept the V1 reward formula as given and patch around it via $\sigma'$ clipping. Three honest readings follow from §2.1 and §2.2:</p>
 <ul>
 <li><strong>CIP-0050 and CIP-0037 are not strictly worse than raising <code>a₀</code>.</strong> They achieve the same intent (make pledge bind) without the smooth-but-uniformly-painful penalty that an <code>a₀</code> raise imposes on every low-pledge pool. The cliff/floor shape is <em>different</em>, not necessarily <em>worse</em>.</li>
@@ -739,6 +773,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777299621"></script>
+<script src="assets/site.js?v=1777360508"></script>
 </body>
 </html>

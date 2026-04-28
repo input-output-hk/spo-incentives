@@ -9,18 +9,18 @@ _Sub-document of [The Staking Census](../README.md). Built on 2026/04/09 from db
 - [Data sources](#data-sources)
 - [1. Lifecycle classification](#1-lifecycle-classification)
 - [2. Dead entities](#2-dead-entities)
-  - [2.1 RockX](#21-rockx)
-  - [2.2 RAID](#22-raid)
+  - [2.1. RockX](#21-rockx)
+  - [2.2. RAID](#22-raid)
 - [3. Severe decline — the large exits](#3-severe-decline--the-large-exits)
-  - [3.1 IOG — steward withdrawal](#31-iog--steward-withdrawal)
-  - [3.2 Binance — exchange retreat](#32-binance--exchange-retreat)
-  - [3.3 1PCT — independent fleet erosion](#33-1pct--independent-fleet-erosion)
-  - [3.4 AdaOcean, HOPE, BCSH, COOL](#34-adaocean-hope-bcsh-cool)
+  - [3.1. IOG — steward withdrawal](#31-iog--steward-withdrawal)
+  - [3.2. Binance — exchange retreat](#32-binance--exchange-retreat)
+  - [3.3. 1PCT — independent fleet erosion](#33-1pct--independent-fleet-erosion)
+  - [3.4. AdaOcean, HOPE, BCSH, COOL](#34-adaocean-hope-bcsh-cool)
 - [4. Moderate decline — the long bleed](#4-moderate-decline--the-long-bleed)
 - [5. Growing entities — the capital recipients](#5-growing-entities--the-capital-recipients)
-  - [5.1 Late institutional entrants](#51-late-institutional-entrants)
-  - [5.2 Exchanges holding ground](#52-exchanges-holding-ground)
-  - [5.3 Community operators that grew against the tide](#53-community-operators-that-grew-against-the-tide)
+  - [5.1. Late institutional entrants](#51-late-institutional-entrants)
+  - [5.2. Exchanges holding ground](#52-exchanges-holding-ground)
+  - [5.3. Community operators that grew against the tide](#53-community-operators-that-grew-against-the-tide)
 - [6. Stable entities — the plateau](#6-stable-entities--the-plateau)
 - [7. Where the capital went](#7-where-the-capital-went)
 - [8. Visual summary](#8-visual-summary)
@@ -63,7 +63,7 @@ The capital they have lost has not vanished: it **migrated to growing entities**
 
 **Two entities** have fallen below the production threshold across all their pools and no longer participate meaningfully in block production.
 
-### 2.1 RockX
+### 2.1. RockX
 
 | Metric | Value |
 |---|---|
@@ -77,7 +77,7 @@ RockX is a **multi-chain institutional staking provider** (Ethereum, Cosmos, Sol
 
 Stake drained steadily after the peak, consistent with a **strategic withdrawal** from Cardano rather than organic delegation loss. All 10 pools are now below the production threshold. The entity's infrastructure appears to **remain registered but economically inert**.
 
-### 2.2 RAID
+### 2.2. RAID
 
 | Metric | Value |
 |---|---|
@@ -96,7 +96,7 @@ By epoch 300 its stake was already marginal. The entity **never scaled** and app
 
 **Eleven entities** have lost **more than 75%** of their peak stake. Together they shed **8.4B ADA** — a **substantial redistribution of capital** away from early and mid-era operators.
 
-### 3.1 IOG — steward withdrawal
+### 3.1. IOG — steward withdrawal
 
 | Metric | Value |
 |---|---|
@@ -112,7 +112,7 @@ The withdrawal was **deliberate and public** — IOG progressively redelegated i
 
 *This is not a failure but a completed lifecycle: the steward exited once the network no longer needed bootstrapping support.*
 
-### 3.2 Binance — exchange retreat
+### 3.2. Binance — exchange retreat
 
 | Metric | Value |
 |---|---|
@@ -131,7 +131,7 @@ The decline has been **continuous** and is consistent with **two overlapping for
 
 The **114 registered pools** (only **20 productive**) suggest **aggressive pool scaling** during the growth phase followed by **no deregistration cleanup**. The entity retains **692M ADA** — still the **second-largest identified entity** by stake.
 
-### 3.3 1PCT — independent fleet erosion
+### 3.3. 1PCT — independent fleet erosion
 
 | Metric | Value |
 |---|---|
@@ -145,7 +145,7 @@ The **114 registered pools** (only **20 productive**) suggest **aggressive pool 
 
 Its decline mirrors the **broader pattern** of early large fleets **losing share** to later entrants and to the growing single-pool operator segment. The decline was **steady rather than abrupt**, suggesting **gradual delegation churn** rather than a single event.
 
-### 3.4 AdaOcean, HOPE, BCSH, COOL
+### 3.4. AdaOcean, HOPE, BCSH, COOL
 
 These four entities share a **similar profile**: mid-size independent or community fleets that peaked between epoch 220 and 330 and have since **lost 75–85%** of their stake.
 
@@ -180,7 +180,7 @@ The median decline ratio for community branded fleets in this segment is **~38%*
 
 **Eighteen entities** are at or near their all-time peak (current stake > 90% of peak). They collectively control **over 6.2B ADA** — and their growth trajectories **explain where much of the capital lost by declining entities has gone**.
 
-### 5.1 Late institutional entrants
+### 5.1. Late institutional entrants
 
 The most striking growth stories belong to entities that **entered Cardano staking well after the Shelley launch** and scaled rapidly through **institutional capital**:
 
@@ -196,13 +196,13 @@ These **five entities alone** hold **5.0B ADA** — *more than the entire indepe
 
 Their arrival and growth **post-epoch 300** represents a **structural shift** in the operator landscape from **community-run fleets** toward **institutional staking infrastructure**.
 
-### 5.2 Exchanges holding ground
+### 5.2. Exchanges holding ground
 
 **Coinbase and Upbit contrast sharply with Binance's retreat.** Coinbase entered at epoch 296, grew aggressively to **2.6B ADA** by epoch 390, and has held most of that position since — the slight decline is well within the "growing" band.
 
 Upbit is a **pure late entrant** (epoch 398) still at its all-time high. The divergence between **growing exchanges** (Coinbase, Upbit) and **declining ones** (Binance, YUTA, eToro) appears to track each exchange's **strategic commitment to Cardano staking as a product line** rather than any protocol-level factor.
 
-### 5.3 Community operators that grew against the tide
+### 5.3. Community operators that grew against the tide
 
 Several community branded fleets have defied the archetype's general decline:
 

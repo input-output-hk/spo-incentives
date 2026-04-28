@@ -93,8 +93,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 .nav-flow-arrow{color:var(--text-muted);opacity:.4;font-size:15px;flex-shrink:0;padding:0 4px;user-select:none;font-weight:300}
 .nav-zone-label{font:700 9px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);flex-shrink:0}
 .nav-zone-label-output{color:var(--infared);opacity:.9}
-.nav-zone-diag,.nav-zone-design,.nav-zone-research{flex:0 0 auto}
-.nav-dd-btn-diag,.nav-dd-btn-design,.nav-dd-btn-research{min-width:0}
+.nav-zone-diag,.nav-zone-design,.nav-zone-research,.nav-zone-constitution{flex:0 0 auto}
+.nav-dd-btn-diag,.nav-dd-btn-design,.nav-dd-btn-research,.nav-dd-btn-constitution{min-width:0}
+.nav-dd-btn-constitution{color:#2C4FFA;border:1px solid rgba(44,79,250,.35);background:rgba(44,79,250,.05)}
+.nav-dd-btn-constitution:hover{background:rgba(44,79,250,.10);border-color:rgba(44,79,250,.55)}
+.nav-dd-wrap-light.open .nav-dd-btn-constitution{background:rgba(44,79,250,.14);border-color:rgba(44,79,250,.7);color:#1a3ad8}
+.nav-dd-stratum-badge-constitution{color:#2C4FFA;background:rgba(44,79,250,.12)}
+.nav-dd-panel-constitution{left:0;right:auto;min-width:480px;max-width:520px}
+[data-theme=dark] .nav-dd-btn-constitution{color:#7B91FF;border-color:rgba(123,145,255,.35);background:rgba(123,145,255,.05)}
+[data-theme=dark] .nav-dd-btn-constitution:hover{background:rgba(123,145,255,.10);border-color:rgba(123,145,255,.55)}
+[data-theme=dark] .nav-dd-wrap-light.open .nav-dd-btn-constitution{background:rgba(123,145,255,.14);border-color:rgba(123,145,255,.7);color:#A8B6FF}
+[data-theme=dark] .nav-dd-stratum-badge-constitution{color:#7B91FF;background:rgba(123,145,255,.16)}
 .nav-dd-btn-diag.active{color:var(--text-primary);border-color:rgba(236,100,29,.55);background:rgba(236,100,29,.08);font-weight:600}
 .nav-dd-btn-design.active{color:var(--text-primary);border-color:rgba(229,35,33,.55);background:rgba(229,35,33,.08);font-weight:600}
 .nav-dd-panel-diag{left:0;right:auto;min-width:500px;max-width:540px}
@@ -183,6 +192,39 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 
 <div class="nav-zone nav-zone-output">
 <a href="index.html" class="nav-tab-spec-big">V2 Specification</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<div class="nav-zone nav-zone-constitution">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-constitution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Constitution ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-constitution">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-constitution">Cardano Constitution v2</span>
+      <span class="nav-dd-stratum-meta">The governance document the protocol operates under (ratified at epoch 609) — every milestone in the V2 spec must comply with it</span>
+    </div>
+    <a href="pdf-viewer.html?file=references/governance/cardano-constitution-2.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Cardano Blockchain Ecosystem Constitution</span>
+      <span class="nav-dd-ref-cite">IntersectMBO — ratified at epoch 609 (v2)<span class="nav-dd-ref-tag">CONST-2</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="references/governance/cardano-constitution-2.pdf" class="nav-dd-ref nav-dd-ref-sub" download>
+      <span class="nav-dd-ref-title">Download the PDF</span>
+      <span class="nav-dd-ref-cite">Local copy on this site<span class="nav-dd-ref-stage">Download</span></span>
+    </a>
+    <a href="https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2" class="nav-dd-ref nav-dd-ref-sub" rel="noopener" target="_blank">
+      <span class="nav-dd-ref-title">Source on GitHub</span>
+      <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
+    </a>
+    <a href="index.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the V2 spec</span>
+      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 spec</span></span>
+    </a>
+  </div>
+</div>
+</div>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>

@@ -20,7 +20,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777299621">
+<link rel="stylesheet" href="assets/site.css?v=1777360508">
 <script defer data-website-id="791f3295-e5ab-4a38-af87-55835f711d11" src="https://cloud.umami.is/script.js"></script><script>window.spoTrack=function(n,p){try{if(window.umami&&window.umami.track){window.umami.track(n,p||{});}}catch(e){}}</script>
 
 </head>
@@ -100,6 +100,40 @@ window.MathJax = {
 <!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
 <div class="nav-zone nav-zone-output">
 <a href="index.html" class="nav-tab-spec-big">V2 Specification</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 2.5 — Cardano Constitution (the governance ceiling V2 must respect) -->
+<div class="nav-zone nav-zone-constitution">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-constitution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Constitution ▾</button>
+<div class="nav-dd-panel-light nav-dd-panel-constitution">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-constitution">Cardano Constitution v2</span>
+      <span class="nav-dd-stratum-meta">The governance document the protocol operates under (ratified at epoch 609) — every milestone in the V2 spec must comply with it</span>
+    </div>
+    <a href="pdf-viewer.html?file=references/governance/cardano-constitution-2.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Cardano Blockchain Ecosystem Constitution</span>
+      <span class="nav-dd-ref-cite">IntersectMBO — ratified at epoch 609 (v2)<span class="nav-dd-ref-tag">CONST-2</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="references/governance/cardano-constitution-2.pdf" class="nav-dd-ref nav-dd-ref-sub" download>
+      <span class="nav-dd-ref-title">Download the PDF</span>
+      <span class="nav-dd-ref-cite">Local copy on this site<span class="nav-dd-ref-stage">Download</span></span>
+    </a>
+    <a href="https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2" class="nav-dd-ref nav-dd-ref-sub" rel="noopener" target="_blank">
+      <span class="nav-dd-ref-title">Source on GitHub</span>
+      <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
+    </a>
+    <a href="index.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the V2 spec</span>
+      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 spec</span></span>
+    </a>
+  </div>
+</div>
+</div>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
@@ -344,33 +378,33 @@ window.MathJax = {
 <li><a href="#executive-summary">Executive summary</a></li>
 <li><a href="#findings-summary">Findings summary</a></li>
 <li><a href="#1-introduction">1. Introduction</a><ul>
-<li><a href="#11-identity-card">1.1 Identity card</a></li>
-<li><a href="#12-origin-and-context">1.2 Origin and context</a></li>
-<li><a href="#13-related-diagnostic-findings">1.3 Related diagnostic findings</a></li>
-<li><a href="#14-missing-cps-mapping-to-v2-31">1.4 Missing CPS — mapping to V2 §3.1</a></li>
+<li><a href="#11-identity-card">1.1. Identity card</a></li>
+<li><a href="#12-origin-and-context">1.2. Origin and context</a></li>
+<li><a href="#13-related-diagnostic-findings">1.3. Related diagnostic findings</a></li>
+<li><a href="#14-missing-cps-mapping-to-v2-31">1.4. Missing CPS — mapping to V2 §3.1</a></li>
 </ul>
 </li>
 <li><a href="#2-mechanism">2. Mechanism</a><ul>
-<li><a href="#21-worked-calibration-from-the-cip-rationale">2.1 Worked calibration from the CIP rationale</a></li>
-<li><a href="#22-updated-calibration-at-current-parameters-epoch-623-202604">2.2 Updated calibration at current parameters (epoch ~623, 2026/04)</a></li>
+<li><a href="#21-worked-calibration-from-the-cip-rationale">2.1. Worked calibration from the CIP rationale</a></li>
+<li><a href="#22-updated-calibration-at-current-parameters-epoch-623-202604">2.2. Updated calibration at current parameters (epoch ~623, 2026/04)</a></li>
 </ul>
 </li>
 <li><a href="#3-limits-of-cip-0023-as-a-standalone-proposal">3. Limits of CIP-0023 as a standalone proposal</a><ul>
-<li><a href="#31-functional-redundancy-cip-0082-stage-2-reproduces-the-same-instrument">3.1 Functional redundancy — CIP-0082 stage 2 reproduces the same instrument</a></li>
-<li><a href="#32-partial-coverage-of-the-missing-cps-the-instrument-leaks-revenue-toward-pools-with-no-viability-problem">3.2 Partial coverage of the missing CPS — the instrument leaks revenue toward pools with no viability problem</a><ul>
-<li><a href="#321-pool-axis-per-pool-across-the-nine-canonical-tiers">3.2.1 Pool axis — Δ per pool across the nine canonical tiers</a></li>
-<li><a href="#322-operator-axis-per-entity-by-n-mpo-bracket">3.2.2 Operator axis — Δ per entity by n-MPO bracket</a></li>
-<li><a href="#323-reading-why-this-fails-the-missing-cps">3.2.3 Reading — why this fails the missing CPS</a></li>
+<li><a href="#31-functional-redundancy-cip-0082-stage-2-reproduces-the-same-instrument">3.1. Functional redundancy — CIP-0082 stage 2 reproduces the same instrument</a></li>
+<li><a href="#32-partial-coverage-of-the-missing-cps-the-instrument-leaks-revenue-toward-pools-with-no-viability-problem">3.2. Partial coverage of the missing CPS — the instrument leaks revenue toward pools with no viability problem</a><ul>
+<li><a href="#321-pool-axis-per-pool-across-the-nine-canonical-tiers">3.2.1. Pool axis — Δ per pool across the nine canonical tiers</a></li>
+<li><a href="#322-operator-axis-per-entity-by-n-mpo-bracket">3.2.2. Operator axis — Δ per entity by n-MPO bracket</a></li>
+<li><a href="#323-reading-why-this-fails-the-missing-cps">3.2.3. Reading — why this fails the missing CPS</a></li>
 </ul>
 </li>
-<li><a href="#33-references">3.3 References</a></li>
+<li><a href="#33-references">3.3. References</a></li>
 </ul>
 </li>
 </ul>
 </nav>
 <h2 id="1-introduction">1. Introduction</h2>
 <p><strong>CIP-0023 — "Fair Min Fees".</strong> A 2021 proposal to introduce a floor on the variable-fee component of the operator take (<code>minPoolMargin</code>), targeting the regressive effect of the existing fixed pool cost on delegators to small pools.</p>
-<h3 id="11-identity-card">1.1 Identity card</h3>
+<h3 id="11-identity-card">1.1. Identity card</h3>
 <table>
 <thead>
 <tr>
@@ -421,11 +455,11 @@ window.MathJax = {
 </tr>
 </tbody>
 </table>
-<h3 id="12-origin-and-context">1.2 Origin and context</h3>
+<h3 id="12-origin-and-context">1.2. Origin and context</h3>
 <p><strong>Authorship and moment.</strong> Written in early-Shelley era, February 2021. The worked example in the CIP uses epoch-382 parameters, with <code>minPoolCost</code> at 340 ADA and <code>a0</code> at 0.3. The authors' observation: a 100 k ADA delegator faced an effective fee rate of <strong>22.7 %</strong> in a 2 M ADA pool versus <strong>0.7 %</strong> in a saturated 64 M ADA pool — a 32× dispersion driven almost entirely by the fixed cost component. The CIP framed this as a <em>fairness</em> problem — delegators penalised for spreading stake across smaller productive pools, and small operators structurally disadvantaged.</p>
 <p><strong>Scope the CIP explicitly excludes.</strong> The text is explicit: <em>"this proposal does not change or reduce the existing minimum fixed pool fee."</em> The CIP proposes the margin-floor instrument only. Any reduction in <code>minPoolCost</code> is left to a separate governance action. This self-imposed scope restriction is load-bearing for the evaluation — it is why the paired variant in §2.2 and §3.2 is labelled out-of-scope for the standalone CIP.</p>
 <p><strong>Historical placement.</strong> Written before Conway-era governance and before CIP-0082 — whose stage 2 reproduces the margin-floor mechanism under a different name (<code>minPoolRate</code>). CIP-0023 is therefore both a live technical proposal and a historical reference point for the margin-floor concept that CIP-0082 later operationalises within a staged path. §3.1 resolves the current relationship with CIP-0082.</p>
-<h3 id="13-related-diagnostic-findings">1.3 Related diagnostic findings</h3>
+<h3 id="13-related-diagnostic-findings">1.3. Related diagnostic findings</h3>
 <p>CIP-0023 is a fee-layer instrument acting on the operator/delegator split <em>after</em> per-pool allocation. Its rationale attacks two problems at once: the regressive burden on delegators of small productive pools, and the structural disadvantage of the operators running them. Two findings from the operator-delegator-distribution mainnet analysis (<a href="operator.html"><code>../../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md</code></a>) are the CIP's direct targets.</p>
 <table>
 <thead>
@@ -448,7 +482,7 @@ window.MathJax = {
 </tr>
 </tbody>
 </table>
-<h3 id="14-missing-cps-mapping-to-v2-31">1.4 Missing CPS — mapping to V2 §3.1</h3>
+<h3 id="14-missing-cps-mapping-to-v2-31">1.4. Missing CPS — mapping to V2 §3.1</h3>
 <p>CIP-0023 ships without a formal Cardano Problem Statement. Read for what it actually points at, the CIP diagnoses a single mechanical defect: <strong>return-on-stake is structurally unfair between small and large pools for the same delegator</strong>. A delegator placing 100 k ADA in a 2 M pool keeps a far smaller share of that pool's reward than a delegator placing 100 k ADA in a saturated pool — because the flat <code>minPoolCost</code> is deducted <em>before</em> the margin, so it consumes a disproportionate share of a small pool's reward and only a trivial share of a saturated pool's. The instrument introduced to <em>ensure operator sustainability at the bottom of the distribution</em> has inverted its purpose at the delegator layer: it makes small pools <strong>less attractive, not more</strong>.</p>
 <p>The reconstructed CPS statement therefore reads:</p>
 <blockquote>
@@ -525,7 +559,7 @@ window.MathJax = {
 </tbody>
 </table>
 <p><strong>Intent.</strong> Attack <em>fee regressivity</em>: <code>minPoolCost</code> alone imposes a disproportionately large effective fee rate on delegators to small pools, biasing delegation toward saturated pools. A variable-fee floor lets the effective operator take scale with pool stake.</p>
-<h3 id="21-worked-calibration-from-the-cip-rationale">2.1 Worked calibration from the CIP rationale</h3>
+<h3 id="21-worked-calibration-from-the-cip-rationale">2.1. Worked calibration from the CIP rationale</h3>
 <p>Comparison at epoch-382 parameters (rewards 31.2 M, saturation 64 M ADA), reference delegator 100 k ADA:</p>
 <table>
 <thead>
@@ -569,7 +603,7 @@ window.MathJax = {
 </tbody>
 </table>
 <p>Fee-rate dispersion collapses from <strong>32× (22.7 / 0.7)</strong> to <strong>3× (4.8 / 1.6)</strong>. <strong>Caveat.</strong> This requires <em>both</em> a reduced <code>minPoolCost</code> and the new margin floor; the margin floor alone does not flatten the small-pool regressive burden.</p>
-<h3 id="22-updated-calibration-at-current-parameters-epoch-623-202604">2.2 Updated calibration at current parameters (epoch ~623, 2026/04)</h3>
+<h3 id="22-updated-calibration-at-current-parameters-epoch-623-202604">2.2. Updated calibration at current parameters (epoch ~623, 2026/04)</h3>
 <p>Two things have changed on mainnet since the CIP was drafted: <code>minPoolCost</code> was halved by governance to <strong>170 ₳</strong> (Conway-era action, DIA.1.3 floor), and the reward base has fallen with reserve depletion — hollow-pool yield at saturation is <strong>~2.27 %/yr</strong> (≈ 24 000 ₳/epoch at $z_0 \approx$ 77 M ₳). Re-running the CIP's own fee-rate comparison at today's values clarifies what the instrument still delivers after the halving already absorbed part of the fixed-fee relief.</p>
 <p>Effective fee rate shown below is $\text{take}(\sigma) / R_{\text{pool}}(\sigma)$ (the share of each delegator's gross reward consumed by the operator take — independent of delegator stake). Per-pool reward below saturation approximated as $R(\sigma) \approx 24\,000 \times \sigma / 77\text{M}$ (pledge ≈ 0, hollow-pool base). Representative σ per tier follows the canonical nine-tier taxonomy from <a href="pools.html#413-tier-definitions">pools-distribution §4.1.3</a>.</p>
 <table>
@@ -683,7 +717,7 @@ window.MathJax = {
 </blockquote>
 <h2 id="3-limits-of-cip-0023-as-a-standalone-proposal">3. Limits of CIP-0023 as a standalone proposal</h2>
 <p>Two structural limits converge on the same verdict: CIP-0023 is better read as the historical seed of the margin-floor concept than as a live proposal to ratify today.</p>
-<h3 id="31-functional-redundancy-cip-0082-stage-2-reproduces-the-same-instrument">3.1 Functional redundancy — CIP-0082 stage 2 reproduces the same instrument</h3>
+<h3 id="31-functional-redundancy-cip-0082-stage-2-reproduces-the-same-instrument">3.1. Functional redundancy — CIP-0082 stage 2 reproduces the same instrument</h3>
 <p>CIP-0082 stage 2 removes <code>minPoolCost</code> and introduces <strong><code>minPoolRate</code></strong> — mechanically identical to CIP-0023's <code>minPoolMargin</code>. The CIP-0082 author explicitly credits CIP-0023 for the concept. CIP-0082 then adds three further stages that reshape the fee layer end-to-end (drop of <code>minPoolCost</code>, rate progression, <code>k</code> increases), where CIP-0023 stops at the single instrument.</p>
 <table>
 <thead>
@@ -711,10 +745,10 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding CIP-0023.S1.F1 [R] — Same instrument, two governance items.</strong> CIP-0082 stage 2's <code>minPoolRate</code> is mechanically identical to CIP-0023's <code>minPoolMargin</code>, and the CIP-0082 author credits CIP-0023 explicitly. Ratifying both as separate items doubles the governance surface (two on-chain parameter changes, two calibration decisions, two review cycles) without delivering any additional mechanism — the CIP's core contribution (the margin-floor concept) is preserved intact inside CIP-0082 stage 2.</p>
 </blockquote>
-<h3 id="32-partial-coverage-of-the-missing-cps-the-instrument-leaks-revenue-toward-pools-with-no-viability-problem">3.2 Partial coverage of the missing CPS — the instrument leaks revenue toward pools with no viability problem</h3>
+<h3 id="32-partial-coverage-of-the-missing-cps-the-instrument-leaks-revenue-toward-pools-with-no-viability-problem">3.2. Partial coverage of the missing CPS — the instrument leaks revenue toward pools with no viability problem</h3>
 <p>The reconstructed CPS at §1.4 has two sides: ROS convergence across pool sizes (delegator layer) <strong>and</strong> income support for the operators of small pools that cannot yet attract delegation (operator layer). CIP-0023 addresses the first and actively mis-allocates the second: a proportional margin floor of 1.5 % produces a per-pool operator-revenue change that scales with pool size, so the same mechanism meant to help the small-pool tier <strong>redirects a far larger ADA amount to operators that already have no viability problem</strong> — and the mis-allocation is amplified when the same operator runs many pools.</p>
 <p>Two projections follow, using the canonical pool-size taxonomy from the <a href="pools.html#413-tier-definitions">pools-distribution tier definitions</a> on the pool axis and the MPO bracket from the <a href="operator.html#44-operator-profitability-versus-delegator-return">operator-delegator profitability analysis</a> on the operator axis.</p>
-<h4 id="321-pool-axis-per-pool-across-the-nine-canonical-tiers">3.2.1 Pool axis — Δ per pool across the nine canonical tiers</h4>
+<h4 id="321-pool-axis-per-pool-across-the-nine-canonical-tiers">3.2.1. Pool axis — Δ per pool across the nine canonical tiers</h4>
 <p><strong>Numbers at current parameters</strong> (epoch ~623, 2026/04 — $R(\sigma) \approx 24\,000 \times \sigma / 77\text{M}$ ₳/epoch below saturation; reward capped at saturation cap $z_0 = 77$ M ₳; convention "declared margin ≈ 0" as in the CIP's own worked example). Representative σ values are taken at mid-tier.</p>
 <table>
 <thead>
@@ -836,7 +870,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding CIP-0023.S2.F2 [R] — Per-pool Δ at Saturation is 52× the Δ at Sub-viable.</strong> +357.5 vs +6.8 ₳/ep under the standalone variant — the instrument that the CIP's rationale introduces to <em>fund</em> small operators redirects the largest ADA transfer to pools that had no viability problem to begin with. The Dormant and Sub-production tiers receive zero transfer (pool reward doesn't reach the 170 ₳ floor, so the 1.5 % margin applies to zero).</p>
 </blockquote>
-<h4 id="322-operator-axis-per-entity-by-n-mpo-bracket">3.2.2 Operator axis — Δ per entity by n-MPO bracket</h4>
+<h4 id="322-operator-axis-per-entity-by-n-mpo-bracket">3.2.2. Operator axis — Δ per entity by n-MPO bracket</h4>
 <p>Per-pool Δ stacks over the operator's fleet. Each MPO bracket below uses its <strong>mean pools per entity</strong> and <strong>mean pool stake</strong> from the <a href="operator.html#44-operator-profitability-versus-delegator-return">operator-delegator profitability analysis</a> (epoch 623, retail hollow segment; 73 epochs/yr). Sub-populations inside hollow-single-pool are listed separately because the mean would otherwise hide the split at the viability line.</p>
 <table>
 <thead>
@@ -929,7 +963,7 @@ window.MathJax = {
 <blockquote>
 <p><strong>Finding CIP-0023.S2.F3 [R] — On the operator-fleet axis, the transfer compounds to a 502× gap.</strong> 11+ pool MPO entities gain <strong>+216 298 ₳/yr</strong> under the standalone variant; sub-viable single-pool operators gain <strong>+431 ₳/yr</strong>. The pool-axis 52× amplification (S2.F2) and the fleet-axis 9.6× amplification stack multiplicatively — the reform is regressive on the operator layer, mirroring the delegator-layer regressivity it is meant to correct.</p>
 </blockquote>
-<h4 id="323-reading-why-this-fails-the-missing-cps">3.2.3 Reading — why this fails the missing CPS</h4>
+<h4 id="323-reading-why-this-fails-the-missing-cps">3.2.3. Reading — why this fails the missing CPS</h4>
 <p><strong>Standalone variant</strong> (<code>minPoolCost</code> unchanged at 170, margin floor 1.5 %):</p>
 <ul>
 <li>The small-pool delegator effective rate barely moves (§2.2: 27.3 % → 28.4 %). Delegators of the pools the CIP is supposed to help see <strong>no meaningful ROS improvement</strong>.</li>
@@ -943,7 +977,7 @@ window.MathJax = {
 <li>The operators the reconstructed CPS asks to be supported are <strong>funding the reform</strong>; the operators already at viability are <strong>paid by it</strong>.</li>
 </ul>
 <p><strong>Why this matters against the missing CPS.</strong> §1.4 identifies "the operator growth path is not functioning as intended" as the CIP's foundational claim. A reform that (i) fails to materially improve ROS at the small-pool end under its standalone shape, (ii) under its paired shape actively reduces small-operator revenue while raising large-operator revenue, and (iii) in both shapes amplifies the transfer <strong>up the MPO ladder</strong> via fleet multiplication, is <strong>not a growth-path instrument</strong>. It is a fee-schedule redistribution whose monotonicity on both the pool axis and the operator-fleet axis is the opposite of what the CPS requires (<strong>CIP-0023.S2</strong>) — and that is before composition with the redundancy of §3.1 (<strong>CIP-0023.S1</strong>). The reform also misses the struggling-pool tail entirely, since the below-floor tiers stay 100 %-fee-consumed under every variant (<strong>CIP-0023.S3</strong>).</p>
-<h3 id="33-references">3.3 References</h3>
+<h3 id="33-references">3.3. References</h3>
 <ul>
 <li><strong>Missing-CPS anchor:</strong> §1.4 of this file; V2 <a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">§3.1 Guarantee operator viability across the entire productive population</a>.</li>
 <li><strong>Numerical baseline:</strong> §2.2 of this file (per-pool reward derivation at $z_0 = 77$ M ₳, saturated-pool reward ≈ 24 000 ₳/ep, <code>minPoolCost = 170 ₳</code>).</li>
@@ -974,6 +1008,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777299621"></script>
+<script src="assets/site.js?v=1777360508"></script>
 </body>
 </html>

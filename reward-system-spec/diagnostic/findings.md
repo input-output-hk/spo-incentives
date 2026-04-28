@@ -25,7 +25,7 @@ Date formatting follows the workspace rule (`YYYY/MM/DD`).
 
 Reserve → Pools → Operators/Delegators
 
-### 1.1.3 — Funding the Protocol Without a Reserve
+### 1.1.3. — Funding the Protocol Without a Reserve
 
 <!-- FINDING
 id: 1.1.3
@@ -57,7 +57,7 @@ reveal that the mechanism is not producing the conditions for its own
 sustainability: the funding source is exhausting, the participation base is
 incomplete, and the governing parameters are frozen.
 
-### 1.2.3 — Closing the Consensus Incentive Gap
+### 1.2.3. — Closing the Consensus Incentive Gap
 
 <!-- FINDING
 id: 1.2.3
@@ -94,7 +94,7 @@ Together these observations describe a gap between the equilibrium the
 mechanism was designed to produce and the equilibrium it actually produces.
 Parameter adjustments alone do not close it.
 
-### 1.3.3 — Two Compounding Failures: Operator Viability and Delegator Yield
+### 1.3.3. — Two Compounding Failures: Operator Viability and Delegator Yield
 
 <!-- FINDING
 id: 1.3.3
@@ -146,7 +146,7 @@ budget, reward curve, intra-pool split) must be designed as one system.
 
 Staking populations & transaction submitters
 
-### 2.1.3 — Each Staking Population Is Structurally Frozen
+### 2.1.3. — Each Staking Population Is Structurally Frozen
 
 <!-- FINDING
 id: 2.1.3
@@ -191,7 +191,7 @@ inflows. Of the 14.36B ADA outside delegation, only 0.37% is addressable —
 the remainder sits in enterprise addresses, DeFi scripts, and dormant wallets
 that the reward mechanism cannot reach.
 
-### 2.2.3 — The Fee Base Contracts While the Pipeline Needs It to Grow
+### 2.2.3. — The Fee Base Contracts While the Pipeline Needs It to Grow
 
 <!-- FINDING
 id: 2.2.3
@@ -237,7 +237,7 @@ pipeline depends on.
 
 Fees, monetary policy, and the exogenous exchange rate
 
-### 3.3 — The Deflation Assumption the Mechanism Cannot Honour
+### 3.3. — The Deflation Assumption the Mechanism Cannot Honour
 
 <!-- FINDING
 id: 3.3
