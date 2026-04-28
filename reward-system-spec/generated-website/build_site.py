@@ -1309,7 +1309,7 @@ window.MathJax = {{
        the page-specific eyebrow + h1 + subtitle. -->
 
   <div class="hero-inner">
-    <div class="hero-eyebrow">V2 Reward System &middot; Technical Specification</div>
+    <div class="hero-eyebrow">{hero_eyebrow}</div>
     <h1>{hero_h1}</h1>
     <div class="sub">{hero_sub}</div>
   </div>
@@ -1430,6 +1430,30 @@ def _render_breadcrumb(active: str, description: str = "") -> str:
     return rendered
 
 
+# Eyebrow text per zone — what reads above the page H1 in the hero.
+# Keyed by active_nav slug; the eyebrow names the zone the page lives in
+# rather than the project umbrella ('V2 Specification').
+_HERO_EYEBROW = {
+    "spec": "V2 Reward System &middot; Technical Specification",
+    "intended-game": "Design Support &middot; The Intended Game",
+    "findings": "Mainnet Diagnostic &middot; Synthesis",
+    "observatory": "Mainnet Diagnostic",
+    "census": "Mainnet Diagnostic &middot; The Staking Census",
+    "treasury": "Mainnet Diagnostic &middot; Reward Flow",
+    "pools": "Mainnet Diagnostic &middot; Reward Flow",
+    "operator": "Mainnet Diagnostic &middot; Reward Flow",
+    "solution-evaluation": "Solution Evaluation &middot; The Landscape",
+    "stake-cap": "Solution Evaluation &middot; Stake-Cap Layer",
+    "cip-0050": "Solution Evaluation &middot; Stake-Cap Layer",
+    "cip-0037": "Solution Evaluation &middot; Stake-Cap Layer",
+    "fee-layer": "Solution Evaluation &middot; Fee Layer",
+    "cip-0023": "Solution Evaluation &middot; Fee Layer",
+    "cip-0082": "Solution Evaluation &middot; Fee Layer",
+    "k-parameter": "Solution Evaluation &middot; Fee Layer",
+    "my-bookmarks": "Reader Tools",
+}
+
+
 def render_shell(page: dict, content_html: str) -> str:
     active = page["active_nav"]
     nav_map = {
@@ -1485,6 +1509,9 @@ def render_shell(page: dict, content_html: str) -> str:
         title=page["title"],
         hero_h1=page["hero_h1"],
         hero_sub=page["hero_sub"],
+        hero_eyebrow=_HERO_EYEBROW.get(
+            active, "V2 Reward System &middot; Technical Specification"
+        ),
         hero_banner=BANNER_VARIANTS.get(active, "fluid"),
         content=content_html,
         cls_diag_trigger=cls_diag_trigger,
