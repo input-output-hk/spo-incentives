@@ -1184,7 +1184,12 @@ TEMPLATE = """<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title}</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Cardano-aligned typographic stack: Chivo for display / headings
+     (used historically across Cardano marketing materials), Inter for
+     long-form body and UI (de-facto Web3 reading face). -->
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script>try{{var t=localStorage.getItem('spo-theme');if(t)document.documentElement.setAttribute('data-theme',t)}}catch(e){{}}</script>
 <script>(function(){{var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fluid-red'];var pick=v[Math.floor(Math.random()*v.length)];document.addEventListener('DOMContentLoaded',function(){{var h=document.querySelector('.hero');if(h)h.setAttribute('data-banner',pick);}});}})();</script>
 <script>
