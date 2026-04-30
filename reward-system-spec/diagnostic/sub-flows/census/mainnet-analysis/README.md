@@ -64,12 +64,12 @@ Before analysing how rewards are shared (the companion [*Pools Pot Distribution*
    - [What remains noisy](#what-remains-noisy)
 8. [Bridges to Companion Analyses](#8-bridges-to-companion-analyses)
    - [8.1. Distribution efficiency (epoch 616)](#81-distribution-efficiency-epoch-616)
-9. [Data sources & methodology](#9-data-sources-methodology)
-   - [9.1. Data sources](#91-data-sources)
-   - [9.2. Methodology note — iterative cleaning](#92-methodology-note-iterative-cleaning)
    - [8.2. Operator's cut (epoch 614)](#82-operators-cut-epoch-614)
    - [8.3. Main report (epochs 548–583)](#83-main-report-epochs-548583)
    - [8.4. Reconciliation summary](#84-reconciliation-summary)
+9. [Data sources & methodology](#9-data-sources-methodology)
+   - [9.1. Data sources](#91-data-sources)
+   - [9.2. Methodology note — iterative cleaning](#92-methodology-note-iterative-cleaning)
 
 
 ## 1. Mainnet Observations

@@ -1027,6 +1027,30 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
         }
       });
     });
+    /* When the page loads (or the hash changes) with a fragment that
+       points at a .sro-finding inside a collapsed .sro-card-pro, force
+       the parent card open so the target is visible. Persist the open
+       state so the user-expanded card stays open after they've come
+       in via a deep link. */
+    function expandToHash(){
+      var hash=location.hash;
+      if(!hash||hash.length<2) return;
+      var target;
+      try{target=document.querySelector(hash);}catch(e){return;}
+      if(!target) return;
+      var card=target.closest('.sro-card-pro');
+      if(!card||!card.classList.contains('collapsed')) return;
+      card.classList.remove('collapsed');
+      var head2=card.querySelector('.sro-head');
+      if(head2) head2.setAttribute('aria-expanded','true');
+      var id=card.id||card.getAttribute('data-obs')||'';
+      if(id){state[id]='0';save(state);}
+      setTimeout(function(){
+        try{target.scrollIntoView({block:'start'});}catch(e){}
+      },10);
+    }
+    expandToHash();
+    window.addEventListener('hashchange',expandToHash);
   })();
   /* ── /Pro observation card — header collapse ── */
   /* ── /Cross-page DIA source overlay ── */

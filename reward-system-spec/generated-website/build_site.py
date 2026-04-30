@@ -3824,6 +3824,30 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
         }
       });
     });
+    /* When the page loads (or the hash changes) with a fragment that
+       points at a .sro-finding inside a collapsed .sro-card-pro, force
+       the parent card open so the target is visible. Persist the open
+       state so the user-expanded card stays open after they've come
+       in via a deep link. */
+    function expandToHash(){
+      var hash=location.hash;
+      if(!hash||hash.length<2) return;
+      var target;
+      try{target=document.querySelector(hash);}catch(e){return;}
+      if(!target) return;
+      var card=target.closest('.sro-card-pro');
+      if(!card||!card.classList.contains('collapsed')) return;
+      card.classList.remove('collapsed');
+      var head2=card.querySelector('.sro-head');
+      if(head2) head2.setAttribute('aria-expanded','true');
+      var id=card.id||card.getAttribute('data-obs')||'';
+      if(id){state[id]='0';save(state);}
+      setTimeout(function(){
+        try{target.scrollIntoView({block:'start'});}catch(e){}
+      },10);
+    }
+    expandToHash();
+    window.addEventListener('hashchange',expandToHash);
   })();
   /* ── /Pro observation card — header collapse ── */
   /* ── /Cross-page DIA source overlay ── */
@@ -4963,18 +4987,18 @@ def extract_f_findings_from_md(md_text: str, code: str = "", page_html: str = ""
         if link_m:
             anchor_label = link_m.group(1).strip()
             anchor_href = link_m.group(2).strip()
-        # Build the cross-page jump URL: prefix the local fragment with the
-        # owning page's html name. If the source markdown didn't supply an
-        # anchor, fall back to the ``## 1. Mainnet Observations`` table on
-        # the same page (still better than no jump).
-        local_anchor = anchor_href if anchor_href else "#1-mainnet-observations"
-        if page_html:
-            if local_anchor.startswith("#"):
-                jump_href = f"{page_html}{local_anchor}"
-            else:
-                jump_href = local_anchor  # already qualified
+        # Build the cross-page jump URL — point at the FINDING CARD's own
+        # anchor on the source sub-report page (e.g. census.html#cen-o1-f1)
+        # so clicks land on the visual Pro card row, not the discussion
+        # section. The original section link (anchor_href) is preserved
+        # separately for any caller that wants the §X reference.
+        canon_slug = _canon_slug(canon_id)
+        if page_html and canon_slug:
+            jump_href = f"{page_html}#{canon_slug}"
+        elif page_html:
+            jump_href = f"{page_html}#1-mainnet-observations"
         else:
-            jump_href = local_anchor
+            jump_href = anchor_href if anchor_href else "#1-mainnet-observations"
         findings.append({
             "id": fid_short,
             "canon_id": canon_id,
