@@ -5326,7 +5326,14 @@ def _render_subreport_observations(groups: list[dict]) -> str:
                 f'<article class="sro-card" id="{g["slug"]}" '
                 f'data-obs="{canon}" data-group="{g["o_num"]}">'
             )
-        out.append(article_open + head_html + abstract_block + '<ol class="sro-findings">')
+        # Pro variant gets a small "Findings" eyebrow label between the
+        # abstract and the list — frames the list as a section, not a
+        # continuation of the abstract paragraph.
+        findings_section_label = (
+            '<div class="sro-findings-label">Findings</div>' if is_pro else ''
+        )
+        out.append(article_open + head_html + abstract_block
+                   + findings_section_label + '<ol class="sro-findings">')
         for fi, f in enumerate(g["findings"], 1):
             ev_html = _sro_inline_md_to_html(f["evidence_md"])
             ev_html = _highlight_metrics(ev_html)
@@ -5338,7 +5345,7 @@ def _render_subreport_observations(groups: list[dict]) -> str:
                 fid_html = (
                     f'<span class="sro-fid sro-fid-stack sro-group-{f["f_group"]}" '
                     f'title="{f["canon_id"]} · was {f["f_id"]}">'
-                    f'<span class="sro-fid-label">Finding #{fi}</span>'
+                    f'<span class="sro-fid-label">#{fi}</span>'
                     f'<span class="sro-fid-ref">{f["canon_id"]}</span>'
                     f'</span>'
                 )
