@@ -5292,10 +5292,12 @@ def _walk_html_skipping(
 #                in the breadcrumb above.
 _CALLOUT_BLOCKQUOTE_RE = re.compile(
     r'<blockquote(\s[^>]*)?>'
-    r'(?P<lead>\s*<p[^>]*>\s*<strong>\s*Finding\s+)'
+    r'(?P<p_open>\s*<p[^>]*>\s*<strong>\s*)'
+    r'Finding\s+'
     r'(?P<anchor_open><a [^>]*?data-finding="(?P<canon>[A-Z]{3}\.O\d+\.F\d+)"[^>]*>)'
     r'(?P<anchor_text>[^<]*)'
-    r'(?P<anchor_close></a>)',
+    r'(?P<anchor_close></a>)'
+    r'(?P<sep>\s*[—–−\-]\s*)?',
     re.IGNORECASE,
 )
 
@@ -5384,10 +5386,11 @@ def inject_finding_callout_ids(
     def _sub(m: re.Match) -> str:
         full = m.group(0)
         attrs = m.group(1) or ""
-        lead = m.group("lead")
+        p_open = m.group("p_open")
         anchor_open = m.group("anchor_open")
         anchor_text = m.group("anchor_text") or ""
         anchor_close = m.group("anchor_close")
+        sep = m.group("sep") or ""
         canon = m.group("canon")
         if "id=" in attrs.lower():
             return full
@@ -5412,20 +5415,142 @@ def inject_finding_callout_ids(
                 f' &mdash; <em class="finding-callout-meta-title">'
                 f'{_html.escape(title)}</em>'
             ) if title else ""
+            # The blue OPE.O1 / POL.O3 chip carries the number, so we
+            # only need the literal "Observation" word here.
+            obs_label_html = (
+                '<span class="finding-callout-meta-obs-num">'
+                'Observation</span> '
+            )
             meta_html = (
                 f'<p class="finding-callout-meta">'
                 f'<span class="finding-callout-meta-prefix">From</span> '
+                f'{obs_label_html}'
                 f'<a class="finding-callout-meta-link" href="#{obs_slug}">'
                 f'{obs_canon}</a>{title_html}'
                 f'</p>'
             )
         new_attrs = f' id="finding-{slug}"' + attrs
+        # ``Finding`` and the ``#N`` ref are wrapped together inside a
+        # ``finding-callout-tag`` span so CSS can frame them as one
+        # rounded chip. The em-dash that separates the chip from the
+        # title becomes a subtle right-arrow glyph.
+        sep_html = (
+            ' <span class="finding-callout-arrow" aria-hidden="true">'
+            '&rarr;</span> '
+        ) if sep else ""
+        tag_html = (
+            f'<span class="finding-callout-tag">'
+            f'<span class="finding-callout-label">Finding</span>'
+            f'{anchor_open}{anchor_text_out}{anchor_close}'
+            f'</span>'
+        )
         return (
-            f"<blockquote{new_attrs}>{meta_html}{lead}"
-            f"{anchor_open}{anchor_text_out}{anchor_close}"
+            f"<blockquote{new_attrs}>{meta_html}"
+            f"{p_open}{tag_html}"
+            f"{sep_html}"
         )
 
     return _CALLOUT_BLOCKQUOTE_RE.sub(_sub, html_body)
+
+
+# Match a finding-callout blockquote (already id-tagged + breadcrumbed).
+# Used by ``group_consecutive_finding_callouts`` to merge runs of
+# same-observation callouts into one visual unit with internal dividers.
+_FINDING_BLOCKQUOTE_RE = re.compile(
+    r'<blockquote(?P<attrs>\s+id="finding-(?P<finding_slug>[^"]+)"[^>]*)>'
+    r'(?P<body>.*?)'
+    r'</blockquote>',
+    re.IGNORECASE | re.DOTALL,
+)
+_FINDING_META_OBS_RE = re.compile(
+    r'<p class="finding-callout-meta">'
+    r'.*?href="#(?P<obs_slug>[^"]+)"',
+    re.IGNORECASE | re.DOTALL,
+)
+_FINDING_META_FULL_RE = re.compile(
+    r'<p class="finding-callout-meta">.*?</p>\s*',
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def group_consecutive_finding_callouts(html_body: str) -> str:
+    """Collapse runs of same-observation Finding callouts into one
+    visual unit so the ``From XX.OY — title`` breadcrumb is not repeated.
+
+    Two callouts that come from the same parent observation and are
+    rendered back-to-back (only whitespace between in the source MD)
+    are merged into a single ``<blockquote class="finding-callout-group">``
+    with one breadcrumb at the top and an internal divider between each
+    finding. Each finding still carries its own ``id="finding-…"`` —
+    moved onto an inner ``<div class="finding-callout-segment">`` —
+    so deep links keep working.
+    """
+    if 'id="finding-' not in html_body:
+        return html_body
+
+    matches: list[dict] = []
+    for m in _FINDING_BLOCKQUOTE_RE.finditer(html_body):
+        body = m.group("body")
+        obs_m = _FINDING_META_OBS_RE.search(body)
+        matches.append({
+            "start": m.start(),
+            "end": m.end(),
+            "finding_slug": m.group("finding_slug"),
+            "obs_slug": obs_m.group("obs_slug") if obs_m else None,
+            "body": body,
+        })
+    if len(matches) < 2:
+        return html_body
+
+    # Walk the matches in order; group consecutive same-obs runs.
+    groups: list[list[dict]] = []
+    current = [matches[0]]
+    for prev, this in zip(matches, matches[1:]):
+        between = html_body[prev["end"]:this["start"]]
+        is_consec = between.strip() == ""
+        is_same_obs = (
+            prev["obs_slug"] is not None
+            and prev["obs_slug"] == this["obs_slug"]
+        )
+        if is_consec and is_same_obs:
+            current.append(this)
+        else:
+            groups.append(current)
+            current = [this]
+    groups.append(current)
+
+    replacements: list[tuple[int, int, str]] = []
+    for g in groups:
+        if len(g) < 2:
+            continue
+        # Pull the breadcrumb from the first member; the rest are dropped.
+        first_body = g[0]["body"]
+        meta_match = _FINDING_META_FULL_RE.search(first_body)
+        meta_html = meta_match.group(0).rstrip() if meta_match else ""
+        # Build one segment per finding.
+        segments: list[str] = []
+        for item in g:
+            inner = _FINDING_META_FULL_RE.sub("", item["body"], count=1)
+            segments.append(
+                f'<div class="finding-callout-segment" '
+                f'id="finding-{item["finding_slug"]}">'
+                f'{inner.strip()}'
+                f'</div>'
+            )
+        merged_body = '<hr class="finding-callout-divider" />'.join(segments)
+        merged = (
+            f'<blockquote class="finding-callout-group">'
+            f'{meta_html}{merged_body}'
+            f'</blockquote>'
+        )
+        replacements.append((g[0]["start"], g[-1]["end"], merged))
+
+    if not replacements:
+        return html_body
+    out = html_body
+    for s, e, r in reversed(replacements):
+        out = out[:s] + r + out[e:]
+    return out
 
 
 def rewrite_finding_citations(
@@ -6303,6 +6428,7 @@ def build_page(page: dict) -> Path:
         content_html = rewrite_finding_citations(content_html, f_findings)
         content_html = split_multi_finding_blockquotes(content_html)
         content_html = inject_finding_callout_ids(content_html, obs_titles)
+        content_html = group_consecutive_finding_callouts(content_html)
         content_html += _render_finding_registry(f_findings)
     else:
         # Pages without local F# findings can still carry callouts that
@@ -6310,6 +6436,7 @@ def build_page(page: dict) -> Path:
         # earlier). Run the splitter + id injector on those too.
         content_html = split_multi_finding_blockquotes(content_html)
         content_html = inject_finding_callout_ids(content_html, obs_titles)
+        content_html = group_consecutive_finding_callouts(content_html)
 
     # Attach the merged cross-page registries so DIA overlays and F# badges
     # hydrate locally (no network fetch). Sub-report pages already carry
