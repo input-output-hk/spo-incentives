@@ -392,53 +392,29 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .content tr:hover td{background:var(--bg-warm)}
 
 /* Grouped data tables — Operator type / Pool tier / Entity archetype
-   tables. Group rows act as section headers; sub-rows (↳ prefix) sit
-   visually nested underneath; the last group row reads as the total. */
+   tables. The styling is intentionally subtle: bold from the MD
+   already differentiates group rows, so we only add a thin top rule
+   to anchor each block + a small left indent on ↳ children. No panel
+   fills, no colour changes, no uppercase totals — readability stays
+   identical to a plain markdown table. */
 .content tbody.data-table-grouped tr.row-group td{
-  background:var(--bg-panel);
-  font-weight:600;
-  border-top:2px solid var(--border)}
+  border-top:1px solid var(--border-strong, var(--text-muted))}
 .content tbody.data-table-grouped tr.row-group:first-child td{
   border-top:1px solid var(--border)}
-.content tbody.data-table-grouped tr.row-group td:first-child{
-  color:var(--text-primary);
-  letter-spacing:.005em}
-.content tbody.data-table-grouped tr.row-group:hover td{
-  background:color-mix(in srgb, var(--cardano-blue) 4%, var(--bg-panel))}
 
-/* Sub-rows: indent the first cell so the ``↳`` arrow registers as a
-   real visual nesting cue rather than just a decoration. The first
-   cell is also slightly muted so the eye reads the group label as
-   the column header. */
+/* Sub-rows: small left indent on the first cell so the ``↳`` arrow
+   reads as a real nesting cue. Text colour and size unchanged — the
+   eye should be able to scan numbers across a sub-row exactly the
+   same way as across its parent. */
 .content tbody.data-table-grouped tr.row-sub td:first-child{
-  padding-left:22px;
-  color:var(--text-muted);
-  font-size:12px}
-.content tbody.data-table-grouped tr.row-sub td{
-  background:transparent}
-.content tbody.data-table-grouped tr.row-sub:hover td{
-  background:var(--bg-warm)}
+  padding-left:22px}
 
-/* Total row: thicker top border in Cardano-blue + bold first cell so
-   the eye lands there as the take-away. */
+/* Total row: a slightly heavier top border so the take-away is
+   visible without colouring or recasing the row. */
 .content tbody.data-table-grouped tr.row-total td{
-  border-top:2px solid var(--cardano-blue);
-  background:color-mix(in srgb, var(--cardano-blue) 5%, var(--bg-panel))}
-.content tbody.data-table-grouped tr.row-total td:first-child{
-  color:var(--cardano-blue);
-  text-transform:uppercase;letter-spacing:.06em;font-size:11px}
+  border-top:2px solid var(--text-muted)}
 [data-theme=dark] .content tbody.data-table-grouped tr.row-total td{
-  border-top-color:#6E97FF;
-  background:color-mix(in srgb, #6E97FF 8%, var(--bg-panel))}
-[data-theme=dark] .content tbody.data-table-grouped tr.row-total td:first-child{
-  color:#8FB1FF}
-
-/* Tighter, mono digit styling in numeric cells so the column scans
-   like a mini spreadsheet. Strings (commission %, B values) keep
-   the body face for readability — only the numerals shift. */
-.content td[style*="text-align: right"]{
-  font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  font-size:12px;letter-spacing:0}
+  border-top-color:var(--text-muted)}
 
 /* ── Evidence base cards (V2 spec) — §3.x.x.x and §4.x.x.x ── */
 /* Evidence cards (Evidence base under each problem statement). The
