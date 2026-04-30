@@ -568,7 +568,7 @@ def _render_footer() -> str:
       <ul class="footer-links">
         <li><a href="index.html">V2 Specification</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
-        <li><a href="findings.html">Mainnet Diagnostic</a></li>
+        <li><a href="findings.html">Diagnostic Synthesis</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
       </ul>
     </div>
@@ -1490,8 +1490,8 @@ window.MathJax = {{
       <span class="nav-dd-stratum-meta">What mainnet is actually doing — synthesis, Reward-Flow evidence, and the prior report</span>
     </div>
     <a href="findings.html" class="nav-dd-ref nav-dd-ref-hero{cls_findings}">
-      <span class="nav-dd-ref-title">Findings &amp; Observations<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">Every diagnostic finding paired with its mainnet evidence — one-page synthesis</span>
+      <span class="nav-dd-ref-title">Diagnostic Synthesis<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">One-page summary — five problem statements, induced from 29 mainnet observations</span>
     </a>
     <a href="observatory.html" class="nav-dd-ref{cls_observatory_title}">
       <span class="nav-dd-ref-title">The Diagnostic</span>
@@ -1690,7 +1690,7 @@ BANNER_VARIANTS = {
 BREADCRUMBS = {
     "spec": ["V2 Specification"],
     "intended-game": ["Design Support", "The Intended Game"],
-    "findings": ["Mainnet Diagnostic", "Findings & Observations"],
+    "findings": ["Mainnet Diagnostic", "Diagnostic Synthesis"],
     "observatory": ["Mainnet Diagnostic", "The Diagnostic"],
     "census": ["Mainnet Diagnostic", "The Staking Census"],
     "treasury": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
@@ -4748,7 +4748,7 @@ def _render_finding_card(finding: dict, obs_for_section: list[dict]) -> str:
         f'data-parent="{finding["parent"]}">'
         f'<header class="finding-card-head">'
         f'<span class="finding-card-parent">{parent_label}</span>'
-        f'<span class="finding-card-badge">Finding</span>'
+        f'<span class="finding-card-badge">Problem Statement</span>'
         f'</header>'
         f'<h3 class="finding-card-title">{_html.escape(title)}</h3>'
         f'<div class="finding-card-body">{summary_html}</div>'
@@ -4788,17 +4788,29 @@ def _render_findings_content(findings: list[dict], observations: list[dict]) -> 
 
     intro = (
         '<div class="findings-intro">'
-        '<p>This page consolidates every <strong>finding</strong> (a problem '
-        'statement induced from evidence) together with the <strong>observations</strong> '
-        'that support it. Each finding links back to the full reasoning on '
-        '<a href="observatory.html">The Diagnostic — Mainnet Observatory</a>; each '
-        'observation can be clicked for its full text.</p>'
+        '<p>This is the one-page summary of the diagnostic. The full '
+        'analysis lives in '
+        '<a href="observatory.html">The Diagnostic — Mainnet Observatory</a> '
+        'and across the four sub-reports '
+        '(<a href="census.html">census</a>, '
+        '<a href="treasury.html">reserves</a>, '
+        '<a href="pools.html">pool distribution</a>, '
+        '<a href="operator.html">operator&#39;s cut</a>); '
+        'this page distills it into '
+        f'<strong>{len(findings)} problem statements</strong> '
+        f'induced from <strong>{len(observations)} mainnet observations</strong>.</p>'
+        '<p>Each card carries one problem statement plus the supporting observations. '
+        'Use the tier chips to filter by problem family, the search box to find a '
+        'specific observation or keyword, and the link on each card to jump to the '
+        'full reasoning in the Observatory.</p>'
         '</div>'
     )
 
     controls = (
         '<div class="findings-controls">'
-        '<input type="search" class="findings-search" placeholder="Search findings and observations…" aria-label="Search">'
+        '<input type="search" class="findings-search" '
+        'placeholder="Search problem statements and observations…" '
+        'aria-label="Search">'
         f'<div class="findings-chips" role="toolbar" aria-label="Filter by tier">{chip_html}</div>'
         '</div>'
     )
@@ -4807,7 +4819,7 @@ def _render_findings_content(findings: list[dict], observations: list[dict]) -> 
     stats = (
         '<div class="findings-stats">'
         f'<div class="findings-stat"><span class="findings-stat-num">{len(findings)}</span>'
-        f'<span class="findings-stat-lbl">findings</span></div>'
+        f'<span class="findings-stat-lbl">problem statements</span></div>'
         f'<div class="findings-stat"><span class="findings-stat-num">{len(observations)}</span>'
         f'<span class="findings-stat-lbl">mainnet observations</span></div>'
         f'<div class="findings-stat"><span class="findings-stat-num">{len(by_parent_obs)}</span>'
@@ -4902,9 +4914,12 @@ def build_findings_page() -> Path:
         "slug": "findings",
         "md": "diagnostic/README.md",
         "html": "findings.html",
-        "title": "Findings & Observations — The Diagnostic Synthesis",
-        "hero_h1": "Findings & Observations",
-        "hero_sub": "Every diagnostic finding paired with its mainnet evidence",
+        "title": "Diagnostic Synthesis — Problem Statements & Mainnet Evidence",
+        "hero_h1": "Diagnostic Synthesis",
+        "hero_sub": (
+            f"{len(findings)} problem statements induced from "
+            f"{len(observations)} mainnet observations"
+        ),
         "active_nav": "findings",
     }
     content_html += _render_page_source_link(page)

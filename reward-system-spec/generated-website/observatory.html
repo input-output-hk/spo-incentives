@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777553928">
+<link rel="stylesheet" href="assets/site.css?v=1777554707">
 
 
 </head>
@@ -179,8 +179,8 @@ window.MathJax = {
       <span class="nav-dd-stratum-meta">What mainnet is actually doing — synthesis, Reward-Flow evidence, and the prior report</span>
     </div>
     <a href="findings.html" class="nav-dd-ref nav-dd-ref-hero">
-      <span class="nav-dd-ref-title">Findings &amp; Observations<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">Every diagnostic finding paired with its mainnet evidence — one-page synthesis</span>
+      <span class="nav-dd-ref-title">Diagnostic Synthesis<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">One-page summary — five problem statements, induced from 29 mainnet observations</span>
     </a>
     <a href="observatory.html" class="nav-dd-ref active">
       <span class="nav-dd-ref-title">The Diagnostic</span>
@@ -314,22 +314,15 @@ window.MathJax = {
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
-<div class="content"><p>The <em>Shelley-era Delegation and Incentives Design Specification</em> (SL-D1) defined the economic rules that were meant to guide Cardano toward a stable, decentralized equilibrium of $k$ <strong>well-funded stake pools</strong>.</p>
-<p><strong>Five years of mainnet operation have exposed significant divergences</strong> between those design intentions and the on-chain reality.</p>
-<p>The <em>Analysis of Cardano's Incentive Mechanism</em> (Lopez de Lara, 2025; hereafter the <em>Incentive Mechanism Analysis</em>) documented the key findings empirically:</p>
-<ul>
-<li>a stratified equilibrium with <strong>873 active operators below the 3M ADA viability threshold</strong>;</li>
-<li>a pledge mechanism that is <strong>functionally irrelevant for most pools</strong>;</li>
-<li>a capital-constrained environment where <strong>~16B ADA remains outside consensus</strong>.</li>
-</ul>
-<p>This document is organised in four parts:</p>
-<ul>
-<li><strong>The reward flow</strong> (§1) — decomposition of the SL-D1 reward pipeline into three stages: epoch-budget assembly (<a href="#11-treasury-pool-pots-distribution">§1.1 — Treasury &amp; Pool Pots Distribution</a>), pool-level distribution (<a href="#12-pools-distribution">§1.2 — Pools Distribution</a>), and operator/delegator split (<a href="#13-operator-delegator-distribution">§1.3 — Operator / Delegator Distribution</a>). Each stage follows the same analytical arc — <em>intended design → mainnet confrontation → problem statement → check for a formal Cardano Problem Statement (CPS) in the CIP governance process</em>. Where no CPS exists, the document produces one.</li>
-<li><strong>The player populations</strong> (§2) — staking participants (operators, delegators, non-participants) and transaction submitters, drawing on the companion <a href="census.html"><em>Staking Census</em></a> to ground the pipeline failures in the structural dynamics of the actors themselves.</li>
-<li><strong>The ₳ price constraint</strong> (§3) — the ADA price dependency that binds the entire mechanism to the external economy.</li>
-<li><strong>The synthesis</strong> (§4) — the problems induced across all layers compiled into a specification for a sustainable successor mechanism, together with the Key Performance Indicators against which any proposed change can be evaluated.</li>
-</ul>
-<p>Each pipeline stage is backed by a dedicated sub-report containing the formula derivations, mainnet observations, and empirical evidence that grounds the corresponding CPS.</p>
+<div class="content"><p>The <em>Shelley-era Delegation and Incentives Design Specification</em> (SL-D1) defined the economic rules that were to guide Cardano toward a stable, decentralised equilibrium of $k$ well-funded stake pools. Five years of mainnet operation have exposed <strong>structural divergences</strong> between that design and the on-chain reality.</p>
+<p>This document is the <strong>mainnet observatory</strong>: it follows the reward through every stage of the pipeline, confronts each design intent with the cleaned mainnet evidence, and inducts the structural problems that emerge. Where a stage exhibits a failure for which no <em>Cardano Problem Statement</em> (CPS) currently exists in the CIP governance process, this analysis produces the missing CPS so the V2 specification can be scoped against a well-defined problem statement. The diagnostic feeds <a href="index.html"><strong>The Cardano Reward System V2 — Specification for a Sustainable Successor</strong></a>.</p>
+<p><strong>The pipeline is read as a single dependency chain.</strong> The epoch budget sets the ceiling, the reward curve allocates within it, and the fee structure determines how much of each allocation actually reaches operators and delegators. These stages are not independent layers — a failure at any stage propagates downstream, and a fix at one stage can be undone by a distortion at another. The pipeline runs on populations (<a href="#2-the-player-populations">§2</a>) and against an exchange-rate boundary (<a href="#3-the-price-constraint">§3</a>) that closes the system. The companion <a href="intended-game.html"><em>The Intended Game</em></a> supplies the normative baseline — what the mechanism was supposed to produce — against which each divergence is measured.</p>
+<p><strong>The reward formula is at war with its own security model.</strong> SL-D1's reward function reaches its global maximum at a <em>private</em> pool — fully self-pledged by a single wealthy operator, with no delegator participation. The security model SL-D1 references requires the <em>opposite</em>: a <em>balanced</em> configuration where operator commitment and delegator power coexist, so that accountability, delegation as counter-power, Sybil resistance, and decentralisation hold simultaneously. The formula's gradient and the security model's requirement run in opposite directions.</p>
+<p><strong>Mainnet's resolution: neither private nor balanced — <em>hollow</em>.</strong> Five years have produced a settled landscape where the pledge mechanism is economically inoperative — stake-weighted median pool pledge ratio <strong>0.07%</strong>, best-case pledge-bonus yield <strong>0.68%/yr</strong> below the <strong>~2.3%/yr</strong> passive-delegation alternative — and <strong>445 of 502 above-threshold entities</strong> (controlling <strong>85.6%</strong> of active stake) operate at zero or near-zero pledge. The reward pipeline runs at <strong>~44% distribution efficiency</strong>: <strong>54%</strong> of the pools pot returns to reserve every epoch, dominated by a participation gap (<strong>31.6%</strong>) and a pledge-bonus budget that goes <strong>95.6% unclaimed</strong> (<strong>22.1%</strong> of the pot). The wasted bonus is the <em>single largest addressable inefficiency in the system</em> — and unlike the participation gap, it is entirely within reach of formula reform.</p>
+<p><strong>The independent operator base has collapsed; entities have filled the gap.</strong> From a peak of <strong>555 productive pools / 39.1%</strong> of stake at epoch 300 to <strong>291 pools / 24.4%</strong> at epoch 623 — a <strong>48%</strong> loss in the segment the mechanism was supposed to grow. The replacement pools that keep the productive total at ~950 are entity-operated: multi-pool fleets grew from <strong>23 to 85 entities</strong> controlling <strong>464 productive pools (75.5% of stake)</strong>, of which ten centralised exchanges and institutional validators alone hold <strong>34.3%</strong> at architecturally zero pledge. <em>The designed progression path from new entrant to established operator has no observable expression in the mainnet data.</em></p>
+<p><strong>The mechanism is on a structural clock.</strong> The reserve has crossed its half-life (<strong>13.29B → 6.53B ADA</strong> in 5.5 years) and trends toward exhaustion around <strong>epoch 1000–1200 (~2028–2029)</strong>. Fees the design assumes will replace monetary expansion contribute <strong>~0.19%</strong> of the current epoch pot; closing the gap requires <strong>12–16×</strong> current capacity. The fee-generating population is contracting and consolidating: the submitter base has fallen by an order of magnitude since its peak, the top 500 addresses now pay the majority of fees, and roughly <strong>30%</strong> of fee revenue comes from enterprise and script addresses that structurally cannot delegate — <em>the mechanism taxes a constituency it excludes from rewards</em>. Meanwhile delegator yield has fallen from <strong>5.3% → 2.0%</strong> with $R^2 = 0.99$ against the reserve curve, compressing past the threshold where delegators can differentiate pools.</p>
+<p><strong>Most non-participation is unreachable by incentive design.</strong> <strong>14.36B ADA (39.8%)</strong> of circulating supply sits outside delegation. Only <strong>134.6M (0.37%)</strong> belongs to accounts with a registered stake credential that have simply not delegated — the <em>addressable</em> pool that incentive changes can, in principle, reach. The remaining <strong>14.2B</strong> sits in addresses with no stake credential at all (enterprise custody, DeFi-locked Plutus contracts, Byron-era legacy, unregistered base addresses). Moving the structural fraction requires protocol-level changes — enabling enterprise-address staking, mandating staking-capable script addresses in DeFi standards — not parameter tuning.</p>
+<p>The remainder of the document follows the pipeline stage by stage: <a href="#1-the-reward-flow">the reward flow</a> decomposes the SL-D1 pipeline into its three stages with a shared arc at each — <em>design intent → mainnet confrontation → problem induction → CPS check</em>; <a href="#2-the-player-populations">the player populations</a> ground the pipeline failures in the structural dynamics of operators, delegators, non-participants, and transaction submitters; <a href="#3-the-price-constraint">the ADA price constraint</a> sets the boundary conditions within which any solution must operate. Each pipeline stage is backed by a <a href="#sub-reports">dedicated sub-report</a> listed at the bottom of this document.</p>
 <h1 id="table-of-contents">Table of Contents</h1>
 <nav class="toc-nav">
 <ul>
@@ -1869,7 +1862,7 @@ END SANDBOX -->
       <ul class="footer-links">
         <li><a href="index.html">V2 Specification</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
-        <li><a href="findings.html">Mainnet Diagnostic</a></li>
+        <li><a href="findings.html">Diagnostic Synthesis</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
       </ul>
     </div>
@@ -1914,6 +1907,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777553928"></script>
+<script src="assets/site.js?v=1777554707"></script>
 </body>
 </html>
