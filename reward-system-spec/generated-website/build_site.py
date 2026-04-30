@@ -5292,10 +5292,12 @@ def _walk_html_skipping(
 #                in the breadcrumb above.
 _CALLOUT_BLOCKQUOTE_RE = re.compile(
     r'<blockquote(\s[^>]*)?>'
-    r'(?P<lead>\s*<p[^>]*>\s*<strong>\s*Finding\s+)'
+    r'(?P<p_open>\s*<p[^>]*>\s*<strong>\s*)'
+    r'Finding\s+'
     r'(?P<anchor_open><a [^>]*?data-finding="(?P<canon>[A-Z]{3}\.O\d+\.F\d+)"[^>]*>)'
     r'(?P<anchor_text>[^<]*)'
-    r'(?P<anchor_close></a>)',
+    r'(?P<anchor_close></a>)'
+    r'(?P<sep>\s*[—–−\-]\s*)?',
     re.IGNORECASE,
 )
 
@@ -5384,10 +5386,11 @@ def inject_finding_callout_ids(
     def _sub(m: re.Match) -> str:
         full = m.group(0)
         attrs = m.group(1) or ""
-        lead = m.group("lead")
+        p_open = m.group("p_open")
         anchor_open = m.group("anchor_open")
         anchor_text = m.group("anchor_text") or ""
         anchor_close = m.group("anchor_close")
+        sep = m.group("sep") or ""
         canon = m.group("canon")
         if "id=" in attrs.lower():
             return full
@@ -5420,9 +5423,23 @@ def inject_finding_callout_ids(
                 f'</p>'
             )
         new_attrs = f' id="finding-{slug}"' + attrs
+        # ``Finding`` becomes an uppercase, dark-grey label via CSS;
+        # the em-dash that separates the ref from the title becomes a
+        # subtle right-arrow glyph. Both are wrapped so styling stays
+        # confined to the callout opener and never leaks into prose
+        # that happens to start with the word ``Finding``.
+        finding_label = (
+            '<span class="finding-callout-label">Finding</span> '
+        )
+        sep_html = (
+            ' <span class="finding-callout-arrow" aria-hidden="true">'
+            '&rarr;</span> '
+        ) if sep else ""
         return (
-            f"<blockquote{new_attrs}>{meta_html}{lead}"
+            f"<blockquote{new_attrs}>{meta_html}"
+            f"{p_open}{finding_label}"
             f"{anchor_open}{anchor_text_out}{anchor_close}"
+            f"{sep_html}"
         )
 
     return _CALLOUT_BLOCKQUOTE_RE.sub(_sub, html_body)
