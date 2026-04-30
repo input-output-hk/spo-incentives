@@ -14,15 +14,13 @@ License: Apache-2.0
 
 ## Abstract
 
-Cardano's staking reward system is funded **almost entirely by monetary expansion** from a finite reserve. Transaction fees — the only sustainable long-term funding source — currently cover **~0.17%** of the epoch pot (epoch 623).
+Cardano's staking reward system has **no defined path** from reserve-funded to fee-funded sustainability. The epoch pot is funded **~99.8%** by monetary expansion from a finite reserve that has **crossed its half-life in ~5.7 years** (13.29B → 6.45B ADA). Transaction fees — the only sustainable long-term alternative — cover **~0.17%** of the pot at epoch 623, and even at full realistic network capacity would reach only **~1.3%** of the reserve expansion term. Closing the gap requires **12–16×** current throughput, implying both a capacity upgrade (Leios) and a fundamental shift in transaction demand.
 
-The reserve has **crossed its half-life in ~5.7 years**, with significant reward pressure projected at **epochs 1000–1200 (~2028–2029)**. Reaching fee self-sufficiency would require **12–16× today's realistic maximum throughput**.
+The two protocol parameters that govern this layer ($\rho = 0.3\%$, $\tau = 20\%$) have **never been adjusted since Shelley** and have never been the subject of a formal governance proposal. The reserve is depleting on a known schedule, with **significant reward pressure projected at epochs 1000–1200 (~2028–2029)**, and **no protocol-level or governance-level mechanism currently manages the transition** from reserve-funded to fee-funded rewards.
 
-The two parameters governing the draw ($\rho = 0.3\%$, $\tau = 20\%$) have **never been adjusted** since Shelley launch, and **no governance process exists to review them**.
+A second-order complication compounds the gap: the mechanism today operates at **~44% distribution efficiency** because **~16.8B ADA (~43.6% of supply)** does not participate in delegation. The undistributed residual returns to reserve, *extending its life by **4.61B ADA** as a side-effect of low participation rather than a design feature*. Any reform that increases participation will improve distribution efficiency *and* accelerate depletion — a tension the current design does not acknowledge.
 
-*No protocol-level or governance-level mechanism currently manages the transition from reserve-funded to fee-funded rewards. The system is on a known depletion schedule with no scheduled response.*
-
-This CPS formally defines the **reward sustainability problem** at the epoch-budget layer of the reward pipeline and invites the community to propose solutions through the CIP process.
+This CPS formally defines the **reward sustainability problem** at the epoch-budget layer of the reward pipeline. It is grounded in the mainnet evidence documented in the dedicated [Treasury & Pool Pots Distribution — Mainnet Analysis](../mainnet-analysis/README.md) sub-report and invites the community to propose solutions through the CIP process.
 
 ## Problem
 

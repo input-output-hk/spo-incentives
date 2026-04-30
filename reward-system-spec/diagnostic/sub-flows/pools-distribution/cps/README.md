@@ -15,13 +15,15 @@ License: Apache-2.0
 
 ## Abstract
 
-The SL-D1 pool reward curve is the protocol's **only tool** for shaping the operator ecosystem that secures consensus. Its design should produce an equilibrium of $k$ **independent, well-pledged pools accountable to delegators**.
+The SL-D1 pool reward curve is the protocol's **only tool** for shaping the operator ecosystem that secures consensus. Its design should produce an equilibrium of $k$ **independent, well-pledged pools accountable to delegators**. After five years of mainnet operation, the equilibrium that has emerged is *structurally hostile to that intent*.
 
-Five years of mainnet operation show a **stable but sub-optimal equilibrium**: the dominant strategy at every level — entry, progression, endgame — is to **maximise delegation and minimise pledge**, the opposite of what consensus security requires.
+The reward formula is **at war with the security model it was meant to support**. Its global maximum is reached at $\pi = 1, \nu = 1$ — a fully-pledged, fully-saturated pool with **no delegator participation** — eliminating the accountability mechanism the protocol depends on. Reaching that optimum requires **77M ADA (~30M USD)** of personal capital for a yield of **0.68%/yr**, well below the **2.3%/yr** delegators earn passively. *The rational actor should never pledge.*
 
-The curve's theoretical optimum **eliminates the delegator entirely**, the pledge bonus is **economically irrational**, the progression is **invisible**, and the entry creates a **viability cliff**. Meanwhile, **43.5% of circulating ADA** does not participate in delegation, constraining the playing field to roughly **half the capital base** the design assumed.
+The progression toward that optimum is invisible: at median pledge the bonus adds **~0.006%** to rewards, undetectable in any pool comparison tool. The entry is a cliff — **73% of pools** sit below the **~3M ADA** viability threshold and operate at a loss. Meanwhile only **8 pools** reach saturation (1.6% of the $k = 500$ design target), and the playing field itself is half the size the design assumed: **~16.75B ADA (43.5%)** of circulating supply does not participate in delegation.
 
-This CPS formally defines the **consensus incentive gap** at the pool-distribution layer and invites the community to propose solutions through the CIP process.
+The dominant strategy at every level — entry, progression, endgame — has converged on **maximising delegation and minimising pledge**, exactly the opposite of what consensus security requires. **95.6%** of the pledge-bonus budget returns to reserve unused — *the single largest addressable inefficiency in the system*, unchanged since Shelley launch.
+
+This CPS formally defines the **consensus incentive gap** at the pool-distribution layer of the reward pipeline. It is grounded in the mainnet evidence documented in the dedicated [Pools Pot Distribution Gaps — Mainnet Analysis](../mainnet-analysis/README.md) sub-report and invites the community to propose solutions through the CIP process.
 
 ## Problem
 

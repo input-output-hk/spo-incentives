@@ -1,19 +1,8 @@
 # Nakamoto Coefficient — Mainnet Re-evaluation at Epoch 623
 
-> Sub-flow of the Diagnostic. Audits the headline Nakamoto figure for Cardano
-> by recomputing it on the same mainnet snapshot under seven explicit
-> definitions, then assessing whether the official Edinburgh Decentralization
-> Index (EDI) value can be defended as a measure of *adversarial*
-> decentralisation. Snapshot: epoch 623 (2026/01/27 anchor; rewards epoch 621).
+This sub-flow of [the Diagnostic](../../README.md) audits the headline Nakamoto coefficient for Cardano by recomputing it on the same mainnet snapshot under **seven explicit stake-based definitions** (D1–D7) and re-running the Edinburgh Decentralization Index (EDI) methodology end-to-end in-house under both clustering modes (D8a/b, D9a/b). The exercise then assesses whether the EDI dashboard value — the figure most commonly cited as Cardano's "official" Nakamoto — can be defended as a measure of *adversarial-coalition* decentralisation. *The work is methodological: it does not propose a new metric, it restores the proper interpretive interval around the existing one.*
 
-## Executive summary
-
-The "official" Nakamoto coefficient for Cardano cited in the November 2025
-report — approximately 80 at epoch 584, sourced from the Edinburgh
-Decentralization Index — is **internally valid under its stated convention**
-but **unrepresentative of adversarial-coalition risk**. On the same mainnet
-snapshot at epoch 623, recomputing the coefficient under the project's
-documented entity-clustering convention yields:
+The "official" Nakamoto coefficient cited in the November 2025 report — approximately **80 at epoch 584**, sourced from EDI — is **internally valid under its stated convention** but **unrepresentative of adversarial-coalition risk**. On the same mainnet snapshot at epoch 623, recomputing the coefficient under the project's documented entity-clustering convention yields:
 
 | Framing | Nakamoto | Population |
 |---|---|---|
@@ -738,3 +727,6 @@ four unmodified output CSVs documented inline.
 | 2026/04/23 | New section "Cardano in cross-chain context" added between the EDI methodology section and "Threats to validity". Reports the EDI alpha-snapshot Nakamoto values for the eight ledgers EDI's consensus pipeline supports (Cardano = 58, Tezos = 7, Bitcoin = 2, Ethereum = 2; Bitcoin Cash, Dogecoin, Litecoin, Zcash covered without separately published headlines). Positions D8a (82) and D8b (90) above the alpha headline of 58, attributed to operator-population growth and cluster fragmentation between 2023/06 and 2026/04. Adds Chainspect's live staking-power snapshot (Bitcoin = 4, Cardano = 22, Tezos = 14, Solana = 19) as a complementary methodology and documents the comparability hazards. References section gains the EDI alpha post (2024/03), the EDI consensus-tool launch post (2023/10), and the Chainspect dashboard. Executive summary expanded from three to four findings, with the cross-chain frame surfaced at the top of the document. The in-sandbox `WebFetch` to the live EDI dashboard returned `ECONNREFUSED`, so per-chain values quoted are restricted to those EDI has published in writing. |
 | 2026/04/23 | Cross-chain anchor lifted into the executive summary itself: a compact comparison table (Cardano D4/alpha/D8b vs. Tezos, Bitcoin, Ethereum) inserted between the Cardano definition matrix and the four findings, with a short paragraph on Cardano's leading position under every clustering policy and on the Chainspect cross-check. Closing paragraph reworded to carry the cross-chain anchor alongside D4 = 18 and D8b = 90. |
 | 2026/04/23 | "Threats to validity" restructured for readability: a five-row summary table (caveat × direction-on-D4 × status) sits at the top, then each caveat is unpacked under its own H3 with a two-line `Direction / Status` blockquote and shorter paragraphs separated by whitespace. Stale cross-reference "Empirical replication of the EDI methodology" updated to the current section title "The EDI methodology, replicated in-house". Substantive content unchanged; only the framing, sub-headings, and line breaks. |
+| 2026/04/30 | Top blockquote and `## Executive summary` header dropped: the verdict, the definition matrix, the cross-chain anchor, and the four findings now flow continuously under the title as the document's intro, with no separate `Executive summary` section. Snapshot anchor moved to a `Status` block at the bottom. |
+
+> **Status** — Snapshot: epoch 623 (2026/01/27 anchor; rewards epoch 621). Cross-chain reading sampled 2026/04/23.

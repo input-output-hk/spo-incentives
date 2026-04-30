@@ -4,7 +4,7 @@ The *Shelley-era Delegation and Incentives Design Specification* (SL-D1) defined
 
 This document is the **mainnet observatory**: it follows the reward through every stage of the pipeline, confronts each design intent with the cleaned mainnet evidence, and inducts the structural problems that emerge. Where a stage exhibits a failure for which no *Cardano Problem Statement* (CPS) currently exists in the CIP governance process, this analysis produces the missing CPS so the V2 specification can be scoped against a well-defined problem statement. The diagnostic feeds [**The Cardano Reward System V2 — Specification for a Sustainable Successor**](../README.md).
 
-**The pipeline is read as a single dependency chain.** The epoch budget sets the ceiling, the reward curve allocates within it, and the fee structure determines how much of each allocation actually reaches operators and delegators. These stages are not independent layers — a failure at any stage propagates downstream, and a fix at one stage can be undone by a distortion at another. The pipeline runs on populations ([§2](#2-the-player-populations)) and against an exchange-rate boundary ([§3](#3-the-price-constraint)) that closes the system. The companion [*The Intended Game*](../the-intended-game/README.md) supplies the normative baseline — what the mechanism was supposed to produce — against which each divergence is measured.
+**The pipeline is read as a single dependency chain.** The epoch budget sets the ceiling, the reward curve allocates within it, and the fee structure determines how much of each allocation actually reaches operators and delegators. These stages are not independent layers — a failure at any stage propagates downstream, and a fix at one stage can be undone by a distortion at another. The pipeline runs on populations ([The Player Populations](#2-the-player-populations)) and against an exchange-rate boundary ([The ₳ Price Constraint](#3-the-price-constraint)) that closes the system. The companion [*The Intended Game*](../the-intended-game/README.md) supplies the normative baseline — what the mechanism was supposed to produce — against which each divergence is measured.
 
 **The reward formula is at war with its own security model.** SL-D1's reward function reaches its global maximum at a *private* pool — fully self-pledged by a single wealthy operator, with no delegator participation. The security model SL-D1 references requires the *opposite*: a *balanced* configuration where operator commitment and delegator power coexist, so that accountability, delegation as counter-power, Sybil resistance, and decentralisation hold simultaneously. The formula's gradient and the security model's requirement run in opposite directions.
 
@@ -94,13 +94,13 @@ The remainder of the document follows the pipeline stage by stage: [the reward f
 
 The SL-D1 reward pipeline transforms a finite reserve into per-participant rewards through **three sequential stages**:
 
-- **Epoch-budget assembly** ([§1.1](#11-treasury-pool-pots-distribution));
-- **Pool-level distribution** ([§1.2](#12-pools-distribution));
-- **Operator/delegator split** ([§1.3](#13-operator-delegator-distribution)).
+- **Epoch-budget assembly** ([Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution));
+- **Pool-level distribution** ([Pools Distribution](#12-pools-distribution));
+- **Operator/delegator split** ([Operator / Delegator Distribution](#13-operator-delegator-distribution)).
 
 **Each stage embeds design choices that constrain the next.** The analysis follows a common arc at every stage — design intent, mainnet confrontation, problem induction — so that the structural failures compound visibly across the full pipeline rather than appearing as isolated parameter issues.
 
-The three stages are **not independent layers** that can be tuned in isolation. The epoch budget ([§1.1](#11-treasury-pool-pots-distribution)) **sets the ceiling**; the reward curve ([§1.2](#12-pools-distribution)) **allocates within it**; the fee structure ([§1.3](#13-operator-delegator-distribution)) **determines how much of each allocation reaches operators and delegators**.
+The three stages are **not independent layers** that can be tuned in isolation. The epoch budget ([Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution)) **sets the ceiling**; the reward curve ([Pools Distribution](#12-pools-distribution)) **allocates within it**; the fee structure ([Operator / Delegator Distribution](#13-operator-delegator-distribution)) **determines how much of each allocation reaches operators and delegators**.
 
 A failure at any stage propagates downstream, and a fix at one stage can be undone by a distortion at another.
 
@@ -119,7 +119,7 @@ This stage assembles the **epoch pot** from three on-chain sources:
 - non-refundable deposits;
 - a monetary expansion draw from the reserve.
 
-It then splits the pot in two: a fixed share goes to the **treasury**, and the remainder becomes the **pools pot** — the total budget that the next stage ([§1.2](#12-pools-distribution)) will distribute across individual pools.
+It then splits the pot in two: a fixed share goes to the **treasury**, and the remainder becomes the **pools pot** — the total budget that the next stage ([Pools Distribution](#12-pools-distribution)) will distribute across individual pools.
 
 Two design choices embedded at this stage matter for the rest of the analysis:
 
@@ -127,7 +127,7 @@ Two design choices embedded at this stage matter for the rest of the analysis:
 
 - **Fixed split rule.** The treasury/pools ratio is a protocol constant ($\tau$), not a function of network activity or reserve level. It does not adapt as the balance between fees and expansion shifts over time.
 
-> **Formulas.** The epoch-pot assembly and treasury/pools split formulas — from the original SL-D1 notation through a reader-friendly rewrite to mainnet parameterization — are in the dedicated sub-report: [`Treasury & Pool Pots Distribution`](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md) — [§1.2.1](#121-flow-overview).
+> **Formulas.** The epoch-pot assembly and treasury/pools split formulas — from the original SL-D1 notation through a reader-friendly rewrite to mainnet parameterization — are in the dedicated sub-report: [`Treasury & Pool Pots Distribution`](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md) — [Flow Overview](#121-flow-overview).
 
 ### 1.1.2. Mainnet Observations
 
@@ -140,7 +140,7 @@ The epoch-level analysis (epochs 208–623) yields four observations at this pip
 | **TRE.O3** | **The reward mechanism operates at ~44% of its potential** | Only ~6.8M of ~15.5M ADA pools pot reaches operators/delegators — the rest returns to reserve. 4.55B ADA cumulative (~70% of current reserve) exists because of this. Root cause: ~17B ADA (~44%) does not participate in delegation. |
 | **TRE.O4** | **Reward parameters have never been adjusted** | $\rho = 0.3\%$ and $\tau = 20\%$ are unchanged since Shelley. Neither has been subject to a governance proposal. |
 
-> **Scope note.** Observations TRE.O1–TRE.O4 are structural to the epoch-budget layer. No existing CIP targets this stage — they all operate downstream ([§1.2](#12-pools-distribution), [§1.3](#13-operator-delegator-distribution)). These observations document the sustainability context within which all downstream proposals operate.
+> **Scope note.** Observations TRE.O1–TRE.O4 are structural to the epoch-budget layer. No existing CIP targets this stage — they all operate downstream ([Pools Distribution](#12-pools-distribution), [Operator / Delegator Distribution](#13-operator-delegator-distribution)). These observations document the sustainability context within which all downstream proposals operate.
 
 ### 1.1.3. Problem Induction → Funding the Protocol Without a Reserve
 
@@ -158,23 +158,23 @@ The reserve is depleting on a known schedule, the only alternative revenue sourc
 
 *This is not a failure of any individual parameter — it is a design gap at the epoch-budget layer.* No protocol-level or governance-level instrument currently exists to manage this transition.
 
-TRE.O3 — the **~44% distribution efficiency** — is **not a problem *at this layer***. It is a consequence of participation levels, which are shaped by incentives defined downstream ([§1.2](#12-pools-distribution), [§1.3](#13-operator-delegator-distribution)).
+TRE.O3 — the **~44% distribution efficiency** — is **not a problem *at this layer***. It is a consequence of participation levels, which are shaped by incentives defined downstream ([Pools Distribution](#12-pools-distribution), [Operator / Delegator Distribution](#13-operator-delegator-distribution)).
 
-But it interacts directly with the sustainability problem: **activating inactive ADA would improve distribution efficiency while accelerating reserve consumption**. Any solution to the epoch-budget problem must account for this tension — and any change to the downstream incentive structure ([§1.2](#12-pools-distribution), [§1.3](#13-operator-delegator-distribution)) that affects participation will feed back into reserve dynamics here.
+But it interacts directly with the sustainability problem: **activating inactive ADA would improve distribution efficiency while accelerating reserve consumption**. Any solution to the epoch-budget problem must account for this tension — and any change to the downstream incentive structure ([Pools Distribution](#12-pools-distribution), [Operator / Delegator Distribution](#13-operator-delegator-distribution)) that affects participation will feed back into reserve dynamics here.
 
 **CPS identified.** No *Cardano Problem Statement* (CPS) has been formally written for this problem. The CIP governance process requires that solutions (CIPs) be scoped against a well-defined problem statement (CPS). This foundational sustainability problem has **remained formally unstated**.
 
 This analysis identifies the gap and produces the missing CPS — *Funding the Protocol Without a Reserve* — derived from the mainnet evidence in the dedicated [sub-report](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md) and defined in [`../sub-flows/treasury-and-pool-pots-distribution/cps/`](sub-flows/treasury-and-pool-pots-distribution/cps/).
 
-The epoch budget sets the ceiling for everything that follows. But how that budget reaches individual participants — and whether the distribution mechanism itself works as intended — is a separate question. That is the subject of [§1.2](#12-pools-distribution).
+The epoch budget sets the ceiling for everything that follows. But how that budget reaches individual participants — and whether the distribution mechanism itself works as intended — is a separate question. That is the subject of [Pools Distribution](#12-pools-distribution).
 
 ## 1.2. Pools Distribution
 
 ### 1.2.1. Flow Overview
 
-This stage takes the **pools pot** ($PoolsPot^{\text{epoch}}$) produced by [§1.1](#11-treasury-pool-pots-distribution) and distributes it across individual pools.
+This stage takes the **pools pot** ($PoolsPot^{\text{epoch}}$) produced by [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution) and distributes it across individual pools.
 
-The output is a per-pool allocation ($PoolPot^{\text{actual}}_i$) that feeds into [§1.3](#13-operator-delegator-distribution) (operator/delegator split).
+The output is a per-pool allocation ($PoolPot^{\text{actual}}_i$) that feeds into [Operator / Delegator Distribution](#13-operator-delegator-distribution) (operator/delegator split).
 
 For each pool $i$, the protocol performs three steps:
 
@@ -184,7 +184,7 @@ For each pool $i$, the protocol performs three steps:
 
 3. **Performance adjustment.** The optimal allocation is scaled by apparent performance $\bar{p}_i$ to produce the *actual* allocation. Pools that miss blocks receive less. If the registered pledge is not met, the allocation is zeroed entirely.
 
-Any rewards not distributed (because $\sum_i \hat{f}_i < R$) **return to the reserve** — this is the mechanism behind TRE.O3 in [§1.1](#11-treasury-pool-pots-distribution).
+Any rewards not distributed (because $\sum_i \hat{f}_i < R$) **return to the reserve** — this is the mechanism behind TRE.O3 in [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution).
 
 Two design choices matter for the rest of the analysis:
 
@@ -192,7 +192,7 @@ Two design choices matter for the rest of the analysis:
 
 - **Uniform saturation threshold.** All pools share the same cap $z_0 = 1/k$. There is no mechanism to differentiate saturation based on pledge level or pool characteristics.
 
-> **Formulas.** The pool-level reward formulas — from the original SL-D1 reward curve through the normalized saturation coordinates rewrite to mainnet parameterization — are in the dedicated sub-report: [`The Pools Pot Distribution Gaps`](sub-flows/pools-distribution/mainnet-analysis/README.md) — [§1.2.3](#123-problem-induction-closing-the-consensus-incentive-gap).
+> **Formulas.** The pool-level reward formulas — from the original SL-D1 reward curve through the normalized saturation coordinates rewrite to mainnet parameterization — are in the dedicated sub-report: [`The Pools Pot Distribution Gaps`](sub-flows/pools-distribution/mainnet-analysis/README.md) — [Problem Induction → Closing the Consensus Incentive Gap](#123-problem-induction-closing-the-consensus-incentive-gap).
 
 ### 1.2.2. Mainnet Observations
 
@@ -207,7 +207,7 @@ The pool-level analysis (epochs 208–618, with the latest complete reward epoch
 | **POL.O5** | **The independent operator base is far smaller and weaker than it appears** | The 741 healthy pools collapse to 283 independent viable operators once MPO fleet members are removed — the competitive field is 3× smaller than the headline. 78% of independent single-pool stake is non-compliant. 561 marginal single-pool operators partially pledge — the narrow policy-sensitive population. The independent base is in slow structural decline: its share of active stake has fallen from 28.0% to 25.0% since epoch 583. |
 | **POL.O6** | **The incentive-responsive field is a fraction of the network** | 78 of 85 MPO entities (13.74B ADA, 63% of active stake) are outside the pledge-response path — multi-game optimisation, not calibration failure. CEX cannot pledge custodied funds; IVaaS cannot pledge client assets; community fleets choose not to — three distinct mechanisms. The filtered proxy (single-pool operators + retained MPOs) holds 7.89B ADA — only 36% of active stake responds to the pledge signal. |
 
-> **Scope note.** POL.O1–POL.O3 are structural to the pool-distribution layer. POL.O4–POL.O6 characterise the entity landscape and the incentive-responsive arena. The participation gap (POL.O1) and capital constraint (POL.O4) are the same upstream conditions documented at [§1.1](#11-treasury-pool-pots-distribution) — they set the playing field within which the reward curve operates.
+> **Scope note.** POL.O1–POL.O3 are structural to the pool-distribution layer. POL.O4–POL.O6 characterise the entity landscape and the incentive-responsive arena. The participation gap (POL.O1) and capital constraint (POL.O4) are the same upstream conditions documented at [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution) — they set the playing field within which the reward curve operates.
 
 ### 1.2.3. Problem Induction → Closing the Consensus Incentive Gap
 
@@ -238,7 +238,7 @@ No formula change at this layer can close this gap; it requires upstream interve
 
 Reaching it requires **77M ADA** at a yield of **~0.68%/yr**, below passive delegation (**~2.3%/yr**) — making the endgame **economically irrational** (POL.O2). The progression is invisible: the pledge bonus adds **~0.006%** at median pledge, **undetectable by delegators** (POL.O2). The entry creates a **viability cliff, not a ramp** (POL.O3).
 
-The dominant strategy at every level — entry, progression, endgame — is to **maximise delegation and minimise pledge**, the exact opposite of what consensus security requires. The full analysis of these distortions from the operator's perspective is in [§1.2.4](#124-divergence-with-intended-equilibrium) below.
+The dominant strategy at every level — entry, progression, endgame — is to **maximise delegation and minimise pledge**, the exact opposite of what consensus security requires. The full analysis of these distortions from the operator's perspective is in [Divergence with intended equilibrium](#124-divergence-with-intended-equilibrium) below.
 
 The evidence confirms this at scale: **95.6% of the pledge-bonus budget returns to reserve unused** (POL.O1), the independent operator base has collapsed to **283 viable operators** (POL.O5), the incentive-responsive field holds **only 36%** of active stake (POL.O6), and structural populations totalling **7.4B ADA cannot pledge by architectural constraint** (POL.O4).
 
@@ -246,7 +246,7 @@ The evidence confirms this at scale: **95.6% of the pledge-bonus budget returns 
 
 This analysis identifies the gap and produces the missing CPS — *Closing the Consensus Incentive Gap* — derived from the mainnet evidence in the dedicated [sub-report](sub-flows/pools-distribution/mainnet-analysis/README.md) and defined in [`../sub-flows/pools-distribution/cps/`](sub-flows/pools-distribution/cps/).
 
-The evaluation of proposed solutions (CIP-0050, CIP-0037, and the downstream CIPs that interact with them) is deferred to a future synthesis section, after the operator/delegator distribution analysis in [§1.3](#13-operator-delegator-distribution) and the population analysis in §2 complete the picture.
+The evaluation of proposed solutions (CIP-0050, CIP-0037, and the downstream CIPs that interact with them) is deferred to a future synthesis section, after the operator/delegator distribution analysis in [Operator / Delegator Distribution](#13-operator-delegator-distribution) and the population analysis in §2 complete the picture.
 
 ### 1.2.4. Divergence with intended equilibrium
 
@@ -324,13 +324,13 @@ The parallel to Cardano is **instructive but not direct**. Rocket Pool exists be
 
 A Cardano equivalent would not pool capital to meet a protocol-level gate; it would **pool commitment to cross the emergent viability threshold** — combining the operational competence of a technically capable participant with the capital of delegators who want to support the network at a level above passive delegation.
 
-The design space this opens is explored in [§1.2.4.4.1](#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano).
+The design space this opens is explored in [Enforce the production threshold — build a Rocket Pool for Cardano](#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano).
 
 ##### 1.2.4.1.5. Analytical scope — pools above the production threshold
 
 The preceding sub-sections establish that pools below the production threshold (**~1M ₳**) are **structural artefacts**: they cannot produce blocks reliably, they destroy value for their delegators, and they dilute the legibility of the pool marketplace for every other participant.
 
-Including them in the downstream analysis — strategy classification ([§1.2.4.2](#1242-progression-balanced-as-intended-but-private-by-design)), mainnet landscape ([§1.2.4.3](#1243-endgame-the-hollow-strategy-is-the-dominant-one)), intra-pool split ([§1.3](#13-operator-delegator-distribution)) — would contaminate every aggregate with noise from a population that the mechanism cannot serve and that has no bearing on the incentive dynamics the analysis evaluates.
+Including them in the downstream analysis — strategy classification ([Progression — balanced as intended, but private by design](#1242-progression-balanced-as-intended-but-private-by-design)), mainnet landscape ([Endgame — the hollow strategy is the dominant one](#1243-endgame-the-hollow-strategy-is-the-dominant-one)), intra-pool split ([Operator / Delegator Distribution](#13-operator-delegator-distribution)) — would contaminate every aggregate with noise from a population that the mechanism cannot serve and that has no bearing on the incentive dynamics the analysis evaluates.
 
 At epoch 614, the production threshold partitions the rewarded pool set as follows:
 
@@ -342,9 +342,9 @@ At epoch 614, the production threshold partitions the rewarded pool set as follo
 
 The **116 sub-threshold pools** carry **0.31% of active stake** and **0.67% of distributed rewards**. They add noise to entity counts (107 of 609 entities operate exclusively below threshold) but contribute nothing to the structural picture. Their inclusion would inflate the entity count and compress the strategy distributions without changing any finding.
 
-All analysis from [§1.2.4.2](#1242-progression-balanced-as-intended-but-private-by-design) onward restricts the pool set to **rewarded pools above the production threshold** (active stake ≥ 1M ₳). The companion sub-reports — [*The Pools Pot Distribution Gaps*](sub-flows/pools-distribution/mainnet-analysis/README.md), [*The Operator's Cut*](sub-flows/operator-delegator-distribution/mainnet-analysis/README.md) — apply the same filter.
+All analysis from [Progression — balanced as intended, but private by design](#1242-progression-balanced-as-intended-but-private-by-design) onward restricts the pool set to **rewarded pools above the production threshold** (active stake ≥ 1M ₳). The companion sub-reports — [*The Pools Pot Distribution Gaps*](sub-flows/pools-distribution/mainnet-analysis/README.md), [*The Operator's Cut*](sub-flows/operator-delegator-distribution/mainnet-analysis/README.md) — apply the same filter.
 
-Where the sub-threshold population is relevant ([§1.2.4.1](#1241-entry-below-1m-too-committed-to-just-delegate-too-small-to-operate)), it is analysed in its own right.
+Where the sub-threshold population is relevant ([Entry — below 1M ₳, too committed to just delegate, too small to operate](#1241-entry-below-1m-too-committed-to-just-delegate-too-small-to-operate)), it is analysed in its own right.
 
 #### 1.2.4.2. Progression — balanced as intended, but private by design
 
@@ -433,7 +433,7 @@ The economic logic is **self-sufficiency**: the operator needs no one else. Ther
 
 The reward formula **explicitly endorses this posture**. The maximum pool reward $P_{\max}$ is defined at $\pi = 1$ and $\nu = 1$: the operator pledges the entire saturation amount, the pool is full, and the operator is the sole beneficiary. This is not an incidental corner case — **it is the *designed optimum* of the reward curve**. The formula's "dream" is a pool where the operator funds everything and needs nobody.
 
-Private pools are therefore **not deviations from the mechanism's intent — they are its literal target**. The tension this creates with the security properties the protocol depends on (which require delegation to be present and pledge to be an active competitive dimension, not a wealth filter) is the subject of [§1.2.4.2.2](#12422-why-balanced-should-be-the-intended-equilibrium).
+Private pools are therefore **not deviations from the mechanism's intent — they are its literal target**. The tension this creates with the security properties the protocol depends on (which require delegation to be present and pledge to be an active competitive dimension, not a wealth filter) is the subject of [Why balanced should be the intended equilibrium](#12422-why-balanced-should-be-the-intended-equilibrium).
 
 ###### 1.2.4.2.1.6. The hollow strategy
 
@@ -443,9 +443,9 @@ The economic logic is **leverage**: the operator contributes infrastructure and 
 
 The opportunity cost is zero — the operator's own ADA can be delegated elsewhere, used as collateral, or held liquid. The only "pledge" is whatever token amount the operator registers to satisfy the certificate requirement.
 
-This is the **rational response** when the pledge bonus is too small to justify the costs it imposes (liquidity lock-up, pledge-unmet risk — detailed in [§1.2.4.3](#1243-endgame-the-hollow-strategy-is-the-dominant-one)). If deepening commitment earns nothing detectable, the dominant move is to **minimise commitment and maximise the capital base** over which the operator extracts fees.
+This is the **rational response** when the pledge bonus is too small to justify the costs it imposes (liquidity lock-up, pledge-unmet risk — detailed in [Endgame — the hollow strategy is the dominant one](#1243-endgame-the-hollow-strategy-is-the-dominant-one)). If deepening commitment earns nothing detectable, the dominant move is to **minimise commitment and maximise the capital base** over which the operator extracts fees.
 
-It is also the **only available strategy** for custodial operators (exchanges, staking-as-a-service providers) who cannot pledge the capital they manage for legal and fiduciary reasons — a population examined in [§1.2.4.2.3](#12423-the-current-design-incentivises-the-private-strategy).
+It is also the **only available strategy** for custodial operators (exchanges, staking-as-a-service providers) who cannot pledge the capital they manage for legal and fiduciary reasons — a population examined in [The current design incentivises the private strategy](#12423-the-current-design-incentivises-the-private-strategy).
 
 These three archetypes span the full spectrum of the pledge/delegation ratio. **They are not equally desirable.** A network of balanced pools and a network of hollow pools may look similar on a pool explorer — both have delegation, both produce blocks — but **their security properties are fundamentally different**. The section that follows evaluates each against the invariants the consensus layer depends on.
 
@@ -460,7 +460,7 @@ The consensus layer does not care which strategy operators prefer. It cares whet
 - **Sybil resistance** — creating additional block-producing identities must carry a cost that scales through the *mechanism*, not merely through wealth.
 - **Decentralisation** — the entry barrier must admit diverse, independent operators rather than concentrating production among the capital-rich or the brand-dominant.
 
-These properties are **not independent** — accountability requires delegation to have an enforcer, delegation requires accountability to have consequence, Sybil resistance and decentralisation must be jointly calibrated — and the structural requirement they impose is that **each pool must combine meaningful operator commitment with meaningful external delegation** ([§1.3.4.6](../the-intended-game/README.md#346-the-structural-requirement)).
+These properties are **not independent** — accountability requires delegation to have an enforcer, delegation requires accountability to have consequence, Sybil resistance and decentralisation must be jointly calibrated — and the structural requirement they impose is that **each pool must combine meaningful operator commitment with meaningful external delegation** ([The structural requirement](../the-intended-game/README.md#346-the-structural-requirement)).
 
 The three strategies defined above map directly onto this framework. The question is **which, if any, produces an equilibrium that satisfies all four properties simultaneously**.
 
@@ -510,7 +510,7 @@ The endgame the mechanism defines — reached by every operator who follows the 
 
 The mechanism's ideal operator is **not the committed community member who grew from a modest start**; it is **a solitary whale who locks a fortune for a marginal uplift** to run a pool that no one else participates in.
 
-This creates a direct contradiction with the security requirement established in [§1.2.4.2.2](#12422-why-balanced-should-be-the-intended-equilibrium). The equilibrium the formula optimises for — **$k$ private pools, each fully funded by a single wealthy operator, with no delegator participation** — is precisely the all-private scenario that eliminates delegation as counter-power, restricts participation to the capital-rich, and concentrates consensus among a small plutocratic set.
+This creates a direct contradiction with the security requirement established in [Why balanced should be the intended equilibrium](#12422-why-balanced-should-be-the-intended-equilibrium). The equilibrium the formula optimises for — **$k$ private pools, each fully funded by a single wealthy operator, with no delegator participation** — is precisely the all-private scenario that eliminates delegation as counter-power, restricts participation to the capital-rich, and concentrates consensus among a small plutocratic set.
 
 **The formula's designed optimum breaks two of the four security properties it was supposed to preserve.**
 
@@ -524,7 +524,7 @@ This creates a direct contradiction with the security requirement established in
 
 #### 1.2.4.3. Endgame — the hollow strategy is the dominant one
 
-The formula points toward **private** ([§1.2.4.2.3](#12423-the-current-design-incentivises-the-private-strategy)). Mainnet converges on **hollow**. This section explains the gap — not as a single failure, but as a **series of compounding factors** that make hollow the rational outcome at every decision point an operator faces.
+The formula points toward **private** ([The current design incentivises the private strategy](#12423-the-current-design-incentivises-the-private-strategy)). Mainnet converges on **hollow**. This section explains the gap — not as a single failure, but as a **series of compounding factors** that make hollow the rational outcome at every decision point an operator faces.
 
 The argument builds in layers:
 
@@ -535,7 +535,7 @@ The argument builds in layers:
 
 ##### 1.2.4.3.1. What mainnet reveals
 
-The three archetypes defined in [§1.2.4.2.1](#12421-the-three-strategies) — **hollow, balanced, private** — are conceptual. To confront them with five years of mainnet data, a single observable criterion is needed: the **owner-stake ratio** (owner active stake / pool active stake).
+The three archetypes defined in [The three strategies](#12421-the-three-strategies) — **hollow, balanced, private** — are conceptual. To confront them with five years of mainnet data, a single observable criterion is needed: the **owner-stake ratio** (owner active stake / pool active stake).
 
 Computed at the **entity level** — averaged across all pools in an entity's fleet — the ratio captures **who funds the pool**. It is **orthogonal to fee policy**: a hollow entity can charge high margins; a balanced entity can charge nothing. What the ratio measures is the *funding structure*, not the pricing decision.
 
@@ -545,7 +545,7 @@ The spectrum divides into three populations:
 - **Balanced** (10–95%): entities with genuine capital at stake alongside delegators.
 - **Private** (≥ 95%): operator-funded entities where external delegation is negligible.
 
-The entity-level strategy profiles, population breakdowns, and consistency data that follow are drawn from [*The Operator's Cut*](sub-flows/operator-delegator-distribution/mainnet-analysis/README.md), a companion analysis of the intra-pool reward split ([§1.3](#13-operator-delegator-distribution)) that applies this classification across all 502 entities operating rewarded pools above the production threshold at epoch 614 ([§1.2.4.1.5](#12415-analytical-scope-pools-above-the-production-threshold)).
+The entity-level strategy profiles, population breakdowns, and consistency data that follow are drawn from [*The Operator's Cut*](sub-flows/operator-delegator-distribution/mainnet-analysis/README.md), a companion analysis of the intra-pool reward split ([Operator / Delegator Distribution](#13-operator-delegator-distribution)) that applies this classification across all 502 entities operating rewarded pools above the production threshold at epoch 614 ([Analytical scope — pools above the production threshold](#12415-analytical-scope-pools-above-the-production-threshold)).
 
 ###### 1.2.4.3.1.1. Three operator strategies, one dominant
 
@@ -615,15 +615,15 @@ The entities that have *chosen* how to grow have **overwhelmingly chosen to grow
 
 ###### 1.2.4.3.1.4. The pledge bonus is a dead letter
 
-The pledge bonus mechanism — the formula's entire budget for making the degree of freedom identified in [§1.2.4.2.1.2](#124212-the-degree-of-freedom) consequential — **captures 1.0% of its theoretical allocation**.
+The pledge bonus mechanism — the formula's entire budget for making the degree of freedom identified in [The degree of freedom](#124212-the-degree-of-freedom) consequential — **captures 1.0% of its theoretical allocation**.
 
 At the median pledge level, the bonus adds approximately **0.006%** to pool rewards — a quantity **undetectable against normal reward variance**.
 
-The budget that goes unclaimed is **not negligible**: **3.43M ADA per epoch** (~250M ADA per year), representing **22.1% of the entire pools pot**, returns to the reserve unused ([§1.3.4.1](sub-flows/pools-distribution/mainnet-analysis/README.md#341-why-pledge-matters-and-why-this-is-not-zero-sum)).
+The budget that goes unclaimed is **not negligible**: **3.43M ADA per epoch** (~250M ADA per year), representing **22.1% of the entire pools pot**, returns to the reserve unused ([Why pledge matters — and why this is not zero-sum](sub-flows/pools-distribution/mainnet-analysis/README.md#341-why-pledge-matters-and-why-this-is-not-zero-sum)).
 
 *This is the single largest addressable inefficiency in the reward pipeline* — unlike the participation gap (unstaked ADA, outside the formula's control), the pledge-bonus waste is **entirely within reach of parameter or formula reform**.
 
-The bonus fails **not because operators are unaware of it**, but because **the cost of capturing it exceeds its value** at every realistic operating point. Pledging imposes a liquidity lock, a binary penalty risk (pledge-unmet → zero rewards for the entire pool), and an opportunity cost relative to passive delegation — and the reward it offers in return is **too flat, too small, and too dominated by the base stake term** to shift behaviour ([§1.2.4.3.2](#12432-delegating-is-inherently-less-constraining-than-pledging)–[§1.2.4.3.4](#12434-the-pledge-bonus-is-inoperative-at-realistic-scale)).
+The bonus fails **not because operators are unaware of it**, but because **the cost of capturing it exceeds its value** at every realistic operating point. Pledging imposes a liquidity lock, a binary penalty risk (pledge-unmet → zero rewards for the entire pool), and an opportunity cost relative to passive delegation — and the reward it offers in return is **too flat, too small, and too dominated by the base stake term** to shift behaviour ([Delegating is inherently less constraining than pledging](#12432-delegating-is-inherently-less-constraining-than-pledging)–[The pledge bonus is inoperative at realistic scale](#12434-the-pledge-bonus-is-inoperative-at-realistic-scale)).
 
 The mainnet outcome — **445 hollow entities controlling 85.6% of stake** with a collective owner-ratio of **1.0%** — is the **rational response** to a bonus that the formula has priced **below the threshold of economic relevance**.
 
@@ -688,7 +688,7 @@ The right panel of Figure 1 makes this visible. The green area — reward earned
 
 The signal the mechanism sends is unambiguous: **~77% of the maximum reward is reserved for growing the pool**; **~23% for deepening commitment within it**.
 
-Given the inherent asymmetry established in [§1.2.4.3.2](#12432-delegating-is-inherently-less-constraining-than-pledging) — that pledging is the strictly more constrained action — the formula needed to weight commitment *more* heavily than size to overcome the natural gravitational pull toward delegation.
+Given the inherent asymmetry established in [Delegating is inherently less constraining than pledging](#12432-delegating-is-inherently-less-constraining-than-pledging) — that pledging is the strictly more constrained action — the formula needed to weight commitment *more* heavily than size to overcome the natural gravitational pull toward delegation.
 
 **Instead, it weights size more than three to one.** *The formula does not counteract the prior; it reinforces it.*
 
@@ -770,22 +770,22 @@ The result is **not that pledging is a bad investment** in the traditional sense
 
 ##### 1.2.4.3.6. The inversion
 
-The mechanism was designed to reward commitment: **pledge more, earn more, compound the advantage**. The intended arc runs from **Hollow toward Balanced** — with the formula's gradient pointing beyond, toward **Private** ([§1.2.4.2.3](#12423-the-current-design-incentivises-the-private-strategy)).
+The mechanism was designed to reward commitment: **pledge more, earn more, compound the advantage**. The intended arc runs from **Hollow toward Balanced** — with the formula's gradient pointing beyond, toward **Private** ([The current design incentivises the private strategy](#12423-the-current-design-incentivises-the-private-strategy)).
 
 **The actual incentive arc runs in the opposite direction.**
 
-- **Foundation.** Delegating is inherently less constraining than pledging — the rational default before any reward enters the picture ([§1.2.4.3.2](#12432-delegating-is-inherently-less-constraining-than-pledging)).
-- **Formula weight.** The formula reinforces this default by weighting size over commitment by **more than three to one** ([§1.2.4.3.3](#12433-the-reward-structure-weights-size-not-commitment)).
-- **Inoperative bonus.** The **23% it allocates to pledge is inoperative** at every realistic scale ([§1.2.4.3.4](#12434-the-pledge-bonus-is-inoperative-at-realistic-scale)).
-- **Compounding.** The size-visibility-delegation loop turns the initial advantage of delegation into a **compounding** one ([§1.2.4.3.5](#12435-the-size-visibility-delegation-loop)).
+- **Foundation.** Delegating is inherently less constraining than pledging — the rational default before any reward enters the picture ([Delegating is inherently less constraining than pledging](#12432-delegating-is-inherently-less-constraining-than-pledging)).
+- **Formula weight.** The formula reinforces this default by weighting size over commitment by **more than three to one** ([The reward structure weights size, not commitment](#12433-the-reward-structure-weights-size-not-commitment)).
+- **Inoperative bonus.** The **23% it allocates to pledge is inoperative** at every realistic scale ([The pledge bonus is inoperative at realistic scale](#12434-the-pledge-bonus-is-inoperative-at-realistic-scale)).
+- **Compounding.** The size-visibility-delegation loop turns the initial advantage of delegation into a **compounding** one ([The size-visibility-delegation loop](#12435-the-size-visibility-delegation-loop)).
 
 A competing operator who pledges nothing and deploys that capital toward marketing, multi-pool infrastructure, or exchange partnerships will enter the **snowball dynamic**: *more delegation → more size → more visibility → more delegation*. An operator who pledges the same capital earns a **small, flat bonus that does not compound and does not attract anyone**.
 
-*The mechanism has inverted its own logic.* The formula points toward private ([§1.2.4.2.3](#12423-the-current-design-incentivises-the-private-strategy)); **the game converges on hollow**.
+*The mechanism has inverted its own logic.* The formula points toward private ([The current design incentivises the private strategy](#12423-the-current-design-incentivises-the-private-strategy)); **the game converges on hollow**.
 
 The strategy the formula was supposed to make suboptimal — capital deployed outside the pledge mechanism toward delegation growth — is the one that **dominates**.
 
-The mainnet data in [§1.2.4.3.1](#12431-what-mainnet-reveals) is **not a failure of adoption**. *It is the rational response to a mechanism at war with itself.*
+The mainnet data in [What mainnet reveals](#12431-what-mainnet-reveals) is **not a failure of adoption**. *It is the rational response to a mechanism at war with itself.*
 
 <!-- SANDBOX — 2.5 Proposed Solutions Evaluation (to be revisited)
 
@@ -802,7 +802,7 @@ The evaluation criteria derive directly from the CPS goals: does the proposal al
 TODO for each CIP at this layer:
   1. Mechanism summary (one paragraph)
   2. Formula substitution (reference the sub-report formulas)
-  3. Which problems from [§1.2.3](#123-problem-induction-closing-the-consensus-incentive-gap) does it address?
+  3. Which problems from [Problem Induction → Closing the Consensus Incentive Gap](#123-problem-induction-closing-the-consensus-incentive-gap) does it address?
   4. Expected effects (positive)
   5. Risks / side effects
   6. Open questions (e.g. parametrization of L)
@@ -815,17 +815,17 @@ END SANDBOX -->
 
 #### 1.2.4.4. Conclusion
 
-The purpose of the reward formula is **not to reward operators**. It is to **preserve the security properties the consensus layer depends on** — accountability, delegation as counter-power, Sybil resistance, and decentralisation ([§1.2.4.2.2](#12422-why-balanced-should-be-the-intended-equilibrium)).
+The purpose of the reward formula is **not to reward operators**. It is to **preserve the security properties the consensus layer depends on** — accountability, delegation as counter-power, Sybil resistance, and decentralisation ([Why balanced should be the intended equilibrium](#12422-why-balanced-should-be-the-intended-equilibrium)).
 
 The formula is a **tool in service of consensus integrity**; the incentive structure it creates for operators is the *means*, **not the *end***.
 
 *The order of priorities matters*: the mechanism must first ensure that consensus retains its structural properties, and it does so by **aligning the rational self-interest of operators with the equilibrium those properties require**.
 
-The analysis in [§1.2.4](#124-divergence-with-intended-equilibrium) surfaces **three areas** where the current design can evolve. Each corresponds to a different stage of the operator lifecycle, and each requires a distinct — though interconnected — response.
+The analysis in [Divergence with intended equilibrium](#124-divergence-with-intended-equilibrium) surfaces **three areas** where the current design can evolve. Each corresponds to a different stage of the operator lifecycle, and each requires a distinct — though interconnected — response.
 
 ##### 1.2.4.4.1. Enforce the production threshold — build a Rocket Pool for Cardano
 
-The analysis in [§1.2.4.1](#1241-entry-below-1m-too-committed-to-just-delegate-too-small-to-operate) reveals a **structural contradiction**: the protocol allows anyone to register a pool, but the physics of block production and the economics of the fee structure impose a floor below which operation is unviable.
+The analysis in [Entry — below 1M ₳, too committed to just delegate, too small to operate](#1241-entry-below-1m-too-committed-to-just-delegate-too-small-to-operate) reveals a **structural contradiction**: the protocol allows anyone to register a pool, but the physics of block production and the economics of the fee structure impose a floor below which operation is unviable.
 
 At epoch 614, **116 sub-threshold pools (< 1M ₳) carry 0.31% of active stake** — they serve **no consensus function**, dilute the pool marketplace, and mislead delegators into pools that cannot produce reliable yield.
 
@@ -837,10 +837,10 @@ The threshold need not be rigid: it could be a governance parameter ($\sigma_{\m
 
 Today, Cardano has ***two* implicit thresholds**:
 
-- a **production floor** (~1M ₳, from Poisson statistics — [§1.2.4.1.1](#12411-the-structural-floor));
-- a **viability floor** (~3M ₳, where the fixed cost exceeds expected rewards — [§1.2.4.1.2](#12412-a-gate-with-no-sign)).
+- a **production floor** (~1M ₳, from Poisson statistics — [The structural floor](#12411-the-structural-floor));
+- a **viability floor** (~3M ₳, where the fixed cost exceeds expected rewards — [A gate with no sign](#12412-a-gate-with-no-sign)).
 
-The corridor between them is a design problem that the downstream analysis of the intra-pool split ([§1.3](#13-operator-delegator-distribution)) must resolve. Whether fee-structure reform can collapse these two thresholds into a **single, legible gate** — and what that means for the operator's entry experience — is examined in [§1.3.3](#133-problem-induction).
+The corridor between them is a design problem that the downstream analysis of the intra-pool split ([Operator / Delegator Distribution](#13-operator-delegator-distribution)) must resolve. Whether fee-structure reform can collapse these two thresholds into a **single, legible gate** — and what that means for the operator's entry experience — is examined in [Problem Induction](#133-problem-induction).
 
 **Step two: build a pooling service for the sub-threshold space.** On Ethereum, the explicit 32 ETH threshold created structural demand for a protocol-level solution to sub-threshold participation.
 
@@ -853,12 +853,12 @@ The components of such a mechanism are identifiable:
 - **Operator bond.** A technically capable participant pledges what they can — say 100K ₳ — and commits to running infrastructure. This is their skin-in-the-game, analogous to Rocket Pool's operator bond.
 - **Capital matching.** Delegators who want to support network decentralisation at a level above passive delegation contribute capital to the alliance. The pooled stake crosses the production threshold; the operator runs the pool.
 - **Transparent split.** A declared, enforceable commission structure governs how rewards are shared between the operator and the alliance's capital providers — replacing the opaque fixed-cost-plus-margin mechanism with a legible contract.
-- **Collateral and accountability.** The operator's bond is at risk: persistent underperformance or misconduct triggers a penalty visible to the alliance's capital providers, who can exit. The accountability channel that the current mechanism fails to create for passive delegators ([§1.2.4.3.6](#12436-the-inversion)) is built into the alliance structure by design.
+- **Collateral and accountability.** The operator's bond is at risk: persistent underperformance or misconduct triggers a penalty visible to the alliance's capital providers, who can exit. The accountability channel that the current mechanism fails to create for passive delegators ([The inversion](#12436-the-inversion)) is built into the alliance structure by design.
 - **Progression path.** An operator who starts as an alliance leader with 100K ₳ and earns reputation through reliable performance can progressively attract more delegation, eventually crossing the viability threshold independently. The alliance is an incubator, not a permanent state — it transforms the empty corridor between "I believe in this network" and "I produce blocks for this network" into a supported trajectory.
 
 **The two steps reinforce each other.** Enforcing the threshold (via $\sigma_{\min}$) **cleans the marketplace**. Building the pooling service below it (via a Rocket Pool-like mechanism) ensures that **enforcement does not become exclusion** — sub-threshold participants get a legitimate, supported path rather than an empty corridor.
 
-And if the fee-structure reform analysed in [§1.3](#13-operator-delegator-distribution) collapses the two implicit thresholds into one ([§1.3.3](#133-problem-induction)), the entry point becomes **fully legible**: *a single gate, below which the pooling service operates, above which the operator is immediately viable*.
+And if the fee-structure reform analysed in [Operator / Delegator Distribution](#13-operator-delegator-distribution) collapses the two implicit thresholds into one ([Problem Induction](#133-problem-induction)), the entry point becomes **fully legible**: *a single gate, below which the pooling service operates, above which the operator is immediately viable*.
 
 Rocket Pool demonstrates that this design space is **viable at scale**; the Cardano-specific design must account for the protocol's distinctive properties (**no lockup, no slashing, no minimum stake for delegation**) and could operate as a **native ledger feature** or as a **Plutus-based service layer**.
 
@@ -866,9 +866,9 @@ A participant who enters an alliance today, proves their operational competence 
 
 ##### 1.2.4.4.2. The reward curve must target the balanced strategy
 
-The equilibrium the security model requires is **balanced** ([§1.2.4.2.2](#12422-why-balanced-should-be-the-intended-equilibrium)). The formula's designed optimum is **private** ([§1.2.4.2.3](#12423-the-current-design-incentivises-the-private-strategy)) — a configuration that weakens delegation as counter-power and narrows consensus participation to the capital-rich.
+The equilibrium the security model requires is **balanced** ([Why balanced should be the intended equilibrium](#12422-why-balanced-should-be-the-intended-equilibrium)). The formula's designed optimum is **private** ([The current design incentivises the private strategy](#12423-the-current-design-incentivises-the-private-strategy)) — a configuration that weakens delegation as counter-power and narrows consensus participation to the capital-rich.
 
-The dominant strategy on mainnet is **hollow** ([§1.2.4.3](#1243-endgame-the-hollow-strategy-is-the-dominant-one)) — a configuration that erodes the costs the consensus layer relies on and produces concentration through market dynamics.
+The dominant strategy on mainnet is **hollow** ([Endgame — the hollow strategy is the dominant one](#1243-endgame-the-hollow-strategy-is-the-dominant-one)) — a configuration that erodes the costs the consensus layer relies on and produces concentration through market dynamics.
 
 The balanced strategy — the only one that preserves all four security properties simultaneously — is **neither the formula's target nor the market's outcome**. *It is the strategy the current design does not incentivise.*
 
@@ -876,15 +876,15 @@ The reward curve must therefore be revised so that **the balanced strategy becom
 
 The goal is **not to make pledge more profitable for its own sake**; it is to make the strategy that preserves consensus security **the one that rational actors converge on**. The pledge bonus must be:
 
-- **large enough** to overcome the inherent asymmetry between pledging and delegating ([§1.2.4.3.2](#12432-delegating-is-inherently-less-constraining-than-pledging));
+- **large enough** to overcome the inherent asymmetry between pledging and delegating ([Delegating is inherently less constraining than pledging](#12432-delegating-is-inherently-less-constraining-than-pledging));
 - **legible enough** to function as a competitive signal;
-- **calibrated to the capital scales** at which operators actually operate ([§1.2.4.3.4](#12434-the-pledge-bonus-is-inoperative-at-realistic-scale)).
+- **calibrated to the capital scales** at which operators actually operate ([The pledge bonus is inoperative at realistic scale](#12434-the-pledge-bonus-is-inoperative-at-realistic-scale)).
 
 The progression from entry to maturity should trace a **legible arc along the balanced path**: an operator who starts with a modest pledge and earns delegation through commitment should see each step — more pledge, more reputation, more delegation — produce a **measurable, compounding advantage**.
 
-**The current formula offers no such arc.** At the production threshold, the pledge bonus is **undetectable** ([§1.2.4.3.4](#12434-the-pledge-bonus-is-inoperative-at-realistic-scale)). As the pool grows, the bonus remains **small, concave, and — below saturation — inverted** at the extreme the formula was designed to optimise.
+**The current formula offers no such arc.** At the production threshold, the pledge bonus is **undetectable** ([The pledge bonus is inoperative at realistic scale](#12434-the-pledge-bonus-is-inoperative-at-realistic-scale)). As the pool grows, the bonus remains **small, concave, and — below saturation — inverted** at the extreme the formula was designed to optimise.
 
-The size-visibility-delegation loop ([§1.2.4.3.5](#12435-the-size-visibility-delegation-loop)) compounds the problem: capital deployed toward delegation attraction generates returns that **snowball**, while capital deployed toward pledge generates a **flat, non-compounding bonus**.
+The size-visibility-delegation loop ([The size-visibility-delegation loop](#12435-the-size-visibility-delegation-loop)) compounds the problem: capital deployed toward delegation attraction generates returns that **snowball**, while capital deployed toward pledge generates a **flat, non-compounding bonus**.
 
 *A revised curve must make the balanced arc not just viable but dominant* — the path that rational operators follow because it **compounds faster than any alternative**.
 
@@ -892,11 +892,11 @@ The size-visibility-delegation loop ([§1.2.4.3.5](#12435-the-size-visibility-de
 
 The saturation cap ($z_0 \approx$ **77M ₳**) is the mechanism's **primary anti-concentration tool**: it prevents any single pool from accumulating unbounded consensus power.
 
-But an entity whose capital or delegation-attracting capacity exceeds $z_0$ faces a **binary choice** — stop growing, or register a second pool. Since the entity's motivation depends on continuous compounding, **stopping is irrational**. The mechanism's natural growth path is **fleet expansion**: saturate, register a new pool, repeat ([§1.2.4.2.1.1](#124211-the-common-endgame-saturate-then-become-an-mpo)).
+But an entity whose capital or delegation-attracting capacity exceeds $z_0$ faces a **binary choice** — stop growing, or register a second pool. Since the entity's motivation depends on continuous compounding, **stopping is irrational**. The mechanism's natural growth path is **fleet expansion**: saturate, register a new pool, repeat ([The common endgame — saturate, then become an MPO](#124211-the-common-endgame-saturate-then-become-an-mpo)).
 
 *The saturation cap fragments pools, not entities.*
 
-This is **not a theoretical concern**. On mainnet, **85 MPO entities control ~51% of staked ADA** (POL.O4). Among entities that have scaled beyond a single pool — thereby revealing a deliberate growth strategy — **89.3% are hollow** ([§1.2.4.3.1.3](#124313-the-hollow-strategy-dominates-at-every-level-of-aggregation)).
+This is **not a theoretical concern**. On mainnet, **85 MPO entities control ~51% of staked ADA** (POL.O4). Among entities that have scaled beyond a single pool — thereby revealing a deliberate growth strategy — **89.3% are hollow** ([The hollow strategy dominates at every level of aggregation](#124313-the-hollow-strategy-dominates-at-every-level-of-aggregation)).
 
 **Fleet expansion with minimal pledge per pool is the dominant growth pattern.** The formula evaluates each pool independently; an entity operating twenty pools with negligible pledge in each is **indistinguishable, at the formula level, from twenty independent operators**. The mechanism that was designed to produce $k$ independent block producers has **no defence against a single entity occupying multiple $k$-slots**.
 
@@ -910,15 +910,15 @@ The current mechanism offers **three potential lines of anti-monopoly defence**.
 
 **Pledge as a Sybil tax.** The reward function includes a pledge-sensitive component designed so that splitting capital across $n$ pools dilutes the pledge bonus per pool — an intended **$O(n)$ cost of fragmentation** (Brünjes & Kiayias, 2020, §4).
 
-This is the mechanism's *engineered* defence against MPO concentration: the cost of operating a fleet should **scale through the *reward structure***, not merely through wealth constraints. But [§1.2.4.3.4](#12434-the-pledge-bonus-is-inoperative-at-realistic-scale) demonstrates that the current bonus is **negligible at realistic scales**. *The Sybil tax exists in the formula; it does not exist in practice.*
+This is the mechanism's *engineered* defence against MPO concentration: the cost of operating a fleet should **scale through the *reward structure***, not merely through wealth constraints. But [The pledge bonus is inoperative at realistic scale](#12434-the-pledge-bonus-is-inoperative-at-realistic-scale) demonstrates that the current bonus is **negligible at realistic scales**. *The Sybil tax exists in the formula; it does not exist in practice.*
 
-A revised curve that makes pledge economically significant ([§1.2.4.4.2](#12442-the-reward-curve-must-target-the-balanced-strategy)) would **reactivate this channel** — each new pool in a fleet would require its own meaningful pledge, and the cost of maintaining many pledged pools would scale with the fleet. **This is the most direct lever**: if fragmentation is expensive *because the mechanism makes it expensive*, the defence is **structural and self-enforcing**.
+A revised curve that makes pledge economically significant ([The reward curve must target the balanced strategy](#12442-the-reward-curve-must-target-the-balanced-strategy)) would **reactivate this channel** — each new pool in a fleet would require its own meaningful pledge, and the cost of maintaining many pledged pools would scale with the fleet. **This is the most direct lever**: if fragmentation is expensive *because the mechanism makes it expensive*, the defence is **structural and self-enforcing**.
 
 **Delegation as a distributed check.** In a balanced equilibrium, delegators provide **continuous oversight** — capital flows away from operators who over-concentrate or underperform. This mechanism is **inherently anti-monopolistic**: no entity can sustain a large fleet without retaining community approval across every pool.
 
-An MPO that expands aggressively must earn delegation *pool by pool*, and delegators who can observe fleet-level behaviour have a reason to redistribute toward independent operators. But this check **only operates if delegators have a legible signal to act on and if their departure is costly to the operator** — conditions the current mechanism does not meet ([§1.2.4.3.5](#12435-the-size-visibility-delegation-loop), [§1.2.4.3.6](#12436-the-inversion)).
+An MPO that expands aggressively must earn delegation *pool by pool*, and delegators who can observe fleet-level behaviour have a reason to redistribute toward independent operators. But this check **only operates if delegators have a legible signal to act on and if their departure is costly to the operator** — conditions the current mechanism does not meet ([The size-visibility-delegation loop](#12435-the-size-visibility-delegation-loop), [The inversion](#12436-the-inversion)).
 
-The accountability channel that should discipline fleet expansion is the same one that [§1.2.4.4.2](#12442-the-reward-curve-must-target-the-balanced-strategy) identifies as needing repair.
+The accountability channel that should discipline fleet expansion is the same one that [The reward curve must target the balanced strategy](#12442-the-reward-curve-must-target-the-balanced-strategy) identifies as needing repair.
 
 **The saturation cap as a ceiling, not a wall.** The cap prevents unbounded growth within a single pool. In a regime where pledge is meaningful and delegation is disciplinary, the cap would interact with both: each new pool in a fleet would require **fresh pledge (costly)** and **fresh delegation earned through commitment (slow)**.
 
@@ -934,19 +934,19 @@ Whether correctly calibrated pool-level instruments — pledge, delegation, and 
 
 ##### 1.2.4.4.4. The downstream dependency
 
-However, the pool-level reward curve is **not the only mechanism** that shapes operator behaviour. The next pipeline stage — the operator/delegator split ([§1.3](#13-operator-delegator-distribution)) — determines how the pool-level reward is divided between the operator and the pool's delegators.
+However, the pool-level reward curve is **not the only mechanism** that shapes operator behaviour. The next pipeline stage — the operator/delegator split ([Operator / Delegator Distribution](#13-operator-delegator-distribution)) — determines how the pool-level reward is divided between the operator and the pool's delegators.
 
 The **fixed cost floor**, the **margin parameter**, and the **proportional sharing rule** all interact with the reward curve to define the operator's actual income and the delegator's actual yield. A revised reward curve that correctly incentivises balanced pools could **still fail** if the fee structure at the next layer distorts the signal — for example, if the fixed cost floor penalises small balanced pools more than large hollow ones, or if margin competition erases the yield differential the curve was designed to create.
 
-Understanding whether the divergences analysed in [§1.2.4](#124-divergence-with-intended-equilibrium) can be corrected by modifying the reward curve alone — or whether they require **coordinated changes across both pipeline stages** — demands a complete picture of the downstream dynamics.
+Understanding whether the divergences analysed in [Divergence with intended equilibrium](#124-divergence-with-intended-equilibrium) can be corrected by modifying the reward curve alone — or whether they require **coordinated changes across both pipeline stages** — demands a complete picture of the downstream dynamics.
 
-The analysis therefore continues into [§1.3](#13-operator-delegator-distribution) before any conclusion on the path forward can be drawn. The synthesis of both layers, and the requirements any revised mechanism must satisfy, will follow once the population analysis (§2) grounds the pipeline failures in the structural dynamics of the actors themselves.
+The analysis therefore continues into [Operator / Delegator Distribution](#13-operator-delegator-distribution) before any conclusion on the path forward can be drawn. The synthesis of both layers, and the requirements any revised mechanism must satisfy, will follow once the population analysis (§2) grounds the pipeline failures in the structural dynamics of the actors themselves.
 
 ## 1.3. Operator / Delegator Distribution
 
 ### 1.3.1. Flow Overview
 
-This stage takes the per-pool allocation ($PoolPot^{\text{actual}}_i$) produced by [§1.2](#12-pools-distribution) and splits it between the operator and the pool's delegators. The output is **the final per-participant reward**.
+This stage takes the per-pool allocation ($PoolPot^{\text{actual}}_i$) produced by [Pools Distribution](#12-pools-distribution) and splits it between the operator and the pool's delegators. The output is **the final per-participant reward**.
 
 The split follows a **three-layer sequential rule**:
 
@@ -1003,9 +1003,9 @@ The commission market, by contrast, is **healthy**: **69% of pools sit in the co
 
 **The floor's burden is growing.** As the reserve depletes, the fixed-cost share of pool rewards **rises mechanically** (OPE.O8). The **confiscatory zone expands upward every epoch**: the hyperbolic penalty that today affects sub-3M pools will, within a few years, erode viability for pools in the **5–10M range**. *The dead zone is not static — it is advancing into the productive population.*
 
-[§1.2.4.4.1](#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano) proposes enforcing the production threshold explicitly ($\sigma_{\min}$). The intra-pool split analysis **completes the economic argument**: reducing $minPoolCost$ to zero (or to a negligible value that tracks the reward curve) **collapses the viability threshold down to the production threshold**.
+[Enforce the production threshold — build a Rocket Pool for Cardano](#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano) proposes enforcing the production threshold explicitly ($\sigma_{\min}$). The intra-pool split analysis **completes the economic argument**: reducing $minPoolCost$ to zero (or to a negligible value that tracks the reward curve) **collapses the viability threshold down to the production threshold**.
 
-- **Below $\sigma_{\min}$**, the protocol does not permit pool registration — and a Rocket Pool-like pooling service ([§1.2.4.4.1](#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano)) provides the legitimate sub-threshold path.
+- **Below $\sigma_{\min}$**, the protocol does not permit pool registration — and a Rocket Pool-like pooling service ([Enforce the production threshold — build a Rocket Pool for Cardano](#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano)) provides the legitimate sub-threshold path.
 - **At $\sigma_{\min}$**, the operator is **immediately economically viable**.
 
 *One threshold, one gate — no dead zone, no misleading corridor, no regressive tax.*
@@ -1028,11 +1028,11 @@ As the epoch pot continues to shrink, this spread compresses proportionally: at 
 
 The decline is **irreversible without protocol-level intervention**: it is built into the monetary expansion formula. The three layers stack:
 
-- the **epoch-budget layer** ([§1.1](#11-treasury-pool-pots-distribution)) sets the ceiling
-- the **pool-distribution layer** ([§1.2](#12-pools-distribution)) allocates within it
-- the **intra-pool split** ([§1.3](#13-operator-delegator-distribution)) divides the remainder
+- the **epoch-budget layer** ([Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution)) sets the ceiling
+- the **pool-distribution layer** ([Pools Distribution](#12-pools-distribution)) allocates within it
+- the **intra-pool split** ([Operator / Delegator Distribution](#13-operator-delegator-distribution)) divides the remainder
 
-No formula change at [§1.3](#13-operator-delegator-distribution) can raise the ceiling — but the flat fee's regressive geometry ensures that the shrinking budget reaches small-pool delegators last and leaves them first. Any solution to the yield problem must operate across all three layers: the epoch budget sets the total, the reward curve shapes the allocation, and the fee structure determines how much of each pool's allocation actually reaches the delegator.
+No formula change at [Operator / Delegator Distribution](#13-operator-delegator-distribution) can raise the ceiling — but the flat fee's regressive geometry ensures that the shrinking budget reaches small-pool delegators last and leaves them first. Any solution to the yield problem must operate across all three layers: the epoch budget sets the total, the reward curve shapes the allocation, and the fee structure determines how much of each pool's allocation actually reaches the delegator.
 
 Together, these two problems account for the reward concentration visible in the data:
 
@@ -1040,11 +1040,11 @@ Together, these two problems account for the reward concentration visible in the
 - delegation follows **visibility, not return** (OPE.O7)
 - the **selection ratchet** structurally eliminates small independent operators and feeds their delegation into larger fleets (OPE.O8)
 
-This concentration is not a third, independent failure — it is the predictable consequence of a fee structure that makes small pools unviable ([§1.3.3.1](#1331-guarantee-operator-viability-across-the-productive-population)) and a yield regime too compressed to let delegators differentiate ([§1.3.3.2](#1332-restore-a-competitive-delegator-yield)).
+This concentration is not a third, independent failure — it is the predictable consequence of a fee structure that makes small pools unviable ([Guarantee operator viability across the productive population](#1331-guarantee-operator-viability-across-the-productive-population)) and a yield regime too compressed to let delegators differentiate ([Restore a competitive delegator yield](#1332-restore-a-competitive-delegator-yield)).
 
-*A revised reward curve that incentivises balanced operators ([§1.2.4.4.2](#12442-the-reward-curve-must-target-the-balanced-strategy)), combined with a fee structure that does not penalise their smaller pools, creates a coherent incentive gradient where the balanced path is rewarding at every scale.* The two pipeline stages — reward curve and intra-pool split — must be designed as a single system, not as independent layers.
+*A revised reward curve that incentivises balanced operators ([The reward curve must target the balanced strategy](#12442-the-reward-curve-must-target-the-balanced-strategy)), combined with a fee structure that does not penalise their smaller pools, creates a coherent incentive gradient where the balanced path is rewarding at every scale.* The two pipeline stages — reward curve and intra-pool split — must be designed as a single system, not as independent layers.
 
-<!-- SANDBOX — [§1.3](#13-operator-delegator-distribution) Formulas, structural decomposition, CIP evaluations (to be extracted to sub-report)
+<!-- SANDBOX — [Operator / Delegator Distribution](#13-operator-delegator-distribution) Formulas, structural decomposition, CIP evaluations (to be extracted to sub-report)
 
 #### Formulas — SL-D1 (Original)
 
@@ -1199,7 +1199,7 @@ They modify the operator/member split rule without changing the pool-level rewar
 TODO:
   1. Mechanism summary (one paragraph)
   2. Formula substitution (reference the cleaned formulas)
-  3. Which problems from [§1.3.3](#133-problem-induction) does it address?
+  3. Which problems from [Problem Induction](#133-problem-induction) does it address?
   4. Expected effects (positive)
   5. Risks / side effects
   6. Open questions (e.g. what value for minPoolRate?)
@@ -1226,7 +1226,7 @@ The evidence base is the companion [*Staking Census*](sub-flows/census/mainnet-a
 
 > Where §1 asks "how does the reward flow work, and where does it break?", §2 asks "who are the actors, how do they behave, and what structural dynamics constrain them?"
 
-The section is split in two: [§2.1](#21-the-staking-populations) covers the three staking populations (operators, delegators, non-participants), and [§2.2](#22-transaction-submitters) covers transaction submitters — a population orthogonal to the staking roles but central to the pipeline's sustainability.
+The section is split in two: [The Staking Populations](#21-the-staking-populations) covers the three staking populations (operators, delegators, non-participants), and [Transaction Submitters](#22-transaction-submitters) covers transaction submitters — a population orthogonal to the staking roles but central to the pipeline's sustainability.
 
 *Every problem identified in §1 has a population-level cause documented here, and every population dynamic here feeds back into the pipeline failures documented in §1.*
 
@@ -1253,7 +1253,7 @@ The Census decomposes this population by credential status and finds that:
 
 **Transaction submitters** pay the fees that fund the epoch pot — the only revenue source that survives reserve depletion. This population is orthogonal to staking roles: a submitter can be an operator, a delegator, a non-participant, or an automated script. The same address that appears as a loyal delegator in the sections above may be a prolific fee payer.
 
-[§2.2](#22-transaction-submitters) treats this population in detail — its size, concentration, composition (script vs key transactions), and overlap with the staking system — because the structural question it raises (whether the fee base depends on a constituency the reward mechanism does not reward) is distinct from the staking-role dynamics addressed in the present section.
+[Transaction Submitters](#22-transaction-submitters) treats this population in detail — its size, concentration, composition (script vs key transactions), and overlap with the staking system — because the structural question it raises (whether the fee base depends on a constituency the reward mechanism does not reward) is distinct from the staking-role dynamics addressed in the present section.
 
 The Census methodology follows a **raw → clean** structure at each layer:
 
@@ -1288,7 +1288,7 @@ The observations above describe the populations on which the reward pipeline ope
 
 #### 2.1.3.1. The operator population is highly concentrated and stable
 
-The intended design assumes a competitive field of $k$ independent operators converging toward a balanced equilibrium ([§1.2.4.2](#1242-progression-balanced-as-intended-but-private-by-design)).
+The intended design assumes a competitive field of $k$ independent operators converging toward a balanced equilibrium ([Progression — balanced as intended, but private by design](#1242-progression-balanced-as-intended-but-private-by-design)).
 
 *The on-chain population has already converged — toward concentration, not competition.*
 
@@ -1297,8 +1297,8 @@ The intended design assumes a competitive field of $k$ independent operators con
 Within this concentrated landscape, three structurally distinct sub-populations coexist:
 
 - **custodial operators** (CEX + IVaaS: 10 entities, 181 pools, **7.40B ADA**) who *cannot* pledge the capital they manage — the constraint is architectural, not economic
-- **community and opaque MPO fleets** (41 of 48 capital-sufficient entities) who have *chosen* not to pledge despite the capacity — the rational response to the pledge-value inversion documented in [§1.2.4.3.6](#12436-the-inversion)
-- **independent single-pool operators** (477 pools, 5.28B ADA) who bear the full cost of the fee structure ([§1.3](#13-operator-delegator-distribution)) while their share of productive stake declines
+- **community and opaque MPO fleets** (41 of 48 capital-sufficient entities) who have *chosen* not to pledge despite the capacity — the rational response to the pledge-value inversion documented in [The inversion](#12436-the-inversion)
+- **independent single-pool operators** (477 pools, 5.28B ADA) who bear the full cost of the fee structure ([Operator / Delegator Distribution](#13-operator-delegator-distribution)) while their share of productive stake declines
 
 The population-level stake variability reinforces this partition (CEN.O2): custodial-by-delegation pools experience **2.3× the volatility** of retail pools.
 
@@ -1306,7 +1306,7 @@ The population-level stake variability reinforces this partition (CEN.O2): custo
 
 #### 2.1.3.2. The stake-holder population is a frozen power law
 
-The intended design assumes that delegators form a competitive demand side — mobile capital that disciplines operators through reallocation ([§1.2.4.2.2](#12422-why-balanced-should-be-the-intended-equilibrium)).
+The intended design assumes that delegators form a competitive demand side — mobile capital that disciplines operators through reallocation ([Why balanced should be the intended equilibrium](#12422-why-balanced-should-be-the-intended-equilibrium)).
 
 *The on-chain population is a power law that crystallised early and has not moved since.*
 
@@ -1336,14 +1336,14 @@ The population that *could* discipline operators — whales, holding **14.1B ADA
 
 The reward pipeline is funded almost entirely by monetary expansion today (**~99.8% of the epoch pot**), but the long-term design assumes transaction fees will eventually replace it. The population that generates those fees — transaction submitters — is therefore a **first-order variable for the pipeline's sustainability**.
 
-This population is **orthogonal to the staking roles** mapped in [§2.1](#21-the-staking-populations). A submitter can be:
+This population is **orthogonal to the staking roles** mapped in [The Staking Populations](#21-the-staking-populations). A submitter can be:
 
 - an operator (pool registration transactions)
 - a delegator (delegation certificates, transfers)
 - a non-participant (exchange withdrawals, DeFi interactions from enterprise addresses)
 - an automated script
 
-The same address can appear as a loyal delegator in [§2.1](#21-the-staking-populations) and a prolific fee payer here.
+The same address can appear as a loyal delegator in [The Staking Populations](#21-the-staking-populations) and a prolific fee payer here.
 
 *The population overlap is itself analytically significant: if fee revenue is dominated by addresses that do not participate in staking, the reward mechanism funds itself from a constituency it does not reward.*
 
@@ -1358,22 +1358,22 @@ The working data and figures are in the [*Staking Census*](sub-flows/census/main
 
 ### 2.2.1. Overview
 
-From epoch 208 (Shelley) through epoch 622, the chain processed **117.5 million transactions** generating **37.67 million ADA** in cumulative fees.
+From epoch 208 (Shelley) through epoch 623, the chain processed **117.6 million transactions** generating **37.7M ADA** in cumulative fees.
 
-The submitter population peaked at approximately **512,000 unique addresses per epoch** (epoch 300, 2021 bull market) and has since contracted to roughly **158,000** (epoch 384), even as transaction volume held steady above **300K per epoch**.
+The submitter population peaked at **790,335 unique addresses per epoch** at epoch 304 (post-Alonzo / NFT-minting frenzy) and has since contracted to **30,505** at epoch 623 — a **96%** collapse against a **93%** drop in transaction volume.
 
-*The fee base is consolidating: fewer actors generate more transactions each.*
+*The fee base is consolidating: a population one-twenty-sixth the size of its peak still sustains two-thirds of the per-epoch transaction rate.*
 
 ### 2.2.2. Mainnet Observations
 
 | # | Observation | Summary |
 | --- | --- | --- |
-| **DIA.2.2.O8** | **The submitter population is contracting while transaction volume holds** | Unique input addresses per epoch peaked at ~512K (epoch 300) and fell to ~158K (epoch 384). The address-to-transaction ratio dropped from 1.47 to 0.48. The chain is not losing activity; it is losing breadth. (F6.1) |
-| **DIA.2.2.O9** | **By headcount, submitters are overwhelmingly stakeable; by fee weight, the picture inverts** | 82% of submitter addresses carry a staking credential (base-key, `addr1q`). But 30.6% of fee revenue comes from enterprise and script addresses that structurally cannot delegate. (F6.3, F6.4) |
-| **DIA.2.2.O10** | **Script transactions pay three times the per-tx rate and dominate fee peaks** | Post-Alonzo, script transactions represent 12.6% of count but 29.7% of fees. During high-DeFi epochs, the script share of fees exceeds 40%. (F6.7) |
-| **DIA.2.2.O11** | **Fee revenue is concentrated but less extreme than delegation stake** | The top 10 fee-paying addresses generate 30.5% of all fees; the top 500 generate 51.5%. The concentration is heavy-tailed but below the delegation Gini of 0.976. (F6.6) |
+| **CEN.O8** | **The submitter population is contracting while transaction volume holds** | Unique submitter addresses fell from a peak of **790,335** (epoch 304) to **30,505** (epoch 623) — a 96% contraction against a 93% drop in transaction volume. The address-to-transaction ratio dropped from 0.88 to 0.29. *The chain is not losing activity; it is losing breadth.* |
+| **CEN.O9** | **By headcount, submitters are overwhelmingly stakeable; by fee weight, the picture inverts** | At epoch 623, 73.4% of submitter addresses carry a staking credential (base-key, `addr1q`). But 30.1% of fee revenue comes from enterprise (`addr1v`) and script (`addr1w`) addresses that structurally cannot delegate — and this share has not fallen below 14% since the Alonzo era. |
+| **CEN.O10** | **Script transactions pay 2.4× the per-tx rate and dominate fee peaks** | Post-Alonzo cumulative: 12.6% of transaction count, 29.7% of fees. At epoch 623, 3,073 script addresses (10.1%) generate 34.9% of epoch fees — the per-address premium is 17× over base-key submitters. |
+| **CEN.O11** | **Fee revenue is heavy-tailed but less extreme than delegation stake** | Over epochs 618–623, the top 10 fee-paying addresses generate 24.3% of all fees and the top 500 generate 60.8% — out of ~151K active submitters. Heavy-tailed but below the delegation Gini of 0.976. |
 
-> **Scope note.** DIA.2.2.O8–DIA.2.2.O11 characterise the fee-generating population. Together with CEN.O1–CEN.O7 ([§2.1](#21-the-staking-populations)), they define the complete population substrate on which the reward pipeline operates.
+> **Scope note.** CEN.O8–CEN.O11 characterise the fee-generating population. Together with CEN.O1–CEN.O7 ([The Staking Populations](#21-the-staking-populations)), they define the complete population substrate on which the reward pipeline operates.
 
 ### 2.2.3. Problem Induction
 
@@ -1381,11 +1381,11 @@ The submitter population peaked at approximately **512,000 unique addresses per 
 
 The reward pipeline's long-term viability rests on a single assumption: *that transaction fees will eventually replace monetary expansion as the dominant source of the epoch pot.*
 
-Today, fees contribute approximately **0.19% of the pot** (TRE.O1, [§1.1](#11-treasury-pool-pots-distribution)). Reaching self-sufficiency — a fee-funded pot equivalent to the current expansion-funded one — would require a **12–16× increase in fee revenue** at current transaction volumes ([§1.1 TRE.O1](#112-mainnet-observations)).
+Today, fees contribute approximately **0.19% of the pot** (TRE.O1, [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution)). Reaching self-sufficiency — a fee-funded pot equivalent to the current expansion-funded one — would require a **12–16× increase in fee revenue** at current transaction volumes ([§1.1 TRE.O1](#112-mainnet-observations)).
 
-**The submitter population is moving in the opposite direction.** The number of distinct fee-paying addresses has contracted from **~512,000 per epoch (epoch 300) to ~158,000 (epoch 384)** — a **69% decline** — while per-epoch transaction count has remained above 300K (DIA.2.2.O8). The fee base is not expanding; it is consolidating toward fewer, more active actors.
+**The submitter population is moving in the opposite direction.** The number of distinct fee-paying addresses has contracted from a peak of **790,335 (epoch 304) to 30,505 (epoch 623)** — a **96% decline** — while per-epoch transaction volume fell only 93%, indicating consolidation toward fewer, more active actors (CEN.O8).
 
-At the same time, the most fee-intensive segment of that population — **script-based transactions**, which pay three times the average per-tx rate (DIA.2.2.O10) — is dominated by enterprise and script addresses that structurally cannot participate in delegation (DIA.2.2.O9).
+At the same time, the most fee-intensive segment of that population — **script-based transactions**, which pay roughly 2.4× the average per-tx rate (CEN.O10) — is dominated by enterprise and script addresses that structurally cannot participate in delegation (CEN.O9).
 
 *The population that the mechanism needs to grow is shrinking; the sub-population that generates the most revenue per transaction is excluded from the rewards it funds.*
 
@@ -1399,7 +1399,7 @@ No parameter change within the current mechanism alters this trajectory — the 
 
 #### 2.2.3.2. The fee-generating population must expand for the pipeline to survive
 
-The reserve is finite. Its depletion trajectory is documented in [§1.1](#11-treasury-pool-pots-distribution); the exact timeline depends on $\rho$ and on whether governance reduces the expansion rate, but the direction is not in question.
+The reserve is finite. Its depletion trajectory is documented in [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution); the exact timeline depends on $\rho$ and on whether governance reduces the expansion rate, but the direction is not in question.
 
 When the reserve approaches exhaustion, the epoch pot contracts to whatever fees and deposits provide. At current levels, that means *a pot roughly 500× smaller than the one the staking population is calibrated to expect*.
 
@@ -1417,7 +1417,7 @@ The current trajectory satisfies the third condition for script transactions but
 
 *The pipeline's future funding source is treated as exogenous — an assumption that the population data contradicts.*
 
-The problem is compounded by the constituency mismatch documented in DIA.2.2.O9: **roughly a third of fee revenue already comes from addresses that cannot delegate**. If the DeFi economy continues to grow as a share of on-chain activity — and the post-Alonzo trend suggests it will — the fraction of the fee base excluded from rewards will increase.
+The problem is compounded by the constituency mismatch documented in CEN.O9: **roughly 30% of fee revenue already comes from addresses that cannot delegate**. If the DeFi economy continues to grow as a share of on-chain activity — and the post-Alonzo trend suggests it will — the fraction of the fee base excluded from rewards will increase.
 
 *The mechanism will progressively tax a population it does not serve, with no feedback loop to retain that population's participation.*
 
@@ -1441,33 +1441,33 @@ The yield that delegators compare against alternatives — **DeFi, staking on co
 
 **This creates an asymmetry at the heart of the mechanism.** The protocol emits a fixed (and declining) quantity of ADA per epoch. If the fiat price of ADA falls, the real value of rewards falls with it — but the real costs of operation do not:
 
-- operator viability ([§1.3](#13-operator-delegator-distribution)) depends on a minimum fiat-denominated revenue
+- operator viability ([Operator / Delegator Distribution](#13-operator-delegator-distribution)) depends on a minimum fiat-denominated revenue
 - delegator retention depends on competitive fiat-adjusted yield
-- the transaction-fee base ([§2.2](#22-transaction-submitters)) must ultimately fund the pipeline in real terms, not just nominal ones
+- the transaction-fee base ([Transaction Submitters](#22-transaction-submitters)) must ultimately fund the pipeline in real terms, not just nominal ones
 
 *The mechanism's sustainability therefore requires the ADA price to be at minimum stable, and more precisely deflationary relative to the goods and services its participants consume.* Not because appreciation is desirable in the abstract, but because the pipeline's ADA-denominated output must maintain or increase its real purchasing power as the emission rate declines.
 
 ## 3.2. The structural requirement
 
-The reserve depletion documented in [§1.1](#11-treasury-pool-pots-distribution) means that the quantity of ADA distributed per epoch will decline over time — by design. The mechanism compensates for this through two implicit assumptions:
+The reserve depletion documented in [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution) means that the quantity of ADA distributed per epoch will decline over time — by design. The mechanism compensates for this through two implicit assumptions:
 
-- first, that **fees will grow to replace expansion** ([§2.2](#22-transaction-submitters))
+- first, that **fees will grow to replace expansion** ([Transaction Submitters](#22-transaction-submitters))
 - second, that the **per-unit value of ADA will appreciate** such that fewer ADA deliver equivalent or greater real value
 
 The second assumption is the **deflationary requirement**. It is not stated in the protocol specification, but it is embedded in the economics.
 
-Consider the operator population: [§1.3](#13-operator-delegator-distribution) documents that the median single-pool operator earns approximately **900 ADA per epoch** after subtracting costs denominated in ADA.
+Consider the operator population: [Operator / Delegator Distribution](#13-operator-delegator-distribution) documents that the median single-pool operator earns approximately **900 ADA per epoch** after subtracting costs denominated in ADA.
 
 - At an ADA price of **$0.30**, that is **$270/epoch (~$65/month)**
 - At **$0.10**, it is **$90/epoch (~$22/month)** — below the infrastructure cost floor for most operators
 
-*The operator viability threshold documented in [§1.3](#13-operator-delegator-distribution) is not a fixed ADA quantity; it is a moving target that tracks fiat-denominated costs.*
+*The operator viability threshold documented in [Operator / Delegator Distribution](#13-operator-delegator-distribution) is not a fixed ADA quantity; it is a moving target that tracks fiat-denominated costs.*
 
 The same logic applies to delegators. A 3% annual return on 10,000 ADA yields 300 ADA. If ADA is worth $0.30, that is **$90/year — competitive with nothing**.
 
 *The delegation decision is rational only if the holder expects the ADA itself to appreciate sufficiently that the combined return (yield + price appreciation) exceeds the opportunity cost.* The mechanism does not produce this appreciation; it assumes it.
 
-For submitters, the constraint is subtler. Transaction fees are protocol-determined minimums denominated in ADA. If ADA appreciates, the fiat cost of transacting rises — which could suppress transaction volume and shrink the fee-generating population ([§2.2](#22-transaction-submitters)).
+For submitters, the constraint is subtler. Transaction fees are protocol-determined minimums denominated in ADA. If ADA appreciates, the fiat cost of transacting rises — which could suppress transaction volume and shrink the fee-generating population ([Transaction Submitters](#22-transaction-submitters)).
 
 *The mechanism needs ADA to be deflationary enough to sustain operator and delegator incentives, but not so deflationary that it prices out the transaction activity that must eventually fund the pipeline.*
 
@@ -1490,8 +1490,8 @@ The protocol's monetary policy — a capped supply with declining emission — c
 The mechanism is therefore **structurally dependent on an exogenous variable it cannot influence**. If the ADA price stagnates or declines in real terms:
 
 - the pipeline's ADA-denominated rewards lose purchasing power
-- **operators exit** ([§2.1.3.1](#2131-the-operator-population-is-highly-concentrated-and-stable) documents the concentration; the marginal operators at the bottom are the first to leave)
-- **delegators undelegate** ([§2.1.3.2](#2132-the-stake-holder-population-is-a-frozen-power-law) documents the frozen power law; the micro-delegators holding 32 ADA median have the least to lose)
+- **operators exit** ([The operator population is highly concentrated and stable](#2131-the-operator-population-is-highly-concentrated-and-stable) documents the concentration; the marginal operators at the bottom are the first to leave)
+- **delegators undelegate** ([The stake-holder population is a frozen power law](#2132-the-stake-holder-population-is-a-frozen-power-law) documents the frozen power law; the micro-delegators holding 32 ADA median have the least to lose)
 - the staking rate declines further ([§2.1 O7](#212-mainnet-observations))
 
 Each of these effects reduces the security budget, which in turn reduces the chain's attractiveness, which in turn suppresses demand for ADA — *a reflexive loop with no internal floor*.
@@ -1500,14 +1500,14 @@ Each of these effects reduces the security budget, which in turn reduces the cha
 
 The reward pipeline's long-term viability requires three conditions to hold simultaneously:
 
-- the **fee input must grow** ([§2.2.3.1](#2231-the-fee-input-is-structurally-insufficient))
-- the **submitter population must expand** ([§2.2.3.2](#2232-the-fee-generating-population-must-expand-for-the-pipeline-to-survive))
+- the **fee input must grow** ([The fee input is structurally insufficient](#2231-the-fee-input-is-structurally-insufficient))
+- the **submitter population must expand** ([The fee-generating population must expand for the pipeline to survive](#2232-the-fee-generating-population-must-expand-for-the-pipeline-to-survive))
 - the **ADA price must be deflationary in real terms**
 
 These three constraints are **not independent** — they interact, and in some configurations they contradict:
 
-- a **rising ADA price** increases the fiat cost of transacting, which suppresses fee volume and makes the [§2.2](#22-transaction-submitters) problem harder
-- a **falling ADA price** makes operator and delegator rewards insufficient, which makes the [§2.1](#21-the-staking-populations) problem harder
+- a **rising ADA price** increases the fiat cost of transacting, which suppresses fee volume and makes the [Transaction Submitters](#22-transaction-submitters) problem harder
+- a **falling ADA price** makes operator and delegator rewards insufficient, which makes the [The Staking Populations](#21-the-staking-populations) problem harder
 - a **stable ADA price** satisfies neither: operators still face a declining ADA emission, and submitters face no price incentive to transact more
 
 The mechanism design does not acknowledge this trilemma. The reward curve, the fee formula, and the reserve schedule were each designed in isolation:
@@ -1532,8 +1532,8 @@ Each pipeline stage is backed by a dedicated empirical analysis containing the f
 
 | Stage | Sub-report | Scope |
 | --- | --- | --- |
-| [§1.1](#11-treasury-pool-pots-distribution) Treasury & Pool Pots | [`Treasury & Pool Pots Distribution`](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md) | Epoch-pot assembly, reserve trajectory, fee analysis, return-to-reserve mechanism |
-| [§1.2](#12-pools-distribution) Pools Distribution | [`The Pools Pot Distribution Gaps`](sub-flows/pools-distribution/mainnet-analysis/README.md) | Reward curve formulas, distribution efficiency, pool landscape, entity analysis |
-| [§1.3](#13-operator-delegator-distribution) Operator / Delegator | [*The Operator's Cut*](sub-flows/operator-delegator-distribution/mainnet-analysis/README.md) | Intra-pool split formulas, pricing plan landscape, custodial/retail boundary, operator profitability, delegator yield trajectory and structural compression |
-| [§2.1](#21-the-staking-populations) Staking Populations | [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md) | ADA supply decomposition, operator landscape and entity analysis, delegator behaviour and loyalty, non-participant decomposition, population dynamics |
-| [§2.2](#22-transaction-submitters) Transaction Submitters | [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md) §6 _(standalone doc pending)_ | Submitter population size and trajectory, address-type decomposition, fee-revenue attribution, script vs key composition, concentration |
+| [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution) Treasury & Pool Pots | [`Treasury & Pool Pots Distribution`](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md) | Epoch-pot assembly, reserve trajectory, fee analysis, return-to-reserve mechanism |
+| [Pools Distribution](#12-pools-distribution) Pools Distribution | [`The Pools Pot Distribution Gaps`](sub-flows/pools-distribution/mainnet-analysis/README.md) | Reward curve formulas, distribution efficiency, pool landscape, entity analysis |
+| [Operator / Delegator Distribution](#13-operator-delegator-distribution) Operator / Delegator | [*The Operator's Cut*](sub-flows/operator-delegator-distribution/mainnet-analysis/README.md) | Intra-pool split formulas, pricing plan landscape, custodial/retail boundary, operator profitability, delegator yield trajectory and structural compression |
+| [The Staking Populations](#21-the-staking-populations) Staking Populations | [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md) | ADA supply decomposition, operator landscape and entity analysis, delegator behaviour and loyalty, non-participant decomposition, population dynamics |
+| [Transaction Submitters](#22-transaction-submitters) Transaction Submitters | [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md) §6 _(standalone doc pending)_ | Submitter population size and trajectory, address-type decomposition, fee-revenue attribution, script vs key composition, concentration |

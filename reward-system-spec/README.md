@@ -175,8 +175,8 @@ Any mechanism that **systematically under-compensates productive participants** 
 
 Two features of the current mechanism fall short of this standard:
 
-- the fee structure imposes a **48% effective cost on sub-viable operators** while charging **1.5% near saturation** ([DIA.1.3.O1](diagnostic/README.md#132-mainnet-observations));
-- the pledge mechanism provides **no material reward for commitment** ([DIA.1.2.O6](diagnostic/README.md#122-mainnet-observations)).
+- the fee structure imposes a **48% effective cost on sub-viable operators** while charging **1.5% near saturation** ([OPE.O1](diagnostic/README.md#132-mainnet-observations));
+- the pledge mechanism provides **no material reward for commitment** ([POL.O6](diagnostic/README.md#122-mainnet-observations)).
 
 Three milestones address this gap, each along a different dimension:
 
@@ -250,9 +250,9 @@ The mechanism was designed so that a new operator who pledges an initial amount 
 
 Today's single-pool operator with 2M ADA of delegation and a proven track record should be tomorrow's established entity. The mechanism must support this trajectory. **Two structural gaps prevent it from doing so.**
 
-**The viability gap.** The fixed-cost floor ($minPoolCost$) absorbs **47.5% of pool reward at the sub-viable tier** but only **1.5% near saturation** ([DIA.1.3.O1](diagnostic/README.md#132-mainnet-observations)).
+**The viability gap.** The fixed-cost floor ($minPoolCost$) absorbs **47.5% of pool reward at the sub-viable tier** but only **1.5% near saturation** ([OPE.O1](diagnostic/README.md#132-mainnet-observations)).
 
-This opens a gap of **~870 pools** between the production threshold (~1M ADA) and the viability threshold (~3M ADA), where pools produce blocks but cannot sustain their operators economically ([viability-gap analysis](diagnostic/README.md#1331-guarantee-operator-viability-across-the-productive-population)). No single-pool operator in the retail market earns a competitive wage: the median earns **~25,000 ADA/yr** — enough to cover infrastructure but not the 5–15 hrs/month of skilled work ([DIA.1.3.O6](diagnostic/README.md#132-mainnet-observations)).
+This opens a gap of **~870 pools** between the production threshold (~1M ADA) and the viability threshold (~3M ADA), where pools produce blocks but cannot sustain their operators economically ([viability-gap analysis](diagnostic/README.md#1331-guarantee-operator-viability-across-the-productive-population)). No single-pool operator in the retail market earns a competitive wage: the median earns **~25,000 ADA/yr** — enough to cover infrastructure but not the 5–15 hrs/month of skilled work ([OPE.O6](diagnostic/README.md#132-mainnet-observations)).
 
 The floor follows a $1/\sigma$ hyperbola: *the operators who charge the most earn the least.*
 
@@ -280,7 +280,7 @@ The replacement pools that sustain the ~950-pool total are **entity-operated, no
 <div class="ev-label">Fee floor trajectory</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">The floor's burden grows as the reserve depletes: the fixed-cost share of pool rewards rises mechanically, progressively extending the viability gap toward pools in the **5–10 M range**.</p>
-<p class="ev-sources" markdown="1">Source: [DIA.1.3.O8](diagnostic/README.md#132-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Source: [OPE.O8](diagnostic/README.md#132-mainnet-observations).</p>
 </div>
 </div>
 
@@ -304,7 +304,7 @@ The replacement pools that sustain the ~950-pool total are **entity-operated, no
 <div class="ev-label">Thresholds</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Production threshold rises with total staked ADA — from **~470 K at Shelley launch** to **~1 M at epoch 623**. Independent single-pool operator population: **477 pools, 5.28 B ADA, 24.5 % of productive stake**, share in slow decline; only **283 above the viability threshold**; **116 sub-threshold pools** carry 0.31 % of active stake.</p>
-<p class="ev-sources" markdown="1">Sources: [Census — historical decomposition](diagnostic/sub-flows/census/mainnet-analysis/README.md#343-historical-decomposition-productive-vs-sub-threshold-pools), [DIA.1.2.O5](diagnostic/README.md#122-mainnet-observations), [production-threshold proposal](diagnostic/README.md#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano).</p>
+<p class="ev-sources" markdown="1">Sources: [Census — historical decomposition](diagnostic/sub-flows/census/mainnet-analysis/README.md#343-historical-decomposition-productive-vs-sub-threshold-pools), [POL.O5](diagnostic/README.md#122-mainnet-observations), [production-threshold proposal](diagnostic/README.md#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano).</p>
 </div>
 </div>
 
@@ -423,7 +423,7 @@ $k = 500$ implies 500 independent entities sharing consensus power; the effectiv
 <div class="ev-label">Pledge-bonus utilisation</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**95.6 %** of the pledge-bonus budget returns to the reserve unused. The instrument exists in the formula but is **economically inert**.</p>
-<p class="ev-sources" markdown="1">Source: [DIA.1.2.O6](diagnostic/README.md#122-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Source: [POL.O6](diagnostic/README.md#122-mainnet-observations).</p>
 </div>
 </div>
 
@@ -463,7 +463,7 @@ $k = 500$ implies 500 independent entities sharing consensus power; the effectiv
 <div class="ev-label">Market structure outcome</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**85 multi-pool entities control 75.4 % of staked supply through 901 pools.** The effective entity-level concentration is an **order of magnitude** above the $k$-target equilibrium.</p>
-<p class="ev-sources" markdown="1">Sources: [DIA.1.2.O4](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
+<p class="ev-sources" markdown="1">Sources: [POL.O4](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
 </div>
 </div>
 
@@ -513,7 +513,7 @@ The monetary-expansion parameter $\rho$ (ME-01 to ME-05, range [0.001, 0.005]) a
 The problem has **three faces**:
 
 - **Competitive as an investment.** Staking competes for capital with DeFi protocols, liquid markets, and off-chain alternatives. If the return is not attractive in absolute terms, **rational capital leaves the staking pool** regardless of how well the mechanism distributes it.
-- **Rewarding the right operators.** Balanced independent operators return **1.98%** while hollow MPO fleets return **2.08%** — the operator who commits capital is *penalised* for commitment ([DIA.1.3.O5](diagnostic/README.md#132-mainnet-observations)). The yield spread is **0.39pp (noise)**, and **half of all pool switches produce zero yield change** ([DIA.2.1.O6](diagnostic/README.md#212-mainnet-observations)).
+- **Rewarding the right operators.** Balanced independent operators return **1.98%** while hollow MPO fleets return **2.08%** — the operator who commits capital is *penalised* for commitment ([OPE.O5](diagnostic/README.md#132-mainnet-observations)). The yield spread is **0.39pp (noise)**, and **half of all pool switches produce zero yield change** ([CEN.O6](diagnostic/README.md#212-mainnet-observations)).
 - **A product range frozen in 2020.** In Shelley's era, **no smart-contract capability existed** — the only product was liquid delegation at a uniform yield. Five years later, Plutus scripts and the extended UTXO model provide infrastructure for a richer staking market that **Cardano has not yet exploited**.
 
 #### 3.3.1. Make the base yield competitive
@@ -540,13 +540,13 @@ This connects directly to [Price Robustness](#43-the-mechanism-must-function-acr
 
 The base yield being competitive is **necessary but not sufficient**. The mechanism must also ensure that the yield *differentiates* between operator types — that delegators who choose a balanced, pledged, independent operator receive a **materially better return** than those who park stake in a hollow fleet.
 
-Today, the spread is **noise**: 0.39pp across the retail market ([DIA.1.3.O5](diagnostic/README.md#132-mainnet-observations)), invisible to delegators, with **delegation following visibility rather than return** ([DIA.1.3.O7](diagnostic/README.md#132-mainnet-observations)).
+Today, the spread is **noise**: 0.39pp across the retail market ([OPE.O5](diagnostic/README.md#132-mainnet-observations)), invisible to delegators, with **delegation following visibility rather than return** ([OPE.O7](diagnostic/README.md#132-mainnet-observations)).
 
-The $minPoolCost$ floor absorbs a disproportionate share of small-pool rewards **before any yield reaches delegators** ([DIA.1.3.O1](diagnostic/README.md#132-mainnet-observations), [DIA.1.3.O8](diagnostic/README.md#132-mainnet-observations)). And entity-level information — fleet size, aggregate pledge ratio, operator profitability — is **absent from the on-chain data**, so delegators cannot distinguish a committed independent operator from one node in an anonymous fleet ([the size-visibility loop](diagnostic/README.md#12435-the-size-visibility-delegation-loop)).
+The $minPoolCost$ floor absorbs a disproportionate share of small-pool rewards **before any yield reaches delegators** ([OPE.O1](diagnostic/README.md#132-mainnet-observations), [OPE.O8](diagnostic/README.md#132-mainnet-observations)). And entity-level information — fleet size, aggregate pledge ratio, operator profitability — is **absent from the on-chain data**, so delegators cannot distinguish a committed independent operator from one node in an anonymous fleet ([the size-visibility loop](diagnostic/README.md#12435-the-size-visibility-delegation-loop)).
 
 **Specification.** Three requirements.
 
-**R1 — The yield differential between entity types must be material.** The spread between balanced, hollow, and custodial operators at equivalent pool sizes must **exceed 1pp**. The current 0.39pp spread is noise ([DIA.1.3.O5](diagnostic/README.md#132-mainnet-observations)); delegators must be able to **see** a material difference between committing to a balanced independent operator and parking stake in a hollow fleet.
+**R1 — The yield differential between entity types must be material.** The spread between balanced, hollow, and custodial operators at equivalent pool sizes must **exceed 1pp**. The current 0.39pp spread is noise ([OPE.O5](diagnostic/README.md#132-mainnet-observations)); delegators must be able to **see** a material difference between committing to a balanced independent operator and parking stake in a hollow fleet.
 
 *The mechanism must make commitment pay — visibly.*
 
@@ -554,7 +554,7 @@ The $minPoolCost$ floor absorbs a disproportionate share of small-pool rewards *
 
 Without this information, the yield signal from R1 is **uninterpretable**.
 
-**R3 — Delegator mobility must produce competitive pressure.** The current regime where half of all switches produce **zero yield change** ([DIA.2.1.O6](diagnostic/README.md#212-mainnet-observations)) must give way to a market where redelegation **carries information** and **exerts discipline**.
+**R3 — Delegator mobility must produce competitive pressure.** The current regime where half of all switches produce **zero yield change** ([CEN.O6](diagnostic/README.md#212-mainnet-observations)) must give way to a market where redelegation **carries information** and **exerts discipline**.
 
 When a delegator moves, **the move must matter** — to the delegator's return, and to the operator's revenue.
 
@@ -600,8 +600,8 @@ The relationship is explicit: **higher commitment — longer lock-up, less liqui
 
 The analysis documents concentration on **two fronts**:
 
-- **Supply side.** **85 multi-pool entities** control **75.4%** of staked supply through **901 pools** ([DIA.1.2.O4](diagnostic/README.md#122-mainnet-observations)), while independent single-pool operators shrink to **283 viable pools and 25%** of productive stake ([DIA.1.2.O5](diagnostic/README.md#122-mainnet-observations)).
-- **Demand side.** **1,000 delegators** (0.07% of the base) control **57% of staked ADA**; the Gini coefficient is **0.976** ([DIA.2.1.O3](diagnostic/README.md#212-mainnet-observations)).
+- **Supply side.** **85 multi-pool entities** control **75.4%** of staked supply through **901 pools** ([POL.O4](diagnostic/README.md#122-mainnet-observations)), while independent single-pool operators shrink to **283 viable pools and 25%** of productive stake ([POL.O5](diagnostic/README.md#122-mainnet-observations)).
+- **Demand side.** **1,000 delegators** (0.07% of the base) control **57% of staked ADA**; the Gini coefficient is **0.976** ([CEN.O3](diagnostic/README.md#212-mainnet-observations)).
 
 Both concentrations are **structural**, both **crystallised early**, and **neither responds** to the current incentive design.
 
@@ -634,13 +634,13 @@ An entity operating twenty pools with negligible pledge in each is **indistingui
 
 ##### 3.4.1.2. The delegator side — titan delegators versus the micro-delegation tail
 
-The demand side exhibits a concentration that **mirrors the supply side**. The median delegator holds **32 ADA**; the mean holds **16,055 ADA** — a **500× gap** ([DIA.2.1.O3](diagnostic/README.md#212-mainnet-observations)).
+The demand side exhibits a concentration that **mirrors the supply side**. The median delegator holds **32 ADA**; the mean holds **16,055 ADA** — a **500× gap** ([CEN.O3](diagnostic/README.md#212-mainnet-observations)).
 
-This is not a transient distribution: concentration **crystallised by epoch 300**, and a subsequent **9× growth** in delegator count produced **no measurable change** in the top-1% share ([Census — historical evolution](diagnostic/sub-flows/census/mainnet-analysis/README.md#443-historical-evolution--who-joined-and-where-is-the-capital)). The delegation market is **structurally bimodal**: 42% of delegators are **loyal** (201+ epochs), 21% **volatile** (≤ 5 epochs), with little in between ([DIA.2.1.O4](diagnostic/README.md#212-mainnet-observations)).
+This is not a transient distribution: concentration **crystallised by epoch 300**, and a subsequent **9× growth** in delegator count produced **no measurable change** in the top-1% share ([Census — historical evolution](diagnostic/sub-flows/census/mainnet-analysis/README.md#443-historical-evolution--who-joined-and-where-is-the-capital)). The delegation market is **structurally bimodal**: 42% of delegators are **loyal** (201+ epochs), 21% **volatile** (≤ 5 epochs), with little in between ([CEN.O4](diagnostic/README.md#212-mainnet-observations)).
 
-**Titan delegators** — those holding 1M+ ADA — average **3.06 lifetime pool switches** against **0.67** for micro-delegators ([DIA.2.1.O5](diagnostic/README.md#212-mainnet-observations)). They hold **11B of 21.8B** staked ADA, and only **38%** of their stake sits in loyal delegations: capital is **disproportionately mobile**.
+**Titan delegators** — those holding 1M+ ADA — average **3.06 lifetime pool switches** against **0.67** for micro-delegators ([CEN.O5](diagnostic/README.md#212-mainnet-observations)). They hold **11B of 21.8B** staked ADA, and only **38%** of their stake sits in loyal delegations: capital is **disproportionately mobile**.
 
-Yet this mobility does **not produce competitive pressure** because it is **not yield-driven**: half of all switches produce zero yield change (±5 bps), operator-take direction is symmetric, and **the only asymmetric signal is pool size** — delegators drift toward larger, more visible pools, not toward more committed ones ([DIA.2.1.O6](diagnostic/README.md#212-mainnet-observations)).
+Yet this mobility does **not produce competitive pressure** because it is **not yield-driven**: half of all switches produce zero yield change (±5 bps), operator-take direction is symmetric, and **the only asymmetric signal is pool size** — delegators drift toward larger, more visible pools, not toward more committed ones ([CEN.O6](diagnostic/README.md#212-mainnet-observations)).
 
 The mechanism treats a 32-ADA micro-delegation and a 50M-ADA titan delegation **identically**: both earn the same proportional return, both have the same governance weight per ADA, and neither receives any incentive differentiated by the scale or stability of commitment.
 
@@ -657,7 +657,7 @@ The consequence is:
 <div class="ev-label">MPO fleet structure</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**85 entities, 901 pools, 75.4 % of staked supply.** 12 entities with 11+ pools control **40.4 % of productive stake**.</p>
-<p class="ev-sources" markdown="1">Sources: [DIA.1.2.O4](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
+<p class="ev-sources" markdown="1">Sources: [POL.O4](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
 </div>
 </div>
 
@@ -665,7 +665,7 @@ The consequence is:
 <div class="ev-label">Sybil cost</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Marginal cost of a new pool is **~500 ADA**; marginal reward is a full share of the curve. **78 of 85** MPO entities are outside the pledge-response path.</p>
-<p class="ev-sources" markdown="1">Sources: [DIA.1.2.O6](diagnostic/README.md#122-mainnet-observations), [mainnet pledge data](diagnostic/README.md#12431-what-mainnet-reveals).</p>
+<p class="ev-sources" markdown="1">Sources: [POL.O6](diagnostic/README.md#122-mainnet-observations), [mainnet pledge data](diagnostic/README.md#12431-what-mainnet-reveals).</p>
 </div>
 </div>
 
@@ -673,7 +673,7 @@ The consequence is:
 <div class="ev-label">Independent operator decline</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**283 viable single-pool operators**, stake share in slow decline from **39 % → 25 %** since epoch 300.</p>
-<p class="ev-sources" markdown="1">Sources: [DIA.1.2.O5](diagnostic/README.md#122-mainnet-observations), [Census — the independent pipeline](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-pipeline-what-the-mechanism-was-intended-to-produce).</p>
+<p class="ev-sources" markdown="1">Sources: [POL.O5](diagnostic/README.md#122-mainnet-observations), [Census — the independent pipeline](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-pipeline-what-the-mechanism-was-intended-to-produce).</p>
 </div>
 </div>
 
@@ -681,7 +681,7 @@ The consequence is:
 <div class="ev-label">Delegator concentration</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**1,000 delegators (0.07 %) control 57 % of staked ADA.** Gini = **0.976**. Frozen since epoch 300.</p>
-<p class="ev-sources" markdown="1">Source: [DIA.2.1.O3](diagnostic/README.md#212-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Source: [CEN.O3](diagnostic/README.md#212-mainnet-observations).</p>
 </div>
 </div>
 
@@ -689,7 +689,7 @@ The consequence is:
 <div class="ev-label">Titan mobility</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Whales (1 M+) average **3.06 switches**; micro (< 1 K) average **0.67**. Mobility scales with size but is **not yield-driven**.</p>
-<p class="ev-sources" markdown="1">Sources: [DIA.2.1.O5, .O6](diagnostic/README.md#212-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Sources: [CEN.O5, CEN.O6](diagnostic/README.md#212-mainnet-observations).</p>
 </div>
 </div>
 
@@ -697,7 +697,7 @@ The consequence is:
 <div class="ev-label">Yield signal failure</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**50.5 % of switches produce zero yield change.** Pool size is the only asymmetric signal.</p>
-<p class="ev-sources" markdown="1">Source: [DIA.2.1.O6](diagnostic/README.md#212-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Source: [CEN.O6](diagnostic/README.md#212-mainnet-observations).</p>
 </div>
 </div>
 
@@ -782,7 +782,7 @@ The mechanism must preserve — and ideally strengthen — the viability of micr
 
 [Microeconomics](#3-microeconomics--participant-incentives-and-market-structure) defines what the micro-economy must satisfy at any given epoch: viable operators, meaningful pledge, competitive delegation, deconcentrated populations. **This chapter defines the dashboard from which those conditions are kept true through time.**
 
-The metaphor is operational. A reward mechanism is a system the protocol pilots — not a static contract it signs and forgets. Five years of inertia on $\rho$, $\tau$ and $minPoolCost$ ([DIA.1.1.O4](diagnostic/README.md#112-mainnet-observations)) document the failure mode of flying without instruments: the parameters could not be observed, could not be questioned, and were therefore never adjusted. **A specification that produces the correct equilibrium once but offers no instrumentation to pilot it is not a specification of the mechanism — it is a snapshot of one of its states.**
+The metaphor is operational. A reward mechanism is a system the protocol pilots — not a static contract it signs and forgets. Five years of inertia on $\rho$, $\tau$ and $minPoolCost$ ([TRE.O4](diagnostic/README.md#112-mainnet-observations)) document the failure mode of flying without instruments: the parameters could not be observed, could not be questioned, and were therefore never adjusted. **A specification that produces the correct equilibrium once but offers no instrumentation to pilot it is not a specification of the mechanism — it is a snapshot of one of its states.**
 
 This chapter closes that gap. For each macro-condition the system must preserve, it defines four operational components.
 
@@ -805,7 +805,7 @@ Two **recalibration cycles** instrument the macro-conditions on which long-term 
 
 *Depends on [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population), [Pledge](#32-restore-the-notion-of-pledge-among-operators), [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield), [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations).*
 
-The staking pot is **~99.8% reserve-funded** ([DIA.1.1.O1](diagnostic/README.md#112-mainnet-observations)). The reserve has crossed its half-life ([DIA.1.1.O2](diagnostic/README.md#112-mainnet-observations)) and will deplete on the mathematical schedule set in 2019, with **no transition plan** for the moment fee revenue must take over. The two parameters governing the draw — $\rho$ (reserve-to-pot rate) and $\tau$ (treasury share) — have **never been adjusted since Shelley** ([DIA.1.1.O4](diagnostic/README.md#112-mainnet-observations)).
+The staking pot is **~99.8% reserve-funded** ([TRE.O1](diagnostic/README.md#112-mainnet-observations)). The reserve has crossed its half-life ([TRE.O2](diagnostic/README.md#112-mainnet-observations)) and will deplete on the mathematical schedule set in 2019, with **no transition plan** for the moment fee revenue must take over. The two parameters governing the draw — $\rho$ (reserve-to-pot rate) and $\tau$ (treasury share) — have **never been adjusted since Shelley** ([TRE.O4](diagnostic/README.md#112-mainnet-observations)).
 
 **The problem this section addresses is not whether to lower $\rho$ or raise $\tau$ to specific values; it is the absence of any process under which those parameters could be observed, questioned, or recalibrated.** The Pot Survival cycle below specifies that process.
 
@@ -817,9 +817,9 @@ Without [Operator Viability](#31-guarantee-operator-viability-across-the-entire-
 
 The reserve-to-pot rate ($\rho$) determines how fast the reserve is consumed; the treasury share ($\tau$) determines how much of the resulting pot returns to the staking layer rather than to the treasury. Together they govern the **runway** in epochs over which the current funding model can operate.
 
-The current values ($\rho = 0.003$, $\tau = 0.2$) were chosen in 2019 when the chain had no smart-contract economy, no on-chain governance, and a fee base of structural irrelevance. Five years on, **none of these conditions hold**, yet **neither parameter has been subject to a single governance proposal** ([DIA.1.1.O4](diagnostic/README.md#112-mainnet-observations)).
+The current values ($\rho = 0.003$, $\tau = 0.2$) were chosen in 2019 when the chain had no smart-contract economy, no on-chain governance, and a fee base of structural irrelevance. Five years on, **none of these conditions hold**, yet **neither parameter has been subject to a single governance proposal** ([TRE.O4](diagnostic/README.md#112-mainnet-observations)).
 
-The diagnostic establishes the funding-model context: monetary expansion provides ~99.8% of the pot today; closing the fee gap to self-sufficiency requires **12–16× current fee capacity** ([DIA.1.1.O1](diagnostic/README.md#112-mainnet-observations)). That capacity expansion has no defined timeline. Reserve depletion does ([DIA.1.1.O2](diagnostic/README.md#112-mainnet-observations)).
+The diagnostic establishes the funding-model context: monetary expansion provides ~99.8% of the pot today; closing the fee gap to self-sufficiency requires **12–16× current fee capacity** ([TRE.O1](diagnostic/README.md#112-mainnet-observations)). That capacity expansion has no defined timeline. Reserve depletion does ([TRE.O2](diagnostic/README.md#112-mainnet-observations)).
 
 The mechanism cannot be allowed to discover its funding-model transition by *running out of reserve*. A surveillance and recalibration cycle must be in place **before** the trajectory becomes binding.
 
@@ -831,7 +831,7 @@ The mechanism cannot be allowed to discover its funding-model transition by *run
 <div class="ev-label">Funding composition</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Monetary expansion provides **~99.8 %** of the epoch pot; fees **~0.19 %**. Self-sufficiency requires **12–16× current fee capacity**.</p>
-<p class="ev-sources" markdown="1">Source: [DIA.1.1.O1](diagnostic/README.md#112-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Source: [TRE.O1](diagnostic/README.md#112-mainnet-observations).</p>
 </div>
 </div>
 
@@ -839,7 +839,7 @@ The mechanism cannot be allowed to discover its funding-model transition by *run
 <div class="ev-label">Reserve trajectory</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Reserve **half-depleted (13.29 B → 6.53 B ADA)** in 5.5 years. Significant reward pressure expected at epochs **1000–1200 (~2028–2029)**.</p>
-<p class="ev-sources" markdown="1">Source: [DIA.1.1.O2](diagnostic/README.md#112-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Source: [TRE.O2](diagnostic/README.md#112-mainnet-observations).</p>
 </div>
 </div>
 
@@ -847,7 +847,7 @@ The mechanism cannot be allowed to discover its funding-model transition by *run
 <div class="ev-label">Realised vs potential</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Only **~44 %** of the budget reaches operators/delegators; **4.55 B ADA cumulative** (~70 % of current reserve) has returned to the reserve as undistributed rewards.</p>
-<p class="ev-sources" markdown="1">Source: [DIA.1.1.O3](diagnostic/README.md#112-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Source: [TRE.O3](diagnostic/README.md#112-mainnet-observations).</p>
 </div>
 </div>
 
@@ -855,7 +855,7 @@ The mechanism cannot be allowed to discover its funding-model transition by *run
 <div class="ev-label">Parameter inertia</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">$\rho = 0.3\,\%$ and $\tau = 20\,\%$ unchanged since Shelley; **no governance proposal has ever targeted them**.</p>
-<p class="ev-sources" markdown="1">Source: [DIA.1.1.O4](diagnostic/README.md#112-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Source: [TRE.O4](diagnostic/README.md#112-mainnet-observations).</p>
 </div>
 </div>
 
@@ -914,7 +914,7 @@ The proposal admitted to the Conway pipeline must include three artefacts: **(i)
 
 The funding-model transition is a question of **revenue**, not only of expense. [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion) governs the rate at which the reserve funds the pot; **Fee Policy** below governs the rate at which fees replace it. The two are not interchangeable — a recalibration that lowers $\rho$ without growing fees does not improve sustainability; it accelerates depletion of the staking-layer income.
 
-The diagnostic establishes that the fee-generating population is **contracting**: unique input addresses per epoch fell from ~512K (epoch 300) to ~158K (epoch 384) — a **69% decline** — while transaction count remained above 300K ([DIA.2.2.O8](diagnostic/README.md#222-mainnet-observations)). Fee revenue is consolidating toward fewer, more active actors. The most fee-intensive segment — script transactions, paying 3× the per-tx average — comes disproportionately from addresses that **structurally cannot delegate** ([DIA.2.2.O9, DIA.2.2.O10](diagnostic/README.md#222-mainnet-observations)).
+The diagnostic establishes that the fee-generating population is **contracting**: unique submitter addresses fell from a peak of **790,335** at epoch 304 to **30,505** at epoch 623 — a **96% collapse** against a 93% drop in transaction volume ([CEN.O8](diagnostic/README.md#222-mainnet-observations)). Fee revenue is consolidating toward fewer, more active actors. The most fee-intensive segment — script transactions, paying **2.4×** the per-tx average — comes disproportionately from addresses that **structurally cannot delegate** ([CEN.O9, CEN.O10](diagnostic/README.md#222-mainnet-observations)).
 
 Fee Policy specifies the surveillance and recalibration machinery that addresses this divergence.
 
@@ -924,7 +924,7 @@ Fee Policy specifies the surveillance and recalibration machinery that addresses
 
 The reward pipeline's long-term viability rests on a single assumption: that fees will eventually replace expansion as the dominant pot revenue source ([fee-input insufficiency](diagnostic/README.md#2231-the-fee-input-is-structurally-insufficient), [submitter expansion requirement](diagnostic/README.md#2232-the-fee-generating-population-must-expand-for-the-pipeline-to-survive)).
 
-Today, fees contribute ~0.19% of the pot; reaching parity requires 12–16× current fee revenue at current transaction volumes. **The submitter population is moving in the opposite direction** ([DIA.2.2.O8](diagnostic/README.md#222-mainnet-observations)) and the most lucrative submitters are **excluded from the rewards their activity funds** ([DIA.2.2.O9](diagnostic/README.md#222-mainnet-observations)).
+Today, fees contribute ~0.19% of the pot; reaching parity requires 12–16× current fee revenue at current transaction volumes. **The submitter population is moving in the opposite direction** ([CEN.O8](diagnostic/README.md#222-mainnet-observations)) and the most lucrative submitters are **excluded from the rewards their activity funds** ([CEN.O9](diagnostic/README.md#222-mainnet-observations)).
 
 The mechanism currently has **no instrument** to detect this divergence at the protocol layer. Fee revenue is observable; submitter population dynamics are not part of any governance review. A specification that requires fee growth as a condition of long-term solvency must include the surveillance and recalibration machinery for the population that produces those fees.
 
@@ -936,7 +936,7 @@ The mechanism currently has **no instrument** to detect this divergence at the p
 <div class="ev-label">Population trajectory</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Unique input addresses per epoch: **~512 K (epoch 300) → ~158 K (epoch 384)** — a **69 % decline**. Transaction count held above 300 K.</p>
-<p class="ev-sources" markdown="1">Source: [DIA.2.2.O8](diagnostic/README.md#222-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Source: [CEN.O8](diagnostic/README.md#222-mainnet-observations).</p>
 </div>
 </div>
 
@@ -944,7 +944,7 @@ The mechanism currently has **no instrument** to detect this divergence at the p
 <div class="ev-label">Eligibility mismatch</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">82 % of submitter addresses carry a staking credential by headcount; **30.6 % of fee revenue** comes from enterprise/script addresses that cannot delegate.</p>
-<p class="ev-sources" markdown="1">Source: [DIA.2.2.O9](diagnostic/README.md#222-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Source: [CEN.O9](diagnostic/README.md#222-mainnet-observations).</p>
 </div>
 </div>
 
@@ -952,7 +952,7 @@ The mechanism currently has **no instrument** to detect this divergence at the p
 <div class="ev-label">Fee concentration</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Script transactions: **12.6 % of count, 29.7 % of fees**; **> 40 %** during high-DeFi epochs.</p>
-<p class="ev-sources" markdown="1">Source: [DIA.2.2.O10](diagnostic/README.md#222-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Source: [CEN.O10](diagnostic/README.md#222-mainnet-observations).</p>
 </div>
 </div>
 
@@ -960,7 +960,7 @@ The mechanism currently has **no instrument** to detect this divergence at the p
 <div class="ev-label">Revenue concentration</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Top **10** fee-paying addresses: **30.5 % of fees**; top **500: 51.5 %**. Heavy-tailed but below delegation Gini.</p>
-<p class="ev-sources" markdown="1">Source: [DIA.2.2.O11](diagnostic/README.md#222-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Source: [CEN.O11](diagnostic/README.md#222-mainnet-observations).</p>
 </div>
 </div>
 
@@ -1051,7 +1051,7 @@ Pot Survival, Fee Policy and Price Robustness specify **what** must be observed,
 
 #### 4.4.1. Why a defined process is the specification, not the design
 
-The pre-V2 mechanism was governed off-chain, with a single class of decision-maker and no codified review cadence. Five years of inertia on $\rho$, $\tau$, and $minPoolCost$ ([DIA.1.1.O4](diagnostic/README.md#112-mainnet-observations)) document the failure mode of an undefined process: parameters that cannot be moved are equivalent to parameters that cannot be wrong.
+The pre-V2 mechanism was governed off-chain, with a single class of decision-maker and no codified review cadence. Five years of inertia on $\rho$, $\tau$, and $minPoolCost$ ([TRE.O4](diagnostic/README.md#112-mainnet-observations)) document the failure mode of an undefined process: parameters that cannot be moved are equivalent to parameters that cannot be wrong.
 
 V2 must not repeat this failure. **Pot Survival, Fee Policy and Price Robustness are meaningful only if the loop they describe is itself specified** — cadence, pipeline, scope, composition. Without that specification, the milestones above describe a loop that has no clock.
 

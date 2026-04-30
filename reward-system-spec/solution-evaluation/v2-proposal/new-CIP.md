@@ -500,7 +500,7 @@ Eight implications follow from this table.
 
 **I5 — Delegation-as-counter-power is restored.** Under $A_{\text{new}}$, the operator economically *needs* delegators to reach the plateau without over-committing capital. A pool that fails to attract delegation is structurally pushed below the plateau, reducing yield per ADA pledged. This re-establishes the accountability loop [The Intended Game §3.4.2](../the-intended-game/README.md#342-delegation-as-counter-power) describes.
 
-**I6 — Yield-differential to delegators becomes visible at low pledge already.** Because the curve is concave, even modest pledge (π = 0.10–0.20) extracts 36–64% of the maximum bonus. A pool at $\pi = 0.20$ vs a pool at $\pi = 0$ produces a yield gap delegators can read. The dormant pledge-bonus budget (95.6% return-to-reserve per [DIA.1.2.O6](../diagnostic/README.md)) becomes a contestable economic dimension *for retail operators*, not just for whales.
+**I6 — Yield-differential to delegators becomes visible at low pledge already.** Because the curve is concave, even modest pledge (π = 0.10–0.20) extracts 36–64% of the maximum bonus. A pool at $\pi = 0.20$ vs a pool at $\pi = 0$ produces a yield gap delegators can read. The dormant pledge-bonus budget (95.6% return-to-reserve per [POL.O6](../diagnostic/README.md)) becomes a contestable economic dimension *for retail operators*, not just for whales.
 
 **I7 — Pledge-bonus utilisation should rise materially.** The plateau means saturating-pool operators no longer face an unreachable target (77M ADA pledge). They reach the maximum at 33.5M and are inert above. The fraction of the $\lambda_{\text{pledge}}$ budget actually distributed should rise from <5% (current) toward [§3.2.2 KPI](../README.md#322-specification) target >50%.
 

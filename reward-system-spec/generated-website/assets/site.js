@@ -100,7 +100,8 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
   })();
 
 
-  /* ── Cross-page DIA source overlay ──
+
+  /* ── Cross-page synthesis-observation source overlay ──
      When an `.obs-ref` anchor carries `data-obs-src`, hydrate the overlay
      from the bundled `.sro-obs-detail` registry (the source card on the
      sub-report page) rather than from the local `.obs-card`. The panel
@@ -1064,6 +1065,6 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
     window.addEventListener('hashchange',expandToHash);
   })();
   /* ── /Pro observation card — header collapse ── */
-  /* ── /Cross-page DIA source overlay ── */
+  /* ── /Cross-page synthesis-observation source overlay ── */
 
 })();
