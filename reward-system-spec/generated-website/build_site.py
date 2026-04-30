@@ -4602,10 +4602,14 @@ def rewrite_dia_anchors(
 
 # --- Findings extraction (for findings.html synthesis page) --------------
 
-# Matches `### X.Y.Z Problem Induction …` headings. The number of levels
-# mirrors the Mainnet Observations regex (2 or 3 dot-separated levels).
+# Matches `### X.Y.Z. Problem Induction …` headings. The number of
+# levels mirrors the Mainnet Observations regex (2 or 3 dot-separated
+# levels). Trailing dot is optional — TOC normalisation added a period
+# after multi-level section numbers (e.g. ``1.1.3.``) that the original
+# regex would otherwise reject (which is what was stalling
+# extract_findings_from_md and producing ``0 findings`` on findings.html).
 _FINDING_HEADING_RE = re.compile(
-    r"^###\s+(\d+(?:\.\d+){1,2})\s+Problem Induction\s*(?:→\s*(.+?))?\s*$",
+    r"^###\s+(\d+(?:\.\d+){1,2})\.?\s+Problem Induction\s*(?:→\s*(.+?))?\s*$",
     re.MULTILINE,
 )
 
