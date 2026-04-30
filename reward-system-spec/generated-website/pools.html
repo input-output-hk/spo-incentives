@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777546576">
+<link rel="stylesheet" href="assets/site.css?v=1777547236">
 
 
 </head>
@@ -1515,6 +1515,9 @@ $$</p>
 </table>
 <p>At 1 block/epoch the reward is <strong>as variable as its own mean</strong>. At <strong>3 blocks/epoch</strong> the pool produces in the overwhelming majority of epochs — this is where a delegator can first observe <em>consistent</em> performance.</p>
 <p><em>The ~3M ADA line identified in prior work is not an arbitrary ADA amount: it is the point where Poisson noise stops dominating.</em></p>
+<blockquote id="finding-pol-o3-f1">
+<p><strong>Finding <a class="finding-ref" href="pools.html#finding-pol-o3-f1" data-finding="POL.O3.F1" data-short="F3.1" data-group="3" title="POL.O3.F1 · hover for summary, click for detail">POL.O3.F1</a> — Regular block production needs ~3M ADA of stake at today's active supply.</strong> The 1-block expectation kicks in at <strong>~0.97M ADA</strong> ($n \cdot S_{\text{active}}/(L \cdot f)$ with $S_{\text{active}} = 21.57$B), but Poisson variance ($\text{CV} = 100\%$ at $\lambda = 1$) makes that tier unreliable; consistent production starts at <strong>~2.92M ADA / 3 blocks per epoch</strong> where the CV falls to <strong>58%</strong>. This boundary is <strong>emergent</strong> — not a protocol parameter — and rises with active stake (to <strong>~5.35M ADA</strong> at full supply), so any participation-growth scenario pushes more pools below it.</p>
+</blockquote>
 <p><strong>Current landscape:</strong></p>
 <table>
 <thead>
@@ -1604,7 +1607,8 @@ $$</p>
 </tbody>
 </table>
 <p>In aggregate, below-viability pools <strong>destroy value</strong>: their fixed costs exceed their total reward by <strong>3.6×</strong>. Delegators to these pools receive <strong>negative net reward</strong>.</p>
-<blockquote>
+<blockquote id="finding-pol-o3-f2">
+<p><strong>Finding <a class="finding-ref" href="pools.html#finding-pol-o3-f2" data-finding="POL.O3.F2" data-short="F3.2" data-group="3" title="POL.O3.F2 · hover for summary, click for detail">POL.O3.F2</a> — Below ~1.1M ADA of stake the protocol-floor flat fee exceeds the entire pool reward.</strong> With the dominant <strong>340 ADA</strong> flat fee, break-even sits at <strong>~1.09M ADA</strong> of stake; below that line the reward is fully consumed before any pro-rata distribution can occur. <strong>1,987 pools (73% of all pools with stake)</strong> sit in this zone — collectively owing <strong>647K ADA/epoch</strong> in fixed costs against just <strong>182K ADA</strong> in earned reward, a <strong>3.6× shortfall</strong>. The pledge-bonus design assumes operators above the line; most of the registered population is structurally underneath it.</p>
 <p><strong>Why do they persist?</strong> 1,987 below-viability pools represent <strong>73% of all pools with stake</strong> — yet they exist and attract delegators despite being <strong>economically irrational for both parties</strong>. The persistence suggests delegators either do not understand the fee mechanics, stake for non-economic reasons (governance, ideology, wallet defaults), or face friction in redelegating.</p>
 </blockquote>
 <h5 id="4123-saturation-threshold">4.1.2.3. Saturation threshold</h5>
@@ -1649,6 +1653,10 @@ $$</p>
 </tbody>
 </table>
 <p>The reason is <strong>arithmetic</strong>: $k = 500$ implicitly required near-complete participation (~100% of supply). Actual participation at <strong>56.5%</strong> makes the target <strong>structurally unreachable</strong> — regardless of operator behaviour or pledge reform.</p>
+<blockquote id="finding-pol-o3-f3">
+<p><strong>Finding <a class="finding-ref" href="pools.html#finding-pol-o3-f3" data-finding="POL.O3.F3" data-short="F3.3" data-group="3" title="POL.O3.F3 · hover for summary, click for detail">POL.O3.F3</a> — Only 8 pools reach saturation; the cap designed for 500 is nearly inactive.</strong> At <strong>$z_0 = 76.99$M ADA</strong>, just <strong>8 pools</strong> (1.6% of the design target) actually bind on the saturation point. The mechanism's central equilibrium tool — meant to redistribute stake across a uniform population of $k = 500$ saturated pools — is operating on <strong>two orders of magnitude</strong> less of the landscape than its design assumed. The plateau the SL-D1 model envisioned is, in practice, a thin cluster.</p>
+<p><strong>Finding <a class="finding-ref" href="pools.html#finding-pol-o3-f4" data-finding="POL.O3.F4" data-short="F3.4" data-group="3" title="POL.O3.F4 · hover for summary, click for detail">POL.O3.F4</a> — Active stake fills only 56.5% of the theoretical $k \times z_0$ capacity.</strong> With <strong>21.75B ADA</strong> active against <strong>38.49B ADA</strong> of nominal capacity, <strong>at most 282 pools</strong> could ever be saturated under current participation — well short of the 500 the parameter encodes. The shortfall is arithmetic, not behavioural: $k = 500$ implicitly required near-complete participation, and absent that, no operator-side reform can make the saturation cap bind on more than ~282 pools.</p>
+</blockquote>
 <p>The near-saturation zone (≥80% of $z_0$) contains <strong>104 pools</strong> — a thin cluster rather than the broad plateau the design envisioned. The bulk of the healthy pool landscape sits between <strong>3M and 60M ADA</strong>, far below saturation.</p>
 <h4 id="413-tier-definitions">4.1.3. Tier definitions</h4>
 <p>The three thresholds partition the pool space into <strong>nine tiers</strong>. Boundary values are for epoch 616 (21.57B ADA active stake).</p>
@@ -3014,6 +3022,10 @@ $$</p>
 <li>Of which <strong>121 retained MPO pools</strong> account for <strong>2.45B ADA</strong></li>
 <li>Everything outside this perimeter is either structurally unable or strategically unwilling to respond to the pledge signal</li>
 </ul>
+<blockquote id="finding-pol-o6-f1">
+<p><strong>Finding <a class="finding-ref" href="pools.html#finding-pol-o6-f1" data-finding="POL.O6.F1" data-short="F6.1" data-group="6" title="POL.O6.F1 · hover for summary, click for detail">POL.O6.F1</a> — 78 of 85 multi-pool entities sit outside the pledge-response path.</strong> Together they hold <strong>13.74B ADA — 63% of active stake</strong> — and absorb the pledge-bonus signal without changing behaviour. This is not a calibration miss but <strong>multi-game optimization</strong>: these entities operate under custody constraints, brand commitments, or adjacent-business logics that dominate the formula's reward delta. The pledge instrument is therefore inert across the majority of the network's capital, regardless of how $a_0$ is set.</p>
+<p><strong>Finding <a class="finding-ref" href="pools.html#finding-pol-o6-f2" data-finding="POL.O6.F2" data-short="F6.2" data-group="6" title="POL.O6.F2 · hover for summary, click for detail">POL.O6.F2</a> — Three distinct mechanisms produce the same non-responsiveness.</strong> <strong>CEX</strong> entities cannot pledge custodied retail balances, <strong>IVaaS</strong> providers cannot pledge institutional client assets, and community-run fleets <em>choose not to</em> despite being capital-sufficient. The first two are <strong>architectural</strong> (the capital is not the operator's to commit), the third is <strong>strategic</strong>. Conflating them obscures that no single parameter change addresses all three: any reform must either reach inside custodial structures, alter the relative payoff of strategic non-compliance, or accept that ~63% of stake is out of scope.</p>
+</blockquote>
 <p><img alt="Competitive Landscape — Independent Single-Pool Operators + Retained MPO Pools" src="sub-flows/pools-distribution/mainnet-analysis/figures/filtered_landscape_mainnet.png"></p>
 <p>The retained MPOs — 70 marginal, 17 compliant, 34 exemplary — reshape the tier structure when added back. The Saturated tier, nearly empty in the single-pool-only view (<a href="observatory.html#22-restore-the-notion-of-pledge-among-operators">§2.2</a>), now carries <strong>2.0B ADA</strong> (24.8% of the filtered basket).</p>
 <p><em>These are the only MPO pools where the pledge signal visibly influences behaviour.</em></p>
@@ -3046,6 +3058,9 @@ $$</p>
 </table>
 <p>The pledge bonus <em>does</em> capture meaningful capital — but almost exclusively among operators who already sit at or near saturation scale.</p>
 <p><em>For the vast majority of independent operators, the mechanism is functionally inert.</em></p>
+<blockquote id="finding-pol-o6-f3">
+<p><strong>Finding <a class="finding-ref" href="pools.html#finding-pol-o6-f3" data-finding="POL.O6.F3" data-short="F6.3" data-group="6" title="POL.O6.F3 · hover for summary, click for detail">POL.O6.F3</a> — The actual incentive-responsive arena holds 7.89B ADA — 36% of active stake.</strong> Once non-responsive MPOs are stripped out and only marginally-pledging MPO pools are retained, the filtered proxy contains <strong>2,218 pools</strong> and <strong>~36%</strong> of staked supply. This is the ceiling on what any pledge-curve reform can directly move. Discussions of $a_0$, $k$, or the bonus shape that ignore the perimeter conflate the formula's nominal scope (the whole network) with its operative scope (just over a third of it).</p>
+</blockquote>
 <h4 id="445-the-structural-mismatch">4.4.5. The structural mismatch</h4>
 <p>The reward sharing scheme was designed for a world of independent, single-pool operators competing on pledge commitment. <strong>The world that exists is fundamentally different.</strong></p>
 <p>Three numbers frame the gap:</p>
@@ -3145,6 +3160,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777546576"></script>
+<script src="assets/site.js?v=1777547236"></script>
 </body>
 </html>
