@@ -5279,14 +5279,23 @@ def _walk_html_skipping(
 
 
 # Match a blockquote whose first paragraph opens with
-# `<strong>Finding <a class="finding-ref" data-finding="XXX.OY.FZ">…</a>…`
+# `<strong>Finding <a class="finding-ref" data-finding="XXX.OY.FZ">XXX.OY.FZ</a>…`
 # i.e. the Finding callout pattern (already rewritten to include the
 # canonical ref anchor by `rewrite_finding_citations`). Captures:
 #   1: existing attributes on the blockquote tag (may be empty)
-#   2: the canonical id (e.g. CEN.O7.F1)
+#   lead: ``<p…><strong>Finding `` opener
+#   anchor_open: full opening ``<a …data-finding="XXX.OY.FZ"…>``
+#   canon: canonical id (``CEN.O7.F1``)
+#   anchor_text: visible text inside the opening anchor (usually
+#                ``CEN.O7.F1``); rewritten to ``#Z`` so the callout reads
+#                "Finding #1 — …" once the parent observation is shown
+#                in the breadcrumb above.
 _CALLOUT_BLOCKQUOTE_RE = re.compile(
-    r'<blockquote(\s[^>]*)?>(?P<rest>\s*<p[^>]*>\s*<strong>\s*Finding\s+'
-    r'<a [^>]*?data-finding="(?P<canon>[A-Z]{3}\.O\d+\.F\d+)"[^>]*>)',
+    r'<blockquote(\s[^>]*)?>'
+    r'(?P<lead>\s*<p[^>]*>\s*<strong>\s*Finding\s+)'
+    r'(?P<anchor_open><a [^>]*?data-finding="(?P<canon>[A-Z]{3}\.O\d+\.F\d+)"[^>]*>)'
+    r'(?P<anchor_text>[^<]*)'
+    r'(?P<anchor_close></a>)',
     re.IGNORECASE,
 )
 
@@ -5375,7 +5384,10 @@ def inject_finding_callout_ids(
     def _sub(m: re.Match) -> str:
         full = m.group(0)
         attrs = m.group(1) or ""
-        rest = m.group("rest")
+        lead = m.group("lead")
+        anchor_open = m.group("anchor_open")
+        anchor_text = m.group("anchor_text") or ""
+        anchor_close = m.group("anchor_close")
         canon = m.group("canon")
         if "id=" in attrs.lower():
             return full
@@ -5384,6 +5396,16 @@ def inject_finding_callout_ids(
         obs_canon = canon.rsplit(".F", 1)[0]
         obs_slug = obs_canon.replace(".", "-").lower()
         title = titles.get(obs_canon, "")
+        # F number for the compact "Finding #N" rendering. The full
+        # canonical id is still in the breadcrumb (parent obs) and in
+        # the anchor's title attribute, so no information is lost.
+        f_num = canon.rsplit(".F", 1)[-1] if ".F" in canon else anchor_text
+        # Only rewrite the anchor text if it currently shows the canonical
+        # id — preserve any author-customised label.
+        if anchor_text.strip() == canon:
+            anchor_text_out = f'#{f_num}'
+        else:
+            anchor_text_out = anchor_text
         meta_html = ""
         if "finding-callout-meta" not in full:
             title_html = (
@@ -5398,7 +5420,10 @@ def inject_finding_callout_ids(
                 f'</p>'
             )
         new_attrs = f' id="finding-{slug}"' + attrs
-        return f"<blockquote{new_attrs}>{meta_html}{rest}"
+        return (
+            f"<blockquote{new_attrs}>{meta_html}{lead}"
+            f"{anchor_open}{anchor_text_out}{anchor_close}"
+        )
 
     return _CALLOUT_BLOCKQUOTE_RE.sub(_sub, html_body)
 
