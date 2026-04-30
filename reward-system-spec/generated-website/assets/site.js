@@ -953,9 +953,15 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
 
   /* ── Pro observation card — header collapse ──
      Click anywhere on the .sro-head row to fold/unfold the body
-     (abstract + findings label + findings list). State persists
-     per-card via localStorage so the user's choice survives
-     reloads and cross-page navigation. */
+     (FINDINGS label + findings list; abstract stays visible).
+
+     Default state = collapsed (the markup ships .collapsed on every
+     card). localStorage tracks user overrides:
+       state[id] === '0' → user explicitly expanded
+       state[id] === '1' → user explicitly collapsed
+       absent           → fall back to the default (collapsed)
+     so the user's expansions persist but cards they never touched
+     stay folded on every visit. */
   (function initCardCollapse(){
     var heads=document.querySelectorAll('.sro-card-pro > .sro-head');
     if(!heads.length) return;
@@ -974,12 +980,14 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
       var id=card.id||card.getAttribute('data-obs')||'';
       head.setAttribute('role','button');
       head.setAttribute('tabindex','0');
-      head.setAttribute('aria-expanded','true');
       function apply(collapsed){
         card.classList.toggle('collapsed',collapsed);
         head.setAttribute('aria-expanded',collapsed?'false':'true');
       }
-      if(id && state[id]==='1') apply(true);
+      /* Reconcile the markup default (collapsed) with any persisted
+         user override. */
+      if(id && state[id]==='0') apply(false);
+      else apply(true);
       function toggle(ev){
         /* Don't toggle when the click lands on a link inside the
            header (the brand badge or any future header link). */
@@ -987,8 +995,7 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
         var willCollapse=!card.classList.contains('collapsed');
         apply(willCollapse);
         if(id){
-          if(willCollapse) state[id]='1';
-          else delete state[id];
+          state[id]=willCollapse?'1':'0';
           save(state);
         }
       }

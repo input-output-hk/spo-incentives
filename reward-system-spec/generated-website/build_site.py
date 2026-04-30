@@ -2571,7 +2571,7 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
   flex-direction:column;gap:3px}
 .sro-card-pro .sro-eyebrow{font:600 10px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)}
-.sro-card-pro .sro-title{font:600 15.5px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+.sro-card-pro .sro-title{font:600 19px/1.35 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-.005em;
   color:var(--text-primary);margin:0}
 .sro-card-pro .sro-count{flex-shrink:0;
   display:inline-flex;align-items:center;
@@ -2596,7 +2596,7 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
     color-mix(in srgb, var(--cardano-blue) 10%, transparent) 0%,
     color-mix(in srgb, var(--cardano-blue) 4%, transparent) 50%,
     transparent 100%);
-  font:400 13.5px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font:400 13px/1.6 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-primary)}
 .sro-card-pro .sro-abstract::before{content:'';position:absolute;
   left:0;top:0;bottom:0;width:3px;
@@ -2677,8 +2677,8 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
   align-items:flex-start;justify-content:center;
   background:transparent;border:0;text-decoration:none}
 .sro-card-pro .sro-fid-label{
-  font:600 17px/1.1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--infared);letter-spacing:-.01em;
+  font:600 14px/1.2 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--infared);letter-spacing:-.005em;
   font-variant-numeric:tabular-nums}
 .sro-card-pro .sro-fid-ref{
   font:500 10px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
@@ -2688,13 +2688,12 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
 [data-theme=dark] .sro-card-pro .sro-fid-label{color:#FF6F6E}
 [data-theme=dark] .sro-card-pro .sro-finding:hover .sro-fid-label{color:#FF8F8E}
 
-/* Evidence text — the row's primary signal. Bumped to 16.5px /
-   1.7 line-height with a slightly cooler, fuller text colour so
-   long claims read as long-form prose rather than chip metadata.
-   Numbers/named entities get tabular-nums for vertical alignment
-   when the eye scans down the column. */
+/* Evidence text — body of the row. Sits BELOW the observation
+   title in the visual hierarchy (title 19px → evidence 14.5px),
+   not above. Numbers/named entities keep tabular-nums for
+   vertical alignment when the eye scans down the column. */
 .sro-card-pro .sro-evidence{
-  font:400 16.5px/1.7 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font:400 14.5px/1.6 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:#1a1a1a;letter-spacing:-.005em}
 [data-theme=dark] .sro-card-pro .sro-evidence{color:#E4E4E7}
 .sro-card-pro .sro-evidence strong{font-weight:700;
@@ -3690,9 +3689,15 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
 
   /* ── Pro observation card — header collapse ──
      Click anywhere on the .sro-head row to fold/unfold the body
-     (abstract + findings label + findings list). State persists
-     per-card via localStorage so the user's choice survives
-     reloads and cross-page navigation. */
+     (FINDINGS label + findings list; abstract stays visible).
+
+     Default state = collapsed (the markup ships .collapsed on every
+     card). localStorage tracks user overrides:
+       state[id] === '0' → user explicitly expanded
+       state[id] === '1' → user explicitly collapsed
+       absent           → fall back to the default (collapsed)
+     so the user's expansions persist but cards they never touched
+     stay folded on every visit. */
   (function initCardCollapse(){
     var heads=document.querySelectorAll('.sro-card-pro > .sro-head');
     if(!heads.length) return;
@@ -3711,12 +3716,14 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
       var id=card.id||card.getAttribute('data-obs')||'';
       head.setAttribute('role','button');
       head.setAttribute('tabindex','0');
-      head.setAttribute('aria-expanded','true');
       function apply(collapsed){
         card.classList.toggle('collapsed',collapsed);
         head.setAttribute('aria-expanded',collapsed?'false':'true');
       }
-      if(id && state[id]==='1') apply(true);
+      /* Reconcile the markup default (collapsed) with any persisted
+         user override. */
+      if(id && state[id]==='0') apply(false);
+      else apply(true);
       function toggle(ev){
         /* Don't toggle when the click lands on a link inside the
            header (the brand badge or any future header link). */
@@ -3724,8 +3731,7 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
         var willCollapse=!card.classList.contains('collapsed');
         apply(willCollapse);
         if(id){
-          if(willCollapse) state[id]='1';
-          else delete state[id];
+          state[id]=willCollapse?'1':'0';
           save(state);
         }
       }
@@ -5448,7 +5454,7 @@ def _render_subreport_observations(groups: list[dict]) -> str:
                 f'</header>'
             )
             article_open = (
-                f'<article class="sro-card sro-card-pro" id="{g["slug"]}" '
+                f'<article class="sro-card sro-card-pro collapsed" id="{g["slug"]}" '
                 f'data-obs="{canon}" data-group="{g["o_num"]}">'
             )
         else:
