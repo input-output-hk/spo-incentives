@@ -5415,9 +5415,20 @@ def inject_finding_callout_ids(
                 f' &mdash; <em class="finding-callout-meta-title">'
                 f'{_html.escape(title)}</em>'
             ) if title else ""
+            # ``OPE.O1`` -> 1; falls back to the raw segment if the
+            # ``.O`` separator is missing for any reason.
+            obs_num = (
+                obs_canon.rsplit(".O", 1)[-1]
+                if ".O" in obs_canon else ""
+            )
+            obs_label_html = (
+                f'<span class="finding-callout-meta-obs-num">'
+                f'Observation #{obs_num}</span> '
+            ) if obs_num else ""
             meta_html = (
                 f'<p class="finding-callout-meta">'
                 f'<span class="finding-callout-meta-prefix">From</span> '
+                f'{obs_label_html}'
                 f'<a class="finding-callout-meta-link" href="#{obs_slug}">'
                 f'{obs_canon}</a>{title_html}'
                 f'</p>'
