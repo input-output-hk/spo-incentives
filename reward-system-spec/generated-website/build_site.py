@@ -2158,8 +2158,7 @@ _CROSS_OBS_CSS = """
 /* Source-panel findings list — hydrated from the bundled findings
    registry. Mirrors the .sro-card-pro finding row layout: red ref
    chip + bigger summary text + small jump arrow. */
-.obs-panel-findings-wrap{margin:22px 0 18px;
-  border-top:1px solid var(--border);padding-top:18px}
+.obs-panel-findings-wrap{margin:22px 0 18px}
 .obs-panel-findings-head{display:flex;align-items:center;gap:14px;
   margin-bottom:12px}
 .obs-panel-findings-label{flex-shrink:0;
@@ -2170,33 +2169,74 @@ _CROSS_OBS_CSS = """
 .obs-panel-findings-head::after{content:'';flex:1;height:1px;
   background:color-mix(in srgb, var(--infared) 30%, transparent)}
 .obs-panel-findings{list-style:none;margin:0;padding:0;
-  display:flex;flex-direction:column;gap:10px}
-.obs-panel-finding{border:1px solid var(--border);border-radius:6px;
-  padding:12px 14px;background:var(--bg);
-  transition:border-color .15s,background .15s}
-.obs-panel-finding:hover{
-  border-color:color-mix(in srgb, var(--infared) 35%, var(--border));
-  background:rgba(229,35,33,.025)}
-.obs-panel-finding-head{display:flex;align-items:center;gap:10px;
-  margin-bottom:6px}
-.obs-panel-finding-id{font:600 10.5px/1.3 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.05em;color:var(--infared);
-  padding:3px 8px;border-radius:3px;
-  background:rgba(229,35,33,.06);
-  border:1px solid rgba(229,35,33,.20)}
-.obs-panel-finding-jump{display:inline-flex;align-items:center;justify-content:center;
-  width:20px;height:20px;border-radius:4px;color:var(--text-muted);
-  text-decoration:none;margin-left:auto;
-  transition:color .15s,background .15s,transform .15s}
-.obs-panel-finding-jump svg{fill:none;stroke:currentColor;stroke-width:2;
-  stroke-linecap:round;stroke-linejoin:round;width:13px;height:13px}
-.obs-panel-finding-jump:hover{color:var(--cardano-blue);
-  background:var(--cardano-blue-soft);transform:translate(1px,-1px)}
-.obs-panel-finding-summary{font:400 13.5px/1.6 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  display:flex;flex-direction:column}
+/* Each finding row mirrors .sro-card-pro .sro-finding — a 2-col
+   layout with the badge on the left, body on the right, and the
+   nature/insight pill anchored bottom-right of the row. */
+.obs-panel-finding{position:relative;
+  display:grid;grid-template-columns:96px 1fr;gap:18px;
+  padding:16px 16px 52px;
+  border-top:1px solid var(--border);background:transparent;
+  transition:background .15s}
+.obs-panel-finding:first-child{border-top:0}
+.obs-panel-finding:hover{background:rgba(229,35,33,.04)}
+[data-theme=dark] .obs-panel-finding:hover{background:rgba(255,111,110,.06)}
+/* Badge column — clickable when a source href is known. \`#N\`
+   prominent in Infared, canonical ref small mono breadcrumb. */
+.obs-panel-finding-fid{padding:0;flex-shrink:0;
+  align-self:flex-start;margin-top:1px;
+  display:inline-flex;flex-direction:column;gap:3px;
+  align-items:flex-start;justify-content:center;
+  background:transparent;border:0;text-decoration:none;
+  color:inherit}
+a.obs-panel-finding-fid{cursor:pointer}
+.obs-panel-finding-num{
+  font:600 14px/1.2 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--infared);letter-spacing:-.005em;
+  font-variant-numeric:tabular-nums}
+.obs-panel-finding-id{
+  font:500 10px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--text-muted);letter-spacing:.06em;
+  padding:0;background:transparent;border:0;border-radius:0}
+a.obs-panel-finding-fid:hover .obs-panel-finding-num{color:#a01a18}
+a.obs-panel-finding-fid:hover .obs-panel-finding-id{color:var(--text-secondary)}
+[data-theme=dark] .obs-panel-finding-num{color:#FF6F6E}
+[data-theme=dark] a.obs-panel-finding-fid:hover .obs-panel-finding-num{color:#FF8F8E}
+/* Body — evidence/summary text. Same Inter 14.5/1.65 as
+   .sro-card-pro .sro-evidence so the rhythm carries from main
+   page into the panel. */
+.obs-panel-finding-body{min-width:0}
+.obs-panel-finding-summary{font:400 14.5px/1.65 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:#1a1a1a;letter-spacing:-.005em}
 [data-theme=dark] .obs-panel-finding-summary{color:#E4E4E7}
 .obs-panel-finding-summary p{margin:0}
 .obs-panel-finding-summary p + p{margin-top:6px}
+.obs-panel-finding-summary strong{font-weight:700;
+  color:#000;font-variant-numeric:tabular-nums}
+[data-theme=dark] .obs-panel-finding-summary strong{color:#fff}
+/* Insight pill — same GitHub-style category chip as .sro-nature on
+   the main page, hue hashed (in JS) from the insight text and
+   passed via the inline \`--n-h\` custom property. */
+.obs-panel-finding-insight{
+  position:absolute;bottom:14px;right:16px;
+  font:500 10.5px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;text-transform:none;font-style:normal;
+  padding:2px 9px;border-radius:12px;
+  background:hsl(var(--n-h,215),65%,94%);
+  color:hsl(var(--n-h,215),55%,32%);
+  border:1px solid hsl(var(--n-h,215),50%,82%);
+  white-space:nowrap;max-width:calc(100% - 80px);
+  overflow:hidden;text-overflow:ellipsis}
+[data-theme=dark] .obs-panel-finding-insight{
+  background:hsl(var(--n-h,215),35%,18%);
+  color:hsl(var(--n-h,215),65%,75%);
+  border-color:hsl(var(--n-h,215),40%,30%)}
+@media (max-width:720px){
+  .obs-panel-finding{grid-template-columns:1fr;gap:8px;
+    padding:14px 16px}
+  .obs-panel-finding-insight{position:static;display:inline-block;
+    margin-top:8px;max-width:none}
+}
 /* Key numbers — bolded at the MD source, tinted and tabular-aligned here so
    they scan as landmarks inside the short finding rows. */
 .obs-panel-finding-summary strong,
@@ -2666,7 +2706,7 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
    accent lane), distinct from the Cardano-blue observation chrome
    above. No decorative left rail or per-row gradient. */
 .sro-card-pro .sro-findings{position:relative;padding:0;border-left:0}
-.sro-card-pro .sro-finding{padding:16px 22px 38px;gap:18px;
+.sro-card-pro .sro-finding{padding:16px 22px 52px;gap:18px;
   border-top:1px solid var(--border);background:transparent;
   transition:background .15s}
 .sro-card-pro .sro-finding:first-child{border-top:0}
@@ -3042,31 +3082,52 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
         empty.textContent='No findings indexed for this observation.';
         list.appendChild(empty);
       } else {
-        ids.forEach(function(fid){
+        /* Stable hash → hue (0..359) so each insight/nature text always
+           lands on the same colour across builds, matching the Python
+           _nature_hue helper used by the Pro card on the main page.
+           (Different hash function — md5 isn't available in the
+           browser without async — but stable per-text and visually
+           varied; the pill colour is a category cue, not a citation.) */
+        function _panelHue(s){
+          s=(s||'').trim().toLowerCase();
+          var h=0;
+          for(var i=0;i<s.length;i++){h=((h*31)+s.charCodeAt(i))|0;}
+          return Math.abs(h)%360;
+        }
+        ids.forEach(function(fid,fi){
           var f=findingsIndex[fid];
           var li=document.createElement('li');
           li.className='obs-panel-finding';
-          var idEl='<span class="obs-panel-finding-id">'+fid+'</span>';
-          if(f){
-            var body='<div class="obs-panel-finding-body">'+
-              '<div class="obs-panel-finding-summary">'+f.summary+'</div>'+
-              (f.insight ? '<div class="obs-panel-finding-insight">'+f.insight+'</div>' : '')+
-            '</div>';
-            var head='<div class="obs-panel-finding-head">'+idEl;
-            if(f.href){
-              head+='<a class="obs-panel-finding-jump" href="'+f.href+'" '+
-                'aria-label="Jump to '+fid+'">'+
-                '<svg viewBox="0 0 24 24" width="12" height="12">'+
-                '<line x1="5" y1="12" x2="19" y2="12"/>'+
-                '<polyline points="12 5 19 12 12 19"/></svg></a>';
-            }
-            head+='</div>';
-            li.innerHTML=head+body;
+          /* Two-line stack badge — \`#N\` ordinal + canonical ref —
+             mirrors .sro-card-pro .sro-fid layout. The whole stack
+             is wrapped in <a> when a source href is available so
+             clicking the badge column navigates to the source. */
+          var num='<span class="obs-panel-finding-num">#'+(fi+1)+'</span>';
+          var ref='<span class="obs-panel-finding-id">'+fid+'</span>';
+          var fid_html;
+          if(f && f.href){
+            fid_html='<a class="obs-panel-finding-fid" href="'+f.href+'" '+
+              'aria-label="Jump to '+fid+'">'+num+ref+'</a>';
           } else {
-            li.innerHTML='<div class="obs-panel-finding-head">'+idEl+'</div>'+
+            fid_html='<span class="obs-panel-finding-fid">'+num+ref+'</span>';
+          }
+          if(f){
+            var insightTxt=(f.insight||'').replace(/<[^>]+>/g,'').trim();
+            var hue=_panelHue(insightTxt);
+            var insightPill=f.insight
+              ? '<span class="obs-panel-finding-insight" style="--n-h:'+hue+'">'+f.insight+'</span>'
+              : '';
+            li.innerHTML=fid_html+
               '<div class="obs-panel-finding-body">'+
-              '<div class="obs-panel-finding-summary obs-panel-finding-missing">'+
-              'Detail not bundled on this page.</div></div>';
+                '<div class="obs-panel-finding-summary">'+f.summary+'</div>'+
+              '</div>'+
+              insightPill;
+          } else {
+            li.innerHTML=fid_html+
+              '<div class="obs-panel-finding-body">'+
+                '<div class="obs-panel-finding-summary obs-panel-finding-missing">'+
+                'Detail not bundled on this page.</div>'+
+              '</div>';
           }
           list.appendChild(li);
         });
@@ -3763,6 +3824,41 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
         }
       });
     });
+    /* When the page loads (or the hash changes) with a fragment that
+       points at a .sro-finding inside a collapsed .sro-card-pro, force
+       the parent card open so the target is visible. Persist the open
+       state so the user-expanded card stays open after they've come
+       in via a deep link. */
+    function expandToHash(){
+      var hash=location.hash;
+      if(!hash||hash.length<2) return;
+      var target;
+      try{target=document.querySelector(hash);}catch(e){return;}
+      /* If the link points at \`#finding-cen-o1-f1\` but no callout
+         carries that id (the prose description hasn't been written
+         yet), fall back to the visual Pro card row \`#cen-o1-f1\`
+         and rewrite the URL silently so a refresh keeps working. */
+      if(!target && hash.indexOf('#finding-')===0){
+        var rowHash='#'+hash.slice('#finding-'.length);
+        try{target=document.querySelector(rowHash);}catch(e){return;}
+        if(target){
+          try{history.replaceState(null,'',rowHash);}catch(e){}
+        }
+      }
+      if(!target) return;
+      var card=target.closest('.sro-card-pro');
+      if(!card||!card.classList.contains('collapsed')) return;
+      card.classList.remove('collapsed');
+      var head2=card.querySelector('.sro-head');
+      if(head2) head2.setAttribute('aria-expanded','true');
+      var id=card.id||card.getAttribute('data-obs')||'';
+      if(id){state[id]='0';save(state);}
+      setTimeout(function(){
+        try{target.scrollIntoView({block:'start'});}catch(e){}
+      },10);
+    }
+    expandToHash();
+    window.addEventListener('hashchange',expandToHash);
   })();
   /* ── /Pro observation card — header collapse ── */
   /* ── /Cross-page DIA source overlay ── */
@@ -4849,7 +4945,11 @@ _F_TABLE_ROW_RE = re.compile(
 )
 
 # Captures an `F#.#` token anywhere in prose. Used for inline citation rewrite.
-_F_TOKEN_RE = re.compile(r"\bF(\d+)\.(\d+)\b")
+# Skip matches inside HTML attribute values (e.g. \`data-short="F7.1"\`)
+# so the second-pass rewrite doesn't double-link a token that the first
+# pass already injected into an attribute. The negative lookbehind for
+# \`="\` is fixed-width (2 chars), which Python's \`re\` supports.
+_F_TOKEN_RE = re.compile(r'(?<!=")\bF(\d+)\.(\d+)\b')
 
 # Matches a markdown-style link in a table cell: `[§3.6.1](#361-current-snapshot)`.
 _MD_LINK_IN_CELL = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
@@ -4902,18 +5002,18 @@ def extract_f_findings_from_md(md_text: str, code: str = "", page_html: str = ""
         if link_m:
             anchor_label = link_m.group(1).strip()
             anchor_href = link_m.group(2).strip()
-        # Build the cross-page jump URL: prefix the local fragment with the
-        # owning page's html name. If the source markdown didn't supply an
-        # anchor, fall back to the ``## 1. Mainnet Observations`` table on
-        # the same page (still better than no jump).
-        local_anchor = anchor_href if anchor_href else "#1-mainnet-observations"
-        if page_html:
-            if local_anchor.startswith("#"):
-                jump_href = f"{page_html}{local_anchor}"
-            else:
-                jump_href = local_anchor  # already qualified
+        # Build the cross-page jump URL — point at the FINDING CARD's own
+        # anchor on the source sub-report page (e.g. census.html#cen-o1-f1)
+        # so clicks land on the visual Pro card row, not the discussion
+        # section. The original section link (anchor_href) is preserved
+        # separately for any caller that wants the §X reference.
+        canon_slug = _canon_slug(canon_id)
+        if page_html and canon_slug:
+            jump_href = f"{page_html}#{canon_slug}"
+        elif page_html:
+            jump_href = f"{page_html}#1-mainnet-observations"
         else:
-            jump_href = local_anchor
+            jump_href = anchor_href if anchor_href else "#1-mainnet-observations"
         findings.append({
             "id": fid_short,
             "canon_id": canon_id,
@@ -5090,7 +5190,9 @@ def _render_subreport_obs_registry(obs_groups: list[dict]) -> str:
 # Canonical-only token re for V2 docs (matches POL.O1.F1, OPE.O3.F2 …).
 # Allows an optional surrounding paren pair (kept around the rewritten link
 # for visual continuity with the (O#) citation style used elsewhere).
-_CANON_F_TOKEN_RE = re.compile(r"\b([A-Z]{3})\.O(\d+)\.F(\d+)\b")
+# Same attribute-skip guard as \`_F_TOKEN_RE\` so the canonical rewrite
+# is idempotent if applied twice (or to an already-linked fragment).
+_CANON_F_TOKEN_RE = re.compile(r'(?<!=")\b([A-Z]{3})\.O(\d+)\.F(\d+)\b')
 _CANON_O_TOKEN_RE = re.compile(r"\b([A-Z]{3})\.O(\d+)(?!\.F)\b")
 
 
@@ -5176,6 +5278,156 @@ def _walk_html_skipping(
     return "".join(out)
 
 
+# Match a blockquote whose first paragraph opens with
+# `<strong>Finding <a class="finding-ref" data-finding="XXX.OY.FZ">XXX.OY.FZ</a>…`
+# i.e. the Finding callout pattern (already rewritten to include the
+# canonical ref anchor by `rewrite_finding_citations`). Captures:
+#   1: existing attributes on the blockquote tag (may be empty)
+#   lead: ``<p…><strong>Finding `` opener
+#   anchor_open: full opening ``<a …data-finding="XXX.OY.FZ"…>``
+#   canon: canonical id (``CEN.O7.F1``)
+#   anchor_text: visible text inside the opening anchor (usually
+#                ``CEN.O7.F1``); rewritten to ``#Z`` so the callout reads
+#                "Finding #1 — …" once the parent observation is shown
+#                in the breadcrumb above.
+_CALLOUT_BLOCKQUOTE_RE = re.compile(
+    r'<blockquote(\s[^>]*)?>'
+    r'(?P<lead>\s*<p[^>]*>\s*<strong>\s*Finding\s+)'
+    r'(?P<anchor_open><a [^>]*?data-finding="(?P<canon>[A-Z]{3}\.O\d+\.F\d+)"[^>]*>)'
+    r'(?P<anchor_text>[^<]*)'
+    r'(?P<anchor_close></a>)',
+    re.IGNORECASE,
+)
+
+# Match a whole blockquote (non-greedy body capture). Used to detect
+# blockquotes that python-markdown collapsed two consecutive ``> **Finding
+# …**`` blocks into. We split such blockquotes into one blockquote per
+# Finding paragraph so each callout renders as its own visual unit.
+_BLOCKQUOTE_FULL_RE = re.compile(
+    r'<blockquote(?P<attrs>\s[^>]*)?>(?P<body>.*?)</blockquote>',
+    re.IGNORECASE | re.DOTALL,
+)
+_FINDING_PARA_RE = re.compile(
+    r'<p[^>]*>\s*<strong>\s*Finding\s+'
+    r'<a [^>]*?data-finding="[A-Z]{3}\.O\d+\.F\d+"[^>]*>',
+    re.IGNORECASE,
+)
+
+
+def split_multi_finding_blockquotes(html_body: str) -> str:
+    """Split a single ``<blockquote>`` containing several ``Finding`` callouts
+    into one blockquote per Finding paragraph.
+
+    Python-markdown merges adjacent ``>`` blocks separated by a blank line
+    into one blockquote. The mainnet-analysis MDs use blank-line-separated
+    ``> **Finding …**`` blocks for visual breathing room, so the rendered
+    HTML loses the per-callout boundary. This pre-processor restores it
+    before ``inject_finding_callout_ids`` adds the breadcrumb / id, so each
+    callout gets its own ``<blockquote id="finding-…">`` and the CSS
+    sibling-separator rule applies.
+    """
+    if not html_body or '<blockquote' not in html_body:
+        return html_body
+
+    def _split(m: re.Match) -> str:
+        attrs = m.group("attrs") or ""
+        body = m.group("body")
+        # Bail out if the blockquote already carries an id (e.g. someone
+        # hand-tagged it) — splitting would lose that anchor.
+        if "id=" in attrs.lower():
+            return m.group(0)
+        # Find every Finding paragraph start position inside the body.
+        starts = [mo.start() for mo in _FINDING_PARA_RE.finditer(body)]
+        if len(starts) < 2:
+            return m.group(0)
+        pieces: list[str] = []
+        # Anything before the first Finding stays attached to the first
+        # split blockquote.
+        for i, s in enumerate(starts):
+            e = starts[i + 1] if i + 1 < len(starts) else len(body)
+            pieces.append(body[s:e].rstrip())
+        prefix = body[:starts[0]]
+        # Re-emit a blockquote per piece, preserving original attrs on
+        # each (the id injector will add ``id="finding-…"`` next).
+        rebuilt: list[str] = []
+        for idx, p in enumerate(pieces):
+            chunk = (prefix + p) if idx == 0 and prefix.strip() else p
+            rebuilt.append(f"<blockquote{attrs}>{chunk}</blockquote>")
+        return "\n".join(rebuilt)
+
+    return _BLOCKQUOTE_FULL_RE.sub(_split, html_body)
+
+
+def inject_finding_callout_ids(
+    html_body: str,
+    obs_titles: dict[str, str] | None = None,
+) -> str:
+    """Add ``id="finding-{slug}"`` to each Finding callout blockquote
+    and prepend a small 'From XX.OY — title' breadcrumb that links
+    back to the parent observation card.
+
+    The breadcrumb runs from website-side metadata only (the
+    observation title is already rendered as part of the Pro card
+    header); it does not duplicate prose into the markdown source.
+    Same-page only — the breadcrumb's href uses ``#{obs-slug}`` which
+    targets the local Pro card.
+
+    Idempotent — blockquotes that already carry an ``id=`` are left
+    alone so manual ids survive, and the breadcrumb is only injected
+    on first pass (we detect by the presence of
+    ``finding-callout-meta``).
+    """
+    if not html_body:
+        return html_body
+    titles = obs_titles or {}
+
+    def _sub(m: re.Match) -> str:
+        full = m.group(0)
+        attrs = m.group(1) or ""
+        lead = m.group("lead")
+        anchor_open = m.group("anchor_open")
+        anchor_text = m.group("anchor_text") or ""
+        anchor_close = m.group("anchor_close")
+        canon = m.group("canon")
+        if "id=" in attrs.lower():
+            return full
+        slug = canon.replace(".", "-").lower()
+        # Parent observation id — drop the trailing .F# segment.
+        obs_canon = canon.rsplit(".F", 1)[0]
+        obs_slug = obs_canon.replace(".", "-").lower()
+        title = titles.get(obs_canon, "")
+        # F number for the compact "Finding #N" rendering. The full
+        # canonical id is still in the breadcrumb (parent obs) and in
+        # the anchor's title attribute, so no information is lost.
+        f_num = canon.rsplit(".F", 1)[-1] if ".F" in canon else anchor_text
+        # Only rewrite the anchor text if it currently shows the canonical
+        # id — preserve any author-customised label.
+        if anchor_text.strip() == canon:
+            anchor_text_out = f'#{f_num}'
+        else:
+            anchor_text_out = anchor_text
+        meta_html = ""
+        if "finding-callout-meta" not in full:
+            title_html = (
+                f' &mdash; <em class="finding-callout-meta-title">'
+                f'{_html.escape(title)}</em>'
+            ) if title else ""
+            meta_html = (
+                f'<p class="finding-callout-meta">'
+                f'<span class="finding-callout-meta-prefix">From</span> '
+                f'<a class="finding-callout-meta-link" href="#{obs_slug}">'
+                f'{obs_canon}</a>{title_html}'
+                f'</p>'
+            )
+        new_attrs = f' id="finding-{slug}"' + attrs
+        return (
+            f"<blockquote{new_attrs}>{meta_html}{lead}"
+            f"{anchor_open}{anchor_text_out}{anchor_close}"
+        )
+
+    return _CALLOUT_BLOCKQUOTE_RE.sub(_sub, html_body)
+
+
 def rewrite_finding_citations(
     html_body: str,
     findings: list[dict],
@@ -5207,6 +5459,19 @@ def rewrite_finding_citations(
         for f in findings:
             canon_index.setdefault(f["canon_id"], f)
 
+    def _href_for(f: dict) -> str:
+        """Prefer the prose 'Finding XX — ...' callout (id
+        ``finding-{slug}``) when one exists on the owning page; the
+        post-processor ``inject_callout_ids`` injects those ids. The
+        client JS ``expandToHash`` falls back to the visual Pro-card
+        row (``#{slug}``) when the callout id isn't present yet — so
+        a missing callout still lands somewhere meaningful."""
+        page = f.get("page_html") or ""
+        slug = f.get("slug", "")
+        if page:
+            return f"{page}#finding-{slug}"
+        return f.get("jump_href") or f"#finding-{slug}"
+
     def _sub_short(m: re.Match) -> str:
         fid = f"F{m.group(1)}.{m.group(2)}"
         f = short_index.get(fid)
@@ -5214,7 +5479,7 @@ def rewrite_finding_citations(
             return m.group(0)
         canon = f.get("canon_id") or fid
         return (
-            f'<a class="finding-ref" href="#finding-{f["slug"]}" '
+            f'<a class="finding-ref" href="{_html.escape(_href_for(f))}" '
             f'data-finding="{canon}" data-short="{fid}" '
             f'data-group="{f["group"]}" '
             f'title="{canon} · hover for summary, click for detail">'
@@ -5227,7 +5492,7 @@ def rewrite_finding_citations(
         if not f:
             return m.group(0)
         return (
-            f'<a class="finding-ref" href="#finding-{f["slug"]}" '
+            f'<a class="finding-ref" href="{_html.escape(_href_for(f))}" '
             f'data-finding="{canon}" data-short="{f["id"]}" '
             f'data-group="{f["group"]}" '
             f'title="{canon} · hover for summary, click for detail">'
@@ -5498,38 +5763,29 @@ def _render_subreport_observations(groups: list[dict]) -> str:
         )
         out.append(article_open + head_html + abstract_block
                    + findings_label + '<ol class="sro-findings">')
-        # Pull the FIRST href= out of a rendered section link so the
-        # Pro badge can become a direct jump-to-source. Findings whose
-        # section_md is plain text (no link) get a non-clickable badge.
-        _sec_href_re = re.compile(r'href=["\']([^"\']+)["\']', re.IGNORECASE)
         for fi, f in enumerate(g["findings"], 1):
             ev_html = _sro_inline_md_to_html(f["evidence_md"])
             ev_html = _highlight_metrics(ev_html)
             sec_html = _sro_inline_md_to_html(f["section_md"])
             nature_html = _sro_inline_md_to_html(f["nature_md"])
-            sec_href_match = _sec_href_re.search(sec_html or "")
-            sec_href = sec_href_match.group(1) if sec_href_match else ""
             if is_pro:
-                # Pro variant — the badge IS the jump-to-source link.
-                # #N (ordinal) + CEN.O1.FN (canonical ref) sit inside
-                # a single <a> so clicking either one navigates to the
-                # finding's source section. The .sro-anchor span in
-                # the meta row was retired — the badge replaces it.
+                # Pro variant — #N badge is a permalink to its own row
+                # (e.g. \`#cen-o1-f1\`). Same-page click updates the URL
+                # so the reader can copy a stable shareable anchor;
+                # cross-page references already use the same slug.
                 inner = (
                     f'<span class="sro-fid-label">#{fi}</span>'
                     f'<span class="sro-fid-ref">{f["canon_id"]}</span>'
                 )
-                if sec_href:
-                    fid_html = (
-                        f'<a class="sro-fid sro-fid-stack sro-group-{f["f_group"]}" '
-                        f'href="{_html.escape(sec_href)}" '
-                        f'title="{f["canon_id"]} — jump to source">{inner}</a>'
-                    )
-                else:
-                    fid_html = (
-                        f'<span class="sro-fid sro-fid-stack sro-group-{f["f_group"]}" '
-                        f'title="{f["canon_id"]}">{inner}</span>'
-                    )
+                # Click jumps to the prose 'Finding XX — ...' callout
+                # (id finding-{slug}) where the finding is described in
+                # full. The expandToHash JS falls back to the row's own
+                # slug when the callout isn't there yet.
+                fid_html = (
+                    f'<a class="sro-fid sro-fid-stack sro-group-{f["f_group"]}" '
+                    f'href="#finding-{f["slug"]}" '
+                    f'title="{f["canon_id"]} — jump to the finding description">{inner}</a>'
+                )
             else:
                 fid_html = (
                     f'<span class="sro-fid sro-group-{f["f_group"]}" '
@@ -5938,7 +6194,12 @@ def build_page(page: dict) -> Path:
     observations = extract_observations_from_md(md_text)
     # F# findings live in sub-reports (the table forms like `| F1.1 | … |`).
     # Extract before preprocess_md touches links / anchors.
-    f_findings = extract_f_findings_from_md(md_text)
+    # Pass page_html so each finding's `jump_href` includes the
+    # owning page (e.g. `census.html#cen-o7-f1`), which the
+    # rewrite_f_findings refs use to deep-link to the visual Pro card.
+    f_findings = extract_f_findings_from_md(
+        md_text, code=page.get("code", ""), page_html=page["html"],
+    )
 
     md_text = preprocess_md(md_text, src_md)
     # Strip the first top-level H1 so the body doesn't duplicate the banner
@@ -5984,6 +6245,7 @@ def build_page(page: dict) -> Path:
     # (header + abstract + findings sub-table) instead of the flat 4-column
     # MD table. Parse and swap the raw ``<table>`` that follows the
     # ``## 1. Mainnet Observations`` heading.
+    sro_groups: list[dict] = []
     if is_subreport:
         code = page["code"]
         o_defining = detect_o_defining_sections(md_text)
@@ -6019,9 +6281,35 @@ def build_page(page: dict) -> Path:
             content_html, rewrite_obs, source_lookup,
         )
 
+    # Collect observation titles for the 'From XX.OY — title' breadcrumb
+    # that the callout post-processor injects above each Finding blockquote.
+    # Sub-reports use their own sro_groups; non-sub-reports pull from the
+    # cross-page bundle.
+    obs_titles: dict[str, str] = {}
+    if is_subreport and sro_groups:
+        for g in sro_groups:
+            canon = g.get("canon_id") or ""
+            title = g.get("o_title") or ""
+            if canon:
+                obs_titles[canon] = title
+    elif cross_obs_groups:
+        for g in cross_obs_groups:
+            canon = g.get("canon_id") or ""
+            title = g.get("o_title") or ""
+            if canon:
+                obs_titles[canon] = title
+
     if f_findings:
         content_html = rewrite_finding_citations(content_html, f_findings)
+        content_html = split_multi_finding_blockquotes(content_html)
+        content_html = inject_finding_callout_ids(content_html, obs_titles)
         content_html += _render_finding_registry(f_findings)
+    else:
+        # Pages without local F# findings can still carry callouts that
+        # cite cross-page findings (rewritten by the cross-finding path
+        # earlier). Run the splitter + id injector on those too.
+        content_html = split_multi_finding_blockquotes(content_html)
+        content_html = inject_finding_callout_ids(content_html, obs_titles)
 
     # Attach the merged cross-page registries so DIA overlays and F# badges
     # hydrate locally (no network fetch). Sub-report pages already carry

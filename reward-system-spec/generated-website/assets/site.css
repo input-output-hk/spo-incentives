@@ -406,6 +406,126 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .content blockquote p{margin:0;font-size:14px;color:var(--text-body)}
 .content blockquote strong{color:var(--text-primary)}
 
+/* Finding callout — a blockquote whose first paragraph opens with a
+   .finding-ref anchor (rendered from \`**Finding CEN.O1.F1 — …**\`).
+   Lifted into a mini Pro-card layout so prose-embedded references
+   echo the §1 Mainnet Observations rows visually. */
+.content blockquote:has(> p.finding-callout-meta),
+.content blockquote:has(> p:first-child > strong > a.finding-ref){
+  border:1px solid rgba(229,35,33,.18);
+  border-left:4px solid var(--infared);
+  background:linear-gradient(90deg,
+    rgba(229,35,33,.055) 0%,
+    rgba(229,35,33,.018) 60%,
+    transparent 100%);
+  padding:14px 22px 18px;margin:24px 0;
+  border-radius:0 10px 10px 0;
+  box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.content blockquote:has(> p.finding-callout-meta) > p,
+.content blockquote:has(> p:first-child > strong > a.finding-ref) > p{
+  font:400 15px/1.65 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#1a1a1a;letter-spacing:-.005em}
+.content blockquote:has(> p.finding-callout-meta) > p strong,
+.content blockquote:has(> p:first-child > strong > a.finding-ref) > p strong{
+  font-weight:600;color:#000}
+
+/* Visually separate consecutive Finding callouts (e.g. POL.O6.F1
+   followed by POL.O6.F2) so they don't read as one block. */
+.content blockquote:has(> p.finding-callout-meta) +
+  blockquote:has(> p.finding-callout-meta),
+.content blockquote:has(> p:first-child > strong > a.finding-ref) +
+  blockquote:has(> p:first-child > strong > a.finding-ref),
+.content blockquote:has(> p.finding-callout-meta) +
+  blockquote:has(> p:first-child > strong > a.finding-ref),
+.content blockquote:has(> p:first-child > strong > a.finding-ref) +
+  blockquote:has(> p.finding-callout-meta){
+  margin-top:36px;
+  position:relative}
+.content blockquote:has(> p.finding-callout-meta) +
+  blockquote:has(> p.finding-callout-meta)::before,
+.content blockquote:has(> p:first-child > strong > a.finding-ref) +
+  blockquote:has(> p:first-child > strong > a.finding-ref)::before,
+.content blockquote:has(> p.finding-callout-meta) +
+  blockquote:has(> p:first-child > strong > a.finding-ref)::before,
+.content blockquote:has(> p:first-child > strong > a.finding-ref) +
+  blockquote:has(> p.finding-callout-meta)::before{
+  content:"";position:absolute;left:24px;right:24px;top:-19px;
+  height:1px;background:linear-gradient(90deg,
+    transparent 0%,rgba(229,35,33,.22) 20%,
+    rgba(229,35,33,.22) 80%,transparent 100%);
+  pointer-events:none}
+
+/* Breadcrumb back to the parent observation, prepended above the
+   callout body. Small mono prefix + canonical chip + observation
+   title in italic. */
+.content blockquote > p.finding-callout-meta{
+  font:500 11px/1.3 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace !important;
+  color:#7a2a28 !important;
+  margin:-2px 0 10px !important;
+  padding-bottom:8px;
+  border-bottom:1px dashed rgba(229,35,33,.18);
+  letter-spacing:.02em}
+.finding-callout-meta-prefix{
+  font-weight:400;color:#9a4a48;text-transform:uppercase;
+  letter-spacing:.06em;font-size:10px;margin-right:4px}
+.finding-callout-meta-link{
+  color:var(--infared);text-decoration:none;
+  border-bottom:1px dotted rgba(229,35,33,.4);
+  padding:0 2px;border-radius:3px;
+  transition:background .15s}
+.finding-callout-meta-link:hover{
+  background:rgba(229,35,33,.08);border-bottom-color:var(--infared)}
+.finding-callout-meta-title{
+  font-style:italic;font-weight:400;color:#444;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:12px;letter-spacing:0;margin-left:6px}
+
+/* The opening canonical ref renders as a small Infared chip, the
+   way #N looks on the Pro card row. Inline still — flows with the
+   prose — but visually a marker. */
+.content blockquote:has(> p:first-child > strong > a.finding-ref)
+  > p:first-child > strong > a.finding-ref,
+.content blockquote:has(> p.finding-callout-meta)
+  > p > strong > a.finding-ref{
+  display:inline-block;padding:1px 8px;border-radius:4px;
+  background:rgba(229,35,33,.10);
+  border:1px solid rgba(229,35,33,.25);
+  color:var(--infared);
+  font:600 11.5px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.04em;
+  text-decoration:none;border-bottom:0;
+  vertical-align:1px;margin:0 2px;
+  transition:background .15s,border-color .15s}
+.content blockquote:has(> p:first-child > strong > a.finding-ref)
+  > p:first-child > strong > a.finding-ref:hover,
+.content blockquote:has(> p.finding-callout-meta)
+  > p > strong > a.finding-ref:hover{
+  background:rgba(229,35,33,.16);
+  border-color:rgba(229,35,33,.45)}
+[data-theme=dark] .content blockquote:has(> p.finding-callout-meta),
+[data-theme=dark] .content blockquote:has(> p:first-child > strong > a.finding-ref){
+  border-color:rgba(255,111,110,.22);
+  border-left-color:#FF6F6E;
+  background:linear-gradient(90deg,
+    rgba(255,111,110,.08) 0%,rgba(255,111,110,.03) 60%,transparent 100%);
+  box-shadow:0 1px 2px rgba(0,0,0,.25)}
+[data-theme=dark] .content blockquote:has(> p.finding-callout-meta) > p,
+[data-theme=dark] .content blockquote:has(> p:first-child > strong > a.finding-ref) > p{color:#E4E4E7}
+[data-theme=dark] .content blockquote:has(> p:first-child > strong > a.finding-ref)
+  > p:first-child > strong > a.finding-ref,
+[data-theme=dark] .content blockquote:has(> p.finding-callout-meta)
+  > p > strong > a.finding-ref{
+  background:rgba(255,111,110,.12);border-color:rgba(255,111,110,.30);color:#FF6F6E}
+[data-theme=dark] .content blockquote > p.finding-callout-meta{
+  color:#FF9D9C !important;
+  border-bottom-color:rgba(255,111,110,.22)}
+[data-theme=dark] .finding-callout-meta-prefix{color:#C77E7C}
+[data-theme=dark] .finding-callout-meta-link{
+  color:#FF6F6E;border-bottom-color:rgba(255,111,110,.4)}
+[data-theme=dark] .finding-callout-meta-link:hover{
+  background:rgba(255,111,110,.12);border-bottom-color:#FF6F6E}
+[data-theme=dark] .finding-callout-meta-title{color:#B8B8BD}
+
 /* Code */
 .content code{font-family:'SF Mono','Fira Code',monospace;font-size:13px;background:var(--bg-code);padding:2px 6px;border-radius:4px;color:#b33a1a}
 .content pre{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;padding:16px 20px;overflow-x:auto;margin:16px 0}
@@ -1320,8 +1440,7 @@ body.finding-panel-open .finding-panel-overlay{opacity:1;pointer-events:auto}
 /* Source-panel findings list — hydrated from the bundled findings
    registry. Mirrors the .sro-card-pro finding row layout: red ref
    chip + bigger summary text + small jump arrow. */
-.obs-panel-findings-wrap{margin:22px 0 18px;
-  border-top:1px solid var(--border);padding-top:18px}
+.obs-panel-findings-wrap{margin:22px 0 18px}
 .obs-panel-findings-head{display:flex;align-items:center;gap:14px;
   margin-bottom:12px}
 .obs-panel-findings-label{flex-shrink:0;
@@ -1332,33 +1451,74 @@ body.finding-panel-open .finding-panel-overlay{opacity:1;pointer-events:auto}
 .obs-panel-findings-head::after{content:'';flex:1;height:1px;
   background:color-mix(in srgb, var(--infared) 30%, transparent)}
 .obs-panel-findings{list-style:none;margin:0;padding:0;
-  display:flex;flex-direction:column;gap:10px}
-.obs-panel-finding{border:1px solid var(--border);border-radius:6px;
-  padding:12px 14px;background:var(--bg);
-  transition:border-color .15s,background .15s}
-.obs-panel-finding:hover{
-  border-color:color-mix(in srgb, var(--infared) 35%, var(--border));
-  background:rgba(229,35,33,.025)}
-.obs-panel-finding-head{display:flex;align-items:center;gap:10px;
-  margin-bottom:6px}
-.obs-panel-finding-id{font:600 10.5px/1.3 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.05em;color:var(--infared);
-  padding:3px 8px;border-radius:3px;
-  background:rgba(229,35,33,.06);
-  border:1px solid rgba(229,35,33,.20)}
-.obs-panel-finding-jump{display:inline-flex;align-items:center;justify-content:center;
-  width:20px;height:20px;border-radius:4px;color:var(--text-muted);
-  text-decoration:none;margin-left:auto;
-  transition:color .15s,background .15s,transform .15s}
-.obs-panel-finding-jump svg{fill:none;stroke:currentColor;stroke-width:2;
-  stroke-linecap:round;stroke-linejoin:round;width:13px;height:13px}
-.obs-panel-finding-jump:hover{color:var(--cardano-blue);
-  background:var(--cardano-blue-soft);transform:translate(1px,-1px)}
-.obs-panel-finding-summary{font:400 13.5px/1.6 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  display:flex;flex-direction:column}
+/* Each finding row mirrors .sro-card-pro .sro-finding — a 2-col
+   layout with the badge on the left, body on the right, and the
+   nature/insight pill anchored bottom-right of the row. */
+.obs-panel-finding{position:relative;
+  display:grid;grid-template-columns:96px 1fr;gap:18px;
+  padding:16px 16px 52px;
+  border-top:1px solid var(--border);background:transparent;
+  transition:background .15s}
+.obs-panel-finding:first-child{border-top:0}
+.obs-panel-finding:hover{background:rgba(229,35,33,.04)}
+[data-theme=dark] .obs-panel-finding:hover{background:rgba(255,111,110,.06)}
+/* Badge column — clickable when a source href is known. \`#N\`
+   prominent in Infared, canonical ref small mono breadcrumb. */
+.obs-panel-finding-fid{padding:0;flex-shrink:0;
+  align-self:flex-start;margin-top:1px;
+  display:inline-flex;flex-direction:column;gap:3px;
+  align-items:flex-start;justify-content:center;
+  background:transparent;border:0;text-decoration:none;
+  color:inherit}
+a.obs-panel-finding-fid{cursor:pointer}
+.obs-panel-finding-num{
+  font:600 14px/1.2 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--infared);letter-spacing:-.005em;
+  font-variant-numeric:tabular-nums}
+.obs-panel-finding-id{
+  font:500 10px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--text-muted);letter-spacing:.06em;
+  padding:0;background:transparent;border:0;border-radius:0}
+a.obs-panel-finding-fid:hover .obs-panel-finding-num{color:#a01a18}
+a.obs-panel-finding-fid:hover .obs-panel-finding-id{color:var(--text-secondary)}
+[data-theme=dark] .obs-panel-finding-num{color:#FF6F6E}
+[data-theme=dark] a.obs-panel-finding-fid:hover .obs-panel-finding-num{color:#FF8F8E}
+/* Body — evidence/summary text. Same Inter 14.5/1.65 as
+   .sro-card-pro .sro-evidence so the rhythm carries from main
+   page into the panel. */
+.obs-panel-finding-body{min-width:0}
+.obs-panel-finding-summary{font:400 14.5px/1.65 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:#1a1a1a;letter-spacing:-.005em}
 [data-theme=dark] .obs-panel-finding-summary{color:#E4E4E7}
 .obs-panel-finding-summary p{margin:0}
 .obs-panel-finding-summary p + p{margin-top:6px}
+.obs-panel-finding-summary strong{font-weight:700;
+  color:#000;font-variant-numeric:tabular-nums}
+[data-theme=dark] .obs-panel-finding-summary strong{color:#fff}
+/* Insight pill — same GitHub-style category chip as .sro-nature on
+   the main page, hue hashed (in JS) from the insight text and
+   passed via the inline \`--n-h\` custom property. */
+.obs-panel-finding-insight{
+  position:absolute;bottom:14px;right:16px;
+  font:500 10.5px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;text-transform:none;font-style:normal;
+  padding:2px 9px;border-radius:12px;
+  background:hsl(var(--n-h,215),65%,94%);
+  color:hsl(var(--n-h,215),55%,32%);
+  border:1px solid hsl(var(--n-h,215),50%,82%);
+  white-space:nowrap;max-width:calc(100% - 80px);
+  overflow:hidden;text-overflow:ellipsis}
+[data-theme=dark] .obs-panel-finding-insight{
+  background:hsl(var(--n-h,215),35%,18%);
+  color:hsl(var(--n-h,215),65%,75%);
+  border-color:hsl(var(--n-h,215),40%,30%)}
+@media (max-width:720px){
+  .obs-panel-finding{grid-template-columns:1fr;gap:8px;
+    padding:14px 16px}
+  .obs-panel-finding-insight{position:static;display:inline-block;
+    margin-top:8px;max-width:none}
+}
 /* Key numbers — bolded at the MD source, tinted and tabular-aligned here so
    they scan as landmarks inside the short finding rows. */
 .obs-panel-finding-summary strong,
@@ -1828,7 +1988,7 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
    accent lane), distinct from the Cardano-blue observation chrome
    above. No decorative left rail or per-row gradient. */
 .sro-card-pro .sro-findings{position:relative;padding:0;border-left:0}
-.sro-card-pro .sro-finding{padding:16px 22px 38px;gap:18px;
+.sro-card-pro .sro-finding{padding:16px 22px 52px;gap:18px;
   border-top:1px solid var(--border);background:transparent;
   transition:background .15s}
 .sro-card-pro .sro-finding:first-child{border-top:0}

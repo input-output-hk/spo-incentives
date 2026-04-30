@@ -272,7 +272,7 @@ The replacement pools that sustain the ~950-pool total are **entity-operated, no
 <div class="ev-label">Fee structure</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">The distortion comes from the fixed-cost floor, not from the commission market. A sub-viable operator absorbs **48.3 %** of pool rewards yet earns **24,820 ADA/yr**; an 11+-pool MPO absorbs **7.7 %** yet earns **1,035,496 ADA/yr** — **42× more revenue at 6× less effective price**. The commission market is healthy: 69 % competitive, median margin stable for 405 epochs.</p>
-<p class="ev-sources" markdown="1">Sources: [DIA.1.3.O1, .O2, .O6](diagnostic/README.md#132-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Sources: [OPE.O1, OPE.O2, OPE.O6](diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#1-mainnet-observations).</p>
 </div>
 </div>
 
@@ -295,7 +295,7 @@ The replacement pools that sustain the ~950-pool total are **entity-operated, no
 <div class="ev-card" markdown="1">
 <div class="ev-label">Stake variability</div>
 <div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Pools near the production threshold oscillate in and out of viability: **9.3 %** have CV between 50–100 %, **3.4 %** exceed 100 %.</p>
+<p class="ev-body" markdown="1">Pools near the production threshold oscillate in and out of viability: for **9.3 %** of productive pools, stake swings epoch-to-epoch by **50–100 %** of its average; for **3.4 %**, swings exceed the average itself.</p>
 <p class="ev-sources" markdown="1">Source: [Census — pool-size variability](diagnostic/sub-flows/census/mainnet-analysis/README.md#36-pool-size-variability-how-stable-is-a-pools-stake).</p>
 </div>
 </div>
@@ -312,7 +312,7 @@ The replacement pools that sustain the ~950-pool total are **entity-operated, no
 <div class="ev-label">Incentive alignment</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">The current fee structure **favours operators who amortise the fixed cost across large fleets**. Small independent operators — from whom tomorrow's established entities should emerge — face the highest effective cost burden. The incentive gradient runs counter to the mechanism's design intent.</p>
-<p class="ev-sources" markdown="1">Sources: [DIA.1.3.O1, .O6](diagnostic/README.md#132-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Sources: [OPE.O1, OPE.O6](diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#1-mainnet-observations).</p>
 </div>
 </div>
 
