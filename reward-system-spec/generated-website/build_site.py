@@ -3687,7 +3687,6 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
       fetchAnswers(canon,host);
     });
   })();
-  /* ── /Cross-page DIA source overlay ── */
 
   /* ── Pro observation card — header collapse ──
      Click anywhere on the .sro-head row to fold/unfold the body
@@ -3739,6 +3738,7 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
     });
   })();
   /* ── /Pro observation card — header collapse ── */
+  /* ── /Cross-page DIA source overlay ── */
 
 """
 
