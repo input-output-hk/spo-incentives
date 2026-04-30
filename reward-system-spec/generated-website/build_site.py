@@ -2577,13 +2577,13 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
   display:inline-flex;align-items:center;
   padding:6px 14px;border-radius:5px;
   background:#fff;
-  border:1px solid color-mix(in srgb, var(--cardano-blue) 35%, var(--border));
+  border:1px solid color-mix(in srgb, var(--infared) 35%, var(--border));
   font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  letter-spacing:.02em;color:var(--cardano-blue);
-  box-shadow:0 1px 2px rgba(0,51,173,.06)}
+  letter-spacing:.02em;color:var(--infared);
+  box-shadow:0 1px 2px rgba(229,35,33,.06)}
 [data-theme=dark] .sro-card-pro .sro-count{
-  background:color-mix(in srgb, var(--cardano-blue) 10%, var(--bg));
-  color:#A8B6FF}
+  background:color-mix(in srgb, var(--infared) 10%, var(--bg));
+  color:#FF6F6E}
 
 /* Abstract + findings — same Cardano-blue rule + gradient on both
    zones so alignment is guaranteed (single colour, single mechanism).
@@ -2604,18 +2604,39 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 .sro-card-pro .sro-abstract strong{font-weight:700;color:var(--text-primary);
   font-variant-numeric:tabular-nums}
 
-/* "Findings" eyebrow — Infared red. Deliberate accent that breaks
-   the Cardano-blue ladder: this label IS the section opener and the
-   red carries authority + matches the hero eyebrow rule's accent. */
+/* "Findings" eyebrow — Infared red label that doubles as the
+   collapse toggle for the list below. Click anywhere on the row
+   (label, rule, or chevron) to fold/unfold. State persists per
+   observation card via localStorage. */
 .sro-findings-label{margin:20px 22px 10px;
   font:600 11px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   letter-spacing:2.6px;text-transform:uppercase;color:var(--infared);
-  display:flex;align-items:center;gap:12px}
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;user-select:none;
+  -webkit-tap-highlight-color:transparent}
+.sro-findings-label::before{content:'▾';flex-shrink:0;
+  font-size:11px;letter-spacing:0;line-height:1;
+  transition:transform .18s ease}
+.sro-findings-label.collapsed::before{transform:rotate(-90deg)}
 .sro-findings-label::after{content:'';flex:1;height:1px;
   background:color-mix(in srgb, var(--infared) 35%, transparent)}
+.sro-findings-label:hover{color:#a01a18}
+.sro-findings-label:hover::after{
+  background:color-mix(in srgb, var(--infared) 55%, transparent)}
 [data-theme=dark] .sro-findings-label{color:#FF6F6E}
 [data-theme=dark] .sro-findings-label::after{
   background:color-mix(in srgb, #FF6F6E 35%, transparent)}
+[data-theme=dark] .sro-findings-label:hover{color:#FF8F8E}
+
+/* Findings list collapse — animated max-height + opacity. The
+   default expanded max-height is intentionally generous (4000px);
+   if a card holds 20+ findings it'll still fit. */
+.sro-findings.collapsed{max-height:0;opacity:0;
+  margin:0;padding:0;overflow:hidden;
+  border-top:0;
+  pointer-events:none}
+.sro-findings{transition:max-height .25s ease,opacity .2s ease;
+  max-height:4000px;opacity:1}
 
 /* Findings list — clean rows on the card surface. The whole row
    theme switches to Infared red (the evidence belongs to the IOG
@@ -3665,6 +3686,59 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
     });
   })();
   /* ── /Cross-page DIA source overlay ── */
+
+  /* ── Findings list collapse — Pro card variant ──
+     Click the FINDINGS eyebrow to fold/unfold the list below. State
+     persists per-card via localStorage so the user's choice survives
+     reloads and cross-page navigation. */
+  (function initFindingsCollapse(){
+    var labels=document.querySelectorAll('.sro-card-pro .sro-findings-label');
+    if(!labels.length) return;
+    var KEY='spo:findings-collapsed';
+    function load(){
+      try{return JSON.parse(localStorage.getItem(KEY)||'{}');}
+      catch(e){return {};}
+    }
+    function save(state){
+      try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
+    }
+    var state=load();
+    labels.forEach(function(label){
+      var card=label.closest('.sro-card-pro');
+      if(!card) return;
+      var id=card.id||card.getAttribute('data-obs')||'';
+      var list=label.nextElementSibling;
+      while(list && !list.classList.contains('sro-findings')){
+        list=list.nextElementSibling;
+      }
+      if(!list) return;
+      label.setAttribute('role','button');
+      label.setAttribute('tabindex','0');
+      label.setAttribute('aria-expanded','true');
+      function apply(collapsed){
+        label.classList.toggle('collapsed',collapsed);
+        list.classList.toggle('collapsed',collapsed);
+        label.setAttribute('aria-expanded',collapsed?'false':'true');
+      }
+      if(id && state[id]==='1') apply(true);
+      function toggle(){
+        var willCollapse=!list.classList.contains('collapsed');
+        apply(willCollapse);
+        if(id){
+          if(willCollapse) state[id]='1';
+          else delete state[id];
+          save(state);
+        }
+      }
+      label.addEventListener('click',toggle);
+      label.addEventListener('keydown',function(e){
+        if(e.key==='Enter'||e.key===' '){
+          e.preventDefault();toggle();
+        }
+      });
+    });
+  })();
+  /* ── /Findings list collapse ── */
 
 """
 

@@ -1745,4 +1745,57 @@
   })();
   /* ── /Cross-page DIA source overlay ── */
 
+  /* ── Findings list collapse — Pro card variant ──
+     Click the FINDINGS eyebrow to fold/unfold the list below. State
+     persists per-card via localStorage so the user's choice survives
+     reloads and cross-page navigation. */
+  (function initFindingsCollapse(){
+    var labels=document.querySelectorAll('.sro-card-pro .sro-findings-label');
+    if(!labels.length) return;
+    var KEY='spo:findings-collapsed';
+    function load(){
+      try{return JSON.parse(localStorage.getItem(KEY)||'{}');}
+      catch(e){return {};}
+    }
+    function save(state){
+      try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
+    }
+    var state=load();
+    labels.forEach(function(label){
+      var card=label.closest('.sro-card-pro');
+      if(!card) return;
+      var id=card.id||card.getAttribute('data-obs')||'';
+      var list=label.nextElementSibling;
+      while(list && !list.classList.contains('sro-findings')){
+        list=list.nextElementSibling;
+      }
+      if(!list) return;
+      label.setAttribute('role','button');
+      label.setAttribute('tabindex','0');
+      label.setAttribute('aria-expanded','true');
+      function apply(collapsed){
+        label.classList.toggle('collapsed',collapsed);
+        list.classList.toggle('collapsed',collapsed);
+        label.setAttribute('aria-expanded',collapsed?'false':'true');
+      }
+      if(id && state[id]==='1') apply(true);
+      function toggle(){
+        var willCollapse=!list.classList.contains('collapsed');
+        apply(willCollapse);
+        if(id){
+          if(willCollapse) state[id]='1';
+          else delete state[id];
+          save(state);
+        }
+      }
+      label.addEventListener('click',toggle);
+      label.addEventListener('keydown',function(e){
+        if(e.key==='Enter'||e.key===' '){
+          e.preventDefault();toggle();
+        }
+      });
+    });
+  })();
+  /* ── /Findings list collapse ── */
+
 })();
