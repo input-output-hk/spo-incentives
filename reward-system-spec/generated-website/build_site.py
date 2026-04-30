@@ -5055,14 +5055,7 @@ def _render_findings_content(
         'paper and the SL-D1 protocol specification &mdash; and the '
         'equilibrium that mainnet actually produces. It is not an '
         'opinion, a roadmap, or a fix. It is a question the mechanism '
-        'has stopped answering, grounded in a chain of evidence:'
-        '</p>'
-        '<p class="findings-intro-chain">'
-        f'<span class="findings-intro-chain-step"><strong>{len(findings)}</strong> problem statements</span>'
-        '<span class="findings-intro-chain-arrow" aria-hidden="true">&larr;</span>'
-        f'<span class="findings-intro-chain-step"><strong>{len(observations)}</strong> mainnet observations</span>'
-        '<span class="findings-intro-chain-arrow" aria-hidden="true">&larr;</span>'
-        f'<span class="findings-intro-chain-step"><strong>{total_findings_count}</strong> canonical findings</span>'
+        'has stopped answering.'
         '</p>'
         '<p class="findings-intro-howto">'
         'Each card below opens with the problem statement and a short '
@@ -5083,12 +5076,18 @@ def _render_findings_content(
     # Search + tier filter were carrying placeholder behaviour with no
     # actual hookup to the cards — net cost without value at 11 items.
     controls = ""
+    # Stats strip — also serves as the evidence-chain visualization
+    # (cards separated by ←-arrows so the induction direction reads
+    # at a glance). Since the strip carries that role, the intro
+    # above no longer duplicates the same row.
     stats = (
         '<div class="findings-stats">'
         f'<div class="findings-stat"><span class="findings-stat-num">{len(findings)}</span>'
         f'<span class="findings-stat-lbl">problem statements</span></div>'
+        '<span class="findings-stats-arrow" aria-hidden="true">&larr;</span>'
         f'<div class="findings-stat"><span class="findings-stat-num">{len(observations)}</span>'
         f'<span class="findings-stat-lbl">mainnet observations</span></div>'
+        '<span class="findings-stats-arrow" aria-hidden="true">&larr;</span>'
         f'<div class="findings-stat"><span class="findings-stat-num">{total_findings_count}</span>'
         f'<span class="findings-stat-lbl">supporting findings</span></div>'
         '</div>'

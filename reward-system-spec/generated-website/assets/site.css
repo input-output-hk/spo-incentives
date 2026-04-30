@@ -1382,10 +1382,12 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
    ========================================================================== */
 
 .findings-page{max-width:1180px;margin:0 auto;padding:8px 4px 60px;font-family:'Chivo',sans-serif}
-.findings-intro{margin:0 0 22px;padding:24px 28px;
-  background:var(--bg-warm);border-left:3px solid var(--infared);
-  border-radius:8px;font-size:14.5px;line-height:1.65;color:var(--text-body);
-  display:flex;flex-direction:column;gap:14px}
+.findings-intro{
+  margin:0 0 22px;padding:0;
+  background:transparent;border:0;
+  font-size:14.5px;line-height:1.65;color:var(--text-body);
+  display:flex;flex-direction:column;gap:14px;
+  max-width:920px}
 .findings-intro p{margin:0}
 .findings-intro a{color:var(--infared);text-decoration:none;border-bottom:1px dotted rgba(229,35,33,.4)}
 .findings-intro a:hover{border-bottom-style:solid}
@@ -1401,31 +1403,22 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
   font-style:italic;font-weight:600;color:var(--cardano-blue)}
 .findings-intro-lead strong{font-weight:700;color:var(--infared)}
 
-/* Evidence chain — the three counts on a single line, separated by
-   left-arrows so the induction direction reads at a glance. */
-.findings-intro-chain{
-  display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;
-  padding:10px 14px;
-  background:var(--bg);border:1px solid var(--border);
-  border-radius:6px;
-  font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.findings-intro-chain-step{
-  display:inline-flex;align-items:baseline;gap:6px;
-  font-size:13px;color:var(--text-body)}
-.findings-intro-chain-step strong{
-  font:700 18px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  color:var(--infared);font-variant-numeric:tabular-nums}
-.findings-intro-chain-arrow{
-  color:var(--text-muted);font-size:16px;font-weight:600;
-  user-select:none}
-
 /* How-to — smaller muted prose so it reads as a footer note rather
    than competing with the lead. */
 .findings-intro-howto{
   font-size:13px;color:var(--text-muted);line-height:1.6}
 [data-theme=dark] .findings-intro-lead em{color:#8FB1FF}
 
-.findings-stats{display:flex;gap:16px;margin:20px 0;flex-wrap:wrap}
+.findings-stats{display:flex;gap:16px;margin:20px 0;flex-wrap:wrap;align-items:center}
+.findings-stats-arrow{
+  flex-shrink:0;
+  font:600 22px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);
+  user-select:none;
+  padding:0 4px}
+@media (max-width:780px){
+  .findings-stats-arrow{transform:rotate(90deg);padding:4px 0}
+}
 .findings-stat{flex:1;min-width:160px;padding:16px 20px;background:var(--bg);
   border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;gap:4px}
 .findings-stat-num{font-size:28px;font-weight:500;color:var(--infared);letter-spacing:-.8px;line-height:1.1}
