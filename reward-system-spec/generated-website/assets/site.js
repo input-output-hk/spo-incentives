@@ -287,7 +287,11 @@
       });
     });
   }
-  /* Apply bottom-up: h4 first, then h3, then h2 (so inner wrappers exist before outer ones) */
+  /* Apply bottom-up: deepest first so inner wrappers exist before outer
+     ones. Extends to h5 + h6 so deeply nested sections (e.g. 1.2.4.2.1
+     and 1.2.4.2.1.1) get the same fold affordance as h2-h4. */
+  document.querySelectorAll('.content h6[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3','H4','H5','H6']); });
+  document.querySelectorAll('.content h5[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3','H4','H5']); });
   document.querySelectorAll('.content h4[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3','H4']); });
   document.querySelectorAll('.content h3[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3']); });
   document.querySelectorAll('.content h2[id]').forEach(function(h){ makeCollapsible(h,['H1','H2']); });
