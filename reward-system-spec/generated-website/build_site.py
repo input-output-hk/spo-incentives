@@ -6392,18 +6392,33 @@ def classify_table_rows(html_body: str) -> str:
             last_pos = tr.end()
         out_parts.append(body[last_pos:])
         new_body = "".join(out_parts)
-        # Mark the LAST group row inside the tbody as the totals row —
-        # gives it a thicker top rule + heavier weight so the eye lands
-        # there as the take-away. Only do this when there are at least
-        # two group rows (otherwise the single bold row IS the total).
-        group_count = new_body.count('class="row-group"')
-        if group_count >= 2:
-            # Find the last occurrence and add the row-total class.
-            new_body = (
-                new_body[:new_body.rfind('class="row-group"')]
-                + 'class="row-group row-total"'
-                + new_body[new_body.rfind('class="row-group"') + len('class="row-group"'):]
-            )
+        # Mark only rows whose first-cell text starts with "Total"
+        # (case-insensitive) as totals. Tagging "the last group row"
+        # was tempting but wrong: many tables have a flat set of group
+        # rows with no totals semantics (commission bands, segment
+        # archetypes, etc.) — picking the last one auto-styled it as
+        # a take-away. Explicit text match is conservative and matches
+        # the way report authors actually write totals rows.
+        def _maybe_total(m: re.Match) -> str:
+            tr_open = m.group(0)
+            tr_inner = m.group("inner")
+            first_td = _FIRST_TD_RE.search(tr_inner)
+            if not first_td:
+                return tr_open
+            text = re.sub(r'<[^>]+>', '',
+                          first_td.group("inner")).strip().lower()
+            if re.match(r'(?:retail\s+|grand\s+)?total\b', text):
+                return tr_open.replace(
+                    'class="row-group"',
+                    'class="row-group row-total"', 1,
+                )
+            return tr_open
+        new_body = re.sub(
+            r'<tr class="row-group">(?P<inner>.*?)</tr>',
+            _maybe_total,
+            new_body,
+            flags=re.DOTALL,
+        )
         if has_group:
             return f'<tbody class="data-table-grouped">{new_body}</tbody>'
         return f'<tbody>{new_body}</tbody>'
