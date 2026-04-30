@@ -4,168 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Document Viewer — SPO Incentives</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/site.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Cardano-aligned typographic stack: Chivo for display / headings
+     (used historically across Cardano marketing materials), Inter for
+     long-form body and UI (de-facto Web3 reading face). -->
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script>try{var t=localStorage.getItem('spo-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
-<style>
-:root {
-  --accent:#EC641D;
-  --infared:#E52321;--dawn:#EC641D;--black:#1a1a1a;--white:#fff;
-  --electric-blue:#16E9D8;--acid-green:#06FF89;--volt-yellow:#F2FF58;
-  --cobalt-pulse:#2C4FFA;--ultraviolet:#A700FF;
-  --bg:#ffffff;--bg-warm:#faf9f7;--bg-panel:#f5f4f2;--bg-code:#f0efed;
-  --text-primary:#1a1a1a;--text-body:#3a3a3a;--text-secondary:#6b6b6b;--text-muted:#999;
-  --border:#e2e0dc;--border-light:#eceae6;
-}
-[data-theme=dark]{
-  --bg:#0a0a0c;--bg-warm:#111113;--bg-panel:#1a1a1d;--bg-code:#242428;
-  --text-primary:#e4e4e7;--text-body:#a1a1aa;--text-secondary:#71717a;--text-muted:#52525b;
-  --border:#27272a;--border-light:#1f1f23;--black:#e4e4e7;--white:#0a0a0c;
-}
-[data-theme=dark] body{background:var(--bg-warm);color:var(--text-body)}
-[data-theme=dark] .nav-pages{background:var(--bg);border-bottom-color:var(--border)}
-[data-theme=dark] .nav-tab:hover{background:rgba(255,255,255,.06)}
-[data-theme=dark] .nav-tab.active{background:rgba(229,35,33,.12);color:var(--text-primary)}
-[data-theme=dark] .nav-col+.nav-col{border-left-color:var(--border)}
-[data-theme=dark] .nav-col-title{color:var(--infared)}
-[data-theme=dark] .nav-pdf-badge{background:rgba(229,35,33,.15)}
-[data-theme=dark] .pdf-toolbar{background:var(--bg);border-bottom-color:var(--border)}
-[data-theme=dark] .pdf-toolbar a{color:var(--text-body)}
-html,body{height:100%;margin:0;padding:0}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;background:var(--bg-warm);color:var(--text-body);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;height:100vh}
-.site-nav{position:sticky;top:0;z-index:100;display:flex;flex-direction:column;flex-shrink:0}
-.nav-brand{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%),var(--bg);padding:12px 28px 10px;display:flex;align-items:center;min-height:60px;gap:14px;border-bottom:0}
-.nav-brand-home{display:flex;align-items:center;gap:10px;text-decoration:none}
-.nav-brand-logo{height:18px;width:auto;opacity:.7;flex-shrink:0}
-.nav-brand-org{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4)}
-.nav-brand-title{font:600 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff;letter-spacing:.2px}
-.nav-brand-sep{color:rgba(255,255,255,.28);font:300 14px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0 2px}
-.nav-brand-subtitle{font:300 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.55)}
-@media (max-width:900px){.nav-brand-sep,.nav-brand-subtitle{display:none}}
-.nav-brand-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
-.theme-toggle{background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;cursor:pointer;padding:5px 8px;color:rgba(255,255,255,.5);font-size:14px;line-height:1;transition:color .15s,border-color .15s;display:flex;align-items:center}
-.theme-toggle:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.3)}
-.nav-dd-wrap{position:relative}
-.nav-dd-btn{background:none;border:1px solid rgba(255,255,255,.15);border-radius:4px;cursor:pointer;font:400 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.5px;color:rgba(255,255,255,.5);padding:6px 12px;transition:color .15s,border-color .15s;white-space:nowrap}
-.nav-dd-btn:hover{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.3)}
-.nav-dd-wrap.open .nav-dd-btn{color:#fff;border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.08)}
-.nav-dd-panel{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#1a1a1a;border:1px solid rgba(255,255,255,.1);border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.4);padding:8px 0;min-width:340px;z-index:200}
-.nav-dd-wrap.open .nav-dd-panel{display:block}
-.nav-dd-item{display:block;padding:10px 16px;text-decoration:none;transition:background .1s}
-.nav-dd-item:hover{background:rgba(255,255,255,.06)}
-.nav-dd-title{display:block;font:500 13px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:rgba(255,255,255,.85);border-bottom:none}
-.nav-dd-meta{display:block;font:400 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:rgba(255,255,255,.35);margin-top:3px}
-.nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:stretch;padding:0;overflow-x:auto;white-space:nowrap}
-.nav-pages a{text-decoration:none;transition:color .15s,background .15s}
-.nav-col{display:flex;flex-direction:column;padding:8px 0 10px 20px;min-width:0}
-.nav-col+.nav-col{border-left:1px solid var(--border)}
-.nav-col-main{flex:1}
-.nav-col-title{font:700 9px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--infared);padding:2px 14px 6px 0;flex-shrink:0}
-.nav-col-title-link{text-decoration:none;cursor:pointer;transition:color .15s}
-.nav-col-title-link:hover{color:var(--dawn)}
-.nav-col-title-link.active{color:var(--dawn);border-bottom:none}
-.nav-col-links{display:flex;align-items:center;gap:0;white-space:nowrap}
-.nav-col-links-wrap{flex-wrap:wrap;gap:0}
-.nav-tab{display:flex;align-items:center;gap:5px;padding:4px 10px;font:500 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.3px;text-transform:uppercase;color:var(--text-muted);border-radius:4px}
-.nav-tab:hover{color:var(--text-primary);background:rgba(0,0,0,.04)}
-.nav-tab.active{color:var(--text-primary);font-weight:600;background:rgba(229,35,33,.06)}
-.nav-pdf{font-size:11px;color:var(--text-muted);opacity:.8}
-.nav-pdf:hover{opacity:1}
-.nav-pdf-badge{display:inline-block;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.5px;text-transform:uppercase;color:var(--infared);background:rgba(229,35,33,.08);border-radius:3px;padding:2px 4px;margin-left:4px;vertical-align:middle}
-.nav-flow-sep{width:1px;align-self:center;height:16px;background:var(--border);margin:0 6px;flex-shrink:0}
-.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.nav-arrow{font-size:11px;color:var(--dawn);opacity:.5;display:flex;align-items:center;padding:0 1px;flex-shrink:0}
-/* Toolbar above the PDF */
-.pdf-toolbar{display:flex;align-items:center;gap:16px;padding:10px 28px;background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0}
-.pdf-title{font:600 14px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-primary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pdf-toolbar a{font-size:12px;color:var(--text-secondary);text-decoration:none;border:1px solid var(--border);border-radius:4px;padding:5px 12px;transition:color .15s,border-color .15s;white-space:nowrap}
-.pdf-toolbar a:hover{color:var(--text-primary);border-color:var(--text-muted)}
-/* Full-bleed iframe */
-.pdf-frame{flex:1;width:100%;border:none;display:block;background:var(--bg-warm)}
-.pdf-error{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--text-secondary);font-size:15px;padding:40px}
-.pdf-error a{color:var(--infared)}
-.site-footer{background:#111;color:rgba(255,255,255,.35);font-size:11px;letter-spacing:.5px;text-transform:uppercase;text-align:center;padding:12px 20px;display:flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0}
-.site-footer img{height:14px;opacity:.4}
-/* ── Inputs → Synthesis → Output nav (shared with site.css) ── */
-.nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:10px 20px;overflow:visible;white-space:nowrap;gap:14px;position:relative;z-index:50}
-[data-theme=dark] .nav-pages{background:var(--bg)}
-.nav-zone{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.nav-flow-arrow{color:var(--text-muted);opacity:.4;font-size:15px;flex-shrink:0;padding:0 4px;user-select:none;font-weight:300}
-.nav-zone-label{font:700 9px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);flex-shrink:0}
-.nav-zone-label-output{color:var(--infared);opacity:.9}
-.nav-zone-diag,.nav-zone-design,.nav-zone-research,.nav-zone-constitution{flex:0 0 auto}
-.nav-dd-btn-diag,.nav-dd-btn-design,.nav-dd-btn-research,.nav-dd-btn-constitution{min-width:0}
-/* Nav button chrome: see assets/site.css for the canonical neutral
-   rules. The PDF viewer is a separate static page; we only repeat
-   the layout-specific bits (panel widths) here. */
-.nav-dd-stratum-badge-constitution{color:var(--text-secondary);background:var(--bg-panel)}
-.nav-dd-panel-constitution{left:0;right:auto;min-width:480px;max-width:520px}
-[data-theme=dark] .nav-dd-stratum-badge-constitution{color:var(--text-body);background:var(--bg)}
-.nav-dd-btn-diag.active,.nav-dd-btn-design.active{color:var(--text-primary);font-weight:600}
-.nav-dd-panel-diag{left:0;right:auto;min-width:500px;max-width:540px}
-.nav-dd-panel-design{left:0;right:auto;min-width:460px;max-width:500px}
-.nav-dd-panel-research{left:auto;right:0;min-width:460px;max-width:500px}
-.nav-dd-ref-group-label{display:block;font:700 9.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-muted);padding:10px 10px 4px;margin-top:4px}
-.nav-dd-ref-group-label-flow{padding-left:16px}
-.nav-dd-ref-flow{padding-left:40px !important}
-.nav-dd-ref-flow::before{left:28px !important}
-.nav-dd-ref-new{display:inline-block;margin-left:8px;font:700 9px/1 -apple-system,sans-serif;letter-spacing:.7px;color:#0a8a80;background:rgba(22,233,216,.14);border:1px solid rgba(22,233,216,.45);border-radius:3px;padding:2px 5px;text-transform:uppercase;vertical-align:1px}
-[data-theme=dark] .nav-dd-ref-new{color:#16E9D8;background:rgba(22,233,216,.1);border-color:rgba(22,233,216,.35)}
-.nav-breadcrumb{background:var(--bg-panel);border-bottom:1px solid var(--border);padding:7px 20px;font:400 11.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);display:flex;align-items:center;flex-wrap:wrap;gap:6px;letter-spacing:.1px}
-[data-theme=dark] .nav-breadcrumb{background:var(--bg)}
-.nav-breadcrumb:empty{display:none}
-.nav-breadcrumb-item{color:var(--text-secondary)}
-.nav-breadcrumb-current{color:var(--text-primary);font-weight:600}
-.nav-breadcrumb-sep{color:var(--text-muted);opacity:.55;font-size:13px;padding:0 2px}
-.nav-breadcrumb-desc-sep{color:var(--text-muted);opacity:.4;font-size:12px;padding:0 2px 0 6px}
-.nav-breadcrumb-desc{color:var(--text-muted);font-weight:400;font-style:italic;opacity:.88;letter-spacing:.15px}
-.nav-dd-wrap-light{position:relative}
-.nav-dd-btn-light{background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font:500 11.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--text-secondary);padding:8px 13px;transition:all .15s;white-space:nowrap}
-.nav-dd-btn-light:hover{color:var(--text-primary);border-color:var(--text-muted);background:rgba(0,0,0,.02)}
-[data-theme=dark] .nav-dd-btn-light:hover{background:rgba(255,255,255,.04)}
-.nav-dd-wrap-light.open .nav-dd-btn-light{color:var(--infared);border-color:rgba(229,35,33,.4);background:rgba(229,35,33,.05)}
-.nav-dd-panel-light{display:none;position:absolute;top:calc(100% + 8px);left:0;background:var(--bg);border:1px solid var(--border);border-radius:8px;box-shadow:0 16px 48px rgba(0,0,0,.12);padding:10px 16px;min-width:460px;max-width:500px;z-index:200;white-space:normal}
-[data-theme=dark] .nav-dd-panel-light{background:var(--bg-panel);box-shadow:0 16px 48px rgba(0,0,0,.4)}
-.nav-dd-wrap-light.open .nav-dd-panel-light{display:block}
-.nav-dd-stratum{padding:10px 0}
-.nav-dd-stratum+.nav-dd-stratum{border-top:1px solid var(--border-light)}
-.nav-dd-stratum-head{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px}
-.nav-dd-stratum-badge{display:inline-block;padding:3px 8px;border-radius:4px;font:700 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.9px;text-transform:uppercase}
-.nav-dd-stratum-badge-design{color:var(--infared);background:rgba(229,35,33,.1)}
-.nav-dd-stratum-badge-diagnostic{color:var(--dawn);background:rgba(236,100,29,.12)}
-.nav-dd-stratum-badge-research{color:#0b8478;background:rgba(22,233,216,.14)}
-[data-theme=dark] .nav-dd-stratum-badge-research{color:var(--electric-blue,#16E9D8);background:rgba(22,233,216,.12)}
-.nav-dd-stratum-meta{font:400 10.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);letter-spacing:.2px}
-.nav-dd-ref{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:12px;align-items:center;padding:8px 10px;margin:2px -6px;border-radius:6px;text-decoration:none;transition:background .12s}
-.nav-dd-ref:hover{background:rgba(229,35,33,.04)}
-[data-theme=dark] .nav-dd-ref:hover{background:rgba(229,35,33,.09)}
-.nav-dd-ref-title{grid-column:1;grid-row:1;font:500 13px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-primary);letter-spacing:-.1px}
-.nav-dd-ref:hover .nav-dd-ref-title{color:var(--infared)}
-.nav-dd-ref-cite{grid-column:1;grid-row:2;font:400 11px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
-.nav-dd-ref-tag{display:inline-block;font:600 9.5px/1 -apple-system,sans-serif;letter-spacing:.4px;color:var(--text-secondary);background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:2px 5px}
-[data-theme=dark] .nav-dd-ref-tag{background:var(--bg);color:var(--text-body)}
-.nav-dd-ref-pdf{grid-column:2;grid-row:1 / span 2;align-self:center;font:700 9.5px/1 -apple-system,sans-serif;letter-spacing:.6px;color:var(--infared);background:rgba(229,35,33,.08);padding:6px 9px;border-radius:4px;text-transform:uppercase}
-.nav-dd-ref:hover .nav-dd-ref-pdf{background:var(--infared);color:#fff}
-.nav-dd-ref-sub{padding-left:22px;position:relative}
-.nav-dd-ref-sub::before{content:"";position:absolute;left:12px;top:16px;width:6px;height:1px;background:var(--border)}
-.nav-dd-ref-sub .nav-dd-ref-title{font-size:12.5px;font-weight:500}
-.nav-dd-ref-stage{display:inline-block;margin-left:8px;font:600 9.5px/1 -apple-system,sans-serif;letter-spacing:.4px;color:var(--text-secondary);background:var(--bg-panel);border:1px solid var(--border);border-radius:3px;padding:2px 5px;text-transform:uppercase}
-[data-theme=dark] .nav-dd-ref-stage{background:var(--bg)}
-.nav-zone-output{flex:0 0 auto;padding-right:4px}
-/* V2 Spec destination + Implementation 'future' tease — Cardano blue,
-   matching the rest of the site (assets/site.css). */
-.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px solid var(--cardano-blue);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap;box-shadow:0 2px 6px var(--cardano-blue-soft)}
-.nav-tab-spec-big:hover{background:#0028a0;border-color:#0028a0}
-.nav-zone-implementation{flex:0 0 auto}
-.nav-tab-implementation{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px dashed rgba(255,255,255,.55);border-radius:6px;cursor:default;transition:all .15s;box-shadow:0 2px 6px var(--cardano-blue-soft);white-space:nowrap;position:relative}
-.nav-tab-implementation::after{content:"future";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:var(--cardano-blue);padding:3px 5px;border-radius:3px;border:1px solid var(--cardano-blue)}
-.nav-tab-implementation:hover{background:#0028a0}
-@media (max-width:1100px){.nav-pages{flex-wrap:wrap;padding:8px 14px}.nav-flow-arrow{display:none}}
-@media (max-width:700px){.nav-dd-panel-light,.nav-dd-panel-diag,.nav-dd-panel-design,.nav-dd-panel-research{position:fixed;left:8px;right:8px;min-width:0;max-width:none;top:auto}.nav-evidence-sub{flex-wrap:wrap}.nav-breadcrumb{padding:6px 14px;font-size:11px}}
-</style>
+<script>(function(){var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fluid-red'];var pick=v[Math.floor(Math.random()*v.length)];document.addEventListener('DOMContentLoaded',function(){var h=document.querySelector('.hero');if(h)h.setAttribute('data-banner',pick);});})();</script>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$']],
+    displayMath: [['$$', '$$']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="assets/site.css?v=1777530733">
+
+
 </head>
-<body>
+<body data-highlights="1" data-bookmarks="1">
+<div class="progress-bar" id="progress"></div>
 <nav class="site-nav"><div class="nav-brand">
 <a href="index.html" class="nav-brand-home">
 <img src="assets/cardano/cardano-logomark-white.svg" alt="Cardano" class="cardano-mark">
@@ -187,12 +52,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 </div>
 <div class="nav-pages">
 
+<!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
 <div class="nav-zone nav-zone-implementation">
 <span class="nav-tab-implementation" title="Future destination — engineering implementation of the V2 specification">Implementation ?</span>
 </div>
 
-<span class="nav-flow-arrow" aria-hidden="true">←</span>
+<span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
 
+<!-- Zone 1 (left anchor) — Solution Evaluation: CIP candidates evaluated against V2 -->
 <div class="nav-zone nav-zone-solution">
 <div class="nav-dd-wrap nav-dd-wrap-light">
 <button class="nav-dd-btn-light nav-dd-btn-solution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Solution Evaluation ▾</button>
@@ -246,14 +113,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 </div>
 </div>
 
-<span class="nav-flow-arrow" aria-hidden="true">←</span>
+<span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
 
+<!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
 <div class="nav-zone nav-zone-output">
-<a href="index.html" class="nav-tab-spec-big">V2 Specification</a>
+<a href="index.html" class="nav-tab-spec-big active">V2 Specification</a>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
 
+<!-- Zone 2.5 — Cardano Constitution (the governance ceiling V2 must respect) -->
 <div class="nav-zone nav-zone-constitution">
 <div class="nav-dd-wrap nav-dd-wrap-light">
 <button class="nav-dd-btn-light nav-dd-btn-constitution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Constitution ▾</button>
@@ -287,6 +156,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
 
+<!-- Zone 3 — Mainnet Diagnostic (observed reality) -->
 <div class="nav-zone nav-zone-diag">
 <div class="nav-dd-wrap nav-dd-wrap-light">
 <button class="nav-dd-btn-light nav-dd-btn-diag" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Mainnet Diagnostic ▾</button>
@@ -296,9 +166,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-diagnostic">Mainnet Diagnostic</span>
       <span class="nav-dd-stratum-meta">What mainnet is actually doing — synthesis, Reward-Flow evidence, and the prior report</span>
     </div>
+    <a href="findings.html" class="nav-dd-ref nav-dd-ref-hero">
+      <span class="nav-dd-ref-title">Findings &amp; Observations<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Every diagnostic finding paired with its mainnet evidence — one-page synthesis</span>
+    </a>
     <a href="observatory.html" class="nav-dd-ref">
-      <span class="nav-dd-ref-title">The Diagnostic<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">Synthesis of observations across the reward pipeline</span>
+      <span class="nav-dd-ref-title">The Diagnostic</span>
+      <span class="nav-dd-ref-cite">Full narrative — observations, problem induction, and sub-report links</span>
     </a>
     <a href="census.html" class="nav-dd-ref nav-dd-ref-sub">
       <span class="nav-dd-ref-title">The Staking Census<span class="nav-dd-ref-new">New</span></span>
@@ -330,6 +204,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
 
+<!-- Zone 4 — Design Support (intended mechanism) -->
 <div class="nav-zone nav-zone-design">
 <div class="nav-dd-wrap nav-dd-wrap-light">
 <button class="nav-dd-btn-light nav-dd-btn-design" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Design Support ▾</button>
@@ -355,6 +230,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
 
+<!-- Zone 5 — Research Papers (academic foundations) -->
 <div class="nav-zone nav-zone-research">
 <div class="nav-dd-wrap nav-dd-wrap-light">
 <button class="nav-dd-btn-light nav-dd-btn-research" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Research Papers ▾</button>
@@ -390,58 +266,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
 </div>
 
 </div>
-<div class="nav-breadcrumb"></div>
+<div class="nav-breadcrumb"><span class="nav-breadcrumb-item nav-breadcrumb-current">V2 Specification</span></div>
 </nav>
+<style>
+.pdf-toolbar{display:flex;align-items:center;gap:16px;padding:10px 28px;background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0}
+.pdf-title{flex:1;font:600 13px/1 var(--font-display);letter-spacing:.6px;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pdf-toolbar a{font-size:12px;color:var(--text-secondary);text-decoration:none;border:1px solid var(--border);border-radius:4px;padding:5px 12px;transition:color .15s,border-color .15s;white-space:nowrap}
+.pdf-toolbar a:hover{color:var(--cardano-blue);border-color:var(--cardano-blue)}
+.pdf-frame{flex:1;width:100%;border:0;background:var(--bg-warm);min-height:calc(100vh - 240px)}
+.pdf-error{padding:40px;color:var(--text-secondary);text-align:center;font:400 14px/1.5 var(--font-body)}
+.pdf-error a{color:var(--cardano-blue);text-decoration:underline}
+[data-theme=dark] .pdf-toolbar{background:var(--bg);border-bottom-color:var(--border)}
+[data-theme=dark] .pdf-toolbar a{color:var(--text-body)}
+</style>
 <div class="pdf-toolbar" id="toolbar">
   <span class="pdf-title" id="pdf-title">Loading document…</span>
   <a id="pdf-download" href="#" download title="Download PDF">Download ↓</a>
   <a id="pdf-newtab" href="#" target="_blank" title="Open in new tab">New tab ↗</a>
 </div>
 <iframe class="pdf-frame" id="pdf-frame"></iframe>
-<footer class="site-footer"><img src="assets/butterfly-white.png" alt=""><span class="cbu-dot" aria-hidden="true"></span>Input Output &middot; Cardano Business Unit <span class="footer-sep" aria-hidden="true">·</span> <a href="https://cardano.org" class="footer-cardano" rel="noopener" target="_blank" title="For the Cardano network"><span class="ouroboros" aria-hidden="true"></span>For the Cardano network</a></footer>
 <script>
 (function(){
-  /* Theme */
-  window.toggleTheme=function(){
-    var html=document.documentElement;
-    var next=html.getAttribute('data-theme')==='dark'?'light':'dark';
-    html.setAttribute('data-theme',next);
-    try{ localStorage.setItem('spo-theme',next); }catch(e){}
-    var btn=document.querySelector('.theme-toggle');
-    if(btn){ btn.textContent=next==='dark'?'☀':'☾'; btn.title=next==='dark'?'Switch to light theme':'Switch to dark theme'; }
-  };
-  (function(){
-    var saved;try{ saved=localStorage.getItem('spo-theme'); }catch(e){}
-    if(saved) document.documentElement.setAttribute('data-theme',saved);
-    var btn=document.querySelector('.theme-toggle');
-    if(btn){ var d=document.documentElement.getAttribute('data-theme')==='dark'; btn.textContent=d?'☀':'☾'; btn.title=d?'Switch to light theme':'Switch to dark theme'; }
-  })();
-
-  /* Dropdowns */
-  window.closeAllDd=function(except){
-    document.querySelectorAll('.nav-dd-wrap.open').forEach(function(w){
-      if(!w.contains(except)) w.classList.remove('open');
-    });
-  };
-  document.addEventListener('click',function(){ closeAllDd(null); });
-
-  /* PDF title lookup */
-  var titles = {};
-  titles["delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf"] = "Delegation & Incentives Design Spec";
-  titles["reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf"] = "Reward Sharing Schemes for Stake Pools";
-  titles["incentives-against-power-grabs_kiayias-et-al_2021.pdf"] = "Stake Pool Incentives Against Power Grabs";
-  titles["removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf"] = "Removing the Minimum Pool Cost";
-  titles["balancing-participation-decentralization_kiayias-et-al_2024.pdf"] = "Balancing Participation & Decentralization";
-  titles["spo-incentives-analysis_lopez-de-lara_2025.pdf"] = "SPO Incentives Analysis";
-
-  /* Load PDF from query string */
+  var titles={};
+  titles["delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf"]="Delegation & Incentives Design Spec";
+  titles["reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf"]="Reward Sharing Schemes for Stake Pools";
+  titles["incentives-against-power-grabs_kiayias-et-al_2021.pdf"]="Stake Pool Incentives Against Power Grabs";
+  titles["removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf"]="Removing the Minimum Pool Cost";
+  titles["balancing-participation-decentralization_kiayias-et-al_2024.pdf"]="Balancing Participation & Decentralization";
+  titles["spo-incentives-analysis_lopez-de-lara_2025.pdf"]="SPO Incentives Analysis";
+  titles["cardano-constitution-2.pdf"]="Cardano Constitution V2";
   var params=new URLSearchParams(window.location.search);
   var file=params.get('file')||'';
   if(file){
     document.getElementById('pdf-frame').src=file;
     document.getElementById('pdf-download').href=file;
     document.getElementById('pdf-newtab').href=file;
-    /* Resolve title from known PDFs or from filename */
     var basename=file.split('/').pop();
     var title=titles[basename]||basename.replace(/\.pdf$/i,'').replace(/[-_]/g,' ');
     document.getElementById('pdf-title').textContent=title;
@@ -456,5 +315,69 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helveti
   }
 })();
 </script>
+
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col footer-col-brand">
+      <a href="index.html" class="footer-cardano-mark" title="Cardano Reward System V2 — home">
+        <svg class="footer-cardano-symbol" viewBox="0 0 64 64" aria-hidden="true"><g fill="currentColor"><circle cx="32" cy="10" r="3"/><circle cx="32" cy="54" r="3"/><circle cx="51.05" cy="21" r="3"/><circle cx="12.94" cy="21" r="3"/><circle cx="51.05" cy="43" r="3"/><circle cx="12.94" cy="43" r="3"/></g><g fill="currentColor" opacity="0.5"><circle cx="22.5" cy="14.5" r="2"/><circle cx="41.5" cy="14.5" r="2"/><circle cx="22.5" cy="49.5" r="2"/><circle cx="41.5" cy="49.5" r="2"/><circle cx="55.5" cy="32" r="2"/><circle cx="8.5" cy="32" r="2"/></g></svg>
+        <span class="footer-cardano-label">Cardano Reward System V2</span>
+      </a>
+      <p class="footer-tagline">An evidence-driven proposal for Cardano&rsquo;s incentive mechanism.</p>
+      <a href="https://cardano.org" class="footer-network-link" rel="noopener" target="_blank">
+        For the Cardano network<span class="footer-ext" aria-hidden="true">↗</span>
+      </a>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Specification</h4>
+      <ul class="footer-links">
+        <li><a href="index.html">V2 Specification</a></li>
+        <li><a href="intended-game.html">The Intended Game</a></li>
+        <li><a href="findings.html">Mainnet Diagnostic</a></li>
+        <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Repository</h4>
+      <ul class="footer-links">
+        <li><a href="https://github.com/input-output-hk/spo-incentives" rel="noopener" target="_blank">View on GitHub<span class="footer-ext" aria-hidden="true">↗</span></a></li><li><a href="https://github.com/input-output-hk/spo-incentives/issues/new" rel="noopener" target="_blank">File an issue<span class="footer-ext" aria-hidden="true">↗</span></a></li><li><a href="https://github.com/input-output-hk/spo-incentives/discussions" rel="noopener" target="_blank">Discussions<span class="footer-ext" aria-hidden="true">↗</span></a></li><li><a href="https://github.com/input-output-hk/spo-incentives/blob/main/LICENSE" rel="noopener" target="_blank">License<span class="footer-ext" aria-hidden="true">↗</span></a></li>
+      </ul>
+    </div>
+    <div class="footer-col footer-col-meta">
+      <h4 class="footer-heading">Built by</h4>
+      <a href="https://iohk.io" class="footer-iog" rel="noopener" target="_blank" title="Input | Output Group">
+        <img src="assets/iog-full-logo-white.png" alt="Input | Output Group" class="footer-iog-mark">
+      </a>
+      <div class="footer-iog-org">
+        <span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit
+      </div>
+      <div class="footer-meta">
+        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/04/30</span></div>
+        <div class="footer-meta-row"><span class="footer-meta-key">Author</span><span class="footer-meta-val"><a href="https://www.linkedin.com/in/nhenin/" rel="noopener" target="_blank">Nicolas Henin<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
+        <div class="footer-meta-row"><span class="footer-meta-key">Source</span><span class="footer-meta-val"><a href="https://github.com/input-output-hk/spo-incentives" rel="noopener" target="_blank">input-output-hk/spo-incentives<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-rule" aria-hidden="true"></div>
+  <div class="footer-bottom">
+    <span class="footer-copy">&copy; 2026 Input Output Group &middot; Released under an open licence</span>
+    <span class="footer-tag">Built by I|O Group &middot; For the Cardano network</span>
+  </div>
+</footer>
+<div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
+<a href="#" class="back-top" id="btt">&uarr;</a>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+<script>
+if (window.mermaid) {
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    securityLevel: 'loose',
+    themeVariables: { fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' },
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' }
+  });
+}
+</script>
+<script src="assets/site.js?v=1777530733"></script>
 </body>
 </html>

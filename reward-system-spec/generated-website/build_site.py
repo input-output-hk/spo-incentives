@@ -1448,7 +1448,34 @@ window.MathJax = {{
 </div>
 <div class="nav-breadcrumb">{breadcrumb_inner}</div>
 </nav>
-<div class="hero" data-banner="{hero_banner}">
+{body_main}
+{giscus_block}
+{footer_block}
+<div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
+<a href="#" class="back-top" id="btt">&uarr;</a>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+<script>
+if (window.mermaid) {{
+  mermaid.initialize({{
+    startOnLoad: true,
+    theme: 'default',
+    securityLevel: 'loose',
+    themeVariables: {{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }},
+    flowchart: {{ useMaxWidth: true, htmlLabels: true, curve: 'basis' }}
+  }});
+}}
+</script>
+<script src="assets/site.js?v={asset_ver}"></script>
+</body>
+</html>
+"""
+
+
+# --- Body-main fragments ----------------------------------------------------
+# The hero block is what regular pages put above their content. The PDF
+# viewer skips it; both share the same {body_main} placeholder in TEMPLATE
+# so the surrounding head/nav/footer never drift between page kinds.
+HERO_BLOCK = """<div class="hero" data-banner="{hero_banner}">
   <svg class="hero-schema" viewBox="0 0 1400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <pattern id="heroGrid" width="40" height="40" patternUnits="userSpaceOnUse">
@@ -1482,28 +1509,7 @@ window.MathJax = {{
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
-<div class="content">{content}</div>
-{giscus_block}
-{footer_block}
-<div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
-<a href="#" class="back-top" id="btt">&uarr;</a>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
-<script>
-if (window.mermaid) {{
-  mermaid.initialize({{
-    startOnLoad: true,
-    theme: 'default',
-    securityLevel: 'loose',
-    themeVariables: {{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }},
-    flowchart: {{ useMaxWidth: true, htmlLabels: true, curve: 'basis' }}
-  }});
-}}
-</script>
-<script src="assets/site.js?v={asset_ver}"></script>
-</body>
-</html>
-"""
-
+<div class="content">{content}</div>"""
 
 # Which active-nav slugs fall under which top-level dropdown
 DIAG_ACTIVE = {"findings", "observatory", "census", "treasury", "pools", "operator"}
@@ -1658,15 +1664,29 @@ def render_shell(page: dict, content_html: str) -> str:
     except OSError:
         js_mt = 0
     asset_ver = str(max(css_mt, js_mt) or int(time.time()))
+
+    # Default body_main = hero block + content. Callers can override
+    # via page["body_main"] (e.g. the PDF viewer page) so the same
+    # head + nav + footer are reused without divergence.
+    body_main_override = page.get("body_main")
+    if body_main_override is not None:
+        body_main = body_main_override
+    else:
+        body_main = HERO_BLOCK.format(
+            hero_h1=page["hero_h1"],
+            hero_sub=page["hero_sub"],
+            hero_eyebrow=_HERO_EYEBROW.get(
+                active, "V2 Reward System &middot; Technical Specification"
+            ),
+            hero_banner=BANNER_VARIANTS.get(active, "fluid"),
+            hero_build_date=_html.escape(BUILD_DATE) if BUILD_DATE else "",
+            hero_build_author_html=_render_build_author_html(),
+            content=content_html,
+        )
+
     return TEMPLATE.format(
         title=page["title"],
-        hero_h1=page["hero_h1"],
-        hero_sub=page["hero_sub"],
-        hero_eyebrow=_HERO_EYEBROW.get(
-            active, "V2 Reward System &middot; Technical Specification"
-        ),
-        hero_banner=BANNER_VARIANTS.get(active, "fluid"),
-        content=content_html,
+        body_main=body_main,
         cls_diag_trigger=cls_diag_trigger,
         cls_solution_trigger=cls_solution_trigger,
         cls_design_trigger=cls_design_trigger,
@@ -1674,11 +1694,7 @@ def render_shell(page: dict, content_html: str) -> str:
         asset_ver=asset_ver,
         plausible_head=_render_analytics_head(),
         hypothesis_head=_render_hypothesis_head(),
-        giscus_block=_render_giscus_block(),
-        # Contact form retired — readers go to GitHub Discussions
-        # (linked from the footer) for any structured feedback.
-        hero_build_date=_html.escape(BUILD_DATE) if BUILD_DATE else "",
-        hero_build_author_html=_render_build_author_html(),
+        giscus_block=_render_giscus_block() if not body_main_override else "",
         footer_block=_render_footer(),
         body_data_attrs=_render_body_data_attrs(),
         **classes,
@@ -5490,9 +5506,88 @@ def build_bookmarks_page() -> Path:
     return out
 
 
+# --- PDF viewer page --------------------------------------------------------
+# Generated as a regular page so it always shares head + nav + footer with
+# the rest of the site (same fonts, same Cardano blue chrome, same logo).
+# Body is a tiny toolbar + iframe; the file to render comes from the
+# `?file=` query string. No drift possible — the standalone pdf-viewer.html
+# is rebuilt every run.
+
+PDF_VIEWER_BODY = """<style>
+.pdf-toolbar{display:flex;align-items:center;gap:16px;padding:10px 28px;background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0}
+.pdf-title{flex:1;font:600 13px/1 var(--font-display);letter-spacing:.6px;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pdf-toolbar a{font-size:12px;color:var(--text-secondary);text-decoration:none;border:1px solid var(--border);border-radius:4px;padding:5px 12px;transition:color .15s,border-color .15s;white-space:nowrap}
+.pdf-toolbar a:hover{color:var(--cardano-blue);border-color:var(--cardano-blue)}
+.pdf-frame{flex:1;width:100%;border:0;background:var(--bg-warm);min-height:calc(100vh - 240px)}
+.pdf-error{padding:40px;color:var(--text-secondary);text-align:center;font:400 14px/1.5 var(--font-body)}
+.pdf-error a{color:var(--cardano-blue);text-decoration:underline}
+[data-theme=dark] .pdf-toolbar{background:var(--bg);border-bottom-color:var(--border)}
+[data-theme=dark] .pdf-toolbar a{color:var(--text-body)}
+</style>
+<div class="pdf-toolbar" id="toolbar">
+  <span class="pdf-title" id="pdf-title">Loading document…</span>
+  <a id="pdf-download" href="#" download title="Download PDF">Download ↓</a>
+  <a id="pdf-newtab" href="#" target="_blank" title="Open in new tab">New tab ↗</a>
+</div>
+<iframe class="pdf-frame" id="pdf-frame"></iframe>
+<script>
+(function(){
+  var titles={};
+  titles["delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf"]="Delegation & Incentives Design Spec";
+  titles["reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf"]="Reward Sharing Schemes for Stake Pools";
+  titles["incentives-against-power-grabs_kiayias-et-al_2021.pdf"]="Stake Pool Incentives Against Power Grabs";
+  titles["removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf"]="Removing the Minimum Pool Cost";
+  titles["balancing-participation-decentralization_kiayias-et-al_2024.pdf"]="Balancing Participation & Decentralization";
+  titles["spo-incentives-analysis_lopez-de-lara_2025.pdf"]="SPO Incentives Analysis";
+  titles["cardano-constitution-2.pdf"]="Cardano Constitution V2";
+  var params=new URLSearchParams(window.location.search);
+  var file=params.get('file')||'';
+  if(file){
+    document.getElementById('pdf-frame').src=file;
+    document.getElementById('pdf-download').href=file;
+    document.getElementById('pdf-newtab').href=file;
+    var basename=file.split('/').pop();
+    var title=titles[basename]||basename.replace(/\\.pdf$/i,'').replace(/[-_]/g,' ');
+    document.getElementById('pdf-title').textContent=title;
+    document.title=title+' — SPO Incentives';
+  } else {
+    document.getElementById('toolbar').style.display='none';
+    document.getElementById('pdf-frame').style.display='none';
+    var err=document.createElement('div');
+    err.className='pdf-error';
+    err.innerHTML='<div>No document specified.</div><a href="index.html">← Back to report</a>';
+    document.body.insertBefore(err,document.querySelector('.site-footer'));
+  }
+})();
+</script>"""
+
+
+def build_pdf_viewer_page() -> Path:
+    """Build pdf-viewer.html as a regular shell page so head/nav/footer
+    stay in sync with the rest of the site automatically. Body is the
+    PDF iframe + toolbar; file comes from ?file= query param at runtime.
+    """
+    page = {
+        "slug": "pdf-viewer",
+        "html": "pdf-viewer.html",
+        "title": "Document Viewer — SPO Incentives",
+        # active_nav highlights the V2 Spec tab so the reader sees they're
+        # still inside the spec context.
+        "active_nav": "spec",
+        # Empty hero placeholders — body_main override skips them entirely.
+        "hero_h1": "",
+        "hero_sub": "",
+        "body_main": PDF_VIEWER_BODY,
+    }
+    full = render_shell(page, content_html="")
+    out = SITE_DIR / "pdf-viewer.html"
+    out.write_text(full)
+    return out
+
+
 def main(argv: list[str]) -> int:
     slugs = [a for a in argv[1:] if not a.startswith("-")]
-    valid_slugs = {p["slug"] for p in PAGES} | {"findings", "my-bookmarks"}
+    valid_slugs = {p["slug"] for p in PAGES} | {"findings", "my-bookmarks", "pdf-viewer"}
     wanted = PAGES if not slugs else [p for p in PAGES if p["slug"] in slugs]
     if slugs:
         missing = set(slugs) - valid_slugs
@@ -5530,6 +5625,14 @@ def main(argv: list[str]) -> int:
         print(f"  {'my-bookmarks':16s} ← (localStorage hydrator)")
         bookmarks_out = build_bookmarks_page()
         print(f"  {' ':16s}  → {bookmarks_out.relative_to(SITE_DIR)}")
+
+    # PDF viewer — generated from the same shell so head/nav/footer
+    # never drift from the regular pages. Body is a static toolbar +
+    # iframe driven by a ?file= query param at runtime.
+    if not slugs or "pdf-viewer" in slugs:
+        print(f"  {'pdf-viewer':16s} ← (shared shell + iframe)")
+        pdf_out = build_pdf_viewer_page()
+        print(f"  {' ':16s}  → {pdf_out.relative_to(SITE_DIR)}")
     print("Done.")
     return 0
 
