@@ -411,6 +411,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
    Lifted into a mini Pro-card layout so prose-embedded references
    echo the §1 Mainnet Observations rows visually. */
 .content blockquote:has(> p.finding-callout-meta),
+.content blockquote.finding-callout-group,
 .content blockquote:has(> p:first-child > strong > a.finding-ref){
   border:1px solid rgba(229,35,33,.18);
   border-left:4px solid var(--infared);
@@ -422,12 +423,46 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
   border-radius:0 10px 10px 0;
   box-shadow:0 1px 2px rgba(0,0,0,.04)}
 .content blockquote:has(> p.finding-callout-meta) > p,
+.content blockquote.finding-callout-group .finding-callout-segment > p,
 .content blockquote:has(> p:first-child > strong > a.finding-ref) > p{
   font:400 15px/1.65 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:#1a1a1a;letter-spacing:-.005em}
 .content blockquote:has(> p.finding-callout-meta) > p strong,
+.content blockquote.finding-callout-group .finding-callout-segment > p strong,
 .content blockquote:has(> p:first-child > strong > a.finding-ref) > p strong{
   font-weight:600;color:#000}
+
+/* Grouped callouts — single breadcrumb at top, internal divider between
+   each finding. Each finding sits in its own segment so deep-links to
+   ``#finding-…`` still land precisely on the right Finding. */
+.content blockquote.finding-callout-group .finding-callout-segment{
+  padding:2px 0}
+.content blockquote.finding-callout-group .finding-callout-segment > p{
+  margin:6px 0}
+.content blockquote.finding-callout-group .finding-callout-segment > p:first-child{
+  margin-top:0}
+.content blockquote.finding-callout-group .finding-callout-segment > p:last-child{
+  margin-bottom:0}
+.content blockquote.finding-callout-group hr.finding-callout-divider{
+  border:0;height:1px;
+  margin:14px -22px;
+  background:linear-gradient(90deg,
+    transparent 0%,rgba(229,35,33,.16) 12%,
+    rgba(229,35,33,.16) 88%,transparent 100%)}
+[data-theme=dark] .content blockquote.finding-callout-group hr.finding-callout-divider{
+  background:linear-gradient(90deg,
+    transparent 0%,rgba(255,111,110,.22) 12%,
+    rgba(255,111,110,.22) 88%,transparent 100%)}
+/* Anchor target indicator — when a deep link lands on a specific
+   finding inside a grouped callout, briefly outline its segment so
+   readers know which one. */
+.content blockquote.finding-callout-group .finding-callout-segment:target{
+  background:rgba(229,35,33,.05);
+  border-radius:4px;
+  margin:0 -8px;padding:2px 8px}
+[data-theme=dark]
+  .content blockquote.finding-callout-group .finding-callout-segment:target{
+  background:rgba(255,111,110,.08)}
 
 /* Visually separate consecutive Finding callouts (e.g. POL.O6.F1
    followed by POL.O6.F2) so they don't read as one block. */
@@ -486,7 +521,9 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .content blockquote:has(> p:first-child > strong > a.finding-ref)
   > p:first-child > strong > a.finding-ref,
 .content blockquote:has(> p.finding-callout-meta)
-  > p > strong > a.finding-ref{
+  > p > strong > a.finding-ref,
+.content blockquote.finding-callout-group
+  .finding-callout-segment > p:first-child > strong > a.finding-ref{
   display:inline-block;padding:1px 8px;border-radius:4px;
   background:rgba(229,35,33,.10);
   border:1px solid rgba(229,35,33,.25);
@@ -499,10 +536,13 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .content blockquote:has(> p:first-child > strong > a.finding-ref)
   > p:first-child > strong > a.finding-ref:hover,
 .content blockquote:has(> p.finding-callout-meta)
-  > p > strong > a.finding-ref:hover{
+  > p > strong > a.finding-ref:hover,
+.content blockquote.finding-callout-group
+  .finding-callout-segment > p:first-child > strong > a.finding-ref:hover{
   background:rgba(229,35,33,.16);
   border-color:rgba(229,35,33,.45)}
 [data-theme=dark] .content blockquote:has(> p.finding-callout-meta),
+[data-theme=dark] .content blockquote.finding-callout-group,
 [data-theme=dark] .content blockquote:has(> p:first-child > strong > a.finding-ref){
   border-color:rgba(255,111,110,.22);
   border-left-color:#FF6F6E;
@@ -510,11 +550,14 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
     rgba(255,111,110,.08) 0%,rgba(255,111,110,.03) 60%,transparent 100%);
   box-shadow:0 1px 2px rgba(0,0,0,.25)}
 [data-theme=dark] .content blockquote:has(> p.finding-callout-meta) > p,
+[data-theme=dark] .content blockquote.finding-callout-group .finding-callout-segment > p,
 [data-theme=dark] .content blockquote:has(> p:first-child > strong > a.finding-ref) > p{color:#E4E4E7}
 [data-theme=dark] .content blockquote:has(> p:first-child > strong > a.finding-ref)
   > p:first-child > strong > a.finding-ref,
 [data-theme=dark] .content blockquote:has(> p.finding-callout-meta)
-  > p > strong > a.finding-ref{
+  > p > strong > a.finding-ref,
+[data-theme=dark] .content blockquote.finding-callout-group
+  .finding-callout-segment > p:first-child > strong > a.finding-ref{
   background:rgba(255,111,110,.12);border-color:rgba(255,111,110,.30);color:#FF6F6E}
 [data-theme=dark] .content blockquote > p.finding-callout-meta{
   color:#FF9D9C !important;
