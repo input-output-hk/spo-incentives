@@ -1743,12 +1743,18 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 .sro-card-pro .sro-abstract strong{font-weight:700;color:var(--text-primary);
   font-variant-numeric:tabular-nums}
 
-/* "Findings" eyebrow between the abstract panel and the list —
-   small uppercase label, +2px tracking, muted; frames the list as
-   its own section without competing with the H3 title above. */
-.sro-findings-label{margin:18px 22px 8px;
-  font:600 10.5px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  letter-spacing:2.4px;text-transform:uppercase;color:var(--text-muted)}
+/* "Findings" eyebrow — Infared red. Deliberate accent that breaks
+   the Cardano-blue ladder: this label IS the section opener and the
+   red carries authority + matches the hero eyebrow rule's accent. */
+.sro-findings-label{margin:20px 22px 10px;
+  font:600 11px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:2.6px;text-transform:uppercase;color:var(--infared);
+  display:flex;align-items:center;gap:12px}
+.sro-findings-label::after{content:'';flex:1;height:1px;
+  background:color-mix(in srgb, var(--infared) 35%, transparent)}
+[data-theme=dark] .sro-findings-label{color:#FF6F6E}
+[data-theme=dark] .sro-findings-label::after{
+  background:color-mix(in srgb, #FF6F6E 35%, transparent)}
 
 /* Findings list — clean rows on the card surface. No decorative
    left rail, no per-row gradient. Hairline between rows, very
@@ -1786,12 +1792,18 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 [data-theme=dark] .sro-card-pro .sro-fid-label{color:#8FB1FF}
 [data-theme=dark] .sro-card-pro .sro-finding:hover .sro-fid-label{color:#B2C8FF}
 
-/* Evidence text — primary signal of the row. */
+/* Evidence text — the row's primary signal. Bumped to 16.5px /
+   1.7 line-height with a slightly cooler, fuller text colour so
+   long claims read as long-form prose rather than chip metadata.
+   Numbers/named entities get tabular-nums for vertical alignment
+   when the eye scans down the column. */
 .sro-card-pro .sro-evidence{
-  font:400 15.5px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--text-primary)}
+  font:400 16.5px/1.7 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#1a1a1a;letter-spacing:-.005em}
+[data-theme=dark] .sro-card-pro .sro-evidence{color:#E4E4E7}
 .sro-card-pro .sro-evidence strong{font-weight:700;
-  color:var(--text-primary);font-variant-numeric:tabular-nums}
+  color:#000;font-variant-numeric:tabular-nums}
+[data-theme=dark] .sro-card-pro .sro-evidence strong{color:#fff}
 
 @media (max-width:640px){
   .sro-card-pro .sro-head{flex-wrap:wrap;gap:10px;padding:12px 14px}
