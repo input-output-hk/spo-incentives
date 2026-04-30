@@ -527,15 +527,16 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 [data-theme=dark] .finding-callout-label{color:#B8B8BD}
 
 /* Replaces the em-dash that separates "Finding #N" from the title.
-   A faint right-arrow glyph anchored at baseline, half-opacity so it
-   reads as punctuation rather than emphasis. */
+   A larger right-arrow glyph anchored slightly above baseline so the
+   stem reads as a hand-off between the ref and the title. */
 .finding-callout-arrow{
   display:inline-block;
-  font:400 12px/1 'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
-  color:rgba(60,60,67,.55);
-  margin:0 1px;
-  vertical-align:1px}
-[data-theme=dark] .finding-callout-arrow{color:rgba(220,220,225,.5)}
+  font:600 18px/1 'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
+  color:rgba(60,60,67,.7);
+  margin:0 4px;
+  vertical-align:-2px;
+  transform:translateY(-1px)}
+[data-theme=dark] .finding-callout-arrow{color:rgba(220,220,225,.65)}
 
 /* The opening canonical ref renders as a quiet inline ``#N`` — same
    accent colour as the breadcrumb chip but no border, no background,
