@@ -5038,15 +5038,30 @@ def _render_findings_content(
         '</div>'
     )
 
-    # Stats strip.
+    # Stats strip — the two figures readers can act on. The previous
+    # "pipeline sections" tile was the count of unique parent §X.Y
+    # buckets, an internal-structure number that didn't tell the
+    # reader anything they could use.
+    # Sum total canonical findings across every problem-statement card
+    # so the third tile reflects evidence weight (the chain
+    # observation → finding the page surfaces) rather than file
+    # structure.
+    total_findings_count = 0
+    if findings_by_canon_obs:
+        for o in observations:
+            canon = o.get("canon_id")
+            if canon:
+                total_findings_count += len(
+                    findings_by_canon_obs.get(canon, [])
+                )
     stats = (
         '<div class="findings-stats">'
         f'<div class="findings-stat"><span class="findings-stat-num">{len(findings)}</span>'
         f'<span class="findings-stat-lbl">problem statements</span></div>'
         f'<div class="findings-stat"><span class="findings-stat-num">{len(observations)}</span>'
         f'<span class="findings-stat-lbl">mainnet observations</span></div>'
-        f'<div class="findings-stat"><span class="findings-stat-num">{len(by_parent_obs)}</span>'
-        f'<span class="findings-stat-lbl">pipeline sections</span></div>'
+        f'<div class="findings-stat"><span class="findings-stat-num">{total_findings_count}</span>'
+        f'<span class="findings-stat-lbl">supporting findings</span></div>'
         '</div>'
     )
 
