@@ -1,6 +1,4 @@
 # The Staking Census — Populations, Capital, and Participation on Cardano Mainnet
-(_Built on 2026/04/09 from db-sync snapshot at epoch 623._)
-
 
 This report maps the **full population of actors** in the Cardano staking ecosystem — and those absent from it.
 
@@ -66,33 +64,12 @@ Before analysing how rewards are shared (the companion [*Pools Pot Distribution*
    - [What remains noisy](#what-remains-noisy)
 8. [Bridges to Companion Analyses](#8-bridges-to-companion-analyses)
    - [8.1. Distribution efficiency (epoch 616)](#81-distribution-efficiency-epoch-616)
+9. [Data sources & methodology](#9-data-sources-methodology)
+   - [9.1. Data sources](#91-data-sources)
+   - [9.2. Methodology note — iterative cleaning](#92-methodology-note-iterative-cleaning)
    - [8.2. Operator's cut (epoch 614)](#82-operators-cut-epoch-614)
    - [8.3. Main report (epochs 548–583)](#83-main-report-epochs-548583)
    - [8.4. Reconciliation summary](#84-reconciliation-summary)
-
-
-## Data sources
-
-All data comes from **cardano-db-sync** (PostgreSQL, snapshot at epoch 623). **No third-party API.**
-
-| Table | Content |
-|---|---|
-| `ada_pots` | Per-epoch supply decomposition: reserve, treasury, circulating, UTxO, unclaimed rewards, deposits |
-| `epoch_stake` | Per-epoch staking snapshot: total staked per delegation, ~560M rows |
-| `delegation` | Individual delegation certificates: addr → pool |
-| `pool_update` + `pool_owner` | Pool registration history and owner keys |
-| `stake_deregistration` | Stake key deregistration events |
-| `tx` | Transaction metadata: fee, block reference, script size |
-| `tx_in` + `tx_out` | Transaction inputs and outputs: source/destination addresses, amounts |
-
-
-## Methodology note — iterative cleaning
-
-The raw db-sync tables contain **structural noise** that must be understood and progressively removed before drawing conclusions.
-
-Rather than presenting only a final "clean" picture, this document shows each cleaning pass explicitly: **what noise was identified**, **what was done about it**, and **how the numbers changed**. This makes the analytical choices visible and auditable.
-
-Each section therefore follows a **raw → clean** structure: the raw query result is shown first, then the noise is named, then the cleaned version is presented.
 
 
 ## 1. Mainnet Observations
@@ -1184,3 +1161,33 @@ The key numerical shifts when porting companion stats to census methodology:
 | Delegation count | 1.27M (epoch 614, reward-earning pools only) | 1.355M (epoch 623, all staked pools) | Scope + epoch drift |
 
 The **participation gap**, **distribution efficiency**, and **operator-take calculations** all chain off these population numbers. *Cleaning the census denominators propagates through every downstream metric.*
+
+
+## 9. Data sources & methodology
+
+### 9.1. Data sources
+
+All data comes from **cardano-db-sync** (PostgreSQL, snapshot at epoch 623). **No third-party API.**
+
+| Table | Content |
+|---|---|
+| `ada_pots` | Per-epoch supply decomposition: reserve, treasury, circulating, UTxO, unclaimed rewards, deposits |
+| `epoch_stake` | Per-epoch staking snapshot: total staked per delegation, ~560M rows |
+| `delegation` | Individual delegation certificates: addr → pool |
+| `pool_update` + `pool_owner` | Pool registration history and owner keys |
+| `stake_deregistration` | Stake key deregistration events |
+| `tx` | Transaction metadata: fee, block reference, script size |
+| `tx_in` + `tx_out` | Transaction inputs and outputs: source/destination addresses, amounts |
+
+### 9.2. Methodology note — iterative cleaning
+
+The raw db-sync tables contain **structural noise** that must be understood and progressively removed before drawing conclusions.
+
+Rather than presenting only a final "clean" picture, this document shows each cleaning pass explicitly: **what noise was identified**, **what was done about it**, and **how the numbers changed**. This makes the analytical choices visible and auditable.
+
+Each section therefore follows a **raw → clean** structure: the raw query result is shown first, then the noise is named, then the cleaned version is presented.
+
+
+---
+
+> **Status** — Built on 2026/04/09 from `cardano-db-sync` snapshot at epoch 623.
