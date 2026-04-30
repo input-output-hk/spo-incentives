@@ -2604,66 +2604,35 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 .sro-card-pro .sro-abstract strong{font-weight:700;color:var(--text-primary);
   font-variant-numeric:tabular-nums}
 
-/* Findings list — single continuous Infared (IOG red) left-rule down
-   the whole list, with each row carrying a soft red gradient that
-   eases out to transparent. Mirrors the abstract's blue left-rule
-   pattern — same architecture, complementary brand colour. No
-   horizontal white separator between rows: the gradients are subtle
-   enough that rows read as siblings without needing a divider. */
-.sro-card-pro .sro-findings{position:relative;padding:0 0 0 23px;
-  border-left:0}
-.sro-card-pro .sro-findings::before{content:'';position:absolute;
-  left:0;top:0;bottom:0;width:3px;
-  background:var(--cardano-blue);pointer-events:none;z-index:1}
+/* Findings list — clean rows on the card surface. No decorative
+   left rail, no per-row gradient, no 'Findings' eyebrow. Hairline
+   between rows, very subtle hover/target tint. */
+.sro-card-pro .sro-findings{position:relative;padding:0;border-left:0}
 .sro-card-pro .sro-finding{padding:14px 18px;
-  border-top:0;margin:0;
-  background:linear-gradient(90deg,
-    color-mix(in srgb, var(--cardano-blue) 6%, transparent) 0%,
-    color-mix(in srgb, var(--cardano-blue) 3%, transparent) 25%,
-    color-mix(in srgb, var(--cardano-blue) 1%, transparent) 55%,
-    transparent 100%);
-  transition:background .2s}
-.sro-card-pro .sro-finding + .sro-finding{
-  box-shadow:inset 0 1px 0 color-mix(in srgb, var(--cardano-blue) 14%, var(--border))}
+  border-top:1px solid var(--border);background:transparent;
+  transition:background .15s}
+.sro-card-pro .sro-finding:first-child{border-top:0}
 .sro-card-pro .sro-finding:hover{
-  background:linear-gradient(90deg,
-    color-mix(in srgb, var(--cardano-blue) 10%, transparent) 0%,
-    color-mix(in srgb, var(--cardano-blue) 5%, transparent) 25%,
-    color-mix(in srgb, var(--cardano-blue) 2%, transparent) 55%,
-    transparent 100%)}
+  background:color-mix(in srgb, var(--cardano-blue) 3%, transparent)}
 .sro-card-pro .sro-finding:target{
-  background:linear-gradient(90deg,
-    color-mix(in srgb, var(--cardano-blue) 14%, transparent) 0%,
-    color-mix(in srgb, var(--cardano-blue) 8%, transparent) 25%,
-    color-mix(in srgb, var(--cardano-blue) 3%, transparent) 55%,
-    transparent 100%)}
-/* F# label — two-line stack: "Finding #N" headline + canonical ref
-   underneath. The label dominates as the visible tag, the ref is the
-   tiny technical breadcrumb. Both sit inside the red gradient lane. */
-.sro-card-pro .sro-fid{padding:0;
-  min-width:128px;
-  align-self:center;
-  display:inline-flex;flex-direction:column;gap:3px;
-  align-items:flex-start;justify-content:center;
-  background:transparent;
-  border:0;
-  text-decoration:none}
+  background:color-mix(in srgb, var(--cardano-blue) 8%, transparent)}
+/* F# badge — minimal "#N" tag in Cardano blue. The canonical ref
+   CEN.O1.FN lives in the badge's title= attribute (hover reveal). */
+.sro-card-pro .sro-fid{padding:0;min-width:auto;flex-shrink:0;
+  align-self:flex-start;margin-top:2px;width:42px;
+  display:inline-flex;align-items:center;justify-content:flex-start;
+  background:transparent;border:0;text-decoration:none}
 .sro-card-pro .sro-fid-label{
-  color:#0a1f8e;
-  font:700 13px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  letter-spacing:.01em}
-.sro-card-pro .sro-fid-ref{
-  color:var(--text-muted);
-  font:600 10px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.06em}
-.sro-card-pro .sro-finding:hover .sro-fid-label{color:var(--cardano-blue)}
-.sro-card-pro .sro-finding:hover .sro-fid-ref{color:var(--text-secondary)}
-[data-theme=dark] .sro-card-pro .sro-fid-label{color:#A8B6FF}
-[data-theme=dark] .sro-card-pro .sro-finding:hover .sro-fid-label{color:#C4CDFF}
-/* Evidence text — bumped up to read as the primary content of the row,
-   no longer secondary to the finding id label. */
+  font:600 14px/1.2 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--cardano-blue);letter-spacing:.01em;
+  font-variant-numeric:tabular-nums}
+.sro-card-pro .sro-fid-ref{display:none}
+.sro-card-pro .sro-finding:hover .sro-fid-label{color:#001a6b}
+[data-theme=dark] .sro-card-pro .sro-fid-label{color:#8FB1FF}
+[data-theme=dark] .sro-card-pro .sro-finding:hover .sro-fid-label{color:#B2C8FF}
+/* Evidence text — primary signal of the row. */
 .sro-card-pro .sro-evidence{
-  font:400 14.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font:400 15.5px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-primary)}
 .sro-card-pro .sro-evidence strong{font-weight:700;
   color:var(--text-primary);font-variant-numeric:tabular-nums}
@@ -5326,14 +5295,7 @@ def _render_subreport_observations(groups: list[dict]) -> str:
                 f'<article class="sro-card" id="{g["slug"]}" '
                 f'data-obs="{canon}" data-group="{g["o_num"]}">'
             )
-        # Pro variant gets a small "Findings" eyebrow label between the
-        # abstract and the list — frames the list as a section, not a
-        # continuation of the abstract paragraph.
-        findings_section_label = (
-            '<div class="sro-findings-label">Findings</div>' if is_pro else ''
-        )
-        out.append(article_open + head_html + abstract_block
-                   + findings_section_label + '<ol class="sro-findings">')
+        out.append(article_open + head_html + abstract_block + '<ol class="sro-findings">')
         for fi, f in enumerate(g["findings"], 1):
             ev_html = _sro_inline_md_to_html(f["evidence_md"])
             ev_html = _highlight_metrics(ev_html)
