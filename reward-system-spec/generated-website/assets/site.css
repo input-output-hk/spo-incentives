@@ -515,32 +515,34 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
   font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-size:12px;letter-spacing:0;margin-left:6px}
 
-/* The opening canonical ref renders as a small Infared chip, the
-   way #N looks on the Pro card row. Inline still — flows with the
-   prose — but visually a marker. */
+/* The opening canonical ref renders as a quiet inline ``#N`` — same
+   accent colour as the breadcrumb chip but no border, no background,
+   no extra weight. Sits alongside the bold ``Finding`` label without
+   competing with it. */
 .content blockquote:has(> p:first-child > strong > a.finding-ref)
   > p:first-child > strong > a.finding-ref,
 .content blockquote:has(> p.finding-callout-meta)
   > p > strong > a.finding-ref,
 .content blockquote.finding-callout-group
   .finding-callout-segment > p:first-child > strong > a.finding-ref{
-  display:inline-block;padding:1px 8px;border-radius:4px;
-  background:rgba(229,35,33,.10);
-  border:1px solid rgba(229,35,33,.25);
+  display:inline;padding:0 1px;
+  background:transparent;border:0;border-bottom:0;
   color:var(--infared);
-  font:600 11.5px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.04em;
-  text-decoration:none;border-bottom:0;
-  vertical-align:1px;margin:0 2px;
-  transition:background .15s,border-color .15s}
+  font:500 .92em/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.01em;
+  text-decoration:none;
+  margin:0 2px;
+  transition:color .15s,text-decoration-color .15s}
 .content blockquote:has(> p:first-child > strong > a.finding-ref)
   > p:first-child > strong > a.finding-ref:hover,
 .content blockquote:has(> p.finding-callout-meta)
   > p > strong > a.finding-ref:hover,
 .content blockquote.finding-callout-group
   .finding-callout-segment > p:first-child > strong > a.finding-ref:hover{
-  background:rgba(229,35,33,.16);
-  border-color:rgba(229,35,33,.45)}
+  text-decoration:underline;
+  text-underline-offset:3px;
+  text-decoration-color:rgba(229,35,33,.5);
+  text-decoration-thickness:1px}
 [data-theme=dark] .content blockquote:has(> p.finding-callout-meta),
 [data-theme=dark] .content blockquote.finding-callout-group,
 [data-theme=dark] .content blockquote:has(> p:first-child > strong > a.finding-ref){
@@ -558,7 +560,14 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
   > p > strong > a.finding-ref,
 [data-theme=dark] .content blockquote.finding-callout-group
   .finding-callout-segment > p:first-child > strong > a.finding-ref{
-  background:rgba(255,111,110,.12);border-color:rgba(255,111,110,.30);color:#FF6F6E}
+  background:transparent;border:0;color:#FF8786}
+[data-theme=dark] .content blockquote:has(> p:first-child > strong > a.finding-ref)
+  > p:first-child > strong > a.finding-ref:hover,
+[data-theme=dark] .content blockquote:has(> p.finding-callout-meta)
+  > p > strong > a.finding-ref:hover,
+[data-theme=dark] .content blockquote.finding-callout-group
+  .finding-callout-segment > p:first-child > strong > a.finding-ref:hover{
+  text-decoration-color:rgba(255,135,134,.6)}
 [data-theme=dark] .content blockquote > p.finding-callout-meta{
   color:#FF9D9C !important;
   border-bottom-color:rgba(255,111,110,.22)}
