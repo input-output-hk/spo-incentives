@@ -2604,11 +2604,18 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 .sro-card-pro .sro-abstract strong{font-weight:700;color:var(--text-primary);
   font-variant-numeric:tabular-nums}
 
+/* "Findings" eyebrow between the abstract panel and the list —
+   small uppercase label, +2px tracking, muted; frames the list as
+   its own section without competing with the H3 title above. */
+.sro-findings-label{margin:18px 22px 8px;
+  font:600 10.5px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:2.4px;text-transform:uppercase;color:var(--text-muted)}
+
 /* Findings list — clean rows on the card surface. No decorative
-   left rail, no per-row gradient, no 'Findings' eyebrow. Hairline
-   between rows, very subtle hover/target tint. */
+   left rail, no per-row gradient. Hairline between rows, very
+   subtle Cardano-blue hover/target tint. */
 .sro-card-pro .sro-findings{position:relative;padding:0;border-left:0}
-.sro-card-pro .sro-finding{padding:14px 18px;
+.sro-card-pro .sro-finding{padding:16px 22px;gap:18px;
   border-top:1px solid var(--border);background:transparent;
   transition:background .15s}
 .sro-card-pro .sro-finding:first-child{border-top:0}
@@ -2616,20 +2623,30 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
   background:color-mix(in srgb, var(--cardano-blue) 3%, transparent)}
 .sro-card-pro .sro-finding:target{
   background:color-mix(in srgb, var(--cardano-blue) 8%, transparent)}
-/* F# badge — minimal "#N" tag in Cardano blue. The canonical ref
-   CEN.O1.FN lives in the badge's title= attribute (hover reveal). */
-.sro-card-pro .sro-fid{padding:0;min-width:auto;flex-shrink:0;
-  align-self:flex-start;margin-top:2px;width:42px;
-  display:inline-flex;align-items:center;justify-content:flex-start;
+
+/* F# badge — two-line stack. \`#N\` is the prominent ordinal so the
+   eye scans #1/#2/#3 vertically; \`CEN.O1.FN\` sits as a small mono
+   breadcrumb beneath, dim enough to read as a technical ref but
+   present for citation. Both lines start-aligned so the column is
+   tight. */
+.sro-card-pro .sro-fid{padding:0;flex-shrink:0;
+  align-self:flex-start;margin-top:1px;
+  min-width:96px;
+  display:inline-flex;flex-direction:column;gap:3px;
+  align-items:flex-start;justify-content:center;
   background:transparent;border:0;text-decoration:none}
 .sro-card-pro .sro-fid-label{
-  font:600 14px/1.2 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--cardano-blue);letter-spacing:.01em;
+  font:600 17px/1.1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--cardano-blue);letter-spacing:-.01em;
   font-variant-numeric:tabular-nums}
-.sro-card-pro .sro-fid-ref{display:none}
+.sro-card-pro .sro-fid-ref{
+  font:500 10px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--text-muted);letter-spacing:.06em}
 .sro-card-pro .sro-finding:hover .sro-fid-label{color:#001a6b}
+.sro-card-pro .sro-finding:hover .sro-fid-ref{color:var(--text-secondary)}
 [data-theme=dark] .sro-card-pro .sro-fid-label{color:#8FB1FF}
 [data-theme=dark] .sro-card-pro .sro-finding:hover .sro-fid-label{color:#B2C8FF}
+
 /* Evidence text — primary signal of the row. */
 .sro-card-pro .sro-evidence{
   font:400 15.5px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -5295,7 +5312,13 @@ def _render_subreport_observations(groups: list[dict]) -> str:
                 f'<article class="sro-card" id="{g["slug"]}" '
                 f'data-obs="{canon}" data-group="{g["o_num"]}">'
             )
-        out.append(article_open + head_html + abstract_block + '<ol class="sro-findings">')
+        # Pro variant gets a small "Findings" eyebrow between the
+        # abstract and the list — frames the list as its own section.
+        findings_label = (
+            '<div class="sro-findings-label">Findings</div>' if is_pro else ''
+        )
+        out.append(article_open + head_html + abstract_block
+                   + findings_label + '<ol class="sro-findings">')
         for fi, f in enumerate(g["findings"], 1):
             ev_html = _sro_inline_md_to_html(f["evidence_md"])
             ev_html = _highlight_metrics(ev_html)
