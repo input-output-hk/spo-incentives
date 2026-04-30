@@ -1320,8 +1320,7 @@ body.finding-panel-open .finding-panel-overlay{opacity:1;pointer-events:auto}
 /* Source-panel findings list — hydrated from the bundled findings
    registry. Mirrors the .sro-card-pro finding row layout: red ref
    chip + bigger summary text + small jump arrow. */
-.obs-panel-findings-wrap{margin:22px 0 18px;
-  border-top:1px solid var(--border);padding-top:18px}
+.obs-panel-findings-wrap{margin:22px 0 18px}
 .obs-panel-findings-head{display:flex;align-items:center;gap:14px;
   margin-bottom:12px}
 .obs-panel-findings-label{flex-shrink:0;
@@ -1338,7 +1337,7 @@ body.finding-panel-open .finding-panel-overlay{opacity:1;pointer-events:auto}
    nature/insight pill anchored bottom-right of the row. */
 .obs-panel-finding{position:relative;
   display:grid;grid-template-columns:96px 1fr;gap:18px;
-  padding:14px 16px 38px;
+  padding:16px 16px 52px;
   border-top:1px solid var(--border);background:transparent;
   transition:background .15s}
 .obs-panel-finding:first-child{border-top:0}
@@ -1381,7 +1380,7 @@ a.obs-panel-finding-fid:hover .obs-panel-finding-id{color:var(--text-secondary)}
    the main page, hue hashed (in JS) from the insight text and
    passed via the inline \`--n-h\` custom property. */
 .obs-panel-finding-insight{
-  position:absolute;bottom:12px;right:16px;
+  position:absolute;bottom:14px;right:16px;
   font:500 10.5px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   letter-spacing:.02em;text-transform:none;font-style:normal;
   padding:2px 9px;border-radius:12px;
@@ -1869,7 +1868,7 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
    accent lane), distinct from the Cardano-blue observation chrome
    above. No decorative left rail or per-row gradient. */
 .sro-card-pro .sro-findings{position:relative;padding:0;border-left:0}
-.sro-card-pro .sro-finding{padding:16px 22px 38px;gap:18px;
+.sro-card-pro .sro-finding{padding:16px 22px 52px;gap:18px;
   border-top:1px solid var(--border);background:transparent;
   transition:background .15s}
 .sro-card-pro .sro-finding:first-child{border-top:0}
