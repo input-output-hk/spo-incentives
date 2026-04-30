@@ -420,6 +420,72 @@ def _render_giscus_block() -> str:
     )
 
 
+_GITHUB_OCTICON = (
+    '<svg class="page-source-icon" viewBox="0 0 16 16" aria-hidden="true">'
+    '<path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 '
+    '5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49'
+    '-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 '
+    '1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78'
+    '-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08'
+    '-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 '
+    '1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 '
+    '2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 '
+    '1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58'
+    '-8-8-8z"/></svg>'
+)
+
+_REPO_FILE_OCTICON = (
+    '<svg class="page-source-path-icon" viewBox="0 0 16 16" aria-hidden="true">'
+    '<path fill="currentColor" d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 '
+    '0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 '
+    '1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 '
+    '0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 '
+    '0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 '
+    '.138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"/></svg>'
+)
+
+
+def _render_page_source_link(page: dict) -> str:
+    """Professional "Source on GitHub" panel anchored at the end of every
+    article. Gives readers a direct path to the full MD — including the
+    Reproduction section stripped from the website rendering.
+    """
+    md_path = page.get("md")
+    if not md_path or not GITHUB_REPO:
+        return ""
+    repo_url = f"https://github.com/{GITHUB_REPO}"
+    src_url = f"{repo_url}/blob/main/reward-system-spec/{md_path}"
+    repo_short = _html.escape(GITHUB_REPO)
+    return (
+        '<aside class="page-source" aria-label="Source on GitHub">'
+        '<div class="page-source-head">'
+        f'{_GITHUB_OCTICON}'
+        '<div class="page-source-titles">'
+        '<span class="page-source-eyebrow">Read the full source</span>'
+        '<span class="page-source-title">Open this page on GitHub</span>'
+        '</div>'
+        f'<a class="page-source-cta" href="{_html.escape(src_url)}" '
+        'rel="noopener" target="_blank">'
+        '<span>View on GitHub</span>'
+        '<span class="page-source-ext" aria-hidden="true">↗</span></a>'
+        '</div>'
+        '<div class="page-source-body">'
+        f'<a class="page-source-path" href="{_html.escape(src_url)}" '
+        f'rel="noopener" target="_blank" title="Open {_html.escape(md_path)} on GitHub">'
+        f'{_REPO_FILE_OCTICON}'
+        f'<span class="page-source-repo">{repo_short}</span>'
+        '<span class="page-source-sep" aria-hidden="true">/</span>'
+        f'<code class="page-source-pathtext">reward-system-spec/{_html.escape(md_path)}</code>'
+        '</a>'
+        '<p class="page-source-meta">'
+        'Includes the reproduction commands and data dependencies omitted '
+        'from this rendering.'
+        '</p>'
+        '</div>'
+        '</aside>'
+    )
+
+
 def _render_footer() -> str:
     """4-column site footer with project context, navigation, repo
     links and authorship. Reads GITHUB_REPO / FOOTER_TAGLINE / build
@@ -935,6 +1001,70 @@ def normalize_toc_indentation(md_text: str) -> str:
     return _TOC_BLOCK_RE.sub(_sub, md_text, count=1)
 
 
+_REPRO_HEADING_RE = re.compile(
+    r"^## +(?:\d+\.?\s+)?Reproduction\b",
+    re.MULTILINE | re.IGNORECASE,
+)
+_REPRO_TRAILER_RE = re.compile(
+    r"^---\s*\n+(_[^\n]*Last updated[^\n]*_)\s*\n*\Z",
+    re.MULTILINE | re.IGNORECASE | re.DOTALL,
+)
+
+
+def strip_reproduction_section(md_text: str) -> str:
+    """Remove ``## ... Reproduction`` and everything that follows from a page's
+    MD source so the website doesn't expose script invocations and data
+    dependencies that only matter for repo readers. The ``View source on
+    GitHub`` block injected at the bottom of every page gives motivated
+    readers a one-click path to the full source.
+
+    Also drops TOC entries that point to the stripped section so the
+    Table of Contents doesn't list dead links. Preserves a trailing
+    ``---\\n\\n_Last updated: …_`` metadata line if it sits below the
+    Reproduction body.
+    """
+    m = _REPRO_HEADING_RE.search(md_text)
+    if not m:
+        return md_text
+    # Capture the section number from the heading (e.g. "6" from
+    # "## 6. Reproduction") so we can remove its TOC entries below.
+    heading_line = md_text[m.start():md_text.find("\n", m.start())]
+    num_m = re.match(r"^## +(\d+)\.?\s+Reproduction", heading_line, re.IGNORECASE)
+    section_num = num_m.group(1) if num_m else None
+
+    head = md_text[:m.start()].rstrip()
+    trailer = _REPRO_TRAILER_RE.search(md_text[m.start():])
+    if trailer:
+        body = head + "\n\n---\n\n" + trailer.group(1) + "\n"
+    else:
+        after_heading = m.end()
+        nxt = re.search(r"^## +", md_text[after_heading:], re.MULTILINE)
+        if nxt:
+            body = head + "\n\n" + md_text[after_heading + nxt.start():]
+        else:
+            body = head + "\n"
+
+    # Drop TOC entries pointing at the stripped section. Matches list
+    # items ("- " or "N. " or "N.M ") whose link anchor starts with
+    # ``#{section_num}`` followed by an optional sub-number — e.g.
+    # ``#6-reproduction`` and ``#61-full-rebuild``. Limits to two extra
+    # digits so unrelated anchors don't get caught.
+    if section_num:
+        toc_link_re = re.compile(
+            rf"^[ \t]*(?:[\-*]|\d+\.|\d+\.\d+)\s+\[[^\]]*\]\(#{section_num}\d{{0,2}}-[^)]*\)\s*\n",
+            re.MULTILINE,
+        )
+        body = toc_link_re.sub("", body)
+        # Some TOCs use the "  - 6.1 [Full rebuild](#61-full-rebuild)"
+        # form where a bare "6.1" prefix sits before the link.
+        toc_prefixed_re = re.compile(
+            rf"^[ \t]*[\-*]\s+{section_num}(?:\.\d+)?\s+\[[^\]]*\]\(#{section_num}\d{{0,2}}-[^)]*\)\s*\n",
+            re.MULTILINE,
+        )
+        body = toc_prefixed_re.sub("", body)
+    return body
+
+
 def preprocess_md(md_text: str, src_md: Path) -> str:
     """Rewrite MD links/images before feeding to the markdown parser.
 
@@ -944,6 +1074,7 @@ def preprocess_md(md_text: str, src_md: Path) -> str:
     and ``![..](..)`` constructs.
     """
     md_text = normalize_toc_indentation(md_text)
+    md_text = strip_reproduction_section(md_text)
     # Images: ![alt](path)  — the path may include a title "title"
     img_re = re.compile(r"(!\[[^\]]*\]\()([^)\s]+)(\s+\"[^\"]*\")?(\))")
 
@@ -2077,18 +2208,18 @@ _CROSS_OBS_CSS = """
 /* Header band — canonical id on the left, title centred, count on the
    right. Subtle Cardano-blue wash so the O-scope reads as a distinct
    zone from the F-scope finding rows below. */
-.sro-head{display:flex;align-items:center;gap:12px;
+.sro-head{display:flex;align-items:baseline;gap:12px;
   padding:12px 16px;
   background:linear-gradient(90deg,
     color-mix(in srgb, var(--cardano-blue) 8%, transparent),
     transparent 70%);
   border-bottom:1px solid var(--border)}
 .sro-badge{display:inline-flex;align-items:center;flex-shrink:0;
-  padding:4px 10px;border-radius:4px;
+  padding:5px 10px 4px;border-radius:4px;
   background:var(--cardano-blue);color:#fff;
-  font:600 11px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  font:600 11px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
   letter-spacing:.05em;text-decoration:none;
-  box-shadow:0 1px 3px rgba(0,51,173,.25)}
+  position:relative;top:1px}
 .sro-title{flex:1 1 auto;min-width:0;margin:0;
   font:600 15px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-primary)}
@@ -2404,6 +2535,84 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
   .spo-selfab button span{display:none}
   .bookmarks-page{margin:16px}
 }
+
+/* "Source on GitHub" — professional end-of-article card.
+   Two zones: header band (icon + titles + CTA button) and body
+   (clickable repo path + meta). The Reproduction section is stripped
+   from the website rendering; this card is the escape hatch for readers
+   who actually want shell commands and data deps. */
+.page-source{display:block;max-width:880px;margin:48px auto 8px;
+  border:1px solid var(--border);border-radius:10px;background:var(--bg);
+  overflow:hidden;
+  box-shadow:0 1px 3px rgba(0,51,173,.04);
+  transition:border-color .15s,box-shadow .15s}
+.page-source:hover{border-color:color-mix(in srgb, var(--cardano-blue) 35%, var(--border));
+  box-shadow:0 2px 12px rgba(0,51,173,.08)}
+.page-source-head{display:flex;align-items:center;gap:14px;
+  padding:14px 18px;
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--cardano-blue) 8%, transparent),
+    color-mix(in srgb, var(--cardano-blue) 3%, transparent) 60%,
+    transparent 100%);
+  border-bottom:1px solid var(--border)}
+.page-source-icon{width:22px;height:22px;flex-shrink:0;
+  color:var(--cardano-blue)}
+.page-source-titles{flex:1 1 auto;min-width:0;display:flex;
+  flex-direction:column;gap:2px}
+.page-source-eyebrow{font:600 10px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)}
+.page-source-title{font:600 14.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.page-source-cta{display:inline-flex;align-items:center;gap:6px;
+  flex-shrink:0;padding:7px 14px;border-radius:5px;
+  background:var(--cardano-blue);color:#fff;text-decoration:none;
+  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;
+  box-shadow:0 1px 4px rgba(0,51,173,.25);
+  transition:background .15s,box-shadow .15s,transform .15s}
+.page-source-cta:hover{background:#0a1f8e;
+  box-shadow:0 2px 8px rgba(0,51,173,.4);
+  transform:translateY(-1px)}
+.page-source-cta .page-source-ext{font-size:14px;line-height:1;opacity:.9}
+.page-source-body{padding:14px 18px 16px}
+.page-source-path{display:flex;align-items:center;gap:8px;
+  padding:8px 12px;border:1px solid var(--border);border-radius:6px;
+  background:var(--bg-panel);text-decoration:none;
+  transition:border-color .15s,background .15s}
+.page-source-path:hover{border-color:color-mix(in srgb, var(--cardano-blue) 50%, var(--border));
+  background:color-mix(in srgb, var(--cardano-blue) 4%, var(--bg-panel))}
+.page-source-path-icon{width:14px;height:14px;flex-shrink:0;
+  color:var(--text-muted)}
+.page-source-path:hover .page-source-path-icon{color:var(--cardano-blue)}
+.page-source-repo{font:500 12px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-secondary);flex-shrink:0}
+.page-source-sep{color:var(--text-muted);opacity:.5;flex-shrink:0;font-size:13px}
+.page-source-pathtext{font:500 12px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  background:transparent;padding:0;border:0;color:var(--text-primary);
+  word-break:break-all;min-width:0}
+.page-source-meta{margin:10px 0 0;
+  font:400 12.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+[data-theme=dark] .page-source{background:var(--bg)}
+[data-theme=dark] .page-source-head{
+  background:linear-gradient(90deg,
+    rgba(0,51,173,.18),
+    rgba(0,51,173,.06) 60%,
+    transparent 100%)}
+[data-theme=dark] .page-source-cta{background:#3a5dff;
+  box-shadow:0 1px 4px rgba(0,0,0,.4)}
+[data-theme=dark] .page-source-cta:hover{background:#5778ff}
+@media (max-width:640px){
+  .page-source{margin:32px 0 4px}
+  .page-source-head{flex-wrap:wrap;gap:10px;padding:12px 14px}
+  .page-source-titles{flex:1 1 100%;order:1}
+  .page-source-icon{order:0}
+  .page-source-cta{order:2;width:100%;justify-content:center;padding:9px 14px}
+  .page-source-body{padding:12px 14px 14px}
+  .page-source-path{flex-wrap:wrap}
+}
+@media print{.page-source{display:none}}
+
 /* ── /Cross-page DIA source overlay + compact §X.Y.2 view ── */
 """
 
@@ -4301,6 +4510,7 @@ def build_findings_page() -> Path:
         "hero_sub": "Every diagnostic finding paired with its mainnet evidence",
         "active_nav": "findings",
     }
+    content_html += _render_page_source_link(page)
     full = render_shell(page, content_html)
     out = SITE_DIR / "findings.html"
     out.write_text(full)
@@ -5434,6 +5644,11 @@ def build_page(page: dict) -> Path:
         content_html += _render_finding_registry(cross_findings)
 
     content_html = decorate_section_references(content_html, page["html"])
+
+    # "View source on GitHub" footer link — sits at the very end of the
+    # article content (above the site-footer) so motivated readers can
+    # always reach the unredacted MD source.
+    content_html += _render_page_source_link(page)
 
     full = render_shell(page, content_html)
     out = SITE_DIR / page["html"]
