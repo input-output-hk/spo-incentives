@@ -521,9 +521,9 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
    stays inline so it flows with the prose. */
 .finding-callout-tag{
   display:inline-flex;align-items:center;gap:6px;
-  padding:1px 9px 2px;
+  padding:1px 7px 2px;
   border:1px solid rgba(60,60,67,.18);
-  border-radius:999px;
+  border-radius:4px;
   background:rgba(60,60,67,.03);
   vertical-align:1px;
   white-space:nowrap;
