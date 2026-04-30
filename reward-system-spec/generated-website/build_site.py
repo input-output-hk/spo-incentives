@@ -2069,25 +2069,26 @@ _CROSS_OBS_CSS = """
 .sro-card{border:1px solid var(--border);border-radius:10px;
   background:var(--bg);overflow:hidden;
   transition:border-color .15s,box-shadow .15s}
-.sro-card:hover{border-color:var(--infared);
-  box-shadow:0 2px 12px rgba(229,35,33,.07)}
-.sro-card:target{border-color:var(--infared);
-  box-shadow:0 0 0 3px rgba(229,35,33,.12)}
+.sro-card:hover{border-color:var(--cardano-blue);
+  box-shadow:0 2px 12px rgba(0,51,173,.10)}
+.sro-card:target{border-color:var(--cardano-blue);
+  box-shadow:0 0 0 3px rgba(0,51,173,.14)}
 
 /* Header band — canonical id on the left, title centred, count on the
-   right. Slight Infrared wash so the O-scope reads as a distinct zone
-   from the F-scope finding rows below. */
+   right. Subtle Cardano-blue wash so the O-scope reads as a distinct
+   zone from the F-scope finding rows below. */
 .sro-head{display:flex;align-items:center;gap:12px;
   padding:12px 16px;
   background:linear-gradient(90deg,
-    color-mix(in srgb, var(--infared) 6%, transparent),
+    color-mix(in srgb, var(--cardano-blue) 8%, transparent),
     transparent 70%);
   border-bottom:1px solid var(--border)}
 .sro-badge{display:inline-flex;align-items:center;flex-shrink:0;
   padding:4px 10px;border-radius:4px;
-  background:var(--infared);color:#fff;
+  background:var(--cardano-blue);color:#fff;
   font:600 11px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.05em;text-decoration:none}
+  letter-spacing:.05em;text-decoration:none;
+  box-shadow:0 1px 3px rgba(0,51,173,.25)}
 .sro-title{flex:1 1 auto;min-width:0;margin:0;
   font:600 15px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-primary)}
@@ -2095,17 +2096,17 @@ _CROSS_OBS_CSS = """
   font-variant-numeric:tabular-nums}
 .sro-count{flex-shrink:0;
   font:500 11px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.04em;color:var(--text-muted);
+  letter-spacing:.04em;color:var(--cardano-blue);
   padding:3px 8px;border-radius:3px;background:var(--bg-panel);
-  border:1px solid var(--border)}
+  border:1px solid color-mix(in srgb, var(--cardano-blue) 30%, var(--border))}
 
 /* Abstract — single editorial lead under the title, matches the
    cross-page overlay's `.obs-panel-abstract` styling so the two read as
    the same artefact. */
 .sro-abstract{margin:0;padding:12px 16px 14px;
-  border-left:3px solid var(--infared);
+  border-left:3px solid var(--cardano-blue);
   background:linear-gradient(90deg,
-    color-mix(in srgb, var(--infared) 8%, transparent),
+    color-mix(in srgb, var(--cardano-blue) 9%, transparent),
     transparent 60%);
   font:400 13.5px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-primary)}
@@ -2120,12 +2121,13 @@ _CROSS_OBS_CSS = """
 .sro-finding{display:flex;align-items:flex-start;gap:12px;
   padding:12px 16px;border-top:1px solid var(--border)}
 .sro-finding:first-child{border-top:none}
-.sro-finding:target{background:color-mix(in srgb, var(--infared) 5%, transparent)}
+.sro-finding:target{background:color-mix(in srgb, var(--cardano-blue) 6%, transparent)}
 .sro-fid{flex-shrink:0;align-self:flex-start;margin-top:2px;
   padding:3px 9px;border-radius:3px;
-  background:var(--bg-panel);border:1px solid var(--border);
+  background:color-mix(in srgb, var(--cardano-blue) 5%, var(--bg-panel));
+  border:1px solid color-mix(in srgb, var(--cardano-blue) 22%, var(--border));
   font:600 10.5px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.04em;color:var(--infared);text-decoration:none}
+  letter-spacing:.04em;color:var(--cardano-blue);text-decoration:none}
 .sro-body{flex:1 1 auto;min-width:0;
   display:flex;flex-direction:column;gap:6px}
 .sro-evidence{font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -2140,7 +2142,7 @@ _CROSS_OBS_CSS = """
 .sro-anchor{font-weight:500;color:var(--text-secondary)}
 .sro-anchor a{color:inherit;text-decoration:none;
   border-bottom:1px dashed var(--border)}
-.sro-anchor a:hover{color:var(--infared);border-bottom-color:var(--infared)}
+.sro-anchor a:hover{color:var(--cardano-blue);border-bottom-color:var(--cardano-blue)}
 .sro-nature{font-style:italic;color:var(--text-muted)}
 .sro-nature::before{content:"· ";color:var(--border);font-style:normal}
 
@@ -3444,7 +3446,10 @@ def sync_references() -> None:
 # observation body. The classification is explanatory, not statistical.
 
 _OBS_HEADING_RE = re.compile(
-    r"^###\s+(\d+(?:\.\d+){1,2})\s+Mainnet Observations\s*$",
+    # Trailing dot is optional — TOC normalisation (commit 37ab992) added a
+    # period after multi-level section numbers (e.g. "1.3.2.") that the
+    # original regex would otherwise reject.
+    r"^###\s+(\d+(?:\.\d+){1,2})\.?\s+Mainnet Observations\s*$",
     re.MULTILINE,
 )
 _OBS_ROW_RE = re.compile(

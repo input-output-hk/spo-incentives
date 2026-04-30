@@ -99,7 +99,7 @@ Each section therefore follows a **raw → clean** structure: the raw query resu
 
 | # | Observation | Section | Nature |
 | --- | --- | --- | --- |
-| | **CEN.O1 — The productive pool landscape is a stable oligopoly** | | |
+| | **CEN.O1 — The productive pool landscape has settled into a top-heavy steady state** | | |
 | CEN.O1.F1 | Two-thirds of registered pools (1,926 of 2,877) sit below the production threshold (~1M ADA) — they hold 0.86% of stake and are economically irrelevant | [§3.2](../../../README.md#32-the-structural-requirement) | Structural threshold |
 | CEN.O1.F2 | 73 named entities control 75.5% of productive stake through 464 pools — entity attribution is a lower bound | [§3.3](../../../README.md#33-problem-induction) | Concentration — supply side |
 | CEN.O1.F3 | The productive set is a quasi-equilibrium at ~950 pools since epoch 300, with 1.7% turnover per epoch (3,497 entries vs 3,070 exits) | [§3.5](#35-population-dynamics-entries-exits-and-turnover) | Market maturity |
