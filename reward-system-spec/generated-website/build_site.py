@@ -2126,16 +2126,14 @@ _CROSS_OBS_CSS = """
   color:var(--text-muted);margin-top:2px}
 .obs-panel-source-xpage strong{color:var(--text-primary);font-weight:600}
 
-/* Observation abstract — editorially-written gloss that reads as a
-   single lead paragraph above the findings list. Same red-rule
-   pattern as .sro-card-pro .sro-abstract on the main page so a
-   reader who jumps from a Pro card into the panel sees the same
-   visual rhythm. */
+/* Observation abstract — same Cardano-blue rule + gradient pattern
+   as \`.sro-card-pro .sro-abstract\` on the main page. Blue is the
+   observation chrome lane; red lives in the findings list below. */
 .obs-panel-abstract{margin:14px 0 6px;padding:14px 18px;
-  border-left:3px solid var(--infared);
+  border-left:3px solid var(--cardano-blue);
   background:linear-gradient(90deg,
-    color-mix(in srgb, var(--infared) 9%, transparent),
-    color-mix(in srgb, var(--infared) 4%, transparent) 50%,
+    color-mix(in srgb, var(--cardano-blue) 10%, transparent),
+    color-mix(in srgb, var(--cardano-blue) 4%, transparent) 50%,
     transparent 100%);
   font:400 14.5px/1.65 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-primary);border-radius:0 6px 6px 0;
