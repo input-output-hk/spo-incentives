@@ -1427,7 +1427,7 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
 .findings-section-title{font-size:22px;font-weight:500;color:var(--text-primary);
   margin:0;letter-spacing:-.3px}
 .findings-section-tagline{font-size:13px;color:var(--text-muted);letter-spacing:.2px}
-.findings-section-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:20px}
+.findings-section-body{display:flex;flex-direction:column;gap:20px}
 
 .finding-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;
   padding:22px 24px 18px;display:flex;flex-direction:column;gap:14px;
@@ -1480,52 +1480,124 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
   background:rgba(0,51,173,.08);color:var(--cardano-blue);
   font-weight:600;padding:0 4px;border-radius:3px}
 
-/* Findings list — canonical XXX.OY.FZ findings pulled from the
-   sub-reports, surfaced under each problem statement. Each chip is a
-   compact link to the sub-report finding row, with the canonical id
-   on the left and a one-line evidence summary on the right. */
-.finding-card-findings{
-  margin-top:12px;padding-top:14px;
+/* Evidence tree — observations are top-level expandable nodes; the
+   canonical sub-report findings (XXX.OY.FZ) sit nested directly
+   underneath their parent observation. The hierarchy is preserved
+   visually (a single column, indented findings) and operationally
+   (the user clicks an obs row to fold its findings). */
+.finding-card-evidence{
+  margin-top:14px;padding-top:14px;
   border-top:1px solid var(--border)}
-.finding-card-findings-label{
+.finding-card-evidence-head{
+  display:flex;align-items:baseline;gap:8px;
+  margin-bottom:10px}
+.finding-card-evidence-label{
   font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;
-  color:var(--text-muted);margin-bottom:8px;font-weight:500}
-.finding-card-findings-list{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(330px,1fr));
-  gap:6px}
-.finding-card-fchip{
-  display:flex;align-items:flex-start;gap:8px;
-  padding:7px 10px;
+  color:var(--text-muted);font-weight:500}
+.finding-card-evidence-count{
+  font-size:11px;color:var(--text-muted)}
+.finding-card-evidence-tree{
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;gap:6px}
+.finding-card-onode{
   border:1px solid var(--border);
-  border-left:3px solid var(--infared);
-  border-radius:4px;
+  border-left:3px solid var(--cardano-blue);
+  border-radius:6px;
   background:var(--bg);
+  overflow:hidden}
+.finding-card-onode-head{
+  display:flex;align-items:center;gap:10px;
+  width:100%;padding:9px 12px;
+  background:transparent;border:0;
+  text-align:left;cursor:pointer;
+  font:inherit;color:inherit;
+  transition:background .12s}
+.finding-card-onode-head:hover{
+  background:rgba(0,51,173,.04)}
+.finding-card-onode-chev{
+  display:inline-block;flex-shrink:0;
+  font-size:12px;color:var(--cardano-blue);
+  transition:transform .15s;
+  transform-origin:50% 50%;
+  width:10px;text-align:center}
+.finding-card-onode.collapsed .finding-card-onode-chev{
+  transform:rotate(-90deg)}
+.finding-card-onode-num{
+  flex-shrink:0;display:inline-flex;align-items:center;
+  padding:2px 8px;border-radius:3px;
+  background:var(--cardano-blue);color:#fff;
+  font:700 10.5px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.04em}
+.finding-card-onode-title{
+  flex:1 1 auto;min-width:0;
+  font:500 13px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.finding-card-onode-fcount{
+  flex-shrink:0;font-size:10.5px;color:var(--text-muted);
+  letter-spacing:.04em;text-transform:lowercase}
+.finding-card-onode-body{
+  padding:0 12px 12px 36px;
+  border-top:1px solid var(--border)}
+.finding-card-onode.collapsed .finding-card-onode-body{
+  display:none}
+.finding-card-onode-summary{
+  margin:8px 0 12px;
+  font:400 12.5px/1.55 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-body)}
+.finding-card-onode-summary p{margin:0 0 6px}
+.finding-card-onode-summary p:last-child{margin-bottom:0}
+.finding-card-onode-findings{
+  display:flex;flex-direction:column;gap:4px}
+.finding-card-onode-empty{
+  display:block;font-size:11.5px;color:var(--text-muted);
+  font-style:italic;padding:8px 0}
+
+/* Each finding row inside an observation node — Infared accent so the
+   evidence chain matches the sub-report callout language. */
+.finding-card-fnode{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:7px 10px;
+  border:1px solid transparent;
+  border-left:3px solid var(--infared);
+  border-radius:0 4px 4px 0;
+  background:rgba(229,35,33,.04);
   text-decoration:none !important;
-  border-bottom:1px solid var(--border) !important;
-  transition:background .12s,border-color .12s,transform .12s}
-.finding-card-fchip:hover{
-  background:var(--bg-warm);
-  border-color:var(--infared) !important;
-  transform:translateY(-1px)}
-.finding-card-fchip-id{
-  display:inline-flex;flex-direction:column;align-items:flex-start;
-  flex-shrink:0;line-height:1.15;min-width:62px}
-.finding-card-fchip-obs{
-  font:600 9.5px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  color:var(--text-muted);letter-spacing:.04em}
-.finding-card-fchip-fnum{
-  font:700 12px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  color:var(--infared);letter-spacing:0;margin-top:2px}
-.finding-card-fchip-text{
-  font:400 11.5px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--text-body);
-  flex:1 1 auto;min-width:0}
-[data-theme=dark] .finding-card-fchip{
-  background:var(--bg-panel);border-color:#2a2a2a}
-[data-theme=dark] .finding-card-fchip:hover{
-  background:rgba(255,111,110,.06);border-color:#FF6F6E !important}
-[data-theme=dark] .finding-card-fchip-fnum{color:#FF6F6E}
+  border-bottom:1px solid transparent !important;
+  transition:background .12s,border-color .12s}
+.finding-card-fnode:hover{
+  background:rgba(229,35,33,.08);
+  border-color:rgba(229,35,33,.25) !important;
+  border-left-color:var(--infared) !important}
+.finding-card-fnode-num{
+  flex-shrink:0;
+  font:700 11px/1.35 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--infared);letter-spacing:0;
+  min-width:24px;padding-top:1px}
+.finding-card-fnode-body{
+  flex:1 1 auto;min-width:0;
+  display:flex;flex-direction:column;gap:2px}
+.finding-card-fnode-text{
+  font:400 12px/1.5 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-body)}
+.finding-card-fnode-insight{
+  font:italic 400 11px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+
+[data-theme=dark] .finding-card-onode{
+  background:var(--bg);border-color:#2a2a2a;
+  border-left-color:#6E97FF}
+[data-theme=dark] .finding-card-onode-head:hover{
+  background:rgba(110,151,255,.06)}
+[data-theme=dark] .finding-card-onode-num{
+  background:#6E97FF}
+[data-theme=dark] .finding-card-onode-chev{color:#6E97FF}
+[data-theme=dark] .finding-card-onode-body{border-top-color:#2a2a2a}
+[data-theme=dark] .finding-card-fnode{
+  background:rgba(255,111,110,.06);border-left-color:#FF6F6E}
+[data-theme=dark] .finding-card-fnode:hover{
+  background:rgba(255,111,110,.10)}
+[data-theme=dark] .finding-card-fnode-num{color:#FF6F6E}
 
 .finding-card-foot{border-top:1px dashed var(--border);padding-top:10px;margin-top:2px}
 .finding-jump{font-size:12.5px;color:var(--infared);text-decoration:none;letter-spacing:.2px;

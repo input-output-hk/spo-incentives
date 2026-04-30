@@ -4854,56 +4854,110 @@ def _render_finding_card(
             f'{preface_inner}</div>'
         )
 
-    obs_refs = "".join(
-        f'<a class="finding-obs-chip obs-ref" href="#{o["global_id"]}" '
-        f'data-obs="{o["global_id"]}" data-tier="{o["tier"]}" '
-        f'title="Hover for full text · click for detail">'
-        f'<span class="finding-obs-chip-num">{o["local_id"]}</span>'
-        f'<span class="finding-obs-chip-title">{_html.escape(o["title"])}</span>'
-        f'</a>'
-        for o in obs_for_section
-    )
-
-    # Findings list — each tabulated observation in the parent section
-    # has its own canonical findings in the corresponding sub-report
-    # (POL.O1 → POL.O1.F1..F4 etc.). Surface them so the synthesis card
-    # carries the same evidence chain readers see in the sub-report.
-    findings_chips = ""
-    if findings_by_canon_obs:
-        finding_rows: list[dict] = []
-        for o in obs_for_section:
-            canon = o.get("canon_id")
-            if canon and canon in findings_by_canon_obs:
-                finding_rows.extend(findings_by_canon_obs[canon])
-        if finding_rows:
-            chip_html: list[str] = []
-            for f in finding_rows:
-                canon = f.get("canon_id") or ""
-                href = f.get("jump_href") or "#"
-                evidence = f.get("evidence") or f.get("summary") or ""
-                # Trim long evidence so chips stay one-line readable.
-                if len(evidence) > 110:
-                    evidence = evidence[:107].rstrip(" ,;") + "…"
-                obs_canon = canon.rsplit(".F", 1)[0]
-                f_num = canon.rsplit(".F", 1)[-1] if ".F" in canon else ""
-                chip_html.append(
-                    f'<a class="finding-card-fchip" href="{_html.escape(href)}" '
-                    f'title="{_html.escape(canon)} — open the sub-report">'
-                    f'<span class="finding-card-fchip-id">'
-                    f'<span class="finding-card-fchip-obs">{_html.escape(obs_canon)}</span>'
-                    f'<span class="finding-card-fchip-fnum">F{f_num}</span>'
-                    f'</span>'
-                    f'<span class="finding-card-fchip-text">{_html.escape(evidence)}</span>'
-                    f'</a>'
-                )
-            findings_chips = (
-                f'<div class="finding-card-findings">'
-                f'<div class="finding-card-findings-label">'
-                f'Findings ({len(finding_rows)})</div>'
-                f'<div class="finding-card-findings-list">'
-                f'{"".join(chip_html)}</div>'
-                f'</div>'
+    # Build an O-grouped evidence tree: each observation is a
+    # collapsible node, its sub-report findings nested directly
+    # underneath. The tree replaces the previous flat
+    # observations-then-findings layout — readers can now scan one
+    # observation row, expand it to inspect its evidence, and move on
+    # without losing the parent context.
+    total_findings = 0
+    nodes_html: list[str] = []
+    for idx, o in enumerate(obs_for_section):
+        canon = o.get("canon_id")
+        f_rows = (
+            findings_by_canon_obs.get(canon, [])
+            if findings_by_canon_obs and canon else []
+        )
+        total_findings += len(f_rows)
+        # Inner finding rows — each links to its sub-report row.
+        rows_html: list[str] = []
+        for f in f_rows:
+            f_canon = f.get("canon_id") or ""
+            href = f.get("jump_href") or "#"
+            evidence = f.get("evidence") or f.get("summary") or ""
+            if len(evidence) > 220:
+                evidence = evidence[:217].rstrip(" ,;") + "…"
+            f_num = f_canon.rsplit(".F", 1)[-1] if ".F" in f_canon else ""
+            insight = f.get("insight") or ""
+            insight_html = (
+                f'<span class="finding-card-fnode-insight">'
+                f'{_html.escape(insight)}</span>'
+            ) if insight else ""
+            rows_html.append(
+                f'<a class="finding-card-fnode" '
+                f'href="{_html.escape(href)}" '
+                f'title="{_html.escape(f_canon)} — open the sub-report row">'
+                f'<span class="finding-card-fnode-num">F{_html.escape(f_num)}</span>'
+                f'<span class="finding-card-fnode-body">'
+                f'<span class="finding-card-fnode-text">{_html.escape(evidence)}</span>'
+                f'{insight_html}'
+                f'</span>'
+                f'</a>'
             )
+        # Default-collapse all but the first observation when there
+        # are 3+ — keeps long cards skimmable; the first node provides
+        # an anchor preview of the evidence pattern.
+        is_collapsed = len(obs_for_section) >= 3 and idx > 0
+        collapsed_cls = " collapsed" if is_collapsed else ""
+        chev_aria = "false" if is_collapsed else "true"
+        f_count_label = (
+            f"{len(f_rows)} finding{'s' if len(f_rows) != 1 else ''}"
+            if f_rows else "no findings linked"
+        )
+        empty_msg = (
+            '<em class="finding-card-onode-empty">'
+            'No canonical findings linked yet.</em>'
+        )
+        rows_block = "".join(rows_html) or empty_msg
+        nodes_html.append(
+            f'<li class="finding-card-onode{collapsed_cls}" '
+            f'data-tier="{o["tier"]}">'
+            f'<button class="finding-card-onode-head" type="button" '
+            f'aria-expanded="{chev_aria}" '
+            f'data-target="onode-toggle">'
+            f'<span class="finding-card-onode-chev" aria-hidden="true">▾</span>'
+            f'<span class="finding-card-onode-num">{o["local_id"]}</span>'
+            f'<span class="finding-card-onode-title">'
+            f'{_html.escape(o["title"])}</span>'
+            f'<span class="finding-card-onode-fcount">{f_count_label}</span>'
+            f'</button>'
+            f'<div class="finding-card-onode-body">'
+            f'<p class="finding-card-onode-summary">'
+            f'{_md_snippet_to_html(o.get("summary", ""))}</p>'
+            f'<div class="finding-card-onode-findings">'
+            f'{rows_block}'
+            f'</div>'
+            f'</div>'
+            f'</li>'
+        )
+    evidence_html = ""
+    if obs_for_section:
+        evidence_label = (
+            f'{len(obs_for_section)} observation'
+            f'{"s" if len(obs_for_section) != 1 else ""} · '
+            f'{total_findings} finding'
+            f'{"s" if total_findings != 1 else ""}'
+        )
+        evidence_html = (
+            f'<div class="finding-card-evidence">'
+            f'<div class="finding-card-evidence-head">'
+            f'<span class="finding-card-evidence-label">'
+            f'Supported by</span>'
+            f'<span class="finding-card-evidence-count">'
+            f'{evidence_label}</span>'
+            f'</div>'
+            f'<ul class="finding-card-evidence-tree">'
+            f'{"".join(nodes_html)}'
+            f'</ul>'
+            f'</div>'
+        )
+    else:
+        evidence_html = (
+            '<div class="finding-card-evidence">'
+            '<em class="finding-card-onode-empty">'
+            'No tabulated observations in this section.</em>'
+            '</div>'
+        )
 
     jump_link = (
         f'<a class="finding-jump" '
@@ -4922,13 +4976,7 @@ def _render_finding_card(
         f'<h3 class="finding-card-title">{_html.escape(title)}</h3>'
         f'{preface_html}'
         f'<div class="finding-card-body">{summary_html}</div>'
-        f'<div class="finding-card-obs">'
-        f'<div class="finding-card-obs-label">'
-        f'Supported by observations ({len(obs_for_section)})</div>'
-        f'<div class="finding-card-obs-list">'
-        f'{obs_refs or "<em>No tabulated observations in this section.</em>"}'
-        f'</div></div>'
-        f'{findings_chips}'
+        f'{evidence_html}'
         f'<footer class="finding-card-foot">{jump_link}</footer>'
         f'</article>'
     )
@@ -5004,73 +5052,54 @@ def _render_findings_content(
         '</div>'
     )
 
-    # Group findings/observations by top-level (1, 2, 3) then by parent.
-    def top_of(parent: str) -> str:
-        return parent.split(".")[0]
-
-    grouped: dict[str, list[dict]] = {}
-    for f in findings:
-        grouped.setdefault(top_of(f["parent"]), []).append(f)
-
-    top_titles = {
-        "1": ("The Reward Flow", "Reserve → Pools → Operators/Delegators"),
-        "2": ("The Player Populations", "Staking populations & transaction submitters"),
-        "3": ("The Price Constraint", "Fees, monetary policy, and the clock"),
-    }
-
-    sections_html = []
-    for top in sorted(grouped.keys()):
-        title, tagline = top_titles.get(top, (f"§{top}", ""))
-        top_findings = grouped[top]
-        cards_html = []
-        for f in top_findings:
-            obs_for_section = [
-                o for o in observations
-                if o["parent"] == f["parent"]
-            ]
-            cards_html.append(_render_finding_card(
-                f, obs_for_section, findings_by_canon_obs,
-            ))
-        # Also surface standalone observation groups under this topic that
-        # are not paired with a finding in this top-level bucket.
-        paired_parents = {f["parent"] for f in top_findings}
-        for parent, obs_group in sorted(by_parent_obs.items()):
-            if top_of(parent) != top or parent in paired_parents:
-                continue
-            obs_cards_html = "".join(_render_obs_card(o) for o in obs_group)
-            cards_html.append(
-                f'<article class="finding-card finding-card-obs-only" '
-                f'data-section="{parent}" data-parent="{parent}">'
-                f'<header class="finding-card-head">'
-                f'<span class="finding-card-parent">§{parent}</span>'
-                f'<span class="finding-card-badge">Observations only</span>'
-                f'</header>'
-                f'<div class="obs-cards">{obs_cards_html}</div>'
-                f'</article>'
-            )
-        section_html = (
-            f'<section class="findings-section" data-top="{top}">'
-            f'<header class="findings-section-head">'
-            f'<span class="findings-section-num">§{top}</span>'
-            f'<h2 class="findings-section-title">{_html.escape(title)}</h2>'
-            f'<span class="findings-section-tagline">{_html.escape(tagline)}</span>'
-            f'</header>'
-            f'<div class="findings-section-body">{"".join(cards_html)}</div>'
-            f'</section>'
-        )
-        sections_html.append(section_html)
+    # Single flat list of every problem statement, in document order.
+    # No top-level §1/§2/§3 grouping — each card carries its own
+    # parent label in its header so the topic context isn't lost.
+    cards_html: list[str] = []
+    for f in sorted(findings, key=lambda r: r.get("order", 0)):
+        obs_for_section = [
+            o for o in observations
+            if o["parent"] == f["parent"]
+        ]
+        cards_html.append(_render_finding_card(
+            f, obs_for_section, findings_by_canon_obs,
+        ))
+    list_html = (
+        f'<div class="findings-list">{"".join(cards_html)}</div>'
+    )
 
     # Render all observation cards as a hidden registry so the overlay JS
     # (which reads .obs-card DOM) can hydrate details on chip hover/click.
     registry_cards = "".join(_render_obs_card(o) for o in observations)
+
+    # Collapsing handler for the per-observation evidence nodes. Tiny,
+    # idempotent, no dependencies — kept inline so the synthesis page
+    # works even if assets/site.js fails to load.
+    toggle_js = (
+        '<script>'
+        '(function(){'
+        'function bind(){'
+        'document.querySelectorAll(".finding-card-onode-head").forEach(function(b){'
+        'if(b.dataset.bound) return;b.dataset.bound="1";'
+        'b.addEventListener("click",function(){'
+        'var n=b.closest(".finding-card-onode");if(!n)return;'
+        'var open=n.classList.toggle("collapsed");'
+        'b.setAttribute("aria-expanded",open?"false":"true");'
+        '});});}'
+        'if(document.readyState!=="loading")bind();'
+        'else document.addEventListener("DOMContentLoaded",bind);'
+        '})();'
+        '</script>'
+    )
 
     body = (
         '<div class="findings-page">'
         + intro
         + stats
         + controls
-        + "".join(sections_html)
+        + list_html
         + f'<div class="findings-obs-registry" hidden aria-hidden="true">{registry_cards}</div>'
+        + toggle_js
         + '</div>'
     )
     return body
