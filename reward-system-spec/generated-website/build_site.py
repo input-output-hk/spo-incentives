@@ -6307,6 +6307,110 @@ def transform_observation_tables_with_sources(
     return html_body
 
 
+# Detect data-table rows that act as group headers or sub-rows so CSS
+# can give them the right visual hierarchy. Group rows have the entire
+# first cell wrapped in ``<strong>`` (the MD pattern
+# ``| **Hollow MPO** | **57** | …``); sub-rows start with the ``↳``
+# arrow (``|   ↳ 2-pool | 17 | …``).
+_TABLE_TBODY_RE = re.compile(
+    r'<tbody>(?P<body>.*?)</tbody>',
+    re.IGNORECASE | re.DOTALL,
+)
+_TR_RE = re.compile(
+    r'<tr(?P<attrs>\s[^>]*)?>(?P<inner>.*?)</tr>',
+    re.IGNORECASE | re.DOTALL,
+)
+_FIRST_TD_RE = re.compile(
+    r'<td(?P<attrs>\s[^>]*)?>(?P<inner>.*?)</td>',
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def classify_table_rows(html_body: str) -> str:
+    """Mark group/total/sub rows on tables so CSS can lift the visual
+    hierarchy without authors having to hand-class each row.
+
+    A row is a *group* row when its first cell is wholly bold
+    (``<td><strong>…</strong></td>``); a *sub* row when its first cell
+    text begins with the ``↳`` Unicode arrow. Tables that contain at
+    least one group row are tagged ``data-table-grouped`` on the tbody
+    so the styling cascade only kicks in where it makes sense.
+    """
+    if "<tbody>" not in html_body:
+        return html_body
+
+    def _process_tbody(tb_match: re.Match) -> str:
+        body = tb_match.group("body")
+        if "<tr" not in body:
+            return tb_match.group(0)
+        rows: list[tuple[str, str]] = []  # (replacement, classifier)
+        out_parts: list[str] = []
+        last_pos = 0
+        has_group = False
+        for tr in _TR_RE.finditer(body):
+            out_parts.append(body[last_pos:tr.start()])
+            attrs = tr.group("attrs") or ""
+            inner = tr.group("inner")
+            first_td = _FIRST_TD_RE.search(inner)
+            kind = ""
+            if first_td:
+                td_inner = first_td.group("inner").strip()
+                # Strip a leading whitespace+arrow pattern. The MD source
+                # uses U+21B3 ↳; the renderer escapes nothing here so it
+                # comes through verbatim.
+                td_text = re.sub(r'<[^>]+>', '', td_inner).strip()
+                if td_text.startswith('↳'):
+                    kind = "row-sub"
+                else:
+                    # Fully bold first cell -> group row. The cell may
+                    # contain only ``<strong>…</strong>`` plus optional
+                    # surrounding whitespace.
+                    inner_no_ws = td_inner.strip()
+                    if (
+                        inner_no_ws.startswith('<strong>')
+                        and inner_no_ws.endswith('</strong>')
+                        and inner_no_ws.count('<strong>') == 1
+                    ):
+                        kind = "row-group"
+            if kind:
+                has_group = has_group or (kind == "row-group")
+                # Splice ``class="…"`` into the existing attrs without
+                # losing whatever else was already there.
+                if 'class="' in attrs.lower():
+                    new_attrs = re.sub(
+                        r'class="([^"]*)"',
+                        lambda m: f'class="{m.group(1)} {kind}"',
+                        attrs,
+                        count=1,
+                        flags=re.IGNORECASE,
+                    )
+                else:
+                    new_attrs = f' class="{kind}"' + attrs
+                out_parts.append(f"<tr{new_attrs}>{inner}</tr>")
+            else:
+                out_parts.append(tr.group(0))
+            last_pos = tr.end()
+        out_parts.append(body[last_pos:])
+        new_body = "".join(out_parts)
+        # Mark the LAST group row inside the tbody as the totals row —
+        # gives it a thicker top rule + heavier weight so the eye lands
+        # there as the take-away. Only do this when there are at least
+        # two group rows (otherwise the single bold row IS the total).
+        group_count = new_body.count('class="row-group"')
+        if group_count >= 2:
+            # Find the last occurrence and add the row-total class.
+            new_body = (
+                new_body[:new_body.rfind('class="row-group"')]
+                + 'class="row-group row-total"'
+                + new_body[new_body.rfind('class="row-group"') + len('class="row-group"'):]
+            )
+        if has_group:
+            return f'<tbody class="data-table-grouped">{new_body}</tbody>'
+        return f'<tbody>{new_body}</tbody>'
+
+    return _TABLE_TBODY_RE.sub(_process_tbody, html_body)
+
+
 def build_page(page: dict) -> Path:
     src_md = REPO_ROOT / page["md"]
     if not src_md.exists():
@@ -6437,6 +6541,10 @@ def build_page(page: dict) -> Path:
         content_html = split_multi_finding_blockquotes(content_html)
         content_html = inject_finding_callout_ids(content_html, obs_titles)
         content_html = group_consecutive_finding_callouts(content_html)
+
+    # Tag group / sub / total rows on data tables so the CSS cascade
+    # can lift the visual hierarchy of dense numeric tables.
+    content_html = classify_table_rows(content_html)
 
     # Attach the merged cross-page registries so DIA overlays and F# badges
     # hydrate locally (no network fetch). Sub-report pages already carry

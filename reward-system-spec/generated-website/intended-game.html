@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777553125">
+<link rel="stylesheet" href="assets/site.css?v=1777553351">
 
 
 </head>
@@ -383,12 +383,12 @@ window.MathJax = {
 <th>Meaning</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody class="data-table-grouped">
+<tr class="row-group">
 <td><strong>Individual rationality</strong></td>
 <td>Each player must be better off entering the game than staying out.</td>
 </tr>
-<tr>
+<tr class="row-group row-total">
 <td><strong>Incentive compatibility</strong></td>
 <td>The strategy that maximises each player's individual reward must also be the strategy that reinforces the system's security properties.</td>
 </tr>
@@ -406,18 +406,18 @@ window.MathJax = {
 <th>Strategic instrument</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody class="data-table-grouped">
+<tr class="row-group">
 <td><strong>Transaction submitters</strong></td>
 <td>Source of economic demand</td>
 <td>Fee payments — revealed-preference signal for network value</td>
 </tr>
-<tr>
+<tr class="row-group">
 <td><strong>Operators</strong></td>
 <td>Block production and network security</td>
 <td><strong>Pledge</strong> — personal capital locked as a commitment bond</td>
 </tr>
-<tr>
+<tr class="row-group row-total">
 <td><strong>Delegators</strong></td>
 <td>Capital allocation and operator oversight</td>
 <td><strong>Liquid delegation</strong> — continuous, revocable approval signal</td>
@@ -507,23 +507,23 @@ window.MathJax = {
 <th>Mechanism</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody class="data-table-grouped">
+<tr class="row-group">
 <td><strong>Accountability</strong></td>
 <td>Operators are identifiable and have something to lose</td>
 <td>Pledge (static bond) + delegation (dynamic discipline)</td>
 </tr>
-<tr>
+<tr class="row-group">
 <td><strong>Delegation as counter-power</strong></td>
 <td>Community oversight substitutes for governance</td>
 <td>Revocable staking rights create a credible exit threat</td>
 </tr>
-<tr>
+<tr class="row-group">
 <td><strong>Sybil resistance</strong></td>
 <td><em>k</em> pools represent <em>k</em> independent entities</td>
 <td>Pledge bonus makes fragmentation economically dominated</td>
 </tr>
-<tr>
+<tr class="row-group row-total">
 <td><strong>Decentralisation</strong></td>
 <td>No single actor dominates block production</td>
 <td>Calibrated entry barrier: commitment, not wealth alone</td>
@@ -659,6 +659,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777553125"></script>
+<script src="assets/site.js?v=1777553351"></script>
 </body>
 </html>
