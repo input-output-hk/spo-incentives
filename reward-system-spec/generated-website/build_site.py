@@ -335,7 +335,7 @@ HYPOTHESIS_ENABLED = _cfg("SPO_HYPOTHESIS_ENABLED", "0") in ("1", "true", "yes")
 # enabled by default. No backend cost. The `my-bookmarks.html` aggregator
 # page is always built; readers see their own saved set when they visit.
 HIGHLIGHTS_ENABLED = _cfg("SPO_HIGHLIGHTS_ENABLED", "1") not in ("0", "false", "no")
-BOOKMARKS_ENABLED = _cfg("SPO_BOOKMARKS_ENABLED", "1") not in ("0", "false", "no")
+BOOKMARKS_ENABLED = _cfg("SPO_BOOKMARKS_ENABLED", "0") not in ("0", "false", "no")
 
 # Formspree (or compatible) endpoint for the structured feedback form.
 # Free tier 50 submissions/month. Set to a Cloudflare Worker URL with
@@ -2633,9 +2633,20 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 [data-theme=dark] .sro-card-pro .sro-finding:hover{background:rgba(255,111,110,.06)}
 [data-theme=dark] .sro-card-pro .sro-finding:target{background:rgba(255,111,110,.12)}
 
-/* F# badge — two-line stack. \`#N\` is the prominent ordinal in
-   Infared (the row's accent), \`CEN.O1.FN\` is the small mono
-   breadcrumb in muted grey for citation. */
+/* F# badge — two-line stack and the row's jump-to-source link.
+   Clicking #N or CEN.O1.FN navigates to the source section — no
+   need for a separate '§3.5 — ...' link in the meta row. The whole
+   stack renders inside a single <a>, so the click target is the
+   full column. \`#N\` is the prominent ordinal in Infared (the
+   row's accent); \`CEN.O1.FN\` is the small mono breadcrumb in
+   muted grey for citation. */
+a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
+  align-self:flex-start;margin-top:1px;
+  min-width:96px;
+  display:inline-flex;flex-direction:column;gap:3px;
+  align-items:flex-start;justify-content:center;
+  background:transparent;border:0;border-bottom:0;text-decoration:none;
+  cursor:pointer}
 .sro-card-pro .sro-fid{padding:0;flex-shrink:0;
   align-self:flex-start;margin-top:1px;
   min-width:96px;
@@ -2676,12 +2687,11 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
   background:rgba(255,111,110,.10);
   border-bottom-color:rgba(255,111,110,.40);color:#E4E4E7}
 
-/* Meta row — nature pill in red on the left, anchor link with
-   'discover on:' prefix on the right, dimmed. */
+/* Meta row — nature pill only (anchor was retired; the #N badge is
+   the jump-to-source link). */
 .sro-card-pro .sro-meta{margin-top:10px;
-  display:flex;align-items:baseline;justify-content:space-between;
-  gap:18px;flex-wrap:wrap}
-.sro-card-pro .sro-nature{order:1;
+  display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+.sro-card-pro .sro-nature{
   font-style:normal;font-weight:500;
   font-size:11px;letter-spacing:.6px;text-transform:uppercase;
   color:var(--infared);
@@ -2691,22 +2701,10 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 .sro-card-pro .sro-nature::before{content:none}
 [data-theme=dark] .sro-card-pro .sro-nature{color:#FF6F6E;
   background:rgba(255,111,110,.10);border-color:rgba(255,111,110,.25)}
-.sro-card-pro .sro-anchor{order:2;
-  font-size:11.5px;font-weight:400;color:var(--text-muted);
-  margin-left:auto;display:inline-flex;align-items:baseline;gap:6px}
-.sro-card-pro .sro-anchor::before{content:"discover on:";
-  font:italic 300 11px/1.2 'Inter',-apple-system,sans-serif;
-  letter-spacing:.04em;color:var(--text-secondary);text-transform:lowercase;
-  flex-shrink:0}
-.sro-card-pro .sro-anchor a{color:var(--text-secondary);text-decoration:none;
-  border-bottom:1px dotted rgba(229,35,33,.35);
-  transition:color .15s,border-color .15s;padding-bottom:1px}
-.sro-card-pro .sro-anchor a:hover{color:var(--infared);
-  border-bottom-color:var(--infared);border-bottom-style:solid}
-[data-theme=dark] .sro-card-pro .sro-anchor a{
-  border-bottom-color:rgba(255,111,110,.35)}
-[data-theme=dark] .sro-card-pro .sro-anchor a:hover{color:#FF6F6E;
-  border-bottom-color:#FF6F6E}
+
+/* Save (.spo-bookmark-btn) is retired — hide if any cached buttons
+   linger from previously rendered pages. */
+.spo-bookmark-btn{display:none!important}
 
 @media (max-width:640px){
   .sro-card-pro .sro-head{flex-wrap:wrap;gap:10px;padding:12px 14px}
@@ -5373,25 +5371,56 @@ def _render_subreport_observations(groups: list[dict]) -> str:
         )
         out.append(article_open + head_html + abstract_block
                    + findings_label + '<ol class="sro-findings">')
+        # Pull the FIRST href= out of a rendered section link so the
+        # Pro badge can become a direct jump-to-source. Findings whose
+        # section_md is plain text (no link) get a non-clickable badge.
+        _sec_href_re = re.compile(r'href=["\']([^"\']+)["\']', re.IGNORECASE)
         for fi, f in enumerate(g["findings"], 1):
             ev_html = _sro_inline_md_to_html(f["evidence_md"])
             ev_html = _highlight_metrics(ev_html)
             sec_html = _sro_inline_md_to_html(f["section_md"])
             nature_html = _sro_inline_md_to_html(f["nature_md"])
+            sec_href_match = _sec_href_re.search(sec_html or "")
+            sec_href = sec_href_match.group(1) if sec_href_match else ""
             if is_pro:
-                # Pro variant — F# label becomes a two-line stack:
-                # "Finding #N" headline + canonical ref underneath.
-                fid_html = (
-                    f'<span class="sro-fid sro-fid-stack sro-group-{f["f_group"]}" '
-                    f'title="{f["canon_id"]} · was {f["f_id"]}">'
+                # Pro variant — the badge IS the jump-to-source link.
+                # #N (ordinal) + CEN.O1.FN (canonical ref) sit inside
+                # a single <a> so clicking either one navigates to the
+                # finding's source section. The .sro-anchor span in
+                # the meta row was retired — the badge replaces it.
+                inner = (
                     f'<span class="sro-fid-label">#{fi}</span>'
                     f'<span class="sro-fid-ref">{f["canon_id"]}</span>'
-                    f'</span>'
                 )
+                if sec_href:
+                    fid_html = (
+                        f'<a class="sro-fid sro-fid-stack sro-group-{f["f_group"]}" '
+                        f'href="{_html.escape(sec_href)}" '
+                        f'title="{f["canon_id"]} — jump to source">{inner}</a>'
+                    )
+                else:
+                    fid_html = (
+                        f'<span class="sro-fid sro-fid-stack sro-group-{f["f_group"]}" '
+                        f'title="{f["canon_id"]}">{inner}</span>'
+                    )
             else:
                 fid_html = (
                     f'<span class="sro-fid sro-group-{f["f_group"]}" '
                     f'title="{f["canon_id"]} · was {f["f_id"]}">{f["canon_id"]}</span>'
+                )
+            # Pro variant drops the .sro-anchor span — nature pill only.
+            if is_pro:
+                meta_html = (
+                    f'<div class="sro-meta">'
+                    f'<span class="sro-nature">{nature_html}</span>'
+                    f'</div>'
+                )
+            else:
+                meta_html = (
+                    f'<div class="sro-meta">'
+                    f'<span class="sro-anchor">{sec_html}</span>'
+                    f'<span class="sro-nature">{nature_html}</span>'
+                    f'</div>'
                 )
             out.append(
                 f'<li class="sro-finding" id="{f["slug"]}" '
@@ -5399,10 +5428,7 @@ def _render_subreport_observations(groups: list[dict]) -> str:
                 f'{fid_html}'
                 f'<div class="sro-body">'
                 f'<div class="sro-evidence">{ev_html}</div>'
-                f'<div class="sro-meta">'
-                f'<span class="sro-anchor">{sec_html}</span>'
-                f'<span class="sro-nature">{nature_html}</span>'
-                f'</div>'
+                f'{meta_html}'
                 f'</div>'
                 f'</li>'
             )
@@ -6074,10 +6100,11 @@ def main(argv: list[str]) -> int:
         findings_out = build_findings_page()
         print(f"  {' ':16s}  → {findings_out.relative_to(SITE_DIR)}")
 
-    # Bookmarks page — utility page, hydrates from the reader's local
-    # storage and lists their saved findings. Always built so the
-    # `Save` button has a target.
-    if not slugs or "my-bookmarks" in slugs:
+    # Bookmarks page retired — Layer 5 'Save findings' feature was
+    # dropped at user request. Build only when explicitly requested by
+    # slug (so old links keep resolving if cached) AND BOOKMARKS_ENABLED
+    # is on.
+    if BOOKMARKS_ENABLED and "my-bookmarks" in slugs:
         print(f"  {'my-bookmarks':16s} ← (localStorage hydrator)")
         bookmarks_out = build_bookmarks_page()
         print(f"  {' ':16s}  → {bookmarks_out.relative_to(SITE_DIR)}")

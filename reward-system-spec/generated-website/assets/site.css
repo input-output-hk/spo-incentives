@@ -1772,9 +1772,20 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 [data-theme=dark] .sro-card-pro .sro-finding:hover{background:rgba(255,111,110,.06)}
 [data-theme=dark] .sro-card-pro .sro-finding:target{background:rgba(255,111,110,.12)}
 
-/* F# badge — two-line stack. \`#N\` is the prominent ordinal in
-   Infared (the row's accent), \`CEN.O1.FN\` is the small mono
-   breadcrumb in muted grey for citation. */
+/* F# badge — two-line stack and the row's jump-to-source link.
+   Clicking #N or CEN.O1.FN navigates to the source section — no
+   need for a separate '§3.5 — ...' link in the meta row. The whole
+   stack renders inside a single <a>, so the click target is the
+   full column. \`#N\` is the prominent ordinal in Infared (the
+   row's accent); \`CEN.O1.FN\` is the small mono breadcrumb in
+   muted grey for citation. */
+a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
+  align-self:flex-start;margin-top:1px;
+  min-width:96px;
+  display:inline-flex;flex-direction:column;gap:3px;
+  align-items:flex-start;justify-content:center;
+  background:transparent;border:0;border-bottom:0;text-decoration:none;
+  cursor:pointer}
 .sro-card-pro .sro-fid{padding:0;flex-shrink:0;
   align-self:flex-start;margin-top:1px;
   min-width:96px;
@@ -1815,12 +1826,11 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
   background:rgba(255,111,110,.10);
   border-bottom-color:rgba(255,111,110,.40);color:#E4E4E7}
 
-/* Meta row — nature pill in red on the left, anchor link with
-   'discover on:' prefix on the right, dimmed. */
+/* Meta row — nature pill only (anchor was retired; the #N badge is
+   the jump-to-source link). */
 .sro-card-pro .sro-meta{margin-top:10px;
-  display:flex;align-items:baseline;justify-content:space-between;
-  gap:18px;flex-wrap:wrap}
-.sro-card-pro .sro-nature{order:1;
+  display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+.sro-card-pro .sro-nature{
   font-style:normal;font-weight:500;
   font-size:11px;letter-spacing:.6px;text-transform:uppercase;
   color:var(--infared);
@@ -1830,22 +1840,10 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 .sro-card-pro .sro-nature::before{content:none}
 [data-theme=dark] .sro-card-pro .sro-nature{color:#FF6F6E;
   background:rgba(255,111,110,.10);border-color:rgba(255,111,110,.25)}
-.sro-card-pro .sro-anchor{order:2;
-  font-size:11.5px;font-weight:400;color:var(--text-muted);
-  margin-left:auto;display:inline-flex;align-items:baseline;gap:6px}
-.sro-card-pro .sro-anchor::before{content:"discover on:";
-  font:italic 300 11px/1.2 'Inter',-apple-system,sans-serif;
-  letter-spacing:.04em;color:var(--text-secondary);text-transform:lowercase;
-  flex-shrink:0}
-.sro-card-pro .sro-anchor a{color:var(--text-secondary);text-decoration:none;
-  border-bottom:1px dotted rgba(229,35,33,.35);
-  transition:color .15s,border-color .15s;padding-bottom:1px}
-.sro-card-pro .sro-anchor a:hover{color:var(--infared);
-  border-bottom-color:var(--infared);border-bottom-style:solid}
-[data-theme=dark] .sro-card-pro .sro-anchor a{
-  border-bottom-color:rgba(255,111,110,.35)}
-[data-theme=dark] .sro-card-pro .sro-anchor a:hover{color:#FF6F6E;
-  border-bottom-color:#FF6F6E}
+
+/* Save (.spo-bookmark-btn) is retired — hide if any cached buttons
+   linger from previously rendered pages. */
+.spo-bookmark-btn{display:none!important}
 
 @media (max-width:640px){
   .sro-card-pro .sro-head{flex-wrap:wrap;gap:10px;padding:12px 14px}
