@@ -4826,8 +4826,13 @@ def _render_finding_card(
     """
     title = finding["finding_title"] or "Problem Induction"
     parent_title = finding["parent_title"]
+    # Drop the §X.Y prefix from the eyebrow — readers don't care about
+    # the section number, the topic name carries the context. ``Analysis``
+    # is suffixed so each label reads as a body of work rather than a
+    # bare topic noun (``The Staking Populations`` -> ``The Staking
+    # Populations Analysis``).
     parent_label = (
-        f"§{finding['parent']} · {_html.escape(parent_title)}"
+        f"{_html.escape(parent_title)} Analysis"
         if parent_title
         else f"§{finding['parent']}"
     )
@@ -4894,12 +4899,12 @@ def _render_finding_card(
                 f'</span>'
                 f'</a>'
             )
-        # Default-collapse all but the first observation when there
-        # are 3+ — keeps long cards skimmable; the first node provides
-        # an anchor preview of the evidence pattern.
-        is_collapsed = len(obs_for_section) >= 3 and idx > 0
-        collapsed_cls = " collapsed" if is_collapsed else ""
-        chev_aria = "false" if is_collapsed else "true"
+        # Default-collapse every observation. The card opens with the
+        # problem statement front-and-centre; readers expand only the
+        # observations they want to inspect.
+        is_collapsed = True
+        collapsed_cls = " collapsed"
+        chev_aria = "false"
         f_count_label = (
             f"{len(f_rows)} finding{'s' if len(f_rows) != 1 else ''}"
             if f_rows else "no findings linked"

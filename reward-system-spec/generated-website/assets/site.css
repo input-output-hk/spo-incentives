@@ -1427,7 +1427,8 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
 .findings-section-title{font-size:22px;font-weight:500;color:var(--text-primary);
   margin:0;letter-spacing:-.3px}
 .findings-section-tagline{font-size:13px;color:var(--text-muted);letter-spacing:.2px}
-.findings-section-body{display:flex;flex-direction:column;gap:20px}
+.findings-section-body{display:flex;flex-direction:column;gap:48px}
+.findings-list{display:flex;flex-direction:column;gap:48px}
 
 /* Banner card head — Cardano-blue plate that mirrors the page hero
    on a per-card scale. Each problem statement opens with its own
