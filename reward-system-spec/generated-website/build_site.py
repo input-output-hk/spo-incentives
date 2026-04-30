@@ -5425,11 +5425,11 @@ def _render_subreport_observations(groups: list[dict]) -> str:
             f'<p class="sro-abstract">{abstract_html}</p>'
             if abstract_html else ""
         )
-        # Pro variant — applied only to the first observation on the page
-        # so the design refresh can be A/B'd visually before rolling out
-        # to every card. The HTML structure differs (titles wrapper +
-        # eyebrow line) so the CSS variant can use proper hierarchy.
-        is_pro = g["o_num"] == 1
+        # Pro variant — now applied to EVERY observation card (was
+        # previously gated to the first card as an A/B test). Validated
+        # design: collapsible header, GitHub-style nature labels, red
+        # findings theme, #N badge as jump-to-source link.
+        is_pro = True
         count_label = (
             f'{len(g["findings"])} '
             f'{"findings" if len(g["findings"]) != 1 else "finding"}'
