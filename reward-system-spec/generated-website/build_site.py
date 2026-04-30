@@ -572,7 +572,7 @@ def _render_footer() -> str:
       <ul class="footer-links">
         <li><a href="index.html">V2 Specification</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
-        <li><a href="findings.html">Diagnostic Synthesis</a></li>
+        <li><a href="findings.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
       </ul>
     </div>
@@ -1494,8 +1494,8 @@ window.MathJax = {{
       <span class="nav-dd-stratum-meta">What mainnet is actually doing — synthesis, Reward-Flow evidence, and the prior report</span>
     </div>
     <a href="findings.html" class="nav-dd-ref nav-dd-ref-hero{cls_findings}">
-      <span class="nav-dd-ref-title">Diagnostic Synthesis<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">One-page summary — five problem statements, induced from 29 mainnet observations</span>
+      <span class="nav-dd-ref-title">Induced Problems<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">The structural problems the diagnostic induces from on-chain evidence — design intent vs mainnet reality</span>
     </a>
     <a href="observatory.html" class="nav-dd-ref{cls_observatory_title}">
       <span class="nav-dd-ref-title">The Diagnostic</span>
@@ -1694,7 +1694,7 @@ BANNER_VARIANTS = {
 BREADCRUMBS = {
     "spec": ["V2 Specification"],
     "intended-game": ["Design Support", "The Intended Game"],
-    "findings": ["Mainnet Diagnostic", "Diagnostic Synthesis"],
+    "findings": ["Mainnet Diagnostic", "Induced Problems"],
     "observatory": ["Mainnet Diagnostic", "The Diagnostic"],
     "census": ["Mainnet Diagnostic", "The Staking Census"],
     "treasury": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
@@ -4058,16 +4058,11 @@ _OBS_HEADING_RE = re.compile(
     r"^###\s+(\d+(?:\.\d+){1,2})\.?\s+Mainnet Observations\s*$",
     re.MULTILINE,
 )
-# The diagnostic README's own observation tables previously labelled
-# rows as ``**SYNTH.X.Y.O#**`` — but the diagnostic itself never owned the underlying
-# observation. The canonical observations live in the four sub-reports
-# under their three-letter prefix (TRE / POL / OPE / CEN) and the
-# diagnostic prose now references them by that prefix. The row regex
-# accepts either form so older snapshots still parse, and so the
-# (single) remaining SYNTH.2.2.O# rows for the tx-submitter section keep
-# extracting until they get a canonical home.
+# The diagnostic README's observation tables reference the canonical
+# observations defined in the four sub-reports under their three-letter
+# prefix: TRE (treasury), POL (pools), OPE (operator), CEN (census).
 _OBS_ROW_RE = re.compile(
-    r"^\|\s*\*\*(?:DIA\.(\d+)\.(\d+)|(TRE|POL|OPE|CEN))\.O(\d+)\*\*"
+    r"^\|\s*\*\*(TRE|POL|OPE|CEN)\.O(\d+)\*\*"
     r"\s*\|\s*\*\*(.+?)\*\*\s*\|\s*(.+?)\s*\|\s*$",
     re.MULTILINE,
 )
@@ -4149,17 +4144,14 @@ def extract_observations_from_md(md_text: str) -> list[dict]:
 
         for row in _OBS_ROW_RE.finditer(section_text):
             # Canonical row: ``| **<prefix>.O#** | **Title** | summary |``
-            # where ``<prefix>`` is either the legacy ``SYNTH.X.Y`` form or
-            # one of the four sub-report 3-letter codes (TRE/POL/OPE/CEN).
-            # Capture groups: (DIA-X, DIA-Y, canon-prefix, O#, title, summary).
-            canon_prefix = row.group(3)  # ``TRE``/``POL``/``OPE``/``CEN`` or None
-            num = int(row.group(4))
-            title = row.group(5).strip()
-            summary = row.group(6).strip()
+            # where ``<prefix>`` is one of the four sub-report 3-letter codes
+            # (TRE/POL/OPE/CEN). Capture groups: (canon-prefix, O#, title, summary).
+            canon_prefix = row.group(1)  # ``TRE``/``POL``/``OPE``/``CEN``
+            num = int(row.group(2))
+            title = row.group(3).strip()
+            summary = row.group(4).strip()
             tier, tier_label = _classify_tier(summary, title)
-            canon_id = (
-                f"{canon_prefix}.O{num}" if canon_prefix else None
-            )
+            canon_id = f"{canon_prefix}.O{num}"
             observations.append({
                 "section_id": section_id,
                 "parent": parent,
@@ -4310,8 +4302,8 @@ def transform_observation_tables(html_body: str, observations: list[dict]) -> st
 # ``(SYNTH.1.1.O1)``, ``(SYNTH.1.3.O6, SYNTH.1.3.O7, SYNTH.1.3.O8)``, and
 # ``(SYNTH.1.1.O1–SYNTH.1.1.O3)``.
 _CITATION_FULL_RE = re.compile(
-    r"\(\s*DIA\.\d+\.\d+\.O\d+"
-    r"(?:\s*(?:[–\-]|,|and|/)\s*DIA\.\d+\.\d+\.O\d+)*"
+    r"\(\s*SYNTH\.\d+\.\d+\.O\d+"
+    r"(?:\s*(?:[–\-]|,|and|/)\s*SYNTH\.\d+\.\d+\.O\d+)*"
     r"\s*\)"
 )
 
@@ -4398,7 +4390,7 @@ def _apply_citation_substitution(
 ) -> str:
     """Rewrite every well-formed canonical citation token inside plain text.
 
-    When ``source_lookup`` maps a DIA canonical id to a sub-report observation
+    When ``source_lookup`` maps a synthesis-observation canonical id to a sub-report observation
     group, the rewritten ``<a>`` carries cross-page source attributes:
 
     - ``data-obs-src``   the source canonical id (e.g. ``OPE.O7``)
@@ -4448,7 +4440,7 @@ def _apply_citation_substitution(
                 # Cross-page source overlay: primary href navigates to the
                 # source sub-report card; the overlay shows the source's
                 # content. Display the source canonical id (e.g. ``OPE.O1``)
-                # rather than the DIA synthesis id so readers see the
+                # rather than the synthesis-observation id so readers see the
                 # defining reference directly.
                 display_id = src["canon_id"]
                 return (
@@ -4465,7 +4457,7 @@ def _apply_citation_substitution(
             )
         range_data = ",".join(o["global_id"] for o in links)
         # Prefer the source canonical id for display when available, falling
-        # back to the DIA synthesis id when no source mapping exists.
+        # back to the synthesis-observation id when no source mapping exists.
         display_canons = [
             (source_lookup[c]["canon_id"] if c in source_lookup else c)
             for c in canons
@@ -4506,25 +4498,26 @@ def _apply_citation_substitution(
     return _CITATION_FULL_RE.sub(_sub, text)
 
 
-# Matches an ``<a>`` whose visible text is one or more DIA canonical tokens
-# (single, comma-separated list, range with em-dash, or slash). Used to
-# rewrite pre-existing markdown links like ``[SYNTH.1.3.O1](diagnostic/...)``
-# into overlay anchors after ``md_to_html`` has already turned them into
-# HTML links.
+# Matches an ``<a>`` whose visible text is one or more synthesis-observation
+# canonical tokens (single, comma-separated list, range with em-dash, or
+# slash). Used to rewrite pre-existing markdown links like
+# ``[SYNTH.1.3.O1](diagnostic/...)`` into overlay anchors after ``md_to_html``
+# has already turned them into HTML links.
 _SYNTH_ANCHOR_TEXT_RE = re.compile(
-    r"<a\b([^>]*)>\s*((?:DIA\.\d+\.\d+\.O\d+"
-    r"(?:\s*[,/–\-]\s*DIA\.\d+\.\d+\.O\d+)*))\s*</a>",
+    r"<a\b([^>]*)>\s*((?:SYNTH\.\d+\.\d+\.O\d+"
+    r"(?:\s*[,/–\-]\s*SYNTH\.\d+\.\d+\.O\d+)*))\s*</a>",
     re.IGNORECASE,
 )
 
 
-def rewrite_dia_anchors(
+def rewrite_synth_anchors(
     html_body: str,
     observations: list[dict],
     source_lookup: dict[str, dict] | None = None,
 ) -> str:
-    """Rewrite pre-existing ``<a>`` tags whose visible text is a DIA canonical
-    id (single, list, or range) into overlay-capable anchors.
+    """Rewrite pre-existing ``<a>`` tags whose visible text is a
+    synthesis-observation canonical id (single, list, or range) into
+    overlay-capable anchors.
 
     This covers the case where the markdown source used an explicit link
     (``[SYNTH.1.3.O1](diagnostic/README.md#...)``) rather than a plain-text
@@ -4536,9 +4529,9 @@ def rewrite_dia_anchors(
     - attaches the overlay class and ``data-obs-*`` attributes so the
       existing hover/click UI fires.
 
-    Anchors whose synthesis-observation target has no source mapping (``SYNTH.2.2.O#``) still
-    pick up ``data-obs`` so the local overlay fires, while the visible text
-    stays as the DIA id.
+    Anchors whose synthesis-observation target has no source mapping
+    (``SYNTH.2.2.O#``) still pick up ``data-obs`` so the local overlay fires,
+    while the visible text stays as the SYNTH id.
     """
     source_lookup = source_lookup or {}
     by_canon: dict[str, dict] = {}
@@ -5035,37 +5028,8 @@ def _render_findings_content(
     """Produce the body HTML for findings.html."""
     by_parent_obs = _group_obs_by_parent(observations)
 
-    intro = (
-        '<div class="findings-intro">'
-        '<p>This is the one-page summary of the diagnostic. The full '
-        'analysis lives in '
-        '<a href="observatory.html">The Diagnostic — Mainnet Observatory</a> '
-        'and across the four sub-reports '
-        '(<a href="census.html">census</a>, '
-        '<a href="treasury.html">reserves</a>, '
-        '<a href="pools.html">pool distribution</a>, '
-        '<a href="operator.html">operator&#39;s cut</a>); '
-        'this page distills it into '
-        f'<strong>{len(findings)} problem statements</strong> '
-        f'induced from <strong>{len(observations)} mainnet observations</strong>.</p>'
-        '<p>Each card carries one problem statement, the mainnet '
-        'observations that support it, and the canonical findings '
-        'beneath each observation.</p>'
-        '</div>'
-    )
-
-    # Search + tier filter were carrying placeholder behaviour with no
-    # actual hookup to the cards — net cost without value at 11 items.
-    controls = ""
-
-    # Stats strip — the two figures readers can act on. The previous
-    # "pipeline sections" tile was the count of unique parent §X.Y
-    # buckets, an internal-structure number that didn't tell the
-    # reader anything they could use.
-    # Sum total canonical findings across every problem-statement card
-    # so the third tile reflects evidence weight (the chain
-    # observation → finding the page surfaces) rather than file
-    # structure.
+    # Sum the canonical findings up front — both the intro chain line
+    # and the stats strip below show this number.
     total_findings_count = 0
     if findings_by_canon_obs:
         for o in observations:
@@ -5074,6 +5038,51 @@ def _render_findings_content(
                 total_findings_count += len(
                     findings_by_canon_obs.get(canon, [])
                 )
+
+    intro = (
+        '<div class="findings-intro">'
+        '<p class="findings-intro-lead">'
+        'The diagnostic walks Cardano&rsquo;s reward pipeline from the '
+        'reserve to the delegator and asks at every layer: '
+        '<em>does the mechanism produce the equilibrium it was designed '
+        'to produce?</em> '
+        f'The answer is <strong>{len(findings)} structural problems</strong>'
+        ' &mdash; each one induced from on-chain evidence rather than '
+        'asserted.</p>'
+        '<p>'
+        'A <strong>problem statement</strong> is a named gap between '
+        'the design intent &mdash; the original Reward Sharing Schemes '
+        'paper and the SL-D1 protocol specification &mdash; and the '
+        'equilibrium that mainnet actually produces. It is not an '
+        'opinion, a roadmap, or a fix. It is a question the mechanism '
+        'has stopped answering, grounded in a chain of evidence:'
+        '</p>'
+        '<p class="findings-intro-chain">'
+        f'<span class="findings-intro-chain-step"><strong>{len(findings)}</strong> problem statements</span>'
+        '<span class="findings-intro-chain-arrow" aria-hidden="true">&larr;</span>'
+        f'<span class="findings-intro-chain-step"><strong>{len(observations)}</strong> mainnet observations</span>'
+        '<span class="findings-intro-chain-arrow" aria-hidden="true">&larr;</span>'
+        f'<span class="findings-intro-chain-step"><strong>{total_findings_count}</strong> canonical findings</span>'
+        '</p>'
+        '<p class="findings-intro-howto">'
+        'Each card below opens with the problem statement and a short '
+        'synthesis of the induction reasoning, then lists the '
+        'observations that support it &mdash; click any observation '
+        'row to expand its underlying findings. The full prose argument '
+        'lives on '
+        '<a href="observatory.html">the Mainnet Observatory</a>; the '
+        'raw evidence and figures are in the four sub-reports '
+        '(<a href="census.html">census</a>, '
+        '<a href="treasury.html">reserves</a>, '
+        '<a href="pools.html">pool distribution</a>, '
+        '<a href="operator.html">operator&rsquo;s cut</a>).'
+        '</p>'
+        '</div>'
+    )
+
+    # Search + tier filter were carrying placeholder behaviour with no
+    # actual hookup to the cards — net cost without value at 11 items.
+    controls = ""
     stats = (
         '<div class="findings-stats">'
         f'<div class="findings-stat"><span class="findings-stat-num">{len(findings)}</span>'
@@ -5169,10 +5178,13 @@ def build_findings_page() -> Path:
         "slug": "findings",
         "md": "diagnostic/README.md",
         "html": "findings.html",
-        "title": "Diagnostic Synthesis — Problem Statements & Mainnet Evidence",
-        "hero_h1": "Diagnostic Synthesis",
+        "title": (
+            "Induced Problems — The Diagnostic&rsquo;s Conclusions, Grounded in "
+            "Mainnet Evidence"
+        ),
+        "hero_h1": "Induced Problems",
         "hero_sub": (
-            f"{len(findings)} problem statements induced from "
+            f"{len(findings)} structural problems induced from "
             f"{len(observations)} mainnet observations"
         ),
         "active_nav": "findings",
@@ -6347,7 +6359,7 @@ def transform_subreport_observation_table(html_body: str, groups: list[dict]) ->
     return html_body[:start] + new_block + html_body[end:]
 
 
-# --- Cross-page source bundle (for observatory.html DIA overlays) --------
+# --- Cross-page source bundle (for observatory.html synthesis-observation overlays) --------
 
 # Cached so the observatory build path pays the parse cost once across the
 # full build run (all four sub-reports are loaded together).
@@ -6402,14 +6414,14 @@ def _load_all_subreport_data() -> dict[str, object]:
     return _SUBREPORT_BUNDLE
 
 
-# Cache the DIA synthesis observations so every non-observatory page can
+# Cache the synthesis observations so every non-observatory page can
 # rewrite inline ``(SYNTH.X.Y.O#)`` citations without re-parsing the diagnostic
 # markdown each time.
 _DIAG_OBSERVATIONS: list[dict] | None = None
 
 
 def _load_diagnostic_observations() -> list[dict]:
-    """Return the DIA observations defined in ``diagnostic/README.md``.
+    """Return the synthesis observations defined in ``diagnostic/README.md``.
 
     Shared by every page that may cite ``(SYNTH.X.Y.O#)`` inline so the rewrite
     can resolve the canonical id even when the defining markdown lives on a
@@ -6432,7 +6444,7 @@ def _build_dia_source_lookup(
     """Map ``SYNTH.X.Y.O#`` → the source sub-report obs_group dict.
 
     Uses ``SYNTHESIS_SOURCE_MAP`` to bridge between synthesis sections and
-    sub-report codes. DIA observations with no source (``2.2``) are simply
+    sub-report codes. synthesis observations with no source (``2.2``) are simply
     absent from the returned mapping so callers fall back to local anchors.
     """
     lookup: dict[str, dict] = {}
@@ -6536,7 +6548,7 @@ def transform_observation_tables_with_sources(
     observations: list[dict],
     source_lookup: dict[str, dict],
 ) -> str:
-    """Lighter variant: sections with a DIA source render the compact list.
+    """Lighter variant: sections with a synthesis-observation source render the compact list.
 
     Sections whose parent has no mapping in ``SYNTHESIS_SOURCE_MAP`` (currently
     only ``2.2`` — tx submitters) keep the full card rendering since there
@@ -6741,7 +6753,7 @@ def build_page(page: dict) -> Path:
     content_html = wrap_manual_toc(content_html)
     content_html = promote_admonitions(content_html)
 
-    # Any non-sub-report page may cite DIA synthesis observations inline.
+    # Any non-sub-report page may cite synthesis observations inline.
     # Sub-report pages (code="TRE"/"POL"/"OPE"/"CEN") define their own O#
     # observations and do not reference SYNTH.X.Y.O# — so they skip the
     # cross-page bundle.
@@ -6762,9 +6774,8 @@ def build_page(page: dict) -> Path:
 
     # When a section's parent (e.g. "1.3") has a SYNTHESIS_SOURCE_MAP entry, render
     # the compact OPE.O# / POL.O# / TRE.O# / CEN.O# source-deferring rows so
-    # the canonical sub-report ids are surfaced (and the "DIA.1.3.O#" wrapper
-    # never reaches the page). This applies to every non-sub-report page,
-    # not just the observatory.
+    # the canonical sub-report ids are surfaced directly. This applies to
+    # every non-sub-report page, not just the observatory.
     if observations and source_lookup:
         content_html = transform_observation_tables_with_sources(
             content_html, observations, source_lookup,
@@ -6808,7 +6819,7 @@ def build_page(page: dict) -> Path:
         # (``[SYNTH.1.3.O1](diagnostic/README.md#...)``) — after ``md_to_html``
         # these land as ``<a>SYNTH.1.3.O1</a>``, which the plain-text regex
         # above doesn't match. Rewrite them to the same overlay form.
-        content_html = rewrite_dia_anchors(
+        content_html = rewrite_synth_anchors(
             content_html, rewrite_obs, source_lookup,
         )
 
@@ -6848,9 +6859,9 @@ def build_page(page: dict) -> Path:
     # can lift the visual hierarchy of dense numeric tables.
     content_html = classify_table_rows(content_html)
 
-    # Attach the merged cross-page registries so DIA overlays and F# badges
+    # Attach the merged cross-page registries so synthesis-observation overlays and F# badges
     # hydrate locally (no network fetch). Sub-report pages already carry
-    # their own finding registry above and do not cite DIA ids.
+    # their own finding registry above and do not cite synthesis-observation ids.
     if not is_subreport and cross_obs_groups:
         content_html += _render_subreport_obs_registry(cross_obs_groups)
     if not is_subreport and cross_findings:

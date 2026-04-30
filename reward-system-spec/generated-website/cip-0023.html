@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777555968">
+<link rel="stylesheet" href="assets/site.css?v=1777557997">
 
 
 </head>
@@ -179,8 +179,8 @@ window.MathJax = {
       <span class="nav-dd-stratum-meta">What mainnet is actually doing — synthesis, Reward-Flow evidence, and the prior report</span>
     </div>
     <a href="findings.html" class="nav-dd-ref nav-dd-ref-hero">
-      <span class="nav-dd-ref-title">Diagnostic Synthesis<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">One-page summary — five problem statements, induced from 29 mainnet observations</span>
+      <span class="nav-dd-ref-title">Induced Problems<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">The structural problems the diagnostic induces from on-chain evidence — design intent vs mainnet reality</span>
     </a>
     <a href="observatory.html" class="nav-dd-ref">
       <span class="nav-dd-ref-title">The Diagnostic</span>
@@ -635,7 +635,7 @@ window.MathJax = {
 </table>
 <p>Fee-rate dispersion collapses from <strong>32× (22.7 / 0.7)</strong> to <strong>3× (4.8 / 1.6)</strong>. <strong>Caveat.</strong> This requires <em>both</em> a reduced <code>minPoolCost</code> and the new margin floor; the margin floor alone does not flatten the small-pool regressive burden.</p>
 <h3 id="22-updated-calibration-at-current-parameters-epoch-623-202604">2.2. Updated calibration at current parameters (epoch ~623, 2026/04)</h3>
-<p>Two things have changed on mainnet since the CIP was drafted: <code>minPoolCost</code> was halved by governance to <strong>170 ₳</strong> (Conway-era action, DIA.1.3 floor), and the reward base has fallen with reserve depletion — hollow-pool yield at saturation is <strong>~2.27 %/yr</strong> (≈ 24 000 ₳/epoch at $z_0 \approx$ 77 M ₳). Re-running the CIP's own fee-rate comparison at today's values clarifies what the instrument still delivers after the halving already absorbed part of the fixed-fee relief.</p>
+<p>Two things have changed on mainnet since the CIP was drafted: <code>minPoolCost</code> was halved by governance to <strong>170 ₳</strong> (Conway-era parameter-change action at epoch 445, 2023/10/27), and the reward base has fallen with reserve depletion — hollow-pool yield at saturation is <strong>~2.27 %/yr</strong> (≈ 24 000 ₳/epoch at $z_0 \approx$ 77 M ₳). Re-running the CIP's own fee-rate comparison at today's values clarifies what the instrument still delivers after the halving already absorbed part of the fixed-fee relief.</p>
 <p>Effective fee rate shown below is $\text{take}(\sigma) / R_{\text{pool}}(\sigma)$ (the share of each delegator's gross reward consumed by the operator take — independent of delegator stake). Per-pool reward below saturation approximated as $R(\sigma) \approx 24\,000 \times \sigma / 77\text{M}$ (pledge ≈ 0, hollow-pool base). Representative σ per tier follows the canonical nine-tier taxonomy from <a href="pools.html#413-tier-definitions">pools-distribution §4.1.3</a>.</p>
 <table>
 <thead>
@@ -1037,7 +1037,7 @@ window.MathJax = {
       <ul class="footer-links">
         <li><a href="index.html">V2 Specification</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
-        <li><a href="findings.html">Diagnostic Synthesis</a></li>
+        <li><a href="findings.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
       </ul>
     </div>
@@ -1082,6 +1082,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777555968"></script>
+<script src="assets/site.js?v=1777557997"></script>
 </body>
 </html>
