@@ -1037,6 +1037,17 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
       if(!hash||hash.length<2) return;
       var target;
       try{target=document.querySelector(hash);}catch(e){return;}
+      /* If the link points at \`#finding-cen-o1-f1\` but no callout
+         carries that id (the prose description hasn't been written
+         yet), fall back to the visual Pro card row \`#cen-o1-f1\`
+         and rewrite the URL silently so a refresh keeps working. */
+      if(!target && hash.indexOf('#finding-')===0){
+        var rowHash='#'+hash.slice('#finding-'.length);
+        try{target=document.querySelector(rowHash);}catch(e){return;}
+        if(target){
+          try{history.replaceState(null,'',rowHash);}catch(e){}
+        }
+      }
       if(!target) return;
       var card=target.closest('.sro-card-pro');
       if(!card||!card.classList.contains('collapsed')) return;

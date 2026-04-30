@@ -3834,6 +3834,17 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
       if(!hash||hash.length<2) return;
       var target;
       try{target=document.querySelector(hash);}catch(e){return;}
+      /* If the link points at \`#finding-cen-o1-f1\` but no callout
+         carries that id (the prose description hasn't been written
+         yet), fall back to the visual Pro card row \`#cen-o1-f1\`
+         and rewrite the URL silently so a refresh keeps working. */
+      if(!target && hash.indexOf('#finding-')===0){
+        var rowHash='#'+hash.slice('#finding-'.length);
+        try{target=document.querySelector(rowHash);}catch(e){return;}
+        if(target){
+          try{history.replaceState(null,'',rowHash);}catch(e){}
+        }
+      }
       if(!target) return;
       var card=target.closest('.sro-card-pro');
       if(!card||!card.classList.contains('collapsed')) return;
@@ -5267,6 +5278,43 @@ def _walk_html_skipping(
     return "".join(out)
 
 
+# Match a blockquote whose first paragraph opens with
+# `<strong>Finding <a class="finding-ref" data-finding="XXX.OY.FZ">…</a>…`
+# i.e. the Finding callout pattern (already rewritten to include the
+# canonical ref anchor by `rewrite_finding_citations`). Captures:
+#   1: existing attributes on the blockquote tag (may be empty)
+#   2: the canonical id (e.g. CEN.O7.F1)
+_CALLOUT_BLOCKQUOTE_RE = re.compile(
+    r'<blockquote(\s[^>]*)?>(?P<rest>\s*<p[^>]*>\s*<strong>\s*Finding\s+'
+    r'<a [^>]*?data-finding="(?P<canon>[A-Z]{3}\.O\d+\.F\d+)"[^>]*>)',
+    re.IGNORECASE,
+)
+
+
+def inject_finding_callout_ids(html_body: str) -> str:
+    """Add ``id="finding-{slug}"`` to each Finding callout blockquote.
+
+    Lets cross-page links land on the in-doc callout (the prose
+    description) rather than only on the visual Pro card row in §1.
+    Idempotent — a blockquote that already carries an ``id=`` is left
+    alone so manual ids in the source markdown survive.
+    """
+    if not html_body:
+        return html_body
+
+    def _sub(m: re.Match) -> str:
+        attrs = m.group(1) or ""
+        rest = m.group("rest")
+        canon = m.group("canon")
+        if "id=" in attrs.lower():
+            return m.group(0)
+        slug = canon.replace(".", "-").lower()
+        new_attrs = f' id="finding-{slug}"' + attrs
+        return f"<blockquote{new_attrs}>{rest}"
+
+    return _CALLOUT_BLOCKQUOTE_RE.sub(_sub, html_body)
+
+
 def rewrite_finding_citations(
     html_body: str,
     findings: list[dict],
@@ -5299,11 +5347,17 @@ def rewrite_finding_citations(
             canon_index.setdefault(f["canon_id"], f)
 
     def _href_for(f: dict) -> str:
-        """Resolve to the visual Pro card row on the source sub-report
-        page (e.g. \`census.html#cen-o7-f1\`) when known; fall back to
-        the local \`.finding-detail\` registry anchor otherwise so the
-        existing JS overlay still wires up."""
-        return f.get("jump_href") or f"#finding-{f['slug']}"
+        """Prefer the prose 'Finding XX — ...' callout (id
+        ``finding-{slug}``) when one exists on the owning page; the
+        post-processor ``inject_callout_ids`` injects those ids. The
+        client JS ``expandToHash`` falls back to the visual Pro-card
+        row (``#{slug}``) when the callout id isn't present yet — so
+        a missing callout still lands somewhere meaningful."""
+        page = f.get("page_html") or ""
+        slug = f.get("slug", "")
+        if page:
+            return f"{page}#finding-{slug}"
+        return f.get("jump_href") or f"#finding-{slug}"
 
     def _sub_short(m: re.Match) -> str:
         fid = f"F{m.group(1)}.{m.group(2)}"
@@ -6111,7 +6165,13 @@ def build_page(page: dict) -> Path:
 
     if f_findings:
         content_html = rewrite_finding_citations(content_html, f_findings)
+        content_html = inject_finding_callout_ids(content_html)
         content_html += _render_finding_registry(f_findings)
+    else:
+        # Pages without local F# findings can still carry callouts that
+        # cite cross-page findings (rewritten by the cross-finding path
+        # earlier). Run the id injector on those too.
+        content_html = inject_finding_callout_ids(content_html)
 
     # Attach the merged cross-page registries so DIA overlays and F# badges
     # hydrate locally (no network fetch). Sub-report pages already carry
