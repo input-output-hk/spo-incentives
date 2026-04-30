@@ -4905,8 +4905,8 @@ def _render_finding_card(
             if f_rows else "no findings linked"
         )
         empty_msg = (
-            '<em class="finding-card-onode-empty">'
-            'No canonical findings linked yet.</em>'
+            '<li class="finding-card-onode-empty">'
+            'No canonical findings linked yet.</li>'
         )
         rows_block = "".join(rows_html) or empty_msg
         nodes_html.append(
@@ -4921,13 +4921,9 @@ def _render_finding_card(
             f'{_html.escape(o["title"])}</span>'
             f'<span class="finding-card-onode-fcount">{f_count_label}</span>'
             f'</button>'
-            f'<div class="finding-card-onode-body">'
-            f'<p class="finding-card-onode-summary">'
-            f'{_md_snippet_to_html(o.get("summary", ""))}</p>'
-            f'<div class="finding-card-onode-findings">'
+            f'<ol class="finding-card-onode-findings">'
             f'{rows_block}'
-            f'</div>'
-            f'</div>'
+            f'</ol>'
             f'</li>'
         )
     evidence_html = ""
@@ -4966,13 +4962,15 @@ def _render_finding_card(
         f'Read full finding on Observatory →</a>'
     )
 
+    # Title-first card head: the problem statement IS the headline.
+    # Parent section is reduced to a small eyebrow tag set ABOVE the
+    # title so the §X.Y context survives without competing with it,
+    # and the redundant "Problem Statement" badge is dropped — the
+    # whole page is problem statements.
     return (
         f'<article class="finding-card" data-section="{finding["section_id"]}" '
         f'data-parent="{finding["parent"]}">'
-        f'<header class="finding-card-head">'
-        f'<span class="finding-card-parent">{parent_label}</span>'
-        f'<span class="finding-card-badge">Problem Statement</span>'
-        f'</header>'
+        f'<span class="finding-card-eyebrow">{parent_label}</span>'
         f'<h3 class="finding-card-title">{_html.escape(title)}</h3>'
         f'{preface_html}'
         f'<div class="finding-card-body">{summary_html}</div>'
