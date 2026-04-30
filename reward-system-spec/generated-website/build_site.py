@@ -4148,10 +4148,14 @@ def extract_observations_from_md(md_text: str) -> list[dict]:
             # where ``<prefix>`` is either the legacy ``DIA.X.Y`` form or
             # one of the four sub-report 3-letter codes (TRE/POL/OPE/CEN).
             # Capture groups: (DIA-X, DIA-Y, canon-prefix, O#, title, summary).
+            canon_prefix = row.group(3)  # ``TRE``/``POL``/``OPE``/``CEN`` or None
             num = int(row.group(4))
             title = row.group(5).strip()
             summary = row.group(6).strip()
             tier, tier_label = _classify_tier(summary, title)
+            canon_id = (
+                f"{canon_prefix}.O{num}" if canon_prefix else None
+            )
             observations.append({
                 "section_id": section_id,
                 "parent": parent,
@@ -4160,6 +4164,8 @@ def extract_observations_from_md(md_text: str) -> list[dict]:
                 "local_id": f"O{num}",
                 "local_num": num,
                 "global_id": f"obs-{slug}-{num}",
+                "canon_id": canon_id,
+                "canon_prefix": canon_prefix,
                 "title": title,
                 "summary": summary,
                 "tier": tier,
@@ -4613,14 +4619,17 @@ def rewrite_dia_anchors(
 
 # --- Findings extraction (for findings.html synthesis page) --------------
 
-# Matches `### X.Y.Z. Problem Induction …` headings. The number of
-# levels mirrors the Mainnet Observations regex (2 or 3 dot-separated
-# levels). Trailing dot is optional — TOC normalisation added a period
-# after multi-level section numbers (e.g. ``1.1.3.``) that the original
-# regex would otherwise reject (which is what was stalling
-# extract_findings_from_md and producing ``0 findings`` on findings.html).
+# Matches `## X.Y. Problem Induction …` and
+# `### X.Y.Z. Problem Induction …` headings. ``§3.3 Problem Induction``
+# sits at depth 2; everything else (``§1.1.3``, ``§1.2.3``, ``§1.3.3``,
+# ``§2.1.3``, ``§2.2.3``) sits at depth 3. Trailing dot is optional —
+# TOC normalisation added a period after multi-level section numbers
+# (e.g. ``1.1.3.``) that the original regex would otherwise reject
+# (which is what was stalling extract_findings_from_md and producing
+# ``0 findings`` on findings.html).
 _FINDING_HEADING_RE = re.compile(
-    r"^###\s+(\d+(?:\.\d+){1,2})\.?\s+Problem Induction\s*(?:→\s*(.+?))?\s*$",
+    r"^(?P<hashes>##|###)\s+(?P<num>\d+(?:\.\d+){1,2})\.?\s+Problem Induction"
+    r"\s*(?:→\s*(?P<title>.+?))?\s*$",
     re.MULTILINE,
 )
 
@@ -4631,72 +4640,162 @@ _PARENT_HEADING_RE = re.compile(
 )
 
 
-def extract_findings_from_md(md_text: str) -> list[dict]:
-    """Extract ``### X.Y.Z Problem Induction`` sections as *finding* records.
+# Boilerplate openers we skip when extracting the synthesis blurb.
+# These are framing sentences ("Each observation above constrains…",
+# "The observations above describe…") that don't actually state the
+# problem — the problem comes one or two paragraphs later.
+_FINDING_BOILERPLATE_OPENERS = (
+    "each observation above",
+    "the observations above",
+    "read together",
+    "each observation",
+)
 
-    Each finding corresponds to the synthesis paragraph(s) that follow the
-    Mainnet Observations for a given topic. We capture:
+# Sub-problem heading inside a Problem Induction section. Matches a
+# fully numbered 4-level heading like ``#### 1.3.3.1. Title`` or a
+# 3-level heading inside a level-2 Problem Induction (``### 3.3.1.
+# Title``). Spurious ####-headings without a numeric prefix
+# (``#### Formulas — SL-D1 (Original)``, ``#### Structural Decomposition``)
+# are filtered out so they never become problem-statement cards.
+_SUBPROBLEM_HEADING_RE = re.compile(
+    r"^(?P<hashes>#{3,4})\s+(?P<num>\d+(?:\.\d+){2,3})\.?\s+(?P<title>.+?)\s*$",
+    re.MULTILINE,
+)
 
-    - ``section_id`` — the ``X.Y.Z`` heading number
-    - ``parent`` / ``parent_slug`` — the enclosing ``X.Y`` topic
-    - ``parent_title`` — the ``## X.Y. Title`` heading text (if available)
-    - ``finding_title`` — the optional ``→ …`` tail of the heading
-    - ``summary`` — the first 1–2 paragraphs of prose, stripped of markdown
-    - ``anchor`` — the HTML id used by python-markdown's TOC slugifier
+
+def _extract_problem_summary(section_body: str) -> str:
+    """Return the first 1–2 substantive paragraphs of a problem-induction
+    section body, skipping the boilerplate framing line(s).
     """
-    # Build a lookup of parent headings so each finding can be labelled.
+    paras = [p.strip() for p in re.split(r"\n\s*\n", section_body) if p.strip()]
+    body_paras: list[str] = []
+    for p in paras[:6]:
+        if p.startswith(("###", "####", "---", "<!--")):
+            break
+        # Drop the framing-sentence paragraphs unless we'd otherwise
+        # have nothing — a standalone boilerplate line still beats
+        # an empty card.
+        first_words = p[:60].lower()
+        if any(opener in first_words for opener in _FINDING_BOILERPLATE_OPENERS):
+            if not body_paras:
+                continue
+            break
+        if len(p) > 20:
+            body_paras.append(p)
+        if len(body_paras) >= 2:
+            break
+    return "\n\n".join(body_paras)
+
+
+def extract_findings_from_md(md_text: str) -> list[dict]:
+    """Extract Problem-Induction problem statements from the diagnostic README.
+
+    Each Problem Induction section emits one *or more* problem-statement
+    records:
+
+    - If the section's body contains numbered sub-sections
+      (``#### 1.3.3.1. Title``, ``### 3.3.1. Title``), each sub-section
+      becomes its own card. The section's prose preface is kept as
+      additional context on the first sub-card so no synthesis is lost.
+    - If the section has no sub-sections, the section itself is a card
+      and the ``→ Title`` tail of the heading provides the card title.
+
+    Capture per record::
+
+        section_id      "1.3.3.1"          # most specific numeric path
+        parent_section  "1.3.3"            # the Problem Induction itself
+        parent          "1.3"              # the topic (## heading)
+        parent_title    "Operator/Delegator Distribution"
+        finding_title   "Guarantee operator viability across …"
+        summary         "<two paragraphs>"
+        anchor          "1331-guarantee-operator-viability-…"
+        order           int                # document order
+    """
     parents: dict[str, str] = {}
     for pm in _PARENT_HEADING_RE.finditer(md_text):
-        parent_id = pm.group(1)
-        parents[parent_id] = pm.group(2).strip()
+        parents[pm.group(1)] = pm.group(2).strip()
 
     findings: list[dict] = []
-    matches = list(_FINDING_HEADING_RE.finditer(md_text))
-    for idx, m in enumerate(matches):
-        section_id = m.group(1)
-        finding_title = (m.group(2) or "").strip()
-        parent = _parent_section(section_id)
-        parent_slug = _slug_for_section(parent)
-        parent_title = parents.get(parent, "")
-        section_start = m.end()
-        next_h = re.search(r"^#{1,3}\s", md_text[section_start:], re.MULTILINE)
-        section_end = section_start + next_h.start() if next_h else len(md_text)
-        section_body = md_text[section_start:section_end].strip()
+    section_matches = list(_FINDING_HEADING_RE.finditer(md_text))
+    for sec in section_matches:
+        section_id = sec.group("num")
+        section_title = (sec.group("title") or "").strip()
+        section_depth = len(sec.group("hashes"))  # 2 = ## , 3 = ###
+        topic = _parent_section(section_id)
+        topic_title = parents.get(topic, "")
+        sec_start = sec.end()
+        # Sub-problems live one level deeper than the parent. Keep
+        # scanning until we hit a heading at the same depth or shallower.
+        if section_depth == 2:
+            next_pat = r"^##\s"
+        else:
+            next_pat = r"^##?\s|^###\s+\d+(?:\.\d+){1,2}\.?\s+(?!Problem)"
+        next_h = re.search(next_pat, md_text[sec_start:], re.MULTILINE)
+        sec_end = sec_start + next_h.start() if next_h else len(md_text)
+        section_body = md_text[sec_start:sec_end]
 
-        # Pull the first 1–2 paragraphs (double-newline separated) as the
-        # synthesis blurb for the card. Keeps the page scannable; the full
-        # finding lives on observatory.html.
-        paras = [p.strip() for p in re.split(r"\n\s*\n", section_body) if p.strip()]
-        # Skip opening boilerplate "The observations above…" lines if too short.
-        body_paras: list[str] = []
-        for p in paras[:4]:
-            if p.startswith(("####", "---", "<!--")):
-                break
-            if len(p) > 20:
-                body_paras.append(p)
-            if len(body_paras) >= 2:
-                break
-        summary = "\n\n".join(body_paras)
+        # Detect numbered sub-problems (####/### inside the section,
+        # depending on the section's own heading depth). Only NUMBERED
+        # subsections count — spurious ones like '#### Formulas' don't.
+        sub_matches: list[tuple[int, str, str, int, int]] = []
+        for sm in _SUBPROBLEM_HEADING_RE.finditer(section_body):
+            sub_id = sm.group("num")
+            # Sub-problems must be one level deeper than the parent
+            # section (1.3.3 → 1.3.3.x; 3.3 → 3.3.x).
+            if not sub_id.startswith(section_id + "."):
+                continue
+            sub_matches.append((sm.start(), sub_id, sm.group("title").strip(),
+                                sm.end(), len(sm.group("hashes"))))
 
-        # Python-markdown slugifies `X.Y.Z Problem Induction → Foo Bar`
-        # to `xyz-problem-induction-foo-bar` (numbers collapse, arrow drops).
-        slug_title = f"problem-induction"
-        if finding_title:
-            # Clean title for slug: lowercase, collapse non-alphanumeric → "-"
-            cleaned = re.sub(r"[^a-z0-9]+", "-", finding_title.lower()).strip("-")
-            slug_title = f"problem-induction-{cleaned}" if cleaned else slug_title
-        anchor = f"{_slug_for_section(section_id)}-{slug_title}"
-
-        findings.append({
-            "section_id": section_id,
-            "parent": parent,
-            "parent_slug": parent_slug,
-            "parent_title": parent_title,
-            "finding_title": finding_title,
-            "summary": summary,
-            "anchor": anchor,
-            "order": idx,
-        })
+        if sub_matches:
+            # Preface = body before the first sub-section.
+            preface = section_body[:sub_matches[0][0]].strip()
+            preface_summary = _extract_problem_summary(preface)
+            for i, (s_start, sub_id, sub_title, s_end, _hashes) in enumerate(sub_matches):
+                # Slice to the next sub-problem or end of section.
+                next_start = (
+                    sub_matches[i + 1][0] if i + 1 < len(sub_matches)
+                    else len(section_body)
+                )
+                sub_body = section_body[s_end:next_start]
+                summary = _extract_problem_summary(sub_body)
+                # Hand the section preface to the first sub-card only,
+                # marked off so the renderer can show it as context.
+                preface_for_card = preface_summary if i == 0 else ""
+                cleaned = re.sub(r"[^a-z0-9]+", "-", sub_title.lower()).strip("-")
+                anchor = f"{sub_id.replace('.', '')}-{cleaned}" if cleaned else sub_id.replace(".", "")
+                findings.append({
+                    "section_id": sub_id,
+                    "parent_section": section_id,
+                    "parent": topic,
+                    "parent_slug": _slug_for_section(topic),
+                    "parent_title": topic_title,
+                    "finding_title": sub_title,
+                    "summary": summary,
+                    "section_preface": preface_for_card,
+                    "anchor": anchor,
+                    "order": len(findings),
+                })
+        else:
+            summary = _extract_problem_summary(section_body)
+            slug_title = "problem-induction"
+            if section_title:
+                cleaned = re.sub(r"[^a-z0-9]+", "-", section_title.lower()).strip("-")
+                if cleaned:
+                    slug_title = f"problem-induction-{cleaned}"
+            anchor = f"{_slug_for_section(section_id)}-{slug_title}"
+            findings.append({
+                "section_id": section_id,
+                "parent_section": section_id,
+                "parent": topic,
+                "parent_slug": _slug_for_section(topic),
+                "parent_title": topic_title,
+                "finding_title": section_title or "Problem Induction",
+                "summary": summary,
+                "section_preface": "",
+                "anchor": anchor,
+                "order": len(findings),
+            })
     return findings
 
 
@@ -4717,8 +4816,14 @@ def _md_snippet_to_html(md_snippet: str) -> str:
     return html
 
 
-def _render_finding_card(finding: dict, obs_for_section: list[dict]) -> str:
-    """Render a single finding as a prominent card with linked observations."""
+def _render_finding_card(
+    finding: dict,
+    obs_for_section: list[dict],
+    findings_by_canon_obs: dict[str, list[dict]] | None = None,
+) -> str:
+    """Render a single problem statement as a card with its observations
+    and the canonical sub-report findings that ground it.
+    """
     title = finding["finding_title"] or "Problem Induction"
     parent_title = finding["parent_title"]
     parent_label = (
@@ -4727,15 +4832,27 @@ def _render_finding_card(finding: dict, obs_for_section: list[dict]) -> str:
         else f"§{finding['parent']}"
     )
     summary_html = _md_snippet_to_html(finding["summary"])
-    # Scope-bound (O#) citation rewrite: any reference in the finding prose
-    # maps to an observation from the same parent section, which makes the
-    # hover/click overlay work identically to the Observatory page.
     scope = {o["local_num"]: o for o in obs_for_section}
     if scope:
         summary_html = _apply_citation_substitution(summary_html, scope)
-    # Apply the same metric highlighting we use on observation cards so the
-    # statistics pop on the synthesis page too.
     summary_html = _highlight_metrics(summary_html)
+
+    # Optional context preface — the section's intro paragraph that's
+    # shared by all sub-problem cards inside it. Shown only on the first
+    # sub-card, smaller and muted, so each subsequent sub-card stays
+    # focused on its own statement.
+    preface_html = ""
+    preface_md = finding.get("section_preface", "")
+    if preface_md:
+        preface_inner = _md_snippet_to_html(preface_md)
+        if scope:
+            preface_inner = _apply_citation_substitution(preface_inner, scope)
+        preface_inner = _highlight_metrics(preface_inner)
+        preface_html = (
+            f'<div class="finding-card-preface" '
+            f'aria-label="Section context">'
+            f'{preface_inner}</div>'
+        )
 
     obs_refs = "".join(
         f'<a class="finding-obs-chip obs-ref" href="#{o["global_id"]}" '
@@ -4746,6 +4863,47 @@ def _render_finding_card(finding: dict, obs_for_section: list[dict]) -> str:
         f'</a>'
         for o in obs_for_section
     )
+
+    # Findings list — each tabulated observation in the parent section
+    # has its own canonical findings in the corresponding sub-report
+    # (POL.O1 → POL.O1.F1..F4 etc.). Surface them so the synthesis card
+    # carries the same evidence chain readers see in the sub-report.
+    findings_chips = ""
+    if findings_by_canon_obs:
+        finding_rows: list[dict] = []
+        for o in obs_for_section:
+            canon = o.get("canon_id")
+            if canon and canon in findings_by_canon_obs:
+                finding_rows.extend(findings_by_canon_obs[canon])
+        if finding_rows:
+            chip_html: list[str] = []
+            for f in finding_rows:
+                canon = f.get("canon_id") or ""
+                href = f.get("jump_href") or "#"
+                evidence = f.get("evidence") or f.get("summary") or ""
+                # Trim long evidence so chips stay one-line readable.
+                if len(evidence) > 110:
+                    evidence = evidence[:107].rstrip(" ,;") + "…"
+                obs_canon = canon.rsplit(".F", 1)[0]
+                f_num = canon.rsplit(".F", 1)[-1] if ".F" in canon else ""
+                chip_html.append(
+                    f'<a class="finding-card-fchip" href="{_html.escape(href)}" '
+                    f'title="{_html.escape(canon)} — open the sub-report">'
+                    f'<span class="finding-card-fchip-id">'
+                    f'<span class="finding-card-fchip-obs">{_html.escape(obs_canon)}</span>'
+                    f'<span class="finding-card-fchip-fnum">F{f_num}</span>'
+                    f'</span>'
+                    f'<span class="finding-card-fchip-text">{_html.escape(evidence)}</span>'
+                    f'</a>'
+                )
+            findings_chips = (
+                f'<div class="finding-card-findings">'
+                f'<div class="finding-card-findings-label">'
+                f'Findings ({len(finding_rows)})</div>'
+                f'<div class="finding-card-findings-list">'
+                f'{"".join(chip_html)}</div>'
+                f'</div>'
+            )
 
     jump_link = (
         f'<a class="finding-jump" '
@@ -4762,11 +4920,15 @@ def _render_finding_card(finding: dict, obs_for_section: list[dict]) -> str:
         f'<span class="finding-card-badge">Problem Statement</span>'
         f'</header>'
         f'<h3 class="finding-card-title">{_html.escape(title)}</h3>'
+        f'{preface_html}'
         f'<div class="finding-card-body">{summary_html}</div>'
         f'<div class="finding-card-obs">'
-        f'<div class="finding-card-obs-label">Supported by observations</div>'
-        f'<div class="finding-card-obs-list">{obs_refs or "<em>No tabulated observations in this section.</em>"}</div>'
-        f'</div>'
+        f'<div class="finding-card-obs-label">'
+        f'Supported by observations ({len(obs_for_section)})</div>'
+        f'<div class="finding-card-obs-list">'
+        f'{obs_refs or "<em>No tabulated observations in this section.</em>"}'
+        f'</div></div>'
+        f'{findings_chips}'
         f'<footer class="finding-card-foot">{jump_link}</footer>'
         f'</article>'
     )
@@ -4779,7 +4941,11 @@ def _group_obs_by_parent(observations: list[dict]) -> dict[str, list[dict]]:
     return groups
 
 
-def _render_findings_content(findings: list[dict], observations: list[dict]) -> str:
+def _render_findings_content(
+    findings: list[dict],
+    observations: list[dict],
+    findings_by_canon_obs: dict[str, list[dict]] | None = None,
+) -> str:
     """Produce the body HTML for findings.html."""
     by_parent_obs = _group_obs_by_parent(observations)
     all_tiers: dict[str, str] = {}
@@ -4862,7 +5028,9 @@ def _render_findings_content(findings: list[dict], observations: list[dict]) -> 
                 o for o in observations
                 if o["parent"] == f["parent"]
             ]
-            cards_html.append(_render_finding_card(f, obs_for_section))
+            cards_html.append(_render_finding_card(
+                f, obs_for_section, findings_by_canon_obs,
+            ))
         # Also surface standalone observation groups under this topic that
         # are not paired with a finding in this top-level bucket.
         paired_parents = {f["parent"] for f in top_findings}
@@ -4919,7 +5087,21 @@ def build_findings_page() -> Path:
     observations = extract_observations_from_md(md_text)
     findings = extract_findings_from_md(md_text)
 
-    content_html = _render_findings_content(findings, observations)
+    # Build a lookup keyed on the canonical observation id
+    # (``TRE.O1`` → list of TRE.O1.F# records) so each problem-statement
+    # card can surface the supporting findings from the sub-reports.
+    bundle = _load_all_subreport_data()
+    findings_by_canon_obs: dict[str, list[dict]] = {}
+    for code, f_rows in bundle["findings_by_code"].items():
+        for f in f_rows:
+            canon = f.get("canon_id", "")
+            obs_canon = canon.rsplit(".F", 1)[0] if ".F" in canon else ""
+            if obs_canon:
+                findings_by_canon_obs.setdefault(obs_canon, []).append(f)
+
+    content_html = _render_findings_content(
+        findings, observations, findings_by_canon_obs,
+    )
 
     page = {
         "slug": "findings",

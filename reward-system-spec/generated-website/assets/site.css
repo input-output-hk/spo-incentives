@@ -1464,6 +1464,69 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
 .finding-obs-chip-num{font-weight:700;color:var(--infared);font-size:11px;letter-spacing:.2px}
 .finding-obs-chip-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
 
+/* Section preface — shown only on the first sub-problem card of each
+   Problem Induction section, providing the parent's framing in muted
+   prose. Sub-cards 2..N omit it so they stay focused on their own
+   statement. */
+.finding-card-preface{
+  font:400 12.5px/1.55 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);
+  border-left:2px solid var(--cardano-blue-soft);
+  padding:6px 0 6px 12px;
+  margin:0 0 12px}
+.finding-card-preface p{margin:0 0 6px}
+.finding-card-preface p:last-child{margin-bottom:0}
+.finding-card-preface .metric{
+  background:rgba(0,51,173,.08);color:var(--cardano-blue);
+  font-weight:600;padding:0 4px;border-radius:3px}
+
+/* Findings list — canonical XXX.OY.FZ findings pulled from the
+   sub-reports, surfaced under each problem statement. Each chip is a
+   compact link to the sub-report finding row, with the canonical id
+   on the left and a one-line evidence summary on the right. */
+.finding-card-findings{
+  margin-top:12px;padding-top:14px;
+  border-top:1px solid var(--border)}
+.finding-card-findings-label{
+  font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:8px;font-weight:500}
+.finding-card-findings-list{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(330px,1fr));
+  gap:6px}
+.finding-card-fchip{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:7px 10px;
+  border:1px solid var(--border);
+  border-left:3px solid var(--infared);
+  border-radius:4px;
+  background:var(--bg);
+  text-decoration:none !important;
+  border-bottom:1px solid var(--border) !important;
+  transition:background .12s,border-color .12s,transform .12s}
+.finding-card-fchip:hover{
+  background:var(--bg-warm);
+  border-color:var(--infared) !important;
+  transform:translateY(-1px)}
+.finding-card-fchip-id{
+  display:inline-flex;flex-direction:column;align-items:flex-start;
+  flex-shrink:0;line-height:1.15;min-width:62px}
+.finding-card-fchip-obs{
+  font:600 9.5px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--text-muted);letter-spacing:.04em}
+.finding-card-fchip-fnum{
+  font:700 12px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--infared);letter-spacing:0;margin-top:2px}
+.finding-card-fchip-text{
+  font:400 11.5px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-body);
+  flex:1 1 auto;min-width:0}
+[data-theme=dark] .finding-card-fchip{
+  background:var(--bg-panel);border-color:#2a2a2a}
+[data-theme=dark] .finding-card-fchip:hover{
+  background:rgba(255,111,110,.06);border-color:#FF6F6E !important}
+[data-theme=dark] .finding-card-fchip-fnum{color:#FF6F6E}
+
 .finding-card-foot{border-top:1px dashed var(--border);padding-top:10px;margin-top:2px}
 .finding-jump{font-size:12.5px;color:var(--infared);text-decoration:none;letter-spacing:.2px;
   border-bottom:1px dotted rgba(229,35,33,.4);transition:border-bottom-style .15s}
