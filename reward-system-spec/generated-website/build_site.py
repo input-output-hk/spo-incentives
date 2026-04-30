@@ -2687,20 +2687,22 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
   background:rgba(255,111,110,.10);
   border-bottom-color:rgba(255,111,110,.40);color:#E4E4E7}
 
-/* Meta row — nature pill only (anchor was retired; the #N badge is
-   the jump-to-source link). */
-.sro-card-pro .sro-meta{margin-top:10px;
+/* Meta row — nature tag only (anchor was retired; the #N badge is
+   the jump-to-source link). The nature is metadata, not an accent
+   — keep it discreet so the eye stays on the evidence text above. */
+.sro-card-pro .sro-meta{margin-top:8px;
   display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
 .sro-card-pro .sro-nature{
-  font-style:normal;font-weight:500;
-  font-size:11px;letter-spacing:.6px;text-transform:uppercase;
-  color:var(--infared);
-  background:rgba(229,35,33,.07);
-  border:1px solid rgba(229,35,33,.20);
-  padding:3px 9px;border-radius:3px}
-.sro-card-pro .sro-nature::before{content:none}
-[data-theme=dark] .sro-card-pro .sro-nature{color:#FF6F6E;
-  background:rgba(255,111,110,.10);border-color:rgba(255,111,110,.25)}
+  font:italic 400 11.5px/1.3 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:0;text-transform:none;
+  color:var(--text-muted);
+  background:transparent;border:0;padding:0}
+.sro-card-pro .sro-nature::before{content:"";display:inline-block;
+  width:4px;height:4px;border-radius:50%;
+  background:var(--border);margin-right:8px;
+  vertical-align:middle;transform:translateY(-1px)}
+[data-theme=dark] .sro-card-pro .sro-nature{color:var(--text-secondary)}
+[data-theme=dark] .sro-card-pro .sro-nature::before{background:var(--border)}
 
 /* Save (.spo-bookmark-btn) is retired — hide if any cached buttons
    linger from previously rendered pages. */
