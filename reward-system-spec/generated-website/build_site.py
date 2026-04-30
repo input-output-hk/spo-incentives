@@ -1323,6 +1323,18 @@ TEMPLATE = """<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script>try{{var t=localStorage.getItem('spo-theme');if(t)document.documentElement.setAttribute('data-theme',t)}}catch(e){{}}</script>
 <script>(function(){{var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fluid-red'];var pick=v[Math.floor(Math.random()*v.length)];document.addEventListener('DOMContentLoaded',function(){{var h=document.querySelector('.hero');if(h)h.setAttribute('data-banner',pick);}});}})();</script>
+<!-- Nav dropdown helpers — referenced by inline onclick handlers on
+     each .nav-dd-btn-* button. Defined as window globals so the
+     onclick attributes resolve regardless of assets/site.js load
+     order or extraction state. -->
+<script>
+window.closeAllDd=function(except){{
+  document.querySelectorAll('.nav-dd-wrap.open').forEach(function(w){{
+    if(!w.contains(except)) w.classList.remove('open');
+  }});
+}};
+document.addEventListener('click',function(){{ window.closeAllDd(null); }});
+</script>
 <script>
 window.MathJax = {{
   tex: {{
