@@ -193,8 +193,8 @@ SUBREPORT_CODES = {p["slug"]: p["code"] for p in PAGES if p.get("code")}
 PAGE_BY_CODE = {p["code"]: p for p in PAGES if p.get("code")}
 
 # Maps a diagnostic synthesis parent section (X.Y) to its source sub-report.
-# Historically the synthesis page used DIA.X.Y.O# tokens that the script
-# rewrote to source-report citations (e.g. DIA.1.3.O7 → OPE.O7 in the
+# Historically the synthesis page used SYNTH.X.Y.O# tokens that the script
+# rewrote to source-report citations (e.g. SYNTH.1.3.O7 → OPE.O7 in the
 # operator sub-report). After the 2026/04/30 cleanup, the source MD now
 # uses the sub-report IDs (TRE/POL/OPE/CEN.O#) directly, so the rewrite
 # logic that depends on this map is effectively a no-op. The map is kept
@@ -4059,12 +4059,12 @@ _OBS_HEADING_RE = re.compile(
     re.MULTILINE,
 )
 # The diagnostic README's own observation tables previously labelled
-# rows as ``**DIA.X.Y.O#**`` — but DIA never owned the underlying
+# rows as ``**SYNTH.X.Y.O#**`` — but the diagnostic itself never owned the underlying
 # observation. The canonical observations live in the four sub-reports
 # under their three-letter prefix (TRE / POL / OPE / CEN) and the
 # diagnostic prose now references them by that prefix. The row regex
 # accepts either form so older snapshots still parse, and so the
-# (single) remaining DIA.2.2.O# rows for the tx-submitter section keep
+# (single) remaining SYNTH.2.2.O# rows for the tx-submitter section keep
 # extracting until they get a canonical home.
 _OBS_ROW_RE = re.compile(
     r"^\|\s*\*\*(?:DIA\.(\d+)\.(\d+)|(TRE|POL|OPE|CEN))\.O(\d+)\*\*"
@@ -4149,7 +4149,7 @@ def extract_observations_from_md(md_text: str) -> list[dict]:
 
         for row in _OBS_ROW_RE.finditer(section_text):
             # Canonical row: ``| **<prefix>.O#** | **Title** | summary |``
-            # where ``<prefix>`` is either the legacy ``DIA.X.Y`` form or
+            # where ``<prefix>`` is either the legacy ``SYNTH.X.Y`` form or
             # one of the four sub-report 3-letter codes (TRE/POL/OPE/CEN).
             # Capture groups: (DIA-X, DIA-Y, canon-prefix, O#, title, summary).
             canon_prefix = row.group(3)  # ``TRE``/``POL``/``OPE``/``CEN`` or None
@@ -4307,8 +4307,8 @@ def transform_observation_tables(html_body: str, observations: list[dict]) -> st
 # --- Inline (O#) citation rewriter ----------------------------------------
 
 # Matches parenthesised canonical observation citations like
-# ``(DIA.1.1.O1)``, ``(DIA.1.3.O6, DIA.1.3.O7, DIA.1.3.O8)``, and
-# ``(DIA.1.1.O1–DIA.1.1.O3)``.
+# ``(SYNTH.1.1.O1)``, ``(SYNTH.1.3.O6, SYNTH.1.3.O7, SYNTH.1.3.O8)``, and
+# ``(SYNTH.1.1.O1–SYNTH.1.1.O3)``.
 _CITATION_FULL_RE = re.compile(
     r"\(\s*DIA\.\d+\.\d+\.O\d+"
     r"(?:\s*(?:[–\-]|,|and|/)\s*DIA\.\d+\.\d+\.O\d+)*"
@@ -4321,16 +4321,16 @@ def rewrite_obs_citations(
     observations: list[dict],
     source_lookup: dict[str, dict] | None = None,
 ) -> str:
-    """Replace ``(DIA.X.Y.O#)`` and its list/range/slash variants with
+    """Replace ``(SYNTH.X.Y.O#)`` and its list/range/slash variants with
     overlay-capable links.
 
     Each canonical token carries its own scope (X.Y.O#), so no h2 tracking is
     needed — we look up the target observation directly from the global
     canonical-id index. When ``source_lookup`` is provided, every
-    ``DIA.X.Y.O#`` that maps to a sub-report observation (via
+    ``SYNTH.X.Y.O#`` that maps to a sub-report observation (via
     ``SYNTHESIS_SOURCE_MAP``) is annotated with cross-page source fields so the
     overlay hydrates the *source* card (e.g. ``OPE.O7``) rather than the
-    diagnostic synthesis card. DIA citations without a source stay local.
+    diagnostic synthesis card. synthesis-observation citations without a source stay local.
     """
     # Build lookup: canonical id → obs
     by_canon: dict[str, dict] = {}
@@ -4346,7 +4346,7 @@ def _rewrite_citations_in_segment(
     by_canon: dict[str, dict],
     source_lookup: dict[str, dict] | None = None,
 ) -> str:
-    """Rewrite ``(DIA.X.Y.O#)`` tokens, skipping defining regions.
+    """Rewrite ``(SYNTH.X.Y.O#)`` tokens, skipping defining regions.
 
     The observation-cards block is the *defining* rendering for each
     synthesis observation; rewriting canonical ids inside it would create
@@ -4406,8 +4406,8 @@ def _apply_citation_substitution(
     - ``data-obs-href``  the cross-page jump URL (``operator.html#srobs-ope-o7``)
 
     The overlay script can then hydrate from a bundled ``sro-obs-registry``
-    and wire the panel CTA to navigate to the source. DIA citations without
-    a mapped source (e.g. ``DIA.2.2.O#``) fall back to the local obs-card
+    and wire the panel CTA to navigate to the source. synthesis-observation citations without
+    a mapped source (e.g. ``SYNTH.2.2.O#``) fall back to the local obs-card
     anchor.
     """
     source_lookup = source_lookup or {}
@@ -4428,7 +4428,7 @@ def _apply_citation_substitution(
         if not tokens:
             return raw
         canons = [f"SYNTH.{x}.{y}.O{n}" for (x, y, n) in tokens]
-        # Range form ``DIA.X.Y.O1–DIA.X.Y.O3``: expand over O# when the two
+        # Range form ``SYNTH.X.Y.O1–SYNTH.X.Y.O3``: expand over O# when the two
         # endpoints share a parent section.
         if "–" in raw and len(tokens) == 2 and tokens[0][0:2] == tokens[1][0:2]:
             x, y = tokens[0][0], tokens[0][1]
@@ -4508,7 +4508,7 @@ def _apply_citation_substitution(
 
 # Matches an ``<a>`` whose visible text is one or more DIA canonical tokens
 # (single, comma-separated list, range with em-dash, or slash). Used to
-# rewrite pre-existing markdown links like ``[DIA.1.3.O1](diagnostic/...)``
+# rewrite pre-existing markdown links like ``[SYNTH.1.3.O1](diagnostic/...)``
 # into overlay anchors after ``md_to_html`` has already turned them into
 # HTML links.
 _SYNTH_ANCHOR_TEXT_RE = re.compile(
@@ -4527,7 +4527,7 @@ def rewrite_dia_anchors(
     id (single, list, or range) into overlay-capable anchors.
 
     This covers the case where the markdown source used an explicit link
-    (``[DIA.1.3.O1](diagnostic/README.md#...)``) rather than a plain-text
+    (``[SYNTH.1.3.O1](diagnostic/README.md#...)``) rather than a plain-text
     citation. The substitution:
 
     - swaps the visible text for the source canon id (e.g. ``OPE.O1``) when
@@ -4536,7 +4536,7 @@ def rewrite_dia_anchors(
     - attaches the overlay class and ``data-obs-*`` attributes so the
       existing hover/click UI fires.
 
-    Anchors whose DIA target has no source mapping (``DIA.2.2.O#``) still
+    Anchors whose synthesis-observation target has no source mapping (``SYNTH.2.2.O#``) still
     pick up ``data-obs`` so the local overlay fires, while the visible text
     stays as the DIA id.
     """
@@ -4850,6 +4850,7 @@ def _render_finding_card(
     finding: dict,
     obs_for_section: list[dict],
     findings_by_canon_obs: dict[str, list[dict]] | None = None,
+    index: int = 0,
 ) -> str:
     """Render a single problem statement as a card with its observations
     and the canonical sub-report findings that ground it.
@@ -4996,13 +4997,18 @@ def _render_finding_card(
 
     # Cardano-blue banner head, mirroring the page hero on a smaller
     # scale. White display title + Infared-rule eyebrow so each card
-    # reads as its own miniature page header.
+    # reads as its own miniature page header. The leading numbered
+    # chip pins the card to its position in the list.
+    num_label = f"{index + 1:02d}"
     return (
         f'<article class="finding-card" data-section="{finding["section_id"]}" '
         f'data-parent="{finding["parent"]}">'
         f'<header class="finding-card-banner" data-banner="braid">'
         f'<span class="finding-card-banner-eyebrow">{parent_label}</span>'
+        f'<div class="finding-card-banner-row">'
+        f'<span class="finding-card-banner-num" aria-hidden="true">{num_label}</span>'
         f'<h3 class="finding-card-title">{_html.escape(title)}</h3>'
+        f'</div>'
         f'</header>'
         f'<div class="finding-card-content">'
         f'{preface_html}'
@@ -5083,13 +5089,13 @@ def _render_findings_content(
     # No top-level §1/§2/§3 grouping — each card carries its own
     # parent label in its header so the topic context isn't lost.
     cards_html: list[str] = []
-    for f in sorted(findings, key=lambda r: r.get("order", 0)):
+    for idx, f in enumerate(sorted(findings, key=lambda r: r.get("order", 0))):
         obs_for_section = [
             o for o in observations
             if o["parent"] == f["parent"]
         ]
         cards_html.append(_render_finding_card(
-            f, obs_for_section, findings_by_canon_obs,
+            f, obs_for_section, findings_by_canon_obs, index=idx,
         ))
     list_html = (
         f'<div class="findings-list">{"".join(cards_html)}</div>'
@@ -6217,7 +6223,7 @@ def _render_subreport_observations(groups: list[dict]) -> str:
     return "".join(out)
 
 
-# --- Synthesis observation canonical IDs (DIA.X.Y.O#) -----------------
+# --- Synthesis observation canonical IDs (SYNTH.X.Y.O#) -----------------
 
 # Code for the diagnostic synthesis itself.
 DIAG_CODE = "SYNTH"
@@ -6397,7 +6403,7 @@ def _load_all_subreport_data() -> dict[str, object]:
 
 
 # Cache the DIA synthesis observations so every non-observatory page can
-# rewrite inline ``(DIA.X.Y.O#)`` citations without re-parsing the diagnostic
+# rewrite inline ``(SYNTH.X.Y.O#)`` citations without re-parsing the diagnostic
 # markdown each time.
 _DIAG_OBSERVATIONS: list[dict] | None = None
 
@@ -6405,7 +6411,7 @@ _DIAG_OBSERVATIONS: list[dict] | None = None
 def _load_diagnostic_observations() -> list[dict]:
     """Return the DIA observations defined in ``diagnostic/README.md``.
 
-    Shared by every page that may cite ``(DIA.X.Y.O#)`` inline so the rewrite
+    Shared by every page that may cite ``(SYNTH.X.Y.O#)`` inline so the rewrite
     can resolve the canonical id even when the defining markdown lives on a
     different page.
     """
@@ -6423,7 +6429,7 @@ def _load_diagnostic_observations() -> list[dict]:
 def _build_dia_source_lookup(
     obs_groups_by_code: dict[str, list[dict]],
 ) -> dict[str, dict]:
-    """Map ``DIA.X.Y.O#`` → the source sub-report obs_group dict.
+    """Map ``SYNTH.X.Y.O#`` → the source sub-report obs_group dict.
 
     Uses ``SYNTHESIS_SOURCE_MAP`` to bridge between synthesis sections and
     sub-report codes. DIA observations with no source (``2.2``) are simply
@@ -6433,7 +6439,7 @@ def _build_dia_source_lookup(
     for parent, meta in SYNTHESIS_SOURCE_MAP.items():
         groups = obs_groups_by_code.get(meta["code"], [])
         by_o_num = {g["o_num"]: g for g in groups}
-        # O# numbering is 1-to-1 between DIA.X.Y.O# and its source XXX.O#,
+        # O# numbering is 1-to-1 between SYNTH.X.Y.O# and its source XXX.O#,
         # so we index by o_num and build both directions.
         for o_num, g in by_o_num.items():
             canon = f"SYNTH.{parent}.O{o_num}"
@@ -6737,7 +6743,7 @@ def build_page(page: dict) -> Path:
 
     # Any non-sub-report page may cite DIA synthesis observations inline.
     # Sub-report pages (code="TRE"/"POL"/"OPE"/"CEN") define their own O#
-    # observations and do not reference DIA.X.Y.O# — so they skip the
+    # observations and do not reference SYNTH.X.Y.O# — so they skip the
     # cross-page bundle.
     is_observatory = page["slug"] == "observatory"
     is_subreport = bool(page.get("code"))
@@ -6788,7 +6794,7 @@ def build_page(page: dict) -> Path:
                 content_html, sro_groups,
             )
 
-    # Rewrite inline ``(DIA.X.Y.O#)`` citations on every non-sub-report page.
+    # Rewrite inline ``(SYNTH.X.Y.O#)`` citations on every non-sub-report page.
     # Observatory resolves against its own observations (same MD); other
     # pages resolve against the cached diagnostic observations.
     rewrite_obs = observations if is_observatory else (
@@ -6799,8 +6805,8 @@ def build_page(page: dict) -> Path:
             content_html, rewrite_obs, source_lookup,
         )
         # Cover the case where the markdown source used an explicit link
-        # (``[DIA.1.3.O1](diagnostic/README.md#...)``) — after ``md_to_html``
-        # these land as ``<a>DIA.1.3.O1</a>``, which the plain-text regex
+        # (``[SYNTH.1.3.O1](diagnostic/README.md#...)``) — after ``md_to_html``
+        # these land as ``<a>SYNTH.1.3.O1</a>``, which the plain-text regex
         # above doesn't match. Rewrite them to the same overlay form.
         content_html = rewrite_dia_anchors(
             content_html, rewrite_obs, source_lookup,
