@@ -379,19 +379,27 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .content tr:hover td{background:var(--bg-warm)}
 
 /* ── Evidence base cards (V2 spec) — §3.x.x.x and §4.x.x.x ── */
+/* Evidence cards (Evidence base under each problem statement). The
+   left-column LABEL acts as the brand stamp; using the Cardano-blue
+   family pulls it into the same tonal world as the page H2/H3 above
+   it. The card chrome stays neutral so the text reads. A 3px Cardano-
+   blue inset on hover ties the interaction to the same anchor-bar
+   motif used by H1 and the active TOC item. */
 .ev-list{display:flex;flex-direction:column;gap:8px;margin:18px 0 28px}
 .ev-card{display:grid;grid-template-columns:160px 1fr;gap:18px;padding:14px 18px;border:1px solid var(--border);border-radius:8px;background:var(--bg);transition:border-color .15s,box-shadow .15s}
-.ev-card:hover{border-color:rgba(229,35,33,.35);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.ev-card:hover{border-color:var(--cardano-blue-2);box-shadow:inset 3px 0 0 var(--cardano-blue),0 1px 3px var(--cardano-blue-soft)}
 [data-theme=dark] .ev-card{border-color:#2a2a2a}
-[data-theme=dark] .ev-card:hover{border-color:rgba(229,35,33,.45);box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.ev-label{font:600 11px/1.3 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-transform:uppercase;letter-spacing:.6px;color:var(--infared);align-self:start;padding-top:3px}
+[data-theme=dark] .ev-card:hover{border-color:#6E97FF;box-shadow:inset 3px 0 0 #6E97FF,0 1px 3px rgba(0,0,0,.2)}
+.ev-label{font:600 11px/1.3 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-transform:uppercase;letter-spacing:1.4px;color:var(--cardano-blue);align-self:start;padding-top:3px}
+[data-theme=dark] .ev-label{color:#8FB1FF}
 .ev-content{min-width:0}
 .ev-body{font:400 13.5px/1.55 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-body);margin:0}
 .ev-body strong{color:var(--text-primary);font-weight:700}
-.ev-sources{margin:8px 0 0;font:italic 400 11.5px/1.4 -apple-system,sans-serif;color:var(--text-muted)}
-.ev-sources a{color:var(--text-muted);text-decoration:underline;text-decoration-color:rgba(229,35,33,.3);text-underline-offset:2px}
-.ev-sources a:hover{color:var(--infared);text-decoration-color:var(--infared)}
-@media (max-width:640px){.ev-card{grid-template-columns:1fr;gap:6px}.ev-label{padding-top:0}}
+.ev-sources{margin:8px 0 0;font:italic 400 11.5px/1.4 'Inter',-apple-system,sans-serif;color:var(--text-muted)}
+.ev-sources a{color:var(--text-muted);text-decoration:underline;text-decoration-color:var(--cardano-link-line);text-underline-offset:2px;transition:color .15s,text-decoration-color .15s}
+.ev-sources a:hover{color:var(--cardano-blue);text-decoration-color:var(--cardano-blue)}
+[data-theme=dark] .ev-sources a:hover{color:#8FB1FF;text-decoration-color:#8FB1FF}
+@media (max-width:640px){.ev-card{grid-template-columns:160px 1fr;gap:6px}.ev-label{padding-top:0}}
 
 /* Blockquotes */
 .content blockquote{border-left:3px solid var(--accent);padding:12px 18px;margin:16px 0;background:var(--bg-panel);border-radius:0 6px 6px 0}
