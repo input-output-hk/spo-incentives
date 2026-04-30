@@ -4962,20 +4962,22 @@ def _render_finding_card(
         f'Read full finding on Observatory →</a>'
     )
 
-    # Title-first card head: the problem statement IS the headline.
-    # Parent section is reduced to a small eyebrow tag set ABOVE the
-    # title so the §X.Y context survives without competing with it,
-    # and the redundant "Problem Statement" badge is dropped — the
-    # whole page is problem statements.
+    # Cardano-blue banner head, mirroring the page hero on a smaller
+    # scale. White display title + Infared-rule eyebrow so each card
+    # reads as its own miniature page header.
     return (
         f'<article class="finding-card" data-section="{finding["section_id"]}" '
         f'data-parent="{finding["parent"]}">'
-        f'<span class="finding-card-eyebrow">{parent_label}</span>'
+        f'<header class="finding-card-banner" data-banner="braid">'
+        f'<span class="finding-card-banner-eyebrow">{parent_label}</span>'
         f'<h3 class="finding-card-title">{_html.escape(title)}</h3>'
+        f'</header>'
+        f'<div class="finding-card-content">'
         f'{preface_html}'
         f'<div class="finding-card-body">{summary_html}</div>'
         f'{evidence_html}'
         f'<footer class="finding-card-foot">{jump_link}</footer>'
+        f'</div>'
         f'</article>'
     )
 
