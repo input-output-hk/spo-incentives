@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 """
-Foundations overview — every doc visible (research papers collapsed),
-★ on novel docs only, arrows reorganised by destination.
+Foundations overview — what the V2 Specification reasons from.
 
-Layout: single input column on the left, ordered so that:
-  · sections that flow to V2 Spec sit in the upper half
-  · sections that flow to The Diagnostic sit in the lower half
-The Diagnostic and V2 Spec are vertically centred on the right.
+Rebranded to the Cardano-blue colour family that drives the rest of the
+site (cardano.org primary blue + a complementary blue-2 for the synthesis
+node). The four diagnostic-evidence cards are now wrapped in a faint
+shaded panel so the single arrow into The Diagnostic clearly represents
+the GROUP rather than only one card.
+
+Layout:
+  · single input column on the left, ordered so spec-bound sections sit
+    in the upper half and diag-bound sections sit below.
+  · The Diagnostic and V2 Spec on the right; The Diagnostic acts as a
+    synthesis bridge for the lower-half inputs.
 
 Outputs: figures/foundations_overview.png
 """
@@ -16,21 +22,28 @@ from __future__ import annotations
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
+from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Rectangle
 
 REPORT_DIR = Path(__file__).resolve().parent.parent
 FIG_DIR = REPORT_DIR / "figures"
 
+# --- Cardano-aligned palette (mirrors assets/site.css :root) -----------
 BG_COLOR = "#FFFFFF"
 TEXT_COLOR = "#1A1A1A"
 TEXT_DIM = "#444444"
 
-INFARED = "#E52321"
-DAWN = "#EC641D"
-ELECTRIC_BLUE = "#0DBFB0"
-COBALT_PULSE = "#2C4FFA"
-EVIDENCE_OLIVE = "#9CAA00"
-RESEARCH_GREY = "#888888"
+# Primary Cardano blues — used for the spec-side flow + the V2 node.
+CARDANO_BLUE = "#0033AD"      # primary brand blue
+CARDANO_BLUE_2 = "#1F5BC6"    # secondary, paler — the synthesis bridge
+CARDANO_BLUE_3 = "#6394E2"    # tertiary, lightest
+
+# Accents kept distinct so each input lane stays readable, but tuned to
+# coexist with the blue chrome (no IOG-red domination).
+INFARED = "#E52321"           # design artefacts (the spec lineage carrier)
+DAWN = "#EC641D"              # community antecedent (warm, prior community work)
+EVIDENCE_OLIVE = "#9CAA00"    # diagnostic evidence (Cardano-leaning olive)
+GOVERNANCE_NAVY = "#2C4FFA"   # governance — cobalt, sits beside cardano-blue
+RESEARCH_GREY = "#888888"     # research papers (inspiration only)
 
 
 def draw_card(ax, x_center, y_center, w, h, title, sub, accent,
@@ -41,11 +54,11 @@ def draw_card(ax, x_center, y_center, w, h, title, sub, accent,
         w, h,
         boxstyle="round,pad=0.02,rounding_size=0.08",
         linewidth=1.6, edgecolor=accent, linestyle=style,
-        facecolor="#000000" if dark else "#FFFFFF",
+        facecolor=accent if dark else "#FFFFFF",
     )
     ax.add_patch(box)
     title_color = "#FFFFFF" if dark else TEXT_COLOR
-    sub_color = "#CCCCCC" if dark else TEXT_DIM
+    sub_color = "#D4DAE6" if dark else TEXT_DIM
     star = "★ " if novel else ""
     ax.text(
         x_center, y_center + (0.13 if sub else 0),
@@ -71,12 +84,12 @@ def draw_category_header(ax, x_left, y, text, color, x_right):
             color=color, linewidth=1.2, alpha=0.4)
 
 
-def arrow(ax, p_from, p_to, color, dashed=False, curve=0.0):
+def arrow(ax, p_from, p_to, color, dashed=False, curve=0.0, width=2.0):
     style = "--" if dashed else "-"
     a = FancyArrowPatch(
         p_from, p_to,
         arrowstyle="-|>,head_length=12,head_width=8",
-        linewidth=2.0, linestyle=style,
+        linewidth=width, linestyle=style,
         color=color,
         connectionstyle=f"arc3,rad={curve}",
         shrinkA=4, shrinkB=6,
@@ -86,6 +99,11 @@ def arrow(ax, p_from, p_to, color, dashed=False, curve=0.0):
 
 def main():
     FIG_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Try to use Inter (the site body face). Falls back to default sans
+    # if Inter isn't installed locally — matplotlib will pick the next
+    # available family from the rcParams stack.
+    plt.rcParams["font.family"] = ["Inter", "DejaVu Sans", "sans-serif"]
 
     fig_w, fig_h = 16.0, 14.0
     fig, ax = plt.subplots(figsize=(fig_w, fig_h))
@@ -129,7 +147,7 @@ def main():
         ("RESEARCH PAPERS  ·  inspiration only", RESEARCH_GREY, [
             ("RSS  ·  IAPG  ·  RMPC  ·  BPD", None, False, True),
         ]),
-        ("GOVERNANCE", COBALT_PULSE, [
+        ("GOVERNANCE", GOVERNANCE_NAVY, [
             ("Cardano Constitution v2",
              "tenets · parameter guardrails · ratified epoch 609",
              False, False),
@@ -154,50 +172,78 @@ def main():
 
     y = 13.0
     category_centroids = {}
+    category_bounds = {}  # (top_y, bottom_y) per section — for group panels
 
     for header_text, color, cards in sections:
         draw_category_header(ax, col_x_left, y, header_text, color, col_x_right)
         key = header_text.split("  ·  ")[0]
         category_centroids[key] = []
+        first_card_y = None
+        last_card_y = None
         y -= pad_after_header + card_h / 2
         for (title, sub, novel, dashed) in cards:
             draw_card(ax, col_x, y, card_w, card_h, title, sub, color,
                       novel=novel, dashed_border=dashed)
             category_centroids[key].append(y)
+            if first_card_y is None:
+                first_card_y = y
+            last_card_y = y
             y -= card_step
         y += card_step
+        # Record top/bottom edges of this group's card stack — used for
+        # drawing the faint group panel behind the diagnostic evidence.
+        category_bounds[key] = (
+            first_card_y + card_h / 2,
+            last_card_y - card_h / 2,
+        )
         y -= card_h / 2 + pad_before_header
+
+    # Faint shaded panel behind the four diagnostic-evidence cards so the
+    # single arrow into The Diagnostic clearly reads as 'all four feed in
+    # together'.
+    ev_top, ev_bot = category_bounds["DIAGNOSTIC EVIDENCE"]
+    panel_pad_x = 0.18
+    panel_pad_y = 0.14
+    ax.add_patch(Rectangle(
+        (col_x_left - panel_pad_x, ev_bot - panel_pad_y),
+        card_w + 2 * panel_pad_x,
+        (ev_top - ev_bot) + 2 * panel_pad_y,
+        facecolor=EVIDENCE_OLIVE, edgecolor="none", alpha=0.05, zorder=0,
+    ))
 
     def centroid(key):
         ys = category_centroids[key]
         return sum(ys) / len(ys)
 
     # ── The Diagnostic and V2 Spec on the right ──
-    # Aligned vertically with the centroid of their respective inputs.
     diag_x, diag_y = 10.7, 5.0
     spec_x, spec_y = 13.7, 9.5
 
+    # The Diagnostic — synthesis bridge. Cardano blue-2 outline, white
+    # fill so it reads as a 'pass-through' on the way to V2.
     draw_card(ax, diag_x, diag_y, 3.4, 1.5,
               "The Diagnostic",
               "holistic audit · problem induction",
-              ELECTRIC_BLUE, novel=True)
+              CARDANO_BLUE_2, novel=True)
+    # V2 Specification — the destination. Solid Cardano-blue fill so it
+    # carries the most visual weight on the canvas.
     draw_card(ax, spec_x, spec_y, 3.0, 1.5,
               "V2 Specification",
               "milestones · KPIs",
-              INFARED, dark=True)
+              CARDANO_BLUE, dark=True)
 
     # ── Arrows ──
     spec_left = spec_x - 1.5
     diag_left = diag_x - 1.7
     diag_right = diag_x + 1.7
 
-    # Design → Spec (arches over Diagnostic since both ends are above)
+    # Design → Spec (substantive lineage; arches over Diagnostic)
     arrow(ax,
           (col_x_right, centroid("DESIGN ARTEFACTS")),
           (spec_left, spec_y + 0.55),
           INFARED, curve=-0.10)
 
-    # Research → Spec (dashed)
+    # Research → Spec (dashed, inspiration only)
     arrow(ax,
           (col_x_right, centroid("RESEARCH PAPERS")),
           (spec_left, spec_y + 0.25),
@@ -207,7 +253,7 @@ def main():
     arrow(ax,
           (col_x_right, centroid("GOVERNANCE")),
           (spec_left, spec_y - 0.10),
-          COBALT_PULSE, curve=0.00)
+          GOVERNANCE_NAVY, curve=0.00)
 
     # Antecedent → Diagnostic
     arrow(ax,
@@ -215,16 +261,17 @@ def main():
           (diag_left, diag_y + 0.30),
           DAWN, curve=-0.05)
 
-    # Evidence → Diagnostic
+    # Evidence (group panel) → Diagnostic. Uses the panel's right edge
+    # so the visual claim is 'the four sub-reports as a whole feed in'.
     arrow(ax,
-          (col_x_right, centroid("DIAGNOSTIC EVIDENCE")),
+          (col_x_right + panel_pad_x, centroid("DIAGNOSTIC EVIDENCE")),
           (diag_left, diag_y - 0.30),
-          EVIDENCE_OLIVE, curve=0.10)
+          EVIDENCE_OLIVE, curve=0.10, width=2.4)
 
-    # Diagnostic → Spec
+    # Diagnostic → Spec (the synthesis hand-off)
     arrow(ax,
           (diag_right, diag_y), (spec_left, spec_y - 0.40),
-          ELECTRIC_BLUE)
+          CARDANO_BLUE_2, width=2.4)
 
     # Caption
     fig.text(
