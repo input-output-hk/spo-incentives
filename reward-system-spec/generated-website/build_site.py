@@ -2126,54 +2126,65 @@ _CROSS_OBS_CSS = """
   color:var(--text-muted);margin-top:2px}
 .obs-panel-source-xpage strong{color:var(--text-primary);font-weight:600}
 
-/* Observation abstract — editorially-written gloss that reads as a single
-   lead paragraph above the findings list. Uses a left rule accent so it
-   clearly frames the observation rather than mimicking a finding. */
-.obs-panel-abstract{margin:12px 0 4px;padding:10px 14px;
+/* Observation abstract — editorially-written gloss that reads as a
+   single lead paragraph above the findings list. Same red-rule
+   pattern as .sro-card-pro .sro-abstract on the main page so a
+   reader who jumps from a Pro card into the panel sees the same
+   visual rhythm. */
+.obs-panel-abstract{margin:14px 0 6px;padding:14px 18px;
   border-left:3px solid var(--infared);
   background:linear-gradient(90deg,
-    color-mix(in srgb, var(--infared) 8%, transparent),
-    transparent 60%);
-  font:400 13.5px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--text-primary);border-radius:0 4px 4px 0}
+    color-mix(in srgb, var(--infared) 9%, transparent),
+    color-mix(in srgb, var(--infared) 4%, transparent) 50%,
+    transparent 100%);
+  font:400 14.5px/1.65 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary);border-radius:0 6px 6px 0;
+  letter-spacing:-.005em}
 .obs-panel-abstract p{margin:0}
-.obs-panel-abstract p + p{margin-top:6px}
+.obs-panel-abstract p + p{margin-top:8px}
 .obs-panel-abstract strong{font-weight:700;color:var(--text-primary);
   font-variant-numeric:tabular-nums}
 
-/* Source-panel findings list — hydrated from the bundled findings-registry.
-   One row per finding with the canonical id, its summary, and a small
-   cross-page jump arrow. The list sits between the obs summary and the
-   source meta row so the reader sees the concrete evidence next to the
-   high-level observation. */
-.obs-panel-findings-wrap{margin:18px 0 16px;
-  border-top:1px solid var(--border);padding-top:14px}
-.obs-panel-findings-head{display:flex;align-items:baseline;gap:8px;
-  margin-bottom:8px}
-.obs-panel-findings-label{font:600 10.5px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
-.obs-panel-findings-count{font:500 11px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  color:var(--text-muted)}
+/* Source-panel findings list — hydrated from the bundled findings
+   registry. Mirrors the .sro-card-pro finding row layout: red ref
+   chip + bigger summary text + small jump arrow. */
+.obs-panel-findings-wrap{margin:22px 0 18px;
+  border-top:1px solid var(--border);padding-top:18px}
+.obs-panel-findings-head{display:flex;align-items:center;gap:14px;
+  margin-bottom:12px}
+.obs-panel-findings-label{flex-shrink:0;
+  font:600 11px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:2.6px;text-transform:uppercase;color:var(--infared)}
+.obs-panel-findings-count{font:500 11px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--text-muted);letter-spacing:.04em}
+.obs-panel-findings-head::after{content:'';flex:1;height:1px;
+  background:color-mix(in srgb, var(--infared) 30%, transparent)}
 .obs-panel-findings{list-style:none;margin:0;padding:0;
-  display:flex;flex-direction:column;gap:8px}
+  display:flex;flex-direction:column;gap:10px}
 .obs-panel-finding{border:1px solid var(--border);border-radius:6px;
-  padding:10px 12px;background:var(--bg-panel);
-  transition:border-color .15s}
-.obs-panel-finding:hover{border-color:var(--infared)}
-.obs-panel-finding-head{display:flex;align-items:center;gap:8px;
-  margin-bottom:4px}
+  padding:12px 14px;background:var(--bg);
+  transition:border-color .15s,background .15s}
+.obs-panel-finding:hover{
+  border-color:color-mix(in srgb, var(--infared) 35%, var(--border));
+  background:rgba(229,35,33,.025)}
+.obs-panel-finding-head{display:flex;align-items:center;gap:10px;
+  margin-bottom:6px}
 .obs-panel-finding-id{font:600 10.5px/1.3 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.04em;color:var(--infared);
-  padding:2px 7px;border-radius:3px;background:var(--bg);
-  border:1px solid var(--border)}
+  letter-spacing:.05em;color:var(--infared);
+  padding:3px 8px;border-radius:3px;
+  background:rgba(229,35,33,.06);
+  border:1px solid rgba(229,35,33,.20)}
 .obs-panel-finding-jump{display:inline-flex;align-items:center;justify-content:center;
-  width:18px;height:18px;border-radius:3px;color:var(--text-muted);
-  text-decoration:none;margin-left:auto;transition:color .15s,background .15s}
+  width:20px;height:20px;border-radius:4px;color:var(--text-muted);
+  text-decoration:none;margin-left:auto;
+  transition:color .15s,background .15s,transform .15s}
 .obs-panel-finding-jump svg{fill:none;stroke:currentColor;stroke-width:2;
-  stroke-linecap:round;stroke-linejoin:round}
-.obs-panel-finding-jump:hover{color:var(--infared);background:var(--bg)}
-.obs-panel-finding-summary{font:400 12.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--text-primary)}
+  stroke-linecap:round;stroke-linejoin:round;width:13px;height:13px}
+.obs-panel-finding-jump:hover{color:var(--cardano-blue);
+  background:var(--cardano-blue-soft);transform:translate(1px,-1px)}
+.obs-panel-finding-summary{font:400 13.5px/1.6 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#1a1a1a;letter-spacing:-.005em}
+[data-theme=dark] .obs-panel-finding-summary{color:#E4E4E7}
 .obs-panel-finding-summary p{margin:0}
 .obs-panel-finding-summary p + p{margin-top:6px}
 /* Key numbers — bolded at the MD source, tinted and tabular-aligned here so
