@@ -193,10 +193,14 @@ SUBREPORT_CODES = {p["slug"]: p["code"] for p in PAGES if p.get("code")}
 PAGE_BY_CODE = {p["code"]: p for p in PAGES if p.get("code")}
 
 # Maps a diagnostic synthesis parent section (X.Y) to its source sub-report.
-# ``DIA.1.3.O7`` is the synthesis view of ``OPE.O7`` in the operator
-# sub-report; clicking the citation should open the source card directly.
-# ``2.2`` (tx submitters) has no sub-report — citations there stay local.
-DIA_SOURCE_MAP: dict[str, dict[str, str]] = {
+# Historically the synthesis page used DIA.X.Y.O# tokens that the script
+# rewrote to source-report citations (e.g. DIA.1.3.O7 → OPE.O7 in the
+# operator sub-report). After the 2026/04/30 cleanup, the source MD now
+# uses the sub-report IDs (TRE/POL/OPE/CEN.O#) directly, so the rewrite
+# logic that depends on this map is effectively a no-op. The map is kept
+# for backward compatibility and for any future reintroduction of a
+# synthesis-level token namespace.
+SYNTHESIS_SOURCE_MAP: dict[str, dict[str, str]] = {
     "1.1": {"code": "TRE", "page": "treasury.html"},
     "1.2": {"code": "POL", "page": "pools.html"},
     "1.3": {"code": "OPE", "page": "operator.html"},
@@ -2091,47 +2095,47 @@ def ensure_floating_toc_assets() -> None:
     ensure_cross_obs_assets()
 
 
-# --- Cross-page DIA overlay + compact §X.Y.2 view assets -----------------
+# --- Cross-page synthesis-observation overlay + compact §X.Y.2 view assets -----------------
 
-_CROSS_OBS_CSS_MARKER = "/* ── Cross-page DIA source overlay + compact §X.Y.2 view ── */"
-_CROSS_OBS_CSS_END_MARKER = "/* ── /Cross-page DIA source overlay + compact §X.Y.2 view ── */"
-_CROSS_OBS_JS_MARKER = "/* ── Cross-page DIA source overlay ──"
+_CROSS_OBS_CSS_MARKER = "/* ── Cross-page synthesis-observation source overlay + compact §X.Y.2 view ── */"
+_CROSS_OBS_CSS_END_MARKER = "/* ── /Cross-page synthesis-observation source overlay + compact §X.Y.2 view ── */"
+_CROSS_OBS_JS_MARKER = "/* ── Cross-page synthesis-observation source overlay ──"
 
 _CROSS_OBS_CSS = """
-/* ── Cross-page DIA source overlay + compact §X.Y.2 view ── */
+/* ── Cross-page synthesis-observation source overlay + compact §X.Y.2 view ── */
 
-/* Compact list view: one row per DIA.X.Y.O# that defers to a sub-report */
-.dia-obs-compact{list-style:none;padding:0;margin:18px 0 24px;
+/* Compact list view: one row per synthesis observation that defers to a sub-report */
+.synth-obs-compact{list-style:none;padding:0;margin:18px 0 24px;
   display:flex;flex-direction:column;gap:10px}
-.dia-obs-row{border:1px solid var(--border);border-radius:8px;padding:14px 16px;
+.synth-obs-row{border:1px solid var(--border);border-radius:8px;padding:14px 16px;
   background:var(--bg);transition:border-color .15s,box-shadow .15s}
-.dia-obs-row:hover{border-color:var(--infared);box-shadow:0 2px 10px rgba(229,35,33,.06)}
-.dia-obs-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
-.dia-obs-canon{display:inline-flex;align-items:center;padding:3px 10px;border-radius:4px;
+.synth-obs-row:hover{border-color:var(--infared);box-shadow:0 2px 10px rgba(229,35,33,.06)}
+.synth-obs-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.synth-obs-canon{display:inline-flex;align-items:center;padding:3px 10px;border-radius:4px;
   background:var(--bg-panel);border:1px solid var(--border);
   font:600 11px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
   letter-spacing:.05em;color:var(--infared);text-decoration:none;
   transition:background .15s,border-color .15s,color .15s}
-.dia-obs-canon:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
-.dia-obs-title{font:600 14px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+.synth-obs-canon:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
+.synth-obs-title{font:600 14px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-primary);flex:1 1 auto;min-width:0}
-.dia-obs-summary{margin:4px 0 10px;font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+.synth-obs-summary{margin:4px 0 10px;font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-secondary)}
-.dia-obs-findings{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.dia-obs-f{display:inline-flex;align-items:center;padding:2px 8px;border-radius:3px;
+.synth-obs-findings{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.synth-obs-f{display:inline-flex;align-items:center;padding:2px 8px;border-radius:3px;
   background:var(--bg-panel);border:1px solid var(--border);
   font:500 10.5px/1.5 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
   letter-spacing:.03em;color:var(--text-secondary);text-decoration:none;
   transition:background .15s,border-color .15s,color .15s}
-.dia-obs-f:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
-.dia-obs-source-link{display:inline-flex;align-items:center;gap:4px;
+.synth-obs-f:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
+.synth-obs-source-link{display:inline-flex;align-items:center;gap:4px;
   font:500 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-muted);text-decoration:none;padding-top:4px;
   border-top:1px dashed var(--border);margin-top:4px;padding-top:8px}
-.dia-obs-source-link:hover{color:var(--infared)}
+.synth-obs-source-link:hover{color:var(--infared)}
 
-/* Cross-page source overlay — the DIA.X.Y.O# link shows the source sub-report
-   observation's content in the side panel, with a "Jump to source" CTA. */
+/* Cross-page source overlay — the synthesis-observation link shows the source
+   sub-report observation's content in the side panel, with a "Jump to source" CTA. */
 .obs-ref-src{border-bottom-style:dashed}
 .obs-panel-source-xpage{display:flex;align-items:center;gap:6px;
   font:500 11.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -2583,8 +2587,8 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 
 /* Responsive */
 @media (max-width:720px){
-  .dia-obs-row{padding:12px 14px}
-  .dia-obs-head{gap:6px}
+  .synth-obs-row{padding:12px 14px}
+  .synth-obs-head{gap:6px}
   .sro-head{flex-wrap:wrap;gap:8px;padding:10px 12px}
   .sro-title{flex:1 1 100%;order:3}
   .sro-count{order:2}
@@ -2892,12 +2896,12 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
 }
 @media print{.page-source{display:none}}
 
-/* ── /Cross-page DIA source overlay + compact §X.Y.2 view ── */
+/* ── /Cross-page synthesis-observation source overlay + compact §X.Y.2 view ── */
 """
 
-_CROSS_OBS_JS_END_MARKER = "/* ── /Cross-page DIA source overlay ── */"
+_CROSS_OBS_JS_END_MARKER = "/* ── /Cross-page synthesis-observation source overlay ── */"
 
-_CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
+_CROSS_OBS_JS = """  /* ── Cross-page synthesis-observation source overlay ──
      When an `.obs-ref` anchor carries `data-obs-src`, hydrate the overlay
      from the bundled `.sro-obs-detail` registry (the source card on the
      sub-report page) rather than from the local `.obs-card`. The panel
@@ -3861,13 +3865,13 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
     window.addEventListener('hashchange',expandToHash);
   })();
   /* ── /Pro observation card — header collapse ── */
-  /* ── /Cross-page DIA source overlay ── */
+  /* ── /Cross-page synthesis-observation source overlay ── */
 
 """
 
 
 def ensure_cross_obs_assets() -> None:
-    """Append cross-page DIA overlay CSS/JS if missing (idempotent).
+    """Append cross-page synthesis-observation overlay CSS/JS if missing (idempotent).
 
     Also patches the initObsOverlay query selector so refs with
     ``data-obs-src`` are delegated to the cross-page handler.
@@ -3881,22 +3885,22 @@ def ensure_cross_obs_assets() -> None:
         # Collapse any legacy duplicates: older builds appended the block
         # repeatedly because the marker constant didn't match the emitted
         # text. Strip every occurrence and re-append once below.
-        legacy_header = "/* ── Cross-page DIA source overlay + compact §X.Y.2 view ── */"
+        legacy_header = "/* ── Cross-page synthesis-observation source overlay + compact §X.Y.2 view ── */"
         if css_text.count(legacy_header) > 1:
             # Drop everything from the first header through the last header's
             # block (each block ends with a "/* Responsive */" media query).
             first = css_text.find(legacy_header)
             # End of last block is the close of the responsive media query
-            # that terminates the block: "  .dia-obs-head{gap:6px}\n}\n".
+            # that terminates the block: "  .synth-obs-head{gap:6px}\n}\n".
             # Use a defensive search for the last occurrence of that closer
             # AFTER the first header.
-            closer = "  .dia-obs-head{gap:6px}\n}\n"
+            closer = "  .synth-obs-head{gap:6px}\n}\n"
             last_close = css_text.rfind(closer)
             if last_close != -1 and last_close > first:
                 end = last_close + len(closer)
                 css_text = css_text[:first].rstrip() + "\n" + css_text[end:].lstrip()
                 css_path.write_text(css_text)
-                print(f"  collapsed duplicate cross-page DIA overlay CSS blocks in {css_path.relative_to(SITE_DIR)}")
+                print(f"  collapsed duplicate cross-page synthesis-observation overlay CSS blocks in {css_path.relative_to(SITE_DIR)}")
 
         if _CROSS_OBS_CSS_MARKER in css_text:
             start = css_text.find(_CROSS_OBS_CSS_MARKER)
@@ -3907,7 +3911,7 @@ def ensure_cross_obs_assets() -> None:
             else:
                 # Legacy (no end marker): strip to the end of the responsive
                 # media query that terminates the block.
-                closer = "  .dia-obs-head{gap:6px}\n}\n"
+                closer = "  .synth-obs-head{gap:6px}\n}\n"
                 tail_idx = css_text.find(closer, start)
                 if tail_idx == -1:
                     tail = ""
@@ -3915,10 +3919,10 @@ def ensure_cross_obs_assets() -> None:
                     tail = css_text[tail_idx + len(closer):].lstrip()
             css_text = css_text[:head_ws] + _CROSS_OBS_CSS.lstrip("\n") + tail
             css_path.write_text(css_text)
-            print(f"  refreshed cross-page DIA overlay CSS in {css_path.relative_to(SITE_DIR)}")
+            print(f"  refreshed cross-page synthesis-observation overlay CSS in {css_path.relative_to(SITE_DIR)}")
         else:
             css_path.write_text(css_text.rstrip() + "\n" + _CROSS_OBS_CSS)
-            print(f"  appended cross-page DIA overlay CSS to {css_path.relative_to(SITE_DIR)}")
+            print(f"  appended cross-page synthesis-observation overlay CSS to {css_path.relative_to(SITE_DIR)}")
 
     if js_path.exists():
         js_text = js_path.read_text()
@@ -3930,7 +3934,7 @@ def ensure_cross_obs_assets() -> None:
             print(f"  patched initObsOverlay selector in {js_path.relative_to(SITE_DIR)}")
         # Replace any existing cross-obs block so edits to _CROSS_OBS_JS
         # propagate on rebuild. The block is delimited by the head marker
-        # and the paired ``/Cross-page DIA source overlay`` end marker.
+        # and the paired ``/Cross-page synthesis-observation source overlay`` end marker.
         if _CROSS_OBS_JS_MARKER in js_text:
             start = js_text.find(_CROSS_OBS_JS_MARKER)
             head_ws = js_text.rfind("\n", 0, start) + 1
@@ -3949,7 +3953,7 @@ def ensure_cross_obs_assets() -> None:
                     tail = js_text[tail_idx:]
             js_text = js_text[:head_ws] + _CROSS_OBS_JS.lstrip("\n") + tail
             js_path.write_text(js_text)
-            print(f"  refreshed cross-page DIA overlay JS in {js_path.relative_to(SITE_DIR)}")
+            print(f"  refreshed cross-page synthesis-observation overlay JS in {js_path.relative_to(SITE_DIR)}")
         else:
             closing = "\n})();"
             idx = js_text.rfind(closing)
@@ -3957,7 +3961,7 @@ def ensure_cross_obs_assets() -> None:
                 js_path.write_text(js_text + "\n" + _CROSS_OBS_JS)
             else:
                 js_path.write_text(js_text[:idx] + "\n" + _CROSS_OBS_JS + js_text[idx:])
-            print(f"  injected cross-page DIA overlay JS into {js_path.relative_to(SITE_DIR)}")
+            print(f"  injected cross-page synthesis-observation overlay JS into {js_path.relative_to(SITE_DIR)}")
 
 
 # --- Figure sync ----------------------------------------------------------
@@ -4324,14 +4328,14 @@ def rewrite_obs_citations(
     needed — we look up the target observation directly from the global
     canonical-id index. When ``source_lookup`` is provided, every
     ``DIA.X.Y.O#`` that maps to a sub-report observation (via
-    ``DIA_SOURCE_MAP``) is annotated with cross-page source fields so the
+    ``SYNTHESIS_SOURCE_MAP``) is annotated with cross-page source fields so the
     overlay hydrates the *source* card (e.g. ``OPE.O7``) rather than the
     diagnostic synthesis card. DIA citations without a source stay local.
     """
     # Build lookup: canonical id → obs
     by_canon: dict[str, dict] = {}
     for obs in observations:
-        canon = f"DIA.{obs['parent']}.{obs['local_id']}"
+        canon = f"SYNTH.{obs['parent']}.{obs['local_id']}"
         by_canon[canon] = obs
 
     return _rewrite_citations_in_segment(html_body, by_canon, source_lookup or {})
@@ -4346,11 +4350,11 @@ def _rewrite_citations_in_segment(
 
     The observation-cards block is the *defining* rendering for each
     synthesis observation; rewriting canonical ids inside it would create
-    circular overlays pointing back to themselves. The ``.dia-obs-compact``
+    circular overlays pointing back to themselves. The ``.synth-obs-compact``
     list used by the lighter §X.Y.2 view is also a defining region.
     """
     source_lookup = source_lookup or {}
-    skip_classes = ("obs-cards", "dia-obs-compact")
+    skip_classes = ("obs-cards", "synth-obs-compact")
     out: list[str] = []
     pos = 0
     in_skip = False
@@ -4384,7 +4388,7 @@ def _rewrite_citations_in_segment(
     return "".join(out)
 
 
-_CANON_DIA_TOKEN_RE = re.compile(r"DIA\.(\d+)\.(\d+)\.O(\d+)")
+_CANON_SYNTH_TOKEN_RE = re.compile(r"SYNTH\.(\d+)\.(\d+)\.O(\d+)")
 
 
 def _apply_citation_substitution(
@@ -4420,16 +4424,16 @@ def _apply_citation_substitution(
 
     def _sub(m: re.Match) -> str:
         raw = m.group(0)
-        tokens = _CANON_DIA_TOKEN_RE.findall(raw)
+        tokens = _CANON_SYNTH_TOKEN_RE.findall(raw)
         if not tokens:
             return raw
-        canons = [f"DIA.{x}.{y}.O{n}" for (x, y, n) in tokens]
+        canons = [f"SYNTH.{x}.{y}.O{n}" for (x, y, n) in tokens]
         # Range form ``DIA.X.Y.O1–DIA.X.Y.O3``: expand over O# when the two
         # endpoints share a parent section.
         if "–" in raw and len(tokens) == 2 and tokens[0][0:2] == tokens[1][0:2]:
             x, y = tokens[0][0], tokens[0][1]
             lo, hi = sorted((int(tokens[0][2]), int(tokens[1][2])))
-            canons = [f"DIA.{x}.{y}.O{n}" for n in range(lo, hi + 1)]
+            canons = [f"SYNTH.{x}.{y}.O{n}" for n in range(lo, hi + 1)]
         links: list[dict] = []
         for c in canons:
             obs = by_canon.get(c)
@@ -4507,7 +4511,7 @@ def _apply_citation_substitution(
 # rewrite pre-existing markdown links like ``[DIA.1.3.O1](diagnostic/...)``
 # into overlay anchors after ``md_to_html`` has already turned them into
 # HTML links.
-_DIA_ANCHOR_TEXT_RE = re.compile(
+_SYNTH_ANCHOR_TEXT_RE = re.compile(
     r"<a\b([^>]*)>\s*((?:DIA\.\d+\.\d+\.O\d+"
     r"(?:\s*[,/–\-]\s*DIA\.\d+\.\d+\.O\d+)*))\s*</a>",
     re.IGNORECASE,
@@ -4527,7 +4531,7 @@ def rewrite_dia_anchors(
     citation. The substitution:
 
     - swaps the visible text for the source canon id (e.g. ``OPE.O1``) when
-      a ``DIA_SOURCE_MAP`` entry exists,
+      a ``SYNTHESIS_SOURCE_MAP`` entry exists,
     - repoints ``href`` at the source sub-report card,
     - attaches the overlay class and ``data-obs-*`` attributes so the
       existing hover/click UI fires.
@@ -4539,7 +4543,7 @@ def rewrite_dia_anchors(
     source_lookup = source_lookup or {}
     by_canon: dict[str, dict] = {}
     for obs in observations:
-        canon = f"DIA.{obs['parent']}.{obs['local_id']}"
+        canon = f"SYNTH.{obs['parent']}.{obs['local_id']}"
         by_canon[canon] = obs
 
     def _src_attrs(obs: dict, src: dict | None) -> str:
@@ -4553,10 +4557,10 @@ def rewrite_dia_anchors(
 
     def _sub(m: re.Match) -> str:
         inner = m.group(2)
-        tokens = re.findall(r"DIA\.(\d+)\.(\d+)\.O(\d+)", inner)
+        tokens = re.findall(r"SYNTH\.(\d+)\.(\d+)\.O(\d+)", inner)
         if not tokens:
             return m.group(0)
-        canons = [f"DIA.{x}.{y}.O{n}" for (x, y, n) in tokens]
+        canons = [f"SYNTH.{x}.{y}.O{n}" for (x, y, n) in tokens]
         obs_list = [by_canon.get(c) for c in canons]
         if any(o is None for o in obs_list):
             return m.group(0)
@@ -4614,7 +4618,7 @@ def rewrite_dia_anchors(
             f'{src_attrs}{src_range_attr}>{ids_display}</a>'
         )
 
-    return _DIA_ANCHOR_TEXT_RE.sub(_sub, html_body)
+    return _SYNTH_ANCHOR_TEXT_RE.sub(_sub, html_body)
 
 
 # --- Findings extraction (for findings.html synthesis page) --------------
@@ -4636,6 +4640,14 @@ _FINDING_HEADING_RE = re.compile(
 # Matches parent headings (## X.Y. Title) used to label finding groups.
 _PARENT_HEADING_RE = re.compile(
     r"^##\s+(\d+(?:\.\d+)?)\.?\s+(.+?)\s*$",
+    re.MULTILINE,
+)
+# Matches the top-level H1 (# X. Title) — used as a fallback eyebrow
+# when the immediate H2 parent is itself a Problem Induction heading
+# (the structural quirk of §3.3, where the Problem Induction sits at
+# H2 level and has no upstream H2 topic of its own).
+_TOP_HEADING_RE = re.compile(
+    r"^#\s+(\d+)\.?\s+(.+?)\s*$",
     re.MULTILINE,
 )
 
@@ -4714,6 +4726,11 @@ def extract_findings_from_md(md_text: str) -> list[dict]:
     parents: dict[str, str] = {}
     for pm in _PARENT_HEADING_RE.finditer(md_text):
         parents[pm.group(1)] = pm.group(2).strip()
+    # Top-level chapters — used as the eyebrow fallback when the H2
+    # topic is meaningless on its own (e.g. ``## 3.3. Problem Induction``).
+    top_chapters: dict[str, str] = {}
+    for tm in _TOP_HEADING_RE.finditer(md_text):
+        top_chapters[tm.group(1)] = tm.group(2).strip()
 
     findings: list[dict] = []
     section_matches = list(_FINDING_HEADING_RE.finditer(md_text))
@@ -4723,6 +4740,19 @@ def extract_findings_from_md(md_text: str) -> list[dict]:
         section_depth = len(sec.group("hashes"))  # 2 = ## , 3 = ###
         topic = _parent_section(section_id)
         topic_title = parents.get(topic, "")
+        # Walk up to the H1 chapter when the resolved topic title is
+        # missing (parent is at H1 — e.g. §3 above ``## 3.3. Problem
+        # Induction``) or itself the boilerplate ``Problem Induction``
+        # heading. Either way, the H2 carries no usable topic name and
+        # the H1 chapter title is the right eyebrow.
+        if (
+            not topic_title
+            or topic_title.lower().startswith("problem induction")
+        ):
+            top_id = section_id.split(".")[0]
+            top_title = top_chapters.get(top_id, "")
+            if top_title:
+                topic_title = top_title
         sec_start = sec.end()
         # Sub-problems live one level deeper than the parent. Keep
         # scanning until we hit a heading at the same depth or shallower.
@@ -4952,13 +4982,10 @@ def _render_finding_card(
             f'</ul>'
             f'</div>'
         )
-    else:
-        evidence_html = (
-            '<div class="finding-card-evidence">'
-            '<em class="finding-card-onode-empty">'
-            'No tabulated observations in this section.</em>'
-            '</div>'
-        )
+    # else: no observations → render no evidence block at all. The
+    # 'No tabulated observations' placeholder added clutter without
+    # information; sections like §3.3 derive their conclusions from
+    # the evidence in §1 and §2 rather than introducing new rows.
 
     jump_link = (
         f'<a class="finding-jump" '
@@ -6193,7 +6220,7 @@ def _render_subreport_observations(groups: list[dict]) -> str:
 # --- Synthesis observation canonical IDs (DIA.X.Y.O#) -----------------
 
 # Code for the diagnostic synthesis itself.
-DIAG_CODE = "DIA"
+DIAG_CODE = "SYNTH"
 # Page that hosts the canonical defining tables for synthesis observations.
 DIAG_SYNTH_PAGE = "observatory.html"
 
@@ -6398,18 +6425,18 @@ def _build_dia_source_lookup(
 ) -> dict[str, dict]:
     """Map ``DIA.X.Y.O#`` → the source sub-report obs_group dict.
 
-    Uses ``DIA_SOURCE_MAP`` to bridge between synthesis sections and
+    Uses ``SYNTHESIS_SOURCE_MAP`` to bridge between synthesis sections and
     sub-report codes. DIA observations with no source (``2.2``) are simply
     absent from the returned mapping so callers fall back to local anchors.
     """
     lookup: dict[str, dict] = {}
-    for parent, meta in DIA_SOURCE_MAP.items():
+    for parent, meta in SYNTHESIS_SOURCE_MAP.items():
         groups = obs_groups_by_code.get(meta["code"], [])
         by_o_num = {g["o_num"]: g for g in groups}
         # O# numbering is 1-to-1 between DIA.X.Y.O# and its source XXX.O#,
         # so we index by o_num and build both directions.
         for o_num, g in by_o_num.items():
-            canon = f"DIA.{parent}.O{o_num}"
+            canon = f"SYNTH.{parent}.O{o_num}"
             lookup[canon] = g
     return lookup
 
@@ -6428,7 +6455,7 @@ def _render_dia_compact_obs(
     if not section_obs:
         return ""
     parent = section_obs[0]["parent"]
-    meta = DIA_SOURCE_MAP.get(parent)
+    meta = SYNTHESIS_SOURCE_MAP.get(parent)
     if not meta:
         return ""
     page_html = meta["page"]
@@ -6439,10 +6466,10 @@ def _render_dia_compact_obs(
     rows: list[str] = []
     for obs in section_obs:
         src = source_lookup.get(
-            f"DIA.{obs['parent']}.{obs['local_id']}"
+            f"SYNTH.{obs['parent']}.{obs['local_id']}"
         )
         if src is None:
-            # Should not happen when the section has a DIA_SOURCE_MAP entry,
+            # Should not happen when the section has a SYNTHESIS_SOURCE_MAP entry,
             # but guard anyway so a missing canon doesn't break the section.
             continue
         canon = src["canon_id"]
@@ -6456,7 +6483,7 @@ def _render_dia_compact_obs(
                 else f"{page_html}#finding-{f['slug']}"
             )
             findings_chips.append(
-                f'<a class="dia-obs-f finding-ref" '
+                f'<a class="synth-obs-f finding-ref" '
                 f'href="{_html.escape(fhref)}" '
                 f'data-finding="{fcanon}" data-short="{f["f_id"]}" '
                 f'data-group="{f["f_group"]}" '
@@ -6464,34 +6491,34 @@ def _render_dia_compact_obs(
                 f'{fcanon}</a>'
             )
         findings_row = (
-            f'<div class="dia-obs-findings">{"".join(findings_chips)}</div>'
+            f'<div class="synth-obs-findings">{"".join(findings_chips)}</div>'
             if findings_chips else ""
         )
         jump_href = src.get("jump_href") or f"{page_html}#srobs-{src['slug']}"
         rows.append(
-            f'<li class="dia-obs-row" data-section="{obs["section_id"]}" '
+            f'<li class="synth-obs-row" data-section="{obs["section_id"]}" '
             f'data-local="{obs["local_id"]}">'
-            f'<div class="dia-obs-head">'
-            f'<a class="dia-obs-canon obs-ref obs-ref-src" '
+            f'<div class="synth-obs-head">'
+            f'<a class="synth-obs-canon obs-ref obs-ref-src" '
             f'href="{_html.escape(jump_href)}" '
             f'data-obs="{obs["global_id"]}" data-tier="{obs["tier"]}" '
             f'data-obs-src="{_html.escape(canon)}" '
             f'data-obs-page="{_html.escape(page_html)}" '
             f'data-obs-href="{_html.escape(jump_href)}" '
             f'title="Overlay source {canon}">{canon}</a>'
-            f'<span class="dia-obs-title">{_html.escape(obs["title"])}</span>'
+            f'<span class="synth-obs-title">{_html.escape(obs["title"])}</span>'
             f'<span class="obs-tier obs-tier-{obs["tier"]}">{obs["tier_label"]}</span>'
             f'</div>'
-            f'<p class="dia-obs-summary">{summary_html}</p>'
+            f'<p class="synth-obs-summary">{summary_html}</p>'
             f'{findings_row}'
-            f'<a class="dia-obs-source-link" '
+            f'<a class="synth-obs-source-link" '
             f'href="{_html.escape(jump_href)}" '
             f'title="Open the defining card in the {_html.escape(src_label)} sub-report">'
             f'Open in {_html.escape(src_label)} →</a>'
             f'</li>'
         )
     return (
-        '<ul class="dia-obs-compact" data-obs-section="'
+        '<ul class="synth-obs-compact" data-obs-section="'
         + section_obs[0]["section_id"] + '">'
         + "".join(rows)
         + '</ul>'
@@ -6505,7 +6532,7 @@ def transform_observation_tables_with_sources(
 ) -> str:
     """Lighter variant: sections with a DIA source render the compact list.
 
-    Sections whose parent has no mapping in ``DIA_SOURCE_MAP`` (currently
+    Sections whose parent has no mapping in ``SYNTHESIS_SOURCE_MAP`` (currently
     only ``2.2`` — tx submitters) keep the full card rendering since there
     is no sub-report to defer to.
     """
@@ -6528,7 +6555,7 @@ def transform_observation_tables_with_sources(
         if not tbl:
             return heading
         parent = obs_list[0]["parent"]
-        if parent in DIA_SOURCE_MAP and source_lookup:
+        if parent in SYNTHESIS_SOURCE_MAP and source_lookup:
             new_block = _render_dia_compact_obs(obs_list, source_lookup)
         else:
             new_block = (
@@ -6727,7 +6754,7 @@ def build_page(page: dict) -> Path:
         for fs in f_by_code.values():
             cross_findings.extend(fs)
 
-    # When a section's parent (e.g. "1.3") has a DIA_SOURCE_MAP entry, render
+    # When a section's parent (e.g. "1.3") has a SYNTHESIS_SOURCE_MAP entry, render
     # the compact OPE.O# / POL.O# / TRE.O# / CEN.O# source-deferring rows so
     # the canonical sub-report ids are surfaced (and the "DIA.1.3.O#" wrapper
     # never reaches the page). This applies to every non-sub-report page,
