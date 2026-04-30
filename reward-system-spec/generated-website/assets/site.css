@@ -947,11 +947,15 @@ body.toc-open .toc-panel{transform:translateX(0)}
 [data-theme=dark] .obs-tier-sustainability{background:rgba(167,0,255,.18);color:#c471e0}
 [data-theme=dark] .obs-tier-general{background:var(--bg-panel);color:var(--text-muted)}
 
-/* Metric highlighting inside obs summaries and findings */
-.metric{background:rgba(229,35,33,.06);border-bottom:1px dotted rgba(229,35,33,.3);
-  padding:0 2px;color:var(--text-primary);font-variant-numeric:tabular-nums;
-  font-weight:500}
-[data-theme=dark] .metric{background:rgba(229,35,33,.12);border-bottom-color:rgba(240,96,80,.4)}
+/* Metric highlighting — inline chips around named numbers ("950 pools",
+   "epoch 300", "1M ADA"). Cardano-blue tint replaces the previous
+   IOG-red wash so the highlight reads as part of the brand. */
+.metric{background:var(--cardano-blue-soft);
+  border-bottom:1px dotted color-mix(in srgb, var(--cardano-blue) 35%, transparent);
+  padding:0 3px;color:var(--text-primary);font-variant-numeric:tabular-nums;
+  font-weight:500;border-radius:2px}
+[data-theme=dark] .metric{background:rgba(110,151,255,.10);
+  border-bottom-color:rgba(110,151,255,.40)}
 
 /* ── Observation citation references (overlay-enabled) ───────────────── */
 .obs-ref{display:inline;color:var(--infared);text-decoration:none;
@@ -1671,12 +1675,153 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
   .bookmarks-page{margin:16px}
 }
 
+/* sro-card "pro" variant — observation header redesigned to match the
+   "Source on GitHub" card pattern: gradient band + dedicated badge zone,
+   eyebrow line above the title, refined count chip on the right. The
+   abstract panel becomes a tinted bordered box, mirroring the GitHub
+   path-row. Applied via .sro-card-pro modifier on the first card only
+   (A/B test). */
+.sro-card.sro-card-pro{border:1px solid var(--border);border-radius:12px;
+  background:var(--bg);overflow:hidden;
+  box-shadow:0 1px 3px rgba(0,51,173,.04);
+  transition:border-color .15s,box-shadow .15s}
+.sro-card.sro-card-pro:hover{
+  border-color:color-mix(in srgb, var(--cardano-blue) 35%, var(--border));
+  box-shadow:0 2px 14px rgba(0,51,173,.08)}
+.sro-card.sro-card-pro:target{
+  border-color:var(--cardano-blue);
+  box-shadow:0 0 0 3px rgba(0,51,173,.14)}
+
+.sro-card-pro .sro-head{display:flex;align-items:center;gap:14px;
+  padding:16px 20px 14px;
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--cardano-blue) 10%, transparent) 0%,
+    color-mix(in srgb, var(--cardano-blue) 4%, transparent) 50%,
+    transparent 100%);
+  border-bottom:0}
+.sro-card-pro .sro-badge{display:inline-flex;align-items:center;flex-shrink:0;
+  padding:6px 12px 5px;border-radius:5px;
+  background:var(--cardano-blue);color:#fff;
+  font:600 12px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.06em;text-decoration:none;
+  box-shadow:0 1px 3px rgba(0,51,173,.25);
+  position:relative;top:0}
+.sro-card-pro .sro-titles{flex:1 1 auto;min-width:0;display:flex;
+  flex-direction:column;gap:3px}
+.sro-card-pro .sro-eyebrow{font:600 10px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)}
+.sro-card-pro .sro-title{font:600 15.5px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary);margin:0}
+.sro-card-pro .sro-count{flex-shrink:0;
+  display:inline-flex;align-items:center;
+  padding:6px 14px;border-radius:5px;
+  background:#fff;
+  border:1px solid color-mix(in srgb, var(--cardano-blue) 35%, var(--border));
+  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;color:var(--cardano-blue);
+  box-shadow:0 1px 2px rgba(0,51,173,.06)}
+[data-theme=dark] .sro-card-pro .sro-count{
+  background:color-mix(in srgb, var(--cardano-blue) 10%, var(--bg));
+  color:#A8B6FF}
+
+/* Abstract + findings — same Cardano-blue rule + gradient on both
+   zones so alignment is guaranteed (single colour, single mechanism).
+   Pseudo-elements at left:0 of each parent always sit at x=0 of the
+   article — no border-left subtleties. */
+.sro-card-pro .sro-abstract{position:relative;margin:0;
+  padding:14px 20px 16px 23px;
+  border-left:0;border-bottom:0;
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--cardano-blue) 10%, transparent) 0%,
+    color-mix(in srgb, var(--cardano-blue) 4%, transparent) 50%,
+    transparent 100%);
+  font:400 13.5px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.sro-card-pro .sro-abstract::before{content:'';position:absolute;
+  left:0;top:0;bottom:0;width:3px;
+  background:var(--cardano-blue);pointer-events:none}
+.sro-card-pro .sro-abstract strong{font-weight:700;color:var(--text-primary);
+  font-variant-numeric:tabular-nums}
+
+/* Findings list — single continuous Infared (IOG red) left-rule down
+   the whole list, with each row carrying a soft red gradient that
+   eases out to transparent. Mirrors the abstract's blue left-rule
+   pattern — same architecture, complementary brand colour. No
+   horizontal white separator between rows: the gradients are subtle
+   enough that rows read as siblings without needing a divider. */
+.sro-card-pro .sro-findings{position:relative;padding:0 0 0 23px;
+  border-left:0}
+.sro-card-pro .sro-findings::before{content:'';position:absolute;
+  left:0;top:0;bottom:0;width:3px;
+  background:var(--cardano-blue);pointer-events:none;z-index:1}
+.sro-card-pro .sro-finding{padding:14px 18px;
+  border-top:0;margin:0;
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--cardano-blue) 6%, transparent) 0%,
+    color-mix(in srgb, var(--cardano-blue) 3%, transparent) 25%,
+    color-mix(in srgb, var(--cardano-blue) 1%, transparent) 55%,
+    transparent 100%);
+  transition:background .2s}
+.sro-card-pro .sro-finding + .sro-finding{
+  box-shadow:inset 0 1px 0 color-mix(in srgb, var(--cardano-blue) 14%, var(--border))}
+.sro-card-pro .sro-finding:hover{
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--cardano-blue) 10%, transparent) 0%,
+    color-mix(in srgb, var(--cardano-blue) 5%, transparent) 25%,
+    color-mix(in srgb, var(--cardano-blue) 2%, transparent) 55%,
+    transparent 100%)}
+.sro-card-pro .sro-finding:target{
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--cardano-blue) 14%, transparent) 0%,
+    color-mix(in srgb, var(--cardano-blue) 8%, transparent) 25%,
+    color-mix(in srgb, var(--cardano-blue) 3%, transparent) 55%,
+    transparent 100%)}
+/* F# label — two-line stack: "Finding #N" headline + canonical ref
+   underneath. The label dominates as the visible tag, the ref is the
+   tiny technical breadcrumb. Both sit inside the red gradient lane. */
+.sro-card-pro .sro-fid{padding:0;
+  min-width:128px;
+  align-self:center;
+  display:inline-flex;flex-direction:column;gap:3px;
+  align-items:flex-start;justify-content:center;
+  background:transparent;
+  border:0;
+  text-decoration:none}
+.sro-card-pro .sro-fid-label{
+  color:#0a1f8e;
+  font:700 13px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.01em}
+.sro-card-pro .sro-fid-ref{
+  color:var(--text-muted);
+  font:600 10px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.06em}
+.sro-card-pro .sro-finding:hover .sro-fid-label{color:var(--cardano-blue)}
+.sro-card-pro .sro-finding:hover .sro-fid-ref{color:var(--text-secondary)}
+[data-theme=dark] .sro-card-pro .sro-fid-label{color:#A8B6FF}
+[data-theme=dark] .sro-card-pro .sro-finding:hover .sro-fid-label{color:#C4CDFF}
+/* Evidence text — bumped up to read as the primary content of the row,
+   no longer secondary to the finding id label. */
+.sro-card-pro .sro-evidence{
+  font:400 14.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.sro-card-pro .sro-evidence strong{font-weight:700;
+  color:var(--text-primary);font-variant-numeric:tabular-nums}
+
+@media (max-width:640px){
+  .sro-card-pro .sro-head{flex-wrap:wrap;gap:10px;padding:12px 14px}
+  .sro-card-pro .sro-titles{flex:1 1 100%;order:1}
+  .sro-card-pro .sro-badge{order:0}
+  .sro-card-pro .sro-count{order:2;margin-left:auto}
+  .sro-card-pro .sro-abstract{margin:12px 14px 0}
+  .sro-card-pro .sro-findings{padding:4px 6px 10px}
+}
+
 /* "Source on GitHub" — professional end-of-article card.
    Two zones: header band (icon + titles + CTA button) and body
    (clickable repo path + meta). The Reproduction section is stripped
    from the website rendering; this card is the escape hatch for readers
    who actually want shell commands and data deps. */
-.page-source{display:block;max-width:880px;margin:48px auto 8px;
+.page-source{display:block;margin:48px 0 8px;
   border:1px solid var(--border);border-radius:10px;background:var(--bg);
   overflow:hidden;
   box-shadow:0 1px 3px rgba(0,51,173,.04);
@@ -1698,23 +1843,26 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
   letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)}
 .page-source-title{font:600 14.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-primary)}
-.page-source-cta{display:inline-flex;align-items:center;gap:6px;
-  flex-shrink:0;padding:7px 14px;border-radius:5px;
+.page-source .page-source-cta{display:inline-flex;align-items:center;gap:8px;
+  flex-shrink:0;padding:9px 20px;border-radius:5px;
   background:var(--cardano-blue);color:#fff;text-decoration:none;
-  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  letter-spacing:.02em;
+  border:0;border-bottom:0;white-space:nowrap;
+  font:600 12.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.03em;
   box-shadow:0 1px 4px rgba(0,51,173,.25);
   transition:background .15s,box-shadow .15s,transform .15s}
-.page-source-cta:hover{background:#0a1f8e;
+.page-source .page-source-cta:hover{background:#0a1f8e;color:#fff;
+  border-bottom:0;
   box-shadow:0 2px 8px rgba(0,51,173,.4);
   transform:translateY(-1px)}
-.page-source-cta .page-source-ext{font-size:14px;line-height:1;opacity:.9}
+.page-source .page-source-cta span{color:#fff}
+.page-source .page-source-cta .page-source-ext{font-size:14px;line-height:1;opacity:.95}
 .page-source-body{padding:14px 18px 16px}
-.page-source-path{display:flex;align-items:center;gap:8px;
+.page-source .page-source-path{display:flex;align-items:center;gap:8px;
   padding:8px 12px;border:1px solid var(--border);border-radius:6px;
-  background:var(--bg-panel);text-decoration:none;
+  background:var(--bg-panel);text-decoration:none;border-bottom:1px solid var(--border);
   transition:border-color .15s,background .15s}
-.page-source-path:hover{border-color:color-mix(in srgb, var(--cardano-blue) 50%, var(--border));
+.page-source .page-source-path:hover{border-color:color-mix(in srgb, var(--cardano-blue) 50%, var(--border));
   background:color-mix(in srgb, var(--cardano-blue) 4%, var(--bg-panel))}
 .page-source-path-icon{width:14px;height:14px;flex-shrink:0;
   color:var(--text-muted)}
@@ -1722,7 +1870,7 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 .page-source-repo{font:500 12px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-secondary);flex-shrink:0}
 .page-source-sep{color:var(--text-muted);opacity:.5;flex-shrink:0;font-size:13px}
-.page-source-pathtext{font:500 12px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+.page-source .page-source-pathtext{font:500 12px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
   background:transparent;padding:0;border:0;color:var(--text-primary);
   word-break:break-all;min-width:0}
 .page-source-meta{margin:10px 0 0;
