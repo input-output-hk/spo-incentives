@@ -370,13 +370,51 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .content li{margin-bottom:6px}
 .content li strong{color:var(--text-primary);font-weight:600}
 
-/* Tables */
-.content table{width:100%;border-collapse:collapse;margin:20px 0;font-size:12.5px;table-layout:auto}
+/* Tables — base style for all .content tables. Numbers always use
+   tabular-nums so column-by-column scanning works; right-aligned
+   numeric cells already get that direction from the MD ``:---:`` row. */
+.content table{width:100%;border-collapse:collapse;margin:20px 0;
+  font-size:12.5px;table-layout:auto;
+  font-variant-numeric:tabular-nums}
 .content thead{position:sticky;top:0}
-.content th{background:var(--bg-panel);color:var(--text-primary);font-weight:600;text-align:left;padding:7px 9px;border:1px solid var(--border)}
-.content td{padding:7px 9px;border:1px solid var(--border);color:var(--text-body);vertical-align:top}
+.content th{
+  background:var(--bg-panel);color:var(--text-primary);
+  font:600 10.5px/1.3 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  text-transform:uppercase;letter-spacing:.06em;
+  text-align:left;padding:9px 10px 7px;
+  border:1px solid var(--border);border-bottom:2px solid var(--border);
+  vertical-align:bottom}
+.content th[style*="text-align: right"]{text-align:right}
+.content td{padding:6px 10px;border:1px solid var(--border);
+  color:var(--text-body);vertical-align:top;
+  font-variant-numeric:tabular-nums}
 .content th,.content td{word-break:normal;overflow-wrap:break-word}
 .content tr:hover td{background:var(--bg-warm)}
+
+/* Grouped data tables — Operator type / Pool tier / Entity archetype
+   tables. The styling is intentionally subtle: bold from the MD
+   already differentiates group rows, so we only add a thin top rule
+   to anchor each block + a small left indent on ↳ children. No panel
+   fills, no colour changes, no uppercase totals — readability stays
+   identical to a plain markdown table. */
+.content tbody.data-table-grouped tr.row-group td{
+  border-top:1px solid var(--border-strong, var(--text-muted))}
+.content tbody.data-table-grouped tr.row-group:first-child td{
+  border-top:1px solid var(--border)}
+
+/* Sub-rows: small left indent on the first cell so the ``↳`` arrow
+   reads as a real nesting cue. Text colour and size unchanged — the
+   eye should be able to scan numbers across a sub-row exactly the
+   same way as across its parent. */
+.content tbody.data-table-grouped tr.row-sub td:first-child{
+  padding-left:22px}
+
+/* Total row: a slightly heavier top border so the take-away is
+   visible without colouring or recasing the row. */
+.content tbody.data-table-grouped tr.row-total td{
+  border-top:2px solid var(--text-muted)}
+[data-theme=dark] .content tbody.data-table-grouped tr.row-total td{
+  border-top-color:var(--text-muted)}
 
 /* ── Evidence base cards (V2 spec) — §3.x.x.x and §4.x.x.x ── */
 /* Evidence cards (Evidence base under each problem statement). The
@@ -1344,14 +1382,51 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
    ========================================================================== */
 
 .findings-page{max-width:1180px;margin:0 auto;padding:8px 4px 60px;font-family:'Chivo',sans-serif}
-.findings-intro{margin:0 0 22px;padding:18px 22px;
-  background:var(--bg-warm);border-left:3px solid var(--infared);
-  border-radius:8px;font-size:15px;line-height:1.65;color:var(--text-body)}
+.findings-intro{
+  margin:0 0 22px;padding:0;
+  background:transparent;border:0;
+  font-size:14.5px;line-height:1.65;color:var(--text-body);
+  display:flex;flex-direction:column;gap:14px}
 .findings-intro p{margin:0}
 .findings-intro a{color:var(--infared);text-decoration:none;border-bottom:1px dotted rgba(229,35,33,.4)}
 .findings-intro a:hover{border-bottom-style:solid}
 
-.findings-stats{display:flex;gap:16px;margin:20px 0;flex-wrap:wrap}
+/* Lead — the diagnostic question framed as one weighty sentence,
+   set in the display face so it carries the page's voice. */
+.findings-intro-lead{
+  font-family:var(--font-display,'Chivo','Inter',-apple-system,sans-serif);
+  font-size:18px;line-height:1.42;font-weight:500;
+  color:var(--text-primary);
+  letter-spacing:-.2px}
+.findings-intro-lead em{
+  font-style:italic;font-weight:600;color:var(--cardano-blue)}
+.findings-intro-lead strong{font-weight:700;color:var(--infared)}
+/* The answer line — same display face but a touch lighter, so the
+   question still owns the visual weight. */
+.findings-intro-answer{
+  font-family:var(--font-display,'Chivo','Inter',-apple-system,sans-serif);
+  font-size:16px;line-height:1.5;font-weight:400;
+  color:var(--text-primary);
+  letter-spacing:-.1px;
+  margin-top:-4px}
+.findings-intro-answer strong{font-weight:700;color:var(--infared)}
+
+/* How-to — smaller muted prose so it reads as a footer note rather
+   than competing with the lead. */
+.findings-intro-howto{
+  font-size:13px;color:var(--text-muted);line-height:1.6}
+[data-theme=dark] .findings-intro-lead em{color:#8FB1FF}
+
+.findings-stats{display:flex;gap:16px;margin:20px 0;flex-wrap:wrap;align-items:center}
+.findings-stats-arrow{
+  flex-shrink:0;
+  font:600 22px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);
+  user-select:none;
+  padding:0 4px}
+@media (max-width:780px){
+  .findings-stats-arrow{transform:rotate(90deg);padding:4px 0}
+}
 .findings-stat{flex:1;min-width:160px;padding:16px 20px;background:var(--bg);
   border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;gap:4px}
 .findings-stat-num{font-size:28px;font-weight:500;color:var(--infared);letter-spacing:-.8px;line-height:1.1}
@@ -1389,10 +1464,69 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
 .findings-section-title{font-size:22px;font-weight:500;color:var(--text-primary);
   margin:0;letter-spacing:-.3px}
 .findings-section-tagline{font-size:13px;color:var(--text-muted);letter-spacing:.2px}
-.findings-section-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:20px}
+.findings-section-body{display:flex;flex-direction:column;gap:48px}
+.findings-list{display:flex;flex-direction:column;gap:48px}
+
+/* Banner card head — Cardano-blue plate that mirrors the page hero
+   on a per-card scale. Each problem statement opens with its own
+   miniature title block so it reads as a self-contained landing
+   block when scrolling the synthesis page. */
+.finding-card-banner{
+  position:relative;overflow:hidden;
+  background:var(--cardano-blue);
+  padding:22px 26px 24px;
+  border-radius:12px 12px 0 0;
+  isolation:isolate}
+.finding-card-banner::before{
+  content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(140% 90% at 110% 110%,
+    rgba(229,35,33,.32) 0%,
+    rgba(229,35,33,.10) 32%,
+    transparent 58%);
+  opacity:.85}
+.finding-card-banner > *{position:relative;z-index:1}
+.finding-card-banner-eyebrow{
+  display:inline-block;
+  font:500 10.5px/1.2 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(255,255,255,.82);
+  padding-left:10px;
+  border-left:2px solid var(--infared);
+  margin:0 0 12px}
+/* Number + title row inside the banner. The number reads as a
+   chapter mark — large, mono, set to the left of the title at 50%
+   white opacity so it pins the card to its position without
+   stealing focus from the headline. */
+.finding-card-banner-row{
+  display:flex;align-items:baseline;gap:18px;
+  margin:0}
+.finding-card-banner-num{
+  font:700 30px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:rgba(255,255,255,.42);
+  letter-spacing:-.02em;
+  flex-shrink:0;
+  font-variant-numeric:tabular-nums}
+.finding-card-banner .finding-card-title{
+  font-family:var(--font-display,'Chivo','Inter',-apple-system,sans-serif);
+  font-size:32px;font-weight:600;line-height:1.15;
+  color:#fff;letter-spacing:-.6px;
+  margin:0;
+  display:block;
+  flex:1 1 auto;
+  max-width:920px}
+/* Suppress the global h3::after horizontal rule on banner titles —
+   the banner has its own visual treatment, the dangling line just
+   competed with the headline. */
+.finding-card-banner .finding-card-title::after{
+  content:none;display:none}
+
+.finding-card-content{
+  padding:22px 26px 22px;
+  display:flex;flex-direction:column;gap:14px}
 
 .finding-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;
-  padding:22px 24px 18px;display:flex;flex-direction:column;gap:14px;
+  display:flex;flex-direction:column;
+  overflow:hidden;
   transition:border-color .15s,transform .15s,box-shadow .2s;position:relative}
 .finding-card:hover{border-color:var(--infared);box-shadow:0 6px 22px rgba(0,0,0,.05)}
 .finding-card.hidden{display:none}
@@ -1402,8 +1536,8 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
   padding:3px 10px;border-radius:12px;background:rgba(229,35,33,.1);color:var(--infared);
   border:1px solid rgba(229,35,33,.22)}
 .finding-card-obs-only .finding-card-badge{background:var(--bg-panel);color:var(--text-muted);border-color:var(--border)}
-.finding-card-title{font-size:17px;font-weight:500;line-height:1.4;color:var(--text-primary);
-  margin:0;letter-spacing:-.2px}
+.finding-card-title{font-size:21px;font-weight:600;line-height:1.3;color:var(--text-primary);
+  margin:0 0 14px;letter-spacing:-.4px}
 .finding-card-body{font-size:14px;line-height:1.65;color:var(--text-body)}
 .finding-card-body p{margin:0 0 10px}
 .finding-card-body p:last-child{margin-bottom:0}
@@ -1425,6 +1559,144 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
 .finding-obs-chip:hover{background:var(--bg);border-color:var(--infared) !important;color:var(--text-primary) !important}
 .finding-obs-chip-num{font-weight:700;color:var(--infared);font-size:11px;letter-spacing:.2px}
 .finding-obs-chip-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+
+/* Section preface — shown only on the first sub-problem card of each
+   Problem Induction section, providing the parent's framing in muted
+   prose. Sub-cards 2..N omit it so they stay focused on their own
+   statement. */
+.finding-card-preface{
+  font:400 12.5px/1.55 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);
+  border-left:2px solid var(--cardano-blue-soft);
+  padding:6px 0 6px 12px;
+  margin:0 0 12px}
+.finding-card-preface p{margin:0 0 6px}
+.finding-card-preface p:last-child{margin-bottom:0}
+.finding-card-preface .metric{
+  background:rgba(0,51,173,.08);color:var(--cardano-blue);
+  font-weight:600;padding:0 4px;border-radius:3px}
+
+/* Evidence tree — observations are top-level expandable nodes; the
+   canonical sub-report findings (XXX.OY.FZ) sit nested directly
+   underneath their parent observation. The hierarchy is preserved
+   visually (a single column, indented findings) and operationally
+   (the user clicks an obs row to fold its findings). */
+.finding-card-evidence{
+  margin-top:14px;padding-top:14px;
+  border-top:1px solid var(--border)}
+.finding-card-evidence-head{
+  display:flex;align-items:baseline;gap:8px;
+  margin-bottom:10px}
+.finding-card-evidence-label{
+  font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--text-muted);font-weight:500}
+.finding-card-evidence-count{
+  font-size:11px;color:var(--text-muted)}
+.finding-card-evidence-tree{
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;gap:6px}
+.finding-card-onode{
+  border:1px solid var(--border);
+  border-left:3px solid var(--cardano-blue);
+  border-radius:6px;
+  background:var(--bg);
+  overflow:hidden}
+.finding-card-onode-head{
+  display:flex;align-items:center;gap:10px;
+  width:100%;padding:9px 12px;
+  background:transparent;border:0;
+  text-align:left;cursor:pointer;
+  font:inherit;color:inherit;
+  transition:background .12s}
+.finding-card-onode-head:hover{
+  background:rgba(0,51,173,.04)}
+.finding-card-onode-chev{
+  display:inline-block;flex-shrink:0;
+  font-size:12px;color:var(--cardano-blue);
+  transition:transform .15s;
+  transform-origin:50% 50%;
+  width:10px;text-align:center}
+.finding-card-onode.collapsed .finding-card-onode-chev{
+  transform:rotate(-90deg)}
+.finding-card-onode-num{
+  flex-shrink:0;display:inline-flex;align-items:center;
+  padding:2px 8px;border-radius:3px;
+  background:var(--cardano-blue);color:#fff;
+  font:700 10.5px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.04em}
+.finding-card-onode-title{
+  flex:1 1 auto;min-width:0;
+  font:500 13px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.finding-card-onode-fcount{
+  flex-shrink:0;font-size:10.5px;color:var(--text-muted);
+  letter-spacing:.04em;text-transform:lowercase}
+.finding-card-onode-body{
+  padding:0 12px 12px 36px;
+  border-top:1px solid var(--border)}
+.finding-card-onode.collapsed .finding-card-onode-body,
+.finding-card-onode.collapsed .finding-card-onode-findings{
+  display:none}
+.finding-card-onode-summary{
+  margin:8px 0 12px;
+  font:400 12.5px/1.55 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-body)}
+.finding-card-onode-summary p{margin:0 0 6px}
+.finding-card-onode-summary p:last-child{margin-bottom:0}
+.finding-card-onode-findings{
+  list-style:none;margin:0;padding:8px 12px 12px 36px;
+  border-top:1px solid var(--border);
+  display:flex;flex-direction:column;gap:4px}
+.finding-card-onode-empty{
+  display:block;font-size:11.5px;color:var(--text-muted);
+  font-style:italic;padding:8px 0}
+
+/* Each finding row inside an observation node — Infared accent so the
+   evidence chain matches the sub-report callout language. */
+.finding-card-fnode{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:7px 10px;
+  border:1px solid transparent;
+  border-left:3px solid var(--infared);
+  border-radius:0 4px 4px 0;
+  background:rgba(229,35,33,.04);
+  text-decoration:none !important;
+  border-bottom:1px solid transparent !important;
+  transition:background .12s,border-color .12s}
+.finding-card-fnode:hover{
+  background:rgba(229,35,33,.08);
+  border-color:rgba(229,35,33,.25) !important;
+  border-left-color:var(--infared) !important}
+.finding-card-fnode-num{
+  flex-shrink:0;
+  font:700 11px/1.35 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--infared);letter-spacing:0;
+  min-width:24px;padding-top:1px}
+.finding-card-fnode-body{
+  flex:1 1 auto;min-width:0;
+  display:flex;flex-direction:column;gap:2px}
+.finding-card-fnode-text{
+  font:400 12px/1.5 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-body)}
+.finding-card-fnode-insight{
+  font:italic 400 11px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+
+[data-theme=dark] .finding-card-onode{
+  background:var(--bg);border-color:#2a2a2a;
+  border-left-color:#6E97FF}
+[data-theme=dark] .finding-card-onode-head:hover{
+  background:rgba(110,151,255,.06)}
+[data-theme=dark] .finding-card-onode-num{
+  background:#6E97FF}
+[data-theme=dark] .finding-card-onode-chev{color:#6E97FF}
+[data-theme=dark] .finding-card-onode-body{border-top-color:#2a2a2a}
+[data-theme=dark] .finding-card-fnode{
+  background:rgba(255,111,110,.06);border-left-color:#FF6F6E}
+[data-theme=dark] .finding-card-fnode:hover{
+  background:rgba(255,111,110,.10)}
+[data-theme=dark] .finding-card-fnode-num{color:#FF6F6E}
 
 .finding-card-foot{border-top:1px dashed var(--border);padding-top:10px;margin-top:2px}
 .finding-jump{font-size:12.5px;color:var(--infared);text-decoration:none;letter-spacing:.2px;
@@ -1527,40 +1799,41 @@ body.finding-panel-open .finding-panel-overlay{opacity:1;pointer-events:auto}
 [data-theme=dark] .finding-panel{background:var(--bg)}
 [data-theme=dark] .finding-panel-header{background:var(--bg-panel)}
 
-/* ── Cross-page DIA source overlay + compact §X.Y.2 view ── */
 
-/* Compact list view: one row per DIA.X.Y.O# that defers to a sub-report */
-.dia-obs-compact{list-style:none;padding:0;margin:18px 0 24px;
+/* ── Cross-page synthesis-observation source overlay + compact §X.Y.2 view ── */
+
+/* Compact list view: one row per synthesis observation that defers to a sub-report */
+.synth-obs-compact{list-style:none;padding:0;margin:18px 0 24px;
   display:flex;flex-direction:column;gap:10px}
-.dia-obs-row{border:1px solid var(--border);border-radius:8px;padding:14px 16px;
+.synth-obs-row{border:1px solid var(--border);border-radius:8px;padding:14px 16px;
   background:var(--bg);transition:border-color .15s,box-shadow .15s}
-.dia-obs-row:hover{border-color:var(--infared);box-shadow:0 2px 10px rgba(229,35,33,.06)}
-.dia-obs-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
-.dia-obs-canon{display:inline-flex;align-items:center;padding:3px 10px;border-radius:4px;
+.synth-obs-row:hover{border-color:var(--infared);box-shadow:0 2px 10px rgba(229,35,33,.06)}
+.synth-obs-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.synth-obs-canon{display:inline-flex;align-items:center;padding:3px 10px;border-radius:4px;
   background:var(--bg-panel);border:1px solid var(--border);
   font:600 11px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
   letter-spacing:.05em;color:var(--infared);text-decoration:none;
   transition:background .15s,border-color .15s,color .15s}
-.dia-obs-canon:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
-.dia-obs-title{font:600 14px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+.synth-obs-canon:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
+.synth-obs-title{font:600 14px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-primary);flex:1 1 auto;min-width:0}
-.dia-obs-summary{margin:4px 0 10px;font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+.synth-obs-summary{margin:4px 0 10px;font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-secondary)}
-.dia-obs-findings{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.dia-obs-f{display:inline-flex;align-items:center;padding:2px 8px;border-radius:3px;
+.synth-obs-findings{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.synth-obs-f{display:inline-flex;align-items:center;padding:2px 8px;border-radius:3px;
   background:var(--bg-panel);border:1px solid var(--border);
   font:500 10.5px/1.5 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
   letter-spacing:.03em;color:var(--text-secondary);text-decoration:none;
   transition:background .15s,border-color .15s,color .15s}
-.dia-obs-f:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
-.dia-obs-source-link{display:inline-flex;align-items:center;gap:4px;
+.synth-obs-f:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
+.synth-obs-source-link{display:inline-flex;align-items:center;gap:4px;
   font:500 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-muted);text-decoration:none;padding-top:4px;
   border-top:1px dashed var(--border);margin-top:4px;padding-top:8px}
-.dia-obs-source-link:hover{color:var(--infared)}
+.synth-obs-source-link:hover{color:var(--infared)}
 
-/* Cross-page source overlay — the DIA.X.Y.O# link shows the source sub-report
-   observation's content in the side panel, with a "Jump to source" CTA. */
+/* Cross-page source overlay — the synthesis-observation link shows the source
+   sub-report observation's content in the side panel, with a "Jump to source" CTA. */
 .obs-ref-src{border-bottom-style:dashed}
 .obs-panel-source-xpage{display:flex;align-items:center;gap:6px;
   font:500 11.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -2012,8 +2285,8 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 
 /* Responsive */
 @media (max-width:720px){
-  .dia-obs-row{padding:12px 14px}
-  .dia-obs-head{gap:6px}
+  .synth-obs-row{padding:12px 14px}
+  .synth-obs-head{gap:6px}
   .sro-head{flex-wrap:wrap;gap:8px;padding:10px 12px}
   .sro-title{flex:1 1 100%;order:3}
   .sro-count{order:2}
@@ -2321,4 +2594,4 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
 }
 @media print{.page-source{display:none}}
 
-/* ── /Cross-page DIA source overlay + compact §X.Y.2 view ── */
+/* ── /Cross-page synthesis-observation source overlay + compact §X.Y.2 view ── */

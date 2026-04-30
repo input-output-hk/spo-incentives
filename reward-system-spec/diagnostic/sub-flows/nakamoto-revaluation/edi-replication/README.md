@@ -1,42 +1,17 @@
 # EDI replication — Cardano Nakamoto coefficient, two reference epochs × two clustering modes
 
-## What this folder contains
-
-This folder is the in-house run of the **Edinburgh Decentralization Index
-methodology** on Cardano mainnet. EDI's pipeline (parser, identifier and
-cluster files, 30-day rolling aggregator, metrics module) is executed
-end-to-end against raw block-production data fetched from a public Koios
-mirror, for two reference epochs and two clustering modes, producing
-four Nakamoto-coefficient values that are entered as definitions
-D8a/D8b/D9a/D9b in the parent sub-flow's definition matrix. The two
-epochs are **584** (the period anchoring the November 2025 report's
-EDI citation, `report.tex` L1249-1252) and **623** (the snapshot epoch
-used by the rest of this sub-flow). The two clustering modes are EDI's
-default on-chain-metadata clustering and `clustering: false`, the
-configuration that exposes the underlying pool-level Nakamoto on the
-same block-production data.
+This folder is the in-house run of the **Edinburgh Decentralization Index (EDI) methodology** on Cardano mainnet. EDI's pipeline (parser, identifier and cluster files, 30-day rolling aggregator, metrics module) is executed end-to-end against raw block-production data fetched from a public Koios mirror, for **two reference epochs × two clustering modes**, producing four Nakamoto-coefficient values entered as **definitions D8a/D8b/D9a/D9b** in the parent sub-flow's [definition matrix](../README.md). The two epochs are **584** (the window anchoring the November 2025 report's EDI citation) and **623** (the snapshot epoch used by the rest of the parent sub-flow). The two clustering modes are EDI's default on-chain-metadata clustering and `clustering: false`, the configuration that exposes the underlying pool-level Nakamoto on the same block-production data.
 
 | Reference epoch | 30-day window (UTC) | Pool view (no clustering) | Entity view (EDI on-chain-metadata) |
 |---|---|---:|---:|
 | 584 (citation anchor) | epochs 579 – 584 (2025-08-27 → 2025-09-26) | **164** | **82** |
 | 623 (project snapshot) | epochs 618 – 623 (2026-03-10 → 2026-04-09) | **162** | **90** |
 
-Two readings:
+**The published EDI value reproduces faithfully.** The entity-view value at epoch 584 (**82**) matches the report's ~80 to within rounding — *the figure is a faithful reproduction of EDI's published metric, not a re-derivation under different assumptions*.
 
-The entity-view value at epoch 584 (**82**) matches the report's ~80 to
-within rounding; the figure is a faithful reproduction of EDI's published
-metric, not a re-derivation under different assumptions.
+**At pool level, blocks and stake produce indistinguishable Nakamoto values.** The pool view at both epochs sits within **1–3 units** of the parent sub-flow's stake-based pool-level definitions D1 (163, raw stake) and D2 (161, productive stake). On Cardano at 30-day granularity (~128 000 blocks), block-share is operationally indistinguishable from stake-share as a Nakamoto input *at the pool level*.
 
-The pool view at both epochs sits within one to three units of the
-project's stake-based pool-level definitions D1 (163, raw stake) and D2
-(161, productive stake). On Cardano at 30-day granularity (~128 000
-blocks), block-share is operationally indistinguishable from stake-share
-as a Nakamoto input *at the pool level*. The ~80× gap to D4 (entity
-clustered, productive, snapshot e623 = **18**) is therefore almost
-entirely a clustering effect: lifting the clustering policy from "none"
-to "on-chain metadata" pulls the metric from ~163 to ~85; lifting it
-further to "curated MPO manifest with operational fingerprinting" pulls
-it from ~85 to **18**.
+**The ~80× gap to D4 = 18 is therefore almost entirely a clustering effect.** Lifting the clustering policy from "none" to "on-chain metadata" pulls the metric from **~163 to ~85**; lifting it further to "curated MPO manifest with operational fingerprinting" pulls it from **~85 to 18**. *The cascade 162 → 90 → 18 is decomposed at each step on the same block-production data — the choice of resource (blocks vs. stake) and the choice of window (30 days vs. snapshot) account for at most a handful of units along the way.*
 
 ## Method
 
@@ -192,7 +167,4 @@ or fragmenting*, not from a change in the underlying pool population.
   window range. Switching between entity and pool views toggles only
   the `clustering` boolean. No other configuration was modified.
 
-## Reproduction timestamp
-
-2026/04/23 — runs against Koios tip at epoch 626; both clustering modes
-executed back-to-back per epoch batch.
+> **Status** — Reproduction timestamp 2026/04/23. Runs against Koios tip at epoch 626; both clustering modes executed back-to-back per epoch batch.

@@ -1,22 +1,12 @@
-# Single-Pool Operators
+# Single-Pool Operators — The Independent Operator Segment
 
-> The independent operator segment — what remains after MPO extraction.
->
-> Last updated: 2026/04/08. Snapshot epoch: 618.
+This sub-document of [*The Staking Census*](../README.md) zooms into the **independent operator segment** — the population that remains once attributed multi-pool entities are extracted from the productive pool set. The mechanism's intended growth path runs through this population: small operators who enter, build reputation, attract delegation, and eventually graduate into established entities. *This document audits whether the segment shows any of that designed trajectory, and quantifies what is actually there.*
 
-## The segment at a glance
+After extracting the **85 MPO entities** (901 pools, **75.4% of stake**), **2,097 single-pool operators** remain. They hold **5.44B ADA — 25.0% of active stake**, and their share is in slow structural decline (from **28.0%** at epoch 583).
 
-After extracting the **85 MPO entities** (901 pools, **75.4% of stake**),
-**2,097 single-pool operators** remain.
+**The competitive field is three times smaller than the headline suggests.** The *Incentive Mechanism Analysis*'s headline of **741 "healthy pools"** collapses to **283 viable independents** once MPO fleet members are removed. The remaining **561 are marginal operators** who partially pledge and sit at the decision boundary — *the narrow policy-sensitive population that any parameter reform must target*.
 
-They hold **5.44B ADA** — **25.0% of active stake** — and their share is
-declining (from **28.0% at epoch 583**).
-
-The headline figure of **741 "healthy pools"** from the *Incentive Mechanism
-Analysis* collapses to **283 viable independents** once fleet members are
-removed.
-
-*The competitive field is three times smaller than the headline suggests.*
+**Pledge is rationally ignored at this scale.** **78%** of independent single-pool stake is non-compliant (pledge ratio < 2%). At single-pool scale, the pledge bonus is economically *negligible* — the rational operator deploys capital elsewhere. The mechanism's intended pledge-as-commitment signal therefore reaches almost none of the segment it was designed to grow.
 
 **By tier (after MPO removal):**
 
@@ -26,15 +16,6 @@ removed.
 | Healthy (viable+) | 283 | ~4.3B ADA | Regular block production, economically viable |
 | Marginal | 561 | ~0.9B ADA | The policy-sensitive population — partially pledge, sit at decision boundary |
 | Below viability | ~1,253 | ~0.2B ADA | Economic loss zone; fixed cost exceeds reward |
-
-**By pledge compliance:**
-
-**78% of independent stake is non-compliant** (pledge ratio < 2%). This is
-rational: at single-pool scale, the pledge bonus is economically
-**negligible**.
-
-The **561 marginal operators** who partially pledge are the narrowest and
-highest-return target for any incentive reform.
 
 ## Data
 
@@ -111,6 +92,8 @@ As the entity workstream matures, this directory can host:
 
 - A generated `spo_pool_list_mainnet.csv` with tier/stance classification per
   pool, extracted by a dedicated script.
-- Individual SPO profiles for operators of analytical interest (e.g. the
+- Individual single-pool-operator profiles for operators of analytical interest (e.g. the
   marginal-to-compliant boundary population).
-- Comparative analysis: SPO vs MPO yield, fee structure, pledge behaviour.
+- Comparative analysis: single-pool-operator vs MPO yield, fee structure, pledge behaviour.
+
+> **Status** — Sub-document of [The Staking Census](../README.md). Snapshot epoch: 618. Last updated 2026/04/08.

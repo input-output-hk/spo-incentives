@@ -90,13 +90,13 @@ Transaction submitters need reliable, censorship-resistant settlement. They do n
 
 #### 2.1.2. How they feed the game
 
-They submit transactions and pay fees. Those fees — together with the monetary expansion draw from the reserve — fund the epoch pot that the reward pipeline distributes ([§1.1](../diagnostic/README.md#11-treasury-pool-pots-distribution)). Transaction submitters are the reason the system exists: without them, there is no economic activity to secure, and no sustainable revenue to fund the operators who secure it.
+They submit transactions and pay fees. Those fees — together with the monetary expansion draw from the reserve — fund the epoch pot that the reward pipeline distributes ([Treasury & Pool Pots Distribution](../diagnostic/README.md#11-treasury-pool-pots-distribution)). Transaction submitters are the reason the system exists: without them, there is no economic activity to secure, and no sustainable revenue to fund the operators who secure it.
 
 #### 2.1.3. A latent constraint — marginal today, existential tomorrow
 
-In the current regime, transaction fees are negligible (~0.19% of the epoch pot — [§1.1.2](../diagnostic/README.md#112-mainnet-observations) (DIA.1.1.O1)). The game is almost entirely funded by monetary expansion from a depleting reserve.
+In the current regime, transaction fees are negligible (~0.19% of the epoch pot — [Mainnet Observations](../diagnostic/README.md#112-mainnet-observations) (TRE.O1)). The game is almost entirely funded by monetary expansion from a depleting reserve.
 
-As the reserve crosses its half-life and expansion shrinks ([§1.1.2](../diagnostic/README.md#112-mainnet-observations) (DIA.1.1.O2)), the system's economic viability progressively shifts onto fee revenue.
+As the reserve crosses its half-life and expansion shrinks ([Mainnet Observations](../diagnostic/README.md#112-mainnet-observations) (TRE.O2)), the system's economic viability progressively shifts onto fee revenue.
 
 > [!NOTE]
 > Transaction submitters are a **latent constraint**: marginal today, existential tomorrow. Their long-term participation is what makes the staking game *sustainably worth playing* for every other participant.
@@ -190,7 +190,7 @@ At this layer (pool distribution), the reward curve directly governs the operato
 
 This **interdependence** is the core of the design: operators need delegators for scale, delegators need operators for block production, and the reward curve should make their partnership the individually rational path for both.
 
-Transaction submitters are upstream — their contribution is mediated through the epoch pot ([§1.1](../diagnostic/README.md#11-treasury-pool-pots-distribution)) — but they set the ultimate economic boundary within which the operator–delegator game plays out.
+Transaction submitters are upstream — their contribution is mediated through the epoch pot ([Treasury & Pool Pots Distribution](../diagnostic/README.md#11-treasury-pool-pots-distribution)) — but they set the ultimate economic boundary within which the operator–delegator game plays out.
 
 <br>
 
@@ -220,11 +220,11 @@ Each player class experiences the game through its own trajectory — entry, pro
 
 **Progression.** As the pool landscape matures and the mechanism produces legible differences between pools, delegators increasingly differentiate on *commitment-based criteria*: pledge level, track record, margin policy. Delegation flows toward the most committed operators and away from uncommitted ones. The accountability mechanism becomes active — delegators are now *policing* operator behaviour through capital reallocation.
 
-**Endgame.** Delegators act as an efficient market for operator commitment — and as ethical arbiters of the pool landscape ([§2.3.3](#233-the-delegator-as-ethical-arbiter)). Capital moves fluidly to the pools that best combine commitment and performance, and exits quickly from those that fall short. The accountability mechanism operates at full power: no operator can sustain high rewards without continuous community approval. This endgame requires non-myopic delegation ([§2.3.4](#234-myopic-and-non-myopic-delegation)): delegators who factor in commitment, independence, and network health — not only current-epoch yield — into their allocation decisions.
+**Endgame.** Delegators act as an efficient market for operator commitment — and as ethical arbiters of the pool landscape ([The delegator as ethical arbiter](#233-the-delegator-as-ethical-arbiter)). Capital moves fluidly to the pools that best combine commitment and performance, and exits quickly from those that fall short. The accountability mechanism operates at full power: no operator can sustain high rewards without continuous community approval. This endgame requires non-myopic delegation ([Myopic and non-myopic delegation](#234-myopic-and-non-myopic-delegation)): delegators who factor in commitment, independence, and network health — not only current-epoch yield — into their allocation decisions.
 
 ### 3.4. The security properties the equilibrium must satisfy
 
-The three trajectories above describe individual paths. But the protocol does not care which path any single operator or delegator takes — it cares whether the *equilibrium* that emerges from the aggregate of all rational choices preserves the security invariants defined in [§1](#1-the-design-objective).
+The three trajectories above describe individual paths. But the protocol does not care which path any single operator or delegator takes — it cares whether the *equilibrium* that emerges from the aggregate of all rational choices preserves the security invariants defined in [The design objective](#1-the-design-objective).
 
 The formal literature — *Reward Sharing Schemes for Stake Pools* (Brünjes, Kiayias et al., 2020) and the SL-D1 engineering specification (Kant, Brünjes & Coutts, 2019) — defines these invariants implicitly through the constraints the reward function must satisfy: the equilibrium must exhibit *k* independent block producers, each bearing a non-trivial personal cost, subject to continuous community oversight, with no single entity able to capture a dominant share of consensus power. Four properties encode these invariants. They are not a menu of desirable features — they are load-bearing elements of the security argument. Losing any one degrades the model; losing two or more can break it.
 
@@ -243,7 +243,7 @@ Cardano's consensus layer does not implement slashing. Unlike protocols that des
 
 **Pledge as a static bond.** Capital registered in the pool certificate creates a visible, on-chain commitment. It is not locked in the custodial sense — the operator retains the keys — but it is *declared*: the protocol observes it at every epoch boundary, and failure to maintain the declared amount triggers a total reward wipe for that epoch (the pledge-unmet penalty). This bond serves a signalling function: an operator who has pledged substantial capital has an observable, verifiable stake in the pool's continued operation. The cost of abandoning or sabotaging the pool includes forfeiting the competitive position that pledge confers.
 
-**Delegation as a dynamic discipline.** Delegators can revoke their delegation unilaterally, at any epoch boundary, without the operator's consent (SL-D1 [§3.4.6](#346-the-structural-requirement)). This is the protocol's primary enforcement mechanism: an operator who degrades performance, raises fees exploitatively, or behaves dishonestly faces capital flight. The pool shrinks, rewards drop, and the operator's income falls — not because the protocol punished them, but because the community withdrew its approval.
+**Delegation as a dynamic discipline.** Delegators can revoke their delegation unilaterally, at any epoch boundary, without the operator's consent (SL-D1 [The structural requirement](#346-the-structural-requirement)). This is the protocol's primary enforcement mechanism: an operator who degrades performance, raises fees exploitatively, or behaves dishonestly faces capital flight. The pool shrinks, rewards drop, and the operator's income falls — not because the protocol punished them, but because the community withdrew its approval.
 
 These two components are not redundant. The static bond ensures that the operator has a *minimum* cost of entry and a *minimum* exposure to the pool's fate — it exists even when no delegator is watching. The dynamic discipline ensures that the operator faces *continuous* pressure to maintain performance — it operates even when the bond is too small to matter on its own.
 

@@ -1,11 +1,19 @@
 # Entity Lifecycle — Growth, Decline, and Exit on Cardano Mainnet
 
-_Sub-document of [The Staking Census](../README.md). Built on 2026/04/09 from db-sync snapshot at epoch 623._
+This sub-document of [*The Staking Census*](../README.md) adds the **temporal dimension** to the operator landscape — which identified entities have contracted, which have exited entirely, and what patterns of decline are visible across archetypes. *Where the census itself is a snapshot of who is on the field at epoch 623, this document tracks how the snapshot was made.*
 
+The analysis follows the **85 identified entities** attributed in the census from their first appearance in `epoch_stake` through epoch 623, classifying each into a lifecycle phase based on the ratio between current stake and all-time peak (dead, severe decline, decline, stable, growing).
+
+**Roughly half of identified operators are past their peak and contracting.** The lifecycle classification places **42 of 85 entities** in the dead or declining segments. **Two are dead** (current stake below the production threshold), **11 are in severe decline** (< 25% of peak — collectively shed **8.4B ADA**), and **29 are in moderate decline** (25–50% of peak). The largest individual exits include **IOG** (2.67B → 11.7M, completed steward withdrawal), **Binance** (2.98B → 692M, exchange retreat), and **1PCT** (1.27B → 275M, independent fleet erosion). *Community-branded fleets dominate the declining segment — the median decline ratio in this archetype is ~38%, with no single event explaining the slow, persistent outflow of delegations.*
+
+**The capital did not leave the staking ecosystem; it restructured.** The declining and dead entities collectively shed **~14.6B ADA** from their peaks, but total staked ADA grew from **~12B to ~21.8B** over the same period. The redistribution flowed along three channels: **toward institutional validators** (Figment, Blockdaemon, Everstake, Kiln together hold **2.7B**, almost all accumulated after epoch 300); **toward late-arriving exchanges** (Coinbase entered at epoch 296 and grew to **2.6B**, Upbit entered at epoch 398 and is at all-time high); and **toward the independent single-pool operator tail** (the 477 unattributed single-pool operators hold **5.28B ADA**, consistent with the community's cultural preference for single-pool delegation).
+
+**The growth pattern selects for late entrants and persistence.** **18 entities** are at or near their all-time peak. Five late institutional entrants alone (Coinbase, Figment, Blockdaemon, Everstake, Upbit) hold **5.0B ADA — more than the entire independent single-pool operator segment**. Among community operators, the few that grew against the tide share a pattern of **late peaks (epoch 450–623)** rather than the early-Shelley peaks characteristic of declining peers — suggesting that *persistence and operational quality matter more than first-mover advantage in the long run*.
+
+*The staking ecosystem is not shrinking — it is restructuring*, and the structural shift since epoch 300 has been from community-run fleets toward institutional staking infrastructure.
 
 ## Table of Contents
 
-- [Objective](#objective)
 - [Data sources](#data-sources)
 - [1. Lifecycle classification](#1-lifecycle-classification)
 - [2. Dead entities](#2-dead-entities)
@@ -24,13 +32,6 @@ _Sub-document of [The Staking Census](../README.md). Built on 2026/04/09 from db
 - [6. Stable entities — the plateau](#6-stable-entities--the-plateau)
 - [7. Where the capital went](#7-where-the-capital-went)
 - [8. Visual summary](#8-visual-summary)
-
-
-## Objective
-
-The main census (§2.4) presents the operator landscape as a **current-epoch snapshot**. This companion document adds the **temporal dimension**: which identified entities have **contracted**, which have **exited entirely**, and what **patterns of decline** are visible across archetypes.
-
-The analysis tracks **85 identified entities** — the same population attributed in §2.3 of the census — from their **first appearance** in `epoch_stake` through **epoch 623**.
 
 
 ## Data sources
@@ -270,3 +271,5 @@ Each panel shows the **total stake history** (in millions of ADA) of an entity c
 Same format as above. **Green** indicates growing entities (current > 90% of peak); **blue** indicates stable entities (50–90% of peak).
 
 The contrast with the decline chart is **striking**: growing entities show **steep ascent curves with late peaks**, while stable entities show **early peaks followed by a long plateau**.
+
+> **Status** — Sub-document of [The Staking Census](../README.md). Built on 2026/04/09 from db-sync snapshot at epoch 623.
