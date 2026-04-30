@@ -335,7 +335,7 @@ HYPOTHESIS_ENABLED = _cfg("SPO_HYPOTHESIS_ENABLED", "0") in ("1", "true", "yes")
 # enabled by default. No backend cost. The `my-bookmarks.html` aggregator
 # page is always built; readers see their own saved set when they visit.
 HIGHLIGHTS_ENABLED = _cfg("SPO_HIGHLIGHTS_ENABLED", "1") not in ("0", "false", "no")
-BOOKMARKS_ENABLED = _cfg("SPO_BOOKMARKS_ENABLED", "1") not in ("0", "false", "no")
+BOOKMARKS_ENABLED = _cfg("SPO_BOOKMARKS_ENABLED", "0") not in ("0", "false", "no")
 
 # Formspree (or compatible) endpoint for the structured feedback form.
 # Free tier 50 submissions/month. Set to a Cloudflare Worker URL with
@@ -417,6 +417,72 @@ def _render_giscus_block() -> str:
         'crossorigin="anonymous" '
         'async></script>'
         '</section>'
+    )
+
+
+_GITHUB_OCTICON = (
+    '<svg class="page-source-icon" viewBox="0 0 16 16" aria-hidden="true">'
+    '<path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 '
+    '5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49'
+    '-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 '
+    '1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78'
+    '-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08'
+    '-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 '
+    '1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 '
+    '2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 '
+    '1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58'
+    '-8-8-8z"/></svg>'
+)
+
+_REPO_FILE_OCTICON = (
+    '<svg class="page-source-path-icon" viewBox="0 0 16 16" aria-hidden="true">'
+    '<path fill="currentColor" d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 '
+    '0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 '
+    '1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 '
+    '0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 '
+    '0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 '
+    '.138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"/></svg>'
+)
+
+
+def _render_page_source_link(page: dict) -> str:
+    """Professional "Source on GitHub" panel anchored at the end of every
+    article. Gives readers a direct path to the full MD — including the
+    Reproduction section stripped from the website rendering.
+    """
+    md_path = page.get("md")
+    if not md_path or not GITHUB_REPO:
+        return ""
+    repo_url = f"https://github.com/{GITHUB_REPO}"
+    src_url = f"{repo_url}/blob/main/reward-system-spec/{md_path}"
+    repo_short = _html.escape(GITHUB_REPO)
+    return (
+        '<aside class="page-source" aria-label="Source on GitHub">'
+        '<div class="page-source-head">'
+        f'{_GITHUB_OCTICON}'
+        '<div class="page-source-titles">'
+        '<span class="page-source-eyebrow">Read the full source</span>'
+        '<span class="page-source-title">Open this page on GitHub</span>'
+        '</div>'
+        f'<a class="page-source-cta" href="{_html.escape(src_url)}" '
+        'rel="noopener" target="_blank">'
+        '<span>View on GitHub</span>'
+        '<span class="page-source-ext" aria-hidden="true">↗</span></a>'
+        '</div>'
+        '<div class="page-source-body">'
+        f'<a class="page-source-path" href="{_html.escape(src_url)}" '
+        f'rel="noopener" target="_blank" title="Open {_html.escape(md_path)} on GitHub">'
+        f'{_REPO_FILE_OCTICON}'
+        f'<span class="page-source-repo">{repo_short}</span>'
+        '<span class="page-source-sep" aria-hidden="true">/</span>'
+        f'<code class="page-source-pathtext">reward-system-spec/{_html.escape(md_path)}</code>'
+        '</a>'
+        '<p class="page-source-meta">'
+        'Includes the reproduction commands and data dependencies omitted '
+        'from this rendering.'
+        '</p>'
+        '</div>'
+        '</aside>'
     )
 
 
@@ -935,6 +1001,70 @@ def normalize_toc_indentation(md_text: str) -> str:
     return _TOC_BLOCK_RE.sub(_sub, md_text, count=1)
 
 
+_REPRO_HEADING_RE = re.compile(
+    r"^## +(?:\d+\.?\s+)?Reproduction\b",
+    re.MULTILINE | re.IGNORECASE,
+)
+_REPRO_TRAILER_RE = re.compile(
+    r"^---\s*\n+(_[^\n]*Last updated[^\n]*_)\s*\n*\Z",
+    re.MULTILINE | re.IGNORECASE | re.DOTALL,
+)
+
+
+def strip_reproduction_section(md_text: str) -> str:
+    """Remove ``## ... Reproduction`` and everything that follows from a page's
+    MD source so the website doesn't expose script invocations and data
+    dependencies that only matter for repo readers. The ``View source on
+    GitHub`` block injected at the bottom of every page gives motivated
+    readers a one-click path to the full source.
+
+    Also drops TOC entries that point to the stripped section so the
+    Table of Contents doesn't list dead links. Preserves a trailing
+    ``---\\n\\n_Last updated: …_`` metadata line if it sits below the
+    Reproduction body.
+    """
+    m = _REPRO_HEADING_RE.search(md_text)
+    if not m:
+        return md_text
+    # Capture the section number from the heading (e.g. "6" from
+    # "## 6. Reproduction") so we can remove its TOC entries below.
+    heading_line = md_text[m.start():md_text.find("\n", m.start())]
+    num_m = re.match(r"^## +(\d+)\.?\s+Reproduction", heading_line, re.IGNORECASE)
+    section_num = num_m.group(1) if num_m else None
+
+    head = md_text[:m.start()].rstrip()
+    trailer = _REPRO_TRAILER_RE.search(md_text[m.start():])
+    if trailer:
+        body = head + "\n\n---\n\n" + trailer.group(1) + "\n"
+    else:
+        after_heading = m.end()
+        nxt = re.search(r"^## +", md_text[after_heading:], re.MULTILINE)
+        if nxt:
+            body = head + "\n\n" + md_text[after_heading + nxt.start():]
+        else:
+            body = head + "\n"
+
+    # Drop TOC entries pointing at the stripped section. Matches list
+    # items ("- " or "N. " or "N.M ") whose link anchor starts with
+    # ``#{section_num}`` followed by an optional sub-number — e.g.
+    # ``#6-reproduction`` and ``#61-full-rebuild``. Limits to two extra
+    # digits so unrelated anchors don't get caught.
+    if section_num:
+        toc_link_re = re.compile(
+            rf"^[ \t]*(?:[\-*]|\d+\.|\d+\.\d+)\s+\[[^\]]*\]\(#{section_num}\d{{0,2}}-[^)]*\)\s*\n",
+            re.MULTILINE,
+        )
+        body = toc_link_re.sub("", body)
+        # Some TOCs use the "  - 6.1 [Full rebuild](#61-full-rebuild)"
+        # form where a bare "6.1" prefix sits before the link.
+        toc_prefixed_re = re.compile(
+            rf"^[ \t]*[\-*]\s+{section_num}(?:\.\d+)?\s+\[[^\]]*\]\(#{section_num}\d{{0,2}}-[^)]*\)\s*\n",
+            re.MULTILINE,
+        )
+        body = toc_prefixed_re.sub("", body)
+    return body
+
+
 def preprocess_md(md_text: str, src_md: Path) -> str:
     """Rewrite MD links/images before feeding to the markdown parser.
 
@@ -944,6 +1074,7 @@ def preprocess_md(md_text: str, src_md: Path) -> str:
     and ``![..](..)`` constructs.
     """
     md_text = normalize_toc_indentation(md_text)
+    md_text = strip_reproduction_section(md_text)
     # Images: ![alt](path)  — the path may include a title "title"
     img_re = re.compile(r"(!\[[^\]]*\]\()([^)\s]+)(\s+\"[^\"]*\")?(\))")
 
@@ -1234,7 +1365,7 @@ window.MathJax = {{
 
 <!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
 <div class="nav-zone nav-zone-implementation">
-<span class="nav-tab-implementation" title="Future destination — engineering implementation of the V2 specification">Implementation ?</span>
+<span class="nav-tab-implementation" title="What follows the spec — engineering implementation of the V2 mechanism">What&rsquo;s next ?</span>
 </div>
 
 <span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
@@ -1448,7 +1579,34 @@ window.MathJax = {{
 </div>
 <div class="nav-breadcrumb">{breadcrumb_inner}</div>
 </nav>
-<div class="hero" data-banner="{hero_banner}">
+{body_main}
+{giscus_block}
+{footer_block}
+<div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
+<a href="#" class="back-top" id="btt">&uarr;</a>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+<script>
+if (window.mermaid) {{
+  mermaid.initialize({{
+    startOnLoad: true,
+    theme: 'default',
+    securityLevel: 'loose',
+    themeVariables: {{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }},
+    flowchart: {{ useMaxWidth: true, htmlLabels: true, curve: 'basis' }}
+  }});
+}}
+</script>
+<script src="assets/site.js?v={asset_ver}"></script>
+</body>
+</html>
+"""
+
+
+# --- Body-main fragments ----------------------------------------------------
+# The hero block is what regular pages put above their content. The PDF
+# viewer skips it; both share the same {body_main} placeholder in TEMPLATE
+# so the surrounding head/nav/footer never drift between page kinds.
+HERO_BLOCK = """<div class="hero" data-banner="{hero_banner}">
   <svg class="hero-schema" viewBox="0 0 1400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <pattern id="heroGrid" width="40" height="40" patternUnits="userSpaceOnUse">
@@ -1482,28 +1640,7 @@ window.MathJax = {{
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
-<div class="content">{content}</div>
-{giscus_block}
-{footer_block}
-<div class="lightbox-overlay" id="lightbox"><img id="lb-img" src="" alt=""></div>
-<a href="#" class="back-top" id="btt">&uarr;</a>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
-<script>
-if (window.mermaid) {{
-  mermaid.initialize({{
-    startOnLoad: true,
-    theme: 'default',
-    securityLevel: 'loose',
-    themeVariables: {{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }},
-    flowchart: {{ useMaxWidth: true, htmlLabels: true, curve: 'basis' }}
-  }});
-}}
-</script>
-<script src="assets/site.js?v={asset_ver}"></script>
-</body>
-</html>
-"""
-
+<div class="content">{content}</div>"""
 
 # Which active-nav slugs fall under which top-level dropdown
 DIAG_ACTIVE = {"findings", "observatory", "census", "treasury", "pools", "operator"}
@@ -1658,15 +1795,29 @@ def render_shell(page: dict, content_html: str) -> str:
     except OSError:
         js_mt = 0
     asset_ver = str(max(css_mt, js_mt) or int(time.time()))
+
+    # Default body_main = hero block + content. Callers can override
+    # via page["body_main"] (e.g. the PDF viewer page) so the same
+    # head + nav + footer are reused without divergence.
+    body_main_override = page.get("body_main")
+    if body_main_override is not None:
+        body_main = body_main_override
+    else:
+        body_main = HERO_BLOCK.format(
+            hero_h1=page["hero_h1"],
+            hero_sub=page["hero_sub"],
+            hero_eyebrow=_HERO_EYEBROW.get(
+                active, "V2 Reward System &middot; Technical Specification"
+            ),
+            hero_banner=BANNER_VARIANTS.get(active, "fluid"),
+            hero_build_date=_html.escape(BUILD_DATE) if BUILD_DATE else "",
+            hero_build_author_html=_render_build_author_html(),
+            content=content_html,
+        )
+
     return TEMPLATE.format(
         title=page["title"],
-        hero_h1=page["hero_h1"],
-        hero_sub=page["hero_sub"],
-        hero_eyebrow=_HERO_EYEBROW.get(
-            active, "V2 Reward System &middot; Technical Specification"
-        ),
-        hero_banner=BANNER_VARIANTS.get(active, "fluid"),
-        content=content_html,
+        body_main=body_main,
         cls_diag_trigger=cls_diag_trigger,
         cls_solution_trigger=cls_solution_trigger,
         cls_design_trigger=cls_design_trigger,
@@ -1674,11 +1825,7 @@ def render_shell(page: dict, content_html: str) -> str:
         asset_ver=asset_ver,
         plausible_head=_render_analytics_head(),
         hypothesis_head=_render_hypothesis_head(),
-        giscus_block=_render_giscus_block(),
-        # Contact form retired — readers go to GitHub Discussions
-        # (linked from the footer) for any structured feedback.
-        hero_build_date=_html.escape(BUILD_DATE) if BUILD_DATE else "",
-        hero_build_author_html=_render_build_author_html(),
+        giscus_block=_render_giscus_block() if not body_main_override else "",
         footer_block=_render_footer(),
         body_data_attrs=_render_body_data_attrs(),
         **classes,
@@ -2053,25 +2200,26 @@ _CROSS_OBS_CSS = """
 .sro-card{border:1px solid var(--border);border-radius:10px;
   background:var(--bg);overflow:hidden;
   transition:border-color .15s,box-shadow .15s}
-.sro-card:hover{border-color:var(--infared);
-  box-shadow:0 2px 12px rgba(229,35,33,.07)}
-.sro-card:target{border-color:var(--infared);
-  box-shadow:0 0 0 3px rgba(229,35,33,.12)}
+.sro-card:hover{border-color:var(--cardano-blue);
+  box-shadow:0 2px 12px rgba(0,51,173,.10)}
+.sro-card:target{border-color:var(--cardano-blue);
+  box-shadow:0 0 0 3px rgba(0,51,173,.14)}
 
 /* Header band — canonical id on the left, title centred, count on the
-   right. Slight Infrared wash so the O-scope reads as a distinct zone
-   from the F-scope finding rows below. */
-.sro-head{display:flex;align-items:center;gap:12px;
+   right. Subtle Cardano-blue wash so the O-scope reads as a distinct
+   zone from the F-scope finding rows below. */
+.sro-head{display:flex;align-items:baseline;gap:12px;
   padding:12px 16px;
   background:linear-gradient(90deg,
-    color-mix(in srgb, var(--infared) 6%, transparent),
+    color-mix(in srgb, var(--cardano-blue) 8%, transparent),
     transparent 70%);
   border-bottom:1px solid var(--border)}
 .sro-badge{display:inline-flex;align-items:center;flex-shrink:0;
-  padding:4px 10px;border-radius:4px;
-  background:var(--infared);color:#fff;
-  font:600 11px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.05em;text-decoration:none}
+  padding:5px 10px 4px;border-radius:4px;
+  background:var(--cardano-blue);color:#fff;
+  font:600 11px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.05em;text-decoration:none;
+  position:relative;top:1px}
 .sro-title{flex:1 1 auto;min-width:0;margin:0;
   font:600 15px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-primary)}
@@ -2079,17 +2227,17 @@ _CROSS_OBS_CSS = """
   font-variant-numeric:tabular-nums}
 .sro-count{flex-shrink:0;
   font:500 11px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.04em;color:var(--text-muted);
+  letter-spacing:.04em;color:var(--cardano-blue);
   padding:3px 8px;border-radius:3px;background:var(--bg-panel);
-  border:1px solid var(--border)}
+  border:1px solid color-mix(in srgb, var(--cardano-blue) 30%, var(--border))}
 
 /* Abstract — single editorial lead under the title, matches the
    cross-page overlay's `.obs-panel-abstract` styling so the two read as
    the same artefact. */
 .sro-abstract{margin:0;padding:12px 16px 14px;
-  border-left:3px solid var(--infared);
+  border-left:3px solid var(--cardano-blue);
   background:linear-gradient(90deg,
-    color-mix(in srgb, var(--infared) 8%, transparent),
+    color-mix(in srgb, var(--cardano-blue) 9%, transparent),
     transparent 60%);
   font:400 13.5px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-primary)}
@@ -2104,12 +2252,13 @@ _CROSS_OBS_CSS = """
 .sro-finding{display:flex;align-items:flex-start;gap:12px;
   padding:12px 16px;border-top:1px solid var(--border)}
 .sro-finding:first-child{border-top:none}
-.sro-finding:target{background:color-mix(in srgb, var(--infared) 5%, transparent)}
+.sro-finding:target{background:color-mix(in srgb, var(--cardano-blue) 6%, transparent)}
 .sro-fid{flex-shrink:0;align-self:flex-start;margin-top:2px;
   padding:3px 9px;border-radius:3px;
-  background:var(--bg-panel);border:1px solid var(--border);
+  background:color-mix(in srgb, var(--cardano-blue) 5%, var(--bg-panel));
+  border:1px solid color-mix(in srgb, var(--cardano-blue) 22%, var(--border));
   font:600 10.5px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.04em;color:var(--infared);text-decoration:none}
+  letter-spacing:.04em;color:var(--cardano-blue);text-decoration:none}
 .sro-body{flex:1 1 auto;min-width:0;
   display:flex;flex-direction:column;gap:6px}
 .sro-evidence{font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -2124,7 +2273,7 @@ _CROSS_OBS_CSS = """
 .sro-anchor{font-weight:500;color:var(--text-secondary)}
 .sro-anchor a{color:inherit;text-decoration:none;
   border-bottom:1px dashed var(--border)}
-.sro-anchor a:hover{color:var(--infared);border-bottom-color:var(--infared)}
+.sro-anchor a:hover{color:var(--cardano-blue);border-bottom-color:var(--cardano-blue)}
 .sro-nature{font-style:italic;color:var(--text-muted)}
 .sro-nature::before{content:"· ";color:var(--border);font-style:normal}
 
@@ -2386,6 +2535,302 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
   .spo-selfab button span{display:none}
   .bookmarks-page{margin:16px}
 }
+
+/* sro-card "pro" variant — observation header redesigned to match the
+   "Source on GitHub" card pattern: gradient band + dedicated badge zone,
+   eyebrow line above the title, refined count chip on the right. The
+   abstract panel becomes a tinted bordered box, mirroring the GitHub
+   path-row. Applied via .sro-card-pro modifier on the first card only
+   (A/B test). */
+.sro-card.sro-card-pro{border:1px solid var(--border);border-radius:12px;
+  background:var(--bg);overflow:hidden;
+  box-shadow:0 1px 3px rgba(0,51,173,.04);
+  transition:border-color .15s,box-shadow .15s}
+.sro-card.sro-card-pro:hover{
+  border-color:color-mix(in srgb, var(--cardano-blue) 35%, var(--border));
+  box-shadow:0 2px 14px rgba(0,51,173,.08)}
+.sro-card.sro-card-pro:target{
+  border-color:var(--cardano-blue);
+  box-shadow:0 0 0 3px rgba(0,51,173,.14)}
+
+.sro-card-pro .sro-head{display:flex;align-items:center;gap:14px;
+  padding:16px 20px 14px;
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--cardano-blue) 10%, transparent) 0%,
+    color-mix(in srgb, var(--cardano-blue) 4%, transparent) 50%,
+    transparent 100%);
+  border-bottom:0}
+.sro-card-pro .sro-badge{display:inline-flex;align-items:center;flex-shrink:0;
+  padding:6px 12px 5px;border-radius:5px;
+  background:var(--cardano-blue);color:#fff;
+  font:600 12px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.06em;text-decoration:none;
+  box-shadow:0 1px 3px rgba(0,51,173,.25);
+  position:relative;top:0}
+.sro-card-pro .sro-titles{flex:1 1 auto;min-width:0;display:flex;
+  flex-direction:column;gap:3px}
+.sro-card-pro .sro-eyebrow{font:600 10px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)}
+.sro-card-pro .sro-title{font:600 19px/1.35 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-.005em;
+  color:var(--text-primary);margin:0}
+.sro-card-pro .sro-count{flex-shrink:0;
+  display:inline-flex;align-items:center;
+  padding:6px 14px;border-radius:5px;
+  background:#fff;
+  border:1px solid color-mix(in srgb, var(--infared) 35%, var(--border));
+  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;color:var(--infared);
+  box-shadow:0 1px 2px rgba(229,35,33,.06)}
+[data-theme=dark] .sro-card-pro .sro-count{
+  background:color-mix(in srgb, var(--infared) 10%, var(--bg));
+  color:#FF6F6E}
+
+/* Abstract + findings — same Cardano-blue rule + gradient on both
+   zones so alignment is guaranteed (single colour, single mechanism).
+   Pseudo-elements at left:0 of each parent always sit at x=0 of the
+   article — no border-left subtleties. */
+.sro-card-pro .sro-abstract{position:relative;margin:0;
+  padding:14px 20px 16px 23px;
+  border-left:0;border-bottom:0;
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--cardano-blue) 10%, transparent) 0%,
+    color-mix(in srgb, var(--cardano-blue) 4%, transparent) 50%,
+    transparent 100%);
+  font:400 13px/1.6 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.sro-card-pro .sro-abstract::before{content:'';position:absolute;
+  left:0;top:0;bottom:0;width:3px;
+  background:var(--cardano-blue);pointer-events:none}
+.sro-card-pro .sro-abstract strong{font-weight:700;color:var(--text-primary);
+  font-variant-numeric:tabular-nums}
+
+/* "Findings" eyebrow — Infared red label introducing the list. */
+.sro-findings-label{margin:20px 22px 10px;
+  font:600 11px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:2.6px;text-transform:uppercase;color:var(--infared);
+  display:flex;align-items:center;gap:12px}
+.sro-findings-label::after{content:'';flex:1;height:1px;
+  background:color-mix(in srgb, var(--infared) 35%, transparent)}
+[data-theme=dark] .sro-findings-label{color:#FF6F6E}
+[data-theme=dark] .sro-findings-label::after{
+  background:color-mix(in srgb, #FF6F6E 35%, transparent)}
+
+/* Card-level collapse — clicking the observation header
+   (.sro-head) folds the FINDINGS list (label + items). The
+   abstract paragraph stays visible so the reader keeps the
+   one-line summary even when the detail is folded. State
+   persists per-card via localStorage. */
+.sro-card-pro .sro-head{cursor:pointer;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .15s}
+.sro-card-pro .sro-head:hover{
+  background:color-mix(in srgb, var(--cardano-blue) 4%, transparent)}
+/* Chevron lives INSIDE the count chip (e.g. '8 findings ▾'), so it
+   reads as 'this chip toggles the list'. Rotates to -90deg when
+   collapsed. */
+.sro-card-pro .sro-count::after{content:'▾';flex-shrink:0;
+  font-size:11px;line-height:1;
+  margin-left:8px;opacity:.7;
+  transition:transform .2s ease,opacity .15s}
+.sro-card-pro .sro-head:hover .sro-count::after{opacity:1}
+.sro-card-pro.collapsed .sro-count::after{transform:rotate(-90deg)}
+/* When the card is collapsed, hide the FINDINGS eyebrow + the list
+   only. The abstract paragraph stays visible. */
+.sro-card-pro.collapsed > .sro-findings-label,
+.sro-card-pro.collapsed > .sro-findings{
+  display:none}
+
+/* Findings list — clean rows on the card surface. The whole row
+   theme switches to Infared red (the evidence belongs to the IOG
+   accent lane), distinct from the Cardano-blue observation chrome
+   above. No decorative left rail or per-row gradient. */
+.sro-card-pro .sro-findings{position:relative;padding:0;border-left:0}
+.sro-card-pro .sro-finding{padding:16px 22px 38px;gap:18px;
+  border-top:1px solid var(--border);background:transparent;
+  transition:background .15s}
+.sro-card-pro .sro-finding:first-child{border-top:0}
+.sro-card-pro .sro-finding:hover{
+  background:rgba(229,35,33,.04)}
+.sro-card-pro .sro-finding:target{
+  background:rgba(229,35,33,.08)}
+[data-theme=dark] .sro-card-pro .sro-finding:hover{background:rgba(255,111,110,.06)}
+[data-theme=dark] .sro-card-pro .sro-finding:target{background:rgba(255,111,110,.12)}
+
+/* F# badge — two-line stack and the row's jump-to-source link.
+   Clicking #N or CEN.O1.FN navigates to the source section — no
+   need for a separate '§3.5 — ...' link in the meta row. The whole
+   stack renders inside a single <a>, so the click target is the
+   full column. \`#N\` is the prominent ordinal in Infared (the
+   row's accent); \`CEN.O1.FN\` is the small mono breadcrumb in
+   muted grey for citation. */
+a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
+  align-self:flex-start;margin-top:1px;
+  min-width:96px;
+  display:inline-flex;flex-direction:column;gap:3px;
+  align-items:flex-start;justify-content:center;
+  background:transparent;border:0;border-bottom:0;text-decoration:none;
+  cursor:pointer}
+.sro-card-pro .sro-fid{padding:0;flex-shrink:0;
+  align-self:flex-start;margin-top:1px;
+  min-width:96px;
+  display:inline-flex;flex-direction:column;gap:3px;
+  align-items:flex-start;justify-content:center;
+  background:transparent;border:0;text-decoration:none}
+.sro-card-pro .sro-fid-label{
+  font:600 14px/1.2 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--infared);letter-spacing:-.005em;
+  font-variant-numeric:tabular-nums}
+.sro-card-pro .sro-fid-ref{
+  font:500 10px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--text-muted);letter-spacing:.06em}
+.sro-card-pro .sro-finding:hover .sro-fid-label{color:#a01a18}
+.sro-card-pro .sro-finding:hover .sro-fid-ref{color:var(--text-secondary)}
+[data-theme=dark] .sro-card-pro .sro-fid-label{color:#FF6F6E}
+[data-theme=dark] .sro-card-pro .sro-finding:hover .sro-fid-label{color:#FF8F8E}
+
+/* Evidence text — body of the row. Sits BELOW the observation
+   title in the visual hierarchy (title 19px → evidence 14.5px),
+   not above. Numbers/named entities keep tabular-nums for
+   vertical alignment when the eye scans down the column. */
+.sro-card-pro .sro-evidence{
+  font:400 14.5px/1.6 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#1a1a1a;letter-spacing:-.005em}
+[data-theme=dark] .sro-card-pro .sro-evidence{color:#E4E4E7}
+.sro-card-pro .sro-evidence strong{font-weight:700;
+  color:#000;font-variant-numeric:tabular-nums}
+[data-theme=dark] .sro-card-pro .sro-evidence strong{color:#fff}
+/* Inline metric chips (e.g. '950 pools', '1M ADA') inside the Pro
+   row scope — switch to the red accent so they belong to the row's
+   theme rather than the global Cardano-blue rule. */
+.sro-card-pro .sro-evidence .metric{
+  background:rgba(229,35,33,.06);
+  border-bottom:1px dotted rgba(229,35,33,.35);color:#1a1a1a}
+[data-theme=dark] .sro-card-pro .sro-evidence .metric{
+  background:rgba(255,111,110,.10);
+  border-bottom-color:rgba(255,111,110,.40);color:#E4E4E7}
+
+/* Nature tag — GitHub-style label, BOTTOM-RIGHT of the finding row.
+   Hue comes from the inline \`--n-h\` custom property (hashed from
+   the nature text in Python) so 'Structural threshold' always
+   renders one colour, 'Concentration — supply side' another, etc.
+   The reader learns categories visually after a few rows.
+   Row carries 38px of bottom padding so the label has its own
+   zone — never overlaps the evidence text, regardless of length. */
+.sro-card-pro{position:relative}
+.sro-card-pro .sro-finding{position:relative}
+.sro-card-pro .sro-nature{
+  position:absolute;bottom:12px;right:18px;
+  font:500 10.5px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;text-transform:none;font-style:normal;
+  padding:2px 9px;border-radius:12px;
+  background:hsl(var(--n-h,215),65%,94%);
+  color:hsl(var(--n-h,215),55%,32%);
+  border:1px solid hsl(var(--n-h,215),50%,82%);
+  white-space:nowrap;max-width:280px;overflow:hidden;text-overflow:ellipsis}
+.sro-card-pro .sro-nature::before{content:none}
+[data-theme=dark] .sro-card-pro .sro-nature{
+  background:hsl(var(--n-h,215),35%,18%);
+  color:hsl(var(--n-h,215),65%,75%);
+  border-color:hsl(var(--n-h,215),40%,30%)}
+@media (max-width:720px){
+  .sro-card-pro .sro-finding{padding-bottom:16px}
+  .sro-card-pro .sro-nature{position:static;display:inline-block;
+    margin-top:8px;max-width:none}
+}
+
+/* Save (.spo-bookmark-btn) is retired — hide if any cached buttons
+   linger from previously rendered pages. */
+.spo-bookmark-btn{display:none!important}
+
+@media (max-width:640px){
+  .sro-card-pro .sro-head{flex-wrap:wrap;gap:10px;padding:12px 14px}
+  .sro-card-pro .sro-titles{flex:1 1 100%;order:1}
+  .sro-card-pro .sro-badge{order:0}
+  .sro-card-pro .sro-count{order:2;margin-left:auto}
+  .sro-card-pro .sro-abstract{margin:12px 14px 0}
+  .sro-card-pro .sro-findings{padding:4px 6px 10px}
+}
+
+/* "Source on GitHub" — professional end-of-article card.
+   Two zones: header band (icon + titles + CTA button) and body
+   (clickable repo path + meta). The Reproduction section is stripped
+   from the website rendering; this card is the escape hatch for readers
+   who actually want shell commands and data deps. */
+.page-source{display:block;margin:48px 0 8px;
+  border:1px solid var(--border);border-radius:10px;background:var(--bg);
+  overflow:hidden;
+  box-shadow:0 1px 3px rgba(0,51,173,.04);
+  transition:border-color .15s,box-shadow .15s}
+.page-source:hover{border-color:color-mix(in srgb, var(--cardano-blue) 35%, var(--border));
+  box-shadow:0 2px 12px rgba(0,51,173,.08)}
+.page-source-head{display:flex;align-items:center;gap:14px;
+  padding:14px 18px;
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--cardano-blue) 8%, transparent),
+    color-mix(in srgb, var(--cardano-blue) 3%, transparent) 60%,
+    transparent 100%);
+  border-bottom:1px solid var(--border)}
+.page-source-icon{width:22px;height:22px;flex-shrink:0;
+  color:var(--cardano-blue)}
+.page-source-titles{flex:1 1 auto;min-width:0;display:flex;
+  flex-direction:column;gap:2px}
+.page-source-eyebrow{font:600 10px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)}
+.page-source-title{font:600 14.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.page-source .page-source-cta{display:inline-flex;align-items:center;gap:8px;
+  flex-shrink:0;padding:9px 20px;border-radius:5px;
+  background:var(--cardano-blue);color:#fff;text-decoration:none;
+  border:0;border-bottom:0;white-space:nowrap;
+  font:600 12.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.03em;
+  box-shadow:0 1px 4px rgba(0,51,173,.25);
+  transition:background .15s,box-shadow .15s,transform .15s}
+.page-source .page-source-cta:hover{background:#0a1f8e;color:#fff;
+  border-bottom:0;
+  box-shadow:0 2px 8px rgba(0,51,173,.4);
+  transform:translateY(-1px)}
+.page-source .page-source-cta span{color:#fff}
+.page-source .page-source-cta .page-source-ext{font-size:14px;line-height:1;opacity:.95}
+.page-source-body{padding:14px 18px 16px}
+.page-source .page-source-path{display:flex;align-items:center;gap:8px;
+  padding:8px 12px;border:1px solid var(--border);border-radius:6px;
+  background:var(--bg-panel);text-decoration:none;border-bottom:1px solid var(--border);
+  transition:border-color .15s,background .15s}
+.page-source .page-source-path:hover{border-color:color-mix(in srgb, var(--cardano-blue) 50%, var(--border));
+  background:color-mix(in srgb, var(--cardano-blue) 4%, var(--bg-panel))}
+.page-source-path-icon{width:14px;height:14px;flex-shrink:0;
+  color:var(--text-muted)}
+.page-source-path:hover .page-source-path-icon{color:var(--cardano-blue)}
+.page-source-repo{font:500 12px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-secondary);flex-shrink:0}
+.page-source-sep{color:var(--text-muted);opacity:.5;flex-shrink:0;font-size:13px}
+.page-source .page-source-pathtext{font:500 12px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  background:transparent;padding:0;border:0;color:var(--text-primary);
+  word-break:break-all;min-width:0}
+.page-source-meta{margin:10px 0 0;
+  font:400 12.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+[data-theme=dark] .page-source{background:var(--bg)}
+[data-theme=dark] .page-source-head{
+  background:linear-gradient(90deg,
+    rgba(0,51,173,.18),
+    rgba(0,51,173,.06) 60%,
+    transparent 100%)}
+[data-theme=dark] .page-source-cta{background:#3a5dff;
+  box-shadow:0 1px 4px rgba(0,0,0,.4)}
+[data-theme=dark] .page-source-cta:hover{background:#5778ff}
+@media (max-width:640px){
+  .page-source{margin:32px 0 4px}
+  .page-source-head{flex-wrap:wrap;gap:10px;padding:12px 14px}
+  .page-source-titles{flex:1 1 100%;order:1}
+  .page-source-icon{order:0}
+  .page-source-cta{order:2;width:100%;justify-content:center;padding:9px 14px}
+  .page-source-body{padding:12px 14px 14px}
+  .page-source-path{flex-wrap:wrap}
+}
+@media print{.page-source{display:none}}
+
 /* ── /Cross-page DIA source overlay + compact §X.Y.2 view ── */
 """
 
@@ -3241,6 +3686,64 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
       fetchAnswers(canon,host);
     });
   })();
+
+  /* ── Pro observation card — header collapse ──
+     Click anywhere on the .sro-head row to fold/unfold the body
+     (FINDINGS label + findings list; abstract stays visible).
+
+     Default state = collapsed (the markup ships .collapsed on every
+     card). localStorage tracks user overrides:
+       state[id] === '0' → user explicitly expanded
+       state[id] === '1' → user explicitly collapsed
+       absent           → fall back to the default (collapsed)
+     so the user's expansions persist but cards they never touched
+     stay folded on every visit. */
+  (function initCardCollapse(){
+    var heads=document.querySelectorAll('.sro-card-pro > .sro-head');
+    if(!heads.length) return;
+    var KEY='spo:findings-collapsed';
+    function load(){
+      try{return JSON.parse(localStorage.getItem(KEY)||'{}');}
+      catch(e){return {};}
+    }
+    function save(state){
+      try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
+    }
+    var state=load();
+    heads.forEach(function(head){
+      var card=head.parentElement;
+      if(!card||!card.classList.contains('sro-card-pro')) return;
+      var id=card.id||card.getAttribute('data-obs')||'';
+      head.setAttribute('role','button');
+      head.setAttribute('tabindex','0');
+      function apply(collapsed){
+        card.classList.toggle('collapsed',collapsed);
+        head.setAttribute('aria-expanded',collapsed?'false':'true');
+      }
+      /* Reconcile the markup default (collapsed) with any persisted
+         user override. */
+      if(id && state[id]==='0') apply(false);
+      else apply(true);
+      function toggle(ev){
+        /* Don't toggle when the click lands on a link inside the
+           header (the brand badge or any future header link). */
+        if(ev && ev.target && ev.target.closest('a')) return;
+        var willCollapse=!card.classList.contains('collapsed');
+        apply(willCollapse);
+        if(id){
+          state[id]=willCollapse?'1':'0';
+          save(state);
+        }
+      }
+      head.addEventListener('click',toggle);
+      head.addEventListener('keydown',function(e){
+        if(e.key==='Enter'||e.key===' '){
+          e.preventDefault();toggle(e);
+        }
+      });
+    });
+  })();
+  /* ── /Pro observation card — header collapse ── */
   /* ── /Cross-page DIA source overlay ── */
 
 """
@@ -3428,7 +3931,10 @@ def sync_references() -> None:
 # observation body. The classification is explanatory, not statistical.
 
 _OBS_HEADING_RE = re.compile(
-    r"^###\s+(\d+(?:\.\d+){1,2})\s+Mainnet Observations\s*$",
+    # Trailing dot is optional — TOC normalisation (commit 37ab992) added a
+    # period after multi-level section numbers (e.g. "1.3.2.") that the
+    # original regex would otherwise reject.
+    r"^###\s+(\d+(?:\.\d+){1,2})\.?\s+Mainnet Observations\s*$",
     re.MULTILINE,
 )
 _OBS_ROW_RE = re.compile(
@@ -4280,6 +4786,7 @@ def build_findings_page() -> Path:
         "hero_sub": "Every diagnostic finding paired with its mainnet evidence",
         "active_nav": "findings",
     }
+    content_html += _render_page_source_link(page)
     full = render_shell(page, content_html)
     out = SITE_DIR / "findings.html"
     out.write_text(full)
@@ -4872,6 +5379,18 @@ def extract_subreport_observations(
     return groups
 
 
+def _nature_hue(text: str) -> int:
+    """Stable hash → hue (0..359) for the nature-tag pill colour.
+    Same nature text always produces the same hue across builds, so
+    'Structural threshold' stays one tone, 'Concentration — supply
+    side' another, and the eye learns the categories visually.
+    """
+    if not text:
+        return 215  # default Cardano-blue-ish
+    digest = hashlib.md5(text.strip().lower().encode("utf-8")).hexdigest()
+    return int(digest[:4], 16) % 360
+
+
 def _sro_inline_md_to_html(md_inline: str) -> str:
     """Render a single table cell's markdown to inline HTML.
 
@@ -4912,35 +5431,114 @@ def _render_subreport_observations(groups: list[dict]) -> str:
             f'<p class="sro-abstract">{abstract_html}</p>'
             if abstract_html else ""
         )
-        out.append(
-            f'<article class="sro-card" id="{g["slug"]}" '
-            f'data-obs="{canon}" data-group="{g["o_num"]}">'
-            f'<header class="sro-head">'
-            f'<span class="sro-badge sro-group-{g["o_num"]}" '
-            f'title="{canon} · {o_short}">{canon}</span>'
-            f'<h3 class="sro-title">{o_title_html}</h3>'
-            f'<span class="sro-count">{len(g["findings"])} '
-            f'{"findings" if len(g["findings"]) != 1 else "finding"}</span>'
-            f'</header>'
-            f'{abstract_block}'
-            f'<ol class="sro-findings">'
+        # Pro variant — now applied to EVERY observation card (was
+        # previously gated to the first card as an A/B test). Validated
+        # design: collapsible header, GitHub-style nature labels, red
+        # findings theme, #N badge as jump-to-source link.
+        is_pro = True
+        count_label = (
+            f'{len(g["findings"])} '
+            f'{"findings" if len(g["findings"]) != 1 else "finding"}'
         )
-        for f in g["findings"]:
+        if is_pro:
+            head_html = (
+                f'<header class="sro-head">'
+                f'<span class="sro-badge sro-group-{g["o_num"]}" '
+                f'title="{canon} · {o_short}">{canon}</span>'
+                f'<div class="sro-titles">'
+                f'<span class="sro-eyebrow">Observation {g["o_num"]:02d}'
+                f' · {count_label}</span>'
+                f'<h3 class="sro-title">{o_title_html}</h3>'
+                f'</div>'
+                f'<span class="sro-count">{count_label}</span>'
+                f'</header>'
+            )
+            article_open = (
+                f'<article class="sro-card sro-card-pro collapsed" id="{g["slug"]}" '
+                f'data-obs="{canon}" data-group="{g["o_num"]}">'
+            )
+        else:
+            head_html = (
+                f'<header class="sro-head">'
+                f'<span class="sro-badge sro-group-{g["o_num"]}" '
+                f'title="{canon} · {o_short}">{canon}</span>'
+                f'<h3 class="sro-title">{o_title_html}</h3>'
+                f'<span class="sro-count">{count_label}</span>'
+                f'</header>'
+            )
+            article_open = (
+                f'<article class="sro-card" id="{g["slug"]}" '
+                f'data-obs="{canon}" data-group="{g["o_num"]}">'
+            )
+        # Pro variant gets a small "Findings" eyebrow between the
+        # abstract and the list — frames the list as its own section.
+        findings_label = (
+            '<div class="sro-findings-label">Findings</div>' if is_pro else ''
+        )
+        out.append(article_open + head_html + abstract_block
+                   + findings_label + '<ol class="sro-findings">')
+        # Pull the FIRST href= out of a rendered section link so the
+        # Pro badge can become a direct jump-to-source. Findings whose
+        # section_md is plain text (no link) get a non-clickable badge.
+        _sec_href_re = re.compile(r'href=["\']([^"\']+)["\']', re.IGNORECASE)
+        for fi, f in enumerate(g["findings"], 1):
             ev_html = _sro_inline_md_to_html(f["evidence_md"])
             ev_html = _highlight_metrics(ev_html)
             sec_html = _sro_inline_md_to_html(f["section_md"])
             nature_html = _sro_inline_md_to_html(f["nature_md"])
+            sec_href_match = _sec_href_re.search(sec_html or "")
+            sec_href = sec_href_match.group(1) if sec_href_match else ""
+            if is_pro:
+                # Pro variant — the badge IS the jump-to-source link.
+                # #N (ordinal) + CEN.O1.FN (canonical ref) sit inside
+                # a single <a> so clicking either one navigates to the
+                # finding's source section. The .sro-anchor span in
+                # the meta row was retired — the badge replaces it.
+                inner = (
+                    f'<span class="sro-fid-label">#{fi}</span>'
+                    f'<span class="sro-fid-ref">{f["canon_id"]}</span>'
+                )
+                if sec_href:
+                    fid_html = (
+                        f'<a class="sro-fid sro-fid-stack sro-group-{f["f_group"]}" '
+                        f'href="{_html.escape(sec_href)}" '
+                        f'title="{f["canon_id"]} — jump to source">{inner}</a>'
+                    )
+                else:
+                    fid_html = (
+                        f'<span class="sro-fid sro-fid-stack sro-group-{f["f_group"]}" '
+                        f'title="{f["canon_id"]}">{inner}</span>'
+                    )
+            else:
+                fid_html = (
+                    f'<span class="sro-fid sro-group-{f["f_group"]}" '
+                    f'title="{f["canon_id"]} · was {f["f_id"]}">{f["canon_id"]}</span>'
+                )
+            # Pro variant drops the .sro-anchor and floats the nature
+            # tag top-right of the row as a GitHub-style label whose
+            # hue is hashed from the nature text (same category =
+            # same colour).
+            if is_pro:
+                nature_text = re.sub(r"<[^>]+>", "", nature_html or "").strip()
+                hue = _nature_hue(nature_text)
+                meta_html = (
+                    f'<span class="sro-nature" style="--n-h:{hue}">'
+                    f'{nature_html}</span>'
+                )
+            else:
+                meta_html = (
+                    f'<div class="sro-meta">'
+                    f'<span class="sro-anchor">{sec_html}</span>'
+                    f'<span class="sro-nature">{nature_html}</span>'
+                    f'</div>'
+                )
             out.append(
                 f'<li class="sro-finding" id="{f["slug"]}" '
                 f'data-finding="{f["canon_id"]}" data-group="{f["f_group"]}">'
-                f'<span class="sro-fid sro-group-{f["f_group"]}" '
-                f'title="{f["canon_id"]} · was {f["f_id"]}">{f["canon_id"]}</span>'
+                f'{fid_html}'
                 f'<div class="sro-body">'
                 f'<div class="sro-evidence">{ev_html}</div>'
-                f'<div class="sro-meta">'
-                f'<span class="sro-anchor">{sec_html}</span>'
-                f'<span class="sro-nature">{nature_html}</span>'
-                f'</div>'
+                f'{meta_html}'
                 f'</div>'
                 f'</li>'
             )
@@ -5349,7 +5947,12 @@ def build_page(page: dict) -> Path:
         for fs in f_by_code.values():
             cross_findings.extend(fs)
 
-    if observations and is_observatory:
+    # When a section's parent (e.g. "1.3") has a DIA_SOURCE_MAP entry, render
+    # the compact OPE.O# / POL.O# / TRE.O# / CEN.O# source-deferring rows so
+    # the canonical sub-report ids are surfaced (and the "DIA.1.3.O#" wrapper
+    # never reaches the page). This applies to every non-sub-report page,
+    # not just the observatory.
+    if observations and source_lookup:
         content_html = transform_observation_tables_with_sources(
             content_html, observations, source_lookup,
         )
@@ -5408,6 +6011,11 @@ def build_page(page: dict) -> Path:
         content_html += _render_finding_registry(cross_findings)
 
     content_html = decorate_section_references(content_html, page["html"])
+
+    # "View source on GitHub" footer link — sits at the very end of the
+    # article content (above the site-footer) so motivated readers can
+    # always reach the unredacted MD source.
+    content_html += _render_page_source_link(page)
 
     full = render_shell(page, content_html)
     out = SITE_DIR / page["html"]
@@ -5490,9 +6098,88 @@ def build_bookmarks_page() -> Path:
     return out
 
 
+# --- PDF viewer page --------------------------------------------------------
+# Generated as a regular page so it always shares head + nav + footer with
+# the rest of the site (same fonts, same Cardano blue chrome, same logo).
+# Body is a tiny toolbar + iframe; the file to render comes from the
+# `?file=` query string. No drift possible — the standalone pdf-viewer.html
+# is rebuilt every run.
+
+PDF_VIEWER_BODY = """<style>
+.pdf-toolbar{display:flex;align-items:center;gap:16px;padding:10px 28px;background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0}
+.pdf-title{flex:1;font:600 13px/1 var(--font-display);letter-spacing:.6px;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pdf-toolbar a{font-size:12px;color:var(--text-secondary);text-decoration:none;border:1px solid var(--border);border-radius:4px;padding:5px 12px;transition:color .15s,border-color .15s;white-space:nowrap}
+.pdf-toolbar a:hover{color:var(--cardano-blue);border-color:var(--cardano-blue)}
+.pdf-frame{flex:1;width:100%;border:0;background:var(--bg-warm);min-height:calc(100vh - 240px)}
+.pdf-error{padding:40px;color:var(--text-secondary);text-align:center;font:400 14px/1.5 var(--font-body)}
+.pdf-error a{color:var(--cardano-blue);text-decoration:underline}
+[data-theme=dark] .pdf-toolbar{background:var(--bg);border-bottom-color:var(--border)}
+[data-theme=dark] .pdf-toolbar a{color:var(--text-body)}
+</style>
+<div class="pdf-toolbar" id="toolbar">
+  <span class="pdf-title" id="pdf-title">Loading document…</span>
+  <a id="pdf-download" href="#" download title="Download PDF">Download ↓</a>
+  <a id="pdf-newtab" href="#" target="_blank" title="Open in new tab">New tab ↗</a>
+</div>
+<iframe class="pdf-frame" id="pdf-frame"></iframe>
+<script>
+(function(){
+  var titles={};
+  titles["delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf"]="Delegation & Incentives Design Spec";
+  titles["reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf"]="Reward Sharing Schemes for Stake Pools";
+  titles["incentives-against-power-grabs_kiayias-et-al_2021.pdf"]="Stake Pool Incentives Against Power Grabs";
+  titles["removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf"]="Removing the Minimum Pool Cost";
+  titles["balancing-participation-decentralization_kiayias-et-al_2024.pdf"]="Balancing Participation & Decentralization";
+  titles["spo-incentives-analysis_lopez-de-lara_2025.pdf"]="SPO Incentives Analysis";
+  titles["cardano-constitution-2.pdf"]="Cardano Constitution V2";
+  var params=new URLSearchParams(window.location.search);
+  var file=params.get('file')||'';
+  if(file){
+    document.getElementById('pdf-frame').src=file;
+    document.getElementById('pdf-download').href=file;
+    document.getElementById('pdf-newtab').href=file;
+    var basename=file.split('/').pop();
+    var title=titles[basename]||basename.replace(/\\.pdf$/i,'').replace(/[-_]/g,' ');
+    document.getElementById('pdf-title').textContent=title;
+    document.title=title+' — SPO Incentives';
+  } else {
+    document.getElementById('toolbar').style.display='none';
+    document.getElementById('pdf-frame').style.display='none';
+    var err=document.createElement('div');
+    err.className='pdf-error';
+    err.innerHTML='<div>No document specified.</div><a href="index.html">← Back to report</a>';
+    document.body.insertBefore(err,document.querySelector('.site-footer'));
+  }
+})();
+</script>"""
+
+
+def build_pdf_viewer_page() -> Path:
+    """Build pdf-viewer.html as a regular shell page so head/nav/footer
+    stay in sync with the rest of the site automatically. Body is the
+    PDF iframe + toolbar; file comes from ?file= query param at runtime.
+    """
+    page = {
+        "slug": "pdf-viewer",
+        "html": "pdf-viewer.html",
+        "title": "Document Viewer — SPO Incentives",
+        # active_nav highlights the V2 Spec tab so the reader sees they're
+        # still inside the spec context.
+        "active_nav": "spec",
+        # Empty hero placeholders — body_main override skips them entirely.
+        "hero_h1": "",
+        "hero_sub": "",
+        "body_main": PDF_VIEWER_BODY,
+    }
+    full = render_shell(page, content_html="")
+    out = SITE_DIR / "pdf-viewer.html"
+    out.write_text(full)
+    return out
+
+
 def main(argv: list[str]) -> int:
     slugs = [a for a in argv[1:] if not a.startswith("-")]
-    valid_slugs = {p["slug"] for p in PAGES} | {"findings", "my-bookmarks"}
+    valid_slugs = {p["slug"] for p in PAGES} | {"findings", "my-bookmarks", "pdf-viewer"}
     wanted = PAGES if not slugs else [p for p in PAGES if p["slug"] in slugs]
     if slugs:
         missing = set(slugs) - valid_slugs
@@ -5523,13 +6210,22 @@ def main(argv: list[str]) -> int:
         findings_out = build_findings_page()
         print(f"  {' ':16s}  → {findings_out.relative_to(SITE_DIR)}")
 
-    # Bookmarks page — utility page, hydrates from the reader's local
-    # storage and lists their saved findings. Always built so the
-    # `Save` button has a target.
-    if not slugs or "my-bookmarks" in slugs:
+    # Bookmarks page retired — Layer 5 'Save findings' feature was
+    # dropped at user request. Build only when explicitly requested by
+    # slug (so old links keep resolving if cached) AND BOOKMARKS_ENABLED
+    # is on.
+    if BOOKMARKS_ENABLED and "my-bookmarks" in slugs:
         print(f"  {'my-bookmarks':16s} ← (localStorage hydrator)")
         bookmarks_out = build_bookmarks_page()
         print(f"  {' ':16s}  → {bookmarks_out.relative_to(SITE_DIR)}")
+
+    # PDF viewer — generated from the same shell so head/nav/footer
+    # never drift from the regular pages. Body is a static toolbar +
+    # iframe driven by a ?file= query param at runtime.
+    if not slugs or "pdf-viewer" in slugs:
+        print(f"  {'pdf-viewer':16s} ← (shared shell + iframe)")
+        pdf_out = build_pdf_viewer_page()
+        print(f"  {' ':16s}  → {pdf_out.relative_to(SITE_DIR)}")
     print("Done.")
     return 0
 

@@ -379,19 +379,27 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .content tr:hover td{background:var(--bg-warm)}
 
 /* ── Evidence base cards (V2 spec) — §3.x.x.x and §4.x.x.x ── */
+/* Evidence cards (Evidence base under each problem statement). The
+   left-column LABEL acts as the brand stamp; using the Cardano-blue
+   family pulls it into the same tonal world as the page H2/H3 above
+   it. The card chrome stays neutral so the text reads. A 3px Cardano-
+   blue inset on hover ties the interaction to the same anchor-bar
+   motif used by H1 and the active TOC item. */
 .ev-list{display:flex;flex-direction:column;gap:8px;margin:18px 0 28px}
 .ev-card{display:grid;grid-template-columns:160px 1fr;gap:18px;padding:14px 18px;border:1px solid var(--border);border-radius:8px;background:var(--bg);transition:border-color .15s,box-shadow .15s}
-.ev-card:hover{border-color:rgba(229,35,33,.35);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.ev-card:hover{border-color:var(--cardano-blue-2);box-shadow:inset 3px 0 0 var(--cardano-blue),0 1px 3px var(--cardano-blue-soft)}
 [data-theme=dark] .ev-card{border-color:#2a2a2a}
-[data-theme=dark] .ev-card:hover{border-color:rgba(229,35,33,.45);box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.ev-label{font:600 11px/1.3 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-transform:uppercase;letter-spacing:.6px;color:var(--infared);align-self:start;padding-top:3px}
+[data-theme=dark] .ev-card:hover{border-color:#6E97FF;box-shadow:inset 3px 0 0 #6E97FF,0 1px 3px rgba(0,0,0,.2)}
+.ev-label{font:600 11px/1.3 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-transform:uppercase;letter-spacing:1.4px;color:var(--cardano-blue);align-self:start;padding-top:3px}
+[data-theme=dark] .ev-label{color:#8FB1FF}
 .ev-content{min-width:0}
 .ev-body{font:400 13.5px/1.55 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-body);margin:0}
 .ev-body strong{color:var(--text-primary);font-weight:700}
-.ev-sources{margin:8px 0 0;font:italic 400 11.5px/1.4 -apple-system,sans-serif;color:var(--text-muted)}
-.ev-sources a{color:var(--text-muted);text-decoration:underline;text-decoration-color:rgba(229,35,33,.3);text-underline-offset:2px}
-.ev-sources a:hover{color:var(--infared);text-decoration-color:var(--infared)}
-@media (max-width:640px){.ev-card{grid-template-columns:1fr;gap:6px}.ev-label{padding-top:0}}
+.ev-sources{margin:8px 0 0;font:italic 400 11.5px/1.4 'Inter',-apple-system,sans-serif;color:var(--text-muted)}
+.ev-sources a{color:var(--text-muted);text-decoration:underline;text-decoration-color:var(--cardano-link-line);text-underline-offset:2px;transition:color .15s,text-decoration-color .15s}
+.ev-sources a:hover{color:var(--cardano-blue);text-decoration-color:var(--cardano-blue)}
+[data-theme=dark] .ev-sources a:hover{color:#8FB1FF;text-decoration-color:#8FB1FF}
+@media (max-width:640px){.ev-card{grid-template-columns:160px 1fr;gap:6px}.ev-label{padding-top:0}}
 
 /* Blockquotes */
 .content blockquote{border-left:3px solid var(--accent);padding:12px 18px;margin:16px 0;background:var(--bg-panel);border-radius:0 6px 6px 0}
@@ -939,11 +947,15 @@ body.toc-open .toc-panel{transform:translateX(0)}
 [data-theme=dark] .obs-tier-sustainability{background:rgba(167,0,255,.18);color:#c471e0}
 [data-theme=dark] .obs-tier-general{background:var(--bg-panel);color:var(--text-muted)}
 
-/* Metric highlighting inside obs summaries and findings */
-.metric{background:rgba(229,35,33,.06);border-bottom:1px dotted rgba(229,35,33,.3);
-  padding:0 2px;color:var(--text-primary);font-variant-numeric:tabular-nums;
-  font-weight:500}
-[data-theme=dark] .metric{background:rgba(229,35,33,.12);border-bottom-color:rgba(240,96,80,.4)}
+/* Metric highlighting — inline chips around named numbers ("950 pools",
+   "epoch 300", "1M ADA"). Cardano-blue tint replaces the previous
+   IOG-red wash so the highlight reads as part of the brand. */
+.metric{background:var(--cardano-blue-soft);
+  border-bottom:1px dotted color-mix(in srgb, var(--cardano-blue) 35%, transparent);
+  padding:0 3px;color:var(--text-primary);font-variant-numeric:tabular-nums;
+  font-weight:500;border-radius:2px}
+[data-theme=dark] .metric{background:rgba(110,151,255,.10);
+  border-bottom-color:rgba(110,151,255,.40)}
 
 /* ── Observation citation references (overlay-enabled) ───────────────── */
 .obs-ref{display:inline;color:var(--infared);text-decoration:none;
@@ -1327,25 +1339,26 @@ body.finding-panel-open .finding-panel-overlay{opacity:1;pointer-events:auto}
 .sro-card{border:1px solid var(--border);border-radius:10px;
   background:var(--bg);overflow:hidden;
   transition:border-color .15s,box-shadow .15s}
-.sro-card:hover{border-color:var(--infared);
-  box-shadow:0 2px 12px rgba(229,35,33,.07)}
-.sro-card:target{border-color:var(--infared);
-  box-shadow:0 0 0 3px rgba(229,35,33,.12)}
+.sro-card:hover{border-color:var(--cardano-blue);
+  box-shadow:0 2px 12px rgba(0,51,173,.10)}
+.sro-card:target{border-color:var(--cardano-blue);
+  box-shadow:0 0 0 3px rgba(0,51,173,.14)}
 
 /* Header band — canonical id on the left, title centred, count on the
-   right. Slight Infrared wash so the O-scope reads as a distinct zone
-   from the F-scope finding rows below. */
-.sro-head{display:flex;align-items:center;gap:12px;
+   right. Subtle Cardano-blue wash so the O-scope reads as a distinct
+   zone from the F-scope finding rows below. */
+.sro-head{display:flex;align-items:baseline;gap:12px;
   padding:12px 16px;
   background:linear-gradient(90deg,
-    color-mix(in srgb, var(--infared) 6%, transparent),
+    color-mix(in srgb, var(--cardano-blue) 8%, transparent),
     transparent 70%);
   border-bottom:1px solid var(--border)}
 .sro-badge{display:inline-flex;align-items:center;flex-shrink:0;
-  padding:4px 10px;border-radius:4px;
-  background:var(--infared);color:#fff;
-  font:600 11px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.05em;text-decoration:none}
+  padding:5px 10px 4px;border-radius:4px;
+  background:var(--cardano-blue);color:#fff;
+  font:600 11px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.05em;text-decoration:none;
+  position:relative;top:1px}
 .sro-title{flex:1 1 auto;min-width:0;margin:0;
   font:600 15px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-primary)}
@@ -1353,17 +1366,17 @@ body.finding-panel-open .finding-panel-overlay{opacity:1;pointer-events:auto}
   font-variant-numeric:tabular-nums}
 .sro-count{flex-shrink:0;
   font:500 11px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.04em;color:var(--text-muted);
+  letter-spacing:.04em;color:var(--cardano-blue);
   padding:3px 8px;border-radius:3px;background:var(--bg-panel);
-  border:1px solid var(--border)}
+  border:1px solid color-mix(in srgb, var(--cardano-blue) 30%, var(--border))}
 
 /* Abstract — single editorial lead under the title, matches the
    cross-page overlay's `.obs-panel-abstract` styling so the two read as
    the same artefact. */
 .sro-abstract{margin:0;padding:12px 16px 14px;
-  border-left:3px solid var(--infared);
+  border-left:3px solid var(--cardano-blue);
   background:linear-gradient(90deg,
-    color-mix(in srgb, var(--infared) 8%, transparent),
+    color-mix(in srgb, var(--cardano-blue) 9%, transparent),
     transparent 60%);
   font:400 13.5px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-primary)}
@@ -1378,12 +1391,13 @@ body.finding-panel-open .finding-panel-overlay{opacity:1;pointer-events:auto}
 .sro-finding{display:flex;align-items:flex-start;gap:12px;
   padding:12px 16px;border-top:1px solid var(--border)}
 .sro-finding:first-child{border-top:none}
-.sro-finding:target{background:color-mix(in srgb, var(--infared) 5%, transparent)}
+.sro-finding:target{background:color-mix(in srgb, var(--cardano-blue) 6%, transparent)}
 .sro-fid{flex-shrink:0;align-self:flex-start;margin-top:2px;
   padding:3px 9px;border-radius:3px;
-  background:var(--bg-panel);border:1px solid var(--border);
+  background:color-mix(in srgb, var(--cardano-blue) 5%, var(--bg-panel));
+  border:1px solid color-mix(in srgb, var(--cardano-blue) 22%, var(--border));
   font:600 10.5px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.04em;color:var(--infared);text-decoration:none}
+  letter-spacing:.04em;color:var(--cardano-blue);text-decoration:none}
 .sro-body{flex:1 1 auto;min-width:0;
   display:flex;flex-direction:column;gap:6px}
 .sro-evidence{font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -1398,7 +1412,7 @@ body.finding-panel-open .finding-panel-overlay{opacity:1;pointer-events:auto}
 .sro-anchor{font-weight:500;color:var(--text-secondary)}
 .sro-anchor a{color:inherit;text-decoration:none;
   border-bottom:1px dashed var(--border)}
-.sro-anchor a:hover{color:var(--infared);border-bottom-color:var(--infared)}
+.sro-anchor a:hover{color:var(--cardano-blue);border-bottom-color:var(--cardano-blue)}
 .sro-nature{font-style:italic;color:var(--text-muted)}
 .sro-nature::before{content:"· ";color:var(--border);font-style:normal}
 
@@ -1660,4 +1674,300 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
   .spo-selfab button span{display:none}
   .bookmarks-page{margin:16px}
 }
+
+/* sro-card "pro" variant — observation header redesigned to match the
+   "Source on GitHub" card pattern: gradient band + dedicated badge zone,
+   eyebrow line above the title, refined count chip on the right. The
+   abstract panel becomes a tinted bordered box, mirroring the GitHub
+   path-row. Applied via .sro-card-pro modifier on the first card only
+   (A/B test). */
+.sro-card.sro-card-pro{border:1px solid var(--border);border-radius:12px;
+  background:var(--bg);overflow:hidden;
+  box-shadow:0 1px 3px rgba(0,51,173,.04);
+  transition:border-color .15s,box-shadow .15s}
+.sro-card.sro-card-pro:hover{
+  border-color:color-mix(in srgb, var(--cardano-blue) 35%, var(--border));
+  box-shadow:0 2px 14px rgba(0,51,173,.08)}
+.sro-card.sro-card-pro:target{
+  border-color:var(--cardano-blue);
+  box-shadow:0 0 0 3px rgba(0,51,173,.14)}
+
+.sro-card-pro .sro-head{display:flex;align-items:center;gap:14px;
+  padding:16px 20px 14px;
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--cardano-blue) 10%, transparent) 0%,
+    color-mix(in srgb, var(--cardano-blue) 4%, transparent) 50%,
+    transparent 100%);
+  border-bottom:0}
+.sro-card-pro .sro-badge{display:inline-flex;align-items:center;flex-shrink:0;
+  padding:6px 12px 5px;border-radius:5px;
+  background:var(--cardano-blue);color:#fff;
+  font:600 12px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.06em;text-decoration:none;
+  box-shadow:0 1px 3px rgba(0,51,173,.25);
+  position:relative;top:0}
+.sro-card-pro .sro-titles{flex:1 1 auto;min-width:0;display:flex;
+  flex-direction:column;gap:3px}
+.sro-card-pro .sro-eyebrow{font:600 10px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)}
+.sro-card-pro .sro-title{font:600 19px/1.35 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-.005em;
+  color:var(--text-primary);margin:0}
+.sro-card-pro .sro-count{flex-shrink:0;
+  display:inline-flex;align-items:center;
+  padding:6px 14px;border-radius:5px;
+  background:#fff;
+  border:1px solid color-mix(in srgb, var(--infared) 35%, var(--border));
+  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;color:var(--infared);
+  box-shadow:0 1px 2px rgba(229,35,33,.06)}
+[data-theme=dark] .sro-card-pro .sro-count{
+  background:color-mix(in srgb, var(--infared) 10%, var(--bg));
+  color:#FF6F6E}
+
+/* Abstract + findings — same Cardano-blue rule + gradient on both
+   zones so alignment is guaranteed (single colour, single mechanism).
+   Pseudo-elements at left:0 of each parent always sit at x=0 of the
+   article — no border-left subtleties. */
+.sro-card-pro .sro-abstract{position:relative;margin:0;
+  padding:14px 20px 16px 23px;
+  border-left:0;border-bottom:0;
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--cardano-blue) 10%, transparent) 0%,
+    color-mix(in srgb, var(--cardano-blue) 4%, transparent) 50%,
+    transparent 100%);
+  font:400 13px/1.6 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.sro-card-pro .sro-abstract::before{content:'';position:absolute;
+  left:0;top:0;bottom:0;width:3px;
+  background:var(--cardano-blue);pointer-events:none}
+.sro-card-pro .sro-abstract strong{font-weight:700;color:var(--text-primary);
+  font-variant-numeric:tabular-nums}
+
+/* "Findings" eyebrow — Infared red label introducing the list. */
+.sro-findings-label{margin:20px 22px 10px;
+  font:600 11px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:2.6px;text-transform:uppercase;color:var(--infared);
+  display:flex;align-items:center;gap:12px}
+.sro-findings-label::after{content:'';flex:1;height:1px;
+  background:color-mix(in srgb, var(--infared) 35%, transparent)}
+[data-theme=dark] .sro-findings-label{color:#FF6F6E}
+[data-theme=dark] .sro-findings-label::after{
+  background:color-mix(in srgb, #FF6F6E 35%, transparent)}
+
+/* Card-level collapse — clicking the observation header
+   (.sro-head) folds the FINDINGS list (label + items). The
+   abstract paragraph stays visible so the reader keeps the
+   one-line summary even when the detail is folded. State
+   persists per-card via localStorage. */
+.sro-card-pro .sro-head{cursor:pointer;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .15s}
+.sro-card-pro .sro-head:hover{
+  background:color-mix(in srgb, var(--cardano-blue) 4%, transparent)}
+/* Chevron lives INSIDE the count chip (e.g. '8 findings ▾'), so it
+   reads as 'this chip toggles the list'. Rotates to -90deg when
+   collapsed. */
+.sro-card-pro .sro-count::after{content:'▾';flex-shrink:0;
+  font-size:11px;line-height:1;
+  margin-left:8px;opacity:.7;
+  transition:transform .2s ease,opacity .15s}
+.sro-card-pro .sro-head:hover .sro-count::after{opacity:1}
+.sro-card-pro.collapsed .sro-count::after{transform:rotate(-90deg)}
+/* When the card is collapsed, hide the FINDINGS eyebrow + the list
+   only. The abstract paragraph stays visible. */
+.sro-card-pro.collapsed > .sro-findings-label,
+.sro-card-pro.collapsed > .sro-findings{
+  display:none}
+
+/* Findings list — clean rows on the card surface. The whole row
+   theme switches to Infared red (the evidence belongs to the IOG
+   accent lane), distinct from the Cardano-blue observation chrome
+   above. No decorative left rail or per-row gradient. */
+.sro-card-pro .sro-findings{position:relative;padding:0;border-left:0}
+.sro-card-pro .sro-finding{padding:16px 22px 38px;gap:18px;
+  border-top:1px solid var(--border);background:transparent;
+  transition:background .15s}
+.sro-card-pro .sro-finding:first-child{border-top:0}
+.sro-card-pro .sro-finding:hover{
+  background:rgba(229,35,33,.04)}
+.sro-card-pro .sro-finding:target{
+  background:rgba(229,35,33,.08)}
+[data-theme=dark] .sro-card-pro .sro-finding:hover{background:rgba(255,111,110,.06)}
+[data-theme=dark] .sro-card-pro .sro-finding:target{background:rgba(255,111,110,.12)}
+
+/* F# badge — two-line stack and the row's jump-to-source link.
+   Clicking #N or CEN.O1.FN navigates to the source section — no
+   need for a separate '§3.5 — ...' link in the meta row. The whole
+   stack renders inside a single <a>, so the click target is the
+   full column. \`#N\` is the prominent ordinal in Infared (the
+   row's accent); \`CEN.O1.FN\` is the small mono breadcrumb in
+   muted grey for citation. */
+a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
+  align-self:flex-start;margin-top:1px;
+  min-width:96px;
+  display:inline-flex;flex-direction:column;gap:3px;
+  align-items:flex-start;justify-content:center;
+  background:transparent;border:0;border-bottom:0;text-decoration:none;
+  cursor:pointer}
+.sro-card-pro .sro-fid{padding:0;flex-shrink:0;
+  align-self:flex-start;margin-top:1px;
+  min-width:96px;
+  display:inline-flex;flex-direction:column;gap:3px;
+  align-items:flex-start;justify-content:center;
+  background:transparent;border:0;text-decoration:none}
+.sro-card-pro .sro-fid-label{
+  font:600 14px/1.2 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--infared);letter-spacing:-.005em;
+  font-variant-numeric:tabular-nums}
+.sro-card-pro .sro-fid-ref{
+  font:500 10px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--text-muted);letter-spacing:.06em}
+.sro-card-pro .sro-finding:hover .sro-fid-label{color:#a01a18}
+.sro-card-pro .sro-finding:hover .sro-fid-ref{color:var(--text-secondary)}
+[data-theme=dark] .sro-card-pro .sro-fid-label{color:#FF6F6E}
+[data-theme=dark] .sro-card-pro .sro-finding:hover .sro-fid-label{color:#FF8F8E}
+
+/* Evidence text — body of the row. Sits BELOW the observation
+   title in the visual hierarchy (title 19px → evidence 14.5px),
+   not above. Numbers/named entities keep tabular-nums for
+   vertical alignment when the eye scans down the column. */
+.sro-card-pro .sro-evidence{
+  font:400 14.5px/1.6 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#1a1a1a;letter-spacing:-.005em}
+[data-theme=dark] .sro-card-pro .sro-evidence{color:#E4E4E7}
+.sro-card-pro .sro-evidence strong{font-weight:700;
+  color:#000;font-variant-numeric:tabular-nums}
+[data-theme=dark] .sro-card-pro .sro-evidence strong{color:#fff}
+/* Inline metric chips (e.g. '950 pools', '1M ADA') inside the Pro
+   row scope — switch to the red accent so they belong to the row's
+   theme rather than the global Cardano-blue rule. */
+.sro-card-pro .sro-evidence .metric{
+  background:rgba(229,35,33,.06);
+  border-bottom:1px dotted rgba(229,35,33,.35);color:#1a1a1a}
+[data-theme=dark] .sro-card-pro .sro-evidence .metric{
+  background:rgba(255,111,110,.10);
+  border-bottom-color:rgba(255,111,110,.40);color:#E4E4E7}
+
+/* Nature tag — GitHub-style label, BOTTOM-RIGHT of the finding row.
+   Hue comes from the inline \`--n-h\` custom property (hashed from
+   the nature text in Python) so 'Structural threshold' always
+   renders one colour, 'Concentration — supply side' another, etc.
+   The reader learns categories visually after a few rows.
+   Row carries 38px of bottom padding so the label has its own
+   zone — never overlaps the evidence text, regardless of length. */
+.sro-card-pro{position:relative}
+.sro-card-pro .sro-finding{position:relative}
+.sro-card-pro .sro-nature{
+  position:absolute;bottom:12px;right:18px;
+  font:500 10.5px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;text-transform:none;font-style:normal;
+  padding:2px 9px;border-radius:12px;
+  background:hsl(var(--n-h,215),65%,94%);
+  color:hsl(var(--n-h,215),55%,32%);
+  border:1px solid hsl(var(--n-h,215),50%,82%);
+  white-space:nowrap;max-width:280px;overflow:hidden;text-overflow:ellipsis}
+.sro-card-pro .sro-nature::before{content:none}
+[data-theme=dark] .sro-card-pro .sro-nature{
+  background:hsl(var(--n-h,215),35%,18%);
+  color:hsl(var(--n-h,215),65%,75%);
+  border-color:hsl(var(--n-h,215),40%,30%)}
+@media (max-width:720px){
+  .sro-card-pro .sro-finding{padding-bottom:16px}
+  .sro-card-pro .sro-nature{position:static;display:inline-block;
+    margin-top:8px;max-width:none}
+}
+
+/* Save (.spo-bookmark-btn) is retired — hide if any cached buttons
+   linger from previously rendered pages. */
+.spo-bookmark-btn{display:none!important}
+
+@media (max-width:640px){
+  .sro-card-pro .sro-head{flex-wrap:wrap;gap:10px;padding:12px 14px}
+  .sro-card-pro .sro-titles{flex:1 1 100%;order:1}
+  .sro-card-pro .sro-badge{order:0}
+  .sro-card-pro .sro-count{order:2;margin-left:auto}
+  .sro-card-pro .sro-abstract{margin:12px 14px 0}
+  .sro-card-pro .sro-findings{padding:4px 6px 10px}
+}
+
+/* "Source on GitHub" — professional end-of-article card.
+   Two zones: header band (icon + titles + CTA button) and body
+   (clickable repo path + meta). The Reproduction section is stripped
+   from the website rendering; this card is the escape hatch for readers
+   who actually want shell commands and data deps. */
+.page-source{display:block;margin:48px 0 8px;
+  border:1px solid var(--border);border-radius:10px;background:var(--bg);
+  overflow:hidden;
+  box-shadow:0 1px 3px rgba(0,51,173,.04);
+  transition:border-color .15s,box-shadow .15s}
+.page-source:hover{border-color:color-mix(in srgb, var(--cardano-blue) 35%, var(--border));
+  box-shadow:0 2px 12px rgba(0,51,173,.08)}
+.page-source-head{display:flex;align-items:center;gap:14px;
+  padding:14px 18px;
+  background:linear-gradient(90deg,
+    color-mix(in srgb, var(--cardano-blue) 8%, transparent),
+    color-mix(in srgb, var(--cardano-blue) 3%, transparent) 60%,
+    transparent 100%);
+  border-bottom:1px solid var(--border)}
+.page-source-icon{width:22px;height:22px;flex-shrink:0;
+  color:var(--cardano-blue)}
+.page-source-titles{flex:1 1 auto;min-width:0;display:flex;
+  flex-direction:column;gap:2px}
+.page-source-eyebrow{font:600 10px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)}
+.page-source-title{font:600 14.5px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-primary)}
+.page-source .page-source-cta{display:inline-flex;align-items:center;gap:8px;
+  flex-shrink:0;padding:9px 20px;border-radius:5px;
+  background:var(--cardano-blue);color:#fff;text-decoration:none;
+  border:0;border-bottom:0;white-space:nowrap;
+  font:600 12.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.03em;
+  box-shadow:0 1px 4px rgba(0,51,173,.25);
+  transition:background .15s,box-shadow .15s,transform .15s}
+.page-source .page-source-cta:hover{background:#0a1f8e;color:#fff;
+  border-bottom:0;
+  box-shadow:0 2px 8px rgba(0,51,173,.4);
+  transform:translateY(-1px)}
+.page-source .page-source-cta span{color:#fff}
+.page-source .page-source-cta .page-source-ext{font-size:14px;line-height:1;opacity:.95}
+.page-source-body{padding:14px 18px 16px}
+.page-source .page-source-path{display:flex;align-items:center;gap:8px;
+  padding:8px 12px;border:1px solid var(--border);border-radius:6px;
+  background:var(--bg-panel);text-decoration:none;border-bottom:1px solid var(--border);
+  transition:border-color .15s,background .15s}
+.page-source .page-source-path:hover{border-color:color-mix(in srgb, var(--cardano-blue) 50%, var(--border));
+  background:color-mix(in srgb, var(--cardano-blue) 4%, var(--bg-panel))}
+.page-source-path-icon{width:14px;height:14px;flex-shrink:0;
+  color:var(--text-muted)}
+.page-source-path:hover .page-source-path-icon{color:var(--cardano-blue)}
+.page-source-repo{font:500 12px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-secondary);flex-shrink:0}
+.page-source-sep{color:var(--text-muted);opacity:.5;flex-shrink:0;font-size:13px}
+.page-source .page-source-pathtext{font:500 12px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  background:transparent;padding:0;border:0;color:var(--text-primary);
+  word-break:break-all;min-width:0}
+.page-source-meta{margin:10px 0 0;
+  font:400 12.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted)}
+[data-theme=dark] .page-source{background:var(--bg)}
+[data-theme=dark] .page-source-head{
+  background:linear-gradient(90deg,
+    rgba(0,51,173,.18),
+    rgba(0,51,173,.06) 60%,
+    transparent 100%)}
+[data-theme=dark] .page-source-cta{background:#3a5dff;
+  box-shadow:0 1px 4px rgba(0,0,0,.4)}
+[data-theme=dark] .page-source-cta:hover{background:#5778ff}
+@media (max-width:640px){
+  .page-source{margin:32px 0 4px}
+  .page-source-head{flex-wrap:wrap;gap:10px;padding:12px 14px}
+  .page-source-titles{flex:1 1 100%;order:1}
+  .page-source-icon{order:0}
+  .page-source-cta{order:2;width:100%;justify-content:center;padding:9px 14px}
+  .page-source-body{padding:12px 14px 14px}
+  .page-source-path{flex-wrap:wrap}
+}
+@media print{.page-source{display:none}}
+
 /* ── /Cross-page DIA source overlay + compact §X.Y.2 view ── */
