@@ -1761,7 +1761,7 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
    accent lane), distinct from the Cardano-blue observation chrome
    above. No decorative left rail or per-row gradient. */
 .sro-card-pro .sro-findings{position:relative;padding:0;border-left:0}
-.sro-card-pro .sro-finding{padding:16px 22px;gap:18px;
+.sro-card-pro .sro-finding{padding:16px 22px 38px;gap:18px;
   border-top:1px solid var(--border);background:transparent;
   transition:background .15s}
 .sro-card-pro .sro-finding:first-child{border-top:0}
@@ -1826,28 +1826,31 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
   background:rgba(255,111,110,.10);
   border-bottom-color:rgba(255,111,110,.40);color:#E4E4E7}
 
-/* Nature tag — GitHub-style label, top-right of the finding row.
-   The hue comes from the inline \`--n-h\` custom property (hashed
-   from the nature text in Python) so 'Structural threshold' always
+/* Nature tag — GitHub-style label, BOTTOM-RIGHT of the finding row.
+   Hue comes from the inline \`--n-h\` custom property (hashed from
+   the nature text in Python) so 'Structural threshold' always
    renders one colour, 'Concentration — supply side' another, etc.
-   The reader learns categories visually after a few rows. */
+   The reader learns categories visually after a few rows.
+   Row carries 38px of bottom padding so the label has its own
+   zone — never overlaps the evidence text, regardless of length. */
 .sro-card-pro{position:relative}
 .sro-card-pro .sro-finding{position:relative}
 .sro-card-pro .sro-nature{
-  position:absolute;top:14px;right:18px;
+  position:absolute;bottom:12px;right:18px;
   font:500 10.5px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   letter-spacing:.02em;text-transform:none;font-style:normal;
   padding:2px 9px;border-radius:12px;
   background:hsl(var(--n-h,215),65%,94%);
   color:hsl(var(--n-h,215),55%,32%);
   border:1px solid hsl(var(--n-h,215),50%,82%);
-  white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+  white-space:nowrap;max-width:280px;overflow:hidden;text-overflow:ellipsis}
 .sro-card-pro .sro-nature::before{content:none}
 [data-theme=dark] .sro-card-pro .sro-nature{
   background:hsl(var(--n-h,215),35%,18%);
   color:hsl(var(--n-h,215),65%,75%);
   border-color:hsl(var(--n-h,215),40%,30%)}
 @media (max-width:720px){
+  .sro-card-pro .sro-finding{padding-bottom:16px}
   .sro-card-pro .sro-nature{position:static;display:inline-block;
     margin-top:8px;max-width:none}
 }
