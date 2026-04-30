@@ -1458,10 +1458,16 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
   margin:0 0 12px}
 .finding-card-banner .finding-card-title{
   font-family:var(--font-display,'Chivo','Inter',-apple-system,sans-serif);
-  font-size:24px;font-weight:600;line-height:1.18;
-  color:#fff;letter-spacing:-.4px;
+  font-size:32px;font-weight:600;line-height:1.15;
+  color:#fff;letter-spacing:-.6px;
   margin:0;
-  max-width:780px}
+  display:block;
+  max-width:920px}
+/* Suppress the global h3::after horizontal rule on banner titles —
+   the banner has its own visual treatment, the dangling line just
+   competed with the headline. */
+.finding-card-banner .finding-card-title::after{
+  content:none;display:none}
 
 .finding-card-content{
   padding:22px 26px 22px;
