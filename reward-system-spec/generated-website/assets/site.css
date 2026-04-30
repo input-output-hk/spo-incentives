@@ -410,24 +410,83 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
    .finding-ref anchor (rendered from \`**Finding CEN.O1.F1 — …**\`).
    Lifted into a mini Pro-card layout so prose-embedded references
    echo the §1 Mainnet Observations rows visually. */
+.content blockquote:has(> p.finding-callout-meta),
 .content blockquote:has(> p:first-child > strong > a.finding-ref){
-  border-left-width:4px;
+  border:1px solid rgba(229,35,33,.18);
+  border-left:4px solid var(--infared);
   background:linear-gradient(90deg,
-    rgba(229,35,33,.06) 0%,
-    rgba(229,35,33,.02) 60%,
+    rgba(229,35,33,.055) 0%,
+    rgba(229,35,33,.018) 60%,
     transparent 100%);
-  padding:18px 22px;margin:20px 0;
-  border-radius:0 8px 8px 0}
+  padding:14px 22px 18px;margin:24px 0;
+  border-radius:0 10px 10px 0;
+  box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.content blockquote:has(> p.finding-callout-meta) > p,
 .content blockquote:has(> p:first-child > strong > a.finding-ref) > p{
   font:400 15px/1.65 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:#1a1a1a;letter-spacing:-.005em}
+.content blockquote:has(> p.finding-callout-meta) > p strong,
 .content blockquote:has(> p:first-child > strong > a.finding-ref) > p strong{
   font-weight:600;color:#000}
+
+/* Visually separate consecutive Finding callouts (e.g. POL.O6.F1
+   followed by POL.O6.F2) so they don't read as one block. */
+.content blockquote:has(> p.finding-callout-meta) +
+  blockquote:has(> p.finding-callout-meta),
+.content blockquote:has(> p:first-child > strong > a.finding-ref) +
+  blockquote:has(> p:first-child > strong > a.finding-ref),
+.content blockquote:has(> p.finding-callout-meta) +
+  blockquote:has(> p:first-child > strong > a.finding-ref),
+.content blockquote:has(> p:first-child > strong > a.finding-ref) +
+  blockquote:has(> p.finding-callout-meta){
+  margin-top:36px;
+  position:relative}
+.content blockquote:has(> p.finding-callout-meta) +
+  blockquote:has(> p.finding-callout-meta)::before,
+.content blockquote:has(> p:first-child > strong > a.finding-ref) +
+  blockquote:has(> p:first-child > strong > a.finding-ref)::before,
+.content blockquote:has(> p.finding-callout-meta) +
+  blockquote:has(> p:first-child > strong > a.finding-ref)::before,
+.content blockquote:has(> p:first-child > strong > a.finding-ref) +
+  blockquote:has(> p.finding-callout-meta)::before{
+  content:"";position:absolute;left:24px;right:24px;top:-19px;
+  height:1px;background:linear-gradient(90deg,
+    transparent 0%,rgba(229,35,33,.22) 20%,
+    rgba(229,35,33,.22) 80%,transparent 100%);
+  pointer-events:none}
+
+/* Breadcrumb back to the parent observation, prepended above the
+   callout body. Small mono prefix + canonical chip + observation
+   title in italic. */
+.content blockquote > p.finding-callout-meta{
+  font:500 11px/1.3 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace !important;
+  color:#7a2a28 !important;
+  margin:-2px 0 10px !important;
+  padding-bottom:8px;
+  border-bottom:1px dashed rgba(229,35,33,.18);
+  letter-spacing:.02em}
+.finding-callout-meta-prefix{
+  font-weight:400;color:#9a4a48;text-transform:uppercase;
+  letter-spacing:.06em;font-size:10px;margin-right:4px}
+.finding-callout-meta-link{
+  color:var(--infared);text-decoration:none;
+  border-bottom:1px dotted rgba(229,35,33,.4);
+  padding:0 2px;border-radius:3px;
+  transition:background .15s}
+.finding-callout-meta-link:hover{
+  background:rgba(229,35,33,.08);border-bottom-color:var(--infared)}
+.finding-callout-meta-title{
+  font-style:italic;font-weight:400;color:#444;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:12px;letter-spacing:0;margin-left:6px}
+
 /* The opening canonical ref renders as a small Infared chip, the
    way #N looks on the Pro card row. Inline still — flows with the
    prose — but visually a marker. */
 .content blockquote:has(> p:first-child > strong > a.finding-ref)
-  > p:first-child > strong > a.finding-ref{
+  > p:first-child > strong > a.finding-ref,
+.content blockquote:has(> p.finding-callout-meta)
+  > p > strong > a.finding-ref{
   display:inline-block;padding:1px 8px;border-radius:4px;
   background:rgba(229,35,33,.10);
   border:1px solid rgba(229,35,33,.25);
@@ -438,16 +497,34 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
   vertical-align:1px;margin:0 2px;
   transition:background .15s,border-color .15s}
 .content blockquote:has(> p:first-child > strong > a.finding-ref)
-  > p:first-child > strong > a.finding-ref:hover{
+  > p:first-child > strong > a.finding-ref:hover,
+.content blockquote:has(> p.finding-callout-meta)
+  > p > strong > a.finding-ref:hover{
   background:rgba(229,35,33,.16);
   border-color:rgba(229,35,33,.45)}
+[data-theme=dark] .content blockquote:has(> p.finding-callout-meta),
 [data-theme=dark] .content blockquote:has(> p:first-child > strong > a.finding-ref){
+  border-color:rgba(255,111,110,.22);
+  border-left-color:#FF6F6E;
   background:linear-gradient(90deg,
-    rgba(255,111,110,.08) 0%,rgba(255,111,110,.03) 60%,transparent 100%)}
+    rgba(255,111,110,.08) 0%,rgba(255,111,110,.03) 60%,transparent 100%);
+  box-shadow:0 1px 2px rgba(0,0,0,.25)}
+[data-theme=dark] .content blockquote:has(> p.finding-callout-meta) > p,
 [data-theme=dark] .content blockquote:has(> p:first-child > strong > a.finding-ref) > p{color:#E4E4E7}
 [data-theme=dark] .content blockquote:has(> p:first-child > strong > a.finding-ref)
-  > p:first-child > strong > a.finding-ref{
+  > p:first-child > strong > a.finding-ref,
+[data-theme=dark] .content blockquote:has(> p.finding-callout-meta)
+  > p > strong > a.finding-ref{
   background:rgba(255,111,110,.12);border-color:rgba(255,111,110,.30);color:#FF6F6E}
+[data-theme=dark] .content blockquote > p.finding-callout-meta{
+  color:#FF9D9C !important;
+  border-bottom-color:rgba(255,111,110,.22)}
+[data-theme=dark] .finding-callout-meta-prefix{color:#C77E7C}
+[data-theme=dark] .finding-callout-meta-link{
+  color:#FF6F6E;border-bottom-color:rgba(255,111,110,.4)}
+[data-theme=dark] .finding-callout-meta-link:hover{
+  background:rgba(255,111,110,.12);border-bottom-color:#FF6F6E}
+[data-theme=dark] .finding-callout-meta-title{color:#B8B8BD}
 
 /* Code */
 .content code{font-family:'SF Mono','Fira Code',monospace;font-size:13px;background:var(--bg-code);padding:2px 6px;border-radius:4px;color:#b33a1a}

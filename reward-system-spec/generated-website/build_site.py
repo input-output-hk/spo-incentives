@@ -5290,27 +5290,115 @@ _CALLOUT_BLOCKQUOTE_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Match a whole blockquote (non-greedy body capture). Used to detect
+# blockquotes that python-markdown collapsed two consecutive ``> **Finding
+# …**`` blocks into. We split such blockquotes into one blockquote per
+# Finding paragraph so each callout renders as its own visual unit.
+_BLOCKQUOTE_FULL_RE = re.compile(
+    r'<blockquote(?P<attrs>\s[^>]*)?>(?P<body>.*?)</blockquote>',
+    re.IGNORECASE | re.DOTALL,
+)
+_FINDING_PARA_RE = re.compile(
+    r'<p[^>]*>\s*<strong>\s*Finding\s+'
+    r'<a [^>]*?data-finding="[A-Z]{3}\.O\d+\.F\d+"[^>]*>',
+    re.IGNORECASE,
+)
 
-def inject_finding_callout_ids(html_body: str) -> str:
-    """Add ``id="finding-{slug}"`` to each Finding callout blockquote.
 
-    Lets cross-page links land on the in-doc callout (the prose
-    description) rather than only on the visual Pro card row in §1.
-    Idempotent — a blockquote that already carries an ``id=`` is left
-    alone so manual ids in the source markdown survive.
+def split_multi_finding_blockquotes(html_body: str) -> str:
+    """Split a single ``<blockquote>`` containing several ``Finding`` callouts
+    into one blockquote per Finding paragraph.
+
+    Python-markdown merges adjacent ``>`` blocks separated by a blank line
+    into one blockquote. The mainnet-analysis MDs use blank-line-separated
+    ``> **Finding …**`` blocks for visual breathing room, so the rendered
+    HTML loses the per-callout boundary. This pre-processor restores it
+    before ``inject_finding_callout_ids`` adds the breadcrumb / id, so each
+    callout gets its own ``<blockquote id="finding-…">`` and the CSS
+    sibling-separator rule applies.
+    """
+    if not html_body or '<blockquote' not in html_body:
+        return html_body
+
+    def _split(m: re.Match) -> str:
+        attrs = m.group("attrs") or ""
+        body = m.group("body")
+        # Bail out if the blockquote already carries an id (e.g. someone
+        # hand-tagged it) — splitting would lose that anchor.
+        if "id=" in attrs.lower():
+            return m.group(0)
+        # Find every Finding paragraph start position inside the body.
+        starts = [mo.start() for mo in _FINDING_PARA_RE.finditer(body)]
+        if len(starts) < 2:
+            return m.group(0)
+        pieces: list[str] = []
+        # Anything before the first Finding stays attached to the first
+        # split blockquote.
+        for i, s in enumerate(starts):
+            e = starts[i + 1] if i + 1 < len(starts) else len(body)
+            pieces.append(body[s:e].rstrip())
+        prefix = body[:starts[0]]
+        # Re-emit a blockquote per piece, preserving original attrs on
+        # each (the id injector will add ``id="finding-…"`` next).
+        rebuilt: list[str] = []
+        for idx, p in enumerate(pieces):
+            chunk = (prefix + p) if idx == 0 and prefix.strip() else p
+            rebuilt.append(f"<blockquote{attrs}>{chunk}</blockquote>")
+        return "\n".join(rebuilt)
+
+    return _BLOCKQUOTE_FULL_RE.sub(_split, html_body)
+
+
+def inject_finding_callout_ids(
+    html_body: str,
+    obs_titles: dict[str, str] | None = None,
+) -> str:
+    """Add ``id="finding-{slug}"`` to each Finding callout blockquote
+    and prepend a small 'From XX.OY — title' breadcrumb that links
+    back to the parent observation card.
+
+    The breadcrumb runs from website-side metadata only (the
+    observation title is already rendered as part of the Pro card
+    header); it does not duplicate prose into the markdown source.
+    Same-page only — the breadcrumb's href uses ``#{obs-slug}`` which
+    targets the local Pro card.
+
+    Idempotent — blockquotes that already carry an ``id=`` are left
+    alone so manual ids survive, and the breadcrumb is only injected
+    on first pass (we detect by the presence of
+    ``finding-callout-meta``).
     """
     if not html_body:
         return html_body
+    titles = obs_titles or {}
 
     def _sub(m: re.Match) -> str:
+        full = m.group(0)
         attrs = m.group(1) or ""
         rest = m.group("rest")
         canon = m.group("canon")
         if "id=" in attrs.lower():
-            return m.group(0)
+            return full
         slug = canon.replace(".", "-").lower()
+        # Parent observation id — drop the trailing .F# segment.
+        obs_canon = canon.rsplit(".F", 1)[0]
+        obs_slug = obs_canon.replace(".", "-").lower()
+        title = titles.get(obs_canon, "")
+        meta_html = ""
+        if "finding-callout-meta" not in full:
+            title_html = (
+                f' &mdash; <em class="finding-callout-meta-title">'
+                f'{_html.escape(title)}</em>'
+            ) if title else ""
+            meta_html = (
+                f'<p class="finding-callout-meta">'
+                f'<span class="finding-callout-meta-prefix">From</span> '
+                f'<a class="finding-callout-meta-link" href="#{obs_slug}">'
+                f'{obs_canon}</a>{title_html}'
+                f'</p>'
+            )
         new_attrs = f' id="finding-{slug}"' + attrs
-        return f"<blockquote{new_attrs}>{rest}"
+        return f"<blockquote{new_attrs}>{meta_html}{rest}"
 
     return _CALLOUT_BLOCKQUOTE_RE.sub(_sub, html_body)
 
@@ -6132,6 +6220,7 @@ def build_page(page: dict) -> Path:
     # (header + abstract + findings sub-table) instead of the flat 4-column
     # MD table. Parse and swap the raw ``<table>`` that follows the
     # ``## 1. Mainnet Observations`` heading.
+    sro_groups: list[dict] = []
     if is_subreport:
         code = page["code"]
         o_defining = detect_o_defining_sections(md_text)
@@ -6167,15 +6256,35 @@ def build_page(page: dict) -> Path:
             content_html, rewrite_obs, source_lookup,
         )
 
+    # Collect observation titles for the 'From XX.OY — title' breadcrumb
+    # that the callout post-processor injects above each Finding blockquote.
+    # Sub-reports use their own sro_groups; non-sub-reports pull from the
+    # cross-page bundle.
+    obs_titles: dict[str, str] = {}
+    if is_subreport and sro_groups:
+        for g in sro_groups:
+            canon = g.get("canon_id") or ""
+            title = g.get("o_title") or ""
+            if canon:
+                obs_titles[canon] = title
+    elif cross_obs_groups:
+        for g in cross_obs_groups:
+            canon = g.get("canon_id") or ""
+            title = g.get("o_title") or ""
+            if canon:
+                obs_titles[canon] = title
+
     if f_findings:
         content_html = rewrite_finding_citations(content_html, f_findings)
-        content_html = inject_finding_callout_ids(content_html)
+        content_html = split_multi_finding_blockquotes(content_html)
+        content_html = inject_finding_callout_ids(content_html, obs_titles)
         content_html += _render_finding_registry(f_findings)
     else:
         # Pages without local F# findings can still carry callouts that
         # cite cross-page findings (rewritten by the cross-finding path
-        # earlier). Run the id injector on those too.
-        content_html = inject_finding_callout_ids(content_html)
+        # earlier). Run the splitter + id injector on those too.
+        content_html = split_multi_finding_blockquotes(content_html)
+        content_html = inject_finding_callout_ids(content_html, obs_titles)
 
     # Attach the merged cross-page registries so DIA overlays and F# badges
     # hydrate locally (no network fetch). Sub-report pages already carry
