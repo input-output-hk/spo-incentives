@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777553619">
+<link rel="stylesheet" href="assets/site.css?v=1777553747">
 
 
 </head>
@@ -901,7 +901,7 @@ $$</p>
 <th style="text-align: right;">% of pot</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
+<tbody>
 <tr>
 <td>Pools pot</td>
 <td style="text-align: right;">15.53M</td>
@@ -912,7 +912,7 @@ $$</p>
 <td style="text-align: right;">−4.91M</td>
 <td style="text-align: right;">31.6%</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Staked pot</strong></td>
 <td style="text-align: right;"><strong>10.62M</strong></td>
 <td style="text-align: right;"><strong>68.4%</strong></td>
@@ -934,7 +934,7 @@ $$</p>
 <th style="text-align: right;">% of pot</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
+<tbody>
 <tr>
 <td>Staked pot</td>
 <td style="text-align: right;">10.62M</td>
@@ -945,7 +945,7 @@ $$</p>
 <td style="text-align: right;">−0.32M</td>
 <td style="text-align: right;">2.1%</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Eligible pot</strong></td>
 <td style="text-align: right;"><strong>10.30M</strong></td>
 <td style="text-align: right;"><strong>66.3%</strong></td>
@@ -1032,14 +1032,14 @@ $$</p>
 <th>Range</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Base</strong></td>
 <td>$\lambda_{\text{size}} \cdot \nu = 76.923\% \cdot \nu$</td>
 <td>Pool size only</td>
 <td>0 → 76.923%</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Pledge bonus</strong></td>
 <td>$\lambda_{\text{pledge}} \cdot A(\nu, \pi) = 23.077\% \cdot A$</td>
 <td>Size + pledge</td>
@@ -1360,18 +1360,18 @@ $$</p>
 <th>Derived from</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Production</strong></td>
 <td>Minimum stake for regular block production</td>
 <td>Slot leadership probability × epoch length</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Viability</strong></td>
 <td>Minimum stake to cover operating costs</td>
 <td>Fixed-cost floor ÷ reward rate per ADA</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Saturation</strong></td>
 <td>Maximum efficient stake per pool</td>
 <td>Circulating supply ÷ $k$</td>
@@ -1467,7 +1467,7 @@ $$</p>
 <th>What a delegator sees</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
+<tbody>
 <tr>
 <td>100K ADA</td>
 <td>0.10</td>
@@ -1480,13 +1480,13 @@ $$</p>
 <td>139%</td>
 <td>One block every ~2 epochs, very noisy</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>~1M ADA</strong></td>
 <td><strong>1.00</strong></td>
 <td><strong>100%</strong></td>
 <td><strong>0 blocks as likely as 2 — unreliable</strong></td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>~3M ADA</strong></td>
 <td><strong>3.00</strong></td>
 <td><strong>58%</strong></td>
@@ -1659,23 +1659,23 @@ $$</p>
 <th>What happens</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Zero-stake</strong></td>
 <td>0 ADA</td>
 <td>Registered, no stake, not operational</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Dormant</strong></td>
 <td>&gt;0 → ~100K</td>
 <td>&lt; 0.1 blocks/epoch — effectively zero production</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Sub-production</strong></td>
 <td>~100K → ~1M</td>
 <td>Sporadic blocks, high variance — unreliable for delegators</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Sub-viable</strong></td>
 <td>~1M → ~3M</td>
 <td>Produces blocks but cannot cover the 340 ADA fixed cost</td>
@@ -1691,28 +1691,28 @@ $$</p>
 <th>What happens</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Healthy</strong></td>
 <td>~3M → ~38.5M</td>
 <td>Consistent production, viable economics — the core operating tier</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Large healthy</strong></td>
 <td>~38.5M → ~61.6M</td>
 <td>Well-capitalised, efficient, stable reward stream</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Near-saturation</strong></td>
 <td>~61.6M → ~73.1M</td>
 <td>Close to maximum reward density</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Saturated</strong></td>
 <td>~73.1M → ~80.8M</td>
 <td>At the cap — maximum reward; mechanism binding</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Oversaturated</strong></td>
 <td>&gt; ~80.8M</td>
 <td>Past the cap — delegators penalised, stake should migrate</td>
@@ -1748,20 +1748,20 @@ $$</p>
 <th>What it captures</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Public brand declarations</strong></td>
 <td>Tickers, metadata URLs, and websites that explicitly name the operator</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Relay and metadata clustering</strong></td>
 <td>Shared relay IPs, identical metadata hashes, or co-located infrastructure</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>On-chain ownership clustering</strong></td>
 <td>Common <code>pool_group</code>, shared <code>reward_addr</code>, or overlapping owner keys</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Manual resolution</strong></td>
 <td>Cross-referencing community databases, social-media announcements, and known brand aliases</td>
 </tr>
@@ -1779,15 +1779,15 @@ $$</p>
 <th style="text-align: right;">% of active stake</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Attributed MPOs</strong></td>
 <td style="text-align: right;">85</td>
 <td style="text-align: right;">901</td>
 <td style="text-align: right;">16.4B ADA</td>
 <td style="text-align: right;"><strong>75.4%</strong></td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Unattributed pools</strong></td>
 <td style="text-align: right;">—</td>
 <td style="text-align: right;">2,097</td>
@@ -2103,32 +2103,32 @@ $$</p>
 <th>Interpretation</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Can't play</strong></td>
 <td>Capital-insufficient</td>
 <td>n/a</td>
 <td>Multi-pool by structure, but sub-scale for the saturation-level pledge game. Better analysed as single-pool-like background than as a stance failure.</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Non-compliant</strong></td>
 <td>Capital-sufficient</td>
 <td>&lt; 2%</td>
 <td>Forfeits the bonus almost entirely despite having enough aggregate stake to play.</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Marginal</strong></td>
 <td>Capital-sufficient</td>
 <td>2–30%</td>
 <td>Partial capture. This is the real decision boundary for parameter adjustments.</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Compliant</strong></td>
 <td>Capital-sufficient</td>
 <td>30–80%</td>
 <td>Captures a meaningful share of the bonus and is clearly responsive to the reward sharing scheme's incentives.</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Exemplary</strong></td>
 <td>Capital-sufficient</td>
 <td>≥ 80%</td>
@@ -2149,36 +2149,36 @@ $$</p>
 <th>Composition</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Can't play</strong></td>
 <td style="text-align: right;">37</td>
 <td style="text-align: right;">1.74</td>
 <td style="text-align: right;">4.51%</td>
 <td>Capital-insufficient fleets: mostly smaller branded clusters, protocol projects, and single-pool-like MPOs below one saturated pool in aggregate</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Non-compliant</strong></td>
 <td style="text-align: right;">41</td>
 <td style="text-align: right;">12.00</td>
 <td style="text-align: right;">31.17%</td>
 <td>All CEX, all IVaaS, Emurgo, NuFi, BigLazyCat, and most capital-sufficient community / opaque fleets</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Marginal</strong></td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0.22</td>
 <td style="text-align: right;">0.56%</td>
 <td>ATADA and ACL — the only capital-sufficient entities in the 2–30% band</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Compliant</strong></td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">1.67</td>
 <td style="text-align: right;">4.33%</td>
 <td>CHUCK BUX, Wave / Wavepool, and Bloom</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Exemplary</strong></td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0.61</td>
@@ -2391,8 +2391,8 @@ $$</p>
 <th style="text-align: right;">Share of MPO loss</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Can't play</strong></td>
 <td style="text-align: right;">37</td>
 <td style="text-align: right;">1.74</td>
@@ -2400,7 +2400,7 @@ $$</p>
 <td style="text-align: right;">2,965,697</td>
 <td style="text-align: right;">6.4%</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Non-compliant</strong></td>
 <td style="text-align: right;">41</td>
 <td style="text-align: right;">12.00</td>
@@ -2408,7 +2408,7 @@ $$</p>
 <td style="text-align: right;">40,191,181</td>
 <td style="text-align: right;"><strong>86.5%</strong></td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Marginal</strong></td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0.22</td>
@@ -2416,7 +2416,7 @@ $$</p>
 <td style="text-align: right;">756,337</td>
 <td style="text-align: right;">1.6%</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Compliant</strong></td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">1.67</td>
@@ -2424,7 +2424,7 @@ $$</p>
 <td style="text-align: right;">2,082,069</td>
 <td style="text-align: right;">4.5%</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Exemplary</strong></td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0.61</td>
@@ -2432,7 +2432,7 @@ $$</p>
 <td style="text-align: right;">488,967</td>
 <td style="text-align: right;">1.1%</td>
 </tr>
-<tr class="row-group row-total">
+<tr>
 <td><strong>Total</strong></td>
 <td style="text-align: right;"><strong>85</strong></td>
 <td style="text-align: right;"><strong>16.23</strong></td>
@@ -2854,29 +2854,29 @@ $$</p>
 <th>Reading</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Non-compliant</strong></td>
 <td style="text-align: right;">905</td>
 <td style="text-align: right;">4.25</td>
 <td style="text-align: right;">78.1%</td>
 <td>The large majority — pledge signal too weak at their scale</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Marginal</strong></td>
 <td style="text-align: right;">561</td>
 <td style="text-align: right;">0.87</td>
 <td style="text-align: right;">16.1%</td>
 <td>Operators who <em>partially</em> pledge (2–30%) — the policy-sensitive population</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Exemplary</strong></td>
 <td style="text-align: right;">360</td>
 <td style="text-align: right;">0.23</td>
 <td style="text-align: right;">4.3%</td>
 <td>Self-staked micro-pools and a handful of high-pledge community operators</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Compliant</strong></td>
 <td style="text-align: right;">271</td>
 <td style="text-align: right;">0.08</td>
@@ -3007,7 +3007,7 @@ $$</p>
 <th style="text-align: right;">% of basket</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
+<tbody>
 <tr>
 <td>Single-pool operators only</td>
 <td style="text-align: right;">0.32B ADA</td>
@@ -3018,7 +3018,7 @@ $$</p>
 <td style="text-align: right;">2.07B ADA</td>
 <td style="text-align: right;">26.3%</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Multiplier</strong></td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"><strong>6.6×</strong></td>
@@ -3129,6 +3129,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777553619"></script>
+<script src="assets/site.js?v=1777553747"></script>
 </body>
 </html>

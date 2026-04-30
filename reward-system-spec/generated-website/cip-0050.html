@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777553619">
+<link rel="stylesheet" href="assets/site.css?v=1777553747">
 
 
 </head>
@@ -350,8 +350,8 @@ window.MathJax = {
 <th>Emerges in</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>CIP-0050.S1</strong></td>
 <td></td>
 <td><strong>Mechanically sharp on pledge-as-signal: zero-pledge hard break + revenue-neutral pool-splitting</strong></td>
@@ -369,7 +369,7 @@ window.MathJax = {
 <td><strong>Pool-splitting revenue-neutral.</strong> A pledge budget $P$ split across $N$ pools produces a total cap of $L \cdot P$ — identical to the single-pool cap. MPO fleet expansion delivers no reward advantage at the pool level — direct delivery on V2 §3.4 pool-level concentration</td>
 <td>§2.2, §3.1</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>CIP-0050.S2</strong></td>
 <td></td>
 <td><strong>Capital-capability bias: the reward rule discriminates by the operator's capacity to self-pledge, not by operator quality</strong></td>
@@ -393,7 +393,7 @@ window.MathJax = {
 <td><strong>The bet that operators will pledge more is contradicted by the opportunity-cost data.</strong> POL.O2.F2: pledge yield is 0.68 %/yr at best vs 2.3 %/yr on passive delegation. POL.O4.F3: 41 of 48 capital-sufficient MPOs already forfeit the bonus today. CIP-0050 shifts the rules but not the passive-delegation-vs-pledge comparison — and adds opportunity cost without flipping the dominance relation</td>
 <td>§3.2</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>CIP-0050.S3</strong></td>
 <td></td>
 <td><strong>Entity-level §3.4 concentration gap and §3.1 viability risk to the retail small-pool tail</strong></td>
@@ -524,33 +524,33 @@ window.MathJax = {
 <th>Supporting observations</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>POL.O2.F1 — 78 % of staked ADA sits in pools with pledge ratio &lt; 1 %; stake-weighted median is 0.07 %</strong></td>
 <td>CIP-0050 at L=100 begins to bind precisely at the 1 % pledge ratio. The median retail pool sits far below that threshold — so a majority-of-stake population is the direct subject of the reform</td>
 <td>—</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>POL.O2.F2 — Pledge yield is 0.68 %/yr at best (full saturation + full self-pledge) vs ~2.3 %/yr on passive delegation</strong></td>
 <td>The CIP assumes operators will respond by increasing pledge. The opportunity-cost data shows pledge is dominated by passive delegation yield; shifting σ' rules does not flip this comparison. The <em>why</em> behind POL.O2.F1 is not the absence of the constraint; it is the economic dominance of the non-pledge choice</td>
 <td>"The 'game' for operators is overwhelmingly about size (ν), not commitment (π)" — POL.O2.F2</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>POL.O4.F1 / POL.O4.F2 — 85 MPO entities operate 901 pools holding 16.4 B ₳ (75.4 % of participating stake); 48 of them are capital-sufficient</strong></td>
 <td>The entity-level concentration metric that matters for Sybil resistance. CIP-0050 is revenue-neutral against pool-splitting but leaves the 10 custodial-by-pledge entities with native pledge unconstrained — and those entities hold a large share of stake today</td>
 <td>—</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>POL.O4.F3 — 41 of 48 capital-sufficient MPOs are non-compliant on pledge</strong></td>
 <td>The population that <em>could</em> respond to CIP-0050 by increasing pledge has already shown it does not choose that option under current rules. CIP-0050 shifts the rules but the opportunity-cost calculus does not flip</td>
 <td>—</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>POL.O5.F2 — 78 % of single-pool stake is non-compliant (pledge ratio &lt; 2 %). Compliant + exemplary hold 5.8 % — economically negligible</strong></td>
 <td>Retail single-pool operators — the population V2 §3.1 targets — empirically do not pledge. CIP-0050 at L=100 clips this population's reward, accelerating attrition</td>
 <td>—</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>OPE.O7.F1 — Delegation is not sticky but not clearly yield-following either</strong></td>
 <td>The CIP's "new entrants will fill the slots vacated by clipped pools" argument requires a delegator-response channel. OPE.O7.F1 shows the observed flow tracks brand / wallet / visibility rather than yield — the response channel is uncertain</td>
 <td>—</td>
@@ -931,23 +931,23 @@ window.MathJax = {
 <th>Type</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Zero-pledge hard break</strong></td>
 <td>$\pi = 0 \Rightarrow L \cdot p = 0 \Rightarrow \sigma' = 0 \Rightarrow \hat f' = 0$</td>
 <td>Algebraic</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Pool-splitting revenue-neutral</strong></td>
 <td>A pledge budget $P$ split across $N$ pools of equal pledge $p = P/N$ gives a total cap $N \cdot (L \cdot P/N) = L \cdot P$ = single-pool cap</td>
 <td>Algebraic</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Monotonicity in pledge</strong></td>
 <td>$\partial \sigma'/\partial p \geq 0$ on the binding branch ($\sigma' = L\cdot p$); rewarding higher pledge is strictly (weakly) weighted</td>
 <td>Algebraic</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Price invariance</strong></td>
 <td>$L$ is dimensionless; the cap is a ratio</td>
 <td>Structural</td>
@@ -969,7 +969,7 @@ window.MathJax = {
 <th>What they must do to stay whole</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
+<tbody>
 <tr>
 <td><strong>Everstake-style 11+ MPO</strong> (per pool)</td>
 <td style="text-align: right;">33.4 M ₳</td>
@@ -988,7 +988,7 @@ window.MathJax = {
 <td style="text-align: right;"><strong>7 %</strong></td>
 <td>Add ~106 k ADA pledge — ≈ $27 k USD at \$0.25/ADA</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Cardano Foundation / private treasury</strong></td>
 <td style="text-align: right;">77 M ₳</td>
 <td style="text-align: right;">large (e.g. 60 M ₳ at 78 % ratio)</td>
@@ -1400,6 +1400,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777553619"></script>
+<script src="assets/site.js?v=1777553747"></script>
 </body>
 </html>

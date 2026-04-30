@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777553619">
+<link rel="stylesheet" href="assets/site.css?v=1777553747">
 
 
 </head>
@@ -724,26 +724,26 @@ window.MathJax = {
 <th>Hollow</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Accountability</strong></td>
 <td>Operator commits meaningful capital — a legible bond that is costly to abandon. The bond exists independently of delegator attention, providing a baseline cost of misbehaviour even when oversight is imperfect.</td>
 <td>Maximal capital exposure, but self-referential. The operator is accountable only to themselves. In a system without slashing, self-accountability has no enforcement mechanism — the operator both commits the offence and decides the penalty. No external interest is at risk.</td>
 <td>Eliminated. Zero pledge means zero cost of exit. The operator can abandon a misbehaving pool and register a new one without forfeiting anything. The accountability structure exists on paper but has no economic content.</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Delegation as counter-power</strong></td>
 <td>Delegators are present and their departure is costly to the operator — the pool shrinks, rewards drop, competitive position degrades. The feedback loop is intact: delegator exit is a <em>credible threat</em> because the operator depends on delegation for a material share of pool stake.</td>
 <td>No delegators, no exit threat. The pool is a closed system. The operator can degrade performance, raise margin to 100%, or go offline — the only consequence is self-inflicted. The disciplinary mechanism has no input.</td>
 <td>Formally present but <em>inverted</em>. Delegators provide all capital, but the operator has nothing at stake. If delegators exit, the operator loses a revenue stream — but can rebuild it by registering a new pool at near-zero cost. The exit cost falls on the delegator (search cost, epoch delay) more than on the operator. The power asymmetry runs the wrong way.</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Sybil resistance</strong></td>
 <td>Real cost of fragmentation: splitting into $n$ pools requires dividing pledge across $n$ certificates, diluting the bonus per pool and reducing competitiveness in each. The Sybil tax operates <em>through the mechanism</em> — it is the pledge bonus that makes fragmentation suboptimal.</td>
 <td>High capital cost per pool, but the constraint is <em>wealth</em>, not the pledge mechanism. An entity with enough capital can operate as many saturated pools as their treasury permits. The pledge bonus is negligible relative to the capital deployed; what prevents fragmentation is running out of money, not forfeiting a bonus. The mechanism's Sybil defence is irrelevant — raw wealth does the work.</td>
 <td>Near zero. Registering a new pool requires only infrastructure and a certificate fee. The 85 MPO entities on mainnet — some operating dozens of pools with minimal or zero pledge — demonstrate that fragmentation is cheap when no pledge is required. The mechanism's Sybil defence is absent.</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Decentralisation</strong></td>
 <td>Capital is shared between operator and delegators — the entry barrier admits operators of moderate means. Operators compete on commitment and community trust, not on treasury size alone. The competitive field is wide enough for diverse, independent operators to coexist.</td>
 <td>Concentrated among the capital-rich. The effective entry barrier is the saturation cap (~77M ₳ per pool). The operator set is bounded by the number of entities with eight-figure treasuries — a vanishingly small population. Block production is permissioned by wealth.</td>
@@ -856,8 +856,8 @@ The security model says: <em>the best pool is a balanced pool.</em></p>
 <th>Percentage</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Pure-strategy entities</strong></td>
 <td></td>
 <td></td>
@@ -877,12 +877,12 @@ The security model says: <em>the best pool is a balanced pool.</em></p>
 <td>13</td>
 <td>2.6%</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Subtotal pure</strong></td>
 <td><strong>495</strong></td>
 <td><strong>98.6%</strong></td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Hybrid entities</strong></td>
 <td></td>
 <td></td>
@@ -892,7 +892,7 @@ The security model says: <em>the best pool is a balanced pool.</em></p>
 <td>7</td>
 <td>1.4%</td>
 </tr>
-<tr class="row-group row-total">
+<tr>
 <td><strong>Total</strong></td>
 <td><strong>502</strong></td>
 <td><strong>100%</strong></td>
@@ -1914,6 +1914,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777553619"></script>
+<script src="assets/site.js?v=1777553747"></script>
 </body>
 </html>

@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777553619">
+<link rel="stylesheet" href="assets/site.css?v=1777553747">
 
 
 </head>
@@ -386,8 +386,8 @@ window.MathJax = {
 <th>Emerges in</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>k-lever.S1</strong></td>
 <td></td>
 <td><strong>A standalone <code>k</code>-raise compresses the top of the distribution and amplifies the pledge bonus for self-pledged pools; hollow pools below saturation are mechanically unchanged</strong></td>
@@ -417,7 +417,7 @@ window.MathJax = {
 <td><strong>Of the three structural thresholds in the nine-tier taxonomy, <code>k</code> moves only saturation.</strong> Production threshold $\text{stake}_n = n \cdot S_{\text{active}} / (L \cdot f)$ (Praos slot mechanics, $L$ and $f$ constant) and viability threshold $c / (R \lambda_{\text{size}} / \text{CircSupply})$ (hollow-pool break-even) contain no <code>k</code>. At mainnet today: 3-block threshold ≈ 2.92 M ₳, break-even ≈ 0.54 M ₳ (minPoolCost=170) — both k-invariant. A k-raise does not rescue any pool at the production or viability boundary</td>
 <td>§2.2 "What <code>k</code> does not move", §3.1</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>k-lever.S2</strong></td>
 <td></td>
 <td><strong>A fine tool for a narrow delegator segment, and insufficient on the operator side because the reward formula is unchanged</strong></td>
@@ -435,7 +435,7 @@ window.MathJax = {
 <td><strong>Changing <code>k</code> without revising the reward formula leaves the non-pledge equilibrium intact.</strong> Operators don't pledge because pledge yield is structurally dominated by passive-delegation yield (POL.O2.F2: 0.68 %/yr vs 2.3 %/yr). POL.O2.F1: 78 % of stake at pledge &lt; 1 %. POL.O4.F3: 41/48 capital-sufficient MPOs forfeit the bonus. A k-raise amplifies the bonus for the narrow band of fully self-pledged pools below the new $z_0$, but keeps $A(0, \nu) = 0$ (hollow pools untouched) and leaves the surrounding formula — which is what produces the dominance relation — unchanged. <strong>Insufficient on the operator side</strong>: changing <code>k</code> cannot fix a non-pledge equilibrium produced by the formula around <code>k</code></td>
 <td>§3.2</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>k-lever.S3</strong></td>
 <td></td>
 <td><strong>Under the current weak-pledge regime, new pool slots are absorbed horizontally by existing MPO fleets — historical precedent plus structural economics</strong></td>
@@ -506,18 +506,18 @@ window.MathJax = {
 <th>Supporting observations</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>POL.O2.F1 — 78 % of staked ADA sits in pools with pledge ratio &lt; 1 %; stake-weighted median is 0.07 %</strong></td>
 <td><strong>Pledge is rare across the entire stake distribution, not just at the small-pool end.</strong> The amplified pledge bonus a k-raise provides rewards a behaviour the vast majority of the network does not currently exhibit, regardless of pool size</td>
 <td>—</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>POL.O2.F2 — Yield on pledge capital is 0.68 %/yr at best (full saturation + full self-pledge) vs ~2.3 %/yr on passive delegation</strong></td>
 <td>The bonus is <strong>priced as irrelevant by operators</strong> because the pledge-capital opportunity cost (passive delegation yield) exceeds the pledge-bonus yield at every realistic scale. A k-raise amplifies a reward that still loses the opportunity-cost comparison</td>
 <td>"The 'game' for operators is overwhelmingly about size (ν), not commitment (π)" — POL.O2.F2</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>POL.O5.F2 — 78 % of single-pool stake is non-compliant (pledge ratio &lt; 2 %). Compliant + exemplary classes combined hold 5.8 % — economically negligible</strong></td>
 <td>Even single-pool operators — the population the pledge mechanism was <em>designed</em> for — do not play the pledge game. Pledge rarity is a universal feature, not a bottom-tier feature</td>
 <td>—</td>
@@ -527,12 +527,12 @@ window.MathJax = {
 <td>Among the population that <em>could</em> play the pledge game (has enough capital), 85 % choose not to. The amplified bonus from a k-raise does not change the opportunity-cost calculus enough to flip this choice</td>
 <td>—</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>POL.O4.F1 — 85 MPO entities operate 901 pools holding 16.4 B ₳ (75.4 % of participating stake)</strong></td>
 <td>Three quarters of the network's stake is controlled by multi-pool operators who could absorb new slots created by a k-raise at ~500 ADA registration cost each</td>
 <td>POL.O4.F2 (MPO capital-sufficiency split — 48 entities could self-pledge ≥ 1 pool)</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>POL.O3.F5 / POL.O3.F6 — Tier boundaries are dynamic functions of <code>k</code>; CIPs targeting <code>k</code> reshape the upper tail only</strong></td>
 <td>A k-raise is an upper-tail-only operation: $z_0$ halves, Large-healthy / Near-saturation / Saturated tiers reclassify; lower tiers (Sub-viable and below) are untouched</td>
 <td>—</td>
@@ -1166,6 +1166,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777553619"></script>
+<script src="assets/site.js?v=1777553747"></script>
 </body>
 </html>

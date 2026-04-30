@@ -6343,7 +6343,28 @@ def classify_table_rows(html_body: str) -> str:
         body = tb_match.group("body")
         if "<tr" not in body:
             return tb_match.group(0)
-        rows: list[tuple[str, str]] = []  # (replacement, classifier)
+        # First pass: scan rows to find out whether this tbody has
+        # actual nesting (at least one ``↳`` sub-row). The group/sub
+        # styling only adds value when there's a hierarchy. If every
+        # bold row is at the same level (commission bands, archetype
+        # rows, etc.), bold-from-MD is enough emphasis — applying the
+        # panel-fill group style to every row just turns the whole
+        # body grey.
+        has_sub = False
+        for tr in _TR_RE.finditer(body):
+            inner = tr.group("inner")
+            first_td = _FIRST_TD_RE.search(inner)
+            if not first_td:
+                continue
+            td_text = re.sub(
+                r'<[^>]+>', '', first_td.group("inner"),
+            ).strip()
+            if td_text.startswith('↳'):
+                has_sub = True
+                break
+        if not has_sub:
+            return tb_match.group(0)
+
         out_parts: list[str] = []
         last_pos = 0
         has_group = False
@@ -6355,16 +6376,10 @@ def classify_table_rows(html_body: str) -> str:
             kind = ""
             if first_td:
                 td_inner = first_td.group("inner").strip()
-                # Strip a leading whitespace+arrow pattern. The MD source
-                # uses U+21B3 ↳; the renderer escapes nothing here so it
-                # comes through verbatim.
                 td_text = re.sub(r'<[^>]+>', '', td_inner).strip()
                 if td_text.startswith('↳'):
                     kind = "row-sub"
                 else:
-                    # Fully bold first cell -> group row. The cell may
-                    # contain only ``<strong>…</strong>`` plus optional
-                    # surrounding whitespace.
                     inner_no_ws = td_inner.strip()
                     if (
                         inner_no_ws.startswith('<strong>')
@@ -6374,8 +6389,6 @@ def classify_table_rows(html_body: str) -> str:
                         kind = "row-group"
             if kind:
                 has_group = has_group or (kind == "row-group")
-                # Splice ``class="…"`` into the existing attrs without
-                # losing whatever else was already there.
                 if 'class="' in attrs.lower():
                     new_attrs = re.sub(
                         r'class="([^"]*)"',

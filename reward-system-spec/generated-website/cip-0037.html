@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777553619">
+<link rel="stylesheet" href="assets/site.css?v=1777553747">
 
 
 </head>
@@ -350,8 +350,8 @@ window.MathJax = {
 <th>Emerges in</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>CIP-0037.S1</strong></td>
 <td></td>
 <td><strong>Mechanically sharp on pledge-as-signal, softened at the bottom by the 20 % floor</strong></td>
@@ -375,7 +375,7 @@ window.MathJax = {
 <td><strong>MPO fleet-split penalty.</strong> Splitting a fixed pledge budget across $N$ pools moves each pool left on the saturation curve (per-pool pledge falls to $P/N$). For a 1 M ₳ pledge budget: 1-pool full 100 % of K; 8-pool split: 25 % of K each (62.5 k pledge on slope). Pool-level §3.4 concentration gain — less sharp than CIP-0050's revenue-neutral identity but directionally aligned</td>
 <td>§2.3 MPO-split table, §3.1</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>CIP-0037.S2</strong></td>
 <td></td>
 <td><strong>Capital-capability bias — Healthy-tier and above are clipped at the mainnet-typical pledge ratio; the discrimination is by capital capacity, not operator quality</strong></td>
@@ -405,7 +405,7 @@ window.MathJax = {
 <td><strong>The "operators will pledge more" bet is contradicted by POL.O2.F2 + POL.O4.F3.</strong> Pledge yield is 0.68 %/yr at best vs ~2.3 %/yr passive delegation (POL.O2.F2). 41 of 48 capital-sufficient MPOs already forfeit the bonus (POL.O4.F3). CIP-0037 reshapes the rules but does not flip the dominance relation — the population that has <em>chosen</em> not to pledge continues to face the same opportunity cost</td>
 <td>§3.2</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>CIP-0037.S3</strong></td>
 <td></td>
 <td><strong>Governance surface, price-robustness, and entity-level gaps compound with the S2 bias</strong></td>
@@ -536,33 +536,33 @@ window.MathJax = {
 <th>Supporting observations</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>POL.O2.F1 — 78 % of staked ADA at pledge ratio &lt; 1 %; stake-weighted median 0.07 %</strong></td>
 <td>At reference parameters ($e=0.2$, $\ell=125$, $p_{100\%}=500$ k), pools need ~108 k ADA of absolute pledge to leave the floor regime. The stake-weighted-median mainnet pool sits far below that threshold</td>
 <td>—</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>POL.O2.F2 — Pledge yield 0.68 %/yr vs ~2.3 %/yr passive delegation</strong></td>
 <td>Same opportunity-cost argument as for CIP-0050: the reform amplifies the pledge incentive but does not flip the opportunity-cost comparison that explains the current non-pledge equilibrium</td>
 <td>—</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>POL.O4.F1 / POL.O4.F2 — 85 MPO entities operate 901 pools holding 75.4 % of participating stake; 48 are capital-sufficient</strong></td>
 <td>Entity-level concentration metric. CIP-0037's ceiling regime leaves large-pledge entities unconstrained — custodial-by-pledge segment not addressed</td>
 <td>—</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>POL.O4.F3 — 41 of 48 capital-sufficient MPOs forfeit the pledge bonus today</strong></td>
 <td>The population that <em>could</em> respond to CIP-0037 by increasing pledge has already shown it does not choose that option under current rules</td>
 <td>—</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>POL.O5.F2 — 78 % of single-pool stake has pledge ratio &lt; 2 %</strong></td>
 <td>Retail single-pool operators — the population V2 §3.1 targets — empirically do not pledge above the CIP-0037 floor-escape threshold. Their pool reward is clipped to 20 % of the V1 cap</td>
 <td>—</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>OPE.O7.F1 — Delegation is not sticky, not clearly yield-following</strong></td>
 <td>The CIP's decentralisation story requires delegator migration toward higher-pledge alternatives; the diagnostic does not support this assumption at the scale needed</td>
 <td>—</td>
@@ -631,18 +631,18 @@ window.MathJax = {
 <th style="text-align: right;">sat(p)</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Floor</strong></td>
 <td>$p \leq e \cdot \text{orig\_sat} / \ell = 108$ k ADA</td>
 <td style="text-align: right;">$e \cdot \text{orig\_sat}$ = 13.49 M</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Slope</strong></td>
 <td>$108$ k $&lt; p &lt;$ $540$ k</td>
 <td style="text-align: right;">$\ell \cdot p$</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Ceiling</strong></td>
 <td>$p \geq \text{orig\_sat} / \ell = 540$ k ADA</td>
 <td style="text-align: right;">$\text{orig\_sat}$ = 67.44 M</td>
@@ -747,33 +747,33 @@ final_sat = max(new_sat, orig_sat);</code></p>
 <th>Type</th>
 </tr>
 </thead>
-<tbody class="data-table-grouped">
-<tr class="row-group">
+<tbody>
+<tr>
 <td><strong>Floor</strong></td>
 <td>$\text{sat}(0) = e \cdot \text{orig\_sat}$ — zero-pledge pools retain $e = 20\,\%$ of V1 capacity</td>
 <td>Algebraic</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Monotonicity in pledge</strong></td>
 <td>$\partial \text{sat}/\partial p \geq 0$ on the slope regime (and weakly on the clamps)</td>
 <td>Algebraic</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Three regimes</strong></td>
 <td>Floor ($p < p_{\text{floor}}$), slope ($p_{\text{floor}} \leq p < p_{100\%}$), ceiling ($p \geq p_{100\%}$)</td>
 <td>Algebraic</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>MPO fleet-split penalty</strong></td>
 <td>Splitting pledge budget $P$ across $N$ equal pools: each pool has $p = P/N$; per-pool sat shrinks (below $p_{100\%}$) as $N$ grows</td>
 <td>Algebraic</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>Price dependence</strong></td>
 <td>$p_{100\%}$ is absolute ADA; fiat-denominated opportunity cost shifts with the ADA/USD rate</td>
 <td>Structural</td>
 </tr>
-<tr class="row-group">
+<tr>
 <td><strong>k-dependence</strong></td>
 <td>$\text{orig\_sat} = \text{Supply}/k$ — any $k$ change reshapes the entire curve</td>
 <td>Structural</td>
@@ -1120,6 +1120,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777553619"></script>
+<script src="assets/site.js?v=1777553747"></script>
 </body>
 </html>
