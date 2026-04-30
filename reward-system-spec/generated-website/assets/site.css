@@ -1755,25 +1755,26 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
   background:color-mix(in srgb, #FF6F6E 35%, transparent)}
 
 /* Card-level collapse — clicking the observation header
-   (.sro-head) folds the entire body (abstract + FINDINGS label +
-   list). Only the header stays visible when collapsed; the
-   FINDINGS eyebrow and dashed rule disappear with the rest. State
+   (.sro-head) folds the FINDINGS list (label + items). The
+   abstract paragraph stays visible so the reader keeps the
+   one-line summary even when the detail is folded. State
    persists per-card via localStorage. */
 .sro-card-pro .sro-head{cursor:pointer;user-select:none;
   -webkit-tap-highlight-color:transparent;
-  position:relative;
   transition:background .15s}
 .sro-card-pro .sro-head:hover{
   background:color-mix(in srgb, var(--cardano-blue) 4%, transparent)}
-/* Chevron indicator at the far right of the header, after the
-   count chip. Rotates to -90deg when collapsed. */
-.sro-card-pro .sro-head::after{content:'▾';flex-shrink:0;
-  font-size:13px;line-height:1;color:var(--text-muted);
-  margin-left:6px;transition:transform .2s ease,color .15s}
-.sro-card-pro .sro-head:hover::after{color:var(--cardano-blue)}
-.sro-card-pro.collapsed .sro-head::after{transform:rotate(-90deg)}
-/* When the card is collapsed, hide everything below the header. */
-.sro-card-pro.collapsed > .sro-abstract,
+/* Chevron lives INSIDE the count chip (e.g. '8 findings ▾'), so it
+   reads as 'this chip toggles the list'. Rotates to -90deg when
+   collapsed. */
+.sro-card-pro .sro-count::after{content:'▾';flex-shrink:0;
+  font-size:11px;line-height:1;
+  margin-left:8px;opacity:.7;
+  transition:transform .2s ease,opacity .15s}
+.sro-card-pro .sro-head:hover .sro-count::after{opacity:1}
+.sro-card-pro.collapsed .sro-count::after{transform:rotate(-90deg)}
+/* When the card is collapsed, hide the FINDINGS eyebrow + the list
+   only. The abstract paragraph stays visible. */
 .sro-card-pro.collapsed > .sro-findings-label,
 .sro-card-pro.collapsed > .sro-findings{
   display:none}
