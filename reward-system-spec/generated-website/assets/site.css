@@ -1401,6 +1401,15 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
 .findings-intro-lead em{
   font-style:italic;font-weight:600;color:var(--cardano-blue)}
 .findings-intro-lead strong{font-weight:700;color:var(--infared)}
+/* The answer line — same display face but a touch lighter, so the
+   question still owns the visual weight. */
+.findings-intro-answer{
+  font-family:var(--font-display,'Chivo','Inter',-apple-system,sans-serif);
+  font-size:16px;line-height:1.5;font-weight:400;
+  color:var(--text-primary);
+  letter-spacing:-.1px;
+  margin-top:-4px}
+.findings-intro-answer strong{font-weight:700;color:var(--infared)}
 
 /* How-to — smaller muted prose so it reads as a footer note rather
    than competing with the lead. */
