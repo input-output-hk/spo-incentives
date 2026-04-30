@@ -1234,7 +1234,7 @@ window.MathJax = {{
 
 <!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
 <div class="nav-zone nav-zone-implementation">
-<span class="nav-tab-implementation" title="Future destination — engineering implementation of the V2 specification">Implementation ?</span>
+<span class="nav-tab-implementation" title="What follows the spec — engineering implementation of the V2 mechanism">What&rsquo;s next ?</span>
 </div>
 
 <span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
@@ -5365,7 +5365,12 @@ def build_page(page: dict) -> Path:
         for fs in f_by_code.values():
             cross_findings.extend(fs)
 
-    if observations and is_observatory:
+    # When a section's parent (e.g. "1.3") has a DIA_SOURCE_MAP entry, render
+    # the compact OPE.O# / POL.O# / TRE.O# / CEN.O# source-deferring rows so
+    # the canonical sub-report ids are surfaced (and the "DIA.1.3.O#" wrapper
+    # never reaches the page). This applies to every non-sub-report page,
+    # not just the observatory.
+    if observations and source_lookup:
         content_html = transform_observation_tables_with_sources(
             content_html, observations, source_lookup,
         )
