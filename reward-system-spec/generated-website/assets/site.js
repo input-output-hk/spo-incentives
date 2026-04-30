@@ -1745,7 +1745,58 @@
   })();
   /* ── /Cross-page DIA source overlay ── */
 
-  /* ── Findings list collapse — Pro card variant ──
+  /* ── Pro observation card — header collapse ──
+     Click anywhere on the .sro-head row to fold/unfold the body
+     (abstract + findings label + findings list). State persists
+     per-card via localStorage so the user's choice survives
+     reloads and cross-page navigation. */
+  (function initCardCollapse(){
+    var heads=document.querySelectorAll('.sro-card-pro > .sro-head');
+    if(!heads.length) return;
+    var KEY='spo:findings-collapsed';
+    function load(){
+      try{return JSON.parse(localStorage.getItem(KEY)||'{}');}
+      catch(e){return {};}
+    }
+    function save(state){
+      try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
+    }
+    var state=load();
+    heads.forEach(function(head){
+      var card=head.parentElement;
+      if(!card||!card.classList.contains('sro-card-pro')) return;
+      var id=card.id||card.getAttribute('data-obs')||'';
+      head.setAttribute('role','button');
+      head.setAttribute('tabindex','0');
+      head.setAttribute('aria-expanded','true');
+      function apply(collapsed){
+        card.classList.toggle('collapsed',collapsed);
+        head.setAttribute('aria-expanded',collapsed?'false':'true');
+      }
+      if(id && state[id]==='1') apply(true);
+      function toggle(ev){
+        /* Don't toggle when the click lands on a link inside the
+           header (the brand badge or any future header link). */
+        if(ev && ev.target && ev.target.closest('a')) return;
+        var willCollapse=!card.classList.contains('collapsed');
+        apply(willCollapse);
+        if(id){
+          if(willCollapse) state[id]='1';
+          else delete state[id];
+          save(state);
+        }
+      }
+      head.addEventListener('click',toggle);
+      head.addEventListener('keydown',function(e){
+        if(e.key==='Enter'||e.key===' '){
+          e.preventDefault();toggle(e);
+        }
+      });
+    });
+  })();
+  /* ── /Pro observation card — header collapse ── */
+
+/* ── Findings list collapse — Pro card variant ──
      Click the FINDINGS eyebrow to fold/unfold the list below. State
      persists per-card via localStorage so the user's choice survives
      reloads and cross-page navigation. */

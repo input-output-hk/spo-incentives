@@ -2604,39 +2604,40 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 .sro-card-pro .sro-abstract strong{font-weight:700;color:var(--text-primary);
   font-variant-numeric:tabular-nums}
 
-/* "Findings" eyebrow — Infared red label that doubles as the
-   collapse toggle for the list below. Click anywhere on the row
-   (label, rule, or chevron) to fold/unfold. State persists per
-   observation card via localStorage. */
+/* "Findings" eyebrow — Infared red label introducing the list. */
 .sro-findings-label{margin:20px 22px 10px;
   font:600 11px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   letter-spacing:2.6px;text-transform:uppercase;color:var(--infared);
-  display:flex;align-items:center;gap:12px;
-  cursor:pointer;user-select:none;
-  -webkit-tap-highlight-color:transparent}
-.sro-findings-label::before{content:'▾';flex-shrink:0;
-  font-size:11px;letter-spacing:0;line-height:1;
-  transition:transform .18s ease}
-.sro-findings-label.collapsed::before{transform:rotate(-90deg)}
+  display:flex;align-items:center;gap:12px}
 .sro-findings-label::after{content:'';flex:1;height:1px;
   background:color-mix(in srgb, var(--infared) 35%, transparent)}
-.sro-findings-label:hover{color:#a01a18}
-.sro-findings-label:hover::after{
-  background:color-mix(in srgb, var(--infared) 55%, transparent)}
 [data-theme=dark] .sro-findings-label{color:#FF6F6E}
 [data-theme=dark] .sro-findings-label::after{
   background:color-mix(in srgb, #FF6F6E 35%, transparent)}
-[data-theme=dark] .sro-findings-label:hover{color:#FF8F8E}
 
-/* Findings list collapse — animated max-height + opacity. The
-   default expanded max-height is intentionally generous (4000px);
-   if a card holds 20+ findings it'll still fit. */
-.sro-findings.collapsed{max-height:0;opacity:0;
-  margin:0;padding:0;overflow:hidden;
-  border-top:0;
-  pointer-events:none}
-.sro-findings{transition:max-height .25s ease,opacity .2s ease;
-  max-height:4000px;opacity:1}
+/* Card-level collapse — clicking the observation header
+   (.sro-head) folds the entire body (abstract + FINDINGS label +
+   list). Only the header stays visible when collapsed; the
+   FINDINGS eyebrow and dashed rule disappear with the rest. State
+   persists per-card via localStorage. */
+.sro-card-pro .sro-head{cursor:pointer;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;
+  transition:background .15s}
+.sro-card-pro .sro-head:hover{
+  background:color-mix(in srgb, var(--cardano-blue) 4%, transparent)}
+/* Chevron indicator at the far right of the header, after the
+   count chip. Rotates to -90deg when collapsed. */
+.sro-card-pro .sro-head::after{content:'▾';flex-shrink:0;
+  font-size:13px;line-height:1;color:var(--text-muted);
+  margin-left:6px;transition:transform .2s ease,color .15s}
+.sro-card-pro .sro-head:hover::after{color:var(--cardano-blue)}
+.sro-card-pro.collapsed .sro-head::after{transform:rotate(-90deg)}
+/* When the card is collapsed, hide everything below the header. */
+.sro-card-pro.collapsed > .sro-abstract,
+.sro-card-pro.collapsed > .sro-findings-label,
+.sro-card-pro.collapsed > .sro-findings{
+  display:none}
 
 /* Findings list — clean rows on the card surface. The whole row
    theme switches to Infared red (the evidence belongs to the IOG
@@ -3687,13 +3688,14 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
   })();
   /* ── /Cross-page DIA source overlay ── */
 
-  /* ── Findings list collapse — Pro card variant ──
-     Click the FINDINGS eyebrow to fold/unfold the list below. State
-     persists per-card via localStorage so the user's choice survives
+  /* ── Pro observation card — header collapse ──
+     Click anywhere on the .sro-head row to fold/unfold the body
+     (abstract + findings label + findings list). State persists
+     per-card via localStorage so the user's choice survives
      reloads and cross-page navigation. */
-  (function initFindingsCollapse(){
-    var labels=document.querySelectorAll('.sro-card-pro .sro-findings-label');
-    if(!labels.length) return;
+  (function initCardCollapse(){
+    var heads=document.querySelectorAll('.sro-card-pro > .sro-head');
+    if(!heads.length) return;
     var KEY='spo:findings-collapsed';
     function load(){
       try{return JSON.parse(localStorage.getItem(KEY)||'{}');}
@@ -3703,26 +3705,23 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
       try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}
     }
     var state=load();
-    labels.forEach(function(label){
-      var card=label.closest('.sro-card-pro');
-      if(!card) return;
+    heads.forEach(function(head){
+      var card=head.parentElement;
+      if(!card||!card.classList.contains('sro-card-pro')) return;
       var id=card.id||card.getAttribute('data-obs')||'';
-      var list=label.nextElementSibling;
-      while(list && !list.classList.contains('sro-findings')){
-        list=list.nextElementSibling;
-      }
-      if(!list) return;
-      label.setAttribute('role','button');
-      label.setAttribute('tabindex','0');
-      label.setAttribute('aria-expanded','true');
+      head.setAttribute('role','button');
+      head.setAttribute('tabindex','0');
+      head.setAttribute('aria-expanded','true');
       function apply(collapsed){
-        label.classList.toggle('collapsed',collapsed);
-        list.classList.toggle('collapsed',collapsed);
-        label.setAttribute('aria-expanded',collapsed?'false':'true');
+        card.classList.toggle('collapsed',collapsed);
+        head.setAttribute('aria-expanded',collapsed?'false':'true');
       }
       if(id && state[id]==='1') apply(true);
-      function toggle(){
-        var willCollapse=!list.classList.contains('collapsed');
+      function toggle(ev){
+        /* Don't toggle when the click lands on a link inside the
+           header (the brand badge or any future header link). */
+        if(ev && ev.target && ev.target.closest('a')) return;
+        var willCollapse=!card.classList.contains('collapsed');
         apply(willCollapse);
         if(id){
           if(willCollapse) state[id]='1';
@@ -3730,15 +3729,15 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
           save(state);
         }
       }
-      label.addEventListener('click',toggle);
-      label.addEventListener('keydown',function(e){
+      head.addEventListener('click',toggle);
+      head.addEventListener('keydown',function(e){
         if(e.key==='Enter'||e.key===' '){
-          e.preventDefault();toggle();
+          e.preventDefault();toggle(e);
         }
       });
     });
   })();
-  /* ── /Findings list collapse ── */
+  /* ── /Pro observation card — header collapse ── */
 
 """
 

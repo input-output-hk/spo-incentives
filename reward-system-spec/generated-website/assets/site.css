@@ -1743,39 +1743,40 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 .sro-card-pro .sro-abstract strong{font-weight:700;color:var(--text-primary);
   font-variant-numeric:tabular-nums}
 
-/* "Findings" eyebrow — Infared red label that doubles as the
-   collapse toggle for the list below. Click anywhere on the row
-   (label, rule, or chevron) to fold/unfold. State persists per
-   observation card via localStorage. */
+/* "Findings" eyebrow — Infared red label introducing the list. */
 .sro-findings-label{margin:20px 22px 10px;
   font:600 11px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   letter-spacing:2.6px;text-transform:uppercase;color:var(--infared);
-  display:flex;align-items:center;gap:12px;
-  cursor:pointer;user-select:none;
-  -webkit-tap-highlight-color:transparent}
-.sro-findings-label::before{content:'▾';flex-shrink:0;
-  font-size:11px;letter-spacing:0;line-height:1;
-  transition:transform .18s ease}
-.sro-findings-label.collapsed::before{transform:rotate(-90deg)}
+  display:flex;align-items:center;gap:12px}
 .sro-findings-label::after{content:'';flex:1;height:1px;
   background:color-mix(in srgb, var(--infared) 35%, transparent)}
-.sro-findings-label:hover{color:#a01a18}
-.sro-findings-label:hover::after{
-  background:color-mix(in srgb, var(--infared) 55%, transparent)}
 [data-theme=dark] .sro-findings-label{color:#FF6F6E}
 [data-theme=dark] .sro-findings-label::after{
   background:color-mix(in srgb, #FF6F6E 35%, transparent)}
-[data-theme=dark] .sro-findings-label:hover{color:#FF8F8E}
 
-/* Findings list collapse — animated max-height + opacity. The
-   default expanded max-height is intentionally generous (4000px);
-   if a card holds 20+ findings it'll still fit. */
-.sro-findings.collapsed{max-height:0;opacity:0;
-  margin:0;padding:0;overflow:hidden;
-  border-top:0;
-  pointer-events:none}
-.sro-findings{transition:max-height .25s ease,opacity .2s ease;
-  max-height:4000px;opacity:1}
+/* Card-level collapse — clicking the observation header
+   (.sro-head) folds the entire body (abstract + FINDINGS label +
+   list). Only the header stays visible when collapsed; the
+   FINDINGS eyebrow and dashed rule disappear with the rest. State
+   persists per-card via localStorage. */
+.sro-card-pro .sro-head{cursor:pointer;user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;
+  transition:background .15s}
+.sro-card-pro .sro-head:hover{
+  background:color-mix(in srgb, var(--cardano-blue) 4%, transparent)}
+/* Chevron indicator at the far right of the header, after the
+   count chip. Rotates to -90deg when collapsed. */
+.sro-card-pro .sro-head::after{content:'▾';flex-shrink:0;
+  font-size:13px;line-height:1;color:var(--text-muted);
+  margin-left:6px;transition:transform .2s ease,color .15s}
+.sro-card-pro .sro-head:hover::after{color:var(--cardano-blue)}
+.sro-card-pro.collapsed .sro-head::after{transform:rotate(-90deg)}
+/* When the card is collapsed, hide everything below the header. */
+.sro-card-pro.collapsed > .sro-abstract,
+.sro-card-pro.collapsed > .sro-findings-label,
+.sro-card-pro.collapsed > .sro-findings{
+  display:none}
 
 /* Findings list — clean rows on the card surface. The whole row
    theme switches to Infared red (the evidence belongs to the IOG
