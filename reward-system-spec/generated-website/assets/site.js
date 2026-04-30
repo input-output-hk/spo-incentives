@@ -285,31 +285,52 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
         empty.textContent='No findings indexed for this observation.';
         list.appendChild(empty);
       } else {
-        ids.forEach(function(fid){
+        /* Stable hash → hue (0..359) so each insight/nature text always
+           lands on the same colour across builds, matching the Python
+           _nature_hue helper used by the Pro card on the main page.
+           (Different hash function — md5 isn't available in the
+           browser without async — but stable per-text and visually
+           varied; the pill colour is a category cue, not a citation.) */
+        function _panelHue(s){
+          s=(s||'').trim().toLowerCase();
+          var h=0;
+          for(var i=0;i<s.length;i++){h=((h*31)+s.charCodeAt(i))|0;}
+          return Math.abs(h)%360;
+        }
+        ids.forEach(function(fid,fi){
           var f=findingsIndex[fid];
           var li=document.createElement('li');
           li.className='obs-panel-finding';
-          var idEl='<span class="obs-panel-finding-id">'+fid+'</span>';
-          if(f){
-            var body='<div class="obs-panel-finding-body">'+
-              '<div class="obs-panel-finding-summary">'+f.summary+'</div>'+
-              (f.insight ? '<div class="obs-panel-finding-insight">'+f.insight+'</div>' : '')+
-            '</div>';
-            var head='<div class="obs-panel-finding-head">'+idEl;
-            if(f.href){
-              head+='<a class="obs-panel-finding-jump" href="'+f.href+'" '+
-                'aria-label="Jump to '+fid+'">'+
-                '<svg viewBox="0 0 24 24" width="12" height="12">'+
-                '<line x1="5" y1="12" x2="19" y2="12"/>'+
-                '<polyline points="12 5 19 12 12 19"/></svg></a>';
-            }
-            head+='</div>';
-            li.innerHTML=head+body;
+          /* Two-line stack badge — \`#N\` ordinal + canonical ref —
+             mirrors .sro-card-pro .sro-fid layout. The whole stack
+             is wrapped in <a> when a source href is available so
+             clicking the badge column navigates to the source. */
+          var num='<span class="obs-panel-finding-num">#'+(fi+1)+'</span>';
+          var ref='<span class="obs-panel-finding-id">'+fid+'</span>';
+          var fid_html;
+          if(f && f.href){
+            fid_html='<a class="obs-panel-finding-fid" href="'+f.href+'" '+
+              'aria-label="Jump to '+fid+'">'+num+ref+'</a>';
           } else {
-            li.innerHTML='<div class="obs-panel-finding-head">'+idEl+'</div>'+
+            fid_html='<span class="obs-panel-finding-fid">'+num+ref+'</span>';
+          }
+          if(f){
+            var insightTxt=(f.insight||'').replace(/<[^>]+>/g,'').trim();
+            var hue=_panelHue(insightTxt);
+            var insightPill=f.insight
+              ? '<span class="obs-panel-finding-insight" style="--n-h:'+hue+'">'+f.insight+'</span>'
+              : '';
+            li.innerHTML=fid_html+
               '<div class="obs-panel-finding-body">'+
-              '<div class="obs-panel-finding-summary obs-panel-finding-missing">'+
-              'Detail not bundled on this page.</div></div>';
+                '<div class="obs-panel-finding-summary">'+f.summary+'</div>'+
+              '</div>'+
+              insightPill;
+          } else {
+            li.innerHTML=fid_html+
+              '<div class="obs-panel-finding-body">'+
+                '<div class="obs-panel-finding-summary obs-panel-finding-missing">'+
+                'Detail not bundled on this page.</div>'+
+              '</div>';
           }
           list.appendChild(li);
         });

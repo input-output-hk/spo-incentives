@@ -2170,33 +2170,74 @@ _CROSS_OBS_CSS = """
 .obs-panel-findings-head::after{content:'';flex:1;height:1px;
   background:color-mix(in srgb, var(--infared) 30%, transparent)}
 .obs-panel-findings{list-style:none;margin:0;padding:0;
-  display:flex;flex-direction:column;gap:10px}
-.obs-panel-finding{border:1px solid var(--border);border-radius:6px;
-  padding:12px 14px;background:var(--bg);
-  transition:border-color .15s,background .15s}
-.obs-panel-finding:hover{
-  border-color:color-mix(in srgb, var(--infared) 35%, var(--border));
-  background:rgba(229,35,33,.025)}
-.obs-panel-finding-head{display:flex;align-items:center;gap:10px;
-  margin-bottom:6px}
-.obs-panel-finding-id{font:600 10.5px/1.3 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.05em;color:var(--infared);
-  padding:3px 8px;border-radius:3px;
-  background:rgba(229,35,33,.06);
-  border:1px solid rgba(229,35,33,.20)}
-.obs-panel-finding-jump{display:inline-flex;align-items:center;justify-content:center;
-  width:20px;height:20px;border-radius:4px;color:var(--text-muted);
-  text-decoration:none;margin-left:auto;
-  transition:color .15s,background .15s,transform .15s}
-.obs-panel-finding-jump svg{fill:none;stroke:currentColor;stroke-width:2;
-  stroke-linecap:round;stroke-linejoin:round;width:13px;height:13px}
-.obs-panel-finding-jump:hover{color:var(--cardano-blue);
-  background:var(--cardano-blue-soft);transform:translate(1px,-1px)}
-.obs-panel-finding-summary{font:400 13.5px/1.6 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  display:flex;flex-direction:column}
+/* Each finding row mirrors .sro-card-pro .sro-finding — a 2-col
+   layout with the badge on the left, body on the right, and the
+   nature/insight pill anchored bottom-right of the row. */
+.obs-panel-finding{position:relative;
+  display:grid;grid-template-columns:96px 1fr;gap:18px;
+  padding:14px 16px 38px;
+  border-top:1px solid var(--border);background:transparent;
+  transition:background .15s}
+.obs-panel-finding:first-child{border-top:0}
+.obs-panel-finding:hover{background:rgba(229,35,33,.04)}
+[data-theme=dark] .obs-panel-finding:hover{background:rgba(255,111,110,.06)}
+/* Badge column — clickable when a source href is known. \`#N\`
+   prominent in Infared, canonical ref small mono breadcrumb. */
+.obs-panel-finding-fid{padding:0;flex-shrink:0;
+  align-self:flex-start;margin-top:1px;
+  display:inline-flex;flex-direction:column;gap:3px;
+  align-items:flex-start;justify-content:center;
+  background:transparent;border:0;text-decoration:none;
+  color:inherit}
+a.obs-panel-finding-fid{cursor:pointer}
+.obs-panel-finding-num{
+  font:600 14px/1.2 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--infared);letter-spacing:-.005em;
+  font-variant-numeric:tabular-nums}
+.obs-panel-finding-id{
+  font:500 10px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  color:var(--text-muted);letter-spacing:.06em;
+  padding:0;background:transparent;border:0;border-radius:0}
+a.obs-panel-finding-fid:hover .obs-panel-finding-num{color:#a01a18}
+a.obs-panel-finding-fid:hover .obs-panel-finding-id{color:var(--text-secondary)}
+[data-theme=dark] .obs-panel-finding-num{color:#FF6F6E}
+[data-theme=dark] a.obs-panel-finding-fid:hover .obs-panel-finding-num{color:#FF8F8E}
+/* Body — evidence/summary text. Same Inter 14.5/1.65 as
+   .sro-card-pro .sro-evidence so the rhythm carries from main
+   page into the panel. */
+.obs-panel-finding-body{min-width:0}
+.obs-panel-finding-summary{font:400 14.5px/1.65 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:#1a1a1a;letter-spacing:-.005em}
 [data-theme=dark] .obs-panel-finding-summary{color:#E4E4E7}
 .obs-panel-finding-summary p{margin:0}
 .obs-panel-finding-summary p + p{margin-top:6px}
+.obs-panel-finding-summary strong{font-weight:700;
+  color:#000;font-variant-numeric:tabular-nums}
+[data-theme=dark] .obs-panel-finding-summary strong{color:#fff}
+/* Insight pill — same GitHub-style category chip as .sro-nature on
+   the main page, hue hashed (in JS) from the insight text and
+   passed via the inline \`--n-h\` custom property. */
+.obs-panel-finding-insight{
+  position:absolute;bottom:12px;right:16px;
+  font:500 10.5px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;text-transform:none;font-style:normal;
+  padding:2px 9px;border-radius:12px;
+  background:hsl(var(--n-h,215),65%,94%);
+  color:hsl(var(--n-h,215),55%,32%);
+  border:1px solid hsl(var(--n-h,215),50%,82%);
+  white-space:nowrap;max-width:calc(100% - 80px);
+  overflow:hidden;text-overflow:ellipsis}
+[data-theme=dark] .obs-panel-finding-insight{
+  background:hsl(var(--n-h,215),35%,18%);
+  color:hsl(var(--n-h,215),65%,75%);
+  border-color:hsl(var(--n-h,215),40%,30%)}
+@media (max-width:720px){
+  .obs-panel-finding{grid-template-columns:1fr;gap:8px;
+    padding:14px 16px}
+  .obs-panel-finding-insight{position:static;display:inline-block;
+    margin-top:8px;max-width:none}
+}
 /* Key numbers — bolded at the MD source, tinted and tabular-aligned here so
    they scan as landmarks inside the short finding rows. */
 .obs-panel-finding-summary strong,
@@ -3042,31 +3083,52 @@ _CROSS_OBS_JS = """  /* ── Cross-page DIA source overlay ──
         empty.textContent='No findings indexed for this observation.';
         list.appendChild(empty);
       } else {
-        ids.forEach(function(fid){
+        /* Stable hash → hue (0..359) so each insight/nature text always
+           lands on the same colour across builds, matching the Python
+           _nature_hue helper used by the Pro card on the main page.
+           (Different hash function — md5 isn't available in the
+           browser without async — but stable per-text and visually
+           varied; the pill colour is a category cue, not a citation.) */
+        function _panelHue(s){
+          s=(s||'').trim().toLowerCase();
+          var h=0;
+          for(var i=0;i<s.length;i++){h=((h*31)+s.charCodeAt(i))|0;}
+          return Math.abs(h)%360;
+        }
+        ids.forEach(function(fid,fi){
           var f=findingsIndex[fid];
           var li=document.createElement('li');
           li.className='obs-panel-finding';
-          var idEl='<span class="obs-panel-finding-id">'+fid+'</span>';
-          if(f){
-            var body='<div class="obs-panel-finding-body">'+
-              '<div class="obs-panel-finding-summary">'+f.summary+'</div>'+
-              (f.insight ? '<div class="obs-panel-finding-insight">'+f.insight+'</div>' : '')+
-            '</div>';
-            var head='<div class="obs-panel-finding-head">'+idEl;
-            if(f.href){
-              head+='<a class="obs-panel-finding-jump" href="'+f.href+'" '+
-                'aria-label="Jump to '+fid+'">'+
-                '<svg viewBox="0 0 24 24" width="12" height="12">'+
-                '<line x1="5" y1="12" x2="19" y2="12"/>'+
-                '<polyline points="12 5 19 12 12 19"/></svg></a>';
-            }
-            head+='</div>';
-            li.innerHTML=head+body;
+          /* Two-line stack badge — \`#N\` ordinal + canonical ref —
+             mirrors .sro-card-pro .sro-fid layout. The whole stack
+             is wrapped in <a> when a source href is available so
+             clicking the badge column navigates to the source. */
+          var num='<span class="obs-panel-finding-num">#'+(fi+1)+'</span>';
+          var ref='<span class="obs-panel-finding-id">'+fid+'</span>';
+          var fid_html;
+          if(f && f.href){
+            fid_html='<a class="obs-panel-finding-fid" href="'+f.href+'" '+
+              'aria-label="Jump to '+fid+'">'+num+ref+'</a>';
           } else {
-            li.innerHTML='<div class="obs-panel-finding-head">'+idEl+'</div>'+
+            fid_html='<span class="obs-panel-finding-fid">'+num+ref+'</span>';
+          }
+          if(f){
+            var insightTxt=(f.insight||'').replace(/<[^>]+>/g,'').trim();
+            var hue=_panelHue(insightTxt);
+            var insightPill=f.insight
+              ? '<span class="obs-panel-finding-insight" style="--n-h:'+hue+'">'+f.insight+'</span>'
+              : '';
+            li.innerHTML=fid_html+
               '<div class="obs-panel-finding-body">'+
-              '<div class="obs-panel-finding-summary obs-panel-finding-missing">'+
-              'Detail not bundled on this page.</div></div>';
+                '<div class="obs-panel-finding-summary">'+f.summary+'</div>'+
+              '</div>'+
+              insightPill;
+          } else {
+            li.innerHTML=fid_html+
+              '<div class="obs-panel-finding-body">'+
+                '<div class="obs-panel-finding-summary obs-panel-finding-missing">'+
+                'Detail not bundled on this page.</div>'+
+              '</div>';
           }
           list.appendChild(li);
         });
