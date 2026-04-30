@@ -521,25 +521,29 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
    stays inline so it flows with the prose. */
 .finding-callout-tag{
   display:inline-flex;align-items:center;gap:6px;
-  padding:1px 7px 2px;
+  padding:3px 8px;
   border:1px solid rgba(60,60,67,.18);
   border-radius:4px;
   background:rgba(60,60,67,.03);
-  vertical-align:1px;
+  vertical-align:0;
   white-space:nowrap;
-  margin-right:2px}
+  margin-right:2px;
+  line-height:1}
 [data-theme=dark] .finding-callout-tag{
   border-color:rgba(220,220,225,.22);
   background:rgba(220,220,225,.04)}
 
 /* The "Finding" label inside the chip — small caps, dark grey,
-   sentence weight. */
+   sentence weight. Line-height set to 1 so the small-cap glyphs
+   sit on the chip's vertical centerline without inherited body
+   line-height pushing them down. */
 .finding-callout-tag > .finding-callout-label{
-  font:600 10.5px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font:600 10.5px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   text-transform:uppercase;
   letter-spacing:.10em;
   color:#3a3a3f;
   margin:0;
+  display:inline-flex;align-items:center;
   vertical-align:0}
 [data-theme=dark] .finding-callout-tag > .finding-callout-label{color:#B8B8BD}
 
@@ -548,7 +552,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
   content:"";display:inline-block;
   width:1px;height:10px;
   background:rgba(60,60,67,.22);
-  margin-left:7px;vertical-align:-1px}
+  margin-left:7px}
 [data-theme=dark] .finding-callout-tag > .finding-callout-label::after{
   background:rgba(220,220,225,.25)}
 
@@ -579,7 +583,16 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
    accent colour as the breadcrumb chip but no border, no background,
    no extra weight. Sits alongside the dark-grey ``FINDING`` label
    inside the chip frame. */
-.finding-callout-tag > a.finding-ref,
+.finding-callout-tag > a.finding-ref{
+  display:inline-flex;align-items:center;
+  padding:0;
+  background:transparent;border:0;border-bottom:0;
+  color:var(--infared);
+  font:500 12px/1 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.01em;
+  text-decoration:none;
+  margin:0;
+  transition:color .15s,text-decoration-color .15s}
 .content blockquote:has(> p:first-child > strong > a.finding-ref)
   > p:first-child > strong > a.finding-ref,
 .content blockquote:has(> p.finding-callout-meta)
