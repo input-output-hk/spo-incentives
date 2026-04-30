@@ -2687,22 +2687,31 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
   background:rgba(255,111,110,.10);
   border-bottom-color:rgba(255,111,110,.40);color:#E4E4E7}
 
-/* Meta row — nature tag only (anchor was retired; the #N badge is
-   the jump-to-source link). The nature is metadata, not an accent
-   — keep it discreet so the eye stays on the evidence text above. */
-.sro-card-pro .sro-meta{margin-top:8px;
-  display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+/* Nature tag — GitHub-style label, top-right of the finding row.
+   The hue comes from the inline \`--n-h\` custom property (hashed
+   from the nature text in Python) so 'Structural threshold' always
+   renders one colour, 'Concentration — supply side' another, etc.
+   The reader learns categories visually after a few rows. */
+.sro-card-pro{position:relative}
+.sro-card-pro .sro-finding{position:relative}
 .sro-card-pro .sro-nature{
-  font:italic 400 11.5px/1.3 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  letter-spacing:0;text-transform:none;
-  color:var(--text-muted);
-  background:transparent;border:0;padding:0}
-.sro-card-pro .sro-nature::before{content:"";display:inline-block;
-  width:4px;height:4px;border-radius:50%;
-  background:var(--border);margin-right:8px;
-  vertical-align:middle;transform:translateY(-1px)}
-[data-theme=dark] .sro-card-pro .sro-nature{color:var(--text-secondary)}
-[data-theme=dark] .sro-card-pro .sro-nature::before{background:var(--border)}
+  position:absolute;top:14px;right:18px;
+  font:500 10.5px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.02em;text-transform:none;font-style:normal;
+  padding:2px 9px;border-radius:12px;
+  background:hsl(var(--n-h,215),65%,94%);
+  color:hsl(var(--n-h,215),55%,32%);
+  border:1px solid hsl(var(--n-h,215),50%,82%);
+  white-space:nowrap;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+.sro-card-pro .sro-nature::before{content:none}
+[data-theme=dark] .sro-card-pro .sro-nature{
+  background:hsl(var(--n-h,215),35%,18%);
+  color:hsl(var(--n-h,215),65%,75%);
+  border-color:hsl(var(--n-h,215),40%,30%)}
+@media (max-width:720px){
+  .sro-card-pro .sro-nature{position:static;display:inline-block;
+    margin-top:8px;max-width:none}
+}
 
 /* Save (.spo-bookmark-btn) is retired — hide if any cached buttons
    linger from previously rendered pages. */
@@ -5287,6 +5296,18 @@ def extract_subreport_observations(
     return groups
 
 
+def _nature_hue(text: str) -> int:
+    """Stable hash → hue (0..359) for the nature-tag pill colour.
+    Same nature text always produces the same hue across builds, so
+    'Structural threshold' stays one tone, 'Concentration — supply
+    side' another, and the eye learns the categories visually.
+    """
+    if not text:
+        return 215  # default Cardano-blue-ish
+    digest = hashlib.md5(text.strip().lower().encode("utf-8")).hexdigest()
+    return int(digest[:4], 16) % 360
+
+
 def _sro_inline_md_to_html(md_inline: str) -> str:
     """Render a single table cell's markdown to inline HTML.
 
@@ -5410,12 +5431,16 @@ def _render_subreport_observations(groups: list[dict]) -> str:
                     f'<span class="sro-fid sro-group-{f["f_group"]}" '
                     f'title="{f["canon_id"]} · was {f["f_id"]}">{f["canon_id"]}</span>'
                 )
-            # Pro variant drops the .sro-anchor span — nature pill only.
+            # Pro variant drops the .sro-anchor and floats the nature
+            # tag top-right of the row as a GitHub-style label whose
+            # hue is hashed from the nature text (same category =
+            # same colour).
             if is_pro:
+                nature_text = re.sub(r"<[^>]+>", "", nature_html or "").strip()
+                hue = _nature_hue(nature_text)
                 meta_html = (
-                    f'<div class="sro-meta">'
-                    f'<span class="sro-nature">{nature_html}</span>'
-                    f'</div>'
+                    f'<span class="sro-nature" style="--n-h:{hue}">'
+                    f'{nature_html}</span>'
                 )
             else:
                 meta_html = (
