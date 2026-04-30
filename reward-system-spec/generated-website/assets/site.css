@@ -1387,7 +1387,7 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
   background:transparent;border:0;
   font-size:14.5px;line-height:1.65;color:var(--text-body);
   display:flex;flex-direction:column;gap:14px}
-.findings-intro p{margin:0;max-width:78ch}
+.findings-intro p{margin:0}
 .findings-intro a{color:var(--infared);text-decoration:none;border-bottom:1px dotted rgba(229,35,33,.4)}
 .findings-intro a:hover{border-bottom-style:solid}
 
