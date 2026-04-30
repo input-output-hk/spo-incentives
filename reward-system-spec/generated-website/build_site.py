@@ -4994,20 +4994,6 @@ def _render_findings_content(
 ) -> str:
     """Produce the body HTML for findings.html."""
     by_parent_obs = _group_obs_by_parent(observations)
-    all_tiers: dict[str, str] = {}
-    for o in observations:
-        all_tiers[o["tier"]] = o["tier_label"]
-
-    # Filter chips — one per tier actually in use, plus an "All" default.
-    chip_html = '<button class="findings-chip active" data-tier="*">All</button>'
-    tier_order = ["mechanism", "concentration", "structure", "demand", "fees", "sustainability", "general"]
-    for t in tier_order:
-        if t in all_tiers:
-            chip_html += (
-                f'<button class="findings-chip findings-chip-{t}" data-tier="{t}">'
-                f'<span class="findings-chip-dot"></span>{all_tiers[t]}'
-                f'</button>'
-            )
 
     intro = (
         '<div class="findings-intro">'
@@ -5022,21 +5008,15 @@ def _render_findings_content(
         'this page distills it into '
         f'<strong>{len(findings)} problem statements</strong> '
         f'induced from <strong>{len(observations)} mainnet observations</strong>.</p>'
-        '<p>Each card carries one problem statement plus the supporting observations. '
-        'Use the tier chips to filter by problem family, the search box to find a '
-        'specific observation or keyword, and the link on each card to jump to the '
-        'full reasoning in the Observatory.</p>'
+        '<p>Each card carries one problem statement, the mainnet '
+        'observations that support it, and the canonical findings '
+        'beneath each observation.</p>'
         '</div>'
     )
 
-    controls = (
-        '<div class="findings-controls">'
-        '<input type="search" class="findings-search" '
-        'placeholder="Search problem statements and observations…" '
-        'aria-label="Search">'
-        f'<div class="findings-chips" role="toolbar" aria-label="Filter by tier">{chip_html}</div>'
-        '</div>'
-    )
+    # Search + tier filter were carrying placeholder behaviour with no
+    # actual hookup to the cards — net cost without value at 11 items.
+    controls = ""
 
     # Stats strip — the two figures readers can act on. The previous
     # "pipeline sections" tile was the count of unique parent §X.Y
