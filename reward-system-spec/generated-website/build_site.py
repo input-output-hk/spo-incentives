@@ -4054,8 +4054,17 @@ _OBS_HEADING_RE = re.compile(
     r"^###\s+(\d+(?:\.\d+){1,2})\.?\s+Mainnet Observations\s*$",
     re.MULTILINE,
 )
+# The diagnostic README's own observation tables previously labelled
+# rows as ``**DIA.X.Y.O#**`` — but DIA never owned the underlying
+# observation. The canonical observations live in the four sub-reports
+# under their three-letter prefix (TRE / POL / OPE / CEN) and the
+# diagnostic prose now references them by that prefix. The row regex
+# accepts either form so older snapshots still parse, and so the
+# (single) remaining DIA.2.2.O# rows for the tx-submitter section keep
+# extracting until they get a canonical home.
 _OBS_ROW_RE = re.compile(
-    r"^\|\s*\*\*DIA\.(\d+)\.(\d+)\.O(\d+)\*\*\s*\|\s*\*\*(.+?)\*\*\s*\|\s*(.+?)\s*\|\s*$",
+    r"^\|\s*\*\*(?:DIA\.(\d+)\.(\d+)|(TRE|POL|OPE|CEN))\.O(\d+)\*\*"
+    r"\s*\|\s*\*\*(.+?)\*\*\s*\|\s*(.+?)\s*\|\s*$",
     re.MULTILINE,
 )
 _SCOPE_NOTE_RE = re.compile(
@@ -4135,11 +4144,13 @@ def extract_observations_from_md(md_text: str) -> list[dict]:
         scope_note = re.split(r"\n\s*\n", scope_note, maxsplit=1)[0].replace("\n", " ").strip()
 
         for row in _OBS_ROW_RE.finditer(section_text):
-            # Canonical row: | **DIA.X.Y.O#** | **Title** | summary |
-            # Capture groups: (X, Y, O#, title, summary).
-            num = int(row.group(3))
-            title = row.group(4).strip()
-            summary = row.group(5).strip()
+            # Canonical row: ``| **<prefix>.O#** | **Title** | summary |``
+            # where ``<prefix>`` is either the legacy ``DIA.X.Y`` form or
+            # one of the four sub-report 3-letter codes (TRE/POL/OPE/CEN).
+            # Capture groups: (DIA-X, DIA-Y, canon-prefix, O#, title, summary).
+            num = int(row.group(4))
+            title = row.group(5).strip()
+            summary = row.group(6).strip()
             tier, tier_label = _classify_tier(summary, title)
             observations.append({
                 "section_id": section_id,
