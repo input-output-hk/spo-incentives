@@ -4934,7 +4934,11 @@ _F_TABLE_ROW_RE = re.compile(
 )
 
 # Captures an `F#.#` token anywhere in prose. Used for inline citation rewrite.
-_F_TOKEN_RE = re.compile(r"\bF(\d+)\.(\d+)\b")
+# Skip matches inside HTML attribute values (e.g. \`data-short="F7.1"\`)
+# so the second-pass rewrite doesn't double-link a token that the first
+# pass already injected into an attribute. The negative lookbehind for
+# \`="\` is fixed-width (2 chars), which Python's \`re\` supports.
+_F_TOKEN_RE = re.compile(r'(?<!=")\bF(\d+)\.(\d+)\b')
 
 # Matches a markdown-style link in a table cell: `[§3.6.1](#361-current-snapshot)`.
 _MD_LINK_IN_CELL = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
@@ -5175,7 +5179,9 @@ def _render_subreport_obs_registry(obs_groups: list[dict]) -> str:
 # Canonical-only token re for V2 docs (matches POL.O1.F1, OPE.O3.F2 …).
 # Allows an optional surrounding paren pair (kept around the rewritten link
 # for visual continuity with the (O#) citation style used elsewhere).
-_CANON_F_TOKEN_RE = re.compile(r"\b([A-Z]{3})\.O(\d+)\.F(\d+)\b")
+# Same attribute-skip guard as \`_F_TOKEN_RE\` so the canonical rewrite
+# is idempotent if applied twice (or to an already-linked fragment).
+_CANON_F_TOKEN_RE = re.compile(r'(?<!=")\b([A-Z]{3})\.O(\d+)\.F(\d+)\b')
 _CANON_O_TOKEN_RE = re.compile(r"\b([A-Z]{3})\.O(\d+)(?!\.F)\b")
 
 
@@ -5292,6 +5298,13 @@ def rewrite_finding_citations(
         for f in findings:
             canon_index.setdefault(f["canon_id"], f)
 
+    def _href_for(f: dict) -> str:
+        """Resolve to the visual Pro card row on the source sub-report
+        page (e.g. \`census.html#cen-o7-f1\`) when known; fall back to
+        the local \`.finding-detail\` registry anchor otherwise so the
+        existing JS overlay still wires up."""
+        return f.get("jump_href") or f"#finding-{f['slug']}"
+
     def _sub_short(m: re.Match) -> str:
         fid = f"F{m.group(1)}.{m.group(2)}"
         f = short_index.get(fid)
@@ -5299,7 +5312,7 @@ def rewrite_finding_citations(
             return m.group(0)
         canon = f.get("canon_id") or fid
         return (
-            f'<a class="finding-ref" href="#finding-{f["slug"]}" '
+            f'<a class="finding-ref" href="{_html.escape(_href_for(f))}" '
             f'data-finding="{canon}" data-short="{fid}" '
             f'data-group="{f["group"]}" '
             f'title="{canon} · hover for summary, click for detail">'
@@ -5312,7 +5325,7 @@ def rewrite_finding_citations(
         if not f:
             return m.group(0)
         return (
-            f'<a class="finding-ref" href="#finding-{f["slug"]}" '
+            f'<a class="finding-ref" href="{_html.escape(_href_for(f))}" '
             f'data-finding="{canon}" data-short="{f["id"]}" '
             f'data-group="{f["group"]}" '
             f'title="{canon} · hover for summary, click for detail">'
@@ -6023,7 +6036,12 @@ def build_page(page: dict) -> Path:
     observations = extract_observations_from_md(md_text)
     # F# findings live in sub-reports (the table forms like `| F1.1 | … |`).
     # Extract before preprocess_md touches links / anchors.
-    f_findings = extract_f_findings_from_md(md_text)
+    # Pass page_html so each finding's `jump_href` includes the
+    # owning page (e.g. `census.html#cen-o7-f1`), which the
+    # rewrite_f_findings refs use to deep-link to the visual Pro card.
+    f_findings = extract_f_findings_from_md(
+        md_text, code=page.get("code", ""), page_html=page["html"],
+    )
 
     md_text = preprocess_md(md_text, src_md)
     # Strip the first top-level H1 so the body doesn't duplicate the banner
