@@ -5664,10 +5664,14 @@ def _render_subreport_observations(groups: list[dict]) -> str:
                     f'<span class="sro-fid-label">#{fi}</span>'
                     f'<span class="sro-fid-ref">{f["canon_id"]}</span>'
                 )
+                # Click jumps to the prose 'Finding XX — ...' callout
+                # (id finding-{slug}) where the finding is described in
+                # full. The expandToHash JS falls back to the row's own
+                # slug when the callout isn't there yet.
                 fid_html = (
                     f'<a class="sro-fid sro-fid-stack sro-group-{f["f_group"]}" '
-                    f'href="#{f["slug"]}" '
-                    f'title="{f["canon_id"]} — permalink to this finding">{inner}</a>'
+                    f'href="#finding-{f["slug"]}" '
+                    f'title="{f["canon_id"]} — jump to the finding description">{inner}</a>'
                 )
             else:
                 fid_html = (
