@@ -5596,38 +5596,25 @@ def _render_subreport_observations(groups: list[dict]) -> str:
         )
         out.append(article_open + head_html + abstract_block
                    + findings_label + '<ol class="sro-findings">')
-        # Pull the FIRST href= out of a rendered section link so the
-        # Pro badge can become a direct jump-to-source. Findings whose
-        # section_md is plain text (no link) get a non-clickable badge.
-        _sec_href_re = re.compile(r'href=["\']([^"\']+)["\']', re.IGNORECASE)
         for fi, f in enumerate(g["findings"], 1):
             ev_html = _sro_inline_md_to_html(f["evidence_md"])
             ev_html = _highlight_metrics(ev_html)
             sec_html = _sro_inline_md_to_html(f["section_md"])
             nature_html = _sro_inline_md_to_html(f["nature_md"])
-            sec_href_match = _sec_href_re.search(sec_html or "")
-            sec_href = sec_href_match.group(1) if sec_href_match else ""
             if is_pro:
-                # Pro variant — the badge IS the jump-to-source link.
-                # #N (ordinal) + CEN.O1.FN (canonical ref) sit inside
-                # a single <a> so clicking either one navigates to the
-                # finding's source section. The .sro-anchor span in
-                # the meta row was retired — the badge replaces it.
+                # Pro variant — #N badge is a permalink to its own row
+                # (e.g. \`#cen-o1-f1\`). Same-page click updates the URL
+                # so the reader can copy a stable shareable anchor;
+                # cross-page references already use the same slug.
                 inner = (
                     f'<span class="sro-fid-label">#{fi}</span>'
                     f'<span class="sro-fid-ref">{f["canon_id"]}</span>'
                 )
-                if sec_href:
-                    fid_html = (
-                        f'<a class="sro-fid sro-fid-stack sro-group-{f["f_group"]}" '
-                        f'href="{_html.escape(sec_href)}" '
-                        f'title="{f["canon_id"]} — jump to source">{inner}</a>'
-                    )
-                else:
-                    fid_html = (
-                        f'<span class="sro-fid sro-fid-stack sro-group-{f["f_group"]}" '
-                        f'title="{f["canon_id"]}">{inner}</span>'
-                    )
+                fid_html = (
+                    f'<a class="sro-fid sro-fid-stack sro-group-{f["f_group"]}" '
+                    f'href="#{f["slug"]}" '
+                    f'title="{f["canon_id"]} — permalink to this finding">{inner}</a>'
+                )
             else:
                 fid_html = (
                     f'<span class="sro-fid sro-group-{f["f_group"]}" '
