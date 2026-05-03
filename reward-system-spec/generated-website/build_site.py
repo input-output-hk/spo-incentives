@@ -5466,41 +5466,13 @@ def _render_findings_content(
     # (which reads .obs-card DOM) can hydrate details on chip hover/click.
     registry_cards = "".join(_render_obs_card(o) for o in observations)
 
-    # Collapsing handler for the per-observation evidence panels.
-    # The page now uses .sro-card-pro from the sub-report layout; the
-    # global initCardCollapse in assets/site.js binds them, but this
-    # inline script doubles as a fallback in case the cards are
-    # rendered after the global pass (e.g. when the synthesis page is
-    # navigated to via SPA-style hash change). It also handles the
-    # legacy .finding-card-onode-head structure where it still exists.
-    toggle_js = (
-        '<script>'
-        '(function(){'
-        'function bind(){'
-        # Pro card: click anywhere on .sro-head toggles parent .collapsed
-        'document.querySelectorAll(".finding-card-evidence-tree '
-        '.sro-card-pro > .sro-head").forEach(function(h){'
-        'if(h.dataset.synthBound) return;h.dataset.synthBound="1";'
-        'h.addEventListener("click",function(ev){'
-        'if(ev.target.closest("a")) return;'
-        'var c=h.parentElement;if(!c)return;'
-        'c.classList.toggle("collapsed");'
-        'h.setAttribute("aria-expanded",'
-        'c.classList.contains("collapsed")?"false":"true");'
-        '});});'
-        # Legacy onode shape — kept for any forward-compat changes.
-        'document.querySelectorAll(".finding-card-onode-head").forEach(function(b){'
-        'if(b.dataset.bound) return;b.dataset.bound="1";'
-        'b.addEventListener("click",function(){'
-        'var n=b.closest(".finding-card-onode");if(!n)return;'
-        'var open=n.classList.toggle("collapsed");'
-        'b.setAttribute("aria-expanded",open?"false":"true");'
-        '});});}'
-        'if(document.readyState!=="loading")bind();'
-        'else document.addEventListener("DOMContentLoaded",bind);'
-        '})();'
-        '</script>'
-    )
+    # No inline collapse handler — the global initCardCollapse in
+    # assets/site.js already binds to ``.sro-card-pro > .sro-head``,
+    # which matches the cards we render here. The previous inline
+    # script attached a SECOND click listener on the same heads, so
+    # every click toggled .collapsed twice (once per handler) and
+    # cancelled itself — appearing as 'collapse is broken'.
+    toggle_js = ""
 
     body = (
         '<div class="findings-page">'
