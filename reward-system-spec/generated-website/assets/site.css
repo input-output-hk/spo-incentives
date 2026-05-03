@@ -1334,6 +1334,37 @@ body.has-toc-panel .content > h2#table-of-contents + .section-body{display:none}
 .toc-fab:hover{color:var(--cardano-blue);border-color:var(--cardano-blue);box-shadow:0 6px 18px var(--cardano-blue-glow);transform:translateY(-1px)}
 .toc-fab svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .toc-fab-label{display:none}
+
+/* Back-to-top FAB — bottom-right twin of the TOC fab. Hidden until
+   the reader scrolls past ~320px; fades + slides in once visible.
+   Same shape language as .toc-fab so the two read as a coordinated
+   pair of floating tools. */
+.back-to-top{
+  position:fixed;bottom:24px;right:24px;
+  width:44px;height:44px;border-radius:50%;
+  background:var(--bg);border:1px solid var(--border);
+  color:var(--text-primary);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.08);
+  z-index:300;
+  opacity:0;visibility:hidden;
+  transform:translateY(8px);
+  transition:opacity .18s,visibility .18s,transform .18s,
+    color .15s,border-color .15s,box-shadow .2s}
+.back-to-top.visible{
+  opacity:1;visibility:visible;transform:translateY(0)}
+.back-to-top:hover{
+  color:var(--cardano-blue);
+  border-color:var(--cardano-blue);
+  box-shadow:0 6px 18px var(--cardano-blue-glow);
+  transform:translateY(-2px)}
+.back-to-top svg{width:18px;height:18px}
+[data-theme=dark] .back-to-top{
+  background:var(--bg-panel);border-color:#2a2a2a}
+[data-theme=dark] .back-to-top:hover{
+  color:#8FB1FF;border-color:#6E97FF;
+  box-shadow:0 6px 18px rgba(110,151,255,.30)}
 [data-theme=dark] .toc-fab{background:var(--bg-panel)}
 
 /* Overlay */

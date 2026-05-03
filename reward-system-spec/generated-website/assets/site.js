@@ -160,6 +160,38 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
   document.querySelectorAll('.content h2[id]').forEach(function(h){ makeCollapsible(h,['H1','H2']); });
 
 
+  /* ── Back-to-top FAB ──
+     Floats above the bottom-right corner once the reader has
+     scrolled past the hero. One round button with an upward
+     chevron — click scrolls the window back to the top. Lives
+     OUTSIDE the cross-obs marker block so it survives every
+     rebuild. */
+  (function initBackToTop(){
+    if(document.querySelector('.back-to-top')) return;
+    var btn=document.createElement('button');
+    btn.className='back-to-top';
+    btn.type='button';
+    btn.setAttribute('aria-label','Back to top');
+    btn.title='Back to top';
+    btn.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+
+      '<path fill="none" stroke="currentColor" stroke-width="2" '+
+      'stroke-linecap="round" stroke-linejoin="round" '+
+      'd="M6 14l6-6 6 6"/></svg>';
+    document.body.appendChild(btn);
+    var threshold=320;
+    function update(){
+      if(window.scrollY>threshold) btn.classList.add('visible');
+      else btn.classList.remove('visible');
+    }
+    btn.addEventListener('click',function(){
+      try{ window.scrollTo({top:0,behavior:'smooth'}); }
+      catch(e){ window.scrollTo(0,0); }
+    });
+    window.addEventListener('scroll',update,{passive:true});
+    update();
+  })();
+
+
   /* ── Cross-page synthesis-observation source overlay ──
      When an `.obs-ref` anchor carries `data-obs-src`, hydrate the overlay
      from the bundled `.sro-obs-detail` registry (the source card on the
