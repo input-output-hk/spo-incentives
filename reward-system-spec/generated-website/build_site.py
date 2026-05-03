@@ -7123,16 +7123,23 @@ def classify_table_rows(html_body: str) -> str:
 
 
 # Match an image paragraph followed (optionally) by a caption paragraph
-# whose first non-tag text begins with ``Figure``/``Fig.``/etc. Captions
-# in the source MDs use partial italic emphasis on phrases — markdown
-# renders them as multiple sibling ``<em>`` segments, so we cannot
-# require a single wrapping ``<em>``. The regex now matches the caption
-# paragraph permissively (any tags / text up to </p>) and the helper
-# below validates that the first ~30 characters of plain text actually
-# start with a Figure keyword before pulling it in.
+# whose first non-tag text begins with ``Figure``/``Fig.``/etc. Two
+# shapes appear in the wild:
+#   A) ``<p><img></p>\n<p><em>Figure …</em></p>`` — image and caption
+#      separated by a blank line in MD, two paragraphs in HTML.
+#   B) ``<p><img>\n<em>Figure …</em></p>`` — image and caption on
+#      adjacent MD lines (no blank), one paragraph in HTML, the image
+#      and caption joined by whitespace or a ``<br>``.
+# Both are handled below; the helper validates the caption text begins
+# with a Figure keyword before pulling it in.
 _MD_IMG_PARA_RE = re.compile(
-    r'<p>\s*(<img\b[^>]*>)\s*</p>'
-    r'(\s*<p>(?P<cap>(?:[^<]|<(?!/?p\b))*)</p>)?',
+    # Shape A: <p><img></p>...<p>caption</p>
+    r'(?:<p>\s*(?P<imgA><img\b[^>]*>)\s*</p>'
+    r'(?P<sepA>\s*<p>(?P<capA>(?:[^<]|<(?!/?p\b))*)</p>)?)'
+    r'|'
+    # Shape B: <p><img>[ws/br]<em>caption</em></p>
+    r'(?:<p>\s*(?P<imgB><img\b[^>]*>)\s*(?:<br\s*/?>\s*)?'
+    r'(?P<capB>(?:[^<]|<(?!/?p\b))*)</p>)',
     re.IGNORECASE | re.DOTALL,
 )
 _FIGURE_CAP_RE = re.compile(
@@ -7173,11 +7180,19 @@ def wrap_md_figures(html_body: str) -> str:
         return re.sub(r'<[^>]+>', '', html)[:n].strip()
 
     def _sub(m: re.Match) -> str:
-        img_tag = m.group(1)
-        cap_inner = (m.group("cap") or "").strip() if m.group(2) else ""
-        # Only fold the next paragraph in if its plain-text prefix
-        # starts with a Figure/Fig./Chart/etc. keyword. Otherwise it's
-        # body prose that happens to follow the image.
+        # Two regex branches share the same handler. Pull whichever
+        # group matched.
+        img_tag = m.group("imgA") or m.group("imgB") or ""
+        # For shape A, the caption lives in a *following* paragraph
+        # (cap_inner is the inner text of that <p>); for shape B, the
+        # caption is the residual text inside the same <p> that holds
+        # the <img>.
+        cap_inner = (
+            (m.group("capA") if m.group("imgA") else m.group("capB")) or ""
+        ).strip()
+        # Only fold the caption in if its plain-text prefix starts
+        # with a Figure/Fig./Chart/etc. keyword. Otherwise it's body
+        # prose that happens to follow the image.
         if cap_inner and _FIGURE_CAP_RE.match(_plain_text_prefix(cap_inner)):
             peeled = _peel_outer_em(cap_inner).strip()
             # Lift the leading ``Figure X.Y`` (or ``Fig.``/``Chart``…)

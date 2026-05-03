@@ -41,7 +41,7 @@ STANCE_LABELS = {
     "exemplary":     "Exemplary (≥80%)",
     "compliant":     "Compliant (30–80%)",
     "marginal":      "Marginal (2–30%)",
-    "non_compliant": "Non-compliant (<2%)",
+    "non_compliant": "Zero-pledge (<2%)",
 }
 STANCE_STACK = ["cant_play", "non_compliant", "marginal", "compliant", "exemplary"]
 
@@ -65,8 +65,8 @@ def main():
     z0 = snap["z0_ada"]
     epoch = snap["epoch"]
 
-    # Canonical productive set (epoch-aligned with Census): ≥1M ADA at e623.
-    PRODUCTIVE_THRESHOLD_ADA = 1_000_000
+    # Canonical productive set: ≥3M ADA at e623 (95% block probability, λ=3 — POL.O3.F1).
+    PRODUCTIVE_THRESHOLD_ADA = 3_000_000
     pool_stake_e623 = {}
     with (DATA_DIR / "pool_stake_623.csv").open(newline="") as f:
         for r in csv.DictReader(f):

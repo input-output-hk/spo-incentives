@@ -258,7 +258,7 @@ The floor follows a $1/\sigma$ hyperbola: *the operators who charge the most ear
 
 **The operator growth path is not functioning as intended.** The census finds **no trace** of the designed growth trajectory on mainnet.
 
-The independent single-pool operator population peaked at **555 pools and 39.1% of productive stake** around epoch 300, then contracted continuously to **291 pools and 24%** at epoch 623 — a **48% loss in pool count** and **15 percentage points** in stake share ([*Staking Census* CEN.O1.F6](diagnostic/sub-flows/census/mainnet-analysis/README.md#353-cohort-decomposition-who-holds-the-productive-set)).
+The single-pool operator population peaked at **555 pools and 39.1% of productive stake** around epoch 300, then contracted continuously to **291 pools and 24%** at epoch 623 — a **48% loss in pool count** and **15 percentage points** in stake share ([*Staking Census* CEN.O1.F6](diagnostic/sub-flows/census/mainnet-analysis/README.md#353-cohort-decomposition-who-holds-the-productive-set)).
 
 The replacement pools that sustain the ~950-pool total are **entity-operated, not new independents**: multi-pool entities grew from 23 to 85, their pool count from 135 to 660 ([*Staking Census* CEN.O1.F7](diagnostic/sub-flows/census/mainnet-analysis/README.md#353-cohort-decomposition-who-holds-the-productive-set)). Capital flows from declining community fleets toward institutional entrants and exchanges — **not** toward the independent tail growing into established entities ([*Staking Census* CEN.O1.F8](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-pipeline-what-the-mechanism-was-designed-to-produce)).
 
@@ -287,7 +287,7 @@ The replacement pools that sustain the ~950-pool total are **entity-operated, no
 <div class="ev-card" markdown="1">
 <div class="ev-label">Population dynamics</div>
 <div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Productive pool count has held near **950 since epoch 300**, but this masks **3,497 entries vs 3,070 exits** — ~16 pools/epoch turnover (**1.7 %/epoch**). Turnover falls disproportionately on small independent operators near the production threshold.</p>
+<p class="ev-body" markdown="1">Productive pool count has held near **950 since epoch 300**, but this masks **3,497 entries vs 3,070 exits** — ~16 pools/epoch turnover (**1.7 %/epoch**). Turnover falls disproportionately on small single-pool operators near the production threshold.</p>
 <p class="ev-sources" markdown="1">Source: [Census — population dynamics](diagnostic/sub-flows/census/mainnet-analysis/README.md#35-population-dynamics-entries-exits-and-turnover).</p>
 </div>
 </div>
@@ -303,7 +303,7 @@ The replacement pools that sustain the ~950-pool total are **entity-operated, no
 <div class="ev-card" markdown="1">
 <div class="ev-label">Thresholds</div>
 <div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Production threshold rises with total staked ADA — from **~470 K at Shelley launch** to **~1 M at epoch 623**. Independent single-pool operator population: **477 pools, 5.28 B ADA, 24.5 % of productive stake**, share in slow decline; only **283 above the viability threshold**; **116 sub-threshold pools** carry 0.31 % of active stake.</p>
+<p class="ev-body" markdown="1">Production threshold rises with total staked ADA — from **~470 K at Shelley launch** to **~1 M at epoch 623**. Single-pool operator population: **477 pools, 5.28 B ADA, 24.5 % of productive stake**, share in slow decline; only **283 above the viability threshold**; **116 sub-threshold pools** carry 0.31 % of active stake.</p>
 <p class="ev-sources" markdown="1">Sources: [Census — historical decomposition](diagnostic/sub-flows/census/mainnet-analysis/README.md#343-historical-decomposition-productive-vs-sub-threshold-pools), [POL.O6](diagnostic/README.md#122-mainnet-observations), [production-threshold proposal](diagnostic/README.md#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano).</p>
 </div>
 </div>
@@ -311,7 +311,7 @@ The replacement pools that sustain the ~950-pool total are **entity-operated, no
 <div class="ev-card" markdown="1">
 <div class="ev-label">Incentive alignment</div>
 <div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">The current fee structure **favours operators who amortise the fixed cost across large fleets**. Small independent operators — from whom tomorrow's established entities should emerge — face the highest effective cost burden. The incentive gradient runs counter to the mechanism's design intent.</p>
+<p class="ev-body" markdown="1">The current fee structure **favours operators who amortise the fixed cost across large fleets**. Small single-pool operators — from whom tomorrow's established entities should emerge — face the highest effective cost burden. The incentive gradient runs counter to the mechanism's design intent.</p>
 <p class="ev-sources" markdown="1">Sources: [OPE.O1, OPE.O6](diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#1-mainnet-observations).</p>
 </div>
 </div>
@@ -367,7 +367,7 @@ The combined effect of the [Production Threshold](#312-structural-enforce-the-pr
 | --- | --- | --- | --- |
 | Dead-zone population | Pools between production and viability thresholds | ~870 | 0 |
 | Operator viability rate | Productive pools where revenue > fiat operating cost | ~60% (at $0.30/ADA) | >90% across the productive set |
-| Independent operator count | Viable independent single-pool operators | 283 | >$k/2$ (currently 250) |
+| Single-pool operator count | Viable single-pool operators | 283 | >$k/2$ (currently 250) |
 | Viability at stress price | Productive pools viable at ADA = $0.10 | <20% est. | >50% |
 
 > **Dependency note.** [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population) is the foundation. [Pledge](#32-restore-the-notion-of-pledge-among-operators) depends on it: pledge is only meaningful once operators are viable. [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield) depends on it: the yield that reaches delegators is shaped by the fee structure Operator Viability reforms. [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion) depends on it: a viable operator population is a prerequisite for any funding-model transition. The reward curve — the design instrument that implements the economic incentives — must be calibrated to serve Operator Viability through Delegator Yield simultaneously; it is a tool, not a specification.
@@ -407,9 +407,9 @@ The mechanism creates **three structural populations** that respond to pledge di
 
 - **Custodial operators** who *cannot* pledge — the constraint is architectural;
 - **MPO fleets** who *choose not to* — the rational response to a negligible incentive;
-- **Independent operators** who pledge **out of conviction** rather than economic rationality.
+- **Single-pool operators** who pledge **out of conviction** rather than economic rationality.
 
-The net result is a proof-of-stake system where the Sybil defence operates through **incidental wealth constraints** — not through the designed pledge mechanism — and where **83 attributed entities** operating **475 productive pools** control **75.5% of productive stake** with no protocol-level cost for having done so.
+The net result is a proof-of-stake system where the Sybil defence operates through **incidental wealth constraints** — not through the designed pledge mechanism — and where **83 attributed entities** operating **449 productive pools** control **76.7% of productive stake** with no protocol-level cost for having done so.
 
 $k = 500$ implies 500 independent entities sharing consensus power; the effective operator count is an **order of magnitude below** that target. The saturation cap has produced ~3,000 pool certificates — far more than $k$ — but the power behind those certificates is concentrated in fewer hands than the equilibrium requires.
 
@@ -452,7 +452,7 @@ $k = 500$ implies 500 independent entities sharing consensus power; the effectiv
 </div>
 
 <div class="ev-card" markdown="1">
-<div class="ev-label">Independent operators</div>
+<div class="ev-label">Single-pool operators</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Single-pool operators pledge out of conviction rather than economic rationality, receiving almost nothing in return. Their share of active stake is in slow decline.</p>
 <p class="ev-sources" markdown="1">Sources: [hollow-strategy analysis](diagnostic/README.md#124313-the-hollow-strategy-dominates-at-every-level-of-aggregation), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
@@ -462,7 +462,7 @@ $k = 500$ implies 500 independent entities sharing consensus power; the effectiv
 <div class="ev-card" markdown="1">
 <div class="ev-label">Market structure outcome</div>
 <div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">**83 attributed entities control 75.5 % of productive stake through 475 productive pools.** The effective entity-level concentration is an **order of magnitude** above the $k$-target equilibrium.</p>
+<p class="ev-body" markdown="1">**83 attributed entities control 76.7 % of productive stake through 449 productive pools.** The effective entity-level concentration is an **order of magnitude** above the $k$-target equilibrium.</p>
 <p class="ev-sources" markdown="1">Sources: [POL.O5](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
 </div>
 </div>
@@ -479,7 +479,7 @@ Four requirements.
 
 The target is a yield differential **>0.5pp** between meaningfully pledged and minimally pledged pools — **visible to delegators** and **material to the operator's business case**. At the current near-zero differential, the rational strategy is to expand; the revised mechanism must make that strategy **dominated**.
 
-**R2 — Pledge must be evaluated at the entity level, not the pool level.** An entity splitting 1M ADA across ten pools must **not** receive the same aggregate pledge benefit as ten independent operators each pledging 1M ADA. The entire point of pledge is to impose the $O(n)$ capital cost on exactly this behaviour.
+**R2 — Pledge must be evaluated at the entity level, not the pool level.** An entity splitting 1M ADA across ten pools must **not** receive the same aggregate pledge benefit as ten single-pool operators each pledging 1M ADA. The entire point of pledge is to impose the $O(n)$ capital cost on exactly this behaviour.
 
 Entity-level pledge accounting is the mechanism through which [Pledge](#32-restore-the-notion-of-pledge-among-operators) and [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations) interact.
 
@@ -513,7 +513,7 @@ The monetary-expansion parameter $\rho$ (ME-01 to ME-05, range [0.001, 0.005]) a
 The problem has **three faces**:
 
 - **Competitive as an investment.** Staking competes for capital with DeFi protocols, liquid markets, and off-chain alternatives. If the return is not attractive in absolute terms, **rational capital leaves the staking pool** regardless of how well the mechanism distributes it.
-- **Rewarding the right operators.** Balanced independent operators return **1.98%** while hollow MPO fleets return **2.08%** — the operator who commits capital is *penalised* for commitment ([OPE.O5](diagnostic/README.md#132-mainnet-observations)). The yield spread is **0.39pp (noise)**, and **half of all pool switches produce zero yield change** ([CEN.O6](diagnostic/README.md#212-mainnet-observations)).
+- **Rewarding the right operators.** Balanced single-pool operators return **1.98%** while hollow MPO fleets return **2.08%** — the operator who commits capital is *penalised* for commitment ([OPE.O5](diagnostic/README.md#132-mainnet-observations)). The yield spread is **0.39pp (noise)**, and **half of all pool switches produce zero yield change** ([CEN.O6](diagnostic/README.md#212-mainnet-observations)).
 - **A product range frozen in 2020.** In Shelley's era, **no smart-contract capability existed** — the only product was liquid delegation at a uniform yield. Five years later, Plutus scripts and the extended UTXO model provide infrastructure for a richer staking market that **Cardano has not yet exploited**.
 
 #### 3.3.1. Make the base yield competitive
@@ -538,15 +538,15 @@ This connects directly to [Price Robustness](#43-the-mechanism-must-function-acr
 
 #### 3.3.2. Make the yield reward operators who play the game
 
-The base yield being competitive is **necessary but not sufficient**. The mechanism must also ensure that the yield *differentiates* between operator types — that delegators who choose a balanced, pledged, independent operator receive a **materially better return** than those who park stake in a hollow fleet.
+The base yield being competitive is **necessary but not sufficient**. The mechanism must also ensure that the yield *differentiates* between operator types — that delegators who choose a balanced, pledged, single-pool operator receive a **materially better return** than those who park stake in a hollow fleet.
 
 Today, the spread is **noise**: 0.39pp across the retail market ([OPE.O5](diagnostic/README.md#132-mainnet-observations)), invisible to delegators, with **delegation following visibility rather than return** ([OPE.O7](diagnostic/README.md#132-mainnet-observations)).
 
-The $minPoolCost$ floor absorbs a disproportionate share of small-pool rewards **before any yield reaches delegators** ([OPE.O1](diagnostic/README.md#132-mainnet-observations), [OPE.O8](diagnostic/README.md#132-mainnet-observations)). And entity-level information — fleet size, aggregate pledge ratio, operator profitability — is **absent from the on-chain data**, so delegators cannot distinguish a committed independent operator from one node in an anonymous fleet ([the size-visibility loop](diagnostic/README.md#12435-the-size-visibility-delegation-loop)).
+The $minPoolCost$ floor absorbs a disproportionate share of small-pool rewards **before any yield reaches delegators** ([OPE.O1](diagnostic/README.md#132-mainnet-observations), [OPE.O8](diagnostic/README.md#132-mainnet-observations)). And entity-level information — fleet size, aggregate pledge ratio, operator profitability — is **absent from the on-chain data**, so delegators cannot distinguish a committed single-pool operator from one node in an anonymous fleet ([the size-visibility loop](diagnostic/README.md#12435-the-size-visibility-delegation-loop)).
 
 **Specification.** Three requirements.
 
-**R1 — The yield differential between entity types must be material.** The spread between balanced, hollow, and custodial operators at equivalent pool sizes must **exceed 1pp**. The current 0.39pp spread is noise ([OPE.O5](diagnostic/README.md#132-mainnet-observations)); delegators must be able to **see** a material difference between committing to a balanced independent operator and parking stake in a hollow fleet.
+**R1 — The yield differential between entity types must be material.** The spread between balanced, hollow, and custodial operators at equivalent pool sizes must **exceed 1pp**. The current 0.39pp spread is noise ([OPE.O5](diagnostic/README.md#132-mainnet-observations)); delegators must be able to **see** a material difference between committing to a balanced single-pool operator and parking stake in a hollow fleet.
 
 *The mechanism must make commitment pay — visibly.*
 
@@ -572,7 +572,7 @@ The smart-contract infrastructure now available on Cardano opens a design space 
 
 **Specification.** The mechanism — or its smart-contract extensions — must enable delegation products that go beyond the Shelley baseline. Three requirements.
 
-**R1 — Lock-up tiers with differentiated APY.** Delegators who commit capital for a defined period (e.g., 6 epochs, 36 epochs, 73 epochs) accept **reduced liquidity** in exchange for a **yield premium**. The result is a **term structure** that rewards long-horizon commitment and stabilises the stake base that independent operators depend on.
+**R1 — Lock-up tiers with differentiated APY.** Delegators who commit capital for a defined period (e.g., 6 epochs, 36 epochs, 73 epochs) accept **reduced liquidity** in exchange for a **yield premium**. The result is a **term structure** that rewards long-horizon commitment and stabilises the stake base that single-pool operators depend on.
 
 **R2 — Liquid staking derivatives.** Smart-contract wrappers that issue **transferable tokens** representing staked ADA, allowing delegators to **maintain liquidity** (trade, lend, use as collateral in DeFi) while their underlying stake continues to earn rewards and contribute to consensus security.
 
@@ -600,12 +600,12 @@ The relationship is explicit: **higher commitment — longer lock-up, less liqui
 
 The analysis documents concentration on **two fronts**:
 
-- **Supply side.** **83 attributed entities** control **75.5%** of productive stake through **475 productive pools** ([POL.O5](diagnostic/README.md#122-mainnet-observations)), while independent single-pool operators shrink to **284 productive pools and 24.5%** of productive stake ([POL.O6](diagnostic/README.md#122-mainnet-observations)).
+- **Supply side.** **83 attributed entities** control **75.5%** of productive stake through **449 productive pools** ([POL.O5](diagnostic/README.md#122-mainnet-observations)), while single-pool operators shrink to **284 productive pools and 24.5%** of productive stake ([POL.O6](diagnostic/README.md#122-mainnet-observations)).
 - **Demand side.** **1,000 delegators** (0.07% of the base) control **57% of staked ADA**; the Gini coefficient is **0.976** ([CEN.O3](diagnostic/README.md#212-mainnet-observations)).
 
 Both concentrations are **structural**, both **crystallised early**, and **neither responds** to the current incentive design.
 
-**Constitutional alignment.** Tenet 9 (fair treatment) supports action on both fronts: a mechanism that rewards fleet expansion at near-zero marginal cost while penalising independent operators **does not treat participants fairly**; a mechanism that produces identical outcomes for a 32-ADA micro-delegator and a 50M-ADA titan offers **no differentiated incentive** for the capital commitment each represents.
+**Constitutional alignment.** Tenet 9 (fair treatment) supports action on both fronts: a mechanism that rewards fleet expansion at near-zero marginal cost while penalising single-pool operators **does not treat participants fairly**; a mechanism that produces identical outcomes for a 32-ADA micro-delegator and a 50M-ADA titan offers **no differentiated incentive** for the capital commitment each represents.
 
 However, the Constitution currently operates at the **pool level** — its guardrails govern pool parameters ($k$, $a_0$, $minPoolCost$), not entity-level or delegator-tier constructs. The concept of operator *entity* has **no constitutional anchor**.
 
@@ -622,15 +622,15 @@ The existing $a_0$ and $k$ guardrails provide substantial design space, but the 
 
 The reward formula evaluates pools **independently** — it does not know that twenty pools share the same controller. The saturation cap, intended to prevent concentration, fragments *pools* but not *entities*: an operator who saturates registers a new pool and continues growing, at **negligible marginal cost** ([multi-pool entity analysis](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures)).
 
-The mechanism was designed for $k$ independent operators converging on a balanced equilibrium (Brünjes & Kiayias, 2020). It encounters instead a **highly concentrated and segmented market** where three structurally distinct sub-populations coexist:
+The mechanism was designed for $k$ single-pool operators converging on a balanced equilibrium (Brünjes & Kiayias, 2020). It encounters instead a **highly concentrated and segmented market** where three structurally distinct sub-populations coexist:
 
 - **Custodial operators** (CEX + IVaaS: 10 entities, 181 pools, 7.40B ADA) who *cannot* pledge the capital they manage — the constraint is **architectural**;
 - **Community and opaque MPO fleets** (42 of 48 saturation-scale entities) who have *chosen* not to pledge — the **rational response** to the current incentive structure;
-- **Independent single-pool operators** who bear the full weight of the fee structure while their market share erodes ([operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable)).
+- **Single-pool operators** who bear the full weight of the fee structure while their market share erodes ([operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable)).
 
 The deeper failure is that **the formula's unit of accounting — the pool — is the wrong unit**. Rewards, saturation caps, and pledge calculations all operate at the pool level. But the **entity** that controls the pools is the economic actor that makes strategic decisions.
 
-An entity operating twenty pools with negligible pledge in each is **indistinguishable, at the formula level**, from twenty independent operators. The mechanism does not merely fail to prevent concentration; *it is structurally blind to it*.
+An entity operating twenty pools with negligible pledge in each is **indistinguishable, at the formula level**, from twenty single-pool operators. The mechanism does not merely fail to prevent concentration; *it is structurally blind to it*.
 
 ##### 3.4.1.2. The delegator side — titan delegators versus the micro-delegation tail
 
@@ -656,7 +656,7 @@ The consequence is:
 <div class="ev-card" markdown="1">
 <div class="ev-label">MPO fleet structure</div>
 <div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">**83 attributed entities, 475 productive pools, 75.5 % of productive stake.** 12 entities with 11+ pools control **40.4 % of productive stake**.</p>
+<p class="ev-body" markdown="1">**83 attributed entities, 449 productive pools, 76.7 % of productive stake.** 12 entities with 11+ pools control **40.4 % of productive stake**.</p>
 <p class="ev-sources" markdown="1">Sources: [POL.O5](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
 </div>
 </div>
@@ -670,7 +670,7 @@ The consequence is:
 </div>
 
 <div class="ev-card" markdown="1">
-<div class="ev-label">Independent operator decline</div>
+<div class="ev-label">Single-pool operator decline</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**284 productive single-pool operators**, stake share in slow decline from **39 % → 25 %** since epoch 300.</p>
 <p class="ev-sources" markdown="1">Sources: [POL.O6](diagnostic/README.md#122-mainnet-observations), [Census — the independent pipeline](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-pipeline-what-the-mechanism-was-intended-to-produce).</p>
@@ -709,7 +709,7 @@ The reward mechanism must transition from **pool-level** to **entity-level** acc
 
 This does **not** mean collapsing all pools into a single reward calculation — pools remain the unit of block production and consensus participation. It means that the **economic incentives** (pledge accounting, saturation behaviour, reward scaling) must recognise **the entity behind the pools**.
 
-This transition raises a **constitutional question**. The Cardano Constitution (v2) governs pool-level parameters — $k$, $a_0$, $minPoolCost$ — and its guardrails are defined in terms of pools, not entities. The concept of operator *entity* has **no constitutional standing**. Yet the evidence is unambiguous: **83 attributed entities operating 475 productive pools control 75.5%** of productive stake, and the formula's blindness to this structure is the **root cause of the Sybil defence failure** ([multi-pool entity analysis](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures)).
+This transition raises a **constitutional question**. The Cardano Constitution (v2) governs pool-level parameters — $k$, $a_0$, $minPoolCost$ — and its guardrails are defined in terms of pools, not entities. The concept of operator *entity* has **no constitutional standing**. Yet the evidence is unambiguous: **83 attributed entities operating 449 productive pools control 75.5%** of productive stake, and the formula's blindness to this structure is the **root cause of the Sybil defence failure** ([multi-pool entity analysis](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures)).
 
 Two paths exist.
 
@@ -724,7 +724,7 @@ The specification below is compatible with **both paths**. The requirements defi
 
 *The entity is the economic actor; the pool is the consensus unit. The mechanism must distinguish between the two.*
 
-**R2 — Evaluate pledge, saturation, and reward-scaling at the entity level.** An entity that splits 1M ADA of pledge across 10 pools must **not** receive the same aggregate pledge benefit as 10 independent operators each pledging 1M ADA.
+**R2 — Evaluate pledge, saturation, and reward-scaling at the entity level.** An entity that splits 1M ADA of pledge across 10 pools must **not** receive the same aggregate pledge benefit as 10 single-pool operators each pledging 1M ADA.
 
 Pool-level evaluation is the **root cause** of the current Sybil blindness ([multi-pool entity analysis](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures)); entity-level evaluation is **the structural fix**.
 
@@ -738,9 +738,9 @@ Entity-level pledge accounting **reactivates the Sybil tax** that exists in the 
 
 | KPI | Definition | Current | Target |
 | --- | --- | --- | --- |
-| Entity-level Herfindahl index | Concentration of staked supply across entities (not pools) | ~0.02 (83 attributed entities, 75.5% of productive stake) | < 0.015 — measurable deconcentration |
+| Entity-level Herfindahl index | Concentration of staked supply across entities (not pools) | ~0.02 (83 attributed entities, 76.7% of productive stake) | < 0.015 — measurable deconcentration |
 | MPO fleet cost gradient | Marginal pledge cost of the $n$-th pool in a fleet | ~0 (negligible) | Positive and increasing with $n$ |
-| Independent operator stake share | Productive stake in single-pool independent operators | ~25% (declining) | >35% — the independent base must stabilise and grow |
+| Single-pool operator stake share | Productive stake in single-pool single-pool operators | ~25% (declining) | >35% — the independent base must stabilise and grow |
 
 #### 3.4.3. Differentiated delegation incentives — titans versus micro-delegators
 
@@ -760,7 +760,7 @@ The mechanism may act through:
 
 - **delegation-weighted governance signals**;
 - **transparency requirements** for large delegations;
-- **incentive structures** that reward titan delegators who spread capital across multiple independent operators rather than concentrating in a single fleet.
+- **incentive structures** that reward titan delegators who spread capital across multiple single-pool operators rather than concentrating in a single fleet.
 
 A 50M-ADA delegation is **not merely a larger version** of a 32-ADA delegation; it is a **qualitatively different act with qualitatively different consequences**.
 

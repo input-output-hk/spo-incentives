@@ -36,7 +36,7 @@ A reward function $f$ over a per-pool tuple $(\sigma, p, \pi)$ — with entity-l
 >
 > **C2 — Material commitment signal.** The yield differential between meaningfully-committed and uncommitted operators is large enough to be visible to delegators (>0.5pp, per [Specification](../../README.md#322-specification)) and *increases with entity-level fleet size*, not pool-level pledge ratio.
 >
-> **C3 — Architectural recognition of the three populations.** Custodial operators (cannot commit own capital) and independent operators (commit capital out of conviction) are *not* mapped to the same reward branch. The function must distinguish *architectural inability* from *strategic choice* through a means other than pledge ratio alone.
+> **C3 — Architectural recognition of the three populations.** Custodial operators (cannot commit own capital) and single-pool operators (commit capital out of conviction) are *not* mapped to the same reward branch. The function must distinguish *architectural inability* from *strategic choice* through a means other than pledge ratio alone.
 
 A solution that satisfies C1 but not C2 collapses to CIP-0023/0082 — viable but Sybil-permissive. A solution that satisfies C2 but not C1 collapses to CIP-0050/0037 — anti-Sybil but capital-capability-biased. A solution satisfying C2 without C3 collapses custodial to "uncommitted" and reproduces the CIP-0050 zero-pledge break.
 
@@ -85,7 +85,7 @@ The whiteboard treats the following pathologies as **pre-conditions to forbid**.
 | Anti-pattern | Source CIP(s) | What the formula must not do |
 |---|---|---|
 | Per-pool revenue regressive uplift | CIP-0023, CIP-0082 stage 2 | The marginal change in operator revenue between sub-reliable and saturated tiers must not exceed the change at the lower tier (no 50× tier amplification) |
-| MPO fleet amplification | CIP-0023, CIP-0082 | The marginal benefit of the $(n+1)$-th pool to an $n$-pool entity must not be larger than the benefit to the 1st pool of an independent operator (current bundle: ~500× gap) |
+| MPO fleet amplification | CIP-0023, CIP-0082 | The marginal benefit of the $(n+1)$-th pool to an $n$-pool entity must not be larger than the benefit to the 1st pool of an single-pool operator (current bundle: ~500× gap) |
 | Capital-capability bias | CIP-0050, CIP-0037 | The activation threshold of any pledge-conditioned bonus must scale with pool size, not with absolute pledge — otherwise floor-exit is mechanically regressive |
 | Zero-pledge discontinuity | CIP-0050 | The reward at $\pi = 0$ must be continuous and non-zero for pools that pass the production gate; custodial populations must not collapse |
 | Custodial / strategic conflation | CIP-0050, CIP-0037 | The function must not treat custodial inability and MPO strategic non-pledging through the same reward branch |

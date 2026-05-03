@@ -61,7 +61,7 @@ The [sub-report](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/
 
 **O3 — Saturation is structurally underutilised.** Active stake fills 56.5% of theoretical capacity ($k \times z_0$). At most 282 pools could saturate under perfect redistribution. The near-saturation zone holds only 104 pools.
 
-**O4 — The delegation market is capital-constrained.** 16.75B ADA (43.5%) does not participate in delegation. 83 attributed entities control 75.5% of productive stake.
+**O4 — The delegation market is capital-constrained.** 16.75B ADA (43.5%) does not participate in delegation. 83 attributed entities control 76.7% of productive stake.
 
 ### The participation constraint
 
@@ -100,10 +100,10 @@ The curve presents a **double failure**: sub-economic yield **and** removal of t
 The evidence confirms this at scale:
 
 - 82% of MPO-level pledge bonus flows to three entities — two by private choice, one by institutional mandate.
-- 42 of 48 saturation-scale MPOs choose non-compliance, forfeiting ~550K ADA/epoch collectively.
+- 42 of 48 saturation-scale MPOs choose zero-pledge, forfeiting ~550K ADA/epoch collectively.
 - Structural populations (CEX, IVaaS) totalling 7.39B ADA cannot pledge custodied assets — an architectural constraint immune to parameter changes.
 - The incentive-responsive field holds only 36% of active stake.
-- The independent operator base has collapsed to 284 productive single-pool operators after removing MPO fleet members, with 78% of their stake non-compliant.
+- The single-pool operator base has collapsed to 284 productive single-pool operators after removing MPO fleet members, with 78% of their stake zero-pledge.
 - 95.6% of the pledge-bonus budget returns to reserve unused, unchanged since Shelley launch (O1).
 
 ## Use Cases
@@ -147,9 +147,9 @@ The evidence confirms this at scale:
 
 - **How should the viability cliff be addressed?** Is the cliff primarily a fixed-cost problem (minPoolCost — addressed by CIP-0082 and CIP-0074), a curve-shape problem, or a participation problem? Can the entry path be smoothed without creating free-rider dynamics?
 
-- **What is the interaction between curve reform and MPO behaviour?** 83 attributed entities control 75.5% of productive stake. If the curve is reformed to reward pledge more aggressively, how will MPOs respond? Will they consolidate pools and increase pledge, or will architectural constraints (custodied assets, governance structures) prevent adaptation?
+- **What is the interaction between curve reform and MPO behaviour?** 83 attributed entities control 76.7% of productive stake. If the curve is reformed to reward pledge more aggressively, how will MPOs respond? Will they consolidate pools and increase pledge, or will architectural constraints (custodied assets, governance structures) prevent adaptation?
 
-- **How do structural non-compliant populations (CEX, IVaaS) affect the achievable equilibrium?** 7.39B ADA in custodied assets cannot pledge by architectural constraint. If the curve is reformed to strongly reward pledge, these populations are structurally disadvantaged. Does this improve decentralisation (by shifting stake toward independent operators) or create a two-tier system?
+- **How do structural zero-pledge populations (CEX, IVaaS) affect the achievable equilibrium?** 7.39B ADA in custodied assets cannot pledge by architectural constraint. If the curve is reformed to strongly reward pledge, these populations are structurally disadvantaged. Does this improve decentralisation (by shifting stake toward single-pool operators) or create a two-tier system?
 
 - **What participation rate does the design actually require?** The $k = 500$ target implies a required capital base. What is the minimum participation rate at which $k = 500$ is feasible? What is the feasible $k$ at current participation? How does $k$ interact with participation rate — does increasing $k$ (as CIP-0082 proposes) make the constraint tighter or looser?
 

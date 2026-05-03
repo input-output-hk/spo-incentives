@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Non-compliant MPO entities by pool-size tier.
+Zero-pledge MPO entities by pool-size tier.
 
 Focus on the entities whose aggregate effective pledge ratio is <2% across
 live pools (>100 ADA). The left panel shows how many live pools each entity
@@ -336,7 +336,7 @@ def main() -> None:
     )
 
     fig.suptitle(
-        "Non-compliant saturation-scale MPO entities by pool-size tier",
+        "Zero-pledge saturation-scale MPO entities by pool-size tier",
         fontsize=14,
         fontweight="bold",
         color=INK,
@@ -346,7 +346,7 @@ def main() -> None:
         0.27,
         0.885,
         (
-            f"{n_entities} saturation-scale non-compliant entities (<2% effective pledge) · "
+            f"{n_entities} saturation-scale zero-pledge entities (<2% effective pledge) · "
             f"{total_non_compliant_pools} live pools (>100 ADA) · "
             f"{total_non_compliant_stake / 1e9:.2f}B ADA · epoch {epoch}"
         ),

@@ -82,10 +82,10 @@ yield on pledge capital tops out at 0.68%/yr, below passive delegation, and
 
 The pool landscape is stratified into four tiers far from the $k = 500$
 target (O3): 73% of pools sit below viability and only 8 reach saturation.
-Multi-pool operators control 75.5% of productive stake (O4): 83 attributed entities hold
-16.29B ADA, and 42 of the 48 saturation-scale MPOs are non-compliant.
+Multi-pool operators control 76.7% of productive stake (O4): 83 attributed entities hold
+16.24B ADA, and 42 of the 48 saturation-scale MPOs are zero-pledge.
 
-The independent operator base has collapsed to 284 productive single-pool operators once MPO
+The single-pool operator base has collapsed to 284 productive single-pool operators once MPO
 fleets are removed (O5). The incentive-responsive field — the portion of the
 network that actually reacts to the pledge signal — holds only 36% of active
 stake (O6).
@@ -169,12 +169,12 @@ structural condition that no parameter adjustment within the current mechanism
 can alter.
 
 **The operator population is not a single competitive field** (O1, O2).
-Seventy-three named entities control 75.5% of productive stake through 464
+Seventy-three named entities control 76.7% of productive stake through 464
 pools, and the productive set has been in quasi-equilibrium at ~950 pools
 since epoch 300 with 1.7% turnover per epoch — replacement, not expansion.
 Within this landscape, three structurally distinct sub-populations coexist:
 custodial operators that cannot pledge client capital, MPO fleets that have
-chosen not to pledge despite capacity, and independent single-pool operators
+chosen not to pledge despite capacity, and single-pool operators
 bearing the full cost of the fee structure.
 
 **The stake-holder population is a frozen power law** (O3, O4, O5, O6). One

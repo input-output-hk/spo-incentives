@@ -67,11 +67,11 @@ def muted(hex_color, factor=0.55):
 def load_data():
     """Load pool data and classify by tier / MPO status.
 
-    Canonical productive set = pool_stake_623.csv with stake ≥ 1M ADA.
-    This mirrors the Census definition (epoch 623, λ=1 production threshold)
-    so MPO totals reconcile across the diagnostic.
+    Canonical productive set = pool_stake_623.csv with stake ≥ 3M ADA.
+    Production threshold = ~3M ADA (95% probability of ≥1 block per epoch,
+    λ=3 in the Poisson process — POL.O3.F1).
     """
-    PRODUCTIVE_THRESHOLD_ADA = 1_000_000
+    PRODUCTIVE_THRESHOLD_ADA = 3_000_000
     z0 = 77_000_000
     T_bounds = [0, 100e3, 1e6, 3e6, z0 * 0.5, z0 * 0.8, z0 * 0.95,
                 z0 * 1.05, np.inf]

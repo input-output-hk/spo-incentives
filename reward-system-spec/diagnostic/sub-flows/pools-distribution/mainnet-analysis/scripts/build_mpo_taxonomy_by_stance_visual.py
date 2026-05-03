@@ -53,7 +53,7 @@ STANCE_LABELS = {
     "exemplary":     "Exemplary (≥80%)",
     "compliant":     "Compliant (30–80%)",
     "marginal":      "Marginal (2–30%)",
-    "non_compliant": "Non-compliant (<2%)",
+    "non_compliant": "Zero-pledge (<2%)",
 }
 STANCE_STACK = ["cant_play", "non_compliant", "marginal", "compliant", "exemplary"]
 
@@ -83,12 +83,12 @@ def main():
     z0    = snap["z0_ada"]
     epoch = snap["epoch"]
 
-    # ── Canonical productive set (epoch-aligned with Census) ──
-    # We source per-pool stake from the Census's epoch-623 snapshot and apply
-    # the ≥1M ADA productive filter, identical to Census's pass-3 cross-ref.
-    # Pledge is still pulled from koios_pool_list_mainnet.csv since it's a
-    # registration parameter that doesn't drift epoch-to-epoch.
-    PRODUCTIVE_THRESHOLD_ADA = 1_000_000
+    # ── Canonical productive set ──
+    # Production threshold = ~3M ADA (95% probability of ≥1 block per epoch,
+    # λ=3 in the Poisson process). Per-pool stake is sourced from the e623
+    # snapshot (pool_stake_623.csv). Pledge is still pulled from koios since
+    # it's a registration parameter that doesn't drift epoch-to-epoch.
+    PRODUCTIVE_THRESHOLD_ADA = 3_000_000
 
     pool_stake_e623 = {}
     with (ENTITY_DATA / "pool_stake_623.csv").open(newline="") as f:
@@ -322,7 +322,7 @@ def main():
     nc_pct = nc_viable / viable_total * 100 if viable_total > 0 else 0
 
     fig.text(0.5, 0.015,
-             f"Among saturation-scale MPO pools, non-compliant red still holds {nc_pct:.0f}% of viable-and-above stake. "
+             f"Among saturation-scale MPO pools, zero-pledge red still holds {nc_pct:.0f}% of viable-and-above stake. "
              f"Ochre isolates sub-saturation fleets that cannot fully play the saturation-scale pledge game.",
              ha="center", fontsize=9.5, color=INFARED,
              fontweight="bold",

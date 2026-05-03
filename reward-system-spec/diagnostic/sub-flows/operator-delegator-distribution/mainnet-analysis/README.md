@@ -93,7 +93,7 @@ _Terminology note._ The protocol uses "fixed cost" and "margin" for the two extr
 | OPE.O8.F1 | The delegator yield has fallen from 5.3% to 2.0% in 413 epochs (5.5 years), tracking reserve depletion with $R^2 = 0.99$. Projection: sub-1.5% within ~1.7 years, sub-1.0% within ~3.5 years. The decline is irreversible without protocol-level intervention — it is built into the monetary expansion formula | [The yield trajectory — level and decline](#51-the-yield-trajectory-level-and-decline) | The entire yield surface descends as a unit; no pool-level strategy can offset the macro trajectory |
 | OPE.O8.F2 | At 2.0%, Cardano sits below the USD risk-free rate (4.3%) and at the bottom of the PoS landscape. No other major chain combines this low a yield with liquid, non-custodial, slashing-free design. The low return is the cost of that design — delegation is a conviction bet on ADA, not a yield-seeking decision | [The yield in context — cross-chain and cross-asset comparison](#52-the-yield-in-context-cross-chain-and-cross-asset-comparison) | The mechanism assumes yield-sensitive delegators, but the yield regime no longer supports that assumption |
 | OPE.O8.F3 | As the epoch pot shrinks, the flat fee (fixed at 170/340 ₳) consumes a growing share of pool rewards — the confiscatory zone identified in [§4.1 — The flat fee (fixed cost)](#41-the-flat-fee-fixed-cost) expands upward. The 0.39pp retail yield spread compresses proportionally: at 1.0% base yield (~3.5 years), the same relative dispersion produces ~0.20pp — indistinguishable from block-production noise. Pools that are viable today will cross the sub-reliable threshold | [The yield spread — structural compression](#53-the-yield-spread-structural-compression) | The failures documented in §4 are not static — they degrade every epoch |
-| OPE.O8.F4 | The declining yield acts as a selection ratchet against small independent operators. The flat fee is fixed in absolute terms while the epoch pot shrinks — the confiscatory zone expands upward every epoch. Single-pool operators bear the full drag with no fleet to amortise it; multi-pool operators are insulated by horizontal scaling. The structural feedback loop (yield compression → confiscatory expansion → single-pool attrition → delegation migration → fleet concentration) drives the centralisation the mechanism was designed to prevent | [The yield spread — structural compression](#53-the-yield-spread-structural-compression) | The mechanism selects against its smallest operators and reinforces its largest |
+| OPE.O8.F4 | The declining yield acts as a selection ratchet against small single-pool operators. The flat fee is fixed in absolute terms while the epoch pot shrinks — the confiscatory zone expands upward every epoch. Single-pool operators bear the full drag with no fleet to amortise it; multi-pool operators are insulated by horizontal scaling. The structural feedback loop (yield compression → confiscatory expansion → single-pool attrition → delegation migration → fleet concentration) drives the centralisation the mechanism was designed to prevent | [The yield spread — structural compression](#53-the-yield-spread-structural-compression) | The mechanism selects against its smallest operators and reinforces its largest |
 
 **Scope note.** OPE.O1 describes the flat fee channel ([§4.1 — The flat fee (fixed cost)](#41-the-flat-fee-fixed-cost)). OPE.O2 describes the commission channel ([§4.2 — The commission (margin)](#42-the-commission-margin)). OPE.O3 establishes the custodial/retail boundary and custodial economics ([§4.3 — Custodial versus retail](#43-custodial-versus-retail)). OPE.O4–OPE.O6 characterise the retail market economics and operator viability ([§4.4 — Operator profitability versus delegator return](#44-operator-profitability-versus-delegator-return)–4.5). OPE.O7 addresses delegation behaviour ([§4.4 — Operator profitability versus delegator return](#44-operator-profitability-versus-delegator-return)). OPE.O8 places the mechanism on its temporal trajectory: the yield decline is not a separate problem — it amplifies every structural failure documented in §4 (§5).
 
@@ -317,7 +317,7 @@ All analysis from §4 onwards operates on the **productive population** at epoch
 |   Identified entities | 83 | 453 | 15.73B | 72.3% |
 |     — multiple productive pools | 73 | 443 | 15.27B | 70.2% |
 |     — single productive pool | 10 | 10 | 0.46B | 2.1% |
-|   Independent single-pool operators | 499 | 499 | 5.83B | 26.8% |
+|   Single-pool operators | 499 | 499 | 5.83B | 26.8% |
 
 Entity attribution is a lower bound — operators using entirely separate infrastructure and branding for each pool remain invisible.
 
@@ -332,9 +332,9 @@ Entity attribution is a lower bound — operators using entirely separate infras
 |   Identified entities | 83 | 433 | 15.70B | 72.8% |
 |     — multiple viable pools | 71 | 421 | 15.20B | 70.5% |
 |     — single viable pool | 12 | 12 | 0.50B | 2.3% |
-|   Independent single-pool operators | 300 | 300 | 5.48B | 25.4% |
+|   Single-pool operators | 300 | 300 | 5.48B | 25.4% |
 
-The 219 sub-reliable pools are productive but economically marginal: 91% are independent single-pool operators, 117 still declare 340 ₳ flat fee, and 9 reach 100% effective price — the flat fee alone consumes the entire pool reward. The 733 viable pools carry 98.2% of productive stake.
+The 219 sub-reliable pools are productive but economically marginal: 91% are single-pool operators, 117 still declare 340 ₳ flat fee, and 9 reach 100% effective price — the flat fee alone consumes the entire pool reward. The 733 viable pools carry 98.2% of productive stake.
 
 ### 3.2. Delegators
 
@@ -351,7 +351,7 @@ The delegation pipeline starts from 1.85M raw delegation certificates and remove
 | **Productive pool delegations** | **1,295,098** | **21.57B** | **99.1%** | **952** |
 | *of which:* | | | | |
 |   Identified entity pools | 910,509 | 15.73B | 72.3% | 453 |
-|   Independent single-pool operators | 384,589 | 5.83B | 26.8% | 499 |
+|   Single-pool operators | 384,589 | 5.83B | 26.8% | 499 |
 
 #### 3.2.2. From productive to viable
 
@@ -362,9 +362,9 @@ The delegation pipeline starts from 1.85M raw delegation certificates and remove
 | **Viable pool delegations (≥3M)** | **1,227,281** | **21.18B** | **98.2%** | **733** |
 | *of which:* | | | | |
 |   Identified entity pools | 904,850 | 15.70B | 72.8% | 433 |
-|   Independent single-pool operators | 322,431 | 5.48B | 25.4% | 300 |
+|   Single-pool operators | 322,431 | 5.48B | 25.4% | 300 |
 
-67,817 delegations (5.2% of productive) sit in sub-reliable pools where the flat fee's regressive geometry erodes most or all delegator returns — 92% of those land in independent single-pool operators. The **1,227,281 delegations** in viable pools are where the pricing plan produces meaningful outcomes. The downstream analysis ([§4.3 — Custodial versus retail](#43-custodial-versus-retail)) decomposes the productive population into operator self-stake, custodial, and retail segments.
+67,817 delegations (5.2% of productive) sit in sub-reliable pools where the flat fee's regressive geometry erodes most or all delegator returns — 92% of those land in single-pool operators. The **1,227,281 delegations** in viable pools are where the pricing plan produces meaningful outcomes. The downstream analysis ([§4.3 — Custodial versus retail](#43-custodial-versus-retail)) decomposes the productive population into operator self-stake, custodial, and retail segments.
 
 The companion [*Staking Census*](../../census/mainnet-analysis/) documents the full cleaning pipeline. All counts and amounts reference epoch **623** unless otherwise noted.
 
@@ -388,7 +388,7 @@ Decomposing this population reveals that the "custom" label conceals **three str
 
 - **Near-floor inertia** (Binance at 345 ₳, Everstake at 400 ₳, OCEAN at 500 ₳);
 - **Extraction** (11 pools with FC > 500 ₳ and commission ≥ 99%);
-- **A handful of independent operators** at intermediate values.
+- **A handful of single-pool operators** at intermediate values.
 
 | Flat-fee strategy | Definition | Pools | Share | Entities | Stake (B) | Stake share | Delegators | Del. share |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
@@ -485,7 +485,7 @@ The retail market — **809 pools, 516 entities, 17.02B ADA, 1,272,836 delegator
 
 > **Finding OPE.O4.F1 — The retail market is larger than mean-based estimates suggested: 809 pools, 516 entities, 17.02B ADA, 1,272,836 delegators.** Once the three custodial mechanisms are filtered out, what remains carries **78.9%** of productive stake and **98.3%** of delegations. The set includes institutional operators (Coinbase, Binance, Kiln) — they qualify as retail by their per-pool *median* delegation rather than by their headline stake. This is the population where the pricing plan produces a genuine market outcome rather than an internal transfer.
 
-> **Finding OPE.O4.F2 — The median retail delegation is 87 ADA — and remarkably uniform across operator types.** Across independent single-pool operators, multi-pool fleets, and institutional brands like Coinbase and Binance, the median sits in a tight **45–962 ADA** band. The typical delegator is small everywhere: the operator type does not select for delegator size. *Whatever else differs between hollow MPOs and single-pool operators, the customer they serve is the same person.* This homogeneity is what makes the 0.39 pp net-return spread (§4.4) effectively flat for the audience that actually receives it.
+> **Finding OPE.O4.F2 — The median retail delegation is 87 ADA — and remarkably uniform across operator types.** Across single-pool operators, multi-pool fleets, and institutional brands like Coinbase and Binance, the median sits in a tight **45–962 ADA** band. The typical delegator is small everywhere: the operator type does not select for delegator size. *Whatever else differs between hollow MPOs and single-pool operators, the customer they serve is the same person.* This homogeneity is what makes the 0.39 pp net-return spread (§4.4) effectively flat for the audience that actually receives it.
 
 > **Finding OPE.O3.F2 — The median delegation separates custodial from retail by four orders of magnitude.** Custodial pools: 1,038,234 ₳ median. Retail pools: 87 ₳ median. A delegation of 50K ₳ is already in the top 1.5% of all delegations on the network.
 
@@ -541,7 +541,7 @@ The reward share column makes the structural imbalance explicit:
 - **414 hollow single-pool operators** share **31.1%**;
 - **41 balanced operators** share **1.2%**.
 
-> **Finding OPE.O6.F3 — 414 hollow single-pool operators share 31.1% of retail rewards; 41 balanced operators share 1.2%.** The bulk of independent operators — **414 entities** with no MPO fleet and minimal owner-stake — collectively earn less than a third of the retail pool — averaging the **~25,000 ADA/yr** floor that does not cover labour at current ADA price. The **41 balanced operators** that *do* pledge meaningfully are the squeezed middle: they bear the flat-fee drag (1.06 pp) without the fleet leverage that compensates hollow MPOs. The reward share is consistent with the operator-distribution shape: a heavy-tailed MPO economy on top, a thin balanced layer in between, and a long flat single-pool tail.
+> **Finding OPE.O6.F3 — 414 hollow single-pool operators share 31.1% of retail rewards; 41 balanced operators share 1.2%.** The bulk of single-pool operators — **414 entities** with no MPO fleet and minimal owner-stake — collectively earn less than a third of the retail pool — averaging the **~25,000 ADA/yr** floor that does not cover labour at current ADA price. The **41 balanced operators** that *do* pledge meaningfully are the squeezed middle: they bear the flat-fee drag (1.06 pp) without the fleet leverage that compensates hollow MPOs. The reward share is consistent with the operator-distribution shape: a heavy-tailed MPO economy on top, a thin balanced layer in between, and a long flat single-pool tail.
 
 **Delegator returns are near-identical regardless of operator type.** Net ROS ranges from **1.95%** (balanced single-pool sub-reliable) to **2.34%** (hollow single-pool near-saturation) — a **0.39 percentage-point spread** across the entire retail market. The flat fee creates large differences in effective price **without producing corresponding differences in delegator return**.
 
@@ -988,7 +988,7 @@ A 0.39pp spread at 2.0% yield is **20% of the base rate**; at 1.0% yield, the sa
 
 The combined effect is a selection pressure that operates **asymmetrically** across the operator population. Each epoch the yield surface descends, the confiscatory zone of the flat fee hyperbola extends upward ([§4.1 — The flat fee (fixed cost)](#41-the-flat-fee-fixed-cost)), and the viable-pool threshold rises.
 
-**Single-pool independent operators are the first casualties**: they cannot distribute the flat fee drag across a fleet, they cannot amortise infrastructure costs over multiple pools, and they have no margin buffer to absorb the compression.
+**Single-pool single-pool operators are the first casualties**: they cannot distribute the flat fee drag across a fleet, they cannot amortise infrastructure costs over multiple pools, and they have no margin buffer to absorb the compression.
 
 Multi-pool operators, by contrast, are **structurally insulated** — horizontal scaling lets them hold per-pool costs constant while the per-ADA fee drag falls with pool size.
 
@@ -996,7 +996,7 @@ The mechanism therefore produces a **ratchet**: as yield declines, the populatio
 
 *Each epoch, the system designed to incentivise decentralised participation selects against its smallest operators and reinforces the dominance of its largest.*
 
-> **Finding OPE.O8.F4 — The declining yield regime acts as a selection ratchet: it eliminates small independent operators and concentrates stake in multi-pool fleets.** The flat fee is fixed in absolute terms; the epoch pot is shrinking. The intersection moves upward every epoch — pools that are viable today cross the sub-reliable threshold tomorrow. Single-pool operators bear the full weight of the flat fee drag and have no fleet over which to amortise it; multi-pool operators are insulated by horizontal scaling. The result is a structural feedback loop: yield compression → expanding confiscatory zone → single-pool attrition → delegation migration → fleet concentration → deeper centralisation. The mechanism's own parameters drive the outcome it was designed to prevent.
+> **Finding OPE.O8.F4 — The declining yield regime acts as a selection ratchet: it eliminates small single-pool operators and concentrates stake in multi-pool fleets.** The flat fee is fixed in absolute terms; the epoch pot is shrinking. The intersection moves upward every epoch — pools that are viable today cross the sub-reliable threshold tomorrow. Single-pool operators bear the full weight of the flat fee drag and have no fleet over which to amortise it; multi-pool operators are insulated by horizontal scaling. The result is a structural feedback loop: yield compression → expanding confiscatory zone → single-pool attrition → delegation migration → fleet concentration → deeper centralisation. The mechanism's own parameters drive the outcome it was designed to prevent.
 
 
 > **Status** — Built on 2026/04/14 from mainnet data at epoch `623` plus historical analysis from epoch `211` (413 epochs).

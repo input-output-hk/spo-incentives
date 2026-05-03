@@ -89,16 +89,16 @@ The analysis spans the full Shelley history (epochs 211–623, ~5 years) with a 
 
 | # | Observation | Section | Nature |
 | --- | --- | --- | --- |
-| | **CEN.O1 — The productive pool landscape is heavily consolidated around its multi-pool entities and closed to new entrants** | | The productive set has stabilised at **~950 pools** since epoch 300 with only **1.7%** epoch turnover — but composition has hardened. **73 named entities** now control **75.5%** of productive stake (12 with 11+ pools alone hold **40.4%**), multi-pool fleets grew from **23 to 85**, and independent single-pool operators contracted from **39.1% to 24.4%** of stake. The entry → growth → established path is no longer observable. |
+| | **CEN.O1 — The productive pool landscape is heavily consolidated around its multi-pool entities and closed to new entrants** | | The productive set has stabilised at **~950 pools** since epoch 300 with only **1.7%** epoch turnover — but composition has hardened. **73 named entities** now control **75.5%** of productive stake (12 with 11+ pools alone hold **40.4%**), multi-pool fleets grew from **23 to 85**, and single-pool operators contracted from **39.1% to 24.4%** of stake. The entry → growth → established path is no longer observable. |
 | CEN.O1.F1 | Two-thirds of registered pools (1,926 of 2,877) sit below the production threshold (~1M ADA) — they hold 0.86% of stake and are economically irrelevant | [The structural requirement](../../../README.md#32-the-structural-requirement) | Structural threshold |
 | CEN.O1.F2 | 73 named entities control 75.5% of productive stake through 464 pools — entity attribution is a lower bound | [Problem Induction](../../../README.md#33-problem-induction) | Concentration — supply side |
 | CEN.O1.F3 | The productive set is a quasi-equilibrium at ~950 pools since epoch 300, with 1.7% turnover per epoch (3,497 entries vs 3,070 exits) | [Population dynamics — entries, exits, and turnover](#35-population-dynamics-entries-exits-and-turnover) | Market maturity |
 | CEN.O1.F4 | The n-MPO distribution is heavy-tailed: 12 entities with 11+ pools control 40.4% of productive stake | [Operator landscape](#34-operator-landscape) | Scale dominance |
 | CEN.O1.F5 | CEX + IVaaS (10 entities, 181 pools) hold 7.40B ADA — 34.3% of productive stake at structurally zero pledge | [Operator landscape](#34-operator-landscape) | Custodial constraint |
-| CEN.O1.F6 | Independent single-pool operators contracted from 555 pools / 39.1% of productive stake (epoch 300) to 291 pools / 24.4% (epoch 623) — a 48% loss in pool count and 15pp in stake share | [Population dynamics — entries, exits, and turnover](#35-population-dynamics-entries-exits-and-turnover) | Structural decline |
+| CEN.O1.F6 | Single-pool operators contracted from 555 pools / 39.1% of productive stake (epoch 300) to 291 pools / 24.4% (epoch 623) — a 48% loss in pool count and 15pp in stake share | [Population dynamics — entries, exits, and turnover](#35-population-dynamics-entries-exits-and-turnover) | Structural decline |
 | CEN.O1.F7 | Multi-pool entities grew from 23 (epoch 210) to 85 (epoch 623), expanding from 135 to 660 productive pools and from 65% to 75.6% of productive stake — mid-tier fleets (6–20 pools) tripled | [Population dynamics — entries, exits, and turnover](#35-population-dynamics-entries-exits-and-turnover) | Entity expansion |
 | CEN.O1.F8 | The designed operator progression path (entry → growth → established) has no observable expression: the independent segment is contracting, not graduating | [Population dynamics — entries, exits, and turnover](#35-population-dynamics-entries-exits-and-turnover) | Pipeline failure |
-| CEN.O1.F9 | **On-chain attribution alone reveals only 4 entities; off-chain layered attribution reveals 85** — a ~20× jump. Most multi-pool operators use separate keys per pool, so the on-chain layer alone treats fleet pools as if they were independent operators. Any analysis that stops at on-chain attribution materially understates MPO concentration | [Cleaning — entity attribution](#33-cleaning--entity-attribution) | Methodological — attribution layer matters |
+| CEN.O1.F9 | **On-chain attribution alone reveals only 4 entities; off-chain layered attribution reveals 85** — a ~20× jump. Most multi-pool operators use separate keys per pool, so the on-chain layer alone treats fleet pools as if they were single-pool operators. Any analysis that stops at on-chain attribution materially understates MPO concentration | [Cleaning — entity attribution](#33-cleaning--entity-attribution) | Methodological — attribution layer matters |
 | | **CEN.O2 — Pool size variability is an institutional rebalancing phenomenon** | | Pool size variability splits cleanly along ownership type — custodial-by-delegation pools show median **CV 19.3%** with **21%** exceeding 50%, retail pools sit at **8.4%**, and custodial-by-extraction are most inert at **6.6%**. Variability is an institutional rebalancing signal, not a measure of delegator behaviour. |
 | CEN.O2.F1 | Custodial-by-delegation pools (28 pools, median delegation ≥ 100K ₳) have median CV 19.3% and 21% exceed CV 50%; retail pools sit at median CV 8.4%; custodial-by-extraction are the most inert (median CV 6.6%) | [Pool size variability — how stable is a pool's stake?](#36-pool-size-variability-how-stable-is-a-pools-stake) | Segment-driven variance |
 | | **CEN.O3 — Stake concentration among delegators is extreme and frozen** | | **1,000 delegators** (0.07%) control **57%** of staked ADA and the top **10,000** (0.74%) control **79.2%** — Gini **0.976**. The shape crystallised by epoch 300 and has not moved since, even as the delegator base grew **9×** and the top-1% share stayed locked at **78–82%**. Median delegator: **32 ADA**. Mean: **16,055 ADA**. A 500× gap. |
@@ -216,7 +216,7 @@ The median below-threshold pool holds just **2,547 ADA**. Three quarters hold le
 
 ### 3.3. Cleaning — entity attribution
 
-The **951 productive pools are not 951 independent operators**. Many pools share a controlling entity — detectable on-chain through shared `pool_owner` keys, and off-chain through metadata, ticker naming patterns, relay DNS, reward addresses, and public disclosures.
+The **951 productive pools are not 951 single-pool operators**. Many pools share a controlling entity — detectable on-chain through shared `pool_owner` keys, and off-chain through metadata, ticker naming patterns, relay DNS, reward addresses, and public disclosures.
 
 This cleaning pass groups pools by entity to reveal the **true operator landscape**.
 
@@ -227,7 +227,7 @@ This cleaning pass groups pools by entity to reveal the **true operator landscap
 | **On-chain only** | Shared `pool_owner` keys across productive pools | **4 entities** sharing keys across 8 pools; 943 pools appear as single-pool operators. On-chain keys are a *lower bound* — most multi-pool operators use separate keys per pool, so this layer alone misses the bulk of fleets. |
 | **Off-chain layered heuristics** | Public brand declarations (tickers, metadata URLs, websites), relay/metadata clustering (shared IPs, identical hashes, co-located infrastructure), on-chain ownership clusters, and manual resolution from community databases | Across **all registered pools**: **85 named entities** controlling **660 pools**. Combining the two layers is what catches the off-chain fleet structure that on-chain keys alone don't expose. |
 
-> **Finding CEN.O1.F9 — On-chain attribution alone reveals only 4 entities; off-chain layered attribution reveals 85 — a ~20× jump.** The on-chain layer alone tells almost nothing about MPO concentration: most multi-pool operators use separate keys per pool, so on-chain ownership clustering only catches the small minority that doesn't separate keys. Any analysis that stops at the on-chain layer treats fleet pools as if they were independent operators and materially understates the concentration of the network. The combined-attribution numbers — 85 entities across the registered set, 73 in the productive set — are the load-bearing inputs for every entity-level claim downstream.
+> **Finding CEN.O1.F9 — On-chain attribution alone reveals only 4 entities; off-chain layered attribution reveals 85 — a ~20× jump.** The on-chain layer alone tells almost nothing about MPO concentration: most multi-pool operators use separate keys per pool, so on-chain ownership clustering only catches the small minority that doesn't separate keys. Any analysis that stops at the on-chain layer treats fleet pools as if they were single-pool operators and materially understates the concentration of the network. The combined-attribution numbers — 85 entities across the registered set, 73 in the productive set — are the load-bearing inputs for every entity-level claim downstream.
 
 **Filtering to the 951 productive pools.** From the 85 named entities, 2 disappear entirely (RAID — 7 pools, RockX — 10 pools, all below threshold), and 10 shrink to a single productive pool (reclassified as attributed single-pool operators), leaving **73 named entities** controlling **464 pools** (16.29B ADA, **75.5% of productive stake**). The remaining **477 pools** (5.28B ADA, **24.5%**) are unattributed single-pool operators.
 
@@ -261,7 +261,7 @@ All figures and tables in this section refer to **productive pools only** — th
 | Identified entities | 83 | 475 | 16.30B | 75.6% |
 | — with multiple productive pools (n-MPO ≥ 2) | 73 | 465 | 15.83B | 73.4% |
 | — with single productive pool (attributed single-pool operator) | 10 | 10 | 0.46B | 2.1% |
-| Independent single-pool operators | 477 | 477 | 5.28B | 24.5% |
+| Single-pool operators | 477 | 477 | 5.28B | 24.5% |
 
 The entity attribution is a **current-epoch snapshot** and a **lower bound** — entities using entirely separate infrastructure and branding for each pool remain invisible. The real multi-pool operator count is **certainly higher than 73**.
 
@@ -337,7 +337,7 @@ Tracking individual pool presence per epoch (`05_pool_population_dynamics.sql`) 
 
 Part of the churn is driven by **entity-level dynamics**. The entity lifecycle analysis ([`data/entity_lifecycle_623.csv`](data/entity_lifecycle_623.csv)) classifies the 85 named entities into four phases — **dead, declining, stable, and growing** — based on their stake trajectory and productive-pool retention.
 
-Declining and dead entities contract their pool fleets, **feeding the exit side**; growing entities and new independent single-pool operators **feed the entry side**. The entity-level decline trajectories are visualised in the figures below.
+Declining and dead entities contract their pool fleets, **feeding the exit side**; growing entities and new single-pool operators **feed the entry side**. The entity-level decline trajectories are visualised in the figures below.
 
 ![Entity lifecycle — declining entities](figures/entity_lifecycle_decline.png)
 
@@ -345,13 +345,13 @@ Declining and dead entities contract their pool fleets, **feeding the exit side*
 
 #### 3.5.3. Cohort decomposition — who holds the productive set?
 
-The entries-and-exits view ([Entries and exits](#351-entries-and-exits)) treats the productive pool set as a **homogeneous stock**. This section decomposes it into two populations — pools operated by **identified multi-pool entities** and **independent single-pool operators** — and tracks each cohort's pool count and stake share across the full history.
+The entries-and-exits view ([Entries and exits](#351-entries-and-exits)) treats the productive pool set as a **homogeneous stock**. This section decomposes it into two populations — pools operated by **identified multi-pool entities** and **single-pool operators** — and tracks each cohort's pool count and stake share across the full history.
 
 The underlying data is in [`data/cohort_population_dynamics.csv`](data/cohort_population_dynamics.csv), derived by subtracting the per-epoch entity aggregate ([`data/entity_stake_history.csv`](data/entity_stake_history.csv)) from the productive totals in [`data/operator_landscape_history.csv`](data/operator_landscape_history.csv).
 
 ![Cohort population dynamics](figures/cohort_population_dynamics.png)
 
-**The independent single-pool operator segment is in structural decline.**
+**The single-pool operator segment is in structural decline.**
 
 The independent population peaked at **555 pools** and **39.1%** of productive stake around epoch 300 — the end of the Shelley expansion phase. Since then it has **contracted in every period**:
 
@@ -364,7 +364,7 @@ The independent population peaked at **555 pools** and **39.1%** of productive s
 
 The contraction **accelerated in the recent period**: **94 pools lost in 123 epochs**, with the stake share dropping **below 25% for the first time**. The independent population has lost **nearly half its pool count** (555 → 291) and **nearly 15 percentage points** of stake share since its peak.
 
-> **Finding CEN.O1.F6 — The independent single-pool operator population has contracted from 555 pools (39.1% of productive stake) at epoch 300 to 291 pools (24.4%) at epoch 623 — a 48% loss in pool count and a 15pp loss in stake share.** The contraction is continuous and has accelerated in the most recent period (epochs 500–623). The quasi-equilibrium of [Entries and exits](#351-entries-and-exits) masks a composition shift: the replacement pools that maintain the ~950 total are increasingly entity-operated, not independent.
+> **Finding CEN.O1.F6 — The single-pool operator population has contracted from 555 pools (39.1% of productive stake) at epoch 300 to 291 pools (24.4%) at epoch 623 — a 48% loss in pool count and a 15pp loss in stake share.** The contraction is continuous and has accelerated in the most recent period (epochs 500–623). The quasi-equilibrium of [Entries and exits](#351-entries-and-exits) masks a composition shift: the replacement pools that maintain the ~950 total are increasingly entity-operated, not independent.
 
 **Identified entities expanded steadily.**
 
@@ -392,19 +392,19 @@ The 21+ tier declined in share (46.4% → 28.8%) as IOG and Binance contracted, 
 
 The Cardano reward mechanism was designed to produce a **progression path for operators**: entry with an initial pledge, delegation-driven growth, and eventually full commitment as an established pool ([*The Intended Game* §3.2](../../../../the-intended-game/README.md#32-operators-from-first-pledge-to-full-commitment)).
 
-The independent single-pool operator segment is the population where this trajectory **should** be observable — small operators entering, building reputation, attracting delegation, and graduating into established entities.
+The single-pool operator segment is the population where this trajectory **should** be observable — small operators entering, building reputation, attracting delegation, and graduating into established entities.
 
 **The data shows the opposite.** The independent population contracted from **555 to 291 pools** while its stake share fell from **39.1% to 24.4%**.
 
-The entity lifecycle analysis ([Entity lifecycle](#352-entity-lifecycle), [companion document](entity-lifecycle/README.md)) tracks where the capital went: toward **late institutional entrants** (IVaaS), **exchanges holding ground**, and a handful of **community operators that grew against the tide**. It did **not** flow toward a cohort of independent operators graduating into established entities.
+The entity lifecycle analysis ([Entity lifecycle](#352-entity-lifecycle), [companion document](entity-lifecycle/README.md)) tracks where the capital went: toward **late institutional entrants** (IVaaS), **exchanges holding ground**, and a handful of **community operators that grew against the tide**. It did **not** flow toward a cohort of single-pool operators graduating into established entities.
 
-The census cannot track individual independent operators over time (they are unattributed by definition), but the aggregate trajectory is unambiguous: *the independent segment is shrinking, not graduating.*
+The census cannot track individual single-pool operators over time (they are unattributed by definition), but the aggregate trajectory is unambiguous: *the independent segment is shrinking, not graduating.*
 
 The absence of evidence for the designed growth path is **itself diagnostic**. If the mechanism were producing the intended progression — small operators growing into established ones — the independent segment would show either **stable pool count** (graduates replaced by new entrants) or **growing stake share** (successful operators attracting more delegation).
 
 **It shows neither.** The pool count is falling and the stake share is falling faster, which means the independents that remain are also **losing average delegation**. The replacement process that maintains the ~950-pool total is driven by **entity fleet expansion**, not by new independent entrants.
 
-> **Finding CEN.O1.F8 — The mechanism's designed progression path — from new independent operator to established entity — has no observable expression in the mainnet data.** The independent segment is contracting in both pool count and stake share, and the replacement pools that sustain the ~950-pool total are entity-operated. The growth path described in the formal design ([*The Intended Game* §3.2](../../../../the-intended-game/README.md#32-operators-from-first-pledge-to-full-commitment)) exists as a theoretical property of the intended equilibrium but not as an empirical feature of the observed one.
+> **Finding CEN.O1.F8 — The mechanism's designed progression path — from new single-pool operator to established entity — has no observable expression in the mainnet data.** The independent segment is contracting in both pool count and stake share, and the replacement pools that sustain the ~950-pool total are entity-operated. The growth path described in the formal design ([*The Intended Game* §3.2](../../../../the-intended-game/README.md#32-operators-from-first-pledge-to-full-commitment)) exists as a theoretical property of the intended equilibrium but not as an empirical feature of the observed one.
 
 ### 3.6. Pool size variability — how stable is a pool's stake?
 

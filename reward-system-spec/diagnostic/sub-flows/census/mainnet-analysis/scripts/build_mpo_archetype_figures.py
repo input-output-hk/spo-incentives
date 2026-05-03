@@ -132,12 +132,12 @@ STANCE_LABELS: Dict[str, str] = {
     "exemplary":      "Exemplary",
     "compliant":      "Compliant",
     "marginal":       "Marginal",
-    "non_compliant":  "Non-compliant",
+    "non_compliant":  "Zero-pledge",
 }
 
 STANCE_INLINE_LABELS: Dict[str, str] = {
     "cant_play":      "Can't play",
-    "non_compliant":  "Non-compliant",
+    "non_compliant":  "Zero-pledge",
     "marginal":       "Marginal",
     "compliant":      "Compliant",
     "exemplary":      "Exemplary",
@@ -1209,7 +1209,7 @@ def figure_stance_distribution(
         0.01, 0.01,
         "Same 85 entities decomposed two ways. Top = structural archetype. Bottom = incentive accessibility + bonus capture. "
         "Can't play = sub-saturation (< z0 total stake); remaining classes use effective pledge ratio: "
-        "Non-compliant <2% | Marginal 2–30% | Compliant 30–80% | Exemplary ≥80%.",
+        "Zero-pledge <2% | Marginal 2–30% | Compliant 30–80% | Exemplary ≥80%.",
         ha="left", va="bottom", fontsize=8, color="#555555",
     )
 
