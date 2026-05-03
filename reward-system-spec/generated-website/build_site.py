@@ -7122,61 +7122,70 @@ def classify_table_rows(html_body: str) -> str:
     return _TABLE_TBODY_RE.sub(_process_tbody, html_body)
 
 
-# Match a paragraph containing only an image (optionally with whitespace).
-# python-markdown turns ``![alt](src.png)`` into ``<p><img …></p>`` —
-# we lift these into a semantic ``<figure>`` so the chart reads as a
-# distinct content unit instead of a paragraph that happens to be an
-# image. If the very next paragraph is an italic caption that starts
-# with ``Figure``/``Fig.``, it gets pulled in as the ``<figcaption>``.
+# Match an image paragraph followed (optionally) by a caption paragraph
+# whose first non-tag text begins with ``Figure``/``Fig.``/etc. Captions
+# in the source MDs use partial italic emphasis on phrases — markdown
+# renders them as multiple sibling ``<em>`` segments, so we cannot
+# require a single wrapping ``<em>``. The regex now matches the caption
+# paragraph permissively (any tags / text up to </p>) and the helper
+# below validates that the first ~30 characters of plain text actually
+# start with a Figure keyword before pulling it in.
 _MD_IMG_PARA_RE = re.compile(
     r'<p>\s*(<img\b[^>]*>)\s*</p>'
-    r'(\s*<p>\s*<em>\s*(?:Figure|Fig\.?|Diagram|Chart|Plot|Table)\b'
-    r'[^<]{0,500}</em>\s*</p>)?',
+    r'(\s*<p>(?P<cap>(?:[^<]|<(?!/?p\b))*)</p>)?',
+    re.IGNORECASE | re.DOTALL,
+)
+_FIGURE_CAP_RE = re.compile(
+    r'^\s*(?:Figure|Fig\.?|Diagram|Chart|Plot|Table)\b',
     re.IGNORECASE,
 )
 
 
 def wrap_md_figures(html_body: str) -> str:
-    """Wrap markdown-image paragraphs in ``<figure>`` so charts read as
-    a discrete content unit. Optional italic caption paragraph that
-    immediately follows is folded in as ``<figcaption>``.
+    """Wrap ``<p><img></p>`` blocks in a semantic ``<figure>``. A
+    following italic caption paragraph (recognised by its leading
+    ``Figure``/``Fig.``/``Chart``/``Table`` keyword) is pulled in as
+    ``<figcaption>`` so the chart and its title read as one unit.
     """
     if "<img" not in html_body:
         return html_body
 
+    def _peel_outer_em(s: str) -> str:
+        """If ``s`` is wrapped in a single ``<em>…</em>`` (or fragmented
+        sibling ``<em>``s like the multi-segment captions), peel one
+        outer layer so the figcaption isn't double-italicised by CSS.
+        Conservative: leaves the string as-is when the structure is
+        ambiguous.
+        """
+        # Drop leading/trailing single em pair only; deeper structure
+        # is left for CSS to handle.
+        m = re.match(r'^\s*<em>(.*)</em>\s*$', s, re.DOTALL)
+        if m and '<em>' not in m.group(1):
+            return m.group(1)
+        # Fragmented case: convert all <em>/</em> to plain (CSS makes
+        # the whole figcaption italic; nested emphasis can't be
+        # distinguished from the surrounding italic anyway).
+        if s.count('<em>') > 1:
+            return re.sub(r'</?em>', '', s)
+        return s
+
+    def _plain_text_prefix(html: str, n: int = 60) -> str:
+        return re.sub(r'<[^>]+>', '', html)[:n].strip()
+
     def _sub(m: re.Match) -> str:
         img_tag = m.group(1)
-        cap_para = m.group(2) or ""
-        if cap_para:
-            # Strip the wrapping ``<p><em>…</em></p>`` to keep the figcaption
-            # text clean. Inner formatting (bold, links, nested em) is
-            # preserved because we only peel one outer layer.
-            inner_match = re.match(
-                r'\s*<p>\s*((?:<em>\s*)+)(.*?)((?:\s*</em>)+)\s*</p>\s*$',
-                cap_para,
-                re.DOTALL,
+        cap_inner = (m.group("cap") or "").strip() if m.group(2) else ""
+        # Only fold the next paragraph in if its plain-text prefix
+        # starts with a Figure/Fig./Chart/etc. keyword. Otherwise it's
+        # body prose that happens to follow the image.
+        if cap_inner and _FIGURE_CAP_RE.match(_plain_text_prefix(cap_inner)):
+            cap_html = (
+                f'<figcaption>{_peel_outer_em(cap_inner).strip()}</figcaption>'
             )
-            if inner_match:
-                # Drop the outermost <em>...</em> wrap; the figcaption
-                # styles the whole block as italic via CSS.
-                inner = inner_match.group(2)
-                # Re-balance inner ems if any were nested.
-                open_em = (inner_match.group(1) or "").count('<em>')
-                close_em = (inner_match.group(3) or "").count('</em>')
-                # Balance: the regex pulled (open_em) opens and
-                # (close_em) closes; we kept the inner text minus one
-                # outer pair.
-                if open_em > 1:
-                    inner = '<em>' * (open_em - 1) + inner
-                if close_em > 1:
-                    inner = inner + '</em>' * (close_em - 1)
-                cap_html = f'<figcaption>{inner.strip()}</figcaption>'
-            else:
-                # Fallback — keep the raw caption paragraph.
-                cap_html = f'<figcaption>{cap_para.strip()}</figcaption>'
-        else:
-            cap_html = ""
-        return f'<figure class="md-figure">{img_tag}{cap_html}</figure>'
+            return f'<figure class="md-figure">{img_tag}{cap_html}</figure>'
+        # No caption — just the image. Keep the trailing paragraph as-is.
+        rest = m.group(2) or ""
+        return f'<figure class="md-figure">{img_tag}</figure>{rest}'
 
     return _MD_IMG_PARA_RE.sub(_sub, html_body)
 
