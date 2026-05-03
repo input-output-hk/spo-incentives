@@ -6321,6 +6321,63 @@ def rewrite_canonical_obs_citations(
     return _walk_html_skipping(html_body, _transform)
 
 
+# Match an existing ``<a>`` tag whose visible text is a canonical
+# observation id (``POL.O6``, ``CEN.O3``, etc.). After the DIA→canonical
+# remap, the V2 spec MD uses ``[POL.O6](diagnostic/...)`` markdown links
+# directly, which md_to_html turns into a plain <a>POL.O6</a>. Without
+# the rewrite below, those anchors render as ordinary cross-page links —
+# losing the hover tooltip and the click-for-side-panel behaviour the
+# reader had on the previous DIA-prefixed version.
+_CANON_OBS_ANCHOR_TEXT_RE = re.compile(
+    r"<a\b([^>]*)>\s*([A-Z]{3}\.O\d+)\s*</a>",
+    re.IGNORECASE,
+)
+
+
+def rewrite_canonical_obs_anchors(
+    html_body: str,
+    obs_groups_by_canon: dict[str, dict] | None = None,
+) -> str:
+    """Enrich pre-existing ``<a>POL.O6</a>``-style anchors with the
+    overlay class + ``data-obs-src`` attributes so the cross-page hover
+    tooltip and side-panel handlers in ``initCrossObsSource`` bind.
+
+    ``obs_groups_by_canon`` keys: ``"POL.O6"`` etc. → ``obs_group`` dict
+    (from ``_load_all_subreport_data().obs_groups_by_code`` flattened by
+    canon_id). Each obs_group carries ``page_html`` and ``jump_href``.
+    """
+    if not obs_groups_by_canon or "<a" not in html_body:
+        return html_body
+
+    def _sub(m: re.Match) -> str:
+        attrs = m.group(1) or ""
+        canon = m.group(2).strip().upper()
+        g = obs_groups_by_canon.get(canon)
+        if not g:
+            return m.group(0)
+        # Already enriched? Don't double-process.
+        if "obs-ref" in attrs:
+            return m.group(0)
+        # Repoint href to the source row (preserves navigation when JS
+        # is unavailable) and inject the overlay attributes.
+        page_html = g.get("page_html", "")
+        jump_href = g.get("jump_href") or f'{page_html}#{g.get("slug", "")}'
+        # Strip any pre-existing href attribute, then re-add.
+        attrs_no_href = re.sub(r'\s+href="[^"]*"', '', attrs)
+        return (
+            f'<a class="obs-ref obs-ref-src"'
+            f'{attrs_no_href}'
+            f' href="{_html.escape(jump_href)}"'
+            f' data-obs-src="{_html.escape(canon)}"'
+            f' data-obs-page="{_html.escape(page_html)}"'
+            f' data-obs-href="{_html.escape(jump_href)}"'
+            f' title="{_html.escape(canon)} · hover for summary, click for detail">'
+            f'{canon}</a>'
+        )
+
+    return _CANON_OBS_ANCHOR_TEXT_RE.sub(_sub, html_body)
+
+
 # --- Sub-report Mainnet Observations: O# headers + F# rows --------------
 
 # Matches O-header rows:  | | **POL.O1 — Title** | | [optional abstract] |
@@ -7190,6 +7247,25 @@ def build_page(page: dict) -> Path:
         content_html = rewrite_synth_anchors(
             content_html, rewrite_obs, source_lookup,
         )
+
+    # Canonical-obs anchors: ``[POL.O6](diagnostic/README.md#...)`` after
+    # md_to_html lands as a plain ``<a>POL.O6</a>``. The DIA→canonical
+    # remap means the V2 spec now uses these directly, so we need to
+    # enrich them with the overlay attributes the cross-page hover/click
+    # handler reads. Runs on every non-subreport page (subreports define
+    # their own canon ids and don't link to themselves cross-page).
+    if not is_subreport:
+        bundle = _load_all_subreport_data()
+        obs_by_canon: dict[str, dict] = {}
+        for code, groups in bundle["obs_groups_by_code"].items():
+            for g in groups:
+                canon = g.get("canon_id", "")
+                if canon:
+                    obs_by_canon[canon] = g
+        if obs_by_canon:
+            content_html = rewrite_canonical_obs_anchors(
+                content_html, obs_by_canon,
+            )
 
     # Collect observation titles for the 'From XX.OY — title' breadcrumb
     # that the callout post-processor injects above each Finding blockquote.
