@@ -7179,9 +7179,33 @@ def wrap_md_figures(html_body: str) -> str:
         # starts with a Figure/Fig./Chart/etc. keyword. Otherwise it's
         # body prose that happens to follow the image.
         if cap_inner and _FIGURE_CAP_RE.match(_plain_text_prefix(cap_inner)):
-            cap_html = (
-                f'<figcaption>{_peel_outer_em(cap_inner).strip()}</figcaption>'
+            peeled = _peel_outer_em(cap_inner).strip()
+            # Lift the leading ``Figure X.Y`` (or ``Fig.``/``Chart``…)
+            # token into its own styled span so it reads as a label, not
+            # as part of the caption sentence. The em-dash separator and
+            # everything after stay in italic muted body.
+            label_match = re.match(
+                r'\s*(Figure|Fig\.?|Diagram|Chart|Plot|Table)'
+                r'(?:\s+(\d+(?:\.\d+)*))?\s*'
+                r'(?:[—–\-]\s*)?',
+                peeled,
+                re.IGNORECASE,
             )
+            if label_match:
+                kind = label_match.group(1).rstrip('.')
+                num = label_match.group(2) or ""
+                rest = peeled[label_match.end():].strip()
+                # Drop a leading "—" from the body that the regex already
+                # consumed, in case the variant didn't trip the dash.
+                rest = re.sub(r'^[—–\-]\s*', '', rest)
+                label_text = f'{kind} {num}'.strip()
+                inner = (
+                    f'<span class="figcaption-label">{label_text}</span>'
+                    f'<span class="figcaption-body">{rest}</span>'
+                )
+                cap_html = f'<figcaption>{inner}</figcaption>'
+            else:
+                cap_html = f'<figcaption>{peeled}</figcaption>'
             return f'<figure class="md-figure">{img_tag}{cap_html}</figure>'
         # No caption — just the image. Keep the trailing paragraph as-is.
         rest = m.group(2) or ""

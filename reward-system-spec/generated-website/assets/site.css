@@ -821,7 +821,30 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
   font:italic 400 12.5px/1.55 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-muted);
   padding:0 4px;
-  letter-spacing:0}
+  letter-spacing:0;
+  display:flex;align-items:flex-start;flex-wrap:wrap;gap:0 10px}
+/* The leading ``Figure 4.1`` token is lifted into its own label so
+   the caption reads as ``[FIGURE 4.1]  pool taxonomy at epoch 618…``.
+   Cardano-blue uppercase mono — picks up the figure block's left rail
+   colour and matches the eyebrow vocabulary used elsewhere on the
+   page so figures register as a structural unit, not floating prose. */
+.figcaption-label{
+  display:inline-flex;align-items:center;
+  flex-shrink:0;
+  font:600 10.5px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:#fff;
+  background:var(--cardano-blue);
+  padding:4px 9px 3px;
+  border-radius:3px;
+  font-style:normal;
+  position:relative;top:1px}
+.figcaption-body{
+  flex:1 1 220px;min-width:0;
+  font-style:italic}
+[data-theme=dark] .figcaption-label{
+  background:#6E97FF;color:#0a0a0a}
 .content figure.md-figure figcaption strong,
 .content figure.md-figure figcaption em strong{
   font-style:normal;font-weight:600;color:var(--text-body)}
