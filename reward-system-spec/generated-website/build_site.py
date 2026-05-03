@@ -7144,8 +7144,17 @@ _FIGURE_FOLLOWED_BY_CAP_RE = re.compile(
     r'\s*<p>(?P<cap>(?:[^<]|<(?!/?p\b))*)</p>',
     re.IGNORECASE | re.DOTALL,
 )
+# A figure caption opens either with the canonical ``CODE.X.Y`` form
+# (``TRE.4.4``, ``POL.3.1``, ``DIA.1.2``, ``CEN.2.3``, ``OPE.4.6``) — the
+# absolute, cross-document reference now baked into every Mainnet
+# Diagnostic MD — or with the legacy ``Figure X.Y`` keyword form left
+# over from older drafts. Either matches.
 _FIGURE_CAP_RE = re.compile(
-    r'^\s*(?:Figure|Fig\.?|Diagram|Chart|Plot|Table)\b',
+    r'^\s*(?:'
+    r'(?:TRE|POL|OPE|CEN|DIA)\.\d+(?:\.\d+)*'
+    r'|'
+    r'(?:Figure|Fig\.?|Diagram|Chart|Plot|Table)\b'
+    r')',
     re.IGNORECASE,
 )
 
@@ -7171,10 +7180,28 @@ def _plain_text_prefix(html: str, n: int = 60) -> str:
 def _build_figcaption(cap_inner: str) -> str:
     """Take the raw inner HTML of a caption paragraph and return the
     fully-styled ``<figcaption>`` markup, including the lifted
-    ``[FIGURE 4.1]`` chip when the text starts with one of the
-    recognised keywords.
+    ``[TRE.4.4]`` (or legacy ``[FIGURE 4.1]``) chip when the text
+    starts with one of the recognised forms.
     """
     peeled = _peel_outer_em(cap_inner).strip()
+    # Try the canonical ``CODE.X.Y`` form first (now the standard
+    # across the diagnostic MDs); fall back to the legacy
+    # ``Figure X.Y`` keyword form for any orphan that hasn't been
+    # remapped.
+    canon_match = re.match(
+        r'\s*((?:TRE|POL|OPE|CEN|DIA)\.\d+(?:\.\d+)*)\s*(?:[—–\-]\s*)?',
+        peeled,
+        re.IGNORECASE,
+    )
+    if canon_match:
+        label_text = canon_match.group(1).upper()
+        rest = peeled[canon_match.end():].strip()
+        rest = re.sub(r'^[—–\-]\s*', '', rest)
+        inner = (
+            f'<span class="figcaption-label">{label_text}</span>'
+            f'<span class="figcaption-body">{rest}</span>'
+        )
+        return f'<figcaption>{inner}</figcaption>'
     label_match = re.match(
         r'\s*(Figure|Fig\.?|Diagram|Chart|Plot|Table)'
         r'(?:\s+(\d+(?:\.\d+)*))?\s*'

@@ -392,6 +392,8 @@ The three strategies described below are **not transient labels**. A natural que
 
 ![Strategy Evolution — Entity-Level View, Epochs 210–615](sub-flows/operator-delegator-distribution/mainnet-analysis/figures/strategy_evolution.png)
 
+*DIA.1.1 — Entity-level strategy evolution across 405 epochs. The per-epoch transition rate sits at a median **0.28%** — fewer than 2 entities per epoch — and **89%** of all transitions are boundary drift between hollow and balanced rather than genuine regime changes.*
+
 The figure tracks three panels across **405 epochs**:
 
 - **Top panel** — entity counts by owner-stake strategy (restricted to pools above the 1M ADA production threshold): hollow entities have grown steadily from **~200 to ~500**, balanced has peaked around **300 and declined to ~200**, and private has remained flat at **~50**.
@@ -409,6 +411,8 @@ Among entities active for at least 200 epochs (n=612), **37.9%** experienced at 
 The margin landscape confirms this stability. The **median margin across all pools has held at 2.0%** since the early Shelley era. The rising stake-weighted mean (**4.2% → 18.9%**) is driven entirely by the growing weight of declared-private and functionally private pools in the overall stake distribution, **not by fee inflation in the competitive market**.
 
 ![Margin Rate Evolution — Epochs 211–615](sub-flows/operator-delegator-distribution/mainnet-analysis/figures/margin_evolution.png)
+
+*DIA.1.2 — Margin rate evolution across 405 epochs. The median margin has held flat at **2.0%** since early Shelley; the rising stake-weighted mean (**4.2% → 18.9%**) reflects compositional drift toward private pools, not fee inflation in the competitive market.*
 
 > The per-epoch strategy transition rate is 0.28% (median) — fewer than 2 entities per epoch. Over 405 epochs, 89% of all transitions are boundary drift between hollow and balanced, not genuine regime changes. The three strategies are durable features of the network's economic structure, not artefacts of a single snapshot. Margin competition in the hollow market has been stable at a median of 2.0% for the entire Shelley era — the apparent rise in the stake-weighted mean is a compositional effect from the growing weight of private-strategy pools.
 
@@ -517,7 +521,7 @@ This creates a direct contradiction with the security requirement established in
 *The mechanism is at war with itself.*
 
 ![The Playing Field — what a pool can earn vs. what it costs (epoch 616 pool-history snapshot)](../the-intended-game/figures/playing_field_mainnet.png)
-*Figure 1 — Left: reward composition at full saturation — the ceiling is $P_{\max}$ at full pledge, full saturation. Right: reward by pool size, comparing size-only reward (green) to the pledge premium (purple). The left panel shows where the formula points; the right panel shows why the journey there is irrelevant. Data: epoch 616 pool-history snapshot (the formula shape is parameter-driven and unchanged through epoch 623).*
+*DIA.1.0 — Left: reward composition at full saturation — the ceiling is $P_{\max}$ at full pledge, full saturation. Right: reward by pool size, comparing size-only reward (green) to the pledge premium (purple). The left panel shows where the formula points; the right panel shows why the journey there is irrelevant. Data: epoch 616 pool-history snapshot (the formula shape is parameter-driven and unchanged through epoch 623).*
 
 #### 1.2.4.3. Endgame — the hollow strategy is the dominant one
 
@@ -557,6 +561,8 @@ The distribution is not ambiguous.
 
 ![Three Strategies — Entity-Level View](main-flow/figures/strategy_landscape.png)
 
+*DIA.1.3 — Entity-level snapshot at epoch 623 across the three owner-stake strategies. Hollow controls **85.6%** of active stake at a 1.0% owner-ratio; private holds **10.8%** as self-funded entities; balanced occupies just **3.6%**.*
+
 - **Hollow entities** control **18.10B ₳ (85.6% of active stake)** with a collective owner-ratio of **1.0%** — for every 100 ADA staked in hollow pools, about 1 ADA comes from the operator.
 - **Private entities** control **2.29B ₳ (10.8%)**, almost entirely self-funded.
 - **Balanced entities** hold **0.77B ₳ (3.6%)** — the smallest segment but **the only one where the pledge mechanism produces genuine alignment**.
@@ -565,7 +571,11 @@ This snapshot captures the end-state of a trajectory that has been **remarkably 
 
 ![Strategy Composition — Pool Count and Active Stake Share](main-flow/figures/strategy_evolution.png)
 
+*DIA.1.4 — Composition of pool count and active stake share by strategy across 405 epochs. The hollow strategy established dominance within the first **50 epochs** of Shelley and has held that position throughout.*
+
 ![Pool Count and Active Stake by Strategy — Individual Trajectories](main-flow/figures/strategy_trends.png)
+
+*DIA.1.5 — Pool count and active stake per strategy, epochs 211–615. Hollow has held **85–92%** of active stake since the early Shelley era; balanced peaked at **119 pools** (epoch 300) and has fallen to **57**; private pool count has risen from zero to **47**.*
 
 The **hollow strategy established dominance within the first 50 epochs** of Shelley and has held **85–92% of active stake** ever since. Pool count peaked at **904** around epoch 400 (2023/03) and has since declined to **771** — a **15% contraction** — as the shrinking epoch pot makes marginal pools unprofitable.
 

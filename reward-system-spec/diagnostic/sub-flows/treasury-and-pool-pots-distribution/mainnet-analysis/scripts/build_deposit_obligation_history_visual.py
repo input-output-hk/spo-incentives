@@ -201,19 +201,6 @@ def main() -> None:
     ax1.set_ylabel("Million ADA", color=WHITE_TEXT, fontsize=10)
     ax1.set_title("Governance deposits surge with DRep and proposal activity", color=WHITE_TEXT, fontsize=12, fontweight="bold", pad=15)
     ax1.legend(loc="upper left", facecolor=DARK_BG, edgecolor=GRID_COLOR, framealpha=0.95, fontsize=9)
-    ax1.text(
-        0.01,
-        0.98,
-        "Available proxy only: this is the obligation-pot stock\n"
-        "not the exact epoch-level non-refundable deposit flow from the reward formula.\n"
-        f"Last 30-day snapshot average: {last_month_avg_total:,.0f} ADA",
-        transform=ax1.transAxes,
-        fontsize=8,
-        va="top",
-        ha="left",
-        color=WHITE_TEXT,
-        bbox=dict(boxstyle="round,pad=0.5", facecolor=GRID_COLOR, edgecolor=DAWN, alpha=0.85),
-    )
 
     # Style ax1
     ax1.tick_params(colors=DIM_TEXT, labelsize=9)

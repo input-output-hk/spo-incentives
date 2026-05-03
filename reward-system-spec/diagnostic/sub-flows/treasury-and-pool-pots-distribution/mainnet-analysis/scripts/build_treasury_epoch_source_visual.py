@@ -228,21 +228,6 @@ def main() -> None:
     ax1.spines["bottom"].set_color(GRID_COLOR)
     add_event_markers(ax1, compact=True, y_frac=0.85, alpha=0.4)
 
-    # Insight bar for current epoch
-    ax1.text(
-        0.01,
-        0.95,
-        f"Epoch {current_epoch} ({format_date(rows[current_idx].start_time_utc)}): "
-        f"fees={current_fee_cut:,.0f} ADA | expansion={current_reserve_cut:,.0f} ADA | total={current_total_proxy:,.0f} ADA\n"
-        "Deposit flows not available in current data; omitted from decomposition.",
-        transform=ax1.transAxes,
-        fontsize=10,
-        va="top",
-        ha="left",
-        bbox=dict(boxstyle="round,pad=0.5", facecolor=SOLAR_AMBER, edgecolor="none", alpha=0.15),
-        color=TEXT_COLOR,
-    )
-
     # Panel 2: Fee-side treasury cut recent window
     fee_focus_start_idx = max(0, current_idx - 95)
     fee_focus_indices = list(range(fee_focus_start_idx, current_idx))

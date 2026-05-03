@@ -63,14 +63,14 @@ _Terminology note._ The protocol uses "fixed cost" and "margin" for the two extr
 | # | Observation | Section | Nature |
 | --- | --- | --- | --- |
 | | **OPE.O1 — The flat fee dominates operator revenue but operators do not actively set it** | | The flat fee delivers **60%** of retail operator revenue yet behaves as a frozen governance artefact — **89.5%** of pools pick one of two floor values, and **64%** still declare the pre-halving **340 ₳** floor **178 epochs** after governance halved it to **170 ₳**. The channel that dominates revenue is the one operators touch the least. |
-| OPE.O1.F1 | The flat fee accounts for **60%** of all operator revenue in the retail market; the commission accounts for **40%** | [Operator profitability versus delegator return](#44-operator-profitability-versus-delegator-return) | Structural — the passive channel dominates the active one |
-| OPE.O1.F2 | **64%** of pools still declare the former floor (**340 ₳**) — **178 epochs** after a governance action halved it to **170 ₳** | [The flat fee (fixed cost)](#41-the-flat-fee-fixed-cost) | Governance inertia — driven by the largest entities |
-| OPE.O1.F3 | **89.5%** of pools declare one of two floor values (**170** or **340 ₳**); "custom" values are mostly near-floor inertia (Binance 345, Everstake 400) or extraction | [The flat fee (fixed cost)](#41-the-flat-fee-fixed-cost) | The flat fee is a binary choice, not a pricing parameter |
-| OPE.O1.F4 | The flat fee follows a $1/\sigma$ hyperbola: **47.5%** of pool reward at the sub-reliable tier, **1.5%** at near-saturation | [The flat fee (fixed cost)](#41-the-flat-fee-fixed-cost) | Regressive by design — a fixed-in-₳ levy on a size-proportional reward |
-| OPE.O1.F5 | **No other major PoS protocol uses a flat fee.** The fixed-cost model is unique to Cardano; Ethereum, Solana, Cosmos, and Polkadot all price validators on proportional rules | [The flat fee (fixed cost)](#41-the-flat-fee-fixed-cost) | Unique to Cardano — no cross-chain precedent or comparator |
+| OPE.O1.F1 | **The passive channel dominates the active one — the flat fee delivers 60% of operator revenue, the commission only 40%.** Across the retail market, the fixed ₳/epoch flat fee accounts for **60%** of operator revenue; the proportional commission accounts for the remaining **40%**. *The channel that dominates revenue is the one operators almost never touch.* | [Operator profitability versus delegator return](#44-operator-profitability-versus-delegator-return) | Structural — the passive channel dominates the active one |
+| OPE.O1.F2 | **Governance halved the floor 178 epochs ago — 64% of pools have not moved.** The `minPoolCost` floor was halved from **340 ₳ to 170 ₳** through a successful governance action. **178 epochs later** (~1.5 years), **64% of pools still declare 340 ₳** — including most of the largest entities. *The price most operators charge is not a pricing decision; it is a governance setting they never revised.* | [The flat fee (fixed cost)](#41-the-flat-fee-fixed-cost) | Governance inertia — driven by the largest entities |
+| OPE.O1.F3 | **The flat fee is a binary choice, not a pricing parameter.** **89.5% of pools declare one of two floor values** (170 ₳ or 340 ₳). The "custom" values that exist are mostly near-floor inertia (Binance 345, Everstake 400) or commission-mode extraction. *Operators are not pricing — they are picking a floor.* | [The flat fee (fixed cost)](#41-the-flat-fee-fixed-cost) | The flat fee is a binary choice, not a pricing parameter |
+| OPE.O1.F4 | **The flat fee is regressive by design — a fixed ₳ levy on a size-proportional reward.** Because the pool reward grows roughly linearly with stake $\sigma$ but the flat fee is fixed in ₳, the fee's share of pool reward follows a $1/\sigma$ hyperbola — **47.5%** of pool reward at the sub-reliable tier, **1.5%** at near-saturation. The same 170 ₳ that disappears in a saturated pool's accounts is a **third of all rewards** in a sub-reliable pool's accounts | [The flat fee (fixed cost)](#41-the-flat-fee-fixed-cost) | Regressive by design — a fixed-in-₳ levy on a size-proportional reward |
+| OPE.O1.F5 | **No other major PoS protocol uses a flat fee — the fixed-cost model is unique to Cardano.** Ethereum (validator-flat reward via the protocol), Solana (commission), Cosmos (commission), and Polkadot (commission) all price validators on **proportional rules** that scale with stake. The Cardano flat fee has no cross-chain precedent or comparator — meaning the regressive dynamics in F4 are unique to this network | [The flat fee (fixed cost)](#41-the-flat-fee-fixed-cost) | Unique to Cardano — no cross-chain precedent |
 | | **OPE.O2 — The commission market is bimodal with an empty middle** | | Commissions cluster at two extremes — a competitive band ≤ **10%** holding **87%** of pools and a privatisation band ≥ **99%** holding **12%** — with only **12 pools** priced in the 89pp interval between them. |
-| OPE.O2.F1 | 87% of pools set a commission at or below 10%; 12% set ≥ 99% (privatisation). The 89pp range between 10% and 99% contains 12 pools | [The commission (margin)](#42-the-commission-margin) | No man's land — no economic attractor exists between pricing and extraction |
-| OPE.O2.F2 | Four bands: no-commission (170 pools, 17.9%), competitive (658, 69.1%), no man's land (12, 1.3%), privatisation (112, 11.8%) | [The commission (margin)](#42-the-commission-margin) | The market self-organises into discrete tiers |
+| OPE.O2.F1 | **The commission distribution is bimodal with an 89pp empty middle.** **87% of pools** set a commission **at or below 10%**; **12%** set **≥ 99%** (privatisation). The **89-percentage-point range between 10% and 99% contains only 12 pools**. *No economic attractor exists between competitive pricing and total extraction* — operators either compete or fully privatise their pool, and almost no one in between | [The commission (margin)](#42-the-commission-margin) | No man's land — no attractor between pricing and extraction |
+| OPE.O2.F2 | **The market self-organises into four discrete tiers, not a continuous price distribution.** No-commission (**170 pools, 17.9%** — almost certainly self-pledged), competitive (**658 pools, 69.1%** — at or below 10%), no man's land (**12 pools, 1.3%** — between 10% and 99%), privatisation (**112 pools, 11.8%** — at or above 99%). *The four bands are an emergent equilibrium, not a design choice — the formula offers a continuous parameter and operators reduce it to four economic stances.* | [The commission (margin)](#42-the-commission-margin) | The market self-organises into discrete tiers |
 | | **OPE.O3 — 21% of productive stake is custodial — three mechanisms, three economics** | | **21.1%** of productive stake is custodial across **three on-chain-detectable mechanisms** (pledge, extraction, median-delegation), each producing a distinct economic outcome — from **29,329 ₳/yr** median revenue per entity for custodial-by-delegation to **1,759,252 ₳/yr** for custodial-by-pledge. |
 | OPE.O3.F1 | 79 entities operating 143 pools (4.55B, 21.1%) are custodial: by pledge (10 entities, 36 pools, 1.59B), by extraction (57 entities, 79 pools, 2.04B), by delegation (15 entities, 28 pools, 0.92B) | [Custodial versus retail](#43-custodial-versus-retail) | Three distinct mechanisms — each detectable from on-chain observables |
 | OPE.O3.F2 | Custodial-by-delegation uses the per-pool **median** delegation (db-sync `epoch_stake`) ≥ 100K ₳ — the amount held by the typical delegator. A delegation of 50K ₳ is already in the top 1.5% of the network | [Custodial by delegation — the median delegation signal](#432-custodial-by-delegation--the-median-delegation-signal) | The median measures the delegator's experience, not capital concentration |
@@ -93,9 +93,7 @@ _Terminology note._ The protocol uses "fixed cost" and "margin" for the two extr
 | OPE.O8.F1 | The delegator yield has fallen from 5.3% to 2.0% in 413 epochs (5.5 years), tracking reserve depletion with $R^2 = 0.99$. Projection: sub-1.5% within ~1.7 years, sub-1.0% within ~3.5 years. The decline is irreversible without protocol-level intervention — it is built into the monetary expansion formula | [The yield trajectory — level and decline](#51-the-yield-trajectory-level-and-decline) | The entire yield surface descends as a unit; no pool-level strategy can offset the macro trajectory |
 | OPE.O8.F2 | At 2.0%, Cardano sits below the USD risk-free rate (4.3%) and at the bottom of the PoS landscape. No other major chain combines this low a yield with liquid, non-custodial, slashing-free design. The low return is the cost of that design — delegation is a conviction bet on ADA, not a yield-seeking decision | [The yield in context — cross-chain and cross-asset comparison](#52-the-yield-in-context-cross-chain-and-cross-asset-comparison) | The mechanism assumes yield-sensitive delegators, but the yield regime no longer supports that assumption |
 | OPE.O8.F3 | As the epoch pot shrinks, the flat fee (fixed at 170/340 ₳) consumes a growing share of pool rewards — the confiscatory zone identified in [§4.1 — The flat fee (fixed cost)](#41-the-flat-fee-fixed-cost) expands upward. The 0.39pp retail yield spread compresses proportionally: at 1.0% base yield (~3.5 years), the same relative dispersion produces ~0.20pp — indistinguishable from block-production noise. Pools that are viable today will cross the sub-reliable threshold | [The yield spread — structural compression](#53-the-yield-spread-structural-compression) | The failures documented in §4 are not static — they degrade every epoch |
-| OPE.O8.F4 | The declining yield acts as a selection ratchet against small single-pool operators. The flat fee is fixed in absolute terms while the epoch pot shrinks — the confiscatory zone expands upward every epoch. Single-pool operators bear the full drag with no fleet to amortise it; multi-pool operators are insulated by horizontal scaling. The structural feedback loop (yield compression → confiscatory expansion → single-pool attrition → delegation migration → fleet concentration) drives the centralisation the mechanism was designed to prevent | [The yield spread — structural compression](#53-the-yield-spread-structural-compression) | The mechanism selects against its smallest operators and reinforces its largest |
-
-**Scope note.** OPE.O1 describes the flat fee channel ([§4.1 — The flat fee (fixed cost)](#41-the-flat-fee-fixed-cost)). OPE.O2 describes the commission channel ([§4.2 — The commission (margin)](#42-the-commission-margin)). OPE.O3 establishes the custodial/retail boundary and custodial economics ([§4.3 — Custodial versus retail](#43-custodial-versus-retail)). OPE.O4–OPE.O6 characterise the retail market economics and operator viability ([§4.4 — Operator profitability versus delegator return](#44-operator-profitability-versus-delegator-return)–4.5). OPE.O7 addresses delegation behaviour ([§4.4 — Operator profitability versus delegator return](#44-operator-profitability-versus-delegator-return)). OPE.O8 places the mechanism on its temporal trajectory: the yield decline is not a separate problem — it amplifies every structural failure documented in §4 (§5).
+| OPE.O8.F4 | **The declining yield is a selection ratchet against small single-pool operators.** The flat fee is fixed in absolute terms while the epoch pot shrinks — the confiscatory zone expands upward every epoch. Single-pool operators bear the full drag with no fleet to amortise it; multi-pool operators are insulated by horizontal scaling. *The structural feedback loop (yield compression → confiscatory expansion → single-pool attrition → delegation migration → fleet concentration) drives the centralisation the mechanism was designed to prevent* | [The yield spread — structural compression](#53-the-yield-spread-structural-compression) | The mechanism selects against its smallest operators and reinforces its largest |
 
 ## 2. The formula — intra-pool reward sharing
 
@@ -304,6 +302,8 @@ All analysis from §4 onwards operates on the **productive population** at epoch
 
 ![Population Funnel — Epoch 623](figures/population_funnel.png)
 
+*OPE.3.1 — From raw to viable population at epoch 623 on both sides of the market. Of **2,302 raw entities** and **2,877 raw pools**, the productive set retains **582 entities** across **952 pools** (99.1% of stake); the viable set further narrows to **383 entities** and **733 pools**.*
+
 ### 3.1. Operators
 
 #### 3.1.1. From raw to productive
@@ -403,6 +403,8 @@ The inertia is **structural**: **70% of floor-declaring stake remains at 340 ₳
 
 ![The Regressive Geometry of Flat Fees](figures/flat_fee_hyperbole.png)
 
+*OPE.4.1 — Flat-fee share of pool reward as a function of pool stake. Because the fee is fixed in ADA but reward scales with stake, the share absorbed follows a **$1/\sigma$** hyperbola — **47.5%** at the sub-reliable tier shrinking to **1.5%** near saturation, a **32×** span in effective extraction from the same nominal price.*
+
 > **Finding OPE.O1.F4 — The flat fee follows a $1/\sigma$ hyperbola: 47.5% of pool reward at sub-reliable, 1.5% near saturation.** Because $c$ is fixed in ADA but the pool reward scales with stake, the share absorbed by the flat fee falls as $1/\sigma$. At the **sub-reliable tier** the channel consumes **47.5%** of pool reward; at the **near-saturation tier** it consumes only **1.5%**. The same nominal price produces a 32× span in effective extraction. The flat fee is therefore *regressive by design* — a fixed-in-ADA levy on a size-proportional reward — and the regressivity is the structure, not a calibration error.
 
 > **Finding OPE.O1.F2 — 64% of pools still declare the former floor (340 ₳) — 178 epochs after the governance action halved it.** The inertia is not transient. It is driven by the largest entities and reflects a structural feature of the network: the flat fee is a set-and-forget parameter for most operators. Among the 219 sub-reliable pools (1M–3M ADA), the distribution mirrors the productive population (84 adopted, 117 legacy) — but the economic meaning is different. At this tier, a 170 ₳ flat fee absorbs ~27% of pool reward and a 340 ₳ fee absorbs ~54%. The adopted/legacy distinction, which is a governance-responsiveness signal for viable pools, becomes a confiscation-severity signal for sub-reliable ones.
@@ -429,6 +431,8 @@ No man's land makes the bimodality explicit: the **89pp gap** between competitiv
 > **Finding OPE.O2.F2 — The market self-organises into four discrete commission bands.** **170 pools (17.9%)** charge no commission; **658 (69.1%)** sit in the competitive band (0–10%); **12 (1.3%)** occupy the 10–99% no-man's-land; **112 (11.8%)** declare privatisation (≥ 99%). The bands are not statistical artefacts — each carries a distinct economic logic, from flat-fee-only pricing through the market norm to total extraction. The **89pp** gap between competitive and privatisation is the absence of any viable strategy in between.
 
 ![Commission Distribution — Epoch 623](figures/commission_histogram.png)
+
+*OPE.4.2 — Commission distribution at epoch 623. The market self-organises into four discrete bands: **17.9%** of pools at no-commission, **69.1%** in the competitive 0–10% band, **1.3%** in the 10–99% no-man's-land, and **11.8%** at privatisation (≥ 99%) — with an **89pp** structural gap.*
 
 **Commission bands × owner-stake strategy.** The bands cross-cut the three owner-stake strategies. The hollow segment fills all four bands. Balanced pools concentrate in no-commission and competitive with marginal presence in privatisation. Private pools occupy only competitive (3 pools — Wave and one anonymous) and privatisation — private × no-commission is empty because an operator who funds the pool has no reason to set commission to zero.
 
@@ -460,6 +464,8 @@ At epoch 623, **28 pools** (across 15 entities) exceed this threshold, carrying 
 
 ![Median Delegation vs Pool Stake — Epoch 623](figures/median_delegation_scatter.png)
 
+*OPE.4.3 — Per-pool median delegation against pool stake at epoch 623. **28 pools** across **15 entities** clear the 100K ₳ median threshold that separates custodial-by-delegation from retail — splitting into whale self-delegation pools (median ≥ 1M ₳) and smaller high-net-worth arrangements.*
+
 #### 4.3.3. Summary
 
 The table below continues the population decomposition from §3:
@@ -476,6 +482,8 @@ The table below continues the population decomposition from §3:
 | **Retail market** | **516** | **809** | **85.0%** | **17.02** | **78.9%** | **1,272,836** | **98.3%** | **87** | **25,235** |
 
 ![Custodial vs Retail — Stake Distribution (Epoch 623)](figures/custodial_retail_treemap.png)
+
+*OPE.4.4 — Productive stake decomposed by custodial mechanism versus retail at epoch 623. Custodial holds **21.1%** of productive stake (4.55B ADA across 143 pools); retail captures **78.9%** (17.02B ADA across 809 pools and 1.27M delegations).*
 
 The custodial segment is **smaller than the mean-APD estimate suggested** — **21.1%** of stake, not 49.9% — because most institutional pools (Coinbase, Binance, Kiln, YUTA) are retail by their delegation median. They route large capital through few addresses, but the majority of their delegators are small retail wallets.
 
@@ -572,6 +580,8 @@ Everstake dominates the retail market: 264,997 delegators (21% of retail) across
 
 ![Entity Revenue vs Delegator Return — Epoch 623](figures/entity_revenue_vs_ros.png)
 
+*OPE.4.5 — Entity revenue (log scale) against net delegator ROS across the retail market. The viable population (Panel B) shows net ROS in a tight **2.0–2.5%** band across a **52×** spread in operator revenue — the pricing plan is invisible to the delegator above the production threshold.*
+
 Panel A shows the full retail market. The x-axis is entity revenue (₳/year, log scale); the y-axis is net ROS (%). Two vertical clusters are visible at 12,410 ₳/yr and 24,820 ₳/yr — these are the two flat fee floor values (170 ₳ and 340 ₳) annualised (× 73 epochs). Sub-reliable operators (red) are pinned to these floor values: their revenue is almost entirely the flat fee, and the commission adds negligible income. The scatter tail below 2% ROS is exclusively sub-reliable — these are pools where the flat fee absorbs so much of the reward that delegator return degrades visibly.
 
 Panel B removes the sub-reliable population and zooms to the viable market (≥3M ADA). The picture sharpens: net ROS sits in a tight band between 2.0% and 2.5% across the entire revenue range from 25K to 1.3M ₳/yr — a 52× spread in operator revenue for a 0.5 percentage-point spread in delegator return. The pricing plan is invisible to the delegator in the viable market.
@@ -580,6 +590,8 @@ Panel B removes the sub-reliable population and zooms to the viable market (≥3
 **The full profitability distribution.** The figure below shows the entity-level revenue distribution across all operator types — custodial and retail — on a logarithmic scale. Each box spans the interquartile range (P25–P75); whiskers extend to P5–P95; dots are outliers.
 
 ![Stake Pool Operator Profitability by Operator Type — Epoch 623](figures/operator_profitability_by_type.png)
+
+*OPE.4.6 — Entity-level revenue distribution across operator types on a logarithmic scale. Custodial-by-pledge entities earn **~1.8M ₳/yr** median while single-pool retail operators are compressed near **25K ₳/yr** regardless of pool size; MPO revenue scales with fleet size from **~94K ₳/yr** (2–5 pools) to **~402K ₳/yr** (6+ pools).*
 
 The visual makes three patterns immediately legible. First, the custodial segment spans three orders of magnitude internally: custodial-by-pledge entities (n=10) earn 1.8M ₳/yr median with a range up to 16.9M, while custodial-by-delegation (n=15) clusters near the retail baseline at 32K. Second, single-pool retail operators (sub-reliable, healthy, large+) are compressed into a narrow band around 25K ₳/yr — regardless of pool size, the revenue barely moves. Third, MPO revenue scales with fleet size: 2–5 pool MPOs earn ~94K, 6+ pool MPOs earn ~402K. The jump from single-pool to 2-pool is the most significant transition in operator economics — it roughly triples entity revenue.
 
@@ -795,6 +807,8 @@ The declining yield also tightens the **participation constraint for operators**
 
 ![Delegator Yield — Historical Trajectory and Projection](figures/yield_trajectory_and_projection.png)
 
+*OPE.5.1 — Hollow-market delegator yield from epoch 211 to epoch 615 with forward projection. Yield has fallen from **5.3% to 2.0%** — a **63% decline** over **5.5 years** — tracking reserve depletion with $R^2 = 0.99$. Sub-1.5% within ~1.7 years and sub-1.0% within ~3.5 years on the projected path.*
+
 > **Finding OPE.O8.F1 — The yield has fallen from 5.3% to 2.0% in 413 epochs, tracking reserve depletion with $R^2 = 0.99$.** Projection: sub-1.5% within ~1.7 years, sub-1.0% within ~3.5 years. The decline is irreversible without protocol-level intervention — it is built into the monetary expansion formula. No pool-level strategy can offset the macro trajectory.
 
 ### 5.2. The yield in context — cross-chain and cross-asset comparison
@@ -960,6 +974,8 @@ For an **ETF product designer**, the relevant metric is *distributable income af
 [The yield spread — structural compression](#53-the-yield-spread-structural-compression) takes this framework to the intra-pool level: given that the absolute yield is modest and declining, is the *spread* between pools wide enough to drive delegation decisions?
 
 ![Cardano's Staking Yield in Context — Cross-Chain and Cross-Asset Comparison](figures/yield_cross_chain_comparison.png)
+
+*OPE.5.2 — Cardano's real staking yield against PoS peers and traditional fixed-income benchmarks. At **1–2%** real yield, Cardano sits below the **4.3%** US 10-Year Treasury and at the bottom of the PoS landscape — but offers zero lock-up, zero slashing, and non-custodial delegation that no other major chain combines.*
 
 > **Finding OPE.O8.F2 — At 2.0%, Cardano sits below the USD risk-free rate (4.3%) and at the bottom of the PoS landscape.** No other major chain combines this low a yield with liquid, non-custodial, slashing-free design. The low return is the cost of that design — delegation is a conviction bet on ADA, not a yield-seeking decision. The mechanism assumes yield-sensitive delegators, but the yield regime no longer supports that assumption.
 
