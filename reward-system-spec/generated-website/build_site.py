@@ -7122,6 +7122,65 @@ def classify_table_rows(html_body: str) -> str:
     return _TABLE_TBODY_RE.sub(_process_tbody, html_body)
 
 
+# Match a paragraph containing only an image (optionally with whitespace).
+# python-markdown turns ``![alt](src.png)`` into ``<p><img …></p>`` —
+# we lift these into a semantic ``<figure>`` so the chart reads as a
+# distinct content unit instead of a paragraph that happens to be an
+# image. If the very next paragraph is an italic caption that starts
+# with ``Figure``/``Fig.``, it gets pulled in as the ``<figcaption>``.
+_MD_IMG_PARA_RE = re.compile(
+    r'<p>\s*(<img\b[^>]*>)\s*</p>'
+    r'(\s*<p>\s*<em>\s*(?:Figure|Fig\.?|Diagram|Chart|Plot|Table)\b'
+    r'[^<]{0,500}</em>\s*</p>)?',
+    re.IGNORECASE,
+)
+
+
+def wrap_md_figures(html_body: str) -> str:
+    """Wrap markdown-image paragraphs in ``<figure>`` so charts read as
+    a discrete content unit. Optional italic caption paragraph that
+    immediately follows is folded in as ``<figcaption>``.
+    """
+    if "<img" not in html_body:
+        return html_body
+
+    def _sub(m: re.Match) -> str:
+        img_tag = m.group(1)
+        cap_para = m.group(2) or ""
+        if cap_para:
+            # Strip the wrapping ``<p><em>…</em></p>`` to keep the figcaption
+            # text clean. Inner formatting (bold, links, nested em) is
+            # preserved because we only peel one outer layer.
+            inner_match = re.match(
+                r'\s*<p>\s*((?:<em>\s*)+)(.*?)((?:\s*</em>)+)\s*</p>\s*$',
+                cap_para,
+                re.DOTALL,
+            )
+            if inner_match:
+                # Drop the outermost <em>...</em> wrap; the figcaption
+                # styles the whole block as italic via CSS.
+                inner = inner_match.group(2)
+                # Re-balance inner ems if any were nested.
+                open_em = (inner_match.group(1) or "").count('<em>')
+                close_em = (inner_match.group(3) or "").count('</em>')
+                # Balance: the regex pulled (open_em) opens and
+                # (close_em) closes; we kept the inner text minus one
+                # outer pair.
+                if open_em > 1:
+                    inner = '<em>' * (open_em - 1) + inner
+                if close_em > 1:
+                    inner = inner + '</em>' * (close_em - 1)
+                cap_html = f'<figcaption>{inner.strip()}</figcaption>'
+            else:
+                # Fallback — keep the raw caption paragraph.
+                cap_html = f'<figcaption>{cap_para.strip()}</figcaption>'
+        else:
+            cap_html = ""
+        return f'<figure class="md-figure">{img_tag}{cap_html}</figure>'
+
+    return _MD_IMG_PARA_RE.sub(_sub, html_body)
+
+
 def build_page(page: dict) -> Path:
     src_md = REPO_ROOT / page["md"]
     if not src_md.exists():
@@ -7284,6 +7343,11 @@ def build_page(page: dict) -> Path:
         content_html += _render_finding_registry(cross_findings)
 
     content_html = decorate_section_references(content_html, page["html"])
+
+    # Wrap ``<p><img></p>`` (+ following ``<p><em>Figure …</em></p>`` if any)
+    # into a semantic ``<figure>`` block so charts read as a discrete
+    # unit, set apart from body prose.
+    content_html = wrap_md_figures(content_html)
 
     # "View source on GitHub" footer link — sits at the very end of the
     # article content (above the site-footer) so motivated readers can
