@@ -409,7 +409,7 @@ The mechanism creates **three structural populations** that respond to pledge di
 - **MPO fleets** who *choose not to* — the rational response to a negligible incentive;
 - **Independent operators** who pledge **out of conviction** rather than economic rationality.
 
-The net result is a proof-of-stake system where the Sybil defence operates through **incidental wealth constraints** — not through the designed pledge mechanism — and where **85 entities** operating **901 pools** control **75.4% of staked supply** with no protocol-level cost for having done so.
+The net result is a proof-of-stake system where the Sybil defence operates through **incidental wealth constraints** — not through the designed pledge mechanism — and where **83 attributed entities** operating **475 productive pools** control **75.5% of productive stake** with no protocol-level cost for having done so.
 
 $k = 500$ implies 500 independent entities sharing consensus power; the effective operator count is an **order of magnitude below** that target. The saturation cap has produced ~3,000 pool certificates — far more than $k$ — but the power behind those certificates is concentrated in fewer hands than the equilibrium requires.
 
@@ -430,7 +430,7 @@ $k = 500$ implies 500 independent entities sharing consensus power; the effectiv
 <div class="ev-card" markdown="1">
 <div class="ev-label">Entity-level pledge behaviour</div>
 <div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">**78 of 85** multi-pool entities are outside the pledge-response path entirely. Only **7 entities (8 %)** respond to the pledge signal.</p>
+<p class="ev-body" markdown="1">**77 of 83** multi-pool entities are outside the pledge-response path entirely. Only **6 entities (7 %)** respond to the pledge signal.</p>
 <p class="ev-sources" markdown="1">Source: [multi-pool entity analysis](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures).</p>
 </div>
 </div>
@@ -462,7 +462,7 @@ $k = 500$ implies 500 independent entities sharing consensus power; the effectiv
 <div class="ev-card" markdown="1">
 <div class="ev-label">Market structure outcome</div>
 <div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">**85 multi-pool entities control 75.4 % of staked supply through 901 pools.** The effective entity-level concentration is an **order of magnitude** above the $k$-target equilibrium.</p>
+<p class="ev-body" markdown="1">**83 attributed entities control 75.5 % of productive stake through 475 productive pools.** The effective entity-level concentration is an **order of magnitude** above the $k$-target equilibrium.</p>
 <p class="ev-sources" markdown="1">Sources: [POL.O5](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
 </div>
 </div>
@@ -600,7 +600,7 @@ The relationship is explicit: **higher commitment — longer lock-up, less liqui
 
 The analysis documents concentration on **two fronts**:
 
-- **Supply side.** **85 multi-pool entities** control **75.4%** of staked supply through **901 pools** ([POL.O5](diagnostic/README.md#122-mainnet-observations)), while independent single-pool operators shrink to **283 viable pools and 25%** of productive stake ([POL.O6](diagnostic/README.md#122-mainnet-observations)).
+- **Supply side.** **83 attributed entities** control **75.5%** of productive stake through **475 productive pools** ([POL.O5](diagnostic/README.md#122-mainnet-observations)), while independent single-pool operators shrink to **284 productive pools and 24.5%** of productive stake ([POL.O6](diagnostic/README.md#122-mainnet-observations)).
 - **Demand side.** **1,000 delegators** (0.07% of the base) control **57% of staked ADA**; the Gini coefficient is **0.976** ([CEN.O3](diagnostic/README.md#212-mainnet-observations)).
 
 Both concentrations are **structural**, both **crystallised early**, and **neither responds** to the current incentive design.
@@ -625,7 +625,7 @@ The reward formula evaluates pools **independently** — it does not know that t
 The mechanism was designed for $k$ independent operators converging on a balanced equilibrium (Brünjes & Kiayias, 2020). It encounters instead a **highly concentrated and segmented market** where three structurally distinct sub-populations coexist:
 
 - **Custodial operators** (CEX + IVaaS: 10 entities, 181 pools, 7.40B ADA) who *cannot* pledge the capital they manage — the constraint is **architectural**;
-- **Community and opaque MPO fleets** (41 of 48 saturation-scale entities) who have *chosen* not to pledge — the **rational response** to the current incentive structure;
+- **Community and opaque MPO fleets** (42 of 48 saturation-scale entities) who have *chosen* not to pledge — the **rational response** to the current incentive structure;
 - **Independent single-pool operators** who bear the full weight of the fee structure while their market share erodes ([operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable)).
 
 The deeper failure is that **the formula's unit of accounting — the pool — is the wrong unit**. Rewards, saturation caps, and pledge calculations all operate at the pool level. But the **entity** that controls the pools is the economic actor that makes strategic decisions.
@@ -656,7 +656,7 @@ The consequence is:
 <div class="ev-card" markdown="1">
 <div class="ev-label">MPO fleet structure</div>
 <div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">**85 entities, 901 pools, 75.4 % of staked supply.** 12 entities with 11+ pools control **40.4 % of productive stake**.</p>
+<p class="ev-body" markdown="1">**83 attributed entities, 475 productive pools, 75.5 % of productive stake.** 12 entities with 11+ pools control **40.4 % of productive stake**.</p>
 <p class="ev-sources" markdown="1">Sources: [POL.O5](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
 </div>
 </div>
@@ -664,7 +664,7 @@ The consequence is:
 <div class="ev-card" markdown="1">
 <div class="ev-label">Sybil cost</div>
 <div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Marginal cost of a new pool is **~500 ADA**; marginal reward is a full share of the curve. **78 of 85** MPO entities are outside the pledge-response path.</p>
+<p class="ev-body" markdown="1">Marginal cost of a new pool is **~500 ADA**; marginal reward is a full share of the curve. **77 of 83** MPO entities are outside the pledge-response path.</p>
 <p class="ev-sources" markdown="1">Sources: [POL.O7](diagnostic/README.md#122-mainnet-observations), [mainnet pledge data](diagnostic/README.md#12431-what-mainnet-reveals).</p>
 </div>
 </div>
@@ -672,7 +672,7 @@ The consequence is:
 <div class="ev-card" markdown="1">
 <div class="ev-label">Independent operator decline</div>
 <div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">**283 viable single-pool operators**, stake share in slow decline from **39 % → 25 %** since epoch 300.</p>
+<p class="ev-body" markdown="1">**284 productive single-pool operators**, stake share in slow decline from **39 % → 25 %** since epoch 300.</p>
 <p class="ev-sources" markdown="1">Sources: [POL.O6](diagnostic/README.md#122-mainnet-observations), [Census — the independent pipeline](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-pipeline-what-the-mechanism-was-intended-to-produce).</p>
 </div>
 </div>
@@ -709,7 +709,7 @@ The reward mechanism must transition from **pool-level** to **entity-level** acc
 
 This does **not** mean collapsing all pools into a single reward calculation — pools remain the unit of block production and consensus participation. It means that the **economic incentives** (pledge accounting, saturation behaviour, reward scaling) must recognise **the entity behind the pools**.
 
-This transition raises a **constitutional question**. The Cardano Constitution (v2) governs pool-level parameters — $k$, $a_0$, $minPoolCost$ — and its guardrails are defined in terms of pools, not entities. The concept of operator *entity* has **no constitutional standing**. Yet the evidence is unambiguous: **85 entities operating 901 pools control 75.4%** of staked supply, and the formula's blindness to this structure is the **root cause of the Sybil defence failure** ([multi-pool entity analysis](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures)).
+This transition raises a **constitutional question**. The Cardano Constitution (v2) governs pool-level parameters — $k$, $a_0$, $minPoolCost$ — and its guardrails are defined in terms of pools, not entities. The concept of operator *entity* has **no constitutional standing**. Yet the evidence is unambiguous: **83 attributed entities operating 475 productive pools control 75.5%** of productive stake, and the formula's blindness to this structure is the **root cause of the Sybil defence failure** ([multi-pool entity analysis](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures)).
 
 Two paths exist.
 
@@ -738,7 +738,7 @@ Entity-level pledge accounting **reactivates the Sybil tax** that exists in the 
 
 | KPI | Definition | Current | Target |
 | --- | --- | --- | --- |
-| Entity-level Herfindahl index | Concentration of staked supply across entities (not pools) | ~0.02 (85 entities, 75% of stake) | < 0.015 — measurable deconcentration |
+| Entity-level Herfindahl index | Concentration of staked supply across entities (not pools) | ~0.02 (83 attributed entities, 75.5% of productive stake) | < 0.015 — measurable deconcentration |
 | MPO fleet cost gradient | Marginal pledge cost of the $n$-th pool in a fleet | ~0 (negligible) | Positive and increasing with $n$ |
 | Independent operator stake share | Productive stake in single-pool independent operators | ~25% (declining) | >35% — the independent base must stabilise and grow |
 

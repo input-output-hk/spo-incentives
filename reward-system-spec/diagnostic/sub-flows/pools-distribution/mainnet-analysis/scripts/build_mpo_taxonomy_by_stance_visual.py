@@ -82,7 +82,21 @@ def main():
         snap = json.load(f)
     z0    = snap["z0_ada"]
     epoch = snap["epoch"]
-    total_staked = float(snap["total_active_stake_ada"])
+
+    # ── Canonical productive set (epoch-aligned with Census) ──
+    # We source per-pool stake from the Census's epoch-623 snapshot and apply
+    # the ≥1M ADA productive filter, identical to Census's pass-3 cross-ref.
+    # Pledge is still pulled from koios_pool_list_mainnet.csv since it's a
+    # registration parameter that doesn't drift epoch-to-epoch.
+    PRODUCTIVE_THRESHOLD_ADA = 1_000_000
+
+    pool_stake_e623 = {}
+    with (ENTITY_DATA / "pool_stake_623.csv").open(newline="") as f:
+        for r in csv.DictReader(f):
+            ada = float(r["total_ada"])
+            if ada >= PRODUCTIVE_THRESHOLD_ADA:
+                pool_stake_e623[r["pool_id"]] = ada
+    productive_total = sum(pool_stake_e623.values())
 
     archetype_meta = {
         r["entity_id"]: r
@@ -100,29 +114,34 @@ def main():
     }
     mpo_pool_ids = set(pool_to_entity)
 
-    # Load all registered pools, filter to MPO
-    pools = []
-    entity_ids = set()
+    # Pull pledge from koios pool list for the join
+    koios_pledge = {}
     with (DATA_DIR / "koios_pool_list_mainnet.csv").open(newline="") as f:
         for r in csv.DictReader(f):
             if r.get("pool_status") != "registered":
                 continue
-            if r["pool_id_bech32"] not in mpo_pool_ids:
-                continue
-            entity_id = pool_to_entity[r["pool_id_bech32"]]
-            entity_ids.add(entity_id)
-            stake = pf(r.get("active_stake")) / 1e6
-            pledge = pf(r.get("pledge")) / 1e6
-            if stake <= 0:
-                continue
-            eff_pledge = min(pledge, stake)
-            ratio = eff_pledge / stake if stake > 100 else 0.0
-            capital_class = archetype_meta.get(entity_id, {}).get("capital_class", "sufficient")
-            pools.append({
-                "stake": stake,
-                "ratio": ratio,
-                "stance": "cant_play" if capital_class != "sufficient" else classify_stance(ratio),
-            })
+            koios_pledge[r["pool_id_bech32"]] = pf(r.get("pledge")) / 1e6
+
+    # Build productive MPO pool list (stake from epoch 623, pledge from koios)
+    pools = []
+    entity_ids = set()
+    for pool_id, entity_id in pool_to_entity.items():
+        stake = pool_stake_e623.get(pool_id)
+        if stake is None:
+            continue  # not productive at epoch 623
+        entity_ids.add(entity_id)
+        pledge = koios_pledge.get(pool_id, 0.0)
+        eff_pledge = min(pledge, stake)
+        ratio = eff_pledge / stake if stake > 100 else 0.0
+        capital_class = archetype_meta.get(entity_id, {}).get("capital_class", "sufficient")
+        pools.append({
+            "stake": stake,
+            "ratio": ratio,
+            "stance": "cant_play" if capital_class != "sufficient" else classify_stance(ratio),
+        })
+
+    # Denominator for stake-share is the productive total (matches Census F2/F7).
+    total_staked = productive_total
 
     stakes_arr = np.array([p["stake"] for p in pools])
     total_mpo = stakes_arr.sum()
@@ -240,7 +259,7 @@ def main():
     ax_r.set_yticks([])
     ax_r.xaxis.tick_top()
     ax_r.xaxis.set_label_position("top")
-    ax_r.set_xlabel("Share of staked supply (%) — coloured by pledge compliance",
+    ax_r.set_xlabel("Share of productive stake (%) — coloured by pledge compliance",
                     fontsize=10, color=DIM, labelpad=6)
     ax_r.tick_params(axis="x", colors=DIM, labelsize=8, top=True, bottom=False)
     ax_r.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x:.0f}%"))
@@ -289,7 +308,7 @@ def main():
              "MPO Pools — Pledge Compliance × Pool Tier",
              ha="center", fontsize=17, fontweight="bold", color=INK)
     fig.text(0.5, 0.88,
-             f"{n:,} MPO pools  ·  {total_mpo/1e9:.2f}B ADA ({total_mpo/total_staked*100:.1f}% of staked supply)  "
+             f"{n:,} productive MPO pools  ·  {total_mpo/1e9:.2f}B ADA ({total_mpo/total_staked*100:.1f}% of productive stake)  "
              f"·  {len(entity_ids)} entities  ·  epoch {epoch}",
              ha="center", fontsize=10.5, color=DIM)
 

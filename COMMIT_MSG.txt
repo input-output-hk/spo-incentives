@@ -1,56 +1,52 @@
-diagnostic: production-threshold framing, viability moved to dedicated section, tier rename, figure captions, doc cleanup
+diagnostic: align MPO numbers with Census productive set (epoch 623)
 
-Production threshold = ~3M ADA canonical (95% probability of producing
->=1 block per epoch). Reasoning made self-sufficient in §4.1.2.1 with
-binomial math (P(0 blocks) = e^(-lambda)).
+The pools-distribution doc and parent README quoted MPO totals computed
+from a koios snapshot with no productive filter (85 entities / 901 pools
+/ 16.4B ADA / 75.4%). Census's canonical pass-3 figures, derived at
+epoch 623 with the productive filter (>=1M ADA per pool), give 83
+entities / 475 pools / 16.29B ADA / 75.5% of productive stake. The two
+counts diverge because the koios snapshot is older and includes
+sub-1M-ADA pools.
 
-Viability moved to a dedicated section (§4.1.2.2) and treated as
-orders-of-magnitude only: real operator cost = infrastructure
-(~$1,320-3,240/yr) + DevOps labour (~$5,160/yr min) ~= $7,160/yr,
-fiat-denominated, ADA/USD-dependent. At today's prices ($0.25 ADA),
-viability coincides with the production threshold (~3M); falls below
-when ADA appreciates. Volatile, so not drawn elsewhere as a fixed line.
+Switched the MPO-counting scripts to source pool stake from
+pool_stake_623.csv with the >=1M productive filter, matching Census
+build_entity_tier_crossref.py exactly:
+  - build_mpo_taxonomy_by_stance_visual.py (pools-distribution)
+  - build_mpo_extraction_visual.py        (pools-distribution)
+  - build_mpo_tier_stance_entity_visual.py (census)
+Pledge data still comes from koios_pool_list_mainnet.csv since pledge is
+a registration parameter that doesn't drift epoch-to-epoch.
+Denominators switched from total-active-stake (21.75B) to productive
+total (21.57B) to match Census's "% of productive stake" framing.
+Figures regenerated.
 
-Tier rename (Option A): Sub-production -> Sub-block, Sub-viable ->
-Sub-reliable. Each tier now named by what production-reliability bar
-it fails to clear. Scripts updated and figures regenerated.
+Aligned headline numbers across the diagnostic, V2 spec README,
+solution-evaluation, CPS, and findings docs:
+  85 entities -> 83 attributed entities (73 strict multi-pool + 10
+                attributed single-pool)
+  901 pools  -> 475 productive pools
+  16.4B      -> 16.29B ADA
+  75.4% of staked supply -> 75.5% of productive stake
+  37 sub-saturation -> 35
+  41 of 48 saturation-scale non-compliant -> 42 of 48
+  78 of 85 outside pledge-response path -> 77 of 83
+  13.74B (63%) outside path -> 13.93B (64.6% of productive)
+  283 independent viable operators -> 284
+  CEX+IVaaS 7.4B (19.2% of supply) -> 7.41B (34.3% of productive)
+  3 exemplary entities -> 2 (CHUCK BUX falls to 75.9% at epoch 623,
+                              moving from exemplary to compliant)
 
-POL.O3 restructured to 5 findings: physics threshold, economics
-viability, formula saturation, design-goal collapse, dynamic boundaries.
-POL.O4 inserted (pool population shape + entity-lens necessity);
-old POL.O4-O6 renumbered to POL.O5-O7 (~110 cross-refs across 10
-.md files).
+POL.O5 cell title rewritten ("83 multi-pool operators control 75.5%
+of productive stake"), POL.O5.F1-F7 findings rewritten, POL.O7 cell +
+F1 updated, POL.O6 narrative tweaked to 284. Body prose at sections
+4.2.1 / 4.2.2 / 4.2.4 / 4.3 / 4.4 reflowed. Reward-loss table at
+4.2.4.3 marked as a structural illustration (rounded estimates) since
+the underlying reward-anatomy script isn't re-run here. Top-10 most-
+exemplary MPOs table replaced with epoch-623 entity-level pledge
+ratios.
 
-Capital-sufficient/insufficient terminology renamed to saturation-scale
-/ sub-saturation across 12 docs + 5 visualization scripts; figures
-regenerated. "Capital class" column -> "Scale class".
-
-Numbering and accessibility:
-  - All 18 figures in pools-distribution numbered Figure x.x with
-    captions
-  - Bare §N litanies replaced with descriptive link labels
-  - V2-spec forward links purged from pools-distribution (the
-    diagnostic should not link forward to V2 proposals)
-  - CV / coefficient-of-variation jargon kept only in dedicated body
-    explanation (§4.1.2.1); observation cells and findings use plain
-    language ("95% probability of >=1 block per epoch")
-
-POL.O1, POL.O2, POL.O3 findings rewritten for accessibility:
-each leads with a plain-language headline claim, technical numbers
-follow as support. POL.O1 title now names the two causes
-(participation gap + unused pledge-incentive budget). POL.O2 title
-notes pledge is unused at scale and structurally unfair across pool
-sizes; three new algebraic findings (F4-F6) added from the §3.4.3
-A(nu, pi) anatomy now imported into the diagnostic.
-
-Census §3.3 surfaces on-chain vs off-chain attribution split:
-on-chain alone catches 4 entities, off-chain layered attribution
-catches 85 — a ~20x jump (CEN.O1.F9). Pools-distribution §4.2.1
-now defers to the Census doc for entity-attribution methodology
-rather than duplicating it.
-
-Side fixes: stale §3 self-reference replaced with §4 link, orphan
-"this framing is incomplete" callout merged into surrounding
-prose, §3.6.1 structure split so the IMPORTANT key-observation
-no longer absorbs the per-finding callouts, §4.2 link cluster
-redirected from V2-spec section titles to local §4.2.x anchors.
+References to 85/901 in nakamoto-revaluation §"Data provenance" and
+census F9 / entity-lifecycle "42 of 85" preserved -- those describe
+the raw attribution mapping (902 rows, 85 distinct entities) or the
+full lifecycle universe before the productive filter, not the
+productive subset.

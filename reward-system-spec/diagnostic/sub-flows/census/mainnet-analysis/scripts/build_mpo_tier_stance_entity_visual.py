@@ -64,7 +64,16 @@ def main():
     snap = json.load((POOL_DATA / "pool_distribution_snapshot.json").open())
     z0 = snap["z0_ada"]
     epoch = snap["epoch"]
-    staked = float(snap["total_active_stake_ada"])
+
+    # Canonical productive set (epoch-aligned with Census): ≥1M ADA at e623.
+    PRODUCTIVE_THRESHOLD_ADA = 1_000_000
+    pool_stake_e623 = {}
+    with (DATA_DIR / "pool_stake_623.csv").open(newline="") as f:
+        for r in csv.DictReader(f):
+            ada = float(r["total_ada"])
+            if ada >= PRODUCTIVE_THRESHOLD_ADA:
+                pool_stake_e623[r["pool_id"]] = ada
+    staked = sum(pool_stake_e623.values())  # productive total — denominator for share
 
     # Load MPO pool mapping
     mpo_map = {}
@@ -93,22 +102,25 @@ def main():
         "healthy": "Healthy\n3–38M",
     }
 
-    # Load MPO pools (viable+)
-    pools = []
+    # Pull pledge from koios pool list for the join (registration parameter).
+    koios_pledge = {}
     for r in csv.DictReader((POOL_DATA / "koios_pool_list_mainnet.csv").open(newline="")):
         if r['pool_status'] != 'registered':
             continue
-        pid = r['pool_id_bech32']
-        if pid not in mpo_map:
-            continue
-        stake = float(r.get('active_stake','0') or '0') / 1e6
-        pledge = float(r.get('pledge','0') or '0') / 1e6
+        koios_pledge[r['pool_id_bech32']] = float(r.get('pledge','0') or '0') / 1e6
+
+    # Load productive MPO pools (stake from epoch 623, pledge from koios)
+    pools = []
+    for pid, eid in mpo_map.items():
+        stake = pool_stake_e623.get(pid)
+        if stake is None:
+            continue  # not productive at e623
         tier = get_tier(stake)
         if tier is None:
-            continue
+            continue  # below 3M (Healthy floor — outside this figure's scope)
+        pledge = koios_pledge.get(pid, 0.0)
         eff_pledge = min(pledge, stake)
         ratio = eff_pledge / stake if stake > 100 else 0.0
-        eid = mpo_map[pid]
         meta = archetypes.get(eid, {})
         display = clean_display_name(meta.get('display_name'), eid)
         stance = "cant_play" if meta.get("capital_class") != "sufficient" else classify_stance(ratio)
@@ -147,7 +159,7 @@ def main():
 
             # Draw one segment per entity within the stance group
             for ent_name, ent_stake in sorted_ents:
-                w = ent_stake / staked * 100  # % of staked supply
+                w = ent_stake / staked * 100  # % of productive stake
                 if w < 0.01:
                     left += w
                     continue
@@ -217,8 +229,8 @@ def main():
     fig.text(
         0.01, 0.01,
         "Each coloured sub-bar = one entity's pools within a tier+stance group. "
-        "White borders separate entities. Only pools ≥3M ADA (viable threshold) shown. "
-        "Ochre = sub-saturation / can't play. Denominator = total staked supply.",
+        "White borders separate entities. Only pools ≥3M ADA (Healthy floor) shown. "
+        "Ochre = sub-saturation / can't play. Denominator = productive stake (≥1M ADA at epoch 623).",
         ha="left", va="bottom", fontsize=7.5, color=DIM,
     )
 

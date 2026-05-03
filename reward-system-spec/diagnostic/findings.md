@@ -82,10 +82,10 @@ yield on pledge capital tops out at 0.68%/yr, below passive delegation, and
 
 The pool landscape is stratified into four tiers far from the $k = 500$
 target (O3): 73% of pools sit below viability and only 8 reach saturation.
-Multi-pool operators control 75% of staked supply (O4): 85 MPO entities hold
-16.4B ADA, and 41 of the 48 saturation-scale MPOs are non-compliant.
+Multi-pool operators control 75.5% of productive stake (O4): 83 attributed entities hold
+16.29B ADA, and 42 of the 48 saturation-scale MPOs are non-compliant.
 
-The independent operator base has collapsed to 283 viable operators once MPO
+The independent operator base has collapsed to 284 productive single-pool operators once MPO
 fleets are removed (O5). The incentive-responsive field — the portion of the
 network that actually reacts to the pledge signal — holds only 36% of active
 stake (O6).

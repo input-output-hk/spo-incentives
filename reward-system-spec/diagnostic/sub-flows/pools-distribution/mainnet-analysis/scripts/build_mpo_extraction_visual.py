@@ -65,8 +65,13 @@ def muted(hex_color, factor=0.55):
 
 
 def load_data():
-    """Load pool data and classify by tier / MPO status."""
-    LOVELACE = 1_000_000
+    """Load pool data and classify by tier / MPO status.
+
+    Canonical productive set = pool_stake_623.csv with stake ≥ 1M ADA.
+    This mirrors the Census definition (epoch 623, λ=1 production threshold)
+    so MPO totals reconcile across the diagnostic.
+    """
+    PRODUCTIVE_THRESHOLD_ADA = 1_000_000
     z0 = 77_000_000
     T_bounds = [0, 100e3, 1e6, 3e6, z0 * 0.5, z0 * 0.8, z0 * 0.95,
                 z0 * 1.05, np.inf]
@@ -77,17 +82,12 @@ def load_data():
             pool_entity.add(row["pool_id_bech32"])
 
     pools = []
-    with open(DATA_DIR / "koios_pool_list_mainnet.csv") as f:
+    with open(ENTITY_DATA / "pool_stake_623.csv") as f:
         for row in csv.DictReader(f):
-            if row["pool_status"] != "registered":
+            stake_ada = float(row["total_ada"])
+            if stake_ada < PRODUCTIVE_THRESHOLD_ADA:
                 continue
-            raw = row["active_stake"]
-            if not raw or not raw.replace(".", "").replace("-", "").isdigit():
-                continue
-            stake_ada = float(raw) / LOVELACE
-            if stake_ada <= 0:
-                continue
-            is_mpo = row["pool_id_bech32"] in pool_entity
+            is_mpo = row["pool_id"] in pool_entity
             pools.append({"stake": stake_ada, "is_mpo": is_mpo})
 
     stakes = np.array([p["stake"] for p in pools])
@@ -310,7 +310,7 @@ def draw_butterfly(data, fig_path):
 
     # ── Titles ──
     title = "MPO Extraction Effect — Full Landscape vs Single-Pool Operators"
-    subtitle = (f"Epoch 618  ·  {n:,} pools  ·  {total/1e9:.1f}B ADA  "
+    subtitle = (f"Epoch 623  ·  {n:,} productive pools  ·  {total/1e9:.1f}B ADA  "
                 f"·  All {n_mpo:,} attributed MPO pools removed")
 
     fig.text(0.5, 0.92, title,

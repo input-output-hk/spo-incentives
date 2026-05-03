@@ -2,7 +2,7 @@
 
 This folder evaluates the CIPs that act on the **stake-cap layer** of the Cardano reward pipeline — the reward-eligible pool stake $\sigma'$ that enters the SL-D1 reward formula, *upstream* of the operator/member split that the [fee layer](../operator-delegator/README.md) reshapes.
 
-The two CIPs in scope ([CIP-0050](cip-0050.md), [CIP-0037](cip-0037.md)) target a real broken signal that the [mainnet diagnostic](../../diagnostic/README.md) confirms: pledge is priced as irrelevant by the operator population. POL.O2.F2 — pledge yield (0.68 %/yr) is structurally dominated by passive-delegation yield (~2.3 %/yr); POL.O2.F1 — 78 % of staked ADA sits in pools with pledge ratio < 1 %; POL.O5.F3 — 41 of 48 saturation-scale MPOs forfeit the bonus. Both CIPs respond by making pledge **binding** on the reward formula — without sufficient pledge, the pool's reward-eligible stake is clipped.
+The two CIPs in scope ([CIP-0050](cip-0050.md), [CIP-0037](cip-0037.md)) target a real broken signal that the [mainnet diagnostic](../../diagnostic/README.md) confirms: pledge is priced as irrelevant by the operator population. POL.O2.F2 — pledge yield (0.68 %/yr) is structurally dominated by passive-delegation yield (~2.3 %/yr); POL.O2.F1 — 78 % of staked ADA sits in pools with pledge ratio < 1 %; POL.O5.F3 — 42 of 48 saturation-scale MPOs forfeit the bonus. Both CIPs respond by making pledge **binding** on the reward formula — without sufficient pledge, the pool's reward-eligible stake is clipped.
 
 **Verdict on both CIPs: no-go, for two stacked reasons.**
 

@@ -4,8 +4,8 @@ This folder is the **centralised entity research** for the SPO Incentives analys
 
 ## The landscape at a glance
 
-The attribution engine identifies **85 multi-pool operator (MPO) entities**
-controlling **901 pools** and **~16.4B ADA** — 75.4% of the 21.75B ADA
+The attribution engine identifies **83 attributed entities** (73 strict multi-pool fleets + 10 attributed single-pool operators)
+controlling **475 productive pools** and **~16.29B ADA** — 75.5% of the 21.57B ADA productive set
 actively staked at epoch 618. The remaining 25% sits in **2,097 single-pool
 operators** (see `single-spo/`).
 
