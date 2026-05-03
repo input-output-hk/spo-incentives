@@ -7122,24 +7122,26 @@ def classify_table_rows(html_body: str) -> str:
     return _TABLE_TBODY_RE.sub(_process_tbody, html_body)
 
 
-# Match an image paragraph followed (optionally) by a caption paragraph
-# whose first non-tag text begins with ``Figure``/``Fig.``/etc. Two
-# shapes appear in the wild:
-#   A) ``<p><img></p>\n<p><em>Figure …</em></p>`` — image and caption
-#      separated by a blank line in MD, two paragraphs in HTML.
-#   B) ``<p><img>\n<em>Figure …</em></p>`` — image and caption on
-#      adjacent MD lines (no blank), one paragraph in HTML, the image
-#      and caption joined by whitespace or a ``<br>``.
-# Both are handled below; the helper validates the caption text begins
-# with a Figure keyword before pulling it in.
-_MD_IMG_PARA_RE = re.compile(
-    # Shape A: <p><img></p>...<p>caption</p>
-    r'(?:<p>\s*(?P<imgA><img\b[^>]*>)\s*</p>'
-    r'(?P<sepA>\s*<p>(?P<capA>(?:[^<]|<(?!/?p\b))*)</p>)?)'
-    r'|'
-    # Shape B: <p><img>[ws/br]<em>caption</em></p>
-    r'(?:<p>\s*(?P<imgB><img\b[^>]*>)\s*(?:<br\s*/?>\s*)?'
-    r'(?P<capB>(?:[^<]|<(?!/?p\b))*)</p>)',
+# Two-pass figure wrapping. The first pass wraps every ``<p><img></p>``
+# (and the same-paragraph ``<p><img>caption</p>`` shape) in a bare
+# ``<figure>``. The second pass folds an *adjacent* caption paragraph
+# (italic, opens with ``Figure``/``Fig.``/``Chart``/etc.) into the
+# previous figure as a ``<figcaption>``. Splitting the work like this
+# avoids the bug where a single greedy regex would consume the next
+# paragraph along with the image — including paragraphs that turned
+# out NOT to be captions, leaving subsequent images orphaned.
+_MD_IMG_ONLY_RE = re.compile(
+    r'<p>\s*(?P<img><img\b[^>]*>)\s*</p>',
+    re.IGNORECASE,
+)
+_MD_IMG_INLINE_CAP_RE = re.compile(
+    r'<p>\s*(?P<img><img\b[^>]*>)\s*(?:<br\s*/?>\s*)?'
+    r'(?P<cap>(?:[^<]|<(?!/?p\b))+)</p>',
+    re.IGNORECASE | re.DOTALL,
+)
+_FIGURE_FOLLOWED_BY_CAP_RE = re.compile(
+    r'(<figure class="md-figure"><img\b[^>]*></figure>)'
+    r'\s*<p>(?P<cap>(?:[^<]|<(?!/?p\b))*)</p>',
     re.IGNORECASE | re.DOTALL,
 )
 _FIGURE_CAP_RE = re.compile(
@@ -7148,85 +7150,101 @@ _FIGURE_CAP_RE = re.compile(
 )
 
 
+def _peel_outer_em(s: str) -> str:
+    """If ``s`` is wrapped in a single ``<em>…</em>`` (or fragmented
+    sibling ``<em>``s as the multi-segment captions emit), peel the
+    outer italic layer so the figcaption isn't double-italicised by
+    CSS. Conservative — leaves the string as-is when ambiguous.
+    """
+    m = re.match(r'^\s*<em>(.*)</em>\s*$', s, re.DOTALL)
+    if m and '<em>' not in m.group(1):
+        return m.group(1)
+    if s.count('<em>') > 1:
+        return re.sub(r'</?em>', '', s)
+    return s
+
+
+def _plain_text_prefix(html: str, n: int = 60) -> str:
+    return re.sub(r'<[^>]+>', '', html)[:n].strip()
+
+
+def _build_figcaption(cap_inner: str) -> str:
+    """Take the raw inner HTML of a caption paragraph and return the
+    fully-styled ``<figcaption>`` markup, including the lifted
+    ``[FIGURE 4.1]`` chip when the text starts with one of the
+    recognised keywords.
+    """
+    peeled = _peel_outer_em(cap_inner).strip()
+    label_match = re.match(
+        r'\s*(Figure|Fig\.?|Diagram|Chart|Plot|Table)'
+        r'(?:\s+(\d+(?:\.\d+)*))?\s*'
+        r'(?:[—–\-]\s*)?',
+        peeled,
+        re.IGNORECASE,
+    )
+    if label_match:
+        kind = label_match.group(1).rstrip('.')
+        num = label_match.group(2) or ""
+        rest = peeled[label_match.end():].strip()
+        rest = re.sub(r'^[—–\-]\s*', '', rest)
+        label_text = f'{kind} {num}'.strip()
+        inner = (
+            f'<span class="figcaption-label">{label_text}</span>'
+            f'<span class="figcaption-body">{rest}</span>'
+        )
+        return f'<figcaption>{inner}</figcaption>'
+    return f'<figcaption>{peeled}</figcaption>'
+
+
 def wrap_md_figures(html_body: str) -> str:
-    """Wrap ``<p><img></p>`` blocks in a semantic ``<figure>``. A
-    following italic caption paragraph (recognised by its leading
-    ``Figure``/``Fig.``/``Chart``/``Table`` keyword) is pulled in as
-    ``<figcaption>`` so the chart and its title read as one unit.
+    """Wrap markdown image paragraphs in ``<figure>`` and fold their
+    captions in as ``<figcaption>`` so each chart reads as a discrete
+    content unit.
+
+    Two-pass:
+    1. Inline-caption pass — same-paragraph ``<p><img>caption</p>`` —
+       wraps with caption embedded.
+    2. Image-only pass — leftover ``<p><img></p>`` — wraps without
+       caption.
+    3. Adjacent-caption pass — for each bare ``<figure>`` followed by
+       a ``<p>`` whose text starts with a Figure keyword, fold the
+       caption in.
+
+    Splitting the work avoids consuming non-caption paragraphs along
+    with the image (which would orphan any image that came right
+    after).
     """
     if "<img" not in html_body:
         return html_body
 
-    def _peel_outer_em(s: str) -> str:
-        """If ``s`` is wrapped in a single ``<em>…</em>`` (or fragmented
-        sibling ``<em>``s like the multi-segment captions), peel one
-        outer layer so the figcaption isn't double-italicised by CSS.
-        Conservative: leaves the string as-is when the structure is
-        ambiguous.
-        """
-        # Drop leading/trailing single em pair only; deeper structure
-        # is left for CSS to handle.
-        m = re.match(r'^\s*<em>(.*)</em>\s*$', s, re.DOTALL)
-        if m and '<em>' not in m.group(1):
-            return m.group(1)
-        # Fragmented case: convert all <em>/</em> to plain (CSS makes
-        # the whole figcaption italic; nested emphasis can't be
-        # distinguished from the surrounding italic anyway).
-        if s.count('<em>') > 1:
-            return re.sub(r'</?em>', '', s)
-        return s
-
-    def _plain_text_prefix(html: str, n: int = 60) -> str:
-        return re.sub(r'<[^>]+>', '', html)[:n].strip()
-
-    def _sub(m: re.Match) -> str:
-        # Two regex branches share the same handler. Pull whichever
-        # group matched.
-        img_tag = m.group("imgA") or m.group("imgB") or ""
-        # For shape A, the caption lives in a *following* paragraph
-        # (cap_inner is the inner text of that <p>); for shape B, the
-        # caption is the residual text inside the same <p> that holds
-        # the <img>.
-        cap_inner = (
-            (m.group("capA") if m.group("imgA") else m.group("capB")) or ""
-        ).strip()
-        # Only fold the caption in if its plain-text prefix starts
-        # with a Figure/Fig./Chart/etc. keyword. Otherwise it's body
-        # prose that happens to follow the image.
+    # Pass 1 — same-paragraph caption (inline).
+    def _sub_inline(m: re.Match) -> str:
+        img_tag = m.group("img")
+        cap_inner = (m.group("cap") or "").strip()
         if cap_inner and _FIGURE_CAP_RE.match(_plain_text_prefix(cap_inner)):
-            peeled = _peel_outer_em(cap_inner).strip()
-            # Lift the leading ``Figure X.Y`` (or ``Fig.``/``Chart``…)
-            # token into its own styled span so it reads as a label, not
-            # as part of the caption sentence. The em-dash separator and
-            # everything after stay in italic muted body.
-            label_match = re.match(
-                r'\s*(Figure|Fig\.?|Diagram|Chart|Plot|Table)'
-                r'(?:\s+(\d+(?:\.\d+)*))?\s*'
-                r'(?:[—–\-]\s*)?',
-                peeled,
-                re.IGNORECASE,
+            return (
+                f'<figure class="md-figure">{img_tag}'
+                f'{_build_figcaption(cap_inner)}'
+                f'</figure>'
             )
-            if label_match:
-                kind = label_match.group(1).rstrip('.')
-                num = label_match.group(2) or ""
-                rest = peeled[label_match.end():].strip()
-                # Drop a leading "—" from the body that the regex already
-                # consumed, in case the variant didn't trip the dash.
-                rest = re.sub(r'^[—–\-]\s*', '', rest)
-                label_text = f'{kind} {num}'.strip()
-                inner = (
-                    f'<span class="figcaption-label">{label_text}</span>'
-                    f'<span class="figcaption-body">{rest}</span>'
-                )
-                cap_html = f'<figcaption>{inner}</figcaption>'
-            else:
-                cap_html = f'<figcaption>{peeled}</figcaption>'
-            return f'<figure class="md-figure">{img_tag}{cap_html}</figure>'
-        # No caption — just the image. Keep the trailing paragraph as-is.
-        rest = m.group(2) or ""
-        return f'<figure class="md-figure">{img_tag}</figure>{rest}'
+        return m.group(0)  # not a figure caption — leave as-is
+    html_body = _MD_IMG_INLINE_CAP_RE.sub(_sub_inline, html_body)
 
-    return _MD_IMG_PARA_RE.sub(_sub, html_body)
+    # Pass 2 — bare image paragraphs.
+    def _sub_only(m: re.Match) -> str:
+        return f'<figure class="md-figure">{m.group("img")}</figure>'
+    html_body = _MD_IMG_ONLY_RE.sub(_sub_only, html_body)
+
+    # Pass 3 — fold an adjacent caption paragraph into the figure.
+    def _sub_adj(m: re.Match) -> str:
+        figure = m.group(1)
+        cap_inner = (m.group("cap") or "").strip()
+        if cap_inner and _FIGURE_CAP_RE.match(_plain_text_prefix(cap_inner)):
+            # Re-open the figure tag and inject the caption before </figure>.
+            return figure[:-len('</figure>')] + _build_figcaption(cap_inner) + '</figure>'
+        return m.group(0)  # next paragraph isn't a caption — leave both as-is
+    html_body = _FIGURE_FOLLOWED_BY_CAP_RE.sub(_sub_adj, html_body)
+    return html_body
 
 
 def build_page(page: dict) -> Path:

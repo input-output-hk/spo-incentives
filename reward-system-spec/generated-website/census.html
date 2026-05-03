@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777819438">
+<link rel="stylesheet" href="assets/site.css?v=1777819637">
 
 
 </head>
@@ -743,7 +743,7 @@ window.MathJax = {
 <p>Part of the churn is driven by <strong>entity-level dynamics</strong>. The entity lifecycle analysis (<a href="sub-flows/census/mainnet-analysis/data/entity_lifecycle_623.csv"><code>data/entity_lifecycle_623.csv</code></a>) classifies the 85 named entities into four phases — <strong>dead, declining, stable, and growing</strong> — based on their stake trajectory and productive-pool retention.</p>
 <p>Declining and dead entities contract their pool fleets, <strong>feeding the exit side</strong>; growing entities and new single-pool operators <strong>feed the entry side</strong>. The entity-level decline trajectories are visualised in the figures below.</p>
 <figure class="md-figure"><img alt="Entity lifecycle — declining entities" src="sub-flows/census/mainnet-analysis/figures/entity_lifecycle_decline.png"></figure>
-<p><img alt="Entity lifecycle — growing entities" src="sub-flows/census/mainnet-analysis/figures/entity_lifecycle_growth.png"></p>
+<figure class="md-figure"><img alt="Entity lifecycle — growing entities" src="sub-flows/census/mainnet-analysis/figures/entity_lifecycle_growth.png"></figure>
 <h4 id="353-cohort-decomposition-who-holds-the-productive-set">3.5.3. Cohort decomposition — who holds the productive set?</h4>
 <p>The entries-and-exits view (<a href="#351-entries-and-exits">Entries and exits</a>) treats the productive pool set as a <strong>homogeneous stock</strong>. This section decomposes it into two populations — pools operated by <strong>identified multi-pool entities</strong> and <strong>single-pool operators</strong> — and tracks each cohort's pool count and stake share across the full history.</p>
 <p>The underlying data is in <a href="sub-flows/census/mainnet-analysis/data/cohort_population_dynamics.csv"><code>data/cohort_population_dynamics.csv</code></a>, derived by subtracting the per-epoch entity aggregate (<a href="sub-flows/census/mainnet-analysis/data/entity_stake_history.csv"><code>data/entity_stake_history.csv</code></a>) from the productive totals in <a href="sub-flows/census/mainnet-analysis/data/operator_landscape_history.csv"><code>data/operator_landscape_history.csv</code></a>.</p>
@@ -2296,6 +2296,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777819438"></script>
+<script src="assets/site.js?v=1777819637"></script>
 </body>
 </html>
