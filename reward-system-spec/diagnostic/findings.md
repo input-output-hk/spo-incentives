@@ -83,7 +83,7 @@ yield on pledge capital tops out at 0.68%/yr, below passive delegation, and
 The pool landscape is stratified into four tiers far from the $k = 500$
 target (O3): 73% of pools sit below viability and only 8 reach saturation.
 Multi-pool operators control 75% of staked supply (O4): 85 MPO entities hold
-16.4B ADA, and 41 of the 48 capital-sufficient MPOs are non-compliant.
+16.4B ADA, and 41 of the 48 saturation-scale MPOs are non-compliant.
 
 The independent operator base has collapsed to 283 viable operators once MPO
 fleets are removed (O5). The incentive-responsive field — the portion of the
@@ -115,7 +115,7 @@ observations:
 
 The intra-pool split fails at both ends. **Operator viability is not
 guaranteed:** no single-pool operator in the retail market earns a competitive
-wage (O6). A sub-viable operator absorbs 48.3% of pool rewards yet earns
+wage (O6). A sub-reliable operator absorbs 48.3% of pool rewards yet earns
 24,820 ₳/yr; an 11+ pool MPO absorbs 7.7% yet earns 1,035,496 ₳/yr — 42× more
 revenue at 6× less effective price. The flat fee follows a $1/\sigma$ hyperbola
 (O1) that creates a corridor between the production threshold (~1M ₳) and the

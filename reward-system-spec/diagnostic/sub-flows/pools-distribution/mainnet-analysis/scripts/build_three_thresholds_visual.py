@@ -79,8 +79,8 @@ def main():
 
     tier_names = [
         "Dormant",
-        "Sub-production",
-        "Sub-viable",
+        "Sub-block",
+        "Sub-reliable",
         "Healthy",
         "Large healthy",
         "Near-saturation",
@@ -89,8 +89,8 @@ def main():
     ]
     tier_colors = [
         GREY_DARK,       # Dormant
-        DAWN,            # Sub-production
-        INFARED,         # Sub-viable
+        DAWN,            # Sub-block
+        INFARED,         # Sub-reliable
         ACID_GREEN,      # Healthy
         TEAL,            # Large healthy
         SOLAR_AMBER,     # Near-saturation
@@ -112,13 +112,13 @@ def main():
     pct_pools = [c / n  * 100 for c in counts]
     pct_stake = [s / total * 100 for s in stake_sums]
 
-    # ── Which tiers have the three named thresholds as their upper bound ──
-    # Production=1M  → upper bound of Sub-production  (tier idx 1)
-    # Viability=3M   → upper bound of Sub-viable       (tier idx 2)
-    # Saturation=z0  → upper bound of Saturated        (tier idx 6)
+    # ── Which tiers have the named thresholds as their upper bound ──
+    # Production threshold=3M (95% prob of ≥1 block / λ=3)  →  lower bound of Healthy tier  (tier idx 2)
+    # Saturation cap=z0  →  upper bound of Saturated  (tier idx 6)
+    # The 1M / λ=1 line is a sub-point inside Sub-block but is not labelled —
+    # we don't draw a viability line either: viability is volatile (see §4.1.2.2).
     threshold_after = {
-        1: ("Production\nthreshold",  "1M ADA",  DAWN),
-        2: ("Viability\nthreshold",   "3M ADA",  INFARED),
+        2: ("Production\nthreshold",   "3M ADA",  INFARED),
         6: ("Saturation\nthreshold", f"{z0/1e6:.0f}M ADA", ULTRAVIOLET),
     }
 
@@ -256,7 +256,7 @@ def main():
 
     # ── Insight footer ──────────────────────────────────────────────────
     insight = (
-        f"{sum(counts[:3]):,} pools ({sum(pct_pools[:3]):.0f}%) sit below the Viability threshold"
+        f"{sum(counts[:3]):,} pools ({sum(pct_pools[:3]):.0f}%) sit below the production threshold (3M)"
         f" — yet hold only {sum(pct_stake[:3]):.1f}% of active stake"
     )
     fig.text(0.5, 0.005, insight,

@@ -1,0 +1,56 @@
+diagnostic: production-threshold framing, viability moved to dedicated section, tier rename, figure captions, doc cleanup
+
+Production threshold = ~3M ADA canonical (95% probability of producing
+>=1 block per epoch). Reasoning made self-sufficient in §4.1.2.1 with
+binomial math (P(0 blocks) = e^(-lambda)).
+
+Viability moved to a dedicated section (§4.1.2.2) and treated as
+orders-of-magnitude only: real operator cost = infrastructure
+(~$1,320-3,240/yr) + DevOps labour (~$5,160/yr min) ~= $7,160/yr,
+fiat-denominated, ADA/USD-dependent. At today's prices ($0.25 ADA),
+viability coincides with the production threshold (~3M); falls below
+when ADA appreciates. Volatile, so not drawn elsewhere as a fixed line.
+
+Tier rename (Option A): Sub-production -> Sub-block, Sub-viable ->
+Sub-reliable. Each tier now named by what production-reliability bar
+it fails to clear. Scripts updated and figures regenerated.
+
+POL.O3 restructured to 5 findings: physics threshold, economics
+viability, formula saturation, design-goal collapse, dynamic boundaries.
+POL.O4 inserted (pool population shape + entity-lens necessity);
+old POL.O4-O6 renumbered to POL.O5-O7 (~110 cross-refs across 10
+.md files).
+
+Capital-sufficient/insufficient terminology renamed to saturation-scale
+/ sub-saturation across 12 docs + 5 visualization scripts; figures
+regenerated. "Capital class" column -> "Scale class".
+
+Numbering and accessibility:
+  - All 18 figures in pools-distribution numbered Figure x.x with
+    captions
+  - Bare §N litanies replaced with descriptive link labels
+  - V2-spec forward links purged from pools-distribution (the
+    diagnostic should not link forward to V2 proposals)
+  - CV / coefficient-of-variation jargon kept only in dedicated body
+    explanation (§4.1.2.1); observation cells and findings use plain
+    language ("95% probability of >=1 block per epoch")
+
+POL.O1, POL.O2, POL.O3 findings rewritten for accessibility:
+each leads with a plain-language headline claim, technical numbers
+follow as support. POL.O1 title now names the two causes
+(participation gap + unused pledge-incentive budget). POL.O2 title
+notes pledge is unused at scale and structurally unfair across pool
+sizes; three new algebraic findings (F4-F6) added from the §3.4.3
+A(nu, pi) anatomy now imported into the diagnostic.
+
+Census §3.3 surfaces on-chain vs off-chain attribution split:
+on-chain alone catches 4 entities, off-chain layered attribution
+catches 85 — a ~20x jump (CEN.O1.F9). Pools-distribution §4.2.1
+now defers to the Census doc for entity-attribution methodology
+rather than duplicating it.
+
+Side fixes: stale §3 self-reference replaced with §4 link, orphan
+"this framing is incomplete" callout merged into surrounding
+prose, §3.6.1 structure split so the IMPORTANT key-observation
+no longer absorbs the per-finding callouts, §4.2 link cluster
+redirected from V2-spec section titles to local §4.2.x anchors.

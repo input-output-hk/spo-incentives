@@ -191,7 +191,7 @@ def historical_pledge_ada(pool_id, epoch_no, pledge_timelines):
 
 # ── Tier definitions (shared) ──
 TIER_NAMES = [
-    "Dormant", "Sub-production", "Sub-viable", "Healthy",
+    "Dormant", "Sub-block", "Sub-reliable", "Healthy",
     "Large healthy", "Near-saturation", "Saturated", "Oversaturated",
 ]
 TIER_COLORS = [
@@ -247,8 +247,7 @@ def draw_butterfly(pools, z0, epoch, title, subtitle, fig_path,
 
     # Threshold markers
     threshold_after = {
-        1: ("Production\nthreshold",  "1M ADA",  DAWN),
-        2: ("Viability\nthreshold",   "3M ADA",  INFARED),
+        2: ("Production\nthreshold",   "3M ADA",  INFARED),
         6: ("Saturation\nthreshold", f"{z0/1e6:.0f}M ADA", ULTRAVIOLET),
     }
 

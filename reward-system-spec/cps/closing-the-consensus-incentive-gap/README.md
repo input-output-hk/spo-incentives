@@ -1,6 +1,6 @@
 ---
 CPS: ???
-Title: Closing the Consensus Incentive Gap
+Title: CPS-2 — Closing the Consensus Incentive Gap
 Category: Ledger
 Status: Draft
 Authors:
@@ -23,11 +23,11 @@ The progression toward that optimum is invisible: at median pledge the bonus add
 
 The dominant strategy at every level — entry, progression, endgame — has converged on **maximising delegation and minimising pledge**, exactly the opposite of what consensus security requires. **95.6%** of the pledge-bonus budget returns to reserve unused — *the single largest addressable inefficiency in the system*, unchanged since Shelley launch.
 
-This CPS formally defines the **consensus incentive gap** at the pool-distribution layer of the reward pipeline. It is grounded in the mainnet evidence documented in the dedicated [Pools Pot Distribution Gaps — Mainnet Analysis](../mainnet-analysis/README.md) sub-report and invites the community to propose solutions through the CIP process.
+This CPS formally defines the **consensus incentive gap** at the pool-distribution layer of the reward pipeline. It is grounded in the mainnet evidence documented in the dedicated [Pools Pot Distribution Gaps — Mainnet Analysis](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md) sub-report and invites the community to propose solutions through the CIP process.
 
 ## Problem
 
-This CPS builds upon the mainnet evidence documented in the dedicated [sub-report: The Pools Pot Distribution Gaps — Mainnet Analysis](../mainnet-analysis/README.md), which provides the full empirical analysis, data, figures, and reproduction scripts behind the findings summarised here.
+This CPS builds upon the mainnet evidence documented in the dedicated [sub-report: The Pools Pot Distribution Gaps — Mainnet Analysis](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md), which provides the full empirical analysis, data, figures, and reproduction scripts behind the findings summarised here.
 
 ### Context
 
@@ -53,7 +53,7 @@ Each player class experiences the game through its own trajectory — entry, pro
 
 ### Observations
 
-The [sub-report](../mainnet-analysis/README.md) documents the following observations at this pipeline stage:
+The [sub-report](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md) documents the following observations at this pipeline stage:
 
 **O1 — The pledge bonus is functionally irrelevant at realistic pledge levels.** At median pledge the bonus adds ~0.006% to rewards — undetectable. Yield on pledge capital (0.68%/yr at best) is below passive delegation yield (~2.3%/yr). 22.1% of the pools pot (~3.4M ADA/epoch) returns to reserve unused because the $a_0$ curve is too flat.
 
@@ -67,7 +67,7 @@ The [sub-report](../mainnet-analysis/README.md) documents the following observat
 
 The pool landscape the reward curve is supposed to shape is fundamentally constrained by a capital base that is half the size the design assumed. $k = 500$ implicitly required near-complete participation. At 56.5%, the target is structurally unreachable — at most 282 pools could saturate (O3). The saturation cap, the core mechanism designed to prevent stake concentration, binds for only 7 pools (O2). The viability threshold acts as a cliff: 73% of pools sit below it, carrying only 2.7% of active stake (O2).
 
-No formula change at this layer can close the participation gap itself — it requires upstream intervention to bring inactive ADA into delegation. But the participation constraint is not a separate problem: it is the playing field on which the incentive game operates, and any solution to the game must account for it. Activating inactive ADA would also interact with reserve sustainability (see companion CPS [*Funding the Protocol Without a Reserve*](../../treasury-and-pool-pots-distribution/cps/README.md)).
+No formula change at this layer can close the participation gap itself — it requires upstream intervention to bring inactive ADA into delegation. But the participation constraint is not a separate problem: it is the playing field on which the incentive game operates, and any solution to the game must account for it. Activating inactive ADA would also interact with reserve sustainability (see companion CPS [*Funding the Protocol Without a Reserve*](../funding-the-protocol-without-a-reserve/README.md)).
 
 The ~17B ADA outside delegation includes exchange-held ADA, governance-inactive holdings, and lost stake. Each category has different activation dynamics — exchange staking policies, governance incentives (CIP-1694), and the lost-stake problem (CPS-0022) — but from the reward curve's perspective they are indistinguishable: absent capital that the mechanism cannot reach.
 
@@ -100,7 +100,7 @@ The curve presents a **double failure**: sub-economic yield **and** removal of t
 The evidence confirms this at scale:
 
 - 82% of MPO-level pledge bonus flows to three entities — two by private choice, one by institutional mandate.
-- 41 of 48 capital-sufficient MPOs choose non-compliance, forfeiting ~550K ADA/epoch collectively.
+- 41 of 48 saturation-scale MPOs choose non-compliance, forfeiting ~550K ADA/epoch collectively.
 - Structural populations (CEX, IVaaS) totalling 7.39B ADA cannot pledge custodied assets — an architectural constraint immune to parameter changes.
 - The incentive-responsive field holds only 36% of active stake.
 - The independent operator base has collapsed to 283 viable operators after removing MPO fleet members, with 78% of their stake non-compliant.

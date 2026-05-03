@@ -2,7 +2,7 @@
 
 This folder evaluates the CIPs that act on the **stake-cap layer** of the Cardano reward pipeline — the reward-eligible pool stake $\sigma'$ that enters the SL-D1 reward formula, *upstream* of the operator/member split that the [fee layer](../operator-delegator/README.md) reshapes.
 
-The two CIPs in scope ([CIP-0050](cip-0050.md), [CIP-0037](cip-0037.md)) target a real broken signal that the [mainnet diagnostic](../../diagnostic/README.md) confirms: pledge is priced as irrelevant by the operator population. POL.O2.F2 — pledge yield (0.68 %/yr) is structurally dominated by passive-delegation yield (~2.3 %/yr); POL.O2.F1 — 78 % of staked ADA sits in pools with pledge ratio < 1 %; POL.O4.F3 — 41 of 48 capital-sufficient MPOs forfeit the bonus. Both CIPs respond by making pledge **binding** on the reward formula — without sufficient pledge, the pool's reward-eligible stake is clipped.
+The two CIPs in scope ([CIP-0050](cip-0050.md), [CIP-0037](cip-0037.md)) target a real broken signal that the [mainnet diagnostic](../../diagnostic/README.md) confirms: pledge is priced as irrelevant by the operator population. POL.O2.F2 — pledge yield (0.68 %/yr) is structurally dominated by passive-delegation yield (~2.3 %/yr); POL.O2.F1 — 78 % of staked ADA sits in pools with pledge ratio < 1 %; POL.O5.F3 — 41 of 48 saturation-scale MPOs forfeit the bonus. Both CIPs respond by making pledge **binding** on the reward formula — without sufficient pledge, the pool's reward-eligible stake is clipped.
 
 **Verdict on both CIPs: no-go, for two stacked reasons.**
 
@@ -20,7 +20,7 @@ The σ′ clip changes *who can earn the V1 reward*; it does not repair what `A`
 - a design that **does not privilege fully-private pools (π = 1)** — the V2 target is not "everyone runs a 100 %-pledged pool";
 - explicit reward for the **balanced-commitment regime (π ≈ 0.5)** — pledge serving as a credible signal *and* the pool remaining open to delegation.
 
-**Capital-capability bias compounds the `A` objection.** By making pledge binding, both CIPs implicitly discriminate by the operator's capital, not by operator quality. Custodial entities (~21 % of productive stake) hold custodied retail funds they legally cannot self-pledge — their reward collapses to the pledge floor regardless of operator quality. Retail small operators (POL.O5.F2 — 78 % of single-pool stake non-compliant at pledge < 2 %) mostly do not have the capital to raise pledge — their only response is reduced reward or exit. The reform rewards the population that *can* pledge and penalises the population that *cannot*, independent of whether the penalised pools produce reliable blocks, serve delegators well, or contribute to decentralisation by any other measure. Even if `A` were repaired, the σ′ primitive on its own would still pressure the wrong segment.
+**Capital-capability bias compounds the `A` objection.** By making pledge binding, both CIPs implicitly discriminate by the operator's capital, not by operator quality. Custodial entities (~21 % of productive stake) hold custodied retail funds they legally cannot self-pledge — their reward collapses to the pledge floor regardless of operator quality. Retail small operators (POL.O6.F2 — 78 % of single-pool stake non-compliant at pledge < 2 %) mostly do not have the capital to raise pledge — their only response is reduced reward or exit. The reform rewards the population that *can* pledge and penalises the population that *cannot*, independent of whether the penalised pools produce reliable blocks, serve delegators well, or contribute to decentralisation by any other measure. Even if `A` were repaired, the σ′ primitive on its own would still pressure the wrong segment.
 
 **Side effect on small-operator viability.** Small retail pools that have attracted delegation in reliance on V1 rules see their σ′ clipped — both operator revenue and delegator ROS drop. This is the *opposite direction* of the V2 [Operator Viability milestone](../../README.md#31-guarantee-operator-viability-across-the-entire-productive-population). A stake-cap instrument that restores pledge-as-signal is legitimate on its own terms, but it should not be deployed without an active viability instrument protecting the low-pledge retail population the stake-cap rule would otherwise penalise.
 
@@ -176,7 +176,7 @@ These are pre-empirical defects: they hold regardless of mainnet data, regardles
 
 **Cast.** Three honest operators, all running pools of different sizes:
 
-- **Bob** runs a Sub-viable 2 M ADA pool ($\nu \approx 0.03$).
+- **Bob** runs a Sub-reliable 2 M ADA pool ($\nu \approx 0.03$).
 - **Charles** runs a Healthy 15 M ADA pool ($\nu \approx 0.222$).
 - **Alice** runs a Saturated 67 M ADA pool ($\nu \approx 0.99$).
 
@@ -287,7 +287,7 @@ The remainder of this folder evaluates the two `σ'`-clipping candidates on thei
 **Design decision — reduced to a single question.** Given the kinship in §1, picking between CIP-0050 and CIP-0037 is essentially **"floor or no floor?"**:
 
 - **No floor (CIP-0050).** Zero-pledge pools collapse to $\sigma' = 0$ — the hardest possible pressure on the custodial-by-extraction segment (21 % of productive stake). One governance parameter $L$.
-- **Floor (CIP-0037).** Zero-pledge pools keep 20 % of V1 capacity — softer landing for Sub-viable tier and below; same clip from Healthy tier up. Two effective governance parameters $(e, \ell)$.
+- **Floor (CIP-0037).** Zero-pledge pools keep 20 % of V1 capacity — softer landing for Sub-reliable tier and below; same clip from Healthy tier up. Two effective governance parameters $(e, \ell)$.
 
 All other properties (monotonicity in pledge, MPO fleet-split penalty on the slope, entity-level §3.4 gap for ceiling-regime pools, §3.1 small-operator viability risk) carry across one-for-one.
 

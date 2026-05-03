@@ -1,15 +1,6 @@
 # MPO Entity Profiles
 
-> Annex to §4.3 of `report/mainnet/pools-distribution/README.md`.
-> Detailed per-entity descriptions grouped by archetype, including
-> historical stake trajectory (epochs 400 / 410 / 584 / 618) and
-> pledge-coverage ratio.
->
-> Last updated: 2026/03/19. Snapshot epoch: 618.
-> Source data: `data/mpo_entity_health_overview_mainnet.csv`,
-> `data/mpo_entity_archetypes.csv`.
-
----
+Annex to the [pools-distribution mainnet analysis](../../../pools-distribution/mainnet-analysis/README.md) — detailed per-entity descriptions grouped by archetype, including historical stake trajectory (epochs 400 / 410 / 584 / 618) and pledge-coverage ratio.
 
 ## Exchange Custody (CEX)
 
@@ -162,192 +153,194 @@ _Pledge coverage:_ 0.83B ₳ delegated / ~742M ₳ pledged = **~1:1** (large sel
 
 The following entities are attributed via `pool_group` or `reward_addr` clustering. They are grouped by sub-type and capital class.
 
-### Capital-sufficient community fleets
+### Saturation-scale community fleets
 
 **Community Branded Fleet**
 
-**ADV** (ADV) — 4 live pools, 263.2M ADA. Tickers: ADV, ADV2, ADV3, ADV4. Sub-type: community_branded_fleet. Capital class: sufficient.
+**ADV** (ADV) — 4 live pools, 263.2M ADA. Tickers: ADV, ADV2, ADV3, ADV4. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=ADV, shared reward_addr=Yes, meta_domain=adavault.com.
 
-**SECUR** (SECUR) — 5 live pools, 234.4M ADA. Tickers: SECUR. Sub-type: community_branded_fleet. Capital class: sufficient.
+**SECUR** (SECUR) — 5 live pools, 234.4M ADA. Tickers: SECUR. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=SECUR, shared reward_addr=Yes, meta_domain=cardano.securestaking.io.
 
-**CCV** (CCV) — 5 live pools, 177.1M ADA. Tickers: CCV, CCV1, CCV2, CCV3, CCV4. Sub-type: community_branded_fleet. Capital class: sufficient.
+**CCV** (CCV) — 5 live pools, 177.1M ADA. Tickers: CCV, CCV1, CCV2, CCV3, CCV4. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=CCV, shared reward_addr=Yes, meta_domain=raw.githubusercontent.com.
 
-**MS4** (MS) — 4 live pools, 155.7M ADA. Tickers: MS4, MS5, MS6, MS9. Sub-type: community_branded_fleet. Capital class: sufficient.
+**MS4** (MS) — 4 live pools, 155.7M ADA. Tickers: MS4, MS5, MS6, MS9. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=MS, shared reward_addr=Yes, meta_domain=git.io.
 
-**TITAN** (TITAN) — 2 live pools, 137.0M ADA. Tickers: TITAN. Sub-type: community_branded_fleet. Capital class: sufficient.
+**TITAN** (TITAN) — 2 live pools, 137.0M ADA. Tickers: TITAN. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=TITAN, shared reward_addr=Yes, meta_domain=titanstaking.io.
 
-**AICHI** (AICHI) — 2 live pools, 123.5M ADA. Tickers: AICHI, TOKAI. Sub-type: community_branded_fleet. Capital class: sufficient.
+**AICHI** (AICHI) — 2 live pools, 123.5M ADA. Tickers: AICHI, TOKAI. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=AICHI, shared reward_addr=Yes, meta_domain=aichi-stakepool.com.
 
-**NEDS1** (NEDS) — 4 live pools, 120.7M ADA. Tickers: NEDS1, NEDS2, NEDS3, NEDS4. Sub-type: community_branded_fleet. Capital class: sufficient.
+**NEDS1** (NEDS) — 4 live pools, 120.7M ADA. Tickers: NEDS1, NEDS2, NEDS3, NEDS4. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=NEDS, shared reward_addr=No, meta_domain=nedscave.io.
 
-**SIPO** (SIPO) — 3 live pools, 114.4M ADA. Tickers: SIPO, SIPO2, SIPO3. Sub-type: community_branded_fleet. Capital class: sufficient.
+**SIPO** (SIPO) — 3 live pools, 114.4M ADA. Tickers: SIPO, SIPO2, SIPO3. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=SIPO, shared reward_addr=Yes, meta_domain=sipo.tokyo.
 
-**SPS** (SPS) — 5 live pools, 104.6M ADA. Tickers: SPS, SPS2, SPS3, SPS4, SPS5. Sub-type: community_branded_fleet. Capital class: sufficient.
+**SPS** (SPS) — 5 live pools, 104.6M ADA. Tickers: SPS, SPS2, SPS3, SPS4, SPS5. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=SPS, shared reward_addr=Yes, meta_domain=stakepoolservice.com.
 
-**PILOT** (PILOT) — 2 live pools, 91.7M ADA. Tickers: PILOT. Sub-type: community_branded_fleet. Capital class: sufficient.
+**PILOT** (PILOT) — 2 live pools, 91.7M ADA. Tickers: PILOT. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=PILOT, shared reward_addr=Yes, meta_domain=raw.githubusercontent.com.
 
-**PAUL1** (PAUL) — 2 live pools, 91.6M ADA. Tickers: PAUL, PAUL1. Sub-type: community_branded_fleet. Capital class: sufficient.
+**PAUL1** (PAUL) — 2 live pools, 91.6M ADA. Tickers: PAUL, PAUL1. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=PAUL, shared reward_addr=Yes, meta_domain=pool.cardanowithpaul.com.
 
-**ACL** (ACL) — 4 live pools, 84.4M ADA. Tickers: ACL. Sub-type: community_branded_fleet. Capital class: sufficient.
+**ACL** (ACL) — 4 live pools, 84.4M ADA. Tickers: ACL. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=ACL, shared reward_addr=Yes, meta_domain=raw.githubusercontent.com.
 
-**CAFE** (CAFE) — 3 live pools, 80.7M ADA. Tickers: CAFE, CAFE2, CAFE3. Sub-type: community_branded_fleet. Capital class: sufficient.
+**CAFE** (CAFE) — 3 live pools, 80.7M ADA. Tickers: CAFE, CAFE2, CAFE3. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=CAFE, shared reward_addr=Yes, meta_domain=cardanocafe.org.
 
-**SASA** (SASA) — 2 live pools, 74.3M ADA. Tickers: SASA, SASA2. Sub-type: community_branded_fleet. Capital class: sufficient.
+**SASA** (SASA) — 2 live pools, 74.3M ADA. Tickers: SASA, SASA2. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=SASA, shared reward_addr=Yes, meta_domain=bit.ly, nagamarupanda.github.io.
 
-**RETIR** (BMTXS_GITHUB_IO) — 3 live pools, 73.8M ADA. Tickers: ADALO, RETIR. Sub-type: community_branded_fleet. Capital class: sufficient.
+**RETIR** (BMTXS_GITHUB_IO) — 3 live pools, 73.8M ADA. Tickers: ADALO, RETIR. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=bmtxs.github.io, shared reward_addr=Yes, meta_domain=raw.githubusercontent.com.
 
-**BCSH** (WESTBERG) — 8 live pools, 69.3M ADA. Tickers: BCSH, BCSH0, BCSH1, BCSH2, BCSH4, BCSH5, BCSH6, NEWMX. Sub-type: community_branded_fleet. Capital class: sufficient.
+**BCSH** (WESTBERG) — 8 live pools, 69.3M ADA. Tickers: BCSH, BCSH0, BCSH1, BCSH2, BCSH4, BCSH5, BCSH6, NEWMX. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=WESTBERG, shared reward_addr=Yes, meta_domain=cardanostakehouse.com.
 
-**ONYX** (ONYX) — 4 live pools, 69.2M ADA. Tickers: ONYX. Sub-type: community_branded_fleet. Capital class: sufficient.
+**ONYX** (ONYX) — 4 live pools, 69.2M ADA. Tickers: ONYX. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=ONYX, shared reward_addr=Yes, meta_domain=onyxstakepool.com.
 
-**BRAVO** (BRAVO) — 2 live pools, 68.3M ADA. Tickers: BRAVO. Sub-type: community_branded_fleet. Capital class: sufficient.
+**BRAVO** (BRAVO) — 2 live pools, 68.3M ADA. Tickers: BRAVO. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=BRAVO, shared reward_addr=Yes, meta_domain=bravostakepool.nl.
 
-**VIPER** (VIPER) — 2 live pools, 68.1M ADA. Tickers: VIPER. Sub-type: community_branded_fleet. Capital class: sufficient.
+**VIPER** (VIPER) — 2 live pools, 68.1M ADA. Tickers: VIPER. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=VIPER, shared reward_addr=Yes, meta_domain=viperstaking.com.
 
-**XSP** (XSP) — 2 live pools, 67.1M ADA. Tickers: XSP, XSP2. Sub-type: community_branded_fleet. Capital class: sufficient.
+**XSP** (XSP) — 2 live pools, 67.1M ADA. Tickers: XSP, XSP2. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=XSP, shared reward_addr=Yes, meta_domain=xstakepool.com.
 
-**PNR39** (STRIXJPN_GITHUB_IO) — 2 live pools, 66.0M ADA. Tickers: PNR39, WBFL. Sub-type: community_branded_fleet. Capital class: sufficient.
+**PNR39** (STRIXJPN_GITHUB_IO) — 2 live pools, 66.0M ADA. Tickers: PNR39, WBFL. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=strixjpn.github.io, shared reward_addr=Yes, meta_domain=strixjpn.github.io.
 
-**SNAKE** (SNAKEPOOL_LINK) — 2 live pools, 63.3M ADA. Tickers: SNAKE. Sub-type: community_branded_fleet. Capital class: sufficient.
+**SNAKE** (SNAKEPOOL_LINK) — 2 live pools, 63.3M ADA. Tickers: SNAKE. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=snakepool.link, shared reward_addr=Yes, meta_domain=asnakep.github.io.
 
-**CNODE** (CNODE) — 4 live pools, 61.3M ADA. Tickers: CNODE, FUND, FUND2, FUND3. Sub-type: community_branded_fleet. Capital class: sufficient.
+**CNODE** (CNODE) — 4 live pools, 61.3M ADA. Tickers: CNODE, FUND, FUND2, FUND3. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=CNODE, shared reward_addr=Yes, meta_domain=cardanode.io.
 
-**STI** (STI) — 3 live pools, 60.9M ADA. Tickers: ADACH, STI, STI2. Sub-type: community_branded_fleet. Capital class: sufficient.
+**STI** (STI) — 3 live pools, 60.9M ADA. Tickers: ADACH, STI, STI2. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=STI, shared reward_addr=Yes, meta_domain=tobg.github.io.
 
-**HODL₳** (HODLA) — 2 live pools, 60.5M ADA. Tickers: HODLA, HODL₳. Sub-type: community_branded_fleet. Capital class: sufficient.
+**HODL₳** (HODLA) — 2 live pools, 60.5M ADA. Tickers: HODLA, HODL₳. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=HODLA, shared reward_addr=Yes, meta_domain=git.io.
 
-**ADAOZ** (LINKTR_EE) — 2 live pools, 58.2M ADA. Tickers: ADAOZ, ENVY. Sub-type: community_branded_fleet. Capital class: sufficient.
+**ADAOZ** (LINKTR_EE) — 2 live pools, 58.2M ADA. Tickers: ADAOZ, ENVY. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=linktr.ee, shared reward_addr=Yes, meta_domain=cardanode.com.au, tinyurl.com.
 
-**TERA** (TERA) — 3 live pools, 52.9M ADA. Tickers: TERA, TERA2, TERA3. Sub-type: community_branded_fleet. Capital class: sufficient.
+**TERA** (TERA) — 3 live pools, 52.9M ADA. Tickers: TERA, TERA2, TERA3. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=TERA, shared reward_addr=Yes, meta_domain=pooltera.github.io.
 
-**ECO** (ECO) — 2 live pools, 50.6M ADA. Tickers: ECO. Sub-type: community_branded_fleet. Capital class: sufficient.
+**ECO** (ECO) — 2 live pools, 50.6M ADA. Tickers: ECO. Sub-type: community_branded_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=ECO, shared reward_addr=Yes, meta_domain=ecopool.io.
 
 **Multi-Brand Fleet**
 
-**CRDNS** (CRDNS) — 9 live pools, 231.2M ADA. Tickers: CRDN, CRDN1, CRDN2, CRDN3, CRDNS, MANDA, POOLS, nan. Sub-type: multi_brand_fleet. Capital class: sufficient.
+**CRDNS** (CRDNS) — 9 live pools, 231.2M ADA. Tickers: CRDN, CRDN1, CRDN2, CRDN3, CRDNS, MANDA, POOLS, nan. Sub-type: multi_brand_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=CRDNS, shared reward_addr=Yes, meta_domain=37.59.55.35, cardanians.io, pool.cardanoyoda.com.
 
-**DAPP** (DAPP) — 8 live pools, 141.2M ADA. Tickers: AZUR, AZUR2, AZUR3, DAPP, LGC, ZILLA, nan. Sub-type: multi_brand_fleet. Capital class: sufficient.
+**DAPP** (DAPP) — 8 live pools, 141.2M ADA. Tickers: AZUR, AZUR2, AZUR3, DAPP, LGC, ZILLA, nan. Sub-type: multi_brand_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=DAPP, shared reward_addr=Yes, meta_domain=apexfusionhosting.com, azureada.com, threenext.com.
 
-**ATADA** (ATADA) — 4 live pools, 130.7M ADA. Tickers: ALPEN, ATAD2, ATADA, EGGS. Sub-type: multi_brand_fleet. Capital class: sufficient.
+**ATADA** (ATADA) — 4 live pools, 130.7M ADA. Tickers: ALPEN, ATAD2, ATADA, EGGS. Sub-type: multi_brand_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=ATADA, shared reward_addr=Yes, meta_domain=stakepool.at, tinyurl.com.
 
-**COOL** (COOL) — 6 live pools, 87.0M ADA. Tickers: CALM, COOL, COOL2, COOL3, COOL4, COOL5. Sub-type: multi_brand_fleet. Capital class: sufficient.
+**COOL** (COOL) — 6 live pools, 87.0M ADA. Tickers: CALM, COOL, COOL2, COOL3, COOL4, COOL5. Sub-type: multi_brand_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=COOL, shared reward_addr=Yes, meta_domain=stakecool.io.
 
-**FIDA** (FIMI) — 9 live pools, 84.7M ADA. Tickers: AMZ1, ANCO, AOTA, BOOM, ELLY7, FIDA, FIMI, GRAB, nan. Sub-type: multi_brand_fleet. Capital class: sufficient.
+**FIDA** (FIMI) — 9 live pools, 84.7M ADA. Tickers: AMZ1, ANCO, AOTA, BOOM, ELLY7, FIDA, FIMI, GRAB, nan. Sub-type: multi_brand_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=FIMI, shared reward_addr=Yes, meta_domain=bit.ly, git.io, tinyurl.com.
 
-**ISP** (WEP) — 6 live pools, 84.0M ADA. Tickers: CTAX, DGK, ISP, PSPJ, RANKT, WEP. Sub-type: multi_brand_fleet. Capital class: sufficient.
+**ISP** (WEP) — 6 live pools, 84.0M ADA. Tickers: CTAX, DGK, ISP, PSPJ, RANKT, WEP. Sub-type: multi_brand_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=WEP, shared reward_addr=Yes, meta_domain=bit.ly, ranket2.github.io.
 
-**FREE** (ITC) — 5 live pools, 79.9M ADA. Tickers: ALLIN, FREE, ITC, ITC2, ITC3. Sub-type: multi_brand_fleet. Capital class: sufficient.
+**FREE** (ITC) — 5 live pools, 79.9M ADA. Tickers: ALLIN, FREE, ITC, ITC2, ITC3. Sub-type: multi_brand_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=ITC, shared reward_addr=Yes, meta_domain=git.io, raw.githubusercontent.com, tinyurl.com.
 
-**HOPE** (JOY) — 9 live pools, 78.6M ADA. Tickers: CCJ, CCJ2, CCJ3, CCJ4, CCJ5, HOPE, HOPE2, JOY, JOY2. Sub-type: multi_brand_fleet. Capital class: sufficient.
+**HOPE** (JOY) — 9 live pools, 78.6M ADA. Tickers: CCJ, CCJ2, CCJ3, CCJ4, CCJ5, HOPE, HOPE2, JOY, JOY2. Sub-type: multi_brand_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=JOY, shared reward_addr=Yes, meta_domain=cardano.ipclub29.com.
 
 **Opaque Fleet**
 
-**NORTH** (NORTH) — 5 live pools, 363.1M ADA. Tickers: NORTH. Sub-type: opaque_fleet. Capital class: sufficient.
+**NORTH** (NORTH) — 5 live pools, 363.1M ADA. Tickers: NORTH. Sub-type: opaque_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=NORTH, shared reward_addr=No, meta_domain=bit.ly.
 
-**DIGI** (DIGI) — 6 live pools, 170.9M ADA. Tickers: DIGI, DIGI2, DIGI3, DIGI4, DIGI5, DIGI6. Sub-type: opaque_fleet. Capital class: sufficient.
+**DIGI** (DIGI) — 6 live pools, 170.9M ADA. Tickers: DIGI, DIGI2, DIGI3, DIGI4, DIGI5, DIGI6. Sub-type: opaque_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=DIGI, shared reward_addr=No, meta_domain=digi.pro.
 
-**EDEN** (EDEN) — 5 live pools, 170.7M ADA. Tickers: EDEN. Sub-type: opaque_fleet. Capital class: sufficient.
+**EDEN** (EDEN) — 5 live pools, 170.7M ADA. Tickers: EDEN. Sub-type: opaque_fleet. Scale class: saturation-scale.
 _Signals:_ pool_group=EDEN, shared reward_addr=No, meta_domain=garden-pool.com.
 
-### Capital-insufficient community fleets
+### Sub-saturation community fleets
 
 **Community Branded Fleet**
 
-**ATLAS** (ATLAS) — 2 live pools, 48.6M ADA. Tickers: ATLAS. Sub-type: community_branded_fleet. Capital class: insufficient.
+**ATLAS** (ATLAS) — 2 live pools, 48.6M ADA. Tickers: ATLAS. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=ATLAS, shared reward_addr=Yes, meta_domain=atlasstakepool.com.
 
-**STSH1** (AWP) — 3 live pools, 47.5M ADA. Tickers: STSH1, STSH2, STSH3. Sub-type: community_branded_fleet. Capital class: insufficient.
+**STSH1** (AWP) — 3 live pools, 47.5M ADA. Tickers: STSH1, STSH2, STSH3. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=AWP, shared reward_addr=Yes, meta_domain=services.atomicwallet.io.
 
-**SUNNY** (SUNNY) — 2 live pools, 45.3M ADA. Tickers: SUNNY. Sub-type: community_branded_fleet. Capital class: insufficient.
+**SUNNY** (SUNNY) — 2 live pools, 45.3M ADA. Tickers: SUNNY. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=SUNNY, shared reward_addr=Yes, meta_domain=metadata.sunshinestakepool.com.
 
-**HRMS** (HRMS) — 2 live pools, 44.3M ADA. Tickers: HRMS, nan. Sub-type: community_branded_fleet. Capital class: insufficient.
+**HRMS** (HRMS) — 2 live pools, 44.3M ADA. Tickers: HRMS, nan. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=HRMS, shared reward_addr=Yes, meta_domain=hermes-stakepool.com.
 
-**KIWI** (KIWI) — 3 live pools, 40.6M ADA. Tickers: KIWI, RAMEN. Sub-type: community_branded_fleet. Capital class: insufficient.
+**KIWI** (KIWI) — 3 live pools, 40.6M ADA. Tickers: KIWI, RAMEN. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=KIWI, shared reward_addr=Yes, meta_domain=tinyurl.com.
 
-**ZETE** (ZETIC) — 2 live pools, 39.2M ADA. Tickers: ZETE, ZETE2. Sub-type: community_branded_fleet. Capital class: insufficient.
+**ZETE** (ZETIC) — 2 live pools, 39.2M ADA. Tickers: ZETE, ZETE2. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=ZETIC, shared reward_addr=Yes, meta_domain=zetetic.tech.
 
-**KTO** (KTO) — 10 live pools, 38.0M ADA. Tickers: CRBN, CRTR, KDK, KTO, MORH, MPOL, SMBU1, nan. Sub-type: community_branded_fleet. Capital class: insufficient.
+**KTO** (KTO) — 10 live pools, 38.0M ADA. Tickers: CRBN, CRTR, KDK, KTO, MORH, MPOL, SMBU1, nan. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=KTO, shared reward_addr=Yes, meta_domain=agoodaycoffee.com, bit.ly, git.io, raw.githubusercontent.com, tinyurl.com.
 
-**ADBV** (ADASTRONG_COM) — 2 live pools, 37.8M ADA. Tickers: ADAST, ADBV. Sub-type: community_branded_fleet. Capital class: insufficient.
+**ADBV** (ADASTRONG_COM) — 2 live pools, 37.8M ADA. Tickers: ADAST, ADBV. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=adastrong.com, shared reward_addr=Yes, meta_domain=adastrong.com.
 
-**4ADA** (4ADA) — 2 live pools, 37.8M ADA. Tickers: 4ADA, F4ADA. Sub-type: community_branded_fleet. Capital class: insufficient.
+**4ADA** (4ADA) — 2 live pools, 37.8M ADA. Tickers: 4ADA, F4ADA. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=4ADA, shared reward_addr=Yes, meta_domain=staking4ada.org.
 
-**NKR** (NKR) — 3 live pools, 36.1M ADA. Tickers: NKR, WWW, ZENA. Sub-type: community_branded_fleet. Capital class: insufficient.
+**NKR** (NKR) — 3 live pools, 36.1M ADA. Tickers: NKR, WWW, ZENA. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=NKR, shared reward_addr=Yes, meta_domain=git.io, raw.githubusercontent.com, tinyurl.com.
 
-**KAIZN** (KAIZN) — 4 live pools, 34.5M ADA. Tickers: KAIZN, KOBE, KRONO, KRSNA. Sub-type: community_branded_fleet. Capital class: insufficient.
+**KAIZN** (KAIZN) — 4 live pools, 34.5M ADA. Tickers: KAIZN, KOBE, KRONO, KRSNA. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=KAIZN, shared reward_addr=Yes, meta_domain=meta.pools.pm.
 
-**MUEN** (MUEN) — 3 live pools, 34.2M ADA. Tickers: MUEN, MUEN2, MUEN3. Sub-type: community_branded_fleet. Capital class: insufficient.
+**MUEN** (MUEN) — 3 live pools, 34.2M ADA. Tickers: MUEN, MUEN2, MUEN3. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=MUEN, shared reward_addr=Yes, meta_domain=muen718.github.io.
 
-**COFFE** (COFFEEPOOL_JP) — 2 live pools, 33.7M ADA. Tickers: COFFE, KISSA. Sub-type: community_branded_fleet. Capital class: insufficient.
+**COFFE** (COFFEEPOOL_JP) — 2 live pools, 33.7M ADA. Tickers: COFFE, KISSA. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=coffeepool.jp, shared reward_addr=Yes, meta_domain=coffeepool.jp.
 
-**ELITE** (ELITE) — 2 live pools, 31.9M ADA. Tickers: ELITE. Sub-type: community_branded_fleet. Capital class: insufficient.
+**ELITE** (ELITE) — 2 live pools, 31.9M ADA. Tickers: ELITE. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=ELITE, shared reward_addr=Yes, meta_domain=elitestakepool.com.
 
-**WAFFLEPOOL_ORG** (WAFFLEPOOL_ORG) — 2 live pools, 31.8M ADA. Tickers: WFFL, nan. Sub-type: community_branded_fleet. Capital class: insufficient.
+**WAFFLEPOOL_ORG** (WAFFLEPOOL_ORG) — 2 live pools, 31.8M ADA. Tickers: WFFL, nan. Sub-type: community_branded_fleet. Scale class: sub-saturation.
 _Signals:_ pool_group=wafflepool.org, shared reward_addr=Yes, meta_domain=raw.githubusercontent.com, wafflepool-cardano.github.io.
 
 **Protocol/DeFi Project**
 
-**LQWD** (LIQWID) — 2 live pools, 47.4M ADA. Tickers: LQWD. Sub-type: protocol_project. Capital class: insufficient.
+**LQWD** (LIQWID) — 2 live pools, 47.4M ADA. Tickers: LQWD. Sub-type: protocol_project. Scale class: sub-saturation.
 _Signals:_ pool_group=LIQWID, shared reward_addr=Yes, meta_domain=lqwdpool.s3.amazonaws.com.
 
-**XRAY1** (RAY) — 8 live pools, 45.7M ADA. Tickers: XRAY1, XRAY2, XRAY3, XRAY4, XRAY5, XRAY6, XRAY7, XRAY8. Sub-type: protocol_project. Capital class: insufficient.
+**XRAY1** (RAY) — 8 live pools, 45.7M ADA. Tickers: XRAY1, XRAY2, XRAY3, XRAY4, XRAY5, XRAY6, XRAY7, XRAY8. Sub-type: protocol_project. Scale class: sub-saturation.
 _Signals:_ pool_group=RAY, shared reward_addr=Yes, meta_domain=xray.app.
 
-**IBEX** (IBEX) — 3 live pools, 44.3M ADA. Tickers: BASHO, IBEX, RKD. Sub-type: protocol_project. Capital class: insufficient.
+**IBEX** (IBEX) — 3 live pools, 44.3M ADA. Tickers: BASHO, IBEX, RKD. Sub-type: protocol_project. Scale class: sub-saturation.
 _Signals:_ pool_group=IBEX, shared reward_addr=Yes, meta_domain=ada.ibexpool.com, ibexpool.com.
 
-**DNEWS** (DNEWS) — 2 live pools, 39.7M ADA. Tickers: DNEWS. Sub-type: protocol_project. Capital class: insufficient.
+**DNEWS** (DNEWS) — 2 live pools, 39.7M ADA. Tickers: DNEWS. Sub-type: protocol_project. Scale class: sub-saturation.
 _Signals:_ pool_group=DNEWS, shared reward_addr=Yes, meta_domain=raw.githubusercontent.com.
+
+> **Status** — Last updated 2026/03/19. Snapshot epoch: 618. Source data: `data/mpo_entity_health_overview_mainnet.csv`, `data/mpo_entity_archetypes.csv`.
 
 

@@ -131,7 +131,7 @@ def main() -> None:
     with_stake = [p for p in registered if p.active_stake > 0]
     viability = 3_000_000  # 3M ADA
     healthy = [p for p in with_stake if p.active_stake >= viability]
-    below_viability = [p for p in with_stake if p.active_stake < viability]
+    below_healthy_floor = [p for p in with_stake if p.active_stake < viability]
 
     # Saturation stats
     near_sat_80 = [p for p in with_stake if p.active_stake >= z0 * 0.80]
@@ -208,8 +208,8 @@ def main() -> None:
         "healthy_pools": len(healthy),
         "healthy_stake_ada": healthy_stake,
         "healthy_stake_pct": healthy_stake / total_stake * 100 if total_stake > 0 else 0,
-        "below_viability_pools": len(below_viability),
-        "below_viability_stake_pct": (total_stake - healthy_stake) / total_stake * 100 if total_stake > 0 else 0,
+        "below_healthy_floor_pools": len(below_healthy_floor),
+        "below_healthy_floor_stake_pct": (total_stake - healthy_stake) / total_stake * 100 if total_stake > 0 else 0,
         "near_sat_80_pools": len(near_sat_80),
         "saturated_pools": len(saturated),
         "oversaturated_pools": len(over_sat),
@@ -245,7 +245,7 @@ def main() -> None:
         f.write(f"| Registered pools | **{len(registered):,}** |\n")
         f.write(f"| Pools with stake | **{len(with_stake):,}** |\n")
         f.write(f"| Healthy pools (≥3M) | **{len(healthy)}** (carry {healthy_stake / total_stake * 100:.1f}% of stake) |\n")
-        f.write(f"| Below viability (<3M) | **{len(below_viability):,}** |\n")
+        f.write(f"| Below healthy floor (<3M) | **{len(below_healthy_floor):,}** |\n")
         f.write(f"| Near-saturation (≥80% z₀) | **{len(near_sat_80)}** |\n")
         f.write(f"| At/above saturation | **{len(saturated)}** |\n")
         f.write(f"| Max saturable pools | **{max_sat}** |\n")

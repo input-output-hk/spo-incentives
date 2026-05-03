@@ -111,7 +111,7 @@ def main():
     T_bounds = [0, 100e3, 1e6, 3e6, z0 * 0.5, z0 * 0.8, z0 * 0.95, z0 * 1.05, np.inf]
 
     tier_names = [
-        "Dormant", "Sub-production", "Sub-viable", "Healthy",
+        "Dormant", "Sub-block", "Sub-reliable", "Healthy",
         "Large healthy", "Near-saturation", "Saturated", "Oversaturated",
     ]
     tier_colors = [
@@ -151,8 +151,7 @@ def main():
 
     # ── Threshold markers ──
     threshold_after = {
-        1: ("Production\nthreshold",  "1M ADA",  DAWN),
-        2: ("Viability\nthreshold",   "3M ADA",  INFARED),
+        2: ("Production\nthreshold",   "3M ADA",  INFARED),
         6: ("Saturation\nthreshold", f"{z0/1e6:.0f}M ADA", ULTRAVIOLET),
     }
 

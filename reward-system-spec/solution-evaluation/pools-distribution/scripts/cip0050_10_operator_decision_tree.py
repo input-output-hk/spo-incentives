@@ -108,7 +108,7 @@ box(8.7, 3.0, 3.5, 1.4,
 # Bottom note
 ax.text(6.5, 1.3,
         'Only options 1 and 4 are available to every operator.\n'
-        'Options 2 and 3 depend on having capital to lock (POL.O4.F3: 41/48 capital-sufficient MPOs\n'
+        'Options 2 and 3 depend on having capital to lock (POL.O4.F3: 41/48 saturation-scale MPOs\n'
         'already decline, revealed preference) or on accepting a smaller pool in a clipped market.',
         ha='center', va='center', fontsize=9.5, color=NEUTRAL, fontweight='normal',
         bbox=dict(facecolor='#f7f7f7', edgecolor=NEUTRAL, pad=10, boxstyle='round,pad=0.4'))

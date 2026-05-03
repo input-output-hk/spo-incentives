@@ -1,10 +1,6 @@
 # Entities
 
-> Centralised entity research for the SPO Incentives analysis.
-> Referenced from pools distribution, operator-delegator distribution, and the
-> main report.
->
-> Last updated: 2026/04/08. Snapshot epoch: 618.
+This folder is the **centralised entity research** for the SPO Incentives analysis. It is referenced from pools distribution, operator-delegator distribution, and the main report.
 
 ## The landscape at a glance
 
@@ -28,8 +24,8 @@ operators** (see `single-spo/`).
 | Platform / wallet | 2 | Wallet-mediated delegation (NuFi, Adalite) |
 | Opaque / unresolved | 1 | Unclassified |
 
-**By capital class:** 48 capital-sufficient entities (could pledge at scale)
-vs 37 capital-insufficient (cannot). Of the 48 sufficient, 41 are
+**By capital class:** 48 saturation-scale entities (could pledge at scale)
+vs 37 sub-saturation (cannot). Of the 48 sufficient, 41 are
 non-compliant — a revealed preference, not a calibration gap.
 
 Detailed per-entity narrative profiles are in
@@ -68,7 +64,7 @@ Per-entity research cards with web-sourced business context are in
 | `mpo_entity_summary_mainnet.csv` | Per-entity summary metrics | 618 |
 | `mpo_entity_health_overview_mainnet.csv` | Per-entity health status across categories | 618 |
 | `mpo_entity_pool_health_mainnet.csv` | Pool-level health details for entity pools | 618 |
-| `mainnet_entity_owner_capital_status_quo.csv` | Capital-sufficiency classification | 618 |
+| `mainnet_entity_owner_capital_status_quo.csv` | Scale class classification | 618 |
 | `entity_profile_hollow_competitive.csv` | Entity profile cards for hollow × competitive cell | 618 |
 
 ## Cross-references
@@ -77,3 +73,5 @@ Several scripts in `sub-flows/pools-distribution/mainnet-analysis/scripts/`
 consume entity data from this folder (via `ENTITY_DATA` path). The entity
 data is authoritative here; pools-distribution scripts read it, not the
 reverse.
+
+> **Status** — Last updated 2026/04/08. Snapshot epoch: 618.

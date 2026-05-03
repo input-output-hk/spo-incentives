@@ -49,7 +49,7 @@ STANCE_COLORS = {
     "non_compliant": "#E52321",
 }
 STANCE_LABELS = {
-    "cant_play":     "Can't play (capital-insufficient)",
+    "cant_play":     "Can't play (sub-saturation)",
     "exemplary":     "Exemplary (≥80%)",
     "compliant":     "Compliant (30–80%)",
     "marginal":      "Marginal (2–30%)",
@@ -131,7 +131,7 @@ def main():
     # Tier definitions
     T_bounds = [0, 100e3, 1e6, 3e6, z0 * 0.5, z0 * 0.8, z0 * 0.95, z0 * 1.05, np.inf]
     tier_names = [
-        "Dormant", "Sub-production", "Sub-viable", "Healthy",
+        "Dormant", "Sub-block", "Sub-reliable", "Healthy",
         "Large healthy", "Near-saturation", "Saturated", "Oversaturated",
     ]
     tier_colors = [
@@ -161,8 +161,7 @@ def main():
             pct_stake_by_stance[t][s] = tier_stance_stake[t][s] / total_staked * 100
 
     threshold_after = {
-        1: ("Production\nthreshold",  "1M ADA",  DAWN),
-        2: ("Viability\nthreshold",   "3M ADA",  INFARED),
+        2: ("Production\nthreshold",   "3M ADA",  INFARED),
         6: ("Saturation\nthreshold", f"{z0/1e6:.0f}M ADA", ULTRAVIOLET),
     }
 
@@ -304,8 +303,8 @@ def main():
     nc_pct = nc_viable / viable_total * 100 if viable_total > 0 else 0
 
     fig.text(0.5, 0.015,
-             f"Among capital-sufficient MPO pools, non-compliant red still holds {nc_pct:.0f}% of viable-and-above stake. "
-             f"Ochre isolates capital-insufficient fleets that cannot fully play the saturation-scale pledge game.",
+             f"Among saturation-scale MPO pools, non-compliant red still holds {nc_pct:.0f}% of viable-and-above stake. "
+             f"Ochre isolates sub-saturation fleets that cannot fully play the saturation-scale pledge game.",
              ha="center", fontsize=9.5, color=INFARED,
              fontweight="bold",
              bbox=dict(boxstyle="round,pad=0.3", facecolor="#FFF3CD",

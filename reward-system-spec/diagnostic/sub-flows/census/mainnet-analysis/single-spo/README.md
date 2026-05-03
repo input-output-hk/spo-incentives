@@ -19,36 +19,36 @@ After extracting the **85 MPO entities** (901 pools, **75.4% of stake**), **2,09
 
 ## Data
 
-SPO-specific data is currently produced by scripts in
+Single-pool-operator data is currently produced by scripts in
 `sub-flows/pools-distribution/mainnet-analysis/` as a by-product of the
 landscape analysis (§4.3):
 
 | File | Location | Description |
 | --- | --- | --- |
 | `filtered_landscape_spo_only_summary.csv` | `sub-flows/pools-distribution/mainnet-analysis/data/` | Tier × pledge-stance summary for single-pool operators |
-| `koios_pool_list_mainnet.csv` | `sub-flows/pools-distribution/mainnet-analysis/data/` | Full pool list — filter by excluding pools in `entities/data/mpo_entity_pool_mapping_mainnet.csv` to obtain the SPO set |
+| `koios_pool_list_mainnet.csv` | `sub-flows/pools-distribution/mainnet-analysis/data/` | Full pool list — filter by excluding pools in `entities/data/mpo_entity_pool_mapping_mainnet.csv` to obtain the single-pool-operator set |
 
 ## Figures
 
 | Figure | Location | Description |
 | --- | --- | --- |
-| `filtered_landscape_spo_only_mainnet.png` | `sub-flows/pools-distribution/mainnet-analysis/figures/` | Current SPO tier distribution by pledge stance |
-| `spo_only_history_mainnet.png` | `sub-flows/pools-distribution/mainnet-analysis/figures/` | Historical SPO composition (epochs 250–618) |
+| `filtered_landscape_spo_only_mainnet.png` | `sub-flows/pools-distribution/mainnet-analysis/figures/` | Current single-pool-operator tier distribution by pledge stance |
+| `spo_only_history_mainnet.png` | `sub-flows/pools-distribution/mainnet-analysis/figures/` | Historical single-pool-operator composition (epochs 250–618) |
 | `mpo_extraction_by_tier_mainnet.png` | `sub-flows/pools-distribution/mainnet-analysis/figures/` | Tier-by-tier effect of MPO removal |
 
 ## Scripts
 
 | Script | Location | What it does |
 | --- | --- | --- |
-| `build_filtered_landscape_visual.py` | `sub-flows/pools-distribution/mainnet-analysis/scripts/` | Produces the SPO-only butterfly chart and history evolution; writes `filtered_landscape_spo_only_summary.csv` |
+| `build_filtered_landscape_visual.py` | `sub-flows/pools-distribution/mainnet-analysis/scripts/` | Produces the single-pool-operator butterfly chart and history evolution; writes `filtered_landscape_spo_only_summary.csv` |
 | `build_mpo_extraction_visual.py` | `sub-flows/pools-distribution/mainnet-analysis/scripts/` | Shows what the pool landscape looks like before and after MPO extraction |
 
-## Deriving the SPO pool list
+## Deriving the single-pool-operator pool list
 
-There is no dedicated SPO listing file. The single-pool operator set is
-**defined by exclusion**: any pool in `koios_pool_list_mainnet.csv` that does
-**not** appear in `entities/data/mpo_entity_pool_mapping_mainnet.csv` is a
-single-pool operator.
+There is no dedicated single-pool-operator listing file. The single-pool
+operator set is **defined by exclusion**: any pool in
+`koios_pool_list_mainnet.csv` that does **not** appear in
+`entities/data/mpo_entity_pool_mapping_mainnet.csv` is a single-pool operator.
 
 This keeps the definition consistent and avoids duplication.
 
@@ -71,7 +71,7 @@ print(f"Single-pool operators: {len(spo_pools)}")
 
 ## Relationship to the MPO entities
 
-The MPO entity analysis and the single-SPO segment are **two sides of the same coin**.
+The MPO entity analysis and the single-pool-operator segment are **two sides of the same coin**.
 Together they partition the full pool landscape.
 
 The split is operationally clean: MPO pools are **attributed** (matched to

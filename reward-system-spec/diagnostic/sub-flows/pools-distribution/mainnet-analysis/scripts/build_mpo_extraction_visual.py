@@ -43,7 +43,7 @@ GREY_DARK    = "#555555"
 
 # ── Tier definitions (identical to filtered_landscape) ──
 TIER_NAMES = [
-    "Dormant", "Sub-production", "Sub-viable", "Healthy",
+    "Dormant", "Sub-block", "Sub-reliable", "Healthy",
     "Large healthy", "Near-saturation", "Saturated", "Oversaturated",
 ]
 TIER_COLORS = [
@@ -154,8 +154,7 @@ def draw_butterfly(data, fig_path):
 
     # Threshold markers — same as reference
     threshold_after = {
-        1: ("Production\nthreshold",  "1M ADA",  DAWN),
-        2: ("Viability\nthreshold",   "3M ADA",  INFARED),
+        2: ("Production\nthreshold",   "3M ADA",  INFARED),
         6: ("Saturation\nthreshold", f"{z0/1e6:.0f}M ADA", ULTRAVIOLET),
     }
 

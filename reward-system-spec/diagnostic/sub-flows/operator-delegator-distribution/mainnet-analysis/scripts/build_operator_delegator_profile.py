@@ -152,7 +152,7 @@ def build_snapshot(hist, latest, owner_snap, pool_list, entity_map,
     """Per-pool reward-split decomposition at latest epoch."""
     snap = hist[hist["epoch_no"] == latest].copy()
     snap = snap[snap["total_pool_rewards_ada"] > 0].copy()
-    # Filter out sub-production-threshold pools (main report §2.4.1.5)
+    # Filter out sub-block-threshold pools (main report §2.4.1.5)
     n_before = len(snap)
     snap = snap[snap["active_stake_ada"] >= PRODUCTION_THRESHOLD_ADA].copy()
     n_after = len(snap)

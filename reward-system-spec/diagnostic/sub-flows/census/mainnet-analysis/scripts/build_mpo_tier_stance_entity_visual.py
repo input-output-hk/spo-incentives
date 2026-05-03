@@ -37,7 +37,7 @@ STANCE_COLORS = {
     "non_compliant": "#E52321",
 }
 STANCE_LABELS = {
-    "cant_play":     "Can't play (capital-insufficient)",
+    "cant_play":     "Can't play (sub-saturation)",
     "exemplary":     "Exemplary (≥80%)",
     "compliant":     "Compliant (30–80%)",
     "marginal":      "Marginal (2–30%)",
@@ -218,7 +218,7 @@ def main():
         0.01, 0.01,
         "Each coloured sub-bar = one entity's pools within a tier+stance group. "
         "White borders separate entities. Only pools ≥3M ADA (viable threshold) shown. "
-        "Ochre = capital-insufficient / can't play. Denominator = total staked supply.",
+        "Ochre = sub-saturation / can't play. Denominator = total staked supply.",
         ha="left", va="bottom", fontsize=7.5, color=DIM,
     )
 

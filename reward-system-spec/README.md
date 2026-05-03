@@ -175,8 +175,8 @@ Any mechanism that **systematically under-compensates productive participants** 
 
 Two features of the current mechanism fall short of this standard:
 
-- the fee structure imposes a **48% effective cost on sub-viable operators** while charging **1.5% near saturation** ([OPE.O1](diagnostic/README.md#132-mainnet-observations));
-- the pledge mechanism provides **no material reward for commitment** ([POL.O6](diagnostic/README.md#122-mainnet-observations)).
+- the fee structure imposes a **48% effective cost on sub-reliable operators** while charging **1.5% near saturation** ([OPE.O1](diagnostic/README.md#132-mainnet-observations));
+- the pledge mechanism provides **no material reward for commitment** ([POL.O7](diagnostic/README.md#122-mainnet-observations)).
 
 Three milestones address this gap, each along a different dimension:
 
@@ -250,7 +250,7 @@ The mechanism was designed so that a new operator who pledges an initial amount 
 
 Today's single-pool operator with 2M ADA of delegation and a proven track record should be tomorrow's established entity. The mechanism must support this trajectory. **Two structural gaps prevent it from doing so.**
 
-**The viability gap.** The fixed-cost floor ($minPoolCost$) absorbs **47.5% of pool reward at the sub-viable tier** but only **1.5% near saturation** ([OPE.O1](diagnostic/README.md#132-mainnet-observations)).
+**The viability gap.** The fixed-cost floor ($minPoolCost$) absorbs **47.5% of pool reward at the sub-reliable tier** but only **1.5% near saturation** ([OPE.O1](diagnostic/README.md#132-mainnet-observations)).
 
 This opens a gap of **~870 pools** between the production threshold (~1M ADA) and the viability threshold (~3M ADA), where pools produce blocks but cannot sustain their operators economically ([viability-gap analysis](diagnostic/README.md#1331-guarantee-operator-viability-across-the-productive-population)). No single-pool operator in the retail market earns a competitive wage: the median earns **~25,000 ADA/yr** — enough to cover infrastructure but not the 5–15 hrs/month of skilled work ([OPE.O6](diagnostic/README.md#132-mainnet-observations)).
 
@@ -271,7 +271,7 @@ The replacement pools that sustain the ~950-pool total are **entity-operated, no
 <div class="ev-card" markdown="1">
 <div class="ev-label">Fee structure</div>
 <div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">The distortion comes from the fixed-cost floor, not from the commission market. A sub-viable operator absorbs **48.3 %** of pool rewards yet earns **24,820 ADA/yr**; an 11+-pool MPO absorbs **7.7 %** yet earns **1,035,496 ADA/yr** — **42× more revenue at 6× less effective price**. The commission market is healthy: 69 % competitive, median margin stable for 405 epochs.</p>
+<p class="ev-body" markdown="1">The distortion comes from the fixed-cost floor, not from the commission market. A sub-reliable operator absorbs **48.3 %** of pool rewards yet earns **24,820 ADA/yr**; an 11+-pool MPO absorbs **7.7 %** yet earns **1,035,496 ADA/yr** — **42× more revenue at 6× less effective price**. The commission market is healthy: 69 % competitive, median margin stable for 405 epochs.</p>
 <p class="ev-sources" markdown="1">Sources: [OPE.O1, OPE.O2, OPE.O6](diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#1-mainnet-observations).</p>
 </div>
 </div>
@@ -304,7 +304,7 @@ The replacement pools that sustain the ~950-pool total are **entity-operated, no
 <div class="ev-label">Thresholds</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Production threshold rises with total staked ADA — from **~470 K at Shelley launch** to **~1 M at epoch 623**. Independent single-pool operator population: **477 pools, 5.28 B ADA, 24.5 % of productive stake**, share in slow decline; only **283 above the viability threshold**; **116 sub-threshold pools** carry 0.31 % of active stake.</p>
-<p class="ev-sources" markdown="1">Sources: [Census — historical decomposition](diagnostic/sub-flows/census/mainnet-analysis/README.md#343-historical-decomposition-productive-vs-sub-threshold-pools), [POL.O5](diagnostic/README.md#122-mainnet-observations), [production-threshold proposal](diagnostic/README.md#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano).</p>
+<p class="ev-sources" markdown="1">Sources: [Census — historical decomposition](diagnostic/sub-flows/census/mainnet-analysis/README.md#343-historical-decomposition-productive-vs-sub-threshold-pools), [POL.O6](diagnostic/README.md#122-mainnet-observations), [production-threshold proposal](diagnostic/README.md#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano).</p>
 </div>
 </div>
 
@@ -423,7 +423,7 @@ $k = 500$ implies 500 independent entities sharing consensus power; the effectiv
 <div class="ev-label">Pledge-bonus utilisation</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**95.6 %** of the pledge-bonus budget returns to the reserve unused. The instrument exists in the formula but is **economically inert**.</p>
-<p class="ev-sources" markdown="1">Source: [POL.O6](diagnostic/README.md#122-mainnet-observations).</p>
+<p class="ev-sources" markdown="1">Source: [POL.O7](diagnostic/README.md#122-mainnet-observations).</p>
 </div>
 </div>
 
@@ -463,7 +463,7 @@ $k = 500$ implies 500 independent entities sharing consensus power; the effectiv
 <div class="ev-label">Market structure outcome</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**85 multi-pool entities control 75.4 % of staked supply through 901 pools.** The effective entity-level concentration is an **order of magnitude** above the $k$-target equilibrium.</p>
-<p class="ev-sources" markdown="1">Sources: [POL.O4](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
+<p class="ev-sources" markdown="1">Sources: [POL.O5](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
 </div>
 </div>
 
@@ -600,7 +600,7 @@ The relationship is explicit: **higher commitment — longer lock-up, less liqui
 
 The analysis documents concentration on **two fronts**:
 
-- **Supply side.** **85 multi-pool entities** control **75.4%** of staked supply through **901 pools** ([POL.O4](diagnostic/README.md#122-mainnet-observations)), while independent single-pool operators shrink to **283 viable pools and 25%** of productive stake ([POL.O5](diagnostic/README.md#122-mainnet-observations)).
+- **Supply side.** **85 multi-pool entities** control **75.4%** of staked supply through **901 pools** ([POL.O5](diagnostic/README.md#122-mainnet-observations)), while independent single-pool operators shrink to **283 viable pools and 25%** of productive stake ([POL.O6](diagnostic/README.md#122-mainnet-observations)).
 - **Demand side.** **1,000 delegators** (0.07% of the base) control **57% of staked ADA**; the Gini coefficient is **0.976** ([CEN.O3](diagnostic/README.md#212-mainnet-observations)).
 
 Both concentrations are **structural**, both **crystallised early**, and **neither responds** to the current incentive design.
@@ -625,7 +625,7 @@ The reward formula evaluates pools **independently** — it does not know that t
 The mechanism was designed for $k$ independent operators converging on a balanced equilibrium (Brünjes & Kiayias, 2020). It encounters instead a **highly concentrated and segmented market** where three structurally distinct sub-populations coexist:
 
 - **Custodial operators** (CEX + IVaaS: 10 entities, 181 pools, 7.40B ADA) who *cannot* pledge the capital they manage — the constraint is **architectural**;
-- **Community and opaque MPO fleets** (41 of 48 capital-sufficient entities) who have *chosen* not to pledge — the **rational response** to the current incentive structure;
+- **Community and opaque MPO fleets** (41 of 48 saturation-scale entities) who have *chosen* not to pledge — the **rational response** to the current incentive structure;
 - **Independent single-pool operators** who bear the full weight of the fee structure while their market share erodes ([operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable)).
 
 The deeper failure is that **the formula's unit of accounting — the pool — is the wrong unit**. Rewards, saturation caps, and pledge calculations all operate at the pool level. But the **entity** that controls the pools is the economic actor that makes strategic decisions.
@@ -657,7 +657,7 @@ The consequence is:
 <div class="ev-label">MPO fleet structure</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**85 entities, 901 pools, 75.4 % of staked supply.** 12 entities with 11+ pools control **40.4 % of productive stake**.</p>
-<p class="ev-sources" markdown="1">Sources: [POL.O4](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
+<p class="ev-sources" markdown="1">Sources: [POL.O5](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
 </div>
 </div>
 
@@ -665,7 +665,7 @@ The consequence is:
 <div class="ev-label">Sybil cost</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Marginal cost of a new pool is **~500 ADA**; marginal reward is a full share of the curve. **78 of 85** MPO entities are outside the pledge-response path.</p>
-<p class="ev-sources" markdown="1">Sources: [POL.O6](diagnostic/README.md#122-mainnet-observations), [mainnet pledge data](diagnostic/README.md#12431-what-mainnet-reveals).</p>
+<p class="ev-sources" markdown="1">Sources: [POL.O7](diagnostic/README.md#122-mainnet-observations), [mainnet pledge data](diagnostic/README.md#12431-what-mainnet-reveals).</p>
 </div>
 </div>
 
@@ -673,7 +673,7 @@ The consequence is:
 <div class="ev-label">Independent operator decline</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**283 viable single-pool operators**, stake share in slow decline from **39 % → 25 %** since epoch 300.</p>
-<p class="ev-sources" markdown="1">Sources: [POL.O5](diagnostic/README.md#122-mainnet-observations), [Census — the independent pipeline](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-pipeline-what-the-mechanism-was-intended-to-produce).</p>
+<p class="ev-sources" markdown="1">Sources: [POL.O6](diagnostic/README.md#122-mainnet-observations), [Census — the independent pipeline](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-pipeline-what-the-mechanism-was-intended-to-produce).</p>
 </div>
 </div>
 

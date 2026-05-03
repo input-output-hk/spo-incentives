@@ -38,4 +38,4 @@ Broadly stable: 1.31% (ep.400) → 1.46% (ep.618). A dip at epoch 410, then full
 
 ## Source
 
-Existing profile: `sub-flows/pools-distribution/mainnet-analysis/docs/mpo_entity_profiles.md` (IVaaS section). Web research: blockdaemon.com, 2026/04/07.
+Existing profile: `sub-flows/census/mainnet-analysis/docs/mpo_entity_profiles.md` (IVaaS section). Web research: blockdaemon.com, 2026/04/07.

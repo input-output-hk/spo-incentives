@@ -40,4 +40,4 @@ Broadly stable: 6.60% of supply at epoch 400, 6.38% at epoch 618. The largest si
 
 ## Source
 
-Existing profile: `sub-flows/pools-distribution/mainnet-analysis/docs/mpo_entity_profiles.md` (CEX section). Coinbase.com/earn returned 403 (gated content).
+Existing profile: `sub-flows/census/mainnet-analysis/docs/mpo_entity_profiles.md` (CEX section). Coinbase.com/earn returned 403 (gated content).

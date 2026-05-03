@@ -627,10 +627,7 @@ It does not bound the cost of *acquiring* a 51 % position. It does not
 bound the speed at which the threshold could be crossed by deliberate
 aggregation either.
 
-The diagnostic's MPO entry-cost analysis
-([reward-system-spec/diagnostic/README.md L492](../../diagnostic/README.md))
-is the complement that puts a price on the structural picture given
-here.
+The diagnostic's [MPO entry-cost analysis](../../README.md) is the complement that puts a price on the structural picture given here.
 
 ### 5. Constitutional scope
 

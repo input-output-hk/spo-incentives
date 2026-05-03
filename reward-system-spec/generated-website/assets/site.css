@@ -119,14 +119,92 @@ body{font-family:var(--font-body);background:var(--bg-warm);color:var(--text-bod
    chip used to be (green dot prefix, green border, dark translucent
    fill). Date in CAPS / wide tracking like the original CBU label;
    author in Title Case (proper noun, not a label). */
-.hero-division-sep{color:rgba(255,255,255,.35);padding:0 2px;
+.hero-division-sep{color:rgba(255,255,255,.7);padding:0 2px;
   letter-spacing:0;font-weight:300}
 /* Author chip — same CBU label treatment as the date (UPPERCASE,
    wide tracking) but rendered as a link to the author's profile. */
-.hero-division-author{font-size:10px;font-weight:300;letter-spacing:2.8px;
-  text-transform:uppercase;color:rgba(255,255,255,.88);
+.hero-division-author{font-size:10px;font-weight:400;letter-spacing:2.8px;
+  text-transform:uppercase;color:#ffffff;
   text-decoration:none;border-bottom:1px solid rgba(6,255,137,.0);
   transition:color .15s,border-color .15s}
+/* Epoch chip — analysis cutoff (e.g. "Through epoch 623"). Same CBU
+   label treatment as the date. */
+.hero-division-epoch{font-size:10px;font-weight:400;letter-spacing:2.8px;
+  text-transform:uppercase;color:#ffffff}
+.hero-division-epoch-date{font-size:10px;font-weight:400;letter-spacing:2.8px;
+  text-transform:uppercase;color:#ffffff}
+/* Data-cutoff badge — sibling of .hero-division. Cool-tinted edge
+   (Electric Blue) to mark it as analysis-window metadata distinct
+   from the build/author chip. */
+.hero-data-cutoff{display:flex;align-items:center;gap:10px;
+  padding:6px 14px 6px 14px;
+  border:1px solid rgba(22,233,216,.45);
+  border-radius:2px;
+  background:rgba(0,0,0,.35);
+  backdrop-filter:blur(2px);
+  color:#ffffff}
+
+/* ── Hero byline ────────────────────────────────────────────
+   Editorial-style metadata line under the hero subtitle. No
+   boxes, no backdrop blur, no borders — pure typography with
+   small line-art icons and a vertical hairline between
+   segments. Reads as part of the document, not as a UI panel. */
+.hero-byline{display:inline-flex;flex-wrap:wrap;
+  align-items:center;
+  gap:0;
+  margin-top:22px;
+  padding:0;
+  background:none;
+  border:none;
+  position:relative;z-index:2;
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.hero-byline-seg{display:inline-flex;align-items:center;gap:9px;
+  padding:0 22px;
+  border-right:1px solid rgba(255,255,255,.18);
+  color:rgba(255,255,255,.78);
+  font-size:13px;
+  font-weight:500;
+  letter-spacing:.01em;
+  white-space:nowrap}
+.hero-byline-seg:first-child{padding-left:0}
+.hero-byline-seg:last-child{border-right:none;padding-right:0}
+.hero-byline-seg .hero-meta-icon{flex-shrink:0;
+  color:rgba(255,255,255,.45);
+  display:block}
+.hero-byline-value{color:rgba(255,255,255,.92)}
+.hero-byline-sub{color:rgba(255,255,255,.55);font-weight:400}
+.hero-byline-author{color:#ffffff;text-decoration:none;
+  font-weight:500;
+  border-bottom:1px solid rgba(255,255,255,0);
+  transition:border-color .15s,color .15s}
+a.hero-byline-author:hover,
+a.hero-byline-author:focus-visible{
+  color:#ffffff;border-bottom-color:rgba(6,255,137,.7);outline:none}
+.hero-meta-cell{display:flex;flex-direction:row;align-items:center;
+  gap:14px;
+  padding:11px 22px;
+  border-bottom:1px solid rgba(255,255,255,.16);
+  min-width:0}
+.hero-meta-cell:last-child{border-bottom:none}
+.hero-meta-icon{flex-shrink:0;
+  color:rgba(255,255,255,.55);
+  display:block}
+.hero-meta-text{display:flex;flex-direction:column;gap:4px;min-width:0}
+.hero-meta-label{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:9px;font-weight:500;letter-spacing:2.4px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.55)}
+.hero-meta-value{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:13px;font-weight:500;letter-spacing:.01em;
+  color:#ffffff;
+  white-space:nowrap}
+.hero-meta-sub{color:rgba(255,255,255,.62);font-weight:400}
+.hero-meta-author-link{color:#ffffff;text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,0);
+  transition:border-color .15s,color .15s}
+.hero-meta-author-link:hover,
+.hero-meta-author-link:focus-visible{
+  color:#ffffff;border-bottom-color:rgba(6,255,137,.7);outline:none}
 a.hero-division-author:hover,a.hero-division-author:focus-visible{
   color:#fff;border-bottom-color:rgba(6,255,137,.6);outline:none}
 .theme-toggle{background:rgba(255,255,255,.85);border:1px solid rgba(0,51,173,.4);border-radius:4px;cursor:pointer;padding:5px 8px;color:var(--cardano-blue);font-size:14px;line-height:1;transition:color .15s,border-color .15s,background .15s;display:flex;align-items:center}
@@ -228,7 +306,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .hero-iog-logo{height:18px;width:auto;display:block;flex-shrink:0;
   filter:drop-shadow(0 0 6px rgba(255,255,255,.10))}
 .hero-division-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#06FF89;box-shadow:0 0 10px rgba(6,255,137,.8),0 0 3px #06FF89;flex-shrink:0}
-.hero-division-label{font-size:10px;font-weight:300;letter-spacing:2.8px;text-transform:uppercase;color:rgba(255,255,255,.88)}
+.hero-division-label{font-size:10px;font-weight:400;letter-spacing:2.8px;text-transform:uppercase;color:#ffffff}
 .hero-inner{position:relative;z-index:2;max-width:1400px;margin:0 auto;padding-top:20px}
 .hero-eyebrow{font-size:16px;font-weight:400;letter-spacing:3.6px;text-transform:uppercase;color:rgba(255,255,255,.78);margin-bottom:26px;padding-left:14px;border-left:2px solid var(--infared)}
 /* When the eyebrow text is empty (zone-landing pages where the H1 is
@@ -900,7 +978,7 @@ h6.section-toggle::before{color:#B7CCF2;opacity:.4}
 /* Three distinct dropdowns, each with a single title; breadcrumb below conveys
    the current location in the hierarchy so the dropdowns stay label-free.    */
 .nav-zone-diag,.nav-zone-design,.nav-zone-research{flex:0 0 auto}
-.nav-dd-btn-diag,.nav-dd-btn-design,.nav-dd-btn-research,.nav-dd-btn-constitution{min-width:0}
+.nav-dd-btn-diag,.nav-dd-btn-design,.nav-dd-btn-research,.nav-dd-btn-constitution,.nav-dd-btn-cps{min-width:0}
 
 /* Constitution zone — Cobalt Pulse (governance blue, distinct from V2 red and diag Dawn) */
 .nav-zone-constitution{flex:0 0 auto}
@@ -910,6 +988,65 @@ h6.section-toggle::before{color:#B7CCF2;opacity:.4}
 [data-theme=dark] .nav-dd-btn-constitution:hover{background:rgba(123,145,255,.10);border-color:rgba(123,145,255,.55)}
 [data-theme=dark] .nav-dd-wrap-light.open .nav-dd-btn-constitution{background:rgba(123,145,255,.14);border-color:rgba(123,145,255,.7);color:#A8B6FF}
 [data-theme=dark] .nav-dd-stratum-badge-constitution{color:#7B91FF;background:rgba(123,145,255,.16)}
+
+/* Findings page TOC — Micro/Macro index above the cards list. Two stacked
+   groups; each group has a head (label + count), a one-line meta description,
+   and a wrapped list of clickable items linking to anchored cards below. */
+.findings-toc{display:grid;grid-template-columns:1fr 1fr;gap:24px;
+  margin:24px 0 32px;padding:20px 24px;
+  background:var(--bg-panel);border:1px solid var(--border);border-radius:10px}
+[data-theme=dark] .findings-toc{background:rgba(255,255,255,.02)}
+.findings-toc-group{display:flex;flex-direction:column;gap:8px}
+.findings-toc-group-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.findings-toc-group-label{font:700 13px/1.2 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.4px;color:var(--text-primary)}
+.findings-toc-group-count{font:500 10.5px/1 'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.4px;color:var(--text-muted);
+  padding:3px 7px;border-radius:3px;border:1px solid var(--border);
+  background:var(--bg);text-transform:uppercase}
+.findings-toc-group-meta{font:400 11.5px/1.45 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);font-style:italic;margin-bottom:6px}
+.findings-toc-group-list{display:flex;flex-direction:column;gap:2px}
+.findings-toc-item{display:flex;align-items:baseline;gap:10px;
+  padding:6px 10px;border-radius:5px;
+  text-decoration:none;color:var(--text-secondary);
+  transition:background .12s,color .12s}
+.findings-toc-item:hover{background:rgba(229,35,33,.06);color:var(--text-primary)}
+[data-theme=dark] .findings-toc-item:hover{background:rgba(229,35,33,.1)}
+.findings-toc-num{flex:0 0 auto;font:600 10.5px/1 'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
+  color:var(--infared);letter-spacing:.4px;min-width:22px}
+.findings-toc-title{font:500 12.5px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+@media (max-width:760px){
+  .findings-toc{grid-template-columns:1fr;gap:20px;padding:16px 18px}
+}
+
+/* Formal-CPS badge inside a finding card banner — Solar Amber, picks up the
+   Problem-Statements zone hue. Sits to the right of the card title. */
+.finding-card-cps-badge{display:inline-flex;align-items:center;gap:6px;
+  margin-left:auto;align-self:center;
+  padding:5px 10px;border-radius:4px;
+  background:rgba(255,186,54,.18);border:1px solid rgba(255,186,54,.55);
+  color:#7a4f00;text-decoration:none;
+  font:700 10.5px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.7px;text-transform:uppercase;
+  transition:background .15s,border-color .15s,color .15s}
+.finding-card-cps-badge:hover{background:rgba(255,186,54,.32);border-color:rgba(255,186,54,.85);color:#5e3d00}
+.finding-card-cps-badge-arrow{font-size:13px;letter-spacing:0}
+[data-theme=dark] .finding-card-cps-badge{background:rgba(255,210,122,.16);border-color:rgba(255,210,122,.55);color:#FFE0A0}
+[data-theme=dark] .finding-card-cps-badge:hover{background:rgba(255,210,122,.26);border-color:rgba(255,210,122,.8);color:#FFEEC0}
+
+/* CPS zone — Solar Amber (problem statement / open question, distinct from V2 red, gov blue, and diag Dawn) */
+.nav-zone-cps{flex:0 0 auto}
+.nav-dd-btn-cps{color:#946000;border-color:rgba(255,186,54,.45);background:rgba(255,186,54,.06)}
+.nav-dd-btn-cps:hover{background:rgba(255,186,54,.14);border-color:rgba(255,186,54,.65);color:#7a4f00}
+.nav-dd-wrap-light.open .nav-dd-btn-cps{background:rgba(255,186,54,.18);border-color:rgba(255,186,54,.75);color:#5e3d00}
+.nav-dd-btn-cps.active{color:var(--text-primary);font-weight:600}
+.nav-dd-wrap-light.open .nav-dd-btn-cps.active{color:var(--text-primary)}
+.nav-dd-stratum-badge-cps{color:#946000;background:rgba(255,186,54,.16)}
+[data-theme=dark] .nav-dd-btn-cps{color:#FFD27A;border-color:rgba(255,210,122,.35);background:rgba(255,210,122,.05)}
+[data-theme=dark] .nav-dd-btn-cps:hover{background:rgba(255,210,122,.10);border-color:rgba(255,210,122,.55)}
+[data-theme=dark] .nav-dd-wrap-light.open .nav-dd-btn-cps{background:rgba(255,210,122,.14);border-color:rgba(255,210,122,.7);color:#FFE0A0}
+[data-theme=dark] .nav-dd-stratum-badge-cps{color:#FFD27A;background:rgba(255,210,122,.16)}
 /* Diagnostic = Dawn accent when the current page lives inside it */
 .nav-dd-btn-diag.active{color:var(--text-primary);font-weight:600}
 .nav-dd-wrap-light.open .nav-dd-btn-diag.active{color:var(--text-primary)}
@@ -921,6 +1058,7 @@ h6.section-toggle::before{color:#B7CCF2;opacity:.4}
 .nav-dd-panel-design{left:0;right:auto;min-width:460px;max-width:500px}
 .nav-dd-panel-research{left:auto;right:0;min-width:460px;max-width:500px}
 .nav-dd-panel-constitution{left:0;right:auto;min-width:480px;max-width:520px}
+.nav-dd-panel-cps{left:0;right:auto;min-width:520px;max-width:560px}
 
 /* Group label inside a dropdown panel (e.g., "Reward Flow" above the pipeline sub-items) */
 .nav-dd-ref-group-label{display:block;font:700 9.5px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.3px;text-transform:uppercase;color:var(--text-muted);padding:10px 10px 4px;margin-top:4px}
@@ -1465,7 +1603,37 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
   margin:0;letter-spacing:-.3px}
 .findings-section-tagline{font-size:13px;color:var(--text-muted);letter-spacing:.2px}
 .findings-section-body{display:flex;flex-direction:column;gap:48px}
-.findings-list{display:flex;flex-direction:column;gap:48px}
+.findings-list{display:flex;flex-direction:column;gap:64px}
+
+/* Findings group sections — Microeconomics + Macroeconomics blocks
+   that wrap their respective card stacks. The h2 inherits the global
+   `.content h2` brand pattern (Cardano-blue title with a trailing
+   horizontal line via ::after) and the count pill is rendered INSIDE
+   the h2 so it sits naturally between the title text and the line.
+   The meta line below acts as a brief subtitle for the group. */
+.findings-group{display:flex;flex-direction:column;gap:28px;
+  scroll-margin-top:96px}
+.findings-group-head{display:flex;flex-direction:column;gap:6px;
+  margin-bottom:4px}
+/* Override the .content h2 default 56px top / 22px bottom margin —
+   the section already provides spacing via .findings-list gap. */
+.findings-group-title{margin:0!important}
+.findings-group-title-text{flex:0 0 auto}
+.findings-group-pill{flex:0 0 auto;
+  font:600 10.5px/1 'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.6px;text-transform:uppercase;
+  color:var(--text-muted);
+  padding:5px 9px;border-radius:3px;
+  border:1px solid var(--border);background:var(--bg-panel);
+  align-self:center;
+  /* Pull the pill closer to the title text so the 24px h2 gap
+     doesn't read as a disconnect. */
+  margin-left:-12px}
+.findings-group-meta{
+  font:400 14px/1.55 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);margin:0;
+  max-width:64ch}
+.findings-group-cards{display:flex;flex-direction:column;gap:48px}
 
 /* Banner card head — Cardano-blue plate that mirrors the page hero
    on a per-card scale. Each problem statement opens with its own
@@ -1636,14 +1804,18 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
   padding:0 12px 12px 36px;
   border-top:1px solid var(--border)}
 .finding-card-onode.collapsed .finding-card-onode-body,
-.finding-card-onode.collapsed .finding-card-onode-findings{
+.finding-card-onode.collapsed .finding-card-onode-findings,
+.finding-card-onode.collapsed .finding-card-onode-summary{
   display:none}
 .finding-card-onode-summary{
-  margin:8px 0 12px;
-  font:400 12.5px/1.55 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  margin:6px 12px 12px 36px;
+  padding:0 4px 0 0;
+  font:400 13px/1.55 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--text-body)}
-.finding-card-onode-summary p{margin:0 0 6px}
+.finding-card-onode-summary p{margin:0 0 8px}
 .finding-card-onode-summary p:last-child{margin-bottom:0}
+.finding-card-onode-summary strong{color:var(--text-primary);font-weight:600}
+.finding-card-onode-summary em{color:var(--text-secondary);font-style:italic}
 .finding-card-onode-findings{
   list-style:none;margin:0;padding:8px 12px 12px 36px;
   border-top:1px solid var(--border);
