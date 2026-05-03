@@ -7194,11 +7194,19 @@ def _build_figcaption(cap_inner: str) -> str:
         re.IGNORECASE,
     )
     if canon_match:
-        label_text = canon_match.group(1).upper()
+        canon_id = canon_match.group(1).upper()
         rest = peeled[canon_match.end():].strip()
         rest = re.sub(r'^[—–\-]\s*', '', rest)
+        # The chip prefixes the canonical id with the word ``Figure``
+        # so the label reads naturally ('Figure TRE.4.4' rather than a
+        # bare ``TRE.4.4`` that looks like an observation id). MD
+        # source stays compact (``*TRE.4.4 — …*``); the prefix is a
+        # display-only convenience.
         inner = (
-            f'<span class="figcaption-label">{label_text}</span>'
+            f'<span class="figcaption-label">'
+            f'<span class="figcaption-label-kind">Figure</span>'
+            f'<span class="figcaption-label-id">{canon_id}</span>'
+            f'</span>'
             f'<span class="figcaption-body">{rest}</span>'
         )
         return f'<figcaption>{inner}</figcaption>'
