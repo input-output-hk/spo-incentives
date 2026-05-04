@@ -1153,7 +1153,7 @@ h6.section-toggle::before{color:#B7CCF2;opacity:.4}
 /* The CIPs button text needs the lowercase 's' to read as the
    initialism. The shared .nav-dd-btn-light has text-transform:
    uppercase; override here. */
-.nav-dd-btn-solution{text-transform:none;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.2px;padding:10px 16px;color:var(--text-primary)}
+.nav-dd-btn-solution{text-transform:none;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.2px;padding:10px 26px;min-width:130px;color:var(--text-primary)}
 .nav-dd-wrap-light.open .nav-dd-btn-solution{color:var(--cardano-blue);border-color:var(--cardano-blue);background:rgba(0,51,173,.06)}
 
 /* "EVALUATION" eyebrow tag — same white-on-Cardano-blue recipe as
