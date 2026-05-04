@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777876109">
+<link rel="stylesheet" href="assets/site.css?v=1777882286">
 
 
 </head>
@@ -1825,7 +1825,7 @@ $$</p>
 <p>This section first identifies who these entities are and how many there are (<a href="#421-attribution-method-and-headline-figures">§4.2.1 — Attribution method and headline figures</a>), distinguishes who has enough capital to play the pledge game (<a href="#422-the-scale-class-divide">§4.2.2 — The scale-class divide</a>), classifies them by archetype (<a href="#423-operator-archetypes">§4.2.3 — Operator archetypes</a>), and measures how they behave with respect to pledge (<a href="#424-pledge-compliance-who-plays-and-who-doesnt">§4.2.4 — Pledge compliance: who plays and who doesn't</a>).</p>
 <h4 id="421-attribution-method-and-headline-figures">4.2.1. Attribution method and headline figures</h4>
 <p>Cardano's on-chain data does <strong>not natively group pools by operator</strong> — a pool is registered with a cold key, a VRF key, and optional metadata, but nothing links two pools to the same controlling entity. The attribution therefore relies on a layered pipeline that combines <strong>on-chain signals</strong> (shared owner keys) with <strong>off-chain heuristics</strong> (public brand declarations, relay/metadata clustering, manual resolution against community databases).</p>
-<p><strong>The full pipeline lives in the Census report</strong>, which is the canonical source for entity attribution across the diagnostic — see <a href="census.html#33-cleaning--entity-attribution">Census §3.3 — Cleaning: entity attribution</a> for the methodology and the on-chain-only vs combined-attribution numbers (the order-of-magnitude jump from <strong>4 entities</strong> detected on-chain alone to <strong>85 entities</strong> after layering off-chain signals — the on-chain-only layer misses the bulk of fleet structure).</p>
+<p><strong>The full pipeline lives in the Census report</strong>, which is the canonical source for entity attribution across the diagnostic — see <a href="census.html#33-cleaning-entity-attribution">Census §3.3 — Cleaning: entity attribution</a> for the methodology and the on-chain-only vs combined-attribution numbers (the order-of-magnitude jump from <strong>4 entities</strong> detected on-chain alone to <strong>85 entities</strong> after layering off-chain signals — the on-chain-only layer misses the bulk of fleet structure).</p>
 <p><strong>Headline figures</strong> (productive set = pools ≥3M ADA at epoch 623, the production threshold from <a class="finding-ref" href="pools.html#finding-pol-o3-f1" data-finding="POL.O3.F1" data-short="F3.1" data-group="3" title="POL.O3.F1 · hover for summary, click for detail">POL.O3.F1</a>):</p>
 <table>
 <thead>
@@ -3732,6 +3732,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777876109"></script>
+<script src="assets/site.js?v=1777882286"></script>
 </body>
 </html>
