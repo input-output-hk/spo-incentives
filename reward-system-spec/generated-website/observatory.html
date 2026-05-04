@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777891936">
+<link rel="stylesheet" href="assets/site.css?v=1777891993">
 
 
 </head>
@@ -1590,7 +1590,7 @@ END SANDBOX -->
 <h2 id="21-the-staking-populations">2.1. The Staking Populations</h2>
 <h3 id="211-overview">2.1.1. Overview</h3>
 <p>The Cardano staking ecosystem contains three populations defined by staking role.</p>
-<p><strong>Operators</strong> register pools, pledge capital, produce blocks, and compete for delegation. At epoch 623, <strong>2,877 pools</strong> appear in the staking snapshot with non-zero delegated stake. After removing the sub-block tail (pools below <strong>~1M ADA</strong> that cannot reliably produce blocks), the productive core is <strong>951 pools controlled by 560 entities</strong> — of which <strong>73 named multi-pool operators hold three-quarters of productive stake</strong>. The single-pool operator population (<strong>477 pools, 5.28B ADA</strong>) provides the remaining quarter.</p>
+<p><strong>Operators</strong> register pools, pledge capital, produce blocks, and compete for delegation. At epoch 623, <strong>2,877 pools</strong> appear in the staking snapshot with non-zero delegated stake. After cutting at the production threshold (≥3M ADA, the 95%-block-probability bar), the productive core is <strong>733 pools controlled by 367 entities</strong> — of which <strong>83 attributed entities</strong> (71 strict multi-pool + 12 attributed single-pool) hold <strong>76.7% of productive stake</strong> through <strong>449 productive pools</strong>. The remaining <strong>23.3%</strong> sits with <strong>284 unattributed single-pool operators (4.94B ADA)</strong>.</p>
 <p><em>The supply side of the staking market is highly concentrated and stable, not the competitive marketplace the mechanism was designed to produce.</em></p>
 <p><strong>Delegators</strong> choose which pools to fund and — in the intended design — discipline operators through capital reallocation. At epoch 623, <strong>1,355,035 active delegations</strong> control <strong>21.755B ADA</strong> (<strong>60.2% of circulating supply</strong>). The distribution is a power law with a <strong>Gini of 0.976</strong>: the <strong>top 1,000 delegators (0.07%) control 57% of staked capital</strong>.</p>
 <p><em>The delegation market crystallised by epoch 300 — subsequent 9× growth in delegator count produced no measurable change in the concentration profile.</em></p>
@@ -1898,6 +1898,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777891936"></script>
+<script src="assets/site.js?v=1777891993"></script>
 </body>
 </html>

@@ -1189,16 +1189,30 @@ h6.section-toggle::before{color:#B7CCF2;opacity:.4}
 .nav-dd-ref-new{display:inline-block;margin-left:8px;font:700 9px/1 -apple-system,sans-serif;letter-spacing:.7px;color:#0a8a80;background:rgba(22,233,216,.14);border:1px solid rgba(22,233,216,.45);border-radius:3px;padding:2px 5px;text-transform:uppercase;vertical-align:1px}
 [data-theme=dark] .nav-dd-ref-new{color:#16E9D8;background:rgba(22,233,216,.1);border-color:rgba(22,233,216,.35)}
 
-/* "NEW" stamp — anchored to the top-LEFT of any dropdown button
-   whose panel contains at least one .nav-dd-ref-new item. Same pill
-   shape language as the right-side FUTURE / EVALUATION / PROPOSAL
-   eyebrows (white plate, accent text, 1px border, soft shadow,
-   3px radius); the Electric Blue accent matches the existing
-   .nav-dd-ref-new chip used inside each panel, so the outer stamp
-   and the inner item badges read as the same signal family. */
-.nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light{
+/* "NEW" stamp — Electric Blue pill anchored to the top-LEFT,
+   shared by every nav button that points to fresh content.
+   Same pill recipe as the right-side FUTURE / EVALUATION /
+   PROPOSAL eyebrows (white plate / 8px / .6em letter-spaced /
+   uppercase / 3px radius / 1px coloured border / soft shadow);
+   the Electric Blue accent matches the inner ``.nav-dd-ref-new``
+   chips used on individual items inside each panel, so outer
+   stamp + inner item badges read as one signal family.
+
+   Applied to:
+   - the V2 Specification tab (.nav-tab-spec-big) — the spec
+     itself is the V2 proposal, brand new artefact
+   - the CIPs dropdown trigger (.nav-dd-btn-solution) — entry
+     point to the freshly-evaluated CIP candidates
+   - any .nav-dd-wrap-light that contains a .nav-dd-ref-new
+     descendant (Mainnet Diagnostic, Design Support, …) via
+     the :has() selector. */
+.nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light,
+.nav-tab-spec-big,
+.nav-dd-btn-solution{
   position:relative}
-.nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light::before{
+.nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light::before,
+.nav-tab-spec-big::before,
+.nav-dd-btn-solution::before{
   content:"new";
   position:absolute;
   top:-7px;left:-6px;
@@ -1212,7 +1226,9 @@ h6.section-toggle::before{color:#B7CCF2;opacity:.4}
   border:1px solid rgba(22,233,216,.55);
   box-shadow:0 1px 2px rgba(22,233,216,.18);
   pointer-events:none}
-[data-theme=dark] .nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light::before{
+[data-theme=dark] .nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light::before,
+[data-theme=dark] .nav-tab-spec-big::before,
+[data-theme=dark] .nav-dd-btn-solution::before{
   background:#1a1a1a;
   color:#16E9D8;
   border-color:rgba(22,233,216,.45)}
