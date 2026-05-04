@@ -35,15 +35,15 @@ The problems the specification addresses are not independent. They form a **depe
 ## Table of Contents
 
 - [1. Foundations](#1-foundations)
-  - [1.1. Prior art — what V2 draws on](#11-prior-art--what-v2-draws-on)
-  - [1.2. The Diagnostic — the empirical layer](#12-the-diagnostic--the-empirical-layer)
-  - [1.3. Governance — the Cardano Constitution](#13-governance--the-cardano-constitution)
+  - [1.1. Prior art — what V2 draws on](#11-prior-art-what-v2-draws-on)
+  - [1.2. The Diagnostic — the empirical layer](#12-the-diagnostic-the-empirical-layer)
+  - [1.3. Governance — the Cardano Constitution](#13-governance-the-cardano-constitution)
 - [2. Constitutional framework](#2-constitutional-framework)
-  - [2.1. The normative foundation — three tenets](#21-the-normative-foundation--three-tenets)
-  - [2.2. The governance pathway — parameter updates within guardrails](#22-the-governance-pathway--parameter-updates-within-guardrails)
-  - [2.3. The entity gap — a pool-level Constitution meeting an entity-level problem](#23-the-entity-gap--a-pool-level-constitution-meeting-an-entity-level-problem)
+  - [2.1. The normative foundation — three tenets](#21-the-normative-foundation-three-tenets)
+  - [2.2. The governance pathway — parameter updates within guardrails](#22-the-governance-pathway-parameter-updates-within-guardrails)
+  - [2.3. The entity gap — a pool-level Constitution meeting an entity-level problem](#23-the-entity-gap-a-pool-level-constitution-meeting-an-entity-level-problem)
   - [2.4. How the milestones below cite the Constitution](#24-how-the-milestones-below-cite-the-constitution)
-- [3. Microeconomics — participant incentives and market structure](#3-microeconomics--participant-incentives-and-market-structure)
+- [3. Microeconomics — participant incentives and market structure](#3-microeconomics-participant-incentives-and-market-structure)
   - [3.1. Guarantee operator viability across the entire productive population](#31-guarantee-operator-viability-across-the-entire-productive-population)
     - [3.1.1. Problem statement](#311-problem-statement)
       - [3.1.1.1. Evidence base](#3111-evidence-base)
@@ -59,16 +59,16 @@ The problems the specification addresses are not independent. They form a **depe
     - [3.3.3. Diversify the delegation offer](#333-diversify-the-delegation-offer)
   - [3.4. Reduce the concentration effects that distort both populations](#34-reduce-the-concentration-effects-that-distort-both-populations)
     - [3.4.1. Problem statement](#341-problem-statement)
-      - [3.4.1.1. The operator side — multi-pool entity concentration](#3411-the-operator-side--multi-pool-entity-concentration)
-      - [3.4.1.2. The delegator side — titan delegators versus the micro-delegation tail](#3412-the-delegator-side--titan-delegators-versus-the-micro-delegation-tail)
+      - [3.4.1.1. The operator side — multi-pool entity concentration](#3411-the-operator-side-multi-pool-entity-concentration)
+      - [3.4.1.2. The delegator side — titan delegators versus the micro-delegation tail](#3412-the-delegator-side-titan-delegators-versus-the-micro-delegation-tail)
       - [3.4.1.3. Evidence base](#3413-evidence-base)
     - [3.4.2. Entity-level awareness in reward distribution](#342-entity-level-awareness-in-reward-distribution)
-    - [3.4.3. Differentiated delegation incentives — titans versus micro-delegators](#343-differentiated-delegation-incentives--titans-versus-micro-delegators)
-- [4. Macroeconomics — a self-sustaining and governable mechanism](#4-macroeconomics--a-self-sustaining-and-governable-mechanism)
+    - [3.4.3. Differentiated delegation incentives — titans versus micro-delegators](#343-differentiated-delegation-incentives-titans-versus-micro-delegators)
+- [4. Macroeconomics — a self-sustaining and governable mechanism](#4-macroeconomics-a-self-sustaining-and-governable-mechanism)
   - [4.1. The staking pot must survive reserve depletion](#41-the-staking-pot-must-survive-reserve-depletion)
     - [4.1.1. Problem statement](#411-problem-statement)
       - [4.1.1.1. Evidence base](#4111-evidence-base)
-    - [4.1.2. Surveillance and recalibration of $\rho$ and $\tau$](#412-surveillance-and-recalibration-of-rho-and-tau)
+    - [4.1.2. Surveillance and recalibration of $\rho$ and $\tau$](#412-surveillance-and-recalibration-of-math36-and-math37)
   - [4.2. The fee-generating population must expand](#42-the-fee-generating-population-must-expand)
     - [4.2.1. Problem statement](#421-problem-statement)
       - [4.2.1.1. Evidence base](#4211-evidence-base)
@@ -79,7 +79,7 @@ The problems the specification addresses are not independent. They form a **depe
   - [4.4. The mechanism must be governable](#44-the-mechanism-must-be-governable)
     - [4.4.1. Why a defined process is the specification, not the design](#441-why-a-defined-process-is-the-specification-not-the-design)
     - [4.4.2. The Conway-era recalibration pipeline](#442-the-conway-era-recalibration-pipeline)
-    - [4.4.3. Forward path — toward ad-hoc readiness](#443-forward-path--toward-ad-hoc-readiness)
+    - [4.4.3. Forward path — toward ad-hoc readiness](#443-forward-path-toward-ad-hoc-readiness)
 - [5. Evaluation framework](#5-evaluation-framework)
 
 ## 1. Foundations
@@ -236,7 +236,7 @@ The milestones below reference their constitutional grounding explicitly:
 
 The first group of milestones addresses the **microeconomics** of the mechanism: the participant-level incentive structures that shape **operator behaviour**, **pledge commitment**, **delegator yield**, and **market concentration**.
 
-These are the problems that manifest at the individual actor level — the reward curve, the fee structure, the pledge function, and the entity-recognition gap. Their resolution is a **precondition** for the macroeconomic sustainability addressed in [Macroeconomics](#4-macroeconomics--a-self-sustaining-and-governable-mechanism).
+These are the problems that manifest at the individual actor level — the reward curve, the fee structure, the pledge function, and the entity-recognition gap. Their resolution is a **precondition** for the macroeconomic sustainability addressed in [Macroeconomics](#4-macroeconomics-a-self-sustaining-and-governable-mechanism).
 
 ### 3.1. Guarantee operator viability across the entire productive population
 
@@ -636,7 +636,7 @@ An entity operating twenty pools with negligible pledge in each is **indistingui
 
 The demand side exhibits a concentration that **mirrors the supply side**. The median delegator holds **32 ADA**; the mean holds **16,055 ADA** — a **500× gap** ([CEN.O3](diagnostic/README.md#212-mainnet-observations)).
 
-This is not a transient distribution: concentration **crystallised by epoch 300**, and a subsequent **9× growth** in delegator count produced **no measurable change** in the top-1% share ([Census — historical evolution](diagnostic/sub-flows/census/mainnet-analysis/README.md#443-historical-evolution--who-joined-and-where-is-the-capital)). The delegation market is **structurally bimodal**: 42% of delegators are **loyal** (201+ epochs), 21% **volatile** (≤ 5 epochs), with little in between ([CEN.O4](diagnostic/README.md#212-mainnet-observations)).
+This is not a transient distribution: concentration **crystallised by epoch 300**, and a subsequent **9× growth** in delegator count produced **no measurable change** in the top-1% share ([Census — historical evolution](diagnostic/sub-flows/census/mainnet-analysis/README.md#443-historical-evolution-who-joined-and-where-is-the-capital)). The delegation market is **structurally bimodal**: 42% of delegators are **loyal** (201+ epochs), 21% **volatile** (≤ 5 epochs), with little in between ([CEN.O4](diagnostic/README.md#212-mainnet-observations)).
 
 **Titan delegators** — those holding 1M+ ADA — average **3.06 lifetime pool switches** against **0.67** for micro-delegators ([CEN.O5](diagnostic/README.md#212-mainnet-observations)). They hold **11B of 21.8B** staked ADA, and only **38%** of their stake sits in loyal delegations: capital is **disproportionately mobile**.
 
@@ -673,7 +673,7 @@ The consequence is:
 <div class="ev-label">Single-pool operator decline</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**284 productive single-pool operators**, stake share in slow decline from **39 % → 25 %** since epoch 300.</p>
-<p class="ev-sources" markdown="1">Sources: [POL.O6](diagnostic/README.md#122-mainnet-observations), [Census — the independent pipeline](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-pipeline-what-the-mechanism-was-intended-to-produce).</p>
+<p class="ev-sources" markdown="1">Sources: [POL.O6](diagnostic/README.md#122-mainnet-observations), [Census — the independent pipeline](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-pipeline-what-the-mechanism-was-designed-to-produce).</p>
 </div>
 </div>
 
@@ -775,12 +775,12 @@ The mechanism must preserve — and ideally strengthen — the viability of micr
 | Micro-delegator retention | Epoch-over-epoch retention rate for delegators below 1K ADA | Not tracked | >95% — broad participation must be sustained |
 | Delegation-tier yield differential | Yield difference between long-tenure and short-tenure delegations | 0 (uniform) | >0 — tenure must be rewarded |
 
-> **Dependency note.** [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations) depends on [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population), [Pledge](#32-restore-the-notion-of-pledge-among-operators), and [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield). The entity-level pledge accounting operates through the reward curve — the design instrument that serves Operator Viability through Deconcentration simultaneously. The [delegation-tier sub-spec](#343-differentiated-delegation-incentives--titans-versus-micro-delegators) interacts directly with the [delegation-diversification sub-spec](#333-diversify-the-delegation-offer): the delegation products defined in Delegator Yield provide the instruments through which delegation-tier differentiation operates. Deconcentration also interacts with [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios): entity-level economics and delegation-tier incentives must remain coherent across ADA-price scenarios.
+> **Dependency note.** [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations) depends on [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population), [Pledge](#32-restore-the-notion-of-pledge-among-operators), and [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield). The entity-level pledge accounting operates through the reward curve — the design instrument that serves Operator Viability through Deconcentration simultaneously. The [delegation-tier sub-spec](#343-differentiated-delegation-incentives-titans-versus-micro-delegators) interacts directly with the [delegation-diversification sub-spec](#333-diversify-the-delegation-offer): the delegation products defined in Delegator Yield provide the instruments through which delegation-tier differentiation operates. Deconcentration also interacts with [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios): entity-level economics and delegation-tier incentives must remain coherent across ADA-price scenarios.
 
 
 ## 4. Macroeconomics — a self-sustaining and governable mechanism
 
-[Microeconomics](#3-microeconomics--participant-incentives-and-market-structure) defines what the micro-economy must satisfy at any given epoch: viable operators, meaningful pledge, competitive delegation, deconcentrated populations. **This chapter defines the dashboard from which those conditions are kept true through time.**
+[Microeconomics](#3-microeconomics-participant-incentives-and-market-structure) defines what the micro-economy must satisfy at any given epoch: viable operators, meaningful pledge, competitive delegation, deconcentrated populations. **This chapter defines the dashboard from which those conditions are kept true through time.**
 
 The metaphor is operational. A reward mechanism is a system the protocol pilots — not a static contract it signs and forgets. Five years of inertia on $\rho$, $\tau$ and $minPoolCost$ ([TRE.O4](diagnostic/README.md#112-mainnet-observations)) document the failure mode of flying without instruments: the parameters could not be observed, could not be questioned, and were therefore never adjusted. **A specification that produces the correct equilibrium once but offers no instrumentation to pilot it is not a specification of the mechanism — it is a snapshot of one of its states.**
 
@@ -791,11 +791,11 @@ This chapter closes that gap. For each macro-condition the system must preserve,
 | **Surveillance KPIs** | The instruments — what the protocol observes, per epoch, to know whether the condition still holds | [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion), [Fee Policy](#42-the-fee-generating-population-must-expand) |
 | **Trigger conditions** | The warning lights — the structural form of the conditions under which a recalibration is justified | [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion), [Fee Policy](#42-the-fee-generating-population-must-expand) |
 | **Recalibration scope** | The flight controls — which parameters can be moved, within which constitutional bounds | [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion), [Fee Policy](#42-the-fee-generating-population-must-expand), [Recalibration Pipeline](#44-the-mechanism-must-be-governable) |
-| **Acceptance criterion** | The validation discipline — the [Microeconomics](#3-microeconomics--participant-incentives-and-market-structure) KPIs every proposed value must preserve, across the [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios) scenarios | All milestones |
+| **Acceptance criterion** | The validation discipline — the [Microeconomics](#3-microeconomics-participant-incentives-and-market-structure) KPIs every proposed value must preserve, across the [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios) scenarios | All milestones |
 
-**Rhythmed, not ad-hoc — a pragmatic principle.** The ideal regime is event-driven: a cycle opens the moment a warning light comes on. Conway-era governance is not yet mature enough to operate that regime safely — proposals require deliberation windows, the Constitutional Committee is still establishing its review cadence, and SPO ratification thresholds have not yet been stress-tested against contested proposals. **Until that machinery has matured, the spec adopts a rhythmed regime: cycles open at fixed intervals, warning lights are read at each cycle boundary, and a fired warning determines whether the cycle produces a recalibration proposal or renews the parameters at their current values.** The forward path back to an event-driven regime is described in the [Forward Path](#443-forward-path--toward-ad-hoc-readiness) section below.
+**Rhythmed, not ad-hoc — a pragmatic principle.** The ideal regime is event-driven: a cycle opens the moment a warning light comes on. Conway-era governance is not yet mature enough to operate that regime safely — proposals require deliberation windows, the Constitutional Committee is still establishing its review cadence, and SPO ratification thresholds have not yet been stress-tested against contested proposals. **Until that machinery has matured, the spec adopts a rhythmed regime: cycles open at fixed intervals, warning lights are read at each cycle boundary, and a fired warning determines whether the cycle produces a recalibration proposal or renews the parameters at their current values.** The forward path back to an event-driven regime is described in the [Forward Path](#443-forward-path-toward-ad-hoc-readiness) section below.
 
-**Constitutional anchor.** This chapter operationalises the **parameter-guardrail discipline** of the [Governance Pathway](#22-the-governance-pathway--parameter-updates-within-guardrails). Every cycle defined below proposes movements **inside** the constitutional ranges (ME-01..ME-05 for $\rho$, TC-01..TC-05 for $\tau$, fee-related parameters within their declared bounds). Movements outside the ranges remain available but require a constitutional amendment, not a Parameter Update Action — a distinction the [Recalibration Pipeline](#442-the-conway-era-recalibration-pipeline) codifies.
+**Constitutional anchor.** This chapter operationalises the **parameter-guardrail discipline** of the [Governance Pathway](#22-the-governance-pathway-parameter-updates-within-guardrails). Every cycle defined below proposes movements **inside** the constitutional ranges (ME-01..ME-05 for $\rho$, TC-01..TC-05 for $\tau$, fee-related parameters within their declared bounds). Movements outside the ranges remain available but require a constitutional amendment, not a Parameter Update Action — a distinction the [Recalibration Pipeline](#442-the-conway-era-recalibration-pipeline) codifies.
 
 ![The macro dashboard — piloting the micro-economy through time](figures/macro_dashboard_loop.png)
 
@@ -898,7 +898,7 @@ A proposal that requires $\rho$ or $\tau$ outside their constitutional ranges is
 
 and satisfy [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios) (validation under three ADA price scenarios).
 
-The proposal admitted to the Conway pipeline must include three artefacts: **(i)** the proposed $(\rho', \tau')$ values, **(ii)** the simulation evidence that those values preserve the [Microeconomics KPIs](#3-microeconomics--participant-incentives-and-market-structure) above, and **(iii)** the price-scenario validation per [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios). **A proposal that improves Pot Survival while degrading any Microeconomics KPI does not satisfy this milestone.** The acceptance criterion is **conjunctive on preservation, disjunctive on improvement**.
+The proposal admitted to the Conway pipeline must include three artefacts: **(i)** the proposed $(\rho', \tau')$ values, **(ii)** the simulation evidence that those values preserve the [Microeconomics KPIs](#3-microeconomics-participant-incentives-and-market-structure) above, and **(iii)** the price-scenario validation per [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios). **A proposal that improves Pot Survival while degrading any Microeconomics KPI does not satisfy this milestone.** The acceptance criterion is **conjunctive on preservation, disjunctive on improvement**.
 
 | Surveillance KPI | Definition | Form of trigger |
 |---|---|---|
@@ -906,7 +906,7 @@ The proposal admitted to the Conway pipeline must include three artefacts: **(i)
 | Runway | Epochs to reserve depletion under current $\rho$ | Drops below constitutional minimum |
 | Realised-to-potential ratio | Pot reaching staking layer ÷ pot defined by formula | Drops below floor required by [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population) |
 
-> **Dependency note.** Pot Survival is meaningful only once the four [Microeconomics](#3-microeconomics--participant-incentives-and-market-structure) milestones — Operator Viability, Pledge, Delegator Yield, Deconcentration — are satisfied: a recalibration cycle that preserves a degraded micro-economy preserves the wrong target. Conversely, the micro-economy drifts over time without surveillance. The relationship is **bidirectional but temporally ordered** — the micro-economy must be reached first, then Pot Survival keeps it true.
+> **Dependency note.** Pot Survival is meaningful only once the four [Microeconomics](#3-microeconomics-participant-incentives-and-market-structure) milestones — Operator Viability, Pledge, Delegator Yield, Deconcentration — are satisfied: a recalibration cycle that preserves a degraded micro-economy preserves the wrong target. Conversely, the micro-economy drifts over time without surveillance. The relationship is **bidirectional but temporally ordered** — the micro-economy must be reached first, then Pot Survival keeps it true.
 
 ### 4.2. The fee-generating population must expand
 
@@ -1029,7 +1029,7 @@ Every proposal $\mathcal{P}$ produced by Pot Survival or Fee Policy must be simu
 - **stable** — price within the band observed over the surveillance window preceding the cycle;
 - **appreciating** — sustained price above the surveillance window, at which ADA-denominated rewards exceed fiat operating costs by a margin that reduces the dependency on $\rho$ and $\tau$ levers.
 
-The numeric definition of each scenario is a design choice. The **structure** of the validation — three scenarios, each with the [Microeconomics](#3-microeconomics--participant-incentives-and-market-structure), Pot Survival, and Fee Policy KPIs computed in full — is the specification.
+The numeric definition of each scenario is a design choice. The **structure** of the validation — three scenarios, each with the [Microeconomics](#3-microeconomics-participant-incentives-and-market-structure), Pot Survival, and Fee Policy KPIs computed in full — is the specification.
 
 A proposal that satisfies its KPIs in only one or two of the three scenarios is **not admissible**. The acceptance criterion is **conjunctive across scenarios**, mirroring the conjunctive structure of preservation at the milestone level.
 
@@ -1089,7 +1089,7 @@ The transition criteria — what would have to be true for ad-hoc cycles to beco
 
 When these conditions hold, the spec admits a transition to an **event-driven** regime in which fired triggers open cycles directly. The transition itself is a governance action subject to the Recalibration Pipeline.
 
-> **Dependency note.** The Recalibration Pipeline applies to every preceding milestone. [Microeconomics](#3-microeconomics--participant-incentives-and-market-structure) parameter changes flow through the same Conway pipeline as Pot Survival and Fee Policy proposals; the difference is in the cycle scope — Microeconomics is open continuously to candidate proposals, while this chapter is operated on cadence. Every candidate proposed under Microeconomics must be implementable through the Conway pathway this section defines, and every cycle opened on the macro dashboard must respect the [Microeconomics KPIs](#3-microeconomics--participant-incentives-and-market-structure) as its preservation condition.
+> **Dependency note.** The Recalibration Pipeline applies to every preceding milestone. [Microeconomics](#3-microeconomics-participant-incentives-and-market-structure) parameter changes flow through the same Conway pipeline as Pot Survival and Fee Policy proposals; the difference is in the cycle scope — Microeconomics is open continuously to candidate proposals, while this chapter is operated on cadence. Every candidate proposed under Microeconomics must be implementable through the Conway pathway this section defines, and every cycle opened on the macro dashboard must respect the [Microeconomics KPIs](#3-microeconomics-participant-incentives-and-market-structure) as its preservation condition.
 
 ## 5. Evaluation framework
 

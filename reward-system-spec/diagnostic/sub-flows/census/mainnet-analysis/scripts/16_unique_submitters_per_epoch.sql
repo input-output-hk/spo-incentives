@@ -1,7 +1,10 @@
 -- 16_unique_submitters_per_epoch.sql
 -- Distinct fee-paying addresses per epoch
 -- Heuristic: first input of each transaction = fee payer
--- Source: db-sync Instance A (epoch 623)
+-- Source: db-sync Instance B (full, epoch 627)
+-- NOTE: in newer db-sync schemas, the consuming-tx column on tx_in is
+-- `tx_in_id` (formerly `tx_id`). Update the JOIN below if you see a
+-- "column ti.tx_id does not exist" error.
 -- Output: one row per epoch with unique submitter count
 -- Figures: figures/unique_submitters_per_epoch.png
 

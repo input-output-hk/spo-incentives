@@ -1,6 +1,6 @@
 -- 15_tx_epoch_summary.sql
 -- Per-epoch transaction count and total fees (Shelley onward)
--- Source: db-sync Instance A (epoch 623)
+-- Source: db-sync Instance B (full, epoch 627)
 -- Output: one row per epoch with tx count, total/avg/median fee
 -- Figures: figures/tx_epoch_summary.png
 

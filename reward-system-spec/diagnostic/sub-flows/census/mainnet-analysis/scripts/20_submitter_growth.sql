@@ -2,7 +2,7 @@
 -- Per-epoch: new submitters (first-ever tx) vs returning submitters
 -- WARNING: this query is expensive — it requires a full scan of tx + tx_in + tx_out
 -- to find each address's first epoch. Consider materializing first_tx as a table.
--- Source: db-sync Instance A (epoch 623)
+-- Source: db-sync Instance B (full, epoch 627)
 -- Output: one row per epoch with active/new/returning submitter counts
 -- Figures: figures/submitter_growth.png (stacked area)
 

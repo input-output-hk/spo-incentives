@@ -1,9 +1,11 @@
 -- 17_fee_concentration.sql
--- Top fee-paying addresses over epochs 600–623 (recent window)
+-- Top fee-paying addresses over epochs 622–627 (recent window)
 -- Heuristic: first input of each transaction = fee payer
--- Source: db-sync Instance A (epoch 623)
+-- Source: db-sync Instance B (full, epoch 627)
 -- Output: top 500 addresses by cumulative fee expenditure
--- Figures: figures/fee_concentration_623.png (Lorenz curve)
+-- Figures: figures/fee_concentration_627.png (Lorenz curve)
+-- NOTE: in newer db-sync schemas, the consuming-tx column on tx_in is
+-- `tx_in_id` (formerly `tx_id`). Update the JOIN below if needed.
 
 WITH tx_submitter AS (
     SELECT
