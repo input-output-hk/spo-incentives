@@ -95,7 +95,7 @@ context that makes either of them interpretable.
 
 ![Nakamoto coefficient under eleven definitions — D1–D7 stake-based recompute and D8a/D8b/D9a/D9b in-house EDI methodology run](figures/definitions_comparison.png)
 
-## What the Nakamoto coefficient actually measures
+# What the Nakamoto coefficient actually measures
 
 The metric was introduced by Balaji S. Srinivasan and Leland Lee in 2017 in
 the essay *Quantifying Decentralization*, which sought to translate the
@@ -201,7 +201,7 @@ coefficient close to **18**, roughly four times smaller than EDI's ~80 —
 follows from the formal definition, not from a methodological dispute
 with EDI.
 
-## Definitions
+# Definitions
 
 The Nakamoto coefficient as used throughout this sub-flow follows the
 canonical formulation given above: the smallest integer *k* such that the
@@ -232,7 +232,7 @@ Custodial-exchange categorisation uses the `category` column of
 [`mpo_entity_summary_mainnet.csv`](../census/mainnet-analysis/data/mpo_entity_summary_mainnet.csv)
 with the category set `{cex, opaque_operational}`.
 
-## Data provenance
+# Data provenance
 
 All inputs are mainnet snapshots already present in the census sub-flow.
 No network call is performed at runtime; the recompute is bit-for-bit
@@ -250,7 +250,7 @@ The MPO mapping was assembled by triangulating Koios `pool_group`,
 domains. Each binding carries a `confidence` field and a `claim_type`. The
 entire manifest is human-auditable and version-controlled.
 
-## Method
+# Method
 
 For each definition the procedure is identical: build the entity → stake
 table appropriate to the definition, sort entities by controlled stake
@@ -264,7 +264,7 @@ This is conservative: any latent affiliation between two singletons would
 *reduce* the coefficient, not increase it. The published value is therefore
 an **upper bound** on the entity-clustered Nakamoto coefficient.
 
-## Results
+# Results
 
 The seven coefficients on the epoch-623 snapshot are:
 
@@ -311,7 +311,7 @@ self-attributed pool families. None of the 18 is a singleton pool: every
 entity in the top-18 is a multi-pool operator captured by the curated
 manifest.
 
-## Robustness — production-threshold sensitivity
+# Robustness — production-threshold sensitivity
 
 The entity-clustered coefficient is essentially flat with respect to the
 production-threshold cut, because the binding 50 %-of-stake mass is
@@ -336,7 +336,7 @@ not change the identity of the threshold-crossers, but it lowers the share
 denominator slightly, allowing the same top entities to cross 50 % one
 position earlier in two cases.
 
-## Comparison with the official figure
+# Comparison with the official figure
 
 EDI's reported value of approximately 80 at epoch 584 is computed on
 **block production share by pool / operator key**, with EDI's own
@@ -368,7 +368,7 @@ The third is **the population filter**. EDI does not apply a production
 threshold; the November 2025 diagnostic does. The threshold sweep above
 shows this is not the source of the dispersion either.
 
-## The EDI methodology, replicated in-house
+# The EDI methodology, replicated in-house
 
 The Edinburgh Decentralization Index (EDI) is itself a methodology, not
 just a dashboard number. Its consensus-decentralization pipeline is
@@ -386,7 +386,7 @@ reference epochs and two clustering modes**, producing four new Nakamoto
 definitions (D8a, D8b, D9a, D9b) that are the EDI methodology's own
 output, not a derivation of it.
 
-### What "running the EDI methodology" means here
+## What "running the EDI methodology" means here
 
 Three components are exercised, all unmodified from the upstream EDI
 repository:
@@ -417,7 +417,7 @@ window. The Nakamoto coefficient is then `min { k | top-k cumulative
 block-share > 0.5 }`, computed over the entity column produced by the
 clustering stage.
 
-### The four EDI definitions added by this sub-flow
+## The four EDI definitions added by this sub-flow
 
 | Def. | Window | Clustering mode | Nakamoto | Active entities |
 |---|---|---|---:|---:|
@@ -435,7 +435,7 @@ line — extending `end_date` from `2026-02-01` to `2026-05-01` so the
 epoch-623 window falls within the sampled range. No metric, windowing,
 or parsing parameter is altered.
 
-### What the four definitions show
+## What the four definitions show
 
 The D8a value at epoch 584 is the EDI methodology's own output for the
 window the November 2025 report cites, computed in-house: **82**, a
@@ -472,7 +472,7 @@ EDI metric CSVs, and the configuration delta — is preserved under
 [`edi-replication/`](edi-replication/), with method, caveats, and
 reproduction commands documented inline.
 
-## Cardano in cross-chain context
+# Cardano in cross-chain context
 
 The EDI consensus pipeline supports eight ledgers — Bitcoin, Bitcoin
 Cash, Cardano, Dogecoin, Ethereum, Litecoin, Tezos, and Zcash — and
@@ -550,7 +550,7 @@ clustering-policy choice that this sub-flow makes — which the cascade
 the right axis to argue about; the cross-chain ordering it produces is
 unchanged.
 
-## Threats to validity
+# Threats to validity
 
 The recompute is conservative and reproducible.
 
@@ -566,7 +566,7 @@ then unpacked individually.
 | 4 | Static snapshot, dynamic adversary | Out of scope | Bounded by the diagnostic's entry-cost analysis |
 | 5 | Constitutional scope | Out of scope | Governance process per the Cardano Constitution |
 
-### 1. Manifest completeness
+## 1. Manifest completeness
 
 > **Direction.** Could only push D4 *down*.
 > **Status.** Upper bound under the curated manifest.
@@ -581,7 +581,7 @@ not raise it.
 The 18 should therefore be read as an upper bound conditional on the
 curated manifest — never as a lower-bound security floor.
 
-### 2. Snapshot specificity
+## 2. Snapshot specificity
 
 > **Direction.** Either way, over time.
 > **Status.** Single-epoch figure; trajectory deferred to future work.
@@ -596,7 +596,7 @@ holds only per-clustered-entity history
 This is recorded as future work in the sub-flow's task list. It does
 not affect the validity of the snapshot value at e623.
 
-### 3. Stake share versus block share
+## 3. Stake share versus block share
 
 > **Direction.** Negligible at pool level — single-unit dispersion.
 > **Status.** Settled by the in-house EDI run.
@@ -615,7 +615,7 @@ The block-share / stake-share distinction is therefore not a residual
 source of uncertainty for the headline 18. The dispersion to ~80–90
 is driven by EDI's clustering policy, not by the choice of resource.
 
-### 4. Static snapshot, dynamic adversary
+## 4. Static snapshot, dynamic adversary
 
 > **Direction.** Out of scope — the metric measures structure, not cost.
 > **Status.** Complemented by the MPO entry-cost analysis.
@@ -629,7 +629,7 @@ aggregation either.
 
 The diagnostic's [MPO entry-cost analysis](../../README.md) is the complement that puts a price on the structural picture given here.
 
-### 5. Constitutional scope
+## 5. Constitutional scope
 
 > **Direction.** Out of scope for this sub-flow.
 > **Status.** Subject to the Cardano Constitution governance process.
@@ -643,7 +643,7 @@ Reframing how a metric is *reported* is a methodological matter.
 Redefining the network's *official* decentralisation indicator is
 not.
 
-## Reproduction
+# Reproduction
 
 ```bash
 cd diagnostic/sub-flows/nakamoto-revaluation
@@ -663,7 +663,7 @@ A scratch verification step confirms that the top-18 entities sum to
 the operator landscape history. Failure of either check should be treated
 as a regression.
 
-## References
+# References
 
 The primary-source citations for the formal definition, the EDI
 methodology, and the Cardano academic literature this sub-flow builds on:
@@ -711,7 +711,7 @@ here. The in-house re-run of EDI's pipeline is preserved under
 [`edi-replication/`](edi-replication/), with method, caveats, and the
 four unmodified output CSVs documented inline.
 
-## Document history
+# Document history
 
 | Date | Change |
 |---|---|

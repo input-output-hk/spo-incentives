@@ -10,7 +10,7 @@ The formal game-theoretic properties of the Cardano reward curve were establishe
 
 The remainder of the document fixes the [design objective the mechanism must hit](#1-the-design-objective), introduces the three [players and their strategic instruments](#2-the-players), traces each [intended trajectory and the four security properties the equilibrium must satisfy](#3-the-progression), and closes with the [aligned dynamics that knit the trajectories into a virtuous cycle](#4-the-aligned-dynamics-the-virtuous-cycle).
 
-## Table of Contents
+# Table of Contents
 
 - [1. The design objective](#1-the-design-objective)
 - [2. The players](#2-the-players)
@@ -25,7 +25,7 @@ The remainder of the document fixes the [design objective the mechanism must hit
   - [3.4. The security properties the equilibrium must satisfy](#34-the-security-properties-the-equilibrium-must-satisfy)
 - [4. The aligned dynamics — the virtuous cycle](#4-the-aligned-dynamics-the-virtuous-cycle)
 
-## 1. The design objective
+# 1. The design objective
 
 The consensus layer needs three security invariants:
 
@@ -48,7 +48,7 @@ Two conditions must hold for this to work:
 
 When both conditions hold, the protocol does not need to trust its participants — only that they are rational.
 
-## 2. The players
+# 2. The players
 
 Three distinct classes participate in the mechanism. Each has a different *motivation* for entering, a different *strategy space* (in mechanism-design terms), and a different *trajectory* as the system matures.
 
@@ -58,7 +58,7 @@ Three distinct classes participate in the mechanism. Each has a different *motiv
 | **Operators** | Block production and network security | **Pledge** — personal capital locked as a commitment bond |
 | **Delegators** | Capital allocation and operator oversight | **Liquid delegation** — continuous, revocable approval signal |
 
-### 2.1. Transaction submitters — the source of economic demand
+## 2.1. Transaction submitters — the source of economic demand
 
 **Why they matter.** Transaction submitters need reliable, censorship-resistant settlement. They do not participate in the staking game directly — they are *users* of the service the game produces. Their willingness to pay fees is a revealed-preference signal: it measures what the network is actually worth.
 
@@ -71,7 +71,7 @@ Three distinct classes participate in the mechanism. Each has a different *motiv
 
 *See also:* [Treasury & Pool Pots Distribution](../diagnostic/README.md#11-treasury-pool-pots-distribution) for the on-chain flow; [Mainnet Observations](../diagnostic/README.md#112-mainnet-observations) (TRE.O1, TRE.O2) for current fee-vs-expansion ratios.
 
-### 2.2. Operators — capital at risk
+## 2.2. Operators — capital at risk
 
 <a id="221-an-open-seat-at-the-deflationary-table"></a>
 
@@ -89,7 +89,7 @@ The entry should be *accessible* — anyone with conviction and a realistic init
 
 **The arc from newcomer to pillar.** A new operator starts with a small pledge, minimal delegation, and sub-reliable block production. The intended trajectory is one of *increasing commitment*: as the operator builds reputation and attracts delegation, they pledge more, the pool grows, and they earn a larger share of the pools pot. Each step up in pledge should produce a measurable competitive advantage — visible to delegators and economically meaningful to the operator — so the progression from "new pool" to "established pool" to "fully committed pool" is a legible arc both players can follow.
 
-### 2.3. Delegators — the oversight layer
+## 2.3. Delegators — the oversight layer
 
 **Yield-seeking with minimal effort.** Delegators seek yield on their ADA holdings with minimal effort and risk. They do not produce blocks and bear no operational cost. Their entire strategic space reduces to a single decision: *which pool to delegate to*. A rational delegator maximises risk-adjusted return, favouring pools with high expected yield, reliable performance, and trustworthy operators.
 
@@ -119,7 +119,7 @@ A **non-myopic** delegator anticipates the *downstream effects* of delegation de
 
 This is the core tension in the delegator's role. The ethical arbitration the mechanism depends on operates *outside* the formula, sustained only by the delegator's understanding that the network they help shape is the network they depend on.
 
-### 2.4. The dependency chain
+## 2.4. The dependency chain
 
 These three roles form a dependency chain.
 
@@ -133,7 +133,7 @@ Transaction submitters are upstream — their contribution is mediated through t
 
 *See also:* [Treasury & Pool Pots Distribution](../diagnostic/README.md#11-treasury-pool-pots-distribution) for the upstream flow.
 
-## 3. The progression
+# 3. The progression
 
 Each player class experiences the game through its own trajectory — entry, progression, endgame. A well-designed mechanism makes each *individually rational* at every stage, so no player has a reason to drop out or deviate.
 
@@ -141,7 +141,7 @@ Each player class experiences the game through its own trajectory — entry, pro
 
 The three trajectories are developed in detail below. Read across the matrix to compare players at the same stage; read down to follow each player's arc.
 
-### 3.1. Transaction submitters — from subsidy to self-sufficiency
+## 3.1. Transaction submitters — from subsidy to self-sufficiency
 
 **Entry.** Early adopters use the network for basic settlement. Transaction volume is low and fees contribute negligibly to the epoch pot. The game is almost entirely funded by monetary expansion from the reserve — a bootstrap subsidy that makes staking rewards viable before organic demand exists.
 
@@ -149,7 +149,7 @@ The three trajectories are developed in detail below. Read across the matrix to 
 
 **Endgame.** Fee revenue fully replaces monetary expansion as the primary funding source for the epoch pot. The staking game is self-sustaining: operators and delegators are paid by the economic activity they secure, not by a depleting reserve. The protocol has achieved *economic self-sufficiency*.
 
-### 3.2. Operators — from first pledge to full commitment
+## 3.2. Operators — from first pledge to full commitment
 
 **Entry.** A new operator registers a pool, pledges an initial amount, and begins attracting delegation. The mechanism must make this *individually rational*: the expected payoff should offer a credible path forward — not just survival but growth — so the *participation constraint* is met from the start.
 
@@ -157,7 +157,7 @@ The three trajectories are developed in detail below. Read across the matrix to 
 
 **Endgame.** The operator has committed deeply (high pledge) and earned broad delegation. Their pool captures the maximum reward the protocol offers. This state should require *both* high pledge and high delegation — it cannot be attained by capital alone or by delegation alone.
 
-### 3.3. Delegators — from passive yield to active oversight
+## 3.3. Delegators — from passive yield to active oversight
 
 **Entry.** A new delegator selects a pool and allocates stake. Differentiation between pools is low — delegation may be driven by brand, community ties, or social signals rather than on-chain metrics. Participation must still be *individually rational*: delegation yield should exceed the opportunity cost of holding idle ADA.
 
@@ -167,7 +167,7 @@ The three trajectories are developed in detail below. Read across the matrix to 
 
 *See also:* [The delegator as ethical arbiter](#23-delegators-the-oversight-layer); [Myopic and non-myopic delegation](#23-delegators-the-oversight-layer).
 
-### 3.4. The security properties the equilibrium must satisfy
+## 3.4. The security properties the equilibrium must satisfy
 
 The three trajectories above describe individual paths. But the protocol does not care which path any single operator or delegator takes — it cares whether the *equilibrium* that emerges from the aggregate of all rational choices preserves the security invariants from [the design objective](#1-the-design-objective).
 
@@ -242,7 +242,7 @@ An equilibrium where operators fund pools entirely from their own capital satisf
 
 The design's target is an equilibrium where the pledge/delegation ratio within each pool reflects genuine *interdependence* between operator and community — where neither party can be absent without degrading the security properties the consensus layer depends on. This is the benchmark against which any evaluation of the mechanism's actual performance must be measured.
 
-## 4. The aligned dynamics — the virtuous cycle
+# 4. The aligned dynamics — the virtuous cycle
 
 When all three trajectories function as intended, they form a self-reinforcing cycle.
 

@@ -2,20 +2,20 @@
 page: findings
 source: diagnostic/README.md
 date_updated: 2026/04/22
-purpose: canonical synthesis for findings.html — decoupled from the long-form diagnostic README
+purpose: canonical synthesis for problem-statements.html — decoupled from the long-form diagnostic README
 ---
 
 # Findings Index
 
-This document curates every finding that appears on `findings.html`. It exists
+This document curates every finding that appears on `problem-statements.html`. It exists
 to decouple the public-facing synthesis from the long-form analytical README,
 so each finding carries an editorially-chosen title, an explicit tier and
 parent, an explicit list of supporting observations, a curated 2–4 paragraph
 summary fit for the synthesis page, and a backlink anchor to the full reasoning
-in `observatory.html`.
+in `diagnostic.html`.
 
 `build_site.py` reads this file (not the regex pipeline over `diagnostic/README.md`)
-to render `findings.html`. The observation table itself stays in
+to render `problem-statements.html`. The observation table itself stays in
 `diagnostic/README.md` — observations *are* the README — but the mapping
 finding → observations is explicit here.
 
@@ -287,8 +287,8 @@ the heading. Fields:
   (e.g., `Treasury & Pool Pots Distribution`).
 - **tier** — one of `mechanism`, `concentration`, `structure`, `demand`,
   `fees`, `sustainability`, `general`. Drives the filter chips on
-  `findings.html`.
-- **observatory_anchor** — the `id=…` in the rendered `observatory.html`
+  `problem-statements.html`.
+- **observatory_anchor** — the `id=…` in the rendered `diagnostic.html`
   that the *Read full finding on Observatory →* link points to.
 - **observations** — YAML list of global observation ids (`obs-XYZ-N`) from
   `diagnostic/README.md` that support the finding. Empty list is valid
@@ -304,11 +304,11 @@ pipeline as observation bodies.
 - **Titles proposed for three findings that previously lacked them.** The
   regex pipeline fell back to `"Problem Induction"` for §1.3.3, §2.1.3, and
   §2.2.3. Suggested titles above — adjust freely.
-- **§3 added.** Previously absent from `findings.html` because its structure
+- **§3 added.** Previously absent from `problem-statements.html` because its structure
   (`## 3.3 Problem Induction` with `### 3.3.x` children) did not match the
   `### X.Y.Z` pattern. Treated here as a single finding at id `3.3`
   consolidating §3.3.1 and §3.3.2. Splitting into two separate findings is an
   option if the Observatory page keeps them distinct.
 - **Observatory anchor for §3.3** is a placeholder (`33-problem-induction`).
   The actual slug depends on the python-markdown TOC rule applied when
-  `observatory.html` is rebuilt; confirm after the next build.
+  `diagnostic.html` is rebuilt; confirm after the next build.

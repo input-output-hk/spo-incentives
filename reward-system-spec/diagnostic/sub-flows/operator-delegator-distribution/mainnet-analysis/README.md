@@ -22,7 +22,7 @@ At epoch 623, **733 productive pools** process **21.18B ADA** of staked capital.
 
 The remainder of the report walks the analysis in four parts: [the formula](#2-the-formula-intra-pool-reward-sharing) presents the SL-D1 split rule in three layers (original notation → residual-split decomposition → reader-friendly rewrite → mainnet parameterisation); [the productive population](#3-the-productive-population) traces the operator and delegator sides from raw certificates to the productive set (≥3M ADA); [the pricing plan landscape](#4-the-pricing-plan-landscape) analyses the flat fee, commission, custodial/retail boundary, operator profitability, and delegator return; [the delegator yield](#5-the-delegator-yield-trajectory-context-and-structural-compression) traces the trajectory, cross-chain comparison, and structural compression. All counts and amounts use epoch **623**. Source data: `pool_choice_quality_623.csv`, `pool_median_delegation_623.csv` (db-sync `epoch_stake`), `reward_split_snapshot_623.csv` (synthetic, estimated from epoch 614 reward rate), `koios_pool_history_mainnet.csv`, `mpo_entity_pool_mapping_mainnet.csv`.
 
-## Table of Contents
+# Table of Contents
 
 1. [Mainnet Observations](operator.html#1-mainnet-observations)
 2. [The formula — intra-pool reward sharing](#2-the-formula-intra-pool-reward-sharing)
@@ -52,7 +52,7 @@ The remainder of the report walks the analysis in four parts: [the formula](#2-t
    - 5.2 [The yield in context — cross-chain and cross-asset comparison](#52-the-yield-in-context-cross-chain-and-cross-asset-comparison)
    - 5.3 [The yield spread — structural compression](#53-the-yield-spread-structural-compression)
 
-## 1. Mainnet Observations
+# 1. Mainnet Observations
 
 _Terminology note._ The protocol uses "fixed cost" and "margin" for the two extraction channels. This report adopts pricing-plan terminology: the fixed cost is the **flat fee** (a fixed ₳/epoch amount), the margin is the **commission** (a proportional share), and their sum — the operator take — is the **effective price** the delegator faces. The on-chain parameter names appear in §2 (the formula) and at first use in §4. Everywhere else, the pricing-plan terms apply.
 
@@ -93,7 +93,7 @@ _Terminology note._ The protocol uses "fixed cost" and "margin" for the two extr
 | OPE.O9.F1 | **At 2.0%, Cardano sits below the USD risk-free rate and at the bottom of the PoS landscape.** Cardano's current **2.0%** delegation yield is **below the USD risk-free rate of 4.3%** and at the **bottom of the PoS chains' yield ladder**. No other major chain combines this low a yield with liquid, non-custodial, slashing-free design. *The low return is the cost of that design — but the design now asks delegators to accept a yield below the risk-free rate, which only conviction-driven holders will do* | [The yield in context — cross-chain and cross-asset comparison](#52-the-yield-in-context-cross-chain-and-cross-asset-comparison) | Yield is uncompetitive vs alternatives |
 | OPE.O9.F2 | **The mechanism's premise depends on ADA appreciation that hasn't materialised — and if it doesn't, only conviction-driven holders remain.** The reward formula was designed around a monetary regime where ADA itself appreciates (the reserve-depletion design implies deflationary-like behaviour as the supply approaches its cap). In practice, ADA price has not delivered that appreciation, leaving delegators with **low yield + uncertain price**. The mechanism's assumption — that yield-sensitive delegators allocate based on competitive returns — collapses to a self-selected pool of long-conviction holders, who do not respond to the formula's pricing levers. *If the deflation premise fails, the psychological pressure compounds: there is no yield case AND no appreciation case, only a conviction case — which the formula cannot manufacture* | [The yield in context — cross-chain and cross-asset comparison](#52-the-yield-in-context-cross-chain-and-cross-asset-comparison) | Yield + price = double-sided pressure on the conviction case |
 
-## 2. The formula — intra-pool reward sharing
+# 2. The formula — intra-pool reward sharing
 
 These formulas define how a pool's realized allocation is split between the operator and the rest of the pool participants. The split happens only after the pool-level reward has already been computed and adjusted by apparent performance.
 
@@ -109,7 +109,7 @@ In this final step, the operator still receives a stake-proportional share throu
 
 The intra-pool split was specified in [*Design Specification for Delegation and Incentives in Cardano*](https://github.com/IntersectMBO/cardano-ledger/releases/latest/download/shelley-delegation.pdf) (Kant, Brünjes & Coutts, IOHK, 2019 — deliverable **SL-D1**, [Implications](#454-implications)). The mechanism has been operational on mainnet since the Shelley hard fork on 2020/07/29. The split logic itself has never been modified; the only governance action affecting the intra-pool split was the reduction of `minPoolCost` from 340 to 170 ADA at epoch 445 (2023/10/27).
 
-### 2.1. SL-D1 (Original)
+## 2.1. SL-D1 (Original)
 
 The operator and member rewards are two complementary views of the same split rule applied to the realized pool allocation.
 Once the pool-level reward has been computed, the split follows the same sequence:
@@ -140,7 +140,7 @@ r_{\text{member}}\left(\hat f,c,m,\frac{t}{\sigma}\right)=
 \end{cases}
 $$
 
-### 2.2. Residual split decomposition
+## 2.2. Residual split decomposition
 
 Before switching to reader-friendly variable names, it is useful to separate the split rule into the two regimes induced by the fixed operator cost $c$. Let
 
@@ -195,7 +195,7 @@ $$
 
 This makes the three-layer structure explicit: fixed cost first, operator margin second, proportional sharing of the remainder third.
 
-### 2.3. Reader-friendly formulation
+## 2.3. Reader-friendly formulation
 
 Let the operator and member pool-share ratios be defined as:
 
@@ -271,7 +271,7 @@ In other words: the operator's *own* capital is rewarded **identically** to dele
 
 The pledge mechanism that makes commitment economically significant lives **upstream**, in the reward curve (§2 of the [main report](../../../README.md#2-the-player-populations)), not in the intra-pool split.
 
-### 2.4. Mainnet parameterization
+## 2.4. Mainnet parameterization
 
 | Parameter | Value | Set by |
 | --- | --- | --- |
@@ -281,7 +281,7 @@ The pledge mechanism that makes commitment economically significant lives **upst
 
 At epoch 623 (hollow-strategy pools): the majority of rewarded hollow-strategy pools declare $c = 340$ ADA (the former minimum). The median declared margin is 2.0%; the entity-level median is 1.0% and the stake-weighted mean is 3.8%.
 
-### 2.5. Concept glossary
+## 2.5. Concept glossary
 
 | Symbol | Name | Definition |
 | --- | --- | --- |
@@ -294,7 +294,7 @@ At epoch 623 (hollow-strategy pools): the majority of rewarded hollow-strategy p
 | Delegator pot | $(1-m)(\hat{f} - c_{\text{eff}})$ | Amount entering pro-rata distribution |
 | Effective tax | Operator take / $\hat{f}$ | Fraction of pool reward extracted before pro-rata |
 
-## 3. The productive population
+# 3. The productive population
 
 All analysis from §4 onwards operates on the **productive population** at epoch **623** — the subset of pools, operators, and delegations that clear the **production threshold (≥3M ADA)**: a 95% probability of producing ≥1 block per epoch (λ=3 in the Poisson model — see [POL.O3.F1](../../pools-distribution/mainnet-analysis/README.md#3-mainnet-observations) in the companion *Pools Pot Distribution* report). Below this threshold, pools produce blocks too sporadically for delegator returns or operator economics to be meaningful — they are dropped from the analysis here, then characterised separately in pools-distribution as the *sub-block* (< 1M) and *sub-reliable* (1M–3M) tails.
 
@@ -302,7 +302,7 @@ All analysis from §4 onwards operates on the **productive population** at epoch
 
 *Figure 3.1 — From raw to productive population at epoch 623 on both sides of the market. Of **2,302 raw entities** and **2,877 raw pools**, the productive set (pools ≥3M ADA, the 95%-block-probability bar) retains **383 entities** across **733 productive pools** holding **21.18B ADA** — 97.4% of all staked supply.*
 
-### 3.1. Operators
+## 3.1. Operators
 
 | Segment | Entities | Pools | Stake | Share |
 |---|---:|---:|---:|---:|
@@ -320,7 +320,7 @@ The **219 sub-reliable pools** (1M–3M ADA) are block-producing in expectation 
 
 Entity attribution is a lower bound — operators using entirely separate infrastructure and branding for each pool remain invisible.
 
-### 3.2. Delegators
+## 3.2. Delegators
 
 The delegation pipeline starts from 1.85M raw delegation certificates and removes two layers of noise: zero-balance certificates (27% of raw — delegation records with no ADA behind them) and delegations to sub-productive pools.
 
@@ -340,11 +340,11 @@ The **1,227,281 delegations** in productive pools are where the pricing plan pro
 
 The companion [*Staking Census*](../../census/mainnet-analysis/) documents the full cleaning pipeline. All counts and amounts reference epoch **623** unless otherwise noted.
 
-## 4. The pricing plan landscape
+# 4. The pricing plan landscape
 
 The formula gives operators two extraction channels: a fixed cost $c$ (on-chain: `fixed_cost`, constrained by protocol parameter `minPoolCost`) and a proportional margin $m$ (on-chain parameter `margin`). In pricing terms, the fixed cost functions as a **flat fee** — a fixed ADA amount per epoch, independent of pool size — and the margin functions as a **commission** — a proportional share of the reward after the flat fee is deducted. Together they compose the operator's pricing plan; their sum, the **operator take**, is the effective price the delegator faces. This section categorises the pool population along each pricing channel; [§4.3 — Custodial versus retail](#43-custodial-versus-retail) classifies the delegation side (custodial versus retail); and [§4.4 — Operator profitability versus delegator return](#44-operator-profitability-versus-delegator-return) crosses both to measure operator profitability against delegator return.
 
-### 4.1. The flat fee (fixed cost)
+## 4.1. The flat fee (fixed cost)
 
 The flat fee is the ADA amount deducted from every pool's reward before commission and pro-rata distribution (on-chain: declared `fixed_cost` $c$, constrained by protocol parameter `minPoolCost`). It is constrained by the protocol floor $c_{\min}$, currently **170 ₳** (reduced from 340 ₳ at epoch 445, on 2023/10/27).
 
@@ -381,7 +381,7 @@ The inertia is **structural**: **70% of floor-declaring stake remains at 340 ₳
 
 > **Finding OPE.O1.F2 — 64% of pools still declare the former floor (340 ₳) — 178 epochs after the governance action halved it.** The inertia is not transient. It is driven by the largest entities and reflects a structural feature of the network: the flat fee is a set-and-forget parameter for most operators. Among the 219 sub-reliable pools (1M–3M ADA), the distribution mirrors the productive population (84 adopted, 117 legacy) — but the economic meaning is different. At this tier, a 170 ₳ flat fee absorbs ~27% of pool reward and a 340 ₳ fee absorbs ~54%. The adopted/legacy distinction, which is a governance-responsiveness signal for productive pools, becomes a confiscation-severity signal for sub-reliable ones.
 
-### 4.2. The commission (margin)
+## 4.2. The commission (margin)
 
 The commission is the operator's proportional share of the reward after the flat fee is deducted (on-chain: `margin` $m \in [0, 1]$). Unlike the flat fee, which clusters at two protocol-floor values, the commission is continuously variable and has no enforced floor or ceiling. It is the only fully unconstrained parameter in the intra-pool split, and the one that most directly expresses the operator's pricing intent.
 
@@ -409,11 +409,11 @@ No man's land makes the bimodality explicit: the **89pp gap** between competitiv
 **Commission bands × owner-stake strategy.** The bands cross-cut the three owner-stake strategies. The hollow segment fills all four bands. Balanced pools concentrate in no-commission and competitive with marginal presence in privatisation. Private pools occupy only competitive (3 pools — Wave and one anonymous) and privatisation — private × no-commission is empty because an operator who funds the pool has no reason to set commission to zero.
 
 
-### 4.3. Custodial versus retail
+## 4.3. Custodial versus retail
 
 Not all staked ADA is delegated by independent participants choosing a pool on the open market. A significant share is **custodial** — controlled by operators rather than by the on-chain delegators themselves. Identifying these pools is necessary before the profitability analysis ([§4.4 — Operator profitability versus delegator return](#44-operator-profitability-versus-delegator-return)) can isolate the genuine pricing market.
 
-#### 4.3.1. Clear custodial — by pledge and by extraction
+### 4.3.1. Clear custodial — by pledge and by extraction
 
 Two mechanisms produce unambiguous custodial outcomes, detectable from a single on-chain observable.
 
@@ -421,7 +421,7 @@ Two mechanisms produce unambiguous custodial outcomes, detectable from a single 
 
 **Custodial by extraction** — non-private pools that declare a privatisation commission (≥ 99%). The operator does not fund the pool but captures virtually all rewards through the commission. Delegators earn near-zero yield; whether they remain through inertia, ignorance, or institutional constraint, their delegation is not a meaningful market signal.
 
-#### 4.3.2. Custodial by delegation — the median delegation signal
+### 4.3.2. Custodial by delegation — the median delegation signal
 
 The third mechanism is more subtle. Some pools appear hollow to the protocol (low owner-stake, competitive commission) but their delegation is concentrated in few, large addresses — the hallmark of operator-routed capital.
 
@@ -438,7 +438,7 @@ At epoch 623, **28 pools** (across 15 entities) exceed this threshold, carrying 
 
 *OPE.4.3 — Per-pool median delegation against pool stake at epoch 623. **28 pools** across **15 entities** clear the 100K ₳ median threshold that separates custodial-by-delegation from retail — splitting into whale self-delegation pools (median ≥ 1M ₳) and smaller high-net-worth arrangements.*
 
-#### 4.3.3. Summary
+### 4.3.3. Summary
 
 The table below continues the population decomposition from §3:
 
@@ -471,7 +471,7 @@ The retail market — **809 pools, 516 entities, 17.02B ADA, 1,272,836 delegator
 
 > **Finding OPE.O3.F3 — Each custodial mechanism produces a different economic outcome.** Custodial-by-pledge entities earn 1,759,252 ₳/yr median — they fund their own pools and capture 100% of rewards. Custodial-by-extraction entities earn 281,831 ₳/yr — privatisation commission extracts from pools whose delegators have not re-delegated. Custodial-by-delegation entities earn 29,329 ₳/yr — these are small whale pools, not institutional revenue engines. The three mechanisms share the label "custodial" but produce economics that span two orders of magnitude.
 
-### 4.4. Operator profitability versus delegator return
+## 4.4. Operator profitability versus delegator return
 
 The effective price is only meaningful **in the retail market** — where the operator does not control the delegator addresses. In custodial pools, the "price" is an **internal transfer**; it carries no information about market competition. This section analyses the **809 retail pools** (516 entities, 17.02B ADA, 1,272,836 delegators) identified in [§4.3 — Custodial versus retail](#43-custodial-versus-retail).
 
@@ -567,7 +567,7 @@ Panel B removes the sub-reliable population and zooms to the productive market (
 
 The visual makes three patterns immediately legible. First, the custodial segment spans three orders of magnitude internally: custodial-by-pledge entities (n=10) earn 1.8M ₳/yr median with a range up to 16.9M, while custodial-by-delegation (n=15) clusters near the retail baseline at 32K. Second, single-pool retail operators (sub-reliable, healthy, large+) are compressed into a narrow band around 25K ₳/yr — regardless of pool size, the revenue barely moves. Third, MPO revenue scales with fleet size: 2–5 pool MPOs earn ~94K, 6+ pool MPOs earn ~402K. The jump from single-pool to 2-pool is the most significant transition in operator economics — it roughly triples entity revenue.
 
-### 4.5. Is operator revenue competitive? — a market benchmark
+## 4.5. Is operator revenue competitive? — a market benchmark
 
 [§4.4 — Operator profitability versus delegator return](#44-operator-profitability-versus-delegator-return) quantifies **what operators earn**; this section asks whether those earnings are **competitive** — whether they compensate for the real resources consumed.
 
@@ -575,7 +575,7 @@ A reward mechanism that **underpays** its operators relative to their costs and 
 
 *The question is where Cardano's operator economics sit on that spectrum.*
 
-#### 4.5.1. The cost of operating a pool — infrastructure and labour
+### 4.5.1. The cost of operating a pool — infrastructure and labour
 
 A Cardano stake pool requires, at minimum, one block-producing node and two relay nodes, each running 24/7 with adequate CPU, RAM (16–32 GB), NVMe storage, and bandwidth (~1 GB/hour). The operator is responsible for uptime, security patching, key rotation, and monitoring. The typical deployment uses either bare-metal servers or cloud VPS instances across geographically distinct locations.
 
@@ -614,7 +614,7 @@ Combining infrastructure and a conservative labour estimate:
 
 This is a *lower bound*. It assumes the cheapest infrastructure tier, the lowest market rate for the relevant skillset, and minimal monthly hours. An operator running redundant infrastructure across multiple regions, maintaining a community presence, and participating in governance easily exceeds 20 hours per month — doubling the labour component.
 
-#### 4.5.2. Revenue versus cost — a price-sensitivity view
+### 4.5.2. Revenue versus cost — a price-sensitivity view
 
 Infrastructure and labour are denominated in fiat; operator revenue is denominated in ADA. The economic viability of pool operation is therefore a function of two variables: the ₳ revenue (set by the mechanism) and the ADA/USD exchange rate (set by the market). The [§4.4 — Operator profitability versus delegator return](#44-operator-profitability-versus-delegator-return) revenue data maps directly onto this cost framework. The table below holds the first constant — each tier's median ₳/yr from [§4.4 — Operator profitability versus delegator return](#44-operator-profitability-versus-delegator-return) — and varies the second across five price points spanning a 40× range.
 
@@ -651,7 +651,7 @@ But the mechanism itself is not structurally broken; it is structurally **contin
 
 *The protocol's operator economics are hostage to a single exogenous variable.*
 
-#### 4.5.3. Cross-chain comparison — the validator cost spectrum
+### 4.5.3. Cross-chain comparison — the validator cost spectrum
 
 Cardano's operator economics are unusually lean relative to other PoS networks. The comparison is instructive because it reveals, chain by chain, that the small-operator viability problem is universal — but the *binding constraint* differs in each design, and so does the structural response.
 
@@ -724,7 +724,7 @@ The flat fee compresses revenue at the bottom; the commission is too low (median
 
 *No other chain exhibits this degree of revenue compression across a 30× range of delegated stake.*
 
-#### 4.5.4. Implications
+### 4.5.4. Implications
 
 Three implications follow from this benchmarking.
 
@@ -744,7 +744,7 @@ The mechanism's viability is **hostage to the fiat price of ADA** — a variable
 
 > **Finding OPE.O6.F4 — No single-pool operator in the retail market earns a competitive wage for their labour.** The median single-pool revenue of ~25,000 ₳/yr ($6,250 at $0.25/ADA) covers infrastructure but not the 5–15 hours per month of skilled work required to operate a pool. Competitive compensation begins at the 2-pool MPO tier (~68,700 ₳/yr). The single-pool operator is economically subsidising the network — sustained by non-economic motivations, not by the reward mechanism.
 
-## 5. The delegator yield — trajectory, context, and structural compression
+# 5. The delegator yield — trajectory, context, and structural compression
 
 The pricing plan landscape (§4) establishes what the delegator **pays**; this section examines what the delegator **receives**.
 
@@ -752,7 +752,7 @@ The annualised return on stake (ROS) — the single metric that aggregates pool 
 
 *If the yield spread across pools is wide enough, delegators can differentiate operators and the accountability loop closes. If it is not, the mechanism's core assumption fails regardless of how prices are set.*
 
-### 5.1. The yield trajectory — level and decline
+## 5.1. The yield trajectory — level and decline
 
 At epoch 623, a delegator in the retail hollow market earns a **stake-weighted annualised yield of approximately 2.0%**. A delegation of 10,000 ADA produces **~200 ADA/year**, or ~2.7 ADA per epoch.
 
@@ -783,7 +783,7 @@ The declining yield also tightens the **participation constraint for operators**
 
 > **Finding OPE.O8.F1 — The delegator yield has fallen from 5.3% to 2.0% in 5.5 years and the decline is built into the formula.** Yield has tracked reserve depletion with **$R^2 = 0.99$** across **413 epochs**. Projection from epoch 623 (~April 2026): **~1.7%** within ~12 months, **sub-1.5% within ~20 months (~Q4 2027)**, **sub-1.0% within ~42 months (~Q3 2029)**. *The decline is irreversible without protocol-level intervention — it is built into the monetary expansion formula. The entire yield surface descends as a unit; no pool-level strategy can offset the macro trajectory.*
 
-### 5.2. The yield in context — cross-chain and cross-asset comparison
+## 5.2. The yield in context — cross-chain and cross-asset comparison
 
 At **~2.0%** annualised, Cardano's native staking yield sits at the lower end of the PoS landscape and **below the risk-free rate** in traditional finance.
 
@@ -791,7 +791,7 @@ At **~2.0%** annualised, Cardano's native staking yield sits at the lower end of
 
 A meaningful evaluation requires **decomposing** each network's yield into its constituent parts, **adjusting for token-supply inflation**, and **comparing** the result not only against peer blockchains but also against the traditional financial instruments with which institutional capital competes.
 
-#### Why nominal APY is insufficient
+### Why nominal APY is insufficient
 
 Staking rewards on most PoS networks are funded, in whole or in part, by the **creation of new tokens**. When a protocol mints 10% more tokens per year and distributes them to stakers, the staker's nominal balance grows — but so does the total supply.
 
@@ -803,7 +803,7 @@ This mechanism is analogous to **money-printing in fiat economies**. An investor
 
 The same logic applies to token economies, with one additional asymmetry: in most PoS systems, **non-stakers bear the full cost of inflation without receiving any compensation**. High-APY networks thus embed a **coercive element** — stake or be diluted — that is often mistaken for generosity.
 
-#### Cross-chain yield decomposition
+### Cross-chain yield decomposition
 
 The table below decomposes the staking economics of six major PoS networks as of Q1 2026. For each chain, the nominal APY is separated into its inflation component and the residual real yield. The table also captures two structural risk factors — lock-up duration and slashing exposure — that directly affect the risk-adjusted return.
 
@@ -842,7 +842,7 @@ Combined with the reduction of the unbonding period from 28 days to **24–48 ho
 
 The wide range reflects the dynamic inflation mechanism: ATOM inflation adjusts continuously to target a **67% bonding ratio**, oscillating between 7% and 10% depending on participation. *In low-activity periods, the real yield can fall below Cardano's while carrying substantially more risk.*
 
-#### Inflation funding models — finite stock versus perpetual flow
+### Inflation funding models — finite stock versus perpetual flow
 
 The divergence in real yields is rooted in fundamentally different monetary architectures. These can be grouped into **three families**.
 
@@ -868,7 +868,7 @@ Each architecture embeds a different bet:
 
 *None of these bets has been conclusively validated; all represent open economic experiments.*
 
-#### Beyond crypto — the traditional-finance yield landscape
+### Beyond crypto — the traditional-finance yield landscape
 
 A staking yield does not exist in isolation. Institutional allocators and retail investors alike evaluate it against the opportunity cost of traditional financial instruments. The table below places the major PoS real yields alongside conventional fixed-income and equity-income benchmarks as of April 2026.
 
@@ -897,7 +897,7 @@ A rational allocator choosing between a 4.3% Treasury and a 3% ETH staking yield
 
 *The era of "free" double-digit yields as a crypto-native anomaly is largely over; what remains are instruments whose risk-return profiles must now compete on traditional terms.*
 
-#### The ETF multiplier — how lock-up and custody reshape yield attractiveness
+### The ETF multiplier — how lock-up and custody reshape yield attractiveness
 
 The emergence of staked-asset Exchange-Traded Funds introduces a new dimension to yield evaluation.
 
@@ -919,7 +919,7 @@ The broader implication is that *yield attractiveness is not determined by APY a
 
 Cardano's modest nominal yield, combined with **zero lock-up** and **non-custodial delegation**, creates an **unusually clean institutional wrapper** — an advantage that may prove more consequential than the headline APY gap suggests.
 
-#### Three evaluation frames
+### Three evaluation frames
 
 The comparison invites three evaluation frames that depend on what the delegator holds and what alternatives are available.
 
@@ -933,7 +933,7 @@ What Cardano's delegation mechanism loses in yield, it gains in **liquidity and 
 
 *The low yield is the price of a design that prioritises liquid, non-custodial participation — a deliberate trade-off, not an oversight.*
 
-#### Toward a framework for "attractive" yield
+### Toward a framework for "attractive" yield
 
 The analysis above reveals that the question "is Cardano's yield competitive?" cannot be answered with a single number. Competitiveness depends on who is asking and what alternatives they face.
 
@@ -953,7 +953,7 @@ For an **ETF product designer**, the relevant metric is *distributable income af
 
 > **Finding OPE.O9.F2 — The mechanism's premise depends on ADA appreciation that hasn't materialised — and if it doesn't, only conviction-driven holders remain.** The reward formula was designed around a monetary regime where ADA itself appreciates (the reserve-depletion design implies deflationary-like behaviour as the supply approaches its cap). In practice, ADA price has not delivered that appreciation, leaving delegators with **low yield + uncertain price**. The mechanism's assumption — that yield-sensitive delegators allocate based on competitive returns — collapses to a self-selected pool of long-conviction holders, who do not respond to the formula's pricing levers. *If the deflation premise fails, the psychological pressure compounds: there is no yield case AND no appreciation case, only a conviction case — which the formula cannot manufacture.*
 
-### 5.3. The yield spread — structural compression
+## 5.3. The yield spread — structural compression
 
 The more important question for the delegator is not the absolute level but the **spread** — how much yield varies across the pools available for delegation. [§4.4 — Operator profitability versus delegator return](#44-operator-profitability-versus-delegator-return) established that net ROS ranges from **1.95% to 2.34%** across the entire retail market — a **0.39 percentage-point spread**. This section places that spread in the context of the declining trajectory.
 

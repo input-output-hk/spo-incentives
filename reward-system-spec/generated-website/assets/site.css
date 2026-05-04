@@ -37,8 +37,9 @@
 [data-theme=dark] .nav-col-title{color:var(--infared)}
 [data-theme=dark] .nav-pdf-badge{background:rgba(229,35,33,.15)}
 [data-theme=dark] .content{background:var(--bg);border-color:var(--border-light)}
-[data-theme=dark] .content h2{background:linear-gradient(90deg,rgba(110,151,255,.10) 0%,transparent 60%)}
-[data-theme=dark] .content h3{background:linear-gradient(90deg,rgba(157,182,240,.08) 0%,transparent 50%)}
+/* Dark-mode heading background washes were retired with the unified
+   bar-on-the-left vocabulary — the bar carries the visual weight; an
+   added background tint competed with the H1 motif. */
 [data-theme=dark] .content a{color:#f06050}
 [data-theme=dark] .content img{border-color:var(--border);filter:brightness(.92)}
 [data-theme=dark] .content code{background:var(--bg-code);color:#e87461}
@@ -404,38 +405,25 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
    H1: typography only (page title). H2 (§X): infared title + infared rule (full).
    H3 (§X.X): dawn title + dawn rule (half length). H4+: plain small labels. */
 .content h1,.content h2,.content h3,.content h4,.content h5,.content h6{font-family:'Chivo','Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+/* Unified heading vocabulary: every level uses the same left-edge
+   accent the H1 chapter heading introduced. Size, weight, opacity
+   and bar thickness step down with depth — but the structural
+   "vertical accent + title" motif is constant, so the hierarchy
+   reads as one continuous scale rather than a switch between
+   competing styles. No trailing horizontal rules; no chevron. */
 .content h1{font-size:34px;font-weight:500;color:var(--cardano-blue);margin:0 0 28px;padding:0 0 0 18px;border:none;background:none;letter-spacing:-.8px;line-height:1.15;position:relative;border-left:3px solid var(--cardano-blue)}
 [data-theme=dark] .content h1{color:#6E97FF;border-left-color:#6E97FF}
 .content h1:first-child{margin-top:0}
-/* H2 — primary section heading. Trailing rule fills remaining space
-   (flex:1) the way it did originally; only the colour changed from
-   IOG red to a Cardano-family blue. */
-.content h2{font-size:24px;font-weight:500;color:var(--cardano-blue-2);margin:56px 0 22px;padding:0;border:none;background:none;display:flex;align-items:center;gap:24px;letter-spacing:-.4px;line-height:1.2;position:relative}
-.content h2::after{content:'';flex:1;height:1.5px;background:var(--cardano-blue-2);min-width:60px;opacity:.6}
-[data-theme=dark] .content h2{color:#8FB1FF}
-[data-theme=dark] .content h2::after{background:#8FB1FF;opacity:.45}
-/* H3 — sub-section heading. Visibly paler than H2. */
-.content h3{font-size:18px;font-weight:500;color:#6394E2;margin:40px 0 14px;padding:0;border:none;background:none;display:flex;align-items:center;gap:20px;letter-spacing:-.2px;line-height:1.25;position:relative}
-.content h3::after{content:'';flex:1;height:1px;background:#6394E2;min-width:40px;opacity:.4}
-[data-theme=dark] .content h3{color:#B7CCF2}
-[data-theme=dark] .content h3::after{background:#B7CCF2;opacity:.3}
-/* H4 — paler blue still. Stays in the Cardano family so the
-   hierarchy reads as one continuous tonal scale, not a switch
-   between coloured (h2/h3) and neutral text (h4 onwards). */
-.content h4{font-size:15px;font-weight:600;color:#88AEEC;margin:32px 0 12px;padding:0;border:none;background:none;display:flex;align-items:center;gap:16px;letter-spacing:-.1px;position:relative}
-.content h4::after{content:'';flex:1;height:1px;background:#88AEEC;min-width:40px;opacity:.35}
-[data-theme=dark] .content h4{color:#C5D4F1}
-[data-theme=dark] .content h4::after{background:#C5D4F1;opacity:.25}
-/* H5 — ALL-CAPS label heading. Paler-still blue, low opacity rule. */
-.content h5{font-size:12.5px;font-weight:700;color:#A4C0F0;margin:24px 0 10px;padding:0;border:none;background:none;display:flex;align-items:center;gap:14px;text-transform:uppercase;letter-spacing:1.2px;position:relative}
-.content h5::after{content:'';flex:1;height:1px;background:#A4C0F0;min-width:40px;opacity:.3}
-[data-theme=dark] .content h5{color:#CFDBF1}
-[data-theme=dark] .content h5::after{background:#CFDBF1;opacity:.2}
-/* H6 — lightest blue + italic. */
-.content h6{font-size:13px;font-weight:600;color:#B7CCF2;margin:20px 0 10px;padding:0;border:none;background:none;display:flex;align-items:center;gap:12px;font-style:italic;position:relative}
-.content h6::after{content:'';flex:1;height:1px;background:#B7CCF2;min-width:40px;opacity:.25}
-[data-theme=dark] .content h6{color:#D7DFF0}
-[data-theme=dark] .content h6::after{background:#D7DFF0;opacity:.2}
+.content h2{font-size:24px;font-weight:500;color:var(--cardano-blue);margin:56px 0 22px;padding:0 0 0 16px;border:none;background:none;letter-spacing:-.4px;line-height:1.2;position:relative;border-left:3px solid var(--cardano-blue);opacity:.92}
+[data-theme=dark] .content h2{color:#6E97FF;border-left-color:#6E97FF}
+.content h3{font-size:19px;font-weight:500;color:var(--cardano-blue);margin:40px 0 14px;padding:0 0 0 14px;border:none;background:none;letter-spacing:-.2px;line-height:1.25;position:relative;border-left:2px solid var(--cardano-blue);opacity:.78}
+[data-theme=dark] .content h3{color:#6E97FF;border-left-color:#6E97FF}
+.content h4{font-size:16px;font-weight:600;color:var(--cardano-blue);margin:32px 0 12px;padding:0 0 0 12px;border:none;background:none;letter-spacing:-.1px;line-height:1.3;position:relative;border-left:2px solid var(--cardano-blue);opacity:.65}
+[data-theme=dark] .content h4{color:#6E97FF;border-left-color:#6E97FF}
+.content h5{font-size:12.5px;font-weight:700;color:var(--cardano-blue);margin:24px 0 10px;padding:0 0 0 10px;border:none;background:none;text-transform:uppercase;letter-spacing:1.2px;line-height:1.3;position:relative;border-left:2px solid var(--cardano-blue);opacity:.55}
+[data-theme=dark] .content h5{color:#6E97FF;border-left-color:#6E97FF}
+.content h6{font-size:13px;font-weight:600;color:var(--cardano-blue);margin:20px 0 10px;padding:0 0 0 10px;border:none;background:none;font-style:italic;line-height:1.35;position:relative;border-left:1px solid var(--cardano-blue);opacity:.5}
+[data-theme=dark] .content h6{color:#6E97FF;border-left-color:#6E97FF}
 .content p{margin:0 0 14px;font-size:15px;color:var(--text-body)}
 .content p strong{color:var(--text-primary);font-weight:600}
 .content a{color:var(--cardano-blue);text-decoration:none;border-bottom:1px solid var(--cardano-link-line)}
@@ -951,17 +939,34 @@ mjx-container[display=true]{display:block!important;max-width:100%;margin:20px a
 /* ── Reading progress bar ── */
 .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--infared),var(--dawn));z-index:200;transition:width .1s linear;width:0}
 
-/* ── Collapsible sections ── */
-/* Arrow lives in the left-gutter of the heading. Headings are already
-   position:relative, and have left padding to reserve the arrow lane. */
-.section-toggle{cursor:pointer;user-select:none;padding-left:22px!important}
-.section-toggle::before{content:'▾';position:absolute;left:0;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-muted);transition:transform .2s;width:16px;text-align:center;line-height:1;pointer-events:none}
-h2.section-toggle::before{color:var(--cardano-blue-2);opacity:.7}
-h3.section-toggle::before{color:#6394E2;opacity:.55}
-h4.section-toggle::before{color:#88AEEC;opacity:.5}
-h5.section-toggle::before{color:#A4C0F0;opacity:.45}
-h6.section-toggle::before{color:#B7CCF2;opacity:.4}
-.section-toggle.collapsed::before{transform:translateY(-50%) rotate(-90deg)}
+/* ── Collapsible sections ──
+   Unified vocabulary: every heading level uses the same vertical-bar
+   accent the H1 introduced, and every level folds without a chevron.
+   Click affordance: cursor + subtle blue wash from the left.
+   Collapsed-state cues: bar becomes dashed; title fades. */
+.section-toggle{cursor:pointer;user-select:none}
+.section-toggle::before{display:none!important;content:none!important}
+.section-toggle:hover{background:linear-gradient(90deg,
+  color-mix(in srgb, var(--cardano-blue) 6%, transparent) 0%,
+  transparent 55%);border-radius:0 4px 4px 0}
+[data-theme=dark] .section-toggle:hover{background:linear-gradient(90deg,
+  rgba(110,151,255,.10) 0%,transparent 55%)}
+.section-toggle.collapsed{border-left-style:dashed!important}
+h1.section-toggle.collapsed,
+h2.section-toggle.collapsed,
+h3.section-toggle.collapsed,
+h4.section-toggle.collapsed,
+h5.section-toggle.collapsed,
+h6.section-toggle.collapsed{
+  /* Multiplier on the inherent per-level opacity so the collapsed
+     state still reads as "faded from baseline" regardless of depth. */
+  filter:opacity(.7)}
+h1.section-toggle.collapsed:hover,
+h2.section-toggle.collapsed:hover,
+h3.section-toggle.collapsed:hover,
+h4.section-toggle.collapsed:hover,
+h5.section-toggle.collapsed:hover,
+h6.section-toggle.collapsed:hover{filter:opacity(1)}
 .section-body{transition:max-height .35s ease, opacity .25s ease;opacity:1}
 .section-body.collapsed{max-height:0!important;opacity:0;margin:0;padding:0;overflow:hidden}
 
@@ -1068,32 +1073,30 @@ h6.section-toggle::before{color:#B7CCF2;opacity:.4}
 /* Findings page TOC — Micro/Macro index above the cards list. Two stacked
    groups; each group has a head (label + count), a one-line meta description,
    and a wrapped list of clickable items linking to anchored cards below. */
-.findings-toc{display:grid;grid-template-columns:1fr 1fr;gap:24px;
-  margin:24px 0 32px;padding:20px 24px;
-  background:var(--bg-panel);border:1px solid var(--border);border-radius:10px}
+.findings-toc{display:grid;grid-template-columns:1fr 1fr;gap:18px;
+  margin:18px 0 24px;padding:14px 16px;
+  background:var(--bg-panel);border:1px solid var(--border);border-radius:8px}
 [data-theme=dark] .findings-toc{background:rgba(255,255,255,.02)}
-.findings-toc-group{display:flex;flex-direction:column;gap:8px}
-.findings-toc-group-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.findings-toc-group-label{font:700 13px/1.2 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  letter-spacing:.4px;color:var(--text-primary)}
-.findings-toc-group-count{font:500 10.5px/1 'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.4px;color:var(--text-muted);
-  padding:3px 7px;border-radius:3px;border:1px solid var(--border);
-  background:var(--bg);text-transform:uppercase}
-.findings-toc-group-meta{font:400 11.5px/1.45 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--text-muted);font-style:italic;margin-bottom:6px}
-.findings-toc-group-list{display:flex;flex-direction:column;gap:2px}
-.findings-toc-item{display:flex;align-items:baseline;gap:10px;
-  padding:6px 10px;border-radius:5px;
+.findings-toc-group{display:flex;flex-direction:column;gap:4px}
+.findings-toc-group-head{display:flex;align-items:baseline;gap:8px}
+.findings-toc-group-label{font:600 11.5px/1.2 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.5px;color:var(--text-primary);text-transform:uppercase}
+.findings-toc-group-count{font:600 10.5px/1 'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
+  color:var(--text-muted);letter-spacing:.04em}
+.findings-toc-group-meta{font:400 10.5px/1.35 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);font-style:italic;margin-bottom:2px}
+.findings-toc-group-list{display:flex;flex-direction:column;gap:0}
+.findings-toc-item{display:flex;align-items:baseline;gap:8px;
+  padding:2px 6px;border-radius:3px;
   text-decoration:none;color:var(--text-secondary);
   transition:background .12s,color .12s}
 .findings-toc-item:hover{background:rgba(229,35,33,.06);color:var(--text-primary)}
 [data-theme=dark] .findings-toc-item:hover{background:rgba(229,35,33,.1)}
-.findings-toc-num{flex:0 0 auto;font:600 10.5px/1 'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
-  color:var(--infared);letter-spacing:.4px;min-width:22px}
-.findings-toc-title{font:500 12.5px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.findings-toc-num{flex:0 0 auto;font:600 9.5px/1.4 'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;
+  color:var(--infared);letter-spacing:.3px;min-width:20px}
+.findings-toc-title{font:400 11.5px/1.35 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 @media (max-width:760px){
-  .findings-toc{grid-template-columns:1fr;gap:20px;padding:16px 18px}
+  .findings-toc{grid-template-columns:1fr;gap:14px;padding:12px 14px}
 }
 
 /* Formal-CPS badge inside a finding card banner — Solar Amber, picks up the
@@ -1188,6 +1191,50 @@ h6.section-toggle::before{color:#B7CCF2;opacity:.4}
 [data-theme=dark] .nav-dd-ref-tag{background:var(--bg);color:var(--text-body)}
 .nav-dd-ref-new{display:inline-block;margin-left:8px;font:700 9px/1 -apple-system,sans-serif;letter-spacing:.7px;color:#0a8a80;background:rgba(22,233,216,.14);border:1px solid rgba(22,233,216,.45);border-radius:3px;padding:2px 5px;text-transform:uppercase;vertical-align:1px}
 [data-theme=dark] .nav-dd-ref-new{color:#16E9D8;background:rgba(22,233,216,.1);border-color:rgba(22,233,216,.35)}
+
+/* "NEW" stamp — Electric Blue pill anchored to the top-LEFT,
+   shared by every nav button that points to fresh content.
+   Same pill recipe as the right-side FUTURE / EVALUATION /
+   PROPOSAL eyebrows (white plate / 8px / .6em letter-spaced /
+   uppercase / 3px radius / 1px coloured border / soft shadow);
+   the Electric Blue accent matches the inner ``.nav-dd-ref-new``
+   chips used on individual items inside each panel, so outer
+   stamp + inner item badges read as one signal family.
+
+   Applied to:
+   - the V2 Specification tab (.nav-tab-spec-big) — the spec
+     itself is the V2 proposal, brand new artefact
+   - the CIPs dropdown trigger (.nav-dd-btn-solution) — entry
+     point to the freshly-evaluated CIP candidates
+   - any .nav-dd-wrap-light that contains a .nav-dd-ref-new
+     descendant (Mainnet Diagnostic, Design Support, …) via
+     the :has() selector. */
+.nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light,
+.nav-tab-spec-big,
+.nav-dd-btn-solution{
+  position:relative}
+.nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light::before,
+.nav-tab-spec-big::before,
+.nav-dd-btn-solution::before{
+  content:"new";
+  position:absolute;
+  top:-7px;left:-6px;
+  font:700 8px/1 -apple-system,sans-serif;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+  background:#fff;
+  color:#0a8a80;
+  padding:3px 5px;
+  border-radius:3px;
+  border:1px solid rgba(22,233,216,.55);
+  box-shadow:0 1px 2px rgba(22,233,216,.18);
+  pointer-events:none}
+[data-theme=dark] .nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light::before,
+[data-theme=dark] .nav-tab-spec-big::before,
+[data-theme=dark] .nav-dd-btn-solution::before{
+  background:#1a1a1a;
+  color:#16E9D8;
+  border-color:rgba(22,233,216,.45)}
 .nav-dd-ref-pdf{grid-column:2;grid-row:1 / span 2;align-self:center;font:700 9.5px/1 -apple-system,sans-serif;letter-spacing:.6px;color:var(--infared);background:rgba(229,35,33,.08);padding:6px 9px;border-radius:4px;text-transform:uppercase}
 .nav-dd-ref:hover .nav-dd-ref-pdf{background:var(--infared);color:#fff}
 
@@ -1468,10 +1515,8 @@ body.toc-open .toc-panel{transform:translateX(0)}
   /* Typography: darker, denser, with proper page breaks */
   .content h1,.content h2,.content h3,.content h4,.content h5,.content h6{
     color:#000!important;page-break-after:avoid;break-after:avoid-page}
-  .content h2{color:var(--infared)!important}
-  .content h2::after{background:var(--infared)!important;opacity:.7!important}
-  .content h3{color:var(--dawn)!important}
-  .content h3::after{background:var(--dawn)!important;opacity:.6!important}
+  .content h2{color:var(--infared)!important;border-left-color:var(--infared)!important}
+  .content h3{color:var(--dawn)!important;border-left-color:var(--dawn)!important}
   .content p,.content li{orphans:3;widows:3}
   /* Keep tables, figures, and admonitions from splitting badly */
   .content table,.content figure,.obs-card,blockquote{
@@ -2099,35 +2144,75 @@ body.finding-panel-open .finding-panel-overlay{opacity:1;pointer-events:auto}
 
 /* ── Cross-page synthesis-observation source overlay + compact §X.Y.2 view ── */
 
-/* Compact list view: one row per synthesis observation that defers to a sub-report */
-.synth-obs-compact{list-style:none;padding:0;margin:18px 0 24px;
-  display:flex;flex-direction:column;gap:10px}
-.synth-obs-row{border:1px solid var(--border);border-radius:8px;padding:14px 16px;
-  background:var(--bg);transition:border-color .15s,box-shadow .15s}
-.synth-obs-row:hover{border-color:var(--infared);box-shadow:0 2px 10px rgba(229,35,33,.06)}
-.synth-obs-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
-.synth-obs-canon{display:inline-flex;align-items:center;padding:3px 10px;border-radius:4px;
-  background:var(--bg-panel);border:1px solid var(--border);
-  font:600 11px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.05em;color:var(--infared);text-decoration:none;
-  transition:background .15s,border-color .15s,color .15s}
-.synth-obs-canon:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
-.synth-obs-title{font:600 14px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--text-primary);flex:1 1 auto;min-width:0}
-.synth-obs-summary{margin:4px 0 10px;font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--text-secondary)}
-.synth-obs-findings{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.synth-obs-f{display:inline-flex;align-items:center;padding:2px 8px;border-radius:3px;
-  background:var(--bg-panel);border:1px solid var(--border);
-  font:500 10.5px/1.5 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.03em;color:var(--text-secondary);text-decoration:none;
-  transition:background .15s,border-color .15s,color .15s}
-.synth-obs-f:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
-.synth-obs-source-link{display:inline-flex;align-items:center;gap:4px;
-  font:500 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--text-muted);text-decoration:none;padding-top:4px;
-  border-top:1px dashed var(--border);margin-top:4px;padding-top:8px}
-.synth-obs-source-link:hover{color:var(--infared)}
+/* Single bordered panel containing a 2-column grid of synthesis
+   observations. The outer panel carries the border + subtle background;
+   items inside are bare flex rows with a hover state. The V2-style
+   hover popover on each chip (.obs-ref obs-ref-src) provides abstract,
+   finding count, and click-through — no inline duplication. */
+/* Panel wrapper carries the border. Inside, a header bar names the source
+   sub-report (eyebrow styling + red left accent — same vocabulary as the
+   page banner's .hero-eyebrow), and below it sits the borderless 2-col
+   grid of OBS rows. */
+.synth-obs-panel{margin:24px 0 22px;
+  border:1px solid var(--border);border-radius:8px;
+  background:var(--bg-panel);overflow:hidden}
+[data-theme=dark] .synth-obs-panel{background:rgba(255,255,255,.02)}
+.synth-obs-panel-title{display:flex;align-items:center;gap:10px;
+  margin:0;padding:11px 16px 11px 14px;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  border-left:3px solid var(--infared)}
+.synth-obs-panel-eyebrow{font:500 10.5px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-muted)}
+.synth-obs-panel-sep{font:400 11px/1 "Inter",-apple-system,sans-serif;
+  color:var(--border);user-select:none}
+a.synth-obs-panel-source{display:inline-flex;align-items:center;gap:8px;
+  font:600 11.5px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.10em;text-transform:uppercase;
+  color:var(--text-primary);text-decoration:none;border-bottom:none;
+  transition:color .15s}
+a.synth-obs-panel-source:hover{color:var(--cardano-blue);
+  text-decoration:none;border-bottom:none}
+a.synth-obs-panel-source:hover .synth-obs-panel-arrow{transform:translateX(2px);color:var(--cardano-blue)}
+.synth-obs-panel-arrow{font-size:13px;letter-spacing:0;color:var(--text-muted);
+  transition:transform .15s,color .15s;display:inline-block}
+.synth-obs-compact{list-style:none;margin:0;padding:14px 16px;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  column-gap:18px;row-gap:4px;border:0;background:transparent}
+.synth-obs-row{border-radius:4px;background:transparent}
+/* Row anchor — explicit overrides of the global .obs-ref styling
+   (which would otherwise force inline display, red color, dotted border-bottom,
+   and a red hover background on the entire row). The whole row is the
+   hover target; the popover (V2-style) hydrates from .obs-ref-src. */
+a.synth-obs-link.obs-ref,
+a.synth-obs-link.obs-ref.obs-ref-src{display:flex;align-items:baseline;gap:10px;
+  flex-wrap:nowrap;padding:6px 10px;border-radius:4px;
+  text-decoration:none;color:inherit;background:transparent;
+  border-bottom:none;cursor:pointer;transition:background .15s}
+a.synth-obs-link.obs-ref:hover,
+a.synth-obs-link.obs-ref.obs-ref-src:hover{
+  background:color-mix(in srgb, var(--cardano-blue) 8%, transparent);
+  color:inherit;text-decoration:none;border-bottom:none}
+[data-theme=dark] a.synth-obs-link.obs-ref:hover,
+[data-theme=dark] a.synth-obs-link.obs-ref.obs-ref-src:hover{
+  background:rgba(96,135,233,.12)}
+/* Chip — back to the original "ref tag" look (left of title), but kept
+   compact so the title still leads visually. */
+.synth-obs-canon{display:inline-flex;align-items:center;padding:2px 7px;border-radius:3px;
+  background:var(--bg);border:1px solid var(--border);
+  font:600 10px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.04em;color:var(--cardano-blue);
+  flex-shrink:0;transition:background .15s,border-color .15s,color .15s}
+.synth-obs-link:hover .synth-obs-canon{background:var(--cardano-blue);
+  border-color:var(--cardano-blue);color:#fff}
+.synth-obs-title{font:600 13.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:-.005em;color:var(--text-primary);flex:1 1 auto;min-width:0}
+.synth-obs-link:hover .synth-obs-title{color:var(--cardano-blue)}
+@media (max-width:760px){
+  .synth-obs-compact{grid-template-columns:1fr;column-gap:0;row-gap:2px}
+  .synth-obs-panel{padding:18px 14px 12px}
+}
 
 /* Cross-page source overlay — the synthesis-observation link shows the source
    sub-report observation's content in the side panel, with a "Jump to source" CTA. */
@@ -2582,8 +2667,8 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 
 /* Responsive */
 @media (max-width:720px){
-  .synth-obs-row{padding:12px 14px}
-  .synth-obs-head{gap:6px}
+  a.synth-obs-link.obs-ref,
+  a.synth-obs-link.obs-ref.obs-ref-src{padding:10px 12px;gap:8px}
   .sro-head{flex-wrap:wrap;gap:8px;padding:10px 12px}
   .sro-title{flex:1 1 100%;order:3}
   .sro-count{order:2}
