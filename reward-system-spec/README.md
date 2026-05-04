@@ -252,7 +252,7 @@ Today's single-pool operator with 2M ADA of delegation and a proven track record
 
 **The viability gap.** The fixed-cost floor ($minPoolCost$) absorbs **47.5% of pool reward at the sub-reliable tier** but only **1.5% near saturation** ([OPE.O1](diagnostic/README.md#132-mainnet-observations)).
 
-This opens a gap of **~870 pools** between the production threshold (~1M ADA) and the viability threshold (~3M ADA), where pools produce blocks but cannot sustain their operators economically ([viability-gap analysis](diagnostic/README.md#1331-guarantee-operator-viability-across-the-productive-population)). No single-pool operator in the retail market earns a competitive wage: the median earns **~25,000 ADA/yr** — enough to cover infrastructure but not the 5–15 hrs/month of skilled work ([OPE.O6](diagnostic/README.md#132-mainnet-observations)).
+This opens a gap of **~870 pools** between the production threshold (~3M ADA) and the viability threshold (~3M ADA), where pools produce blocks but cannot sustain their operators economically ([viability-gap analysis](diagnostic/README.md#1331-guarantee-operator-viability-across-the-productive-population)). No single-pool operator in the retail market earns a competitive wage: the median earns **~25,000 ADA/yr** — enough to cover infrastructure but not the 5–15 hrs/month of skilled work ([OPE.O6](diagnostic/README.md#132-mainnet-observations)).
 
 The floor follows a $1/\sigma$ hyperbola: *the operators who charge the most earn the least.*
 

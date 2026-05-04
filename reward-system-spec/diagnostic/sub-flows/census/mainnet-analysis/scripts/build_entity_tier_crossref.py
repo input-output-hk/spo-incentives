@@ -79,7 +79,10 @@ def main():
 
     # ── Load pool stake (filter to productive pools ≥1M ADA) ──
     pool_stake_all = pd.read_csv(DATA_DIR / "pool_stake_623.csv")
-    PRODUCTION_THRESHOLD = 1_000_000
+    # Canonical production threshold: 3M ADA (95% probability of ≥1 block per
+    # epoch, λ=3 — POL.O3.F1). Older runs used 1M (λ=1 expected); the diagnostic
+    # standard is now 3M and Census aligns with pools-distribution / operator.
+    PRODUCTION_THRESHOLD = 3_000_000
     pool_stake = pool_stake_all[pool_stake_all["total_ada"] >= PRODUCTION_THRESHOLD].copy()
     pool_stake_map = dict(zip(pool_stake["pool_id"], pool_stake["total_ada"]))
     pool_deleg_map = dict(zip(pool_stake["pool_id"], pool_stake["delegation_count"]))

@@ -1,0 +1,218 @@
+-- §5 Non-Participants — deeper insights queries (Instance B, full UTxO).
+--
+-- Generates six CSVs at /tmp inside the container using server-side COPY.
+-- See README.md §5 for the analytical narrative.
+
+SET statement_timeout = 0;
+SET work_mem = '512MB';
+
+\echo (A) Address-level concentration of the no-stake-credential UTxO set
+
+CREATE TEMP VIEW v_no_cred AS
+  SELECT address, payment_cred, value
+  FROM tx_out
+  WHERE consumed_by_tx_id IS NULL
+    AND stake_address_id IS NULL;
+
+CREATE TEMP TABLE t_no_cred_addr AS
+  SELECT address,
+         CASE
+           WHEN address LIKE 'addr1v%' THEN 'enterprise_key'
+           WHEN address LIKE 'addr1w%' THEN 'enterprise_script'
+           WHEN address LIKE 'Ae2%' OR address LIKE 'DdzFF%' THEN 'byron'
+           ELSE 'other'
+         END                                AS address_type,
+         SUM(value)::bigint                 AS lovelace,
+         COUNT(*)                           AS utxo_count
+  FROM v_no_cred
+  GROUP BY address;
+
+COPY (
+  WITH ranked AS (
+    SELECT address,
+           address_type,
+           lovelace,
+           utxo_count,
+           ROW_NUMBER() OVER (ORDER BY lovelace DESC) AS rank,
+           SUM(lovelace) OVER ()                       AS total_lovelace
+    FROM t_no_cred_addr
+  )
+  SELECT rank,
+         LEFT(address, 12) || '…' || RIGHT(address, 8) AS address_short,
+         address,
+         address_type,
+         utxo_count,
+         lovelace,
+         (lovelace / 1000000.0)::bigint AS ada,
+         100.0 * lovelace / total_lovelace AS pct_of_no_cred
+  FROM ranked
+  WHERE rank <= 200
+  ORDER BY rank
+) TO '/tmp/no_cred_top200.csv' WITH CSV HEADER;
+
+\echo (B) Bucketed size distribution of no-cred address holdings
+
+COPY (
+  WITH bucketed AS (
+    SELECT
+      CASE
+        WHEN lovelace < 1000000             THEN '00_under_1_ada'
+        WHEN lovelace < 10000000            THEN '01_1_to_10_ada'
+        WHEN lovelace < 100000000           THEN '02_10_to_100_ada'
+        WHEN lovelace < 1000000000          THEN '03_100_to_1k_ada'
+        WHEN lovelace < 10000000000         THEN '04_1k_to_10k_ada'
+        WHEN lovelace < 100000000000        THEN '05_10k_to_100k_ada'
+        WHEN lovelace < 1000000000000       THEN '06_100k_to_1m_ada'
+        WHEN lovelace < 10000000000000      THEN '07_1m_to_10m_ada'
+        WHEN lovelace < 100000000000000     THEN '08_10m_to_100m_ada'
+        ELSE                                     '09_above_100m_ada'
+      END AS size_bucket,
+      address_type,
+      lovelace,
+      utxo_count,
+      address
+    FROM t_no_cred_addr
+  )
+  SELECT
+    size_bucket,
+    address_type,
+    COUNT(*)        AS address_count,
+    SUM(utxo_count) AS utxo_count,
+    SUM(lovelace)   AS total_lovelace,
+    (SUM(lovelace) / 1000000.0)::bigint AS total_ada
+  FROM bucketed
+  GROUP BY size_bucket, address_type
+  ORDER BY address_type, size_bucket
+) TO '/tmp/no_cred_size_distribution.csv' WITH CSV HEADER;
+
+\echo (C) Stake-address status table — used by (D),(E),(F)
+
+CREATE TEMP TABLE t_stake_status AS
+  SELECT
+    sa.id           AS stake_address_id,
+    sa.script_hash IS NOT NULL AS is_script,
+    CASE WHEN d.tx_id IS NOT NULL AND (sd.tx_id IS NULL OR d.tx_id > sd.tx_id) THEN true ELSE false END AS is_delegated,
+    CASE WHEN sd.tx_id IS NOT NULL AND (d.tx_id IS NULL OR sd.tx_id > d.tx_id) THEN true ELSE false END AS is_deregistered,
+    r.tx_id         AS reg_tx_id,
+    d.tx_id         AS last_deleg_tx_id
+  FROM stake_address sa
+  LEFT JOIN LATERAL (SELECT tx_id FROM delegation         WHERE addr_id = sa.id ORDER BY tx_id DESC LIMIT 1) d  ON true
+  LEFT JOIN LATERAL (SELECT tx_id FROM stake_deregistration WHERE addr_id = sa.id ORDER BY tx_id DESC LIMIT 1) sd ON true
+  LEFT JOIN LATERAL (SELECT tx_id FROM stake_registration   WHERE addr_id = sa.id ORDER BY tx_id DESC LIMIT 1) r  ON true;
+
+CREATE INDEX ON t_stake_status (stake_address_id);
+
+\echo (D) Addressable-pool balance distribution (registered, not delegated)
+
+CREATE TEMP TABLE t_addressable AS
+  SELECT stake_address_id, is_script, reg_tx_id, last_deleg_tx_id IS NOT NULL AS ever_delegated
+  FROM t_stake_status
+  WHERE NOT is_delegated AND NOT is_deregistered AND reg_tx_id IS NOT NULL;
+
+CREATE INDEX ON t_addressable (stake_address_id);
+
+CREATE TEMP TABLE t_addr_balance AS
+  SELECT
+    a.stake_address_id,
+    a.is_script,
+    a.ever_delegated,
+    COALESCE(SUM(txo.value), 0)::bigint AS lovelace
+  FROM t_addressable a
+  LEFT JOIN tx_out txo
+    ON txo.stake_address_id = a.stake_address_id
+   AND txo.consumed_by_tx_id IS NULL
+  GROUP BY a.stake_address_id, a.is_script, a.ever_delegated;
+
+COPY (
+  SELECT
+    CASE
+      WHEN lovelace = 0                     THEN '00_zero'
+      WHEN lovelace < 10000000              THEN '01_under_10_ada'
+      WHEN lovelace < 100000000             THEN '02_10_to_100_ada'
+      WHEN lovelace < 1000000000            THEN '03_100_to_1k_ada'
+      WHEN lovelace < 10000000000           THEN '04_1k_to_10k_ada'
+      WHEN lovelace < 100000000000          THEN '05_10k_to_100k_ada'
+      WHEN lovelace < 1000000000000         THEN '06_100k_to_1m_ada'
+      WHEN lovelace < 10000000000000        THEN '07_1m_to_10m_ada'
+      ELSE                                       '08_above_10m_ada'
+    END                                          AS size_bucket,
+    CASE WHEN is_script THEN 'script' ELSE 'key' END AS credential_type,
+    COUNT(*)                                     AS account_count,
+    SUM(lovelace)                                AS total_lovelace,
+    (SUM(lovelace) / 1000000.0)::bigint          AS total_ada
+  FROM t_addr_balance
+  GROUP BY size_bucket, credential_type
+  ORDER BY credential_type, size_bucket
+) TO '/tmp/addressable_pool_size.csv' WITH CSV HEADER;
+
+\echo (E) Addressable-pool registration vintage
+
+COPY (
+  WITH with_epoch AS (
+    SELECT a.is_script, b.epoch_no AS reg_epoch
+    FROM t_addressable a
+    JOIN tx t  ON t.id = a.reg_tx_id
+    JOIN block b ON b.id = t.block_id
+  )
+  SELECT
+    CASE
+      WHEN reg_epoch < 250 THEN '01_shelley_allegra_208_249'
+      WHEN reg_epoch < 290 THEN '02_mary_250_289'
+      WHEN reg_epoch < 350 THEN '03_alonzo_290_349'
+      WHEN reg_epoch < 450 THEN '04_babbage_350_449'
+      WHEN reg_epoch < 550 THEN '05_early_conway_450_549'
+      ELSE                       '06_late_conway_550_plus'
+    END                                          AS reg_vintage,
+    CASE WHEN is_script THEN 'script' ELSE 'key' END AS credential_type,
+    COUNT(*) AS account_count,
+    MIN(reg_epoch) AS min_epoch,
+    MAX(reg_epoch) AS max_epoch
+  FROM with_epoch
+  GROUP BY reg_vintage, credential_type
+  ORDER BY credential_type, reg_vintage
+) TO '/tmp/addressable_pool_vintage.csv' WITH CSV HEADER;
+
+\echo (F) Addressable-pool lifecycle (ever-delegated vs never)
+
+COPY (
+  SELECT
+    CASE WHEN is_script THEN 'script' ELSE 'key' END AS credential_type,
+    CASE WHEN ever_delegated THEN 'ex_delegator_undelegated' ELSE 'never_delegated' END AS lifecycle,
+    COUNT(*)                                         AS account_count,
+    SUM(lovelace)                                    AS total_lovelace,
+    (SUM(lovelace) / 1000000.0)::bigint              AS total_ada
+  FROM t_addr_balance
+  GROUP BY credential_type, lifecycle
+  ORDER BY credential_type, lifecycle
+) TO '/tmp/addressable_pool_lifecycle.csv' WITH CSV HEADER;
+
+\echo (G) Top-N payment credentials (scripthashes) for script-no-cred ADA
+
+COPY (
+  WITH script_no_cred AS (
+    SELECT payment_cred, value, address
+    FROM v_no_cred
+    WHERE address LIKE 'addr1w%'
+  ),
+  per_cred AS (
+    SELECT payment_cred,
+           MIN(address)        AS sample_address,
+           COUNT(*)            AS utxo_count,
+           SUM(value)::bigint  AS lovelace
+    FROM script_no_cred
+    GROUP BY payment_cred
+  ),
+  total AS (SELECT SUM(lovelace) AS t FROM per_cred)
+  SELECT ROW_NUMBER() OVER (ORDER BY p.lovelace DESC) AS rank,
+         encode(p.payment_cred, 'hex')                AS scripthash_hex,
+         p.sample_address,
+         p.utxo_count,
+         p.lovelace,
+         (p.lovelace / 1000000.0)::bigint             AS ada,
+         100.0 * p.lovelace / t.t                     AS pct_of_script_no_cred
+  FROM per_cred p, total t
+  ORDER BY p.lovelace DESC
+  LIMIT 100
+) TO '/tmp/script_no_cred_top100.csv' WITH CSV HEADER;
+
+\echo Done.

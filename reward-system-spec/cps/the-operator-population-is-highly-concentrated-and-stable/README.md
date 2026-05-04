@@ -13,7 +13,7 @@ License: Apache-2.0
 
 ## Abstract
 
-The intended design assumes a competitive field of $k$ single-pool operators converging toward a balanced equilibrium. *The on-chain population has already converged — toward concentration, not competition.* **73 named entities control 75.5% of productive stake through 464 pools.** The productive set has been in **quasi-equilibrium at ~950 pools since epoch 300**, with **1.7% turnover per epoch** — replacement, not expansion. **12 entities operating 11+ pools each control 40.4% of productive stake.**
+The intended design assumes a competitive field of $k$ single-pool operators converging toward a balanced equilibrium. *The on-chain population has already converged — toward concentration, not competition.* **83 attributed entities control 76.7% of productive stake through 449 productive pools.** The productive set has been in **quasi-equilibrium at ~950 pools since epoch 300**, with **1.7% turnover per epoch** — replacement, not expansion. **12 entities operating 11+ pools each control 40.4% of productive stake.**
 
 Three structurally distinct sub-populations coexist within this concentrated landscape, and the dominant ones are *structurally insensitive* to the pledge signal the mechanism relies on: custodial operators (CEX + IVaaS, 7.40B ADA) cannot pledge by architectural constraint; community and opaque MPO fleets have *chosen* not to pledge despite the capacity (rational response to the pledge-value inversion); only the contracting single-pool operator population (477 pools, 5.28B ADA) bears the full cost of the fee structure. The operator population is not a single competitive field — *it is a segmented and highly concentrated market.*
 

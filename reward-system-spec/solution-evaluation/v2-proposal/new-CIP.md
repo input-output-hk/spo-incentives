@@ -236,7 +236,7 @@ The eligible-set size $N_q$ in any given epoch is the count of pools satisfying 
 
 | Population | Count above $\nu_{\min}$ | Expected ≥ 1 block per epoch |
 |---|---:|---:|
-| All pools (single-SPO + MPO-attached) | 951 | **~900** |
+| All pools (single-SPO + MPO-attached) | 733 | **~900** |
 | → Above viability threshold (≥3M ADA, $\lambda \geq 3$) | 731 | ~720 (≥ 95%) |
 | → Marginal (1M–3M, $\lambda \in [1, 3]$) | 220 | ~180 (63–95%) |
 | Single-SPO only | 477 | ~440 |

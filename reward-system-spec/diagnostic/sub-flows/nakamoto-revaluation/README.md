@@ -7,7 +7,7 @@ The "official" Nakamoto coefficient cited in the November 2025 report — approx
 | Framing | Nakamoto | Population |
 |---|---|---|
 | Pool-level, raw stake (no clustering, no threshold) — D1 | **163** | 2 877 active pools |
-| Pool-level, productive only (≥ 1.007M ADA threshold) — D2 | **161** | 951 productive pools |
+| Pool-level, productive only (≥ 1.007M ADA threshold) — D2 | **161** | 733 productive pools |
 | EDI methodology, blocks, on-chain-metadata clustering, 30j → e584 — D8a (replicated) | **82** | 970 entities |
 | EDI methodology, blocks, on-chain-metadata clustering, 30j → e623 — D8b (replicated) | **90** | 919 entities |
 | EDI methodology, blocks, *no* clustering, 30j → e584 — D9a (replicated) | **164** | 1 240 pools |
@@ -271,7 +271,7 @@ The seven coefficients on the epoch-623 snapshot are:
 | Def. | Description | Units | Stake covered (ADA) | Nakamoto |
 |---|---|---|---|---|
 | D1 | Pool, raw, no threshold | 2 877 | 21.75 B | **163** |
-| D2 | Pool, productive | 951 | 21.57 B | **161** |
+| D2 | Pool, productive | 733 | 21.57 B | **161** |
 | D3 | Entity-clustered, no threshold | 2 302 | 21.75 B | **19** |
 | D4 | Entity-clustered, productive | 560 | 21.57 B | **18** |
 | D5 | Entity-clustered, productive, no custody | 557 | 18.59 B | **23** |
