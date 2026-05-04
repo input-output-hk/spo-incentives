@@ -1149,7 +1149,14 @@ h6.section-toggle::before{color:#B7CCF2;opacity:.4}
 .nav-breadcrumb-desc-sep{color:var(--text-muted);opacity:.4;font-size:12px;padding:0 2px 0 6px}
 .nav-breadcrumb-desc{color:var(--text-muted);font-weight:400;font-style:italic;opacity:.88;letter-spacing:.15px}
 .nav-dd-wrap-light{position:relative}
-.nav-dd-btn-light{background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font:500 11.5px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--text-secondary);padding:8px 13px;transition:all .15s;white-space:nowrap}
+.nav-dd-btn-light{background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font:500 11.5px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--text-secondary);padding:8px 13px;transition:all .15s;white-space:nowrap;position:relative}
+/* "EVALUATION" eyebrow tag — anchored to the top-right of the
+   Solution Evaluation dropdown trigger, mirroring the "FUTURE"
+   stamp on .nav-tab-implementation. The tab itself sits on a white
+   plate against a Cardano-blue navbar; the tag uses Cardano-blue
+   bg + white text so it pops off the white tab. */
+.nav-dd-btn-solution::after{content:"evaluation";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:var(--cardano-blue);color:#fff;padding:3px 5px;border-radius:3px;border:1px solid var(--cardano-blue);pointer-events:none}
+[data-theme=dark] .nav-dd-btn-solution::after{background:#7B91FF;color:#1a1a1a;border-color:#7B91FF}
 .nav-dd-btn-light:hover{color:var(--text-primary);border-color:var(--text-muted);background:rgba(0,0,0,.02)}
 [data-theme=dark] .nav-dd-btn-light:hover{background:rgba(255,255,255,.04)}
 .nav-dd-wrap-light.open .nav-dd-btn-light{color:var(--infared);border-color:rgba(229,35,33,.4);background:rgba(229,35,33,.05)}
@@ -1227,7 +1234,13 @@ h6.section-toggle::before{color:#B7CCF2;opacity:.4}
 /* V2 Specification — Cardano blue solid CTA. The whole nav points
    at this destination, so it gets the brand colour at full saturation
    instead of a tinted pill. */
-.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px solid var(--cardano-blue);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap;box-shadow:0 2px 6px var(--cardano-blue-soft)}
+.nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px solid var(--cardano-blue);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap;box-shadow:0 2px 6px var(--cardano-blue-soft);position:relative}
+/* "PROPOSAL" eyebrow tag — same shape language as the "FUTURE"
+   stamp on .nav-tab-implementation, anchored to the top-right of
+   the V2 Specification tab so the spec reads as 'this is a
+   proposal' at a glance. */
+.nav-tab-spec-big::after{content:"proposal";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:var(--cardano-blue);padding:3px 5px;border-radius:3px;border:1px solid var(--cardano-blue)}
+[data-theme=dark] .nav-tab-spec-big::after{background:#1a1a1a;color:#7B91FF;border-color:#7B91FF}
 .nav-tab-spec-big:hover{background:#0028a0;border-color:#0028a0;box-shadow:0 4px 14px var(--cardano-blue-glow)}
 .nav-tab-spec-big.active{background:#001f80;border-color:#001f80;box-shadow:0 3px 12px var(--cardano-blue-glow)}
 [data-theme=dark] .nav-tab-spec-big{background:var(--cardano-blue);border-color:var(--cardano-blue);color:#fff}
