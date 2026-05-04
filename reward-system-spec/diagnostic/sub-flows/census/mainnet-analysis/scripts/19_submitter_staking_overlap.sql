@@ -1,9 +1,18 @@
 -- 19_submitter_staking_overlap.sql
 -- Classify top fee-paying addresses by CIP-19 address type and delegation status
 -- Depends on: 17_fee_concentration.sql output (materialized or CTE)
--- Source: db-sync Instance A (epoch 623)
--- Output: fee share by address type (base_key, enterprise_key, base_script, enterprise_script)
--- Figures: figures/submitter_staking_overlap.png
+-- Source: db-sync Instance B (full, epoch 627). Requires `tx_out.stake_address_id`
+-- (only present on full db-sync) to do the delegation-status join cleanly.
+-- Output: fee share by address type × staking_status (delegating /
+-- has_cred_not_delegating / no_stake_cred), top500 vs full population.
+-- Figures: figures/submitter_staking_overlap_627.png
+
+-- Reference output produced 2026/05/04 → data/submitter_staking_overlap_627.csv
+-- The query below is the legacy address-prefix-only version. The actual run
+-- on Instance B replaces Step 3 with a direct join on
+--   epoch_stake es WHERE es.epoch_no = 627 AND es.addr_id = txo.stake_address_id
+-- which is far cleaner than the deferred bech32 decode this file originally
+-- recommended.
 
 -- Step 1: reuse the top-500 submitters from 17_fee_concentration
 WITH tx_submitter AS (

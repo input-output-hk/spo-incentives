@@ -1,7 +1,7 @@
 -- 18_tx_type_composition.sql
 -- Script vs key transactions per epoch, with fee breakdown
 -- Uses t.script_size as proxy: >0 means the tx includes Plutus scripts
--- Source: db-sync Instance A (epoch 623)
+-- Source: db-sync Instance B (full, epoch 627)
 -- Output: one row per epoch with script/key tx counts and fee totals
 -- Figures: figures/tx_type_composition.png (stacked area)
 

@@ -4,7 +4,7 @@ Before any conclusion can be drawn about how rewards are *shared*, a prior quest
 
 The census is also, deliberately, a **noise-removal protocol**. The raw db-sync tables register **5,919 pools** and **1.85M delegation certificates** — but most of those pools earn no blocks and most of those certificates are ghosts of empty wallets. Iterative cleaning (production threshold → entity attribution → balance-bearing delegations) brings the productive count down to **733 pools** and **1,227,281 delegations** carrying **21.18B ADA**. The companion [*Pools Pot Distribution*](../../pools-distribution/mainnet-analysis/) and [*Operator's Cut*](../../operator-delegator-distribution/mainnet-analysis/) reports chain off these cleaned denominators; *every metric they report inherits the choices documented here*.
 
-The analysis spans the full Shelley history (epochs 211–623, ~5 years) with a snapshot anchor at **epoch 623**, and produces **eleven headline observations** (CEN.O1–CEN.O11) that the rest of the report makes auditable.
+The analysis spans the full Shelley history (epochs 211–627, ~5 years) with a snapshot anchor at **epoch 623** for the staking-side aggregates (§2–§5) and at **epoch 627** for the transaction-submitter analysis (§6, refreshed once Instance B's full db-sync caught up with chain tip). It produces **twelve headline observations** (CEN.O1–CEN.O12) that the rest of the report makes auditable.
 
 **Who is on the field.** **21.75B ADA** (60.2% of circulating supply) is staked across **2,877 pools**. After cutting at the production threshold (≥3M ADA, the 95%-block-probability bar), the productive core is **733 pools** controlled by **367 entities**. **83 attributed entities** hold **76.7%** of productive stake through **449 productive pools** (71 strict multi-pool + 12 attributed single-pool) — and within that, **10 centralised exchange and institutional-validator entities** alone hold **34.3%** at structurally zero pledge. The remaining **23.3%** sits with **284 unattributed single-pool operators (4.94B ADA)**. Entity attribution is a lower bound; the real multi-pool count is certainly higher.
 
@@ -20,7 +20,7 @@ The analysis spans the full Shelley history (epochs 211–623, ~5 years) with a 
 
 ## Table of Contents
 
-1. [Mainnet Observations](#1-mainnet-observations)
+1. [Mainnet Observations](census.html#1-mainnet-observations)
 2. [The ADA Supply](#2-the-ada-supply)
 3. [Pool Operators](#3-pool-operators)
    - [3.1. Raw query](#31-raw-query)
@@ -57,85 +57,89 @@ The analysis spans the full Shelley history (epochs 211–623, ~5 years) with a 
      - [4.7.4. Loyal delegators and their pools](#474-loyal-delegators-and-their-pools)
    - [4.8. Credential type — key versus script](#48-credential-type-key-versus-script)
 5. [Non-Participants](#5-non-participants)
-   - [5.1. Circulating supply decomposition](#51-circulating-supply-decomposition)
-   - [5.2. Anatomy of the non-participant population](#52-anatomy-of-the-non-participant-population)
-     - [5.2.1. Fine-grained UTxO decomposition at epoch 623](#521-fine-grained-utxo-decomposition-at-epoch-623)
-   - [5.3. Dormancy vintage](#53-dormancy-vintage)
-   - [5.4. What the non-participant population likely contains](#54-what-the-non-participant-population-likely-contains)
+   - [5.1. Two-fifths of the supply has sat unstaked for over 300 epochs](#51-two-fifths-of-the-supply-has-sat-unstaked-for-over-300-epochs)
+   - [5.2. Most non-participants have no staking key — only 0.4 % of supply is reachable by reward design](#52-most-non-participants-have-no-staking-key-only-04-of-supply-is-reachable-by-reward-design)
+   - [5.3. The locked share splits cleanly between probably-lost and operationally-active](#53-the-locked-share-splits-cleanly-between-probably-lost-and-operationally-active)
+   - [5.4. A few hundred custodians hold three-quarters of the structurally-excluded ADA](#54-a-few-hundred-custodians-hold-three-quarters-of-the-structurally-excluded-ada)
+     - [5.4.1. The DeFi-locked share is one contract](#541-the-defi-locked-share-is-one-contract)
+   - [5.5. The "addressable" pool collapses to about 2,100 active accounts](#55-the-addressable-pool-collapses-to-about-2100-active-accounts)
+   - [5.6. What the four levers can and cannot reach](#56-what-the-four-levers-can-and-cannot-reach)
 6. [Transaction Submitters](#6-transaction-submitters)
-   - [6.1. What the analysis must establish](#61-what-the-analysis-must-establish)
-   - [6.2. Data sources and methodology](#62-data-sources-and-methodology)
-   - [6.3. Findings](#63-findings)
-     - [6.3.1. Volume and population size](#631-volume-and-population-size)
-     - [6.3.2. Submitter population decomposition](#632-submitter-population-decomposition)
-     - [6.3.3. Fee revenue decomposition — who pays](#633-fee-revenue-decomposition-who-pays)
-     - [6.3.4. Transaction composition — script vs simple](#634-transaction-composition-script-vs-simple)
+   - [6.1. A shrinking crowd paying for a busy chain](#61-a-shrinking-crowd-paying-for-a-busy-chain)
+   - [6.2. Most submitters can stake — but the loudest of them can't](#62-most-submitters-can-stake-but-the-loudest-of-them-cant)
+   - [6.3. ~3,800 smart contracts carry a third of the fees](#63-3800-smart-contracts-carry-a-third-of-the-fees)
+   - [6.4. The fee floor rests on a few dozen recognisable names](#64-the-fee-floor-rests-on-a-few-dozen-recognisable-names)
+   - [6.5. The people who pay are not the people who get rewarded](#65-the-people-who-pay-are-not-the-people-who-get-rewarded)
+   - [6.6. What this means for the reward pipeline](#66-what-this-means-for-the-reward-pipeline)
 7. [Synthesis](#7-synthesis)
-   - [Key metrics (epoch 623)](#key-metrics-epoch-623)
+   - [Key metrics (staking snapshot epoch 623; submitter snapshot epoch 627)](#key-metrics-staking-snapshot-epoch-623-submitter-snapshot-epoch-627)
    - [Concentration headline](#concentration-headline)
    - [Noise removal log](#noise-removal-log)
    - [What remains noisy](#what-remains-noisy)
 8. [Bridges to Companion Analyses](#8-bridges-to-companion-analyses)
-   - [8.1. Distribution efficiency (epoch 616)](#81-distribution-efficiency-epoch-616)
-   - [8.2. Operator's cut (epoch 614)](#82-operators-cut-epoch-614)
-   - [8.3. Main report (epochs 548–583)](#83-main-report-epochs-548583)
-   - [8.4. Reconciliation summary](#84-reconciliation-summary)
-9. [Data sources & methodology](#9-data-sources-methodology)
-   - [9.1. Data sources](#91-data-sources)
-   - [9.2. Methodology note — iterative cleaning](#92-methodology-note-iterative-cleaning)
+- [Appendix A — methodological notes for the submitter analysis](#appendix-a-methodological-notes-for-the-submitter-analysis)
+- [Appendix B — methodological notes for the non-participant analysis](#appendix-b-methodological-notes-for-the-non-participant-analysis)
+- [Appendix C — global data sources and methodology](#appendix-c-global-data-sources-and-methodology)
 
 
 ## 1. Mainnet Observations
 
 | # | Observation | Section | Nature |
 | --- | --- | --- | --- |
-| | **CEN.O1 — The productive pool landscape is heavily consolidated around its multi-pool entities and closed to new entrants** | | At epoch 623 the productive set is **733 pools** (historical band ~700–1,000 since epoch 300 as the threshold rises with total stake), with only **1.7%** epoch turnover. Composition has hardened: **83 attributed entities** control **76.7%** of productive stake (12 with 11+ pools alone hold **41.0%**), multi-pool fleets grew from **23 to 85**, and single-pool operators contracted from **39.1% to 24.4%** of stake. The entry → growth → established path is no longer observable. |
-| CEN.O1.F1 | 75% of registered pools (2,144 of 2,877) sit below the production threshold (~3M ADA) — they hold 2.7% of stake and are economically irrelevant | [The structural requirement](../../../README.md#32-the-structural-requirement) | Structural threshold |
-| CEN.O1.F2 | 83 attributed entities control 76.7% of productive stake through 449 productive pools — entity attribution is a lower bound | [Problem Induction](../../../README.md#33-problem-induction) | Concentration — supply side |
-| CEN.O1.F3 | The productive set is a quasi-equilibrium since epoch 300 (historical band ~700–1,000 as the threshold rises with total stake; **733 at epoch 623**), with 1.7% turnover per epoch (3,497 entries vs 3,070 exits) | [Population dynamics — entries, exits, and turnover](#35-population-dynamics-entries-exits-and-turnover) | Market maturity |
-| CEN.O1.F4 | The n-MPO distribution is heavy-tailed: 12 entities with 11+ productive pools control 41.0% of productive stake | [Operator landscape](#34-operator-landscape) | Scale dominance |
-| CEN.O1.F5 | CEX + IVaaS (10 entities, 181 pools) hold 7.40B ADA — 34.3% of productive stake at structurally zero pledge | [Operator landscape](#34-operator-landscape) | Custodial constraint |
-| CEN.O1.F6 | Single-pool operators contracted from 555 pools / 39.1% of productive stake (epoch 300) to 291 pools / 24.4% (epoch 623) — a 48% loss in pool count and 15pp in stake share | [Population dynamics — entries, exits, and turnover](#35-population-dynamics-entries-exits-and-turnover) | Structural decline |
-| CEN.O1.F7 | Multi-pool entities grew from 23 (epoch 210) to 85 (epoch 623), expanding from 135 to 660 productive pools and from 65% to 75.6% of productive stake — mid-tier fleets (6–20 pools) tripled | [Population dynamics — entries, exits, and turnover](#35-population-dynamics-entries-exits-and-turnover) | Entity expansion |
-| CEN.O1.F8 | The designed operator progression path (entry → growth → established) has no observable expression: the independent segment is contracting, not graduating | [Population dynamics — entries, exits, and turnover](#35-population-dynamics-entries-exits-and-turnover) | Pipeline failure |
-| CEN.O1.F9 | **On-chain attribution alone reveals only 4 entities; off-chain layered attribution reveals 85** — a ~20× jump. Most multi-pool operators use separate keys per pool, so the on-chain layer alone treats fleet pools as if they were single-pool operators. Any analysis that stops at on-chain attribution materially understates MPO concentration | [Cleaning — entity attribution](#33-cleaning--entity-attribution) | Methodological — attribution layer matters |
-| | **CEN.O2 — Pool size variability is an institutional rebalancing phenomenon** | | Pool size variability splits cleanly along ownership type — custodial-by-delegation pools show median **CV 19.3%** with **21%** exceeding 50%, retail pools sit at **8.4%**, and custodial-by-extraction are most inert at **6.6%**. Variability is an institutional rebalancing signal, not a measure of delegator behaviour. |
-| CEN.O2.F1 | Custodial-by-delegation pools (28 pools, median delegation ≥ 100K ₳) have median CV 19.3% and 21% exceed CV 50%; retail pools sit at median CV 8.4%; custodial-by-extraction are the most inert (median CV 6.6%) | [Pool size variability — how stable is a pool's stake?](#36-pool-size-variability-how-stable-is-a-pools-stake) | Segment-driven variance |
-| | **CEN.O3 — Stake concentration among delegators is extreme and frozen** | | **1,000 delegators** (0.07%) control **57%** of staked ADA and the top **10,000** (0.74%) control **79.2%** — Gini **0.976**. The shape crystallised by epoch 300 and has not moved since, even as the delegator base grew **9×** and the top-1% share stayed locked at **78–82%**. Median delegator: **32 ADA**. Mean: **16,055 ADA**. A 500× gap. |
-| CEN.O3.F1 | The median delegator holds 32 ADA; the mean is 16,055 ADA — a 500× gap measuring power-law skewness | [Stake distribution among delegators](#442-stake-distribution-among-delegators) | Structural inequality |
-| CEN.O3.F2 | 1,000 delegators (0.07%) control 57% of staked ADA; the top 10,000 (0.74%) control 79.2%; Gini = 0.976 | [Stake distribution among delegators](#442-stake-distribution-among-delegators) | Concentration — demand side |
-| CEN.O3.F3 | Stake concentration crystallised by epoch 300 and has not moved since — 9× growth in delegator count without affecting the top-1% share (78–82%) | [Historical evolution — who joined and where is the capital?](#443-historical-evolution--who-joined-and-where-is-the-capital) | Structural lock-in |
-| | **CEN.O4 — The delegation market has matured and crystallised** | | Redelegation activity fell **75%** from **2,000–3,500 per epoch** in early Shelley to **600–800** today. The delegator base is structurally bimodal — **42%** loyal (201+ epochs), **21%** volatile (≤ 5 epochs), **37%** moderate — and almost all churn is retail; custodial and private pools contribute negligibly to delegation movement. |
-| CEN.O4.F1 | Redelegation activity fell 75% from 2,000–3,500/epoch (early Shelley) to 600–800 (current regime) | [Certificate composition and temporal regimes](#461-certificate-composition-and-temporal-regimes) | Market maturity |
-| CEN.O4.F2 | The delegator base is structurally bimodal: 42% loyal (201+ epochs), 21% volatile (≤ 5 epochs), 37% moderate | [Tenure distribution](#462-tenure-distribution) | Structural bimodality |
-| CEN.O4.F3 | Custodial and private pools contribute negligible churn — retail-only filter produces identical aggregate metrics | [Flow corridors and retail lens](#464-flow-corridors-and-retail-lens) | Churn is retail-only |
-| | **CEN.O5 — Delegation size determines behaviour, not price** | | Switching scales monotonically with stake size — micro-delegators (< 1K ADA) average **0.67** lifetime switches while whales (1M+) average **3.06**. Whales hold **14.1B of 21.8B** staked but only **38%** of their stake sits in loyal delegations. Capital is disproportionately mobile; price is not the driver. |
-| CEN.O5.F1 | Micro-delegators (< 1K ADA) average 0.67 lifetime switches; whales (1M+) average 3.06 — switching scales monotonically with stake size | [Who switches? A size-stratified view](#463-who-switches-a-size-stratified-view) | Size-driven behaviour |
-| CEN.O5.F2 | Whales hold 14.1B of 21.8B staked total, yet only 38% of their stake sits in loyal delegations — capital is disproportionately mobile | [Loyal delegators and their pools](#474-loyal-delegators-and-their-pools) | Capital instability |
-| | **CEN.O6 — Yield does not drive delegation decisions** | | Half of all delegation switches (**50.5%**) produce zero yield change (±5 bps) and the median ROS differential is just **+0.02 bps**. Operator take direction is symmetric — **30.8%** lower / **37.7%** similar / **31.5%** higher — with no fee-chasing pattern. Loyalty and low fees coexist (**92.1%** of loyal delegations sit in 0–5% margin), and DeFi operates outside the system entirely (**99.83%** of staked ADA is key-based). |
-| CEN.O6.F1 | Half of all switches (50.5%) produce zero yield change (±5 bps); the median ROS differential is +0.02 bps | [Net ROS does not differentiate](#471-net-ros-does-not-differentiate) | Price signal invisible |
-| CEN.O6.F2 | Operator take direction is symmetric: 30.8% lower / 37.7% similar / 31.5% higher — no optimisation pattern | [Operator take is symmetric](#472-operator-take-is-symmetric) | No fee-chasing |
-| CEN.O6.F3 | Pool size is the only asymmetric signal: moves to smaller pools accept higher take (21.5%), moves to larger pools are take-neutral (21.0%) | [Pool size is the only asymmetric signal](#473-pool-size-is-the-only-asymmetric-signal) | Visibility over optimality |
-| CEN.O6.F4 | 92.1% of loyal delegations sit in the 0–5% margin range — loyalty and low fees coexist, not trade off | [Loyal delegators and their pools](#474-loyal-delegators-and-their-pools) | Entry filter, not trigger |
-| CEN.O6.F5 | 99.97% of delegations and 99.83% of stake are key-based; script-based delegation (399 addresses, 38M ADA) is negligible — DeFi operates outside the delegation system | [Credential type — key versus script](#48-credential-type--key-versus-script) | No smart-contract staking |
-| | **CEN.O7 — The staking participation rate is structurally declining** | | Staking has fallen from **71%** of supply (epoch ~260) to **59%** (epoch 623), driven by supply growth outpacing stake inflows. **14.36B ADA** (39.8%) does not participate — but only **134.6M** (0.37%) is addressable through registered stake credentials; the remaining **14.2B** sits in addresses with no stake credential at all. |
+| | **CEN.O1 — Multi-pool entities flourished (23 → 85 entities, 65% → 76% of productive stake) while single-pool operators struggle (555 → 291 pools, 39% → 24% of stake)** | | *The designed entry → growth → established path is no longer observable.* The productive set tracks a **700–1,000 band** since epoch 300 (**733 pools at epoch 623** as the threshold rises with total stake), with only **1.7%** turnover per epoch — but composition has hardened underneath that flat aggregate. **83 attributed entities** control **76.7%** of productive stake (12 with 11+ pools alone hold **41.0%**); multi-pool fleets grew from **23 to 85** while single-pool operators contracted from **39.1% to 24.4%** of stake. |
+| CEN.O1.F1 | **Three quarters of registered pools are economically irrelevant.** 2,144 of 2,877 (75%) sit below the production threshold (~3M ADA) and together hold only 2.7% of stake | [The structural requirement](../../../README.md#32-the-structural-requirement) | Structural threshold |
+| CEN.O1.F2 | **Three quarters of productive stake sits in 83 named entities.** They control 76.7% through 449 productive pools (71 strict multi-pool + 12 attributed single-pool) — and the count is a lower bound (operators using fully separate per-pool infrastructure stay invisible) | [Problem Induction](../../../README.md#33-problem-induction) | Concentration — supply side |
+| CEN.O1.F3 | **The pool count flat-lined since epoch 300; the equilibrium is replacement, not growth.** The productive set tracks a 700–1,000 historical band (733 at epoch 623) with 1.7% turnover per epoch — 3,497 entries against 3,070 exits balance to near-zero net flow | [Population dynamics — entries, exits, and turnover](#35-population-dynamics-entries-exits-and-turnover) | Market maturity |
+| CEN.O1.F4 | **Concentration is heavy-tailed: 12 entities run 41% of productive stake.** Of the 83 attributed, 12 with 11+ productive pools control 41.0% (8.69B / 21.18B); the top 2 alone (Coinbase 41p, YUTA 25p) hold 13.4% | [Operator landscape](#34-operator-landscape) | Scale dominance |
+| CEN.O1.F5 | **Custodial dominance sets a structural pledge floor.** CEX + IVaaS (10 entities, 181 pools, 7.40B ADA, 34.3% of productive stake) operate at zero pledge by *architectural* constraint — custodied retail balances cannot legally be pledged | [Operator landscape](#34-operator-landscape) | Custodial constraint |
+| CEN.O1.F6 | **Independent operators are losing the field — 48% pool-count loss in 323 epochs.** Single-pool operators contracted from 555 pools / 39.1% of productive stake (epoch 300 peak) to 291 / 24.4% (epoch 623); the contraction has accelerated in the most recent window | [Population dynamics — entries, exits, and turnover](#35-population-dynamics-entries-exits-and-turnover) | Structural decline |
+| CEN.O1.F7 | **Multi-pool entities absorbed the contraction and then some — fleet count nearly quadrupled.** From 23 entities / 135 pools / 65% of stake (epoch 210) to 85 / 660 / 75.6% (epoch 623); the mid-tier (6–20 pools) tripled in entity count and nearly doubled in stake share | [Population dynamics — entries, exits, and turnover](#35-population-dynamics-entries-exits-and-turnover) | Entity expansion |
+| CEN.O1.F8 | **The mechanism's designed progression path is invisible in the data.** Entry → growth → established is supposed to feed the independent segment; instead the independent population is contracting and the replacement pools that maintain the productive total are entity-operated | [Population dynamics — entries, exits, and turnover](#35-population-dynamics-entries-exits-and-turnover) | Pipeline failure |
+| CEN.O1.F9 | **On-chain attribution alone misses the bulk of fleet structure — 4 entities vs 85, a ~20× jump.** Most multi-pool operators use separate keys per pool, so on-chain ownership clustering catches only the small minority that doesn't separate keys; any analysis stopping at the on-chain layer materially understates MPO concentration | [Cleaning — entity attribution](#33-cleaning-entity-attribution) | Methodological — attribution layer matters |
+| | **CEN.O2 — When a Titan delegator switches pools, the whole pool moves with them — whale-funded pools swing ±20% between epochs (1 in 5 swings >50%) while retail pools barely move (±8%)** | | *A pool's stake stability depends on who its delegators are — not on the market segment it competes in.* In **whale-funded pools** (the 28 *custodial-by-delegation* pools, where the typical delegator holds ≥ 100K ₳), a single Titan-tier address (10M+ ₳) is large enough that when they move, the whole pool moves: **stake swings ~±20% between epochs**, and **1 in 5** of them swings more than 50%. The operator loses revenue predictability and the remaining delegators see their block-production rhythm wobble. **Retail** pools (broad small-delegator base) absorb churn smoothly — they only move **±8%** between epochs. **Custodial-by-extraction** pools (≥ 99% margin) barely budge (**±7%**) because their delegators are locked in by inertia. What looks like *delegator activity* in the aggregate is mostly a handful of institutional treasuries shifting capital. |
+| CEN.O2.F1 | **A single Titan delegator moving in or out can shake a whole pool — whale-funded pools swing ~±20% between epochs vs ±8% for retail.** In the **28 custodial-by-delegation pools** (typical delegator holds ≥ 100K ₳), stake moves by roughly **±20% between epochs**, with **21%** of them swinging by more than 50% — these are pools where a single address is large enough that its movement dominates the variance. **Retail** (809 pools, broad small-delegator base) is mostly stable (**±8%**) — no single delegator can move the pool. **Custodial-by-extraction** (79 pools, ≥99% margin) is the most inert (**±7%**) — stagnation, not active management | [Pool size variability — how stable is a pool's stake?](#36-pool-size-variability-how-stable-is-a-pools-stake) | Segment-driven variance |
+| | **CEN.O3 — The delegator population is wildly skewed in stake — 1,000 of 1.36M delegators (0.07%) hold 57% of staked ADA, and 9× population growth has not shifted the shape** | | *The delegator population is shaped like a power-law tail — almost all the staked capital sits in a tiny upper sub-population.* Of the **1.36M active delegators**, **1,000 (0.07%) hold 57% of staked ADA**; the top **10,000** (0.74%) hold **79.2%**; Gini = **0.976** — more concentrated than US wealth (~0.85) and comparable to the most unequal asset distributions in financial markets. The **median** delegator holds just **32 ADA** while the **mean** is **16,055 ADA** — a 500× gap that quantifies the skew. *The population has grown 9× since epoch 300 without changing its shape*: every cohort of new entrants has joined at the bottom of the distribution, leaving the top-1% share locked at **78–82%**. |
+| CEN.O3.F1 | **Half the delegator base stakes less than a single transaction fee at peak congestion.** Median: 32 ADA. Mean: 16,055 ADA. The 500× gap measures the skewness of a power-law distribution where each tier above 10K ADA holds roughly 20% of total stake despite containing exponentially fewer delegators | [Stake distribution among delegators](#442-stake-distribution-among-delegators) | Structural inequality |
+| CEN.O3.F2 | **The delegator population's stake is concentrated in its top 0.07%.** 1,000 delegators (0.07% of the 1.36M population) hold 57% of staked ADA; the top 10,000 (0.74%) hold 79.2%. Gini = 0.976 — more concentrated than US wealth (~0.85) and comparable to the most unequal asset distributions observed in financial markets | [Stake distribution among delegators](#442-stake-distribution-among-delegators) | Concentration — demand side |
+| CEN.O3.F3 | **Concentration crystallised by epoch 300 and has not moved since.** A 9× growth in delegator count has not budged the top-1% share (locked at 78–82%) — new entrants are overwhelmingly micro-delegators (<1K ADA, 96% of new joins) who inflate the denominator without touching the numerator. The economic weight of staking was set in its first ~90 epochs | [Historical evolution — who joined and where is the capital?](#443-historical-evolution--who-joined-and-where-is-the-capital) | Structural lock-in |
+| | **CEN.O4 — Most delegators stay put for years — 42% have stuck with the same pool for 2.7+ years, only 21% switch within 25 days, and the population's switching rate is 75% below early Shelley** | | *The delegator population settled long ago — most of it doesn't move.* Tenure splits the population cleanly into three sub-groups: **42% have stayed with the same pool for 2.7+ years** (201+ epochs), **21% switch within 25 days** (≤ 5 epochs), **37% sit in the middle** (somewhere between). Aggregate switching has collapsed **75%** from **2,000–3,500 redelegations per epoch** in early Shelley to **600–800 today** — three regimes: experimentation → middle → mature. And almost all of that switching comes from the retail population: custodial and private pools barely move. |
+| CEN.O4.F1 | **Pool-switching collapsed 75% from early Shelley.** Redelegations fell from 2,000–3,500 per epoch (early Shelley experimentation) to 600–800 today — three regimes: experimentation (epochs 210–260) → middle period with hard-fork spikes (260–500) → mature settled market (500+) | [Certificate composition and temporal regimes](#461-certificate-composition-and-temporal-regimes) | Market maturity |
+| CEN.O4.F2 | **The base splits cleanly into stickers and switchers, with a thin middle.** 42% loyal (201+ epochs, > 2.7 years), 21% volatile (≤ 5 epochs, < 25 days), 37% moderate. The loyal majority anchors pool economics; the volatile tail generates the bulk of the churn signal | [Tenure distribution](#462-tenure-distribution) | Structural bimodality |
+| CEN.O4.F3 | **Switching is a retail-market phenomenon — custodial and private pools contribute negligible churn.** A retail-only filter (margin < 99.9%, excluding by-pledge / by-extraction custodial) produces near-identical aggregates: 40.0% switch rate, 42.4% loyal tenure, ~799 redelegations per epoch | [Flow corridors and retail lens](#464-flow-corridors-and-retail-lens) | Churn is retail-only |
+| | **CEN.O5 — The bigger the delegation, the more it moves — whales (1M+ ₳) hold 65% of the staked supply and switch ~4× more often than small delegators** | | *The bigger the delegation, the more often it moves.* The smallest delegators (**< 1K ₳**) average just **0.67 pool switches over their lifetime** — they delegate once and forget. **Whales (1M+ ₳)** average **3.06 switches** — about **4–5× more**. And whales hold **14.1B of the 21.8B staked supply (65%)** — yet only **38%** of that capital sits in long-term (201+ epoch) delegations. *The bulk of the network's staked capital sits in the hands of its most actively-managed delegations.* Pool operators depending on a few whale delegators therefore face structurally higher stake instability than those with a broad retail base. |
+| CEN.O5.F1 | **Whales switch 4–5× more often than micro-delegators.** Lifetime switches: <1K = 0.67, 1K–10K = 0.95, 10K–100K = 1.64, 100K–1M = 2.65, 1M+ = 3.06. Loyal share (201+ epochs): <1K = 82%, 1M+ = 39%. Switching intensity scales monotonically with stake size — small delegators delegate once and forget; large delegators actively manage their position | [Who switches? A size-stratified view](#463-who-switches-a-size-stratified-view) | Size-driven behaviour |
+| CEN.O5.F2 | **Most of the network's staked capital sits in delegations that move.** Whales (1M+) hold 14.1B of the 21.8B staked total (65%), yet only 38% of that stake sits in loyal (201+ epoch) delegations — the rest distributes across moderate and volatile tenures. Pool operators dependent on a few large delegations face structurally higher stake instability than those with a broad base of small loyal delegators | [Loyal delegators and their pools](#474-loyal-delegators-and-their-pools) | Capital instability |
+| | **CEN.O6 — The delegator population doesn't shop on price — half their switches produce zero yield change, switch direction is balanced (30.8% cheaper / 31.5% pricier), and 92% of long-term delegators sit in the cheapest 0–5% margin band** | | *The delegator population behaves like passive parkers, not yield-shoppers.* When delegators do switch, **half (50.5%) land in pools with statistically indistinguishable yield** (±5 bps; median ROS differential **+0.02 bps** — well below any threshold a delegator could observe). Switch *direction* is symmetric too: **30.8% go cheaper / 37.7% stay flat / 31.5% go pricier** — no fee-chasing pattern. The one asymmetric move is by *pool size* (the population drifts toward larger pools regardless of price). And **92.1% of long-term delegators (201+ epochs) sit in the cheapest 0–5% margin band** — the cheapest pools are also the stickiest, so loyalty and low fees coexist, they don't trade off. The DeFi sub-population is essentially absent: **99.83% of staked ADA is key-based**; only 38M ADA across 399 script addresses is held by smart contracts. |
+| CEN.O6.F1 | **Delegators cannot see what they're paying for — the yield signal is too flat to act on.** Half of all switches (50.5%) produce zero yield change (±5 bps); the median ROS differential is +0.02 bps with an interquartile range of −0.47 to +0.55 bps. The signal is an order of magnitude below any threshold a delegator could observe, let alone optimise against | [Net ROS does not differentiate](#471-net-ros-does-not-differentiate) | Price signal invisible |
+| CEN.O6.F2 | **Operator take direction is balanced — no fee-chasing pattern is detectable.** 30.8% of switches go to a cheaper pool, 31.5% to a more expensive one, 37.7% land at the same take. The take × ROS matrix's diagonal dominates (lower take → better ROS at 18.4%, similar → similar at 25.6%, higher → worse at 16.5%) — confirming take and ROS are two views of one signal, and that signal is too flat to drive behaviour | [Operator take is symmetric](#472-operator-take-is-symmetric) | No fee-chasing |
+| CEN.O6.F3 | **Pool size — not price — is the only asymmetric signal in switching behaviour.** Moves to smaller pools tend to accept higher take (21.5%), moves to larger pools tend to stay take-neutral (21.0%). The asymmetry suggests moves toward small pools follow non-economic factors (community affinity, retirement at origin, decentralisation preference); moves toward larger pools follow a path of least resistance — *visibility, not optimisation* | [Pool size is the only asymmetric signal](#473-pool-size-is-the-only-asymmetric-signal) | Visibility over optimality |
+| CEN.O6.F4 | **Loyalty and low fees coexist — the cheapest pools are the stickiest.** 92.1% of loyal delegations (201+ epochs) sit in the 0–5% margin range. Loyalty is a consequence of *initial pool selection* into the competitive neighbourhood, not a barrier to leaving it; fees segment the market at entry, not during tenure | [Loyal delegators and their pools](#474-loyal-delegators-and-their-pools) | Entry filter, not trigger |
+| CEN.O6.F5 | **DeFi operates almost entirely outside the staking system.** 99.97% of delegations and 99.83% of stake are key-based; script-based delegation (smart contracts, multisig, governance) is 399 addresses and 38M ADA. The DeFi ecosystem has not integrated with delegation in any meaningful way — and the credential type cannot separate custodial from retail capital, since both present as key-based | [Credential type — key versus script](#48-credential-type--key-versus-script) | No smart-contract staking |
+| | **CEN.O7 — The non-participant population is 39.8 % of the supply, structurally inert, and held by a tightly-concentrated minority of custodians and legacy holders** | | The **non-participant population** — addresses controlling ADA that is not delegated to any pool — has been **stable at 36–39 % of circulation for over 300 epochs** (14.4 B ADA at epoch 623). Only **0.37 %** of circulation is *reachable* by reward design (registered staking key but not delegated); the remaining **39.4 %** sits in addresses that cannot delegate without a protocol-level change. The "unreachable" core is **not a faceless retail tail** — **246 wallets hold 74 %** of it, top-3 alone hold 19 %; the addresses split cleanly into recognisable archetypes (exchange hot wallets, institutional cold storage, pre-staking-era legacy holders, DeFi vaults). The "addressable" pool collapses to **~2,100 active accounts and 0.06 % of supply** once zero-balance shells and a single DeFi vault are removed. *The reward mechanism's recruitment ceiling is narrow; meaningful re-engagement requires changing the address architecture, not the incentive curve.* |
 | CEN.O7.F1 | Staking rate has fallen from 71% (epoch ~260) to 59% (epoch 623) — driven by supply growth outpacing stake inflows | §2 | Supply-side erosion |
-| CEN.O7.F2 | 14.36B ADA (39.8%) does not participate; of this, only 134.6M (0.37%) is *addressable* (registered stake credential, not delegated) — the remaining 14.2B sits in addresses with no stake credential | §5 | Structural non-participation |
-| CEN.O7.F3 | Incentive changes can move at most the 0.37% addressable pool (134.6M ADA, 24,176 accounts); moving the other 39.4% requires protocol-level changes (enterprise-address staking, staking-capable script standards, delegation-by-default) | [Anatomy of the non-participant population](#52-anatomy-of-the-non-participant-population) | Structural protocol limit |
-| CEN.O7.F4 | The 14.2B no-credential residual is dominated by two legacy populations: Byron addresses (1.32B) and enterprise addresses (1.04B) — script-no-cred (91M) is a small and slowly growing fraction | [Fine-grained UTxO decomposition at epoch 623](#521-fine-grained-utxo-decomposition-at-epoch-623) | Composition — legacy not DeFi |
-| CEN.O7.F5 | The no-credential UTxO set is temporally polarised: 37% (927.7M ADA) is pre-staking-era dormant output (awakening at ~0.8M ADA per epoch), 44% (1,110M ADA) is from the last 73 epochs — middle eras are almost entirely spent | [Dormancy vintage](#53-dormancy-vintage) | Bimodal — dormant vs operationally active |
-| | **CEN.O8 — The submitter population is contracting while transaction volume holds** | | Unique submitter addresses fell from a peak of **790,335** at epoch 304 to **30,505** at epoch 623 — a **96%** contraction against a 93% drop in transaction volume. The address-to-transaction ratio dropped from 0.88 (epoch 210) to 0.29 (epoch 623). *The chain is not losing activity; it is losing breadth.* |
-| CEN.O8.F1 | Submitter population peaked at 790,335 unique addresses (epoch 304) and has contracted by 96% to 30,505 (epoch 623) | [Volume and population size](#631-volume-and-population-size) | Consolidation toward fewer, more active actors |
-| CEN.O8.F2 | Address-to-transaction ratio fell from 0.88 (epoch 210) to 0.29 (epoch 623) — a structural consolidation signal | [Volume and population size](#631-volume-and-population-size) | Breadth loss without volume loss |
-| | **CEN.O9 — By headcount, submitters are overwhelmingly stakeable; by fee weight, the picture inverts** | | At epoch 623, **73.4%** of submitter addresses carry a staking credential (base-key, `addr1q`). But **30.1%** of fee revenue comes from enterprise (`addr1v`) and script (`addr1w`) addresses that **structurally cannot delegate** — and this share has not fallen below 14% since the Alonzo era. *The reward pipeline taxes a constituency it excludes from rewards.* |
-| CEN.O9.F1 | 73.4% of submitter addresses are base-key (`addr1q`); 9.9% enterprise-key, 8.3% base-script, 6.3% legacy Byron, 1.7% enterprise-script, 0.3% base-other | [Submitter population decomposition](#632-submitter-population-decomposition) | Headcount remains overwhelmingly stakeable |
-| CEN.O9.F2 | 30.1% of fee revenue comes from enterprise + script addresses that structurally cannot delegate; non-stakeable share has remained ≥ 14% since Alonzo | [Fee revenue decomposition — who pays](#633-fee-revenue-decomposition-who-pays) | The fee base is structurally misaligned with the reward base |
-| | **CEN.O10 — Script transactions pay 2.4× the per-tx rate and dominate fee peaks** | | Post-Alonzo cumulative: script transactions are **12.6%** of count but **29.7%** of fees. At epoch 623, **3,073 script addresses** (10.1% of submitters) generate **34.9%** of epoch fees — and the per-address fee for an enterprise-script submitter (11.6 ADA/epoch) is **17×** that of a base-key submitter (0.69 ADA/epoch). |
-| CEN.O10.F1 | Post-Alonzo, script transactions account for 12.6% of transaction count but 29.7% of cumulative fees — a 2.4× per-tx premium structurally embedded via Plutus execution costs | [Transaction composition — script vs simple](#634-transaction-composition-script-vs-simple) | DeFi subsidises the epoch pot |
-| CEN.O10.F2 | At epoch 623, 3,073 script addresses (10.1%) generate 34.9% of fees — the pipeline's fee revenue is coupled to ~3,000 smart contracts | [Fee revenue decomposition — who pays](#633-fee-revenue-decomposition-who-pays) | Concentration on script activity |
-| | **CEN.O11 — Fee revenue is heavy-tailed but less extreme than delegation stake** | | Over epochs 618–623, the **top 10** fee-paying addresses generate **24.3%** of all fees and the **top 500** generate **60.8%** — out of ~151K active submitters. The concentration is heavy-tailed but below the delegation Gini of 0.976. *500 addresses out of 151K (0.33%) pay the majority of fees.* |
-| CEN.O11.F1 | Top 10 fee-paying addresses generate 24.3% of fee revenue; top 500 generate 60.8% — across ~151K active submitters in the recent 6-epoch window | [Fee concentration](#635-fee-concentration) | High-frequency automated actors (DEX aggregators, exchange hot wallets, arbitrage bots) |
-| CEN.O11.F2 | The top 10 alone account for 148,909 transactions over 6 epochs (20.9% of volume) — their departure would reduce the epoch pot's fee component by a quarter | [Fee concentration](#635-fee-concentration) | Single-actor exposure |
+| CEN.O7.F2 | 14.36B ADA (39.8%) does not participate; of this, only 134.6M (0.37%) is *addressable* (registered staking key, not delegated) — the remaining 14.2B sits in addresses with no staking key | [Two-fifths of the supply has sat unstaked for over 300 epochs](#51-two-fifths-of-the-supply-has-sat-unstaked-for-over-300-epochs) | Structural non-participation |
+| CEN.O7.F3 | Reward changes can at most reach the 0.37% addressable pool (134.6M ADA, 24,176 accounts); the other 39.4% requires protocol-level changes (enabling exchange-style addresses to stake, staking-capable script standards, delegation-by-default) | [Most non-participants have no staking key](#52-most-non-participants-have-no-staking-key-only-04-of-supply-is-reachable-by-reward-design) | Structural protocol limit |
+| CEN.O7.F4 | The 14.2B no-staking-key residual is dominated by legacy and custody, not by active DeFi — exchange/custody addresses (1.04B) and pre-staking legacy (1.32B) account for 96% of the identified shapes; DeFi contracts without staking total just 91M | [Most non-participants have no staking key](#52-most-non-participants-have-no-staking-key-only-04-of-supply-is-reachable-by-reward-design) | Composition — legacy not DeFi |
+| CEN.O7.F5 | The no-staking-key pool is temporally polarised: 37% (928M) is pre-staking-era dormant (awakening at ~0.8M per epoch), 44% (1,110M) is from the last 73 epochs — middle eras are almost entirely spent | [The locked share splits cleanly between probably-lost and operationally-active](#53-the-locked-share-splits-cleanly-between-probably-lost-and-operationally-active) | Bimodal — dormant vs operationally active |
+| CEN.O7.F6 | The no-staking-key pool is held by a few hundred wallets, not by a diffuse retail base — top 3 control 19.1%, top 10 control 41.6%, top 200 control 68.9% of the 2.5B residual | [A few hundred custodians hold three-quarters of the structurally-excluded ADA](#54-a-few-hundred-custodians-hold-three-quarters-of-the-structurally-excluded-ada) | Concentration of structurally-excluded ADA |
+| CEN.O7.F7 | DeFi-locked-without-staking is dominated by a single 80M-ADA contract — 89% of the 91M residual lives in one contract | [The DeFi-locked share is one contract](#541-the-defi-locked-share-is-one-contract) | DeFi exclusion is a one-contract problem |
+| CEN.O7.F8 | The "addressable" pool is mostly inert — 91% of accounts hold zero ADA, 89% have been dormant since the first 41 epochs of Shelley, and 80% of the residual ADA sits in one DeFi vault; the genuine ceiling for reward-driven re-engagement is ~22.5M ADA (0.06% of circulation) | [The "addressable" pool collapses to about 2,100 active accounts](#55-the-addressable-pool-collapses-to-about-2100-active-accounts) | Real ceiling on reward-driven recruitment |
+| | **CEN.O8 — The active submitter population is shrinking and concentrating into a smaller, more active core** | | The submitter population — addresses paying fees in any given epoch — collapsed from a peak of **790,335 actors** (epoch 304) to **31,176** (epoch 627), a **−96%** contraction against only a 92% drop in transactions. The same population now transacts **~3.8× per epoch** (vs ~2.0× at peak), and the address-to-transaction ratio fell from 0.88 (epoch 210) to 0.26 (epoch 627). *The chain is not losing activity; the **population doing it** is shrinking while each surviving member transacts more often.* |
+| CEN.O8.F1 | Submitter population peaked at 790,335 unique addresses (epoch 304) and has contracted by 96% to 31,176 (epoch 627) | [A shrinking crowd paying for a busy chain](#61-a-shrinking-crowd-paying-for-a-busy-chain) | Population contraction |
+| CEN.O8.F2 | Address-to-transaction ratio fell from 0.88 (epoch 210) to 0.26 (epoch 627), and tx-per-submitter rose from ~2.0 to ~3.8 — breadth loss without volume loss; per-actor intensity is rising | [A shrinking crowd paying for a busy chain](#61-a-shrinking-crowd-paying-for-a-busy-chain) | Same shrinking core, more active per-member |
+| | **CEN.O9 — Two submitter sub-populations coexist: a stakeable head-count majority and a small non-stakeable minority that pays a third of the fees** | | At epoch 627, the **stakeable majority** — base-key (`addr1q`) addresses carrying a stake credential — is **73.3%** of submitter head-count and pays 47.4% of fees. The **non-stakeable minority** — enterprise (`addr1v`, `addr1w`) and legacy Byron addresses that structurally cannot delegate — is only **~16%** of head-count but generates **30.1%** of fee revenue (averaged 622–627), and that share has not fallen below 14% since the Alonzo era. *The reward pipeline taxes a sub-population it cannot reward.* |
+| CEN.O9.F1 | 73.3% of submitter addresses are base-key (`addr1q`); 10.8% base-script, 9.2% enterprise-key, 4.9% legacy Byron, 1.6% enterprise-script, 0.2% base-other | [Most submitters can stake — but the loudest of them can't](#62-most-submitters-can-stake-but-the-loudest-of-them-cant) | Headcount remains overwhelmingly stakeable |
+| CEN.O9.F2 | 30.1% of fee revenue (epochs 622–627 average) comes from enterprise + legacy addresses that structurally cannot delegate; non-stakeable share has remained ≥ 14% since Alonzo | [Most submitters can stake — but the loudest of them can't](#62-most-submitters-can-stake-but-the-loudest-of-them-cant) | The fee base is structurally misaligned with the reward base |
+| | **CEN.O10 — A small DeFi-script sub-population — ~3,800 contracts at epoch 627 — generates a third of the fee base** | | The **script-using sub-population** — base-script (`addr1z`) and enterprise-script (`addr1w`) addresses — is **3,851 actors** at epoch 627 (**12.4%** of submitters) and generates **36.0%** of epoch fees. Across the full post-Alonzo era it represents 12.5% of transaction count but **29.6%** of cumulative fees. The per-address fee rate of an enterprise-script submitter (12.1 ADA/epoch) is **14×** that of a base-key submitter (0.83 ADA/epoch). *The chain's fee floor is supported by a population of roughly 3,800 smart contracts — a population dimension the current incentive design does not address.* |
+| CEN.O10.F1 | Post-Alonzo, script transactions account for 12.5% of transaction count but 29.6% of cumulative fees — a 2.4× per-tx premium structurally embedded via Plutus execution costs | [~3,800 smart contracts carry a third of the fees](#63-3800-smart-contracts-carry-a-third-of-the-fees) | DeFi subsidises the epoch pot |
+| CEN.O10.F2 | At epoch 627, 3,851 script addresses (12.4%) generate 36.0% of fees — the pipeline's fee revenue is coupled to ~3,800 smart contracts | [Most submitters can stake — but the loudest of them can't](#62-most-submitters-can-stake-but-the-loudest-of-them-cant) | Concentration on script activity |
+| | **CEN.O11 — The fee-paying population is bimodal: a heavy-paying core of a few hundred high-frequency actors and a long tail of ~147K small contributors** | | Over epochs 622–627, the **top 10** addresses generate **20.0%** of fees and the **top 500** generate **58.4%** — out of ~147K active submitters. The heavy-paying core is recognisable: a MinSwap DEX-script address leads, followed by addresses tied to the **NUFI**, **TITAN**, **BERRY**, and **OYSTR** pools and several enterprise-script DEX contracts and bot wallets. The concentration is heavy-tailed but below the delegation Gini of 0.976. *500 addresses out of 147K (0.34%) pay the majority of fees — the fee floor depends on a sub-population small enough to know by name.* |
+| CEN.O11.F1 | Top 10 fee-paying addresses generate 20.0% of fee revenue; top 500 generate 58.4% — across ~147K active submitters in the recent 6-epoch window 622–627 | [The fee floor rests on a few dozen recognisable names](#64-the-fee-floor-rests-on-a-few-dozen-recognisable-names) | High-frequency automated actors (DEX aggregators, exchange hot wallets, arbitrage bots) |
+| CEN.O11.F2 | The top 10 alone ran 110,739 transactions over 6 epochs (16.1% of volume); the top 50 ran 219,720 (32.0%) — fee-pot stability hinges on a few dozen automated actors with recognisable archetypes (MinSwap, NUFI, TITAN, BERRY, OYSTR, plus enterprise-script DEX contracts) | [The fee floor rests on a few dozen recognisable names](#64-the-fee-floor-rests-on-a-few-dozen-recognisable-names) | Single-actor exposure |
+| | **CEN.O12 — The fee-paying population and the delegator population barely overlap — funders and beneficiaries are largely different people** | | Joining the submitter set (~147K addresses, epochs 622–627) to the **1,352,113 active delegators at epoch 627** reveals the population gap: only **41.8%** of fee revenue comes from currently-delegating addresses; **28.1%** from base addresses whose stake credential is *not* in the delegation set; **30.1%** from addresses with *no stake credential*. From the delegator side, **only 3.1%** of the 1.352M delegators submit any transaction in a 6-epoch window. *Fewer than 4 ADA in every 10 ADA of fees flow back to the population that paid them through any reward channel.* |
+| CEN.O12.F1 | 41.8% of fee revenue (622–627) comes from currently-delegating addresses; 28.1% from has-cred-not-delegating; 30.1% from no-stake-credential | [The people who pay are not the people who get rewarded](#65-the-people-who-pay-are-not-the-people-who-get-rewarded) | Fee base ≠ reward base |
+| CEN.O12.F2 | Only 3.1% of delegators submit any transaction in a 6-epoch window (42,082 of 1,352,113); conversely, 55% of submitter stake credentials are also delegating | [The people who pay are not the people who get rewarded](#65-the-people-who-pay-are-not-the-people-who-get-rewarded) | Delegators are passive; submitters are a different population |
+| CEN.O12.F3 | Top-500 fee revenue split: 39.4% no-stake-cred, 39.2% delegating, 21.4% has-cred-not-delegating — the largest segment by fee weight is the population the reward mechanism cannot reach | [The people who pay are not the people who get rewarded](#65-the-people-who-pay-are-not-the-people-who-get-rewarded) | Heavy-paying actors are concentrated outside the delegation channel |
 
 ## 2. The ADA Supply
 
@@ -166,7 +170,7 @@ The top panel shows the staked/unstaked decomposition of circulating supply with
 
 The pool count from epoch_stake peaked at **3,160** (epoch 331) and currently stands at **2,877**.
 
-This counts only pools that appear in the staking snapshot with non-zero delegated stake — the registration-certificate count of **5,919** includes **3,042 empty pools** and is discarded (see [§3.2 — Cleaning: production threshold](#32-cleaning--production-threshold) for the full rationale).
+This counts only pools that appear in the staking snapshot with non-zero delegated stake — the registration-certificate count of **5,919** includes **3,042 empty pools** and is discarded (see [§3.2 — Cleaning: production threshold](#32-cleaning-production-threshold) for the full rationale).
 
 ![Pool count — cleaned](figures/pool_count_clean.png)
 
@@ -220,7 +224,7 @@ The median sub-block pool holds just **2,547 ADA**; three quarters hold less tha
 
 **After cleaning:** the productive pool count drops from 2,877 to **733** — slightly above the protocol's $k = 500$ target.
 
-> **Finding CEN.O1.F1 — Three quarters of registered pools (2,144 of 2,877, 75%) sit below the production threshold.** The 1,925 sub-block pools (< 1M ADA) and 219 sub-reliable pools (1M–3M ADA) together hold only **0.58B ADA — 2.7% of staked supply**. The median sub-block pool holds 2,547 ADA, orders of magnitude below the threshold.
+> **Finding CEN.O1.F1 — Three quarters of registered pools are economically irrelevant.** 2,144 of 2,877 (75%) sit below the production threshold (~3M ADA): 1,925 sub-block pools (< 1M) and 219 sub-reliable pools (1M–3M) together hold only **0.58B ADA — 2.7% of staked supply**. The median sub-block pool holds 2,547 ADA, orders of magnitude below the threshold — these are addresses on the registry, not infrastructure operating in production.
 
 ### 3.3. Cleaning — entity attribution
 
@@ -235,7 +239,7 @@ This cleaning pass groups pools by entity to reveal the **true operator landscap
 | **On-chain only** | Shared `pool_owner` keys across productive pools | **4 entities** sharing keys across 8 pools; 943 pools appear as single-pool operators. On-chain keys are a *lower bound* — most multi-pool operators use separate keys per pool, so this layer alone misses the bulk of fleets. |
 | **Off-chain layered heuristics** | Public brand declarations (tickers, metadata URLs, websites), relay/metadata clustering (shared IPs, identical hashes, co-located infrastructure), on-chain ownership clusters, and manual resolution from community databases | Across **all registered pools**: **85 named entities** controlling **660 pools**. Combining the two layers is what catches the off-chain fleet structure that on-chain keys alone don't expose. |
 
-> **Finding CEN.O1.F9 — On-chain attribution alone reveals only 4 entities; off-chain layered attribution reveals 85 — a ~20× jump.** The on-chain layer alone tells almost nothing about MPO concentration: most multi-pool operators use separate keys per pool, so on-chain ownership clustering only catches the small minority that doesn't separate keys. Any analysis that stops at the on-chain layer treats fleet pools as if they were single-pool operators and materially understates the concentration of the network. The combined-attribution numbers — 85 entities across the registered set, 83 in the productive set — are the load-bearing inputs for every entity-level claim downstream.
+> **Finding CEN.O1.F9 — On-chain attribution alone misses the bulk of fleet structure — 4 entities vs 85, a ~20× jump.** The on-chain layer reveals **4 entities sharing keys across 8 pools**; everything else *appears* as single-pool operators. Most multi-pool operators use separate keys per pool, so on-chain ownership clustering catches only the small minority that doesn't separate keys. Any analysis that stops at the on-chain layer treats fleet pools as if they were single-pool operators and materially understates network concentration. The combined-attribution numbers — **85 entities across the registered set, 83 in the productive set** — are the load-bearing inputs for every entity-level claim downstream.
 
 **Filtering to the 733 productive pools.** From the 85 named entities, 2 disappear entirely (RAID — 7 pools, RockX — 10 pools, all below threshold), and 10 shrink to a single productive pool (reclassified as attributed single-pool operators), leaving **83 attributed entities** controlling **449 productive pools** (16.24B ADA, **76.7% of productive stake**). The remaining **284 productive pools** (4.94B ADA, **23.3%**) are unattributed single-pool operators.
 
@@ -246,7 +250,7 @@ This cleaning pass groups pools by entity to reveal the **true operator landscap
 
 The productive landscape splits almost evenly by pool count but is **heavily skewed by stake**: attributed entities control **three quarters of productive stake through half the pools**.
 
-> **Finding CEN.O1.F2 — 83 attributed entities control 76.7% of productive stake through 449 productive pools.** The operator landscape is dominated by multi-pool entities whose economic weight far exceeds their pool count. The 284 unattributed single-pool operators are the numerical majority but hold only a quarter of productive stake. Entity attribution is a lower bound — operators using entirely separate infrastructure per pool remain invisible.
+> **Finding CEN.O1.F2 — Three quarters of productive stake sits in 83 named entities.** They control 76.7% through **449 productive pools** (71 strict multi-pool fleets + 12 attributed single-pool operators). The 284 unattributed single-pool operators are the numerical majority but hold only **23.3%** of productive stake. The 83-entity count is a *lower bound* — operators running entirely separate infrastructure per pool stay invisible to the attribution pipeline.
 
 ![Stake attribution landscape](figures/entity_stake_landscape_623.png)
 
@@ -305,13 +309,13 @@ The **2–3 pool tier** is the most populated (36 entities) but each tier above 
 
 Two entities alone — **Coinbase (41 productive pools) and YUTA (25)** — operate **66 productive pools** and hold **2.83B ADA (13.4%)** of productive stake. Binance, which would have placed a third entity in the 21+ tier under an "owned pools" count, sits in the 11–20 tier on a productive-pool count.
 
-> **Finding CEN.O1.F4 — The n-MPO distribution is heavy-tailed: 12 entities with 11+ productive pools control 41.0% of productive stake.** Counted on *productive* pools only, the mid-range (2–10 productive pools, 59 entities) is the numerical majority but its aggregate weight (33.3%) is smaller than the concentrated top. Stake scales super-linearly with fleet size — a 21+ productive-pool entity holds on average 1.42B, a 2–3 productive-pool entity holds 0.07B.
+> **Finding CEN.O1.F4 — Concentration is heavy-tailed: 12 entities run 41% of productive stake.** Counted on *productive* pools only, 12 entities with 11+ productive pools hold **8.69B / 21.18B = 41.0%** of productive stake. The mid-range (2–10 productive pools, 59 entities) is the numerical majority but its aggregate weight (33.3%) is smaller than the concentrated top. Stake scales super-linearly with fleet size — a 21+ productive-pool entity holds on average 1.42B; a 2–3 productive-pool entity holds 0.07B.
 
 **Entity archetype composition** (panel B). Exchanges (**CEX**: 6 entities, 119 pools, 4.71B) and institutional validators (**IVaaS**: 4 entities, 62 pools, 2.69B) together account for **10 entities** but **45.4%** of attributed stake.
 
 Community-branded fleets (**43 entities**, 3.30B) are the most numerous archetype but hold **less stake than the exchange tier alone**. The remaining archetypes — independent MPOs, multi-brand fleets, opaque entities, ecosystem actors, and platforms — fill the long tail.
 
-> **Finding CEN.O1.F5 — CEX + IVaaS (10 entities, 181 pools) hold 7.40B ADA — 34.3% of productive stake at structurally zero pledge.** These entities' delegation source — custodied retail balances and institutional client assets — makes pledge economically meaningless. Their dominance sets a floor on how much of the stake landscape is unreachable by pledge-based incentive mechanisms.
+> **Finding CEN.O1.F5 — Custodial dominance sets a structural pledge floor.** CEX + IVaaS together — **10 entities, 181 pools, 7.40B ADA, 34.3% of productive stake** — operate at zero pledge by *architectural* constraint: their delegation source is custodied retail balances and institutional client assets, which cannot legally be pledged by the operator. Their dominance sets a floor on how much of the stake landscape is unreachable by pledge-based incentive mechanisms.
 
 #### 3.4.3. Historical decomposition — productive vs sub-threshold pools
 
@@ -353,7 +357,7 @@ The stability of the stock alongside non-trivial per-epoch fluctuation implies a
 
 Tracking individual pool presence per epoch (`05_pool_population_dynamics.sql`) confirms this: over the full history the productive set recorded **3,497 entries** against **3,070 exits**, with an **average churn of ~15.9 pools per epoch**. The turnover rate (entries + exits as a share of the productive population) averages around **1.7% per epoch** — higher than the delegator-side turnover of **~0.5%**, reflecting the **greater fragility of pool economics near the production threshold**.
 
-> **Finding CEN.O1.F3 — The productive pool set is a quasi-equilibrium since epoch 300, with 1.7% turnover per epoch.** Across the post-300 window, the count tracks a **700–1,000 band** as the threshold rises with total stake — landing at **733 pools at epoch 623**. **3,497 entries against 3,070 exits** balance to a near-zero net flow. The apparent stability of the aggregate conceals a replacement process where departing pools are continuously substituted by new entrants.
+> **Finding CEN.O1.F3 — The pool count flat-lined since epoch 300; the equilibrium is replacement, not growth.** Across the post-300 window, the productive count tracks a **700–1,000 band** as the threshold rises with total stake — landing at **733 pools at epoch 623**. **3,497 entries balance against 3,070 exits** (~15.9 pools per epoch, 1.7% turnover). The apparent stability of the aggregate conceals a continuous replacement process: pools that fall below the rising threshold or retire are substituted at roughly the same rate by new entrants — but the *composition* shifts in favour of entity-operated pools (see CEN.O1.F6/F7).
 
 #### 3.5.2. Entity lifecycle
 
@@ -392,7 +396,7 @@ The independent population peaked at **555 pools** and **39.1%** of productive s
 
 The contraction **accelerated in the recent period**: **94 pools lost in 123 epochs**, with the stake share dropping **below 25% for the first time**. The independent population has lost **nearly half its pool count** (555 → 291) and **nearly 15 percentage points** of stake share since its peak.
 
-> **Finding CEN.O1.F6 — The single-pool operator population has contracted from 555 pools (39.1% of productive stake) at epoch 300 to 291 pools (24.4%) at epoch 623 — a 48% loss in pool count and a 15pp loss in stake share.** The contraction is continuous and has accelerated in the most recent period (epochs 500–623). The quasi-equilibrium of [Entries and exits](#351-entries-and-exits) masks a composition shift: the replacement pools that maintain the ~950 total are increasingly entity-operated, not independent.
+> **Finding CEN.O1.F6 — Independent operators are losing the field — 48% pool-count loss in 323 epochs.** The single-pool population peaked at **555 pools / 39.1% of productive stake** at epoch 300 and has contracted to **291 pools / 24.4%** at epoch 623 — a **48% loss in pool count and 15pp loss in stake share**. The contraction is continuous and has accelerated most recently (epochs 500–623). The quasi-equilibrium of [Entries and exits](#351-entries-and-exits) masks a composition shift: the replacement pools that maintain the productive total are increasingly entity-operated, not independent.
 
 **Identified entities expanded steadily.**
 
@@ -414,7 +418,7 @@ The 21+ tier declined in share (46.4% → 28.8%) as IOG and Binance contracted, 
 
 *Entity power is not merely growing — it is spreading across a broader fleet-size distribution.*
 
-> **Finding CEN.O1.F7 — Multi-pool entities grew from 23 (epoch 210) to 85 (epoch 623), expanding from 135 to 660 productive pools and from 65% to 75.6% of productive stake.** The mid-tier fleets (6–20 pools) tripled their entity count and nearly doubled their stake share. The ~700–1,000-pool quasi-equilibrium is increasingly populated by entity-operated pools substituting for departing independents.
+> **Finding CEN.O1.F7 — Multi-pool entities absorbed the contraction and then some — fleet count nearly quadrupled.** From **23 entities / 135 pools / 65% of stake** at Shelley launch to **85 / 660 / 75.6%** at epoch 623. The mid-tier fleets (6–20 pools) tripled their entity count and nearly doubled their stake share — *entity power is not merely growing, it is spreading across a broader fleet-size distribution*. The ~700–1,000-pool quasi-equilibrium is increasingly populated by entity-operated pools substituting for departing independents.
 
 #### 3.5.4. The independent pipeline — what the mechanism was designed to produce
 
@@ -432,7 +436,7 @@ The absence of evidence for the designed growth path is **itself diagnostic**. I
 
 **It shows neither.** The pool count is falling and the stake share is falling faster, which means the independents that remain are also **losing average delegation**. The replacement process that maintains the productive total is driven by **entity fleet expansion**, not by new independent entrants.
 
-> **Finding CEN.O1.F8 — The mechanism's designed progression path — from new single-pool operator to established entity — has no observable expression in the mainnet data.** The independent segment is contracting in both pool count and stake share, and the replacement pools that sustain the ~950-pool total are entity-operated. The growth path described in the formal design ([*The Intended Game* §3.2](../../../../the-intended-game/README.md#32-operators-from-first-pledge-to-full-commitment)) exists as a theoretical property of the intended equilibrium but not as an empirical feature of the observed one.
+> **Finding CEN.O1.F8 — The mechanism's designed progression path is invisible in the data.** Entry → growth → established was supposed to feed the independent segment; instead it is contracting in both pool count and stake share, while the replacement pools that sustain the productive total are entity-operated. The growth path described in the formal design ([*The Intended Game* §3.2](../../../../the-intended-game/README.md#32-operators-from-first-pledge-to-full-commitment)) exists as a theoretical property of the intended equilibrium but not as an empirical feature of the observed one.
 
 ### 3.6. Pool size variability — how stable is a pool's stake?
 
@@ -476,7 +480,7 @@ The **retail market** (809 pools, median delegation below 100K ₳) lands at a m
 
 The **10% tail above 50%** in the retail segment captures pools that gained or lost a whale delegator — a single large address arriving or leaving a pool with hundreds of small delegators.
 
-> **Finding CEN.O2.F1 — Stake variability is driven by delegation concentration, not market segment.** Pools where the typical delegator holds ≥ 100K ₳ (28 custodial-by-delegation pools) show a median coefficient of variation of 19.3% and a mean of 43.0% — whale movements dominate their variance. Retail pools (809 pools) are mostly stable at 8.4% median, but the 10% tail above 50% shows that even retail pools are vulnerable to single-whale shocks. Custodial-by-extraction pools are the most inert (6.6% median) — stagnation, not active management, keeps their stake steady.
+> **Finding CEN.O2.F1 — When a Titan delegator switches pools, the whole pool moves with them — whale-funded pools swing ~±20% between epochs vs ±8% for retail.** In **28 custodial-by-delegation pools** (where the typical delegator holds ≥ 100K ₳), stake swings by roughly **±20% between epochs**, and **21% of them swing more than 50%** — a single Titan-tier address (10M+ ₳) is large enough that its in/out movement dominates the pool's variance, leaving the operator with unpredictable revenue and the remaining delegators with a wobbly block-production rhythm. **Retail** pools (809, broad small-delegator base) are mostly stable at **±8%** between epochs — no single delegator is large enough to move the pool — but a 10% tail above 50% shows that even retail pools are vulnerable to single-whale shocks. **Custodial-by-extraction** (79 pools, ≥ 99% margin) barely budge (**±7%** between epochs, 54% below 10%) — stagnation, not active management, keeps their stake steady (delegators are locked in by inertia or institutional constraint). The technical metric used is the per-pool **coefficient of variation** (standard deviation / mean) over the trailing 73 epochs — see [§3.6](#36-pool-size-variability-how-stable-is-a-pools-stake) for methodology.
 
 **Implications for delegators.** A pool's stake stability matters because it affects **block-production regularity** and, by extension, the **consistency of epoch rewards**.
 
@@ -525,7 +529,7 @@ The **1,925 pools** below the production threshold ([The structural requirement]
 
 #### 4.4.1. Epoch 623 snapshot
 
-After the two cleaning passes ([§4.2](#42-cleaning--zero-balance-certificates) and [§4.3](#43-cleaning--non-productive-pools)), the delegator population at epoch 623 is:
+After the two cleaning passes ([§4.2](#42-cleaning-zero-balance-certificates) and [§4.3](#43-cleaning-non-productive-pools)), the delegator population at epoch 623 is:
 
 | Segment | Delegations | Stake | Share | Pools | Entities |
 |---|---|---|---|---|---|
@@ -560,7 +564,7 @@ The **1.36M delegations** carry **21.75B ADA** — but the distribution across i
 
 The bottom **59.1%** of delegators (under 100 ADA) collectively hold **0.05%** of stake — **less than any single delegation in the top tier**. The top **318 delegators (0.02%)** hold **44.8%** of all staked ADA.
 
-> **Finding CEN.O3.F1 — The median delegator holds 32 ADA; the mean is 16,055 ADA.** The 500× gap between mean and median measures the skewness of the distribution. Half the delegator population stakes less than the cost of a single transaction fee at peak congestion. The distribution follows a power law — each tier above 10K ADA holds roughly 20% of total stake despite containing exponentially fewer delegators.
+> **Finding CEN.O3.F1 — Half the delegator base stakes less than a single transaction fee at peak congestion.** **Median: 32 ADA. Mean: 16,055 ADA.** The 500× gap measures the skewness of a power-law distribution — each tier above 10K ADA holds roughly 20% of total stake despite containing exponentially fewer delegators. Below 100 ADA: 801,067 delegators (59.1% of population) holding 0.05% of stake; above 10M: 318 delegators (0.02%) holding 44.8%.
 
 **Concentration metrics:**
 
@@ -578,7 +582,7 @@ The Lorenz curve (panel B) is **nearly flat until the last few percent of delega
 
 At **Gini = 0.976**, the Cardano staking distribution is **more concentrated than the US wealth distribution** (~0.85) and comparable to the most unequal asset distributions observed in financial markets.
 
-> **Finding CEN.O3.F2 — 1,000 delegators (0.07% of the population) control 57% of staked ADA.** The top 10,000 (0.74%) control 79.2%. The staking economy is effectively governed by the capital allocation decisions of a few thousand addresses — whose identity (individual whale, exchange hot wallet, institutional custodian) determines whether the protocol's delegation signal reflects genuine preference or operational logistics.
+> **Finding CEN.O3.F2 — The delegator population's stake is concentrated in its top 0.07%.** Of the **1.36M active delegators**, just **1,000** (0.07%) hold **57%** of staked ADA; the top **10,000** (0.74%) hold **79.2%**. Gini = **0.976** — more concentrated than US wealth (~0.85) and comparable to the most unequal asset distributions observed in financial markets. The identity of those top few thousand addresses (individual whale, exchange hot wallet, institutional custodian) determines whether the population's aggregate delegation signal reflects genuine preference or operational logistics.
 
 #### 4.4.3. Historical evolution — who joined and where is the capital?
 
@@ -602,7 +606,7 @@ The delegator count (dashed line) grew **9×** over the same period **without af
 
 *The mechanism is straightforward:* new entrants are overwhelmingly micro-delegators who add to the **denominator** without touching the **numerator** of the concentration ratio.
 
-> **Finding CEN.O3.F3 — Stake concentration crystallised by epoch 300 and has not moved since.** The top-1% share has been stable at 78–82% for over 300 epochs, despite a 9× growth in delegator count. Growth since epoch 300 has come almost exclusively from the < 1K tier — 600K new micro-delegators who collectively added 0.06B ADA (0.3% of stake). The economic weight of the staking system was set in its first ~90 epochs. Concentration is now a structural feature, not a trend.
+> **Finding CEN.O3.F3 — The delegator population grew 9× without changing its shape — every cohort joined at the bottom.** The top-1% share has been locked at **78–82%** for over 300 epochs despite a **9× growth in the delegator population**. Growth since epoch 300 has come almost exclusively from the **< 1K ₳ tier** (**600K new micro-delegators** who collectively added 0.06B ADA — 0.3% of stake), inflating the denominator without touching the numerator. The shape of the population was set in its first ~90 epochs and has been structurally locked since.
 
 ### 4.5. Population dynamics — delegator entries and exits
 
@@ -655,7 +659,7 @@ The per-epoch pattern reveals **three regimes**:
 
 - **Mature regime (epoch 500+):** **600–800** redelegations per epoch — a stable market where most delegators have settled.
 
-> **Finding CEN.O4.F1 — The delegation market has matured through three distinct regimes.** Redelegation activity fell from 2,000–3,500 per epoch in early Shelley to 600–800 in the current regime — a 75% decline that marks the transition from experimentation to a settled market.
+> **Finding CEN.O4.F1 — Pool-switching collapsed 75% from early Shelley.** Redelegation activity fell from **2,000–3,500 per epoch** in early Shelley to **600–800** today — a 75% decline through three distinct regimes: experimentation (epochs 210–260) → middle period with hard-fork spikes (260–500) → mature settled market (500+). The transition is from active price discovery to settled allocation.
 
 #### 4.6.2. Tenure distribution
 
@@ -667,7 +671,7 @@ The tenure distribution confirms a bimodal structure:
 | 6–200 epochs (25 days – 2.7 years) | 36.8% | Moderate — roughly uniform distribution across bands |
 | 0–5 epochs (≤ 25 days) | 21.0% | Rapid switchers — yield optimisation, pool retirement, or exchange rebalancing |
 
-> **Finding CEN.O4.F2 — The delegator base is structurally bimodal.** 42% of delegations have persisted for over 2.7 years, while 21% last less than 25 days. The middle ground (37%) distributes roughly uniformly. The loyal majority anchors pool economics; the volatile tail generates most of the churn signal.
+> **Finding CEN.O4.F2 — The delegator base splits cleanly into stickers and switchers, with a thin middle.** **42% loyal** (201+ epochs, > 2.7 years) — committed long-term delegators who anchor pool economics. **21% volatile** (≤ 5 epochs, < 25 days) — yield optimisation, pool retirement, or exchange rebalancing. **37% moderate** (6–200 epochs, distributed roughly uniformly across bands). The loyal majority anchors pool economics; the volatile tail generates most of the churn signal.
 
 #### 4.6.3. Who switches? A size-stratified view
 
@@ -691,13 +695,13 @@ Crossing tenure with delegator stake size at epoch 623 reveals a **clear gradien
 
 *Small delegators delegate once and forget; large delegators actively manage their position.*
 
-> **Finding CEN.O5.F1 — Delegation size predicts switching behaviour.** Micro-delegators (<1K ADA) average 0.67 lifetime switches and 70% have never moved. Whales (1M+) average 3.06 switches and only 43% have never moved. Switching intensity increases monotonically with stake size.
+> **Finding CEN.O5.F1 — Whales switch 4–5× more often than micro-delegators.** Lifetime switches scale monotonically with stake: <1K = **0.67** (70% have never moved), 1K–10K = 0.95, 10K–100K = 1.64, 100K–1M = 2.65, 1M+ = **3.06** (only 43% have never moved). Loyal share (201+ epochs) falls from **82%** for <1K to **39%** for 1M+. *Small delegators delegate once and forget; large delegators actively manage their position.*
 
 **Capital implications** (panel C). In the <1K cohort, **72%** of stake is held by loyal delegators. In the 1M+ cohort, only **38%** sits with loyals — the rest distributes across moderate and volatile tenures.
 
 Since whales hold the majority of staked ADA (**14.1B of 21.8B total**), a large share of the network's capital is in the hands of delegators who **move actively**.
 
-> **Finding CEN.O5.F2 — The network's capital is disproportionately held by its most mobile delegators.** Whales (1M+ ADA) hold 14.1B of the 21.8B staked total, yet only 38% of their stake sits in loyal delegations. Pool operators who depend on a few large delegations face structurally higher stake instability than those with a broad base of small, loyal delegators.
+> **Finding CEN.O5.F2 — Most of the network's staked capital sits in delegations that move.** Whales (1M+ ADA) hold **14.1B of the 21.8B** staked total — **65% of staked supply** — yet only **38%** of that stake sits in loyal (201+ epoch) delegations. The remaining 8.7B distributes across moderate and volatile tenures. Pool operators dependent on a few large delegations face structurally higher stake instability than those with a broad base of small, loyal delegators — *the network's economic substrate is structurally mobile*.
 
 #### 4.6.4. Flow corridors and retail lens
 
@@ -716,7 +720,7 @@ The top pool-to-pool flows (`data/delegation_flow_matrix.csv`) reveal that the *
 
 The private pool population (**47 pools, ~300 delegations**) generates **negligible churn**. *Essentially all observed switching behaviour originates in the retail delegation market.* The retail flow matrix is available at `data/retail_delegation_flow_matrix.csv`.
 
-> **Finding CEN.O4.F3 — Custodial and private pools contribute negligible churn.** The retail-only filter produces near-identical aggregate metrics — 40.0% switch rate, 42.4% loyal tenure. Observed switching is a retail-market phenomenon.
+> **Finding CEN.O4.F3 — Switching is a retail-market phenomenon — custodial and private pools contribute negligible churn.** The retail-only filter (margin < 99.9%, excluding by-pledge / by-extraction custodial) produces **near-identical aggregate metrics**: 40.0% switch rate (vs 40.3% all-pools), 42.4% loyal tenure (vs 42.2%), ~799 redelegations per epoch (vs ~800). The private pool population (47 pools, ~300 delegations) generates negligible churn — *essentially all observed switching originates in the retail market*.
 
 ### 4.7. Switch motivation and loyalty profiles
 
@@ -744,7 +748,7 @@ For each of the **top 500 pool-to-pool flow corridors** (**170,064 matched switc
 
 **Half of all switches** land in a pool with a **statistically indistinguishable net ROS**. The median ROS differential is **+0.02 bps** — effectively zero. The interquartile range spans −0.47 to +0.55 bps, **well below any threshold a delegator could observe or act on**.
 
-> **Finding CEN.O6.F1 — Net ROS cannot explain switching: half of all switches produce zero yield change.** The median ROS differential between origin and destination pool is +0.02 bps. The signal is too weak to detect, let alone optimise — consistent with F3.10 of the Operator's Cut, which found that gross ROS varies by less than 3 bps across 90% of the non-custodial market.
+> **Finding CEN.O6.F1 — Delegators cannot see what they're paying for — the yield signal is too flat to act on.** Half of all switches (**50.5%**) land in a pool with statistically indistinguishable net ROS (±5 bps). The **median ROS differential is +0.02 bps**; the interquartile range spans −0.47 to +0.55 bps — well below any threshold a delegator could observe, let alone optimise against. The finding is consistent with the companion *Operator's Cut* analysis showing gross ROS varies by less than 3 bps across 90% of the non-custodial market.
 
 #### 4.7.2. Operator take is symmetric
 
@@ -760,7 +764,7 @@ The three buckets are **near-equal**. *Delegators do not systematically move tow
 
 **The take × ROS matrix** (panel A) shows the mechanical coupling between the two metrics: the **diagonal dominates** (lower take → better ROS at 18.4%, similar → similar at 25.6%, higher → worse at 16.5%). The off-diagonal cells are sparse, confirming that take and ROS are **two views of the same signal** — and that signal is **too flat to drive behaviour**.
 
-> **Finding CEN.O6.F2 — Operator take is equally balanced across switch directions.** 30.8% of switches go to a cheaper pool, 31.5% to a more expensive one, and 37.7% to a similar-take pool. No take-based optimisation pattern is detectable.
+> **Finding CEN.O6.F2 — Operator take direction is balanced — no fee-chasing pattern is detectable.** **30.8%** of switches go to a cheaper pool, **31.5%** to a more expensive one, **37.7%** to a similar-take pool. The take × ROS matrix's diagonal dominates (lower take → better ROS at 18.4%, similar → similar at 25.6%, higher → worse at 16.5%) — confirming that take and ROS are two views of the same signal. *That signal is too flat to drive behaviour.*
 
 #### 4.7.3. Pool size is the only asymmetric signal
 
@@ -776,7 +780,7 @@ When delegators move to a **smaller pool**, they tend to **accept a higher opera
 
 The asymmetry suggests that moves toward smaller pools may be driven by **non-economic factors** (community affinity, pool retirement at origin, decentralisation preference) while moves toward larger pools follow a **path of least resistance**.
 
-> **Finding CEN.O6.F3 — Pool size, not price, is the only asymmetric signal in switching behaviour.** Moves to smaller pools correlate with higher take acceptance (21.5%), while moves to larger pools correlate with take neutrality (21.0%). This is consistent with F3.11 of the Operator's Cut: delegation concentration is driven by pool visibility, not return optimisation.
+> **Finding CEN.O6.F3 — Pool size — not price — is the only asymmetric signal in switching behaviour.** Moves to smaller pools tend to **accept higher take (21.5%)** — likely driven by non-economic factors (community affinity, retirement at origin, decentralisation preference). Moves to larger pools tend to be **take-neutral (21.0%)** — likely path-of-least-resistance flows toward more visible operators. This is consistent with the companion *Operator's Cut* finding that delegation concentration tracks visibility, not return optimisation.
 
 #### 4.7.4. Loyal delegators and their pools
 
@@ -792,7 +796,7 @@ The margin-band distribution across loyalty segments confirms that fee levels se
 
 Their stability reflects satisfaction with a combination of **competitive fees, predictable returns, and community trust** rather than an inability to switch.
 
-> **Finding CEN.O6.F4 — Loyalty and low fees coexist rather than being traded off.** 92.1% of loyal delegations (201+ epochs) sit in the 0–5% margin range. The cheapest pools are the stickiest — loyalty is a consequence of initial pool selection into the competitive neighbourhood, not a barrier to leaving it.
+> **Finding CEN.O6.F4 — Loyalty and low fees coexist — the cheapest pools are the stickiest.** **92.1%** of loyal delegations (201+ epochs) sit in the **0–5% margin range** (45.3% in 0–2%, 46.8% in 2–5%). Moderate (83.2%) and volatile (85.5%) cohorts are also concentrated in this band — fees segment the market *at entry*, not during tenure. Loyalty is a consequence of initial pool selection into the competitive neighbourhood, not a barrier to leaving it.
 
 **The top 20 pools by loyal-delegation count** (`data/loyal_delegator_pools.csv`) are **overwhelmingly single-pool operators** with margins of **2–4%** and fixed costs of **340–400 ADA**.
 
@@ -819,305 +823,318 @@ The credential type **cannot separate custodial from retail capital** — both a
 
 The key/script split does, however, confirm one structural observation: *the DeFi ecosystem has not yet integrated with the delegation system in any meaningful way.*
 
-If protocol changes were to mandate staking-capable script addresses in DeFi standards (cf. [Anatomy of the non-participant population](#52-anatomy-of-the-non-participant-population)), the script-based share could grow substantially — but **under current conditions it rounds to zero**.
+If protocol changes were to mandate staking-capable script addresses in DeFi standards (cf. [Most non-participants have no staking key](#52-most-non-participants-have-no-staking-key-only-04-of-supply-is-reachable-by-reward-design)), the script-based share could grow substantially — but **under current conditions it rounds to zero**.
 
-> **Finding CEN.O6.F5 — 99.97% of delegations and 99.83% of stake are key-based.** Script-based delegation (smart contracts, multisig, governance) is negligible at 399 addresses and 38M ADA. The DeFi ecosystem operates almost entirely outside the delegation system. The credential type is the finest on-chain classification available but cannot distinguish custodial from retail capital — both present as key-based delegations.
+> **Finding CEN.O6.F5 — DeFi operates almost entirely outside the staking system.** **99.97%** of delegations and **99.83%** of stake are key-based; script-based delegation (smart contracts, multisig, governance) is **399 addresses** and **38M ADA**. The DeFi ecosystem has not integrated with delegation in any meaningful way. The credential type is the finest on-chain classification available but cannot distinguish custodial from retail capital — both present as key-based delegations (the ADA-per-delegator heuristic in the companion *Operator's Cut* is what disambiguates them).
 
 _Data: `data/stake_account_census_623.csv`; per-pool credential breakdown in `operator-delegator-distribution/mainnet-analysis/data/delegator_credential_by_pool.csv`._
 
 
 ## 5. Non-Participants
 
-### 5.1. Circulating supply decomposition
+Sections 3 and 4 measured **who is staking** and **how**. This one measures the **complement** — the ADA that is **not** delegated to any pool. The five sections below trace the population from the headline ratio to the smallest reachable subset; the operational details — data sources, the two complementary lenses, the question-to-section mapping — live in [Appendix B — methodological notes for the non-participant analysis](#appendix-b-methodological-notes-for-the-non-participant-analysis).
 
-Before isolating non-participants, the circulating supply itself must be decomposed.
+### 5.1. Two-fifths of the supply has sat unstaked for over 300 epochs
 
-The Koios `totals` endpoint (cross-checked against `ada_pots` in db-sync) records the key components that sum to circulating ADA: **UTxO balances**, **unclaimed reward-account balances**, and **protocol deposits**. Combining these with the staked amount from `epoch_stake` yields:
+At epoch 623, circulating ADA splits into three quantities:
 
 | Component | Epoch 623 | Share of circulating |
 |---|---|---|
-| **Staked ADA** (delegated key + script) | **21.755B** | **60.2%** |
-| **Non-participant ADA** (all remaining) | **14.355B** | **39.8%** |
-| _of which: unstaked UTxO + rewards_ | _14.350B_ | _39.7%_ |
-| _of which: deposits (stake, DRep, gov)_ | _0.006B_ | _<0.1%_ |
-| **Circulating supply** | **36.110B** | **100%** |
+| **Staked ADA** (delegated to a pool) | **21.755 B** | **60.2 %** |
+| **Non-participant ADA** | **14.355 B** | **39.8 %** |
+| _of which: spendable balances + unclaimed rewards_ | _14.350 B_ | _39.7 %_ |
+| _of which: protocol deposits_ | _0.006 B_ | _< 0.1 %_ |
+| **Circulating supply** | **36.110 B** | **100 %** |
 
-Staked ADA is covered by §§3–4. It comprises **1,354,636 key-based delegations** (21.717B) and **399 script-based delegations** (0.038B).
-
-Deposits are the 2-ADA stake-key registration deposits (**4.4M ADA**), DRep deposits (**0.5M**), and governance-proposal deposits (**0.6M**) locked by the protocol. These are **mechanically excluded from spending** until the credential is deregistered or the proposal resolved.
-
-The non-participant population is therefore the **14.355B ADA** controlled by addresses that are **not delegated to any pool** at epoch 623.
+Protocol deposits — the 2-ADA fee paid to register a staking key, plus DRep and governance-proposal deposits — are locked by construction and trivial in size. The substantive question is what fills the **14.350 B** of unstaked spendable balances.
 
 ![Circulating supply decomposition](figures/circulating_supply_decomposition.png)
 
-*CEN.5.1 — Circulating supply decomposed into staked, non-participant, and deposits across the Shelley era. The non-participant share has hovered between **36–39%** for over 300 epochs; the brief epoch 365 spike coincides with the Alonzo hard fork and initial smart-contract deployments.*
+*CEN.5.1 — Circulating supply over the Shelley era, split into staked, non-participant, and deposits. The non-participant share has hovered between **36–39 %** since epoch ~300; the brief upward spike around epoch 365 coincides with the Alonzo hard fork and the first wave of smart-contract deployments.*
 
-The top panel shows the absolute decomposition over time. The bottom panel shows the percentage shares.
+> **Finding CEN.O7.F2 — 14.4 B ADA (39.8 % of circulating supply) does not participate in staking.** The pool has been stable at 36–39 % for over 300 epochs. The decomposition that follows shows that **only 0.37 % of circulation is nominally addressable** by an incentive-design change — and even that figure shrinks under scrutiny (§5.5). The remaining 39.4 % sits in addresses that cannot delegate without a protocol-level change.
 
-The staking rate stabilised around **59–62%** from epoch ~300 onward, meaning the non-participant share has hovered between **36–39%** for over 300 epochs.
+### 5.2. Most non-participants have no staking key — only 0.4 % of supply is reachable by reward design
 
-The brief spike in unstaked share around epoch 365 coincides with the **Alonzo hard fork** and the initial wave of smart-contract deployments, which locked ADA in script addresses outside the delegation system.
+The 14.4 B of unstaked supply divides naturally along a single axis: **does the address have a registered staking key?**
 
-> **Finding CEN.O7.F2 — 14.355B ADA (39.8% of circulating supply) does not participate in staking.** The non-participant pool has been stable at 36–39% for over 300 epochs. As [Anatomy of the non-participant population](#52-anatomy-of-the-non-participant-population) demonstrates, only 134.6M ADA (0.37% of circulation) is *addressable* by incentive changes — registered stake credentials that have not delegated. The remaining 14.2B has no stake credential and is structurally excluded from the delegation system without protocol-level changes.
-
-### 5.2. Anatomy of the non-participant population
-
-The **14.355B** non-participant ADA is **not a monolithic block** of disengaged holders. It divides into **structurally distinct populations** based on whether a stake credential exists and, if so, whether it has been registered and delegated.
-
-The classification pipeline (`15_utxo_from_koios.py`) combines two data sources:
-
-- the delegation and stake-address tables in Instance A postgres (**pruned db-sync**) provide the full list of registered stake credentials and their delegation status;
-- the **Koios public API** provides per-account balance data and epoch-level supply totals.
-
-The methodology works by **subtraction**: the total ADA controlled by all stake addresses (delegated and not) is computed directly, and the residual — circulation minus stake-controlled minus deposits — gives the ADA held in **addresses with no stake credential at all**.
-
-> **Methodology note.** The `cardano-cli query utxo --whole-utxo` approach (which would give a per-UTxO address-type classification) is **blocked by a known CBOR deserialization bug** in the cardano-ledger library: a TxIx value exceeding 16 bits exists in the mainnet UTxO set, and the library's `Word16` decoder rejects it. The bug affects both `cardano-cli` (10.15, 10.16) and ogmios (6.12.0). The approach below **bypasses the UTxO dump entirely** by working at the stake-account level.
-
-| Category | Accounts | ADA | % of circulation | Description |
+| Category | Accounts | ADA | Share | What it is |
 |---|---|---|---|---|
-| **Delegated — key-based** | 1,354,636 | **21,716.6M** | **60.14%** | Standard stakers (covered in §§3–4) |
-| **Delegated — script-based** | 399 | **38.0M** | **0.11%** | Smart-contract staking |
-| Registered, not delegated — key | 23,074 | 23.6M | 0.07% | Addressable: could delegate but do not |
-| Registered, not delegated — script | 1,102 | 111.0M | 0.31% | Addressable: script credential without delegation |
-| Deposits (stake + DRep + governance) | — | 5.5M | 0.02% | Protocol-locked, mechanically excluded |
-| **No stake credential** | **—** | **14,215.2M** | **39.37%** | Enterprise, unregistered base, script-without-staking |
-| **Circulation** | | **36,110.0M** | **100%** | |
+| **Delegated** | 1,355,035 | **21.755 B** | **60.25 %** | Standard stakers (§§3–4) |
+| **Registered staking key, not delegated** *(addressable in principle)* | 24,176 | **0.135 B** | **0.37 %** | Has a staking key, paid the 2-ADA deposit, but has not delegated |
+| **No registered staking key** *(structurally excluded)* | — | **14.215 B** | **39.37 %** | Address shape cannot delegate without modification |
+| **Protocol deposits** | — | 0.006 B | < 0.1 % | Locked by the protocol |
+| **Circulation** | | **36.110 B** | **100 %** | |
 
-The decomposition reveals a **stark asymmetry**.
+The **"registered staking key, not delegated"** row is the *nominally addressable* pool: an incentive change could in principle reach it without any protocol modification. It is **134.6 M ADA across 24,176 accounts — 0.37 % of circulation**. Section 5.5 shows that what is *operationally* addressable is much smaller still.
 
-The *addressable* non-participant pool — accounts that possess a registered stake credential but have simply not delegated — amounts to only **134.6M ADA** across **24,176 accounts** (**0.37% of circulation**). This is the population that incentive adjustments could, **in principle**, reach without any protocol change.
+The **"no registered staking key"** row — **14.215 B (39.4 % of circulation)** — has four identifiable shapes:
 
-The **overwhelming majority** of non-participant ADA (**14.215B, 39.4% of circulation**) sits in addresses with **no stake credential whatsoever**. This category is an upper bound on *structurally excluded* ADA: it includes
+| Shape | ADA | What it is |
+|---|---:|---|
+| Exchange / institutional addresses | 1.04 B | Payment-only addresses with no staking part by design — used by exchanges, custodians, payment processors |
+| Pre-staking legacy addresses | 1.32 B | Wallets that predate the modern address format — some fraction permanently lost |
+| DeFi contract addresses without staking | 0.09 B | Smart contracts whose authors did not embed a staking part |
+| Wallet addresses with an unregistered staking key | ~11.8 B | Standard wallets where the holder never registered a staking key — a single transaction would move them into the addressable column |
+| **Total no registered staking key** | **14.215 B** | |
 
-- **enterprise addresses** (which by CIP-19 design carry no staking capability — commonly used by exchanges and institutional custodians),
-- **script addresses without a staking part** (DeFi-locked ADA in Plutus contracts that omit the staking credential), and
-- **base addresses whose staking key was never registered** (passive holders who have never engaged with the delegation system).
+The fourth shape — wallets *capable* of staking where the holder simply never registered — is the largest single component (~11.8 B) and is more accurately described as **dormant capacity** than structural exclusion. The other three are architectural: the address shape itself prevents delegation.
 
-Separating these sub-categories requires a full UTxO dump (to read the CIP-19 header byte of each output), which is **deferred** until the cardano-ledger TxIx bug is resolved or Instance B's full db-sync completes.
-
-> **Finding CEN.O7.F3 — The non-participant floor is structural, not behavioural.** Incentive-mechanism changes (reward adjustments, fee-structure reforms) can at most shift the 0.37% addressable pool (134.6M ADA across 24,176 accounts). Moving the other 39.4% requires structural protocol changes: enabling enterprise-address staking, mandating staking-capable script addresses in DeFi standards, or introducing delegation-by-default for newly minted base addresses.
+The **mix among the three architectural shapes is shifting**. The exchange-to-DeFi-contract ratio has fallen from **145 ∶ 1** (epoch 376) to **19 ∶ 1** (epoch 513) to **11.4 ∶ 1** (epoch 623), as DeFi locks grow and exchanges move more of their custody into delegating pools.
 
 ![Non-participant decomposition](figures/non_participant_decomposition.png)
 
-*CEN.5.2 — Non-participant ADA decomposed across stake-credential categories at epoch 623. Only **134.6M ADA (0.37%)** of circulation is *addressable* (registered but not delegated); the remaining **14.215B ADA (39.4%)** has no stake credential at all — structurally unreachable without protocol changes.*
+*CEN.5.2 — The 14.4 B non-participant pool by stake-credential category. Only **134.6 M (0.37 %)** is nominally addressable; the remaining **14.215 B (39.4 %)** has no registered staking key and is structurally unreachable without protocol-level changes.*
 
-#### 5.2.1. Fine-grained UTxO decomposition at epoch 623
+> **Finding CEN.O7.F3 — The non-participant floor is structural, not behavioural.** Reward-mechanism changes (curve adjustments, fee-structure reforms) can at most shift the 0.37 % addressable pool. Moving the other 39.4 % requires protocol-level changes — enabling exchange-style addresses to stake, mandating staking-capable DeFi script standards, or introducing delegation-by-default for newly minted wallets.
 
-Instance B's full db-sync (synced from genesis to epoch 626) provides `tx_out` data that enables a **per-UTxO address-type classification** impossible with Koios alone. Querying all unspent outputs and classifying by bech32 address prefix yields the **definitive decomposition**:
+> **Finding CEN.O7.F4 — The "no registered staking key" residual is dominated by legacy and custody, not by active DeFi.** Among the 2.45 B identified by address shape, exchange-style addresses (1.04 B) and pre-staking legacy addresses (1.32 B) together account for **96 %**. DeFi contract addresses without staking total just **91 M** — one tenth as much, growing only slowly. The remaining ~11.8 B sits in standard wallets where the holder never bothered to register a staking key.
 
-| Classification | UTxO count | ADA | % of UTxO value | Description |
-|---|---:|---:|---:|---|
-| Has stake credential | 9,828,271 | 34,050.7M | 93.3% | Base/script address with staking credential (delegated or not) |
-| Byron legacy | 377,282 | 1,320.7M | 3.6% | Byron-era bootstrap addresses (`Ae2`/`DdzFF` prefix) |
-| Enterprise | 309,373 | 1,037.4M | 2.8% | Enterprise address (`addr1v`) — no staking credential by design |
-| Script — no staking cred | 689,791 | 91.2M | 0.3% | Script address (`addr1w`) without staking credential |
-| Other | 1,227 | 1.4M | <0.01% | Other address formats |
+### 5.3. The locked share splits cleanly between probably-lost and operationally-active
 
-The "no stake credential" residual from [Anatomy of the non-participant population](#52-anatomy-of-the-non-participant-population) (**14,215M ADA**) decomposes into **three structurally distinct populations**:
+Of the 2.45 B identified residual (the three architectural shapes from §5.2), how much is genuinely dormant or lost, and how much is moving every day? The creation date of each unspent output is a first-order proxy: **value created before staking existed and never touched since** is the dormant-or-lost candidate; **value created recently** is exchange custody or DeFi contracts cycling funds.
 
-- **Enterprise addresses** — **1,037.4M ADA (2.8%)**. These are CIP-19 type 6 addresses, **deliberately constructed without a staking credential**. Exchanges, institutional custodians, and payment processors use them by design. They cannot delegate without being reconstructed as base addresses.
+Bucketing by creation epoch:
 
-- **Byron-era legacy addresses** — **1,320.7M ADA (3.6%)**. Pre-Shelley addresses that predate the CIP-19 format entirely. They cannot participate in staking without being moved to a Shelley-era address — a step that requires the holder to have retained their keys across the Byron-to-Shelley migration. Some portion is **permanently inaccessible** (lost keys).
+| Vintage | Epoch range | ADA | Share |
+|---|---|---:|---:|
+| Byron legacy (no epoch tag) | — | 318 M | 12.7 % |
+| **Pre-Shelley** | 0–207 | **609 M** | **24.3 %** |
+| Shelley + Allegra | 208–250 | 14 M | 0.5 % |
+| Mary | 251–299 | 38 M | 1.5 % |
+| Early Alonzo | 300–349 | 139 M | 5.6 % |
+| Alonzo + Babbage | 350–449 | 128 M | 5.1 % |
+| Early Conway | 450–549 | 94 M | 3.7 % |
+| **Late Conway** | 550–623 | **1,110 M** | **44.3 %** |
 
-- **Script addresses without staking** — **91.2M ADA (0.3%)**. Plutus contracts (`addr1w`) that omit the staking credential. DeFi-locked ADA that is **structurally excluded** from delegation.
+The distribution is **bimodal**.
 
-The enterprise-to-script-no-cred ratio by value is **11.4∶1** (1,037M vs 91.2M ADA). This ratio has **declined steadily** — from **145∶1** at epoch 376 to **19∶1** at epoch 513 to **11.4∶1** at epoch 623 — reflecting both the **growth of DeFi script locks** and the **consolidation of enterprise-address holdings** as exchanges migrate ADA into staking pools.
+The **pre-Shelley + Byron-untagged** buckets — value untouched since before staking became available, totalling **928 M (37 %)** — are the strongest candidates for dormant or lost wallets. This fraction has eroded slowly across snapshots: 1,127 M at epoch 376, 808 M at 513, 609 M at 623 — about **0.8 M ADA per epoch awakens** from this dormant tail.
 
-> **Finding CEN.O7.F4 — The 14.2B "no stake credential" residual is dominated by two legacy populations, not by active DeFi.** Byron addresses (1.32B) and enterprise addresses (1.04B) together account for 2.36B ADA in identified UTxOs. The remaining ~11.9B gap between the UTxO-level total and the account-level residual reflects addresses with stake credentials that are registered but not delegated, plus rounding from the ~3-epoch lag between Instance B's tip and epoch 623. Script-no-cred (91M) is a small and slowly growing fraction.
+The **Late Conway** bucket — value created in just the last 73 epochs — holds **1,110 M (44 %)**. This is the opposite signature: actively cycled outputs from exchange custody and DeFi.
 
-### 5.3. Dormancy vintage
-
-Among the non-delegated UTxOs, the creation date of each output provides a **rough proxy** for how "alive" the controlling wallet is.
-
-A UTxO created in the **pre-Shelley era** (before epoch 208) and never moved since suggests a **dormant or lost** wallet. A UTxO created **recently but not delegated** suggests an active user who has consciously opted out of staking — or an exchange hot wallet cycling funds.
-
-Instance B's full db-sync (synced from genesis to epoch 626) provides `tx_out` creation timestamps for all unspent outputs. The query isolates UTxOs in addresses with no stake credential (enterprise, script-no-staking-cred, and Byron-era) and groups them by **creation-epoch vintage**:
-
-| Vintage | Epoch range | UTxO count | ADA | % of no-cred | Description |
-|---|---|---:|---:|---:|---|
-| Byron-era (null epoch) | — | 465 | 318.2M | 12.7% | Byron outputs without epoch metadata |
-| Pre-Shelley | 0–207 | 186,214 | 609.5M | 24.3% | Dormant or lost — untouched since Byron/early Shelley |
-| Shelley / Allegra | 208–250 | 11,511 | 13.6M | 0.5% | Early staking era outputs |
-| Mary | 251–299 | 31,316 | 37.6M | 1.5% | Native-token era |
-| Early Alonzo | 300–349 | 426,326 | 139.5M | 5.6% | Smart-contract era begins |
-| Alonzo + Babbage | 350–449 | 188,670 | 128.0M | 5.1% | DeFi expansion + exchange cycling |
-| Early Conway | 450–549 | 308,679 | 94.0M | 3.7% | Conway governance era |
-| Late Conway | 550–623 | 224,492 | 1,110.2M | 44.3% | Recent activity |
-
-Total no-credential UTxO value at epoch 623: **~2,450.6M ADA**. This is consistent with the [Fine-grained UTxO decomposition at epoch 623](#521-fine-grained-utxo-decomposition-at-epoch-623) decomposition (enterprise 1,037M + Byron 1,321M + script-no-cred 91M = 2,449M).
-
-The distribution reveals a **striking temporal polarisation**.
-
-The **pre-Shelley residual** (**609.5M ADA, 24.3%**) has survived untouched for **400+ epochs** since staking became available — the **strongest candidate for dormant or lost wallets**.
-
-The **Byron null-vintage** bucket (**318.2M ADA, 12.7%**) likely contains early-era whale holdings that predate the epoch-tagging system. Together these "probably dormant" outputs total **927.7M ADA (37.0%)**.
-
-Tracking across snapshots, the pre-Shelley ADA has **steadily eroded**: **808.7M** at epoch 376, **684.1M** at epoch 513, **609.5M** at epoch 623. Roughly **200M ADA** in pre-Shelley outputs was spent over 247 epochs — *dormant wallets awakening at a rate of ~0.8M ADA per epoch.*
-
-At the other extreme, the **Late Conway outputs** (epochs 550–623, just 73 epochs) dominate with **1,110.2M ADA (44.3%)**. This recent, actively created value reflects **exchange hot-wallet cycling** and **DeFi contract interactions** generating fresh enterprise-address UTxOs at **high velocity**.
-
-The middle eras (Shelley through early Conway, epochs 208–549) together contribute **only 412.7M ADA (16.9%)** — most outputs from those periods have since been spent and consolidated.
-
-> **Finding CEN.O7.F5 — The no-credential UTxO set is temporally polarised: 37% is pre-staking-era dormant output, 44% is from the last 73 epochs.** The dormant fraction (927.7M ADA) has eroded from 1,127M at epoch 376 — wallets awaken at ~0.8M ADA per epoch. The recent fraction (1,110M ADA in epochs 550–623) reflects active enterprise-address cycling. The middle eras are almost entirely spent, confirming that the no-credential population splits cleanly into "probably lost" and "operationally active" — with very little in between.
+The middle eras (Shelley through Early Conway) together contribute only **413 M (16.9 %)**: most outputs from those periods have long since been spent and consolidated.
 
 ![Dormancy vintage](figures/dormancy_vintage_623.png)
 
-*CEN.5.3 — No-credential UTxO value decomposed by creation-epoch vintage. Pre-Shelley plus Byron-null buckets total **927.7M ADA (37.0%)** — the strongest dormant-or-lost candidates; Late Conway (epochs 550–623) holds **1,110M ADA (44.3%)** in actively cycled enterprise UTxOs.*
+*CEN.5.3 — No-staking-key value by creation-epoch vintage. Pre-Shelley + Byron-untagged total **928 M (37 %)** — the dormant-or-lost candidates. Late Conway (last 73 epochs) holds **1,110 M (44 %)** in actively cycled outputs. The middle is largely empty.*
 
-### 5.4. What the non-participant population likely contains
+> **Finding CEN.O7.F5 — The no-staking-key pool is bimodal: 37 % is pre-staking-era dormant, 44 % is from the last 73 epochs.** The dormant fraction (928 M) erodes at about **0.8 M ADA per epoch**. The recent fraction (1,110 M from epochs 550–623) reflects active exchange and DeFi cycling. The middle eras are essentially empty — the population splits cleanly into "probably lost" and "operationally active", with very little in between.
 
-The **14.215B ADA** in the "no stake credential" residual category cannot be further decomposed on-chain without a full UTxO dump (blocked by the TxIx bug; see [Anatomy of the non-participant population](#52-anatomy-of-the-non-participant-population) methodology note). However, the **major constituents are identifiable by elimination**:
+### 5.4. A few hundred custodians hold three-quarters of the structurally-excluded ADA
 
-**Exchange custody (likely dominant).** Centralised exchanges hold ADA in **enterprise addresses** (hot and cold wallets). Some exchanges stake user ADA through their own pools (Coinbase, Binance — visible in [Problem Induction](../../../README.md#33-problem-induction) entity attribution), but the **custodial ADA that is *not* staked sits in enterprise addresses by design**.
+In aggregate the structurally-excluded 2.5 B reads like a faceless mass. Aggregating *by address* tells a very different story: **372,361 distinct addresses** hold the entire residual, and **a few hundred of them hold most of it**.
 
-Enterprise addresses **structurally cannot delegate**; this is the **largest single contributor** to the 14.2B residual. The epoch 623 decomposition ([Fine-grained UTxO decomposition at epoch 623](#521-fine-grained-utxo-decomposition-at-epoch-623)) shows that enterprise addresses account for **1,037M ADA (42%)** of identified no-credential UTxOs, Byron-era legacy addresses **1,321M ADA (54%)**, and script-no-staking-credential **91M ADA (4%)**. Exchange cold-wallet identification requires cross-referencing with known address clusters, which is deferred to a companion analysis.
+![Concentration of unstaked ADA](figures/no_cred_concentration.png)
 
-**Smart-contract-locked ADA.** DeFi protocols (DEXes, lending platforms, liquidity pools) lock ADA in **script addresses**. Most Plutus script addresses **omit the staking credential** (CIP-19 type 7), making their ADA **structurally unstakeable**.
+*CEN.5.4 — Distribution and concentration of the **2.50 B ADA** held in addresses without a registered staking key. Left: ADA stacked by holder size and address type — the **≥10M-ADA** bucket alone holds **1.26 B across just 8 addresses**. Right: cumulative concentration — the **top 3** addresses capture **19.1 %** of the residual, the **top 10** capture **41.6 %**, the **top 200** capture **68.9 %**. The remaining 372 K addresses share the bottom 31 %.*
 
-The growth of DeFi since the Alonzo hard fork (epoch ~290) has steadily increased the script-locked portion. The **1,102 script accounts** that *do* carry a staking credential but have not delegated control **111M ADA** — a small but notable population that could participate with a single delegation transaction.
+The size distribution is **extremely top-heavy**:
 
-**Dormant and lost wallets.** Wallets that received ADA before or shortly after the Shelley hard fork and have **never transacted since**. Some fraction of these represent **lost keys**.
+- **Top 3 addresses → 19 %** of the residual
+- **Top 10 → 42 %**
+- **Top 200 → 69 %**
+- The remaining 372 K addresses → **just 31 %**
 
-The dormancy vintage analysis ([Dormancy vintage](#53-dormancy-vintage)) quantifies this segment at epoch 623: pre-Shelley UTxOs (created before epoch 208 and never moved) account for **609.5M ADA (24.3%)**, plus **318.2M** in Byron null-vintage outputs (12.7%) — totalling **927.7M ADA (37.0%)** of no-credential UTxO value. This fraction has eroded steadily from **1,127M** at epoch 376 — wallets awaken at **~0.8M ADA per epoch**.
+The combined ≥10M-ADA bucket holds **1.26 B ADA across just 8 addresses**: 6 pre-staking legacy whales (266 M total), 13 large exchange-style wallets in the 10–100 M band plus 3 above 100 M (913 M combined), and 1 DeFi vault at 80 M. With the 1–10 M tier added, **246 addresses hold 1.86 B — 74 % of the entire structurally-excluded pool — out of 372 K total**.
 
-**Active non-stakers.** The **23,074 key-based accounts** that are registered but not delegated (**23.6M ADA**) represent the **purest "addressable" non-participant pool**.
+#### What the top wallets *look like*
 
-These holders have engaged with the staking infrastructure (registered a stake key, paid the 2-ADA deposit) but **stopped short of delegating**. Whether this reflects a deliberate opt-out, a failed transaction sequence, or wallet UX friction is **not determinable from on-chain data alone**.
+The **shape** of these top holdings is itself diagnostic. Three patterns recur:
+
+| Pattern | Signature | Likely identity |
+|---|---|---|
+| **Cold storage** | A handful of high-value outputs at one address | Institutional / treasury cold wallet |
+| **Hot wallet** | Many small outputs at high total value | Exchange cycling deposits and withdrawals |
+| **Legacy whale** | Pre-staking-era address holding large balance | Early Cardano holder who never migrated |
+
+The top three holdings illustrate the first two patterns directly:
+
+| Rank | Holding | Outputs | Likely identity |
+|---:|---:|---:|---|
+| 1 | 166.6 M ADA (6.7 %) | 7 | Institutional cold wallet |
+| 2 | 158.5 M ADA (6.3 %) | 3,034 | Exchange hot wallet |
+| 3 | 153.5 M ADA (6.1 %) | 10 | Institutional cold wallet |
+
+Together those three addresses control **478.6 M ADA** — more than the entire dormant pre-Shelley + Byron-untagged population combined. Ranks 4–10 mix a 116 M legacy whale, a high-cycling 94 M legacy hot wallet (55,007 outputs), the 80 M DeFi vault discussed below, and four more exchange-style cold/hot wallets.
+
+> **Finding CEN.O7.F6 — The "structurally-excluded" 2.5 B is held by a few hundred wallets, not by a diffuse retail base.** Top-3: 19.1 %; top-10: 41.6 %; top-200: 68.9 %. The combined ≥1M-ADA shoulder of 246 addresses holds 74 % of the residual. **Output count vs total value cleanly separates exchange hot wallets from institutional cold storage by inspection.** The remaining 26 % is split among 372 K addresses averaging ~1,750 ADA each — the genuine retail tail. The mass is therefore far less unreachable than it looks: it is a small, identifiable set of custodians whose address shape is a deliberate custody choice, not an architectural barrier.
+
+#### 5.4.1. The DeFi-locked share is one contract
+
+The 91 M-ADA "DeFi contract without staking" sub-population — already the smallest of the three architectural shapes — is even more concentrated than the rest of the no-staking-key pool. **A single contract holds 80.6 M ADA across 3 outputs — 89 % of the entire DeFi-locked-without-staking residual.** The next-largest holds 1.5 M (1.7 %), and ranks 3–5 each hold 0.9–1.3 M.
+
+DeFi-locked-without-staking is therefore not a generalised phenomenon but the footprint of **one large protocol** whose authors chose not to embed a staking part in their contract address. If that one contract were upgraded to a staking-enabled address, the category would shrink by an order of magnitude in a single transaction.
+
+> **Finding CEN.O7.F7 — DeFi-locked-without-staking is dominated by a single 80 M contract, not by the DeFi ecosystem at large.** 89 % of the 91 M residual lives in one contract; the remaining 99 contracts together hold ~10 M (11 %). Mandating staking-capable contract addresses in DeFi standards would primarily move this one contract; the rest of DeFi has either already integrated staking or holds amounts too small to materially shift the residual.
+
+### 5.5. The "addressable" pool collapses to about 2,100 active accounts
+
+The 134.6 M-ADA "registered staking key, not delegated" pool is the only non-participant category that incentive design — not protocol architecture — can in principle re-engage. Decomposed three ways, very little of it turns out to be *actually* incentive-addressable.
+
+![Addressable pool composition](figures/addressable_pool.png)
+
+*CEN.5.5 — The 23,895 nominally addressable accounts decomposed three ways. **Left:** balance distribution — **91 % of accounts hold zero ADA**. **Middle:** opt-in vintage — **89 % of accounts registered in the first 41 epochs of Shelley** and have not moved since. **Right:** lifecycle — **94.5 %** of accounts have **never delegated** to any pool; only 0.5 % are ex-delegators.*
+
+Three patterns dominate.
+
+**Most of the pool is empty.** Of 23,895 accounts, **21,787 (91 %) hold zero ADA**. They are staking keys that were registered (paying the 2-ADA deposit) and then drained — the registration is alive, but the spendable balance migrated to a different address. The actually populated subset is **2,108 accounts**, which together hold the entire 110 M ADA of the addressable residual.
+
+**Most of *that* ADA is in one contract.** Of the 110 M, **88 M (80 %) sits in a single DeFi vault** — the same contract flagged from the no-staking-key side in [The DeFi-locked share is one contract](#541-the-defi-locked-share-is-one-contract), seen here from the staking-key side. Excluding it, the addressable pool collapses to **22.5 M ADA across roughly 2,100 accounts**.
+
+**The pool is a Shelley-era fossil.** **89 % of the registered staking keys come from the first 41 epochs of Shelley** (epochs 208–249) and have not delegated, deregistered, or moved a stake-control transaction since. They are consistent with users who registered a staking key during the initial Shelley wallet wave and then either lost interest, lost the key, or moved their funds to a different wallet and forgot the old one. Only 0.5 % of the pool is ex-delegators who once delegated and later undelegated — movement *out* of staking is not what built this category. It was built by accounts that opted in once and then **stopped one transaction short of delegating**.
+
+> **Finding CEN.O7.F8 — The "addressable" pool is mostly inert.** 91 % of accounts hold zero ADA, 89 % have been dormant since the first 41 epochs of Shelley, and 80 % of the active residual sits in one DeFi vault. Setting the vault aside (it is reachable but governed by contract logic, not by individual choice) leaves **~22.5 M ADA across ~2,100 active accounts — about 0.06 % of circulation**. That is the genuine ceiling for what a reward-design change can recruit. Below this floor, no on-chain population exists for the mechanism to reach.
+
+### 5.6. What the four levers can and cannot reach
+
+![Non-participant levers — where the 14.4 B sits](figures/non_participant_levers.png)
+
+*CEN.5.6 — The 14.4 B unstaked ADA, sized by sub-population and colour-coded by the lever that reaches each. **Only 0.16 % of the unstaked supply is reachable by reward design alone**; the dominant 82 % sits in standard wallets where the holder simply never registered a staking key, and the rest splits between custody (protocol-level change required), DeFi contract locks (contract upgrade required), and pre-staking legacy holdings (some permanently lost).*
+
+The non-participant population is best understood as four sub-populations that respond to four different levers:
+
+- **Custody (the largest reachable block).** Centralised exchanges and institutional custodians hold ADA in addresses that have no staking part by design. The [custodian-concentration ranking](#54-a-few-hundred-custodians-hold-three-quarters-of-the-structurally-excluded-ada) confirms this: the top 10 no-staking-key holdings split between low-output cold vaults and high-output exchange hot wallets. The ≥1M-ADA shoulder of 246 addresses holds 74 % of the residual — small enough to identify and cluster by inspection in a follow-up. Some exchanges (Coinbase, Binance) already operate their own delegating pools (visible in [Problem Induction](../../../README.md#33-problem-induction) entity attribution), but the custodial ADA they don't stake by choice sits here. **Mobilising this share requires a protocol-level change** that lets these address shapes delegate.
+
+- **One DeFi vault.** Rather than a generalised "DeFi-locked" phenomenon, the DeFi-locked-without-staking residual is **one 80 M contract**. The other 99 contracts together hold ~10 M. **At the protocol-design level this is a one-contract problem.**
+
+- **Dormant and lost.** Pre-Shelley + Byron-untagged outputs total ~928 M (37 % of the no-staking-key value) and erode at ~0.8 M per epoch — a slowly decaying tail of legacy wallets, with an unknown fraction permanently lost. **No design change reaches this share.**
+
+- **Active non-stakers — far smaller than the headline.** The 24,176 nominally-addressable accounts (134.6 M) collapse on inspection to roughly **2,100 active accounts holding 22.5 M ADA — about 0.06 % of circulation** — once zero-balance shells and the single DeFi vault are removed. **These are the only holders an incentive-design change can plausibly recruit**; everything beyond requires protocol-level changes that bring the other 14.2 B into reach.
 
 
 ## 6. Transaction Submitters
 
 The preceding sections map the staking ecosystem — operators, delegators, and the ADA that sits outside it. But the reward pipeline has a **fourth population** that cuts across all three: **transaction submitters**, the addresses that pay the fees feeding the epoch pot.
 
-The fee component is **negligible today** (~0.19% of the epoch pot; see the companion [*Treasury & Pool Pots Distribution*](../../treasury-and-pool-pots-distribution/mainnet-analysis/README.md)). But **every sustainability scenario** depends on fees eventually replacing monetary expansion as the dominant input.
+The fee component is **negligible today** (~0.19% of the epoch pot; see the companion [*Treasury & Pool Pots Distribution*](../../treasury-and-pool-pots-distribution/mainnet-analysis/README.md)). But **every sustainability scenario** depends on fees eventually replacing monetary expansion as the dominant input. The population that generates those fees — its size, who is in it, and who is *not* in it — is therefore a first-order variable for the pipeline's long-term viability.
 
-The population that generates those fees — its **size, concentration, composition, and growth trajectory** — is therefore a **first-order variable** for the pipeline's long-term viability.
-
-Transaction submitters are **orthogonal to staking roles**. A submitter can be an operator (pool registration and retirement transactions), a delegator (delegation certificates, transfers), a non-participant (exchange withdrawals, DeFi interactions from enterprise addresses), or an automated script.
-
-The same address can be a loyal delegator in §4 and a prolific submitter in this section. The population overlap is **itself analytically significant**:
+Transaction submitters are **orthogonal to staking roles**. A submitter can be an operator (pool registration and retirement transactions), a delegator (delegation certificates, transfers), a non-participant (exchange withdrawals, DeFi interactions from enterprise addresses), or an automated script. The same address can be a loyal delegator in §4 and a prolific submitter in this section. The population overlap is **itself analytically significant**:
 
 > *If fee revenue is dominated by addresses that do not participate in staking, the reward mechanism funds itself from a constituency it does not reward.*
 
-### 6.1. What the analysis must establish
+Five questions guide what follows: *how many submitters there are today, how concentrated their fee contributions are, what kind of addresses they use, whether they overlap with delegators, and whether the population is growing or shrinking*. Each question is answered by one of the five sections below; the operational details — db-sync queries, the first-input heuristic, the recent-window definition — live in [Appendix A — methodological notes for the submitter analysis](#appendix-a-methodological-notes-for-the-submitter-analysis).
 
-**Five questions** define the analytical scope. Each maps to a finding that the main report's §2 needs.
+### 6.1. A shrinking crowd paying for a busy chain
 
-**Population size and breadth.** How many distinct addresses submit transactions per epoch? How does this compare to the **1.355M active delegations**? Is the fee-generating population **larger, smaller, or roughly the same** as the staking population — and how has the ratio evolved since Shelley?
+![Transaction volume and submitter population](figures/submitter_volume_627.png)
 
-**Concentration.** Does fee revenue follow the same **power-law pattern** as delegation stake (Gini 0.976, §4)? If the top 100 addresses generate the majority of fees, the sustainability of the entire pipeline depends on a **handful of actors** — and the identity of those actors (DEX contracts, exchange hot wallets, known entities) determines whether the fee base is **diversified or fragile**.
+*CEN.6.1 — Per-epoch transaction count and unique submitter population across epochs 208–627, with fee revenue tracked beneath. The submitter population peaked at **790K addresses** (epoch 304, CNFT minting frenzy) and has since contracted by **96%** to **31,176** at epoch 627, while transaction volume fell **92%**.*
 
-**Composition — script vs key.** The Alonzo hard fork (epoch ~290) introduced Plutus scripts, splitting the submitter population into **key-based transactions** (simple transfers, delegation certificates) and **script-based transactions** (DeFi interactions, smart contract calls).
+The top panel overlays two series across the full Shelley era: **per-epoch transaction count** (blue area) and **unique submitter addresses** (red line). The bottom panel tracks **fee revenue per epoch**.
 
-The relative share of script transactions in total fee revenue measures **how much the fee base depends on the DeFi economy**. If script transactions dominate fee revenue, the pipeline's long-term funding is **coupled to DeFi adoption** — a dependency the current design does not acknowledge.
+The two lines used to move together; they no longer do. At the epoch-304 peak, **790,335** addresses sent **1,566,974** transactions — almost one tx per active address. Five years later the address curve has fallen off a cliff (**31,176** at epoch 627) while the transaction curve fell only halfway as far (**118,358** at epoch 627). The chain still runs busily; a much smaller crowd is running it.
 
-**Overlap with staking populations.** The **critical structural question**: does the population that *funds* the reward pipeline (fee payers) overlap with the population that *benefits* from it (delegators)?
+> **Finding CEN.O8.F1 — The submitter population peaked at 790K addresses (epoch 304) and has since contracted by 96%, while transaction volume fell by 92%.** The submitter population grew in step with transaction count through early Shelley, peaking at 790,335 unique addresses and 1,566,974 transactions at epoch 304 — the CNFT minting frenzy. From epoch 310 onward the population collapsed faster than volume: by epoch 384, unique submitters had fallen to 101K while transactions remained above 330K. The decline continued through the post-Alonzo era: by epoch 500, 58K submitters generated 217K transactions; at epoch 627, 31,176 submitters generated 118,358 transactions. The fee base has consolidated dramatically: a population one twenty-fifth the size of its peak still sustains three quarters of the per-epoch transaction rate seen during 2023–2024.
 
-If the fee base is dominated by enterprise addresses and script addresses that **structurally cannot delegate** (§5), the pipeline **taxes a constituency it excludes from rewards**. The CIP-19 address-type prefix provides a first-order classification: base addresses (`addr1q`) have a staking part; enterprise addresses (`addr1v`) do not. Cross-referencing top fee payers with `epoch_stake` delegation status completes the picture.
+> **Finding CEN.O8.F2 — The address-to-transaction ratio fell from 0.88 (epoch 210) to 0.26 (epoch 627), and tx-per-submitter rose from ~2.0 (epoch 304) to ~3.8 (epoch 627) — breadth is collapsing while intensity is rising.** Over the recent 6-epoch window (epochs 622–627), throughput averaged 114,502 transactions per epoch with 36,928 ADA in fees and 31,783 unique submitters. Cumulative Shelley-era throughput totals **118.07M transactions** and **37.85M ADA** in fees; the all-time peak occurred at epoch 304 (1,566,974 tx, 790,335 submitters, 308,294 ADA in fees). The growth-trajectory signal is unambiguous: new addresses are not entering the fee-paying population at a rate that would sustain breadth — the same shrinking core is just transacting more often.
 
-**Growth trajectory.** Is the fee-generating population **expanding, contracting, or stable**? Is growth driven by **new addresses entering** (breadth) or by **higher activity from existing ones** (intensity)?
+### 6.2. Most submitters can stake — but the loudest of them can't
 
-Comparing submitter growth to the delegator growth curve  and to the staking-rate decline (CEN.O7) establishes whether the two populations are **diverging** — and in which direction.
+![Population decomposition by address type](figures/submitter_population_627.png)
 
-### 6.2. Data sources and methodology
+*CEN.6.2 — Submitter population decomposed by CIP-19 address type across epochs 208–627. Base-key dominates at **73.3%** (epoch 627) but base-script reached **10.8%**; legacy Byron addresses fell from **48%** to **4.9%** as the Shelley format became universal.*
 
-The analysis requires `tx` (fee, block reference, script size), `tx_in` + `tx_out` (source addresses), and `block` (epoch attribution) from db-sync Instance A at epoch 623.
+The first chart counts heads. At epoch 627, almost three quarters of submitters (**73.3%**) are base-key addresses (`addr1q`) — addresses that carry a stake credential and are technically capable of delegating. Add base-script (`addr1z`, **10.8%**) and base-other (0.2%) and the **stakeable** majority covers **84.3%** of the active population.
 
-The submitter-identification heuristic is **the first input of each transaction** (the address that pays the fee). For multi-input transactions this is an **approximation** — but it covers the vast majority of cases and matches the convention used by wallet software and block explorers.
+The remaining **15.7%** is structurally non-stakeable: enterprise-key addresses (`addr1v`, **9.2%**) used by exchanges and institutional custody, enterprise-script addresses (`addr1w`, **1.6%**) used by DeFi contracts, and legacy Byron addresses (**4.9%**) — formats that simply have no place to attach a stake credential. By head-count, this is a small minority.
 
-The reproduction scripts are in `scripts/15_tx_epoch_summary.sql` through `scripts/20_submitter_growth.sql`.
+Three structural transitions span the timeline:
 
-> **Data coverage.** Two db-sync instances feed the analysis. **Instance A** (pruned, epoch 623) provides script-size classification for the full Shelley era (epochs 208–622). **Instance B** (full, epoch 626) retains unpruned `tx_out` rows, enabling address resolution for submitter identification across the entire Shelley era (epochs 208–623). All findings in §6.3.1–6.3.3 and §6.3.5 now use Instance B for both aggregate and address-level metrics. Instance A remains the source for §6.3.4 (script vs simple composition).
+- **Legacy Byron addresses collapsed** from **48%** of submitters (epoch 208) to **4.9%** (epoch 627) as the Shelley-era address format became universal.
+- **Enterprise-key addresses** grew from **near-zero** to a **stable 9–10% band** from epoch 300 onward.
+- **Script-typed addresses emerged after Alonzo** (epoch ~290) and grew steadily — base-script from zero to **10.8%**, enterprise-script stabilising at **1–2%**.
 
-### 6.3. Findings
+> **Finding CEN.O9.F1 — By address count, the submitter population remains overwhelmingly stakeable, but the script segment has grown structurally.** At epoch 627, 73.3% of unique submitters are base-key (`addr1q`) addresses carrying a staking credential, 10.8% are base-script (`addr1z`), 9.2% are enterprise-key (`addr1v`), 4.9% are legacy Byron, 1.6% are enterprise-script (`addr1w`), and 0.2% are base-other. Compared to the earlier snapshot at epoch 384 (87% base-key, <1% script), the shift is clear: base-key's share dropped 14 pp while base-script grew from 0.4% to 10.8%. The count-based picture, however, remains misleading — the small script population punches far above its weight in fee terms, as the next chart reveals.
 
-#### 6.3.1. Volume and population size
+![Fee revenue share by submitter address type](figures/submitter_fee_decomp_627.png)
 
-![Transaction volume and submitter population](figures/submitter_volume_623.png)
+*CEN.6.3 — Fee revenue share by CIP-19 submitter address type across epochs 208–627. At epoch 627, base-key holds **47.4%**, base-script **21.2%**, enterprise-script **14.7%**, enterprise-key **8.9%** — meaning roughly **24%** of fee revenue still comes from non-base (enterprise / legacy) addresses that cannot carry a staking credential.*
 
-*CEN.6.1 — Per-epoch transaction count and unique submitter population across epochs 208–623, with fee revenue tracked beneath. The submitter population peaked at **790K addresses** (epoch 304, CNFT minting frenzy) and has since contracted by **96%** to **30,505** at epoch 623, while transaction volume fell **93%**.*
+The second chart re-weights the same population by **how much each segment pays**. Now base-key holds **less than half the area** (47.4% at epoch 627), and the non-stakeable minority — only ~16% of head-count — generates **30.1%** of the fees on average over the recent window.
 
-The top panel overlays two series across the full Shelley era (epochs 208–623): **per-epoch transaction count** (blue area) and **unique submitter addresses** (red line), both from Instance B. The bottom panel tracks **fee revenue per epoch**.
+The history makes the pattern even sharper. At epoch 300 (early post-Alonzo), base-key paid **69%** of all fees. By epoch 340 — the height of "DeFi summer" — base-key was down to 62% and **enterprise-script alone**, just **197 addresses** at the time, was paying **25%**. Enterprise-key + enterprise-script peaked together at **44% (epoch 328)** before settling into a **20–30% band** that has now held through the entire Conway era.
 
-> **Finding CEN.O8.F1 — The submitter population peaked at 790K addresses (epoch 304) and has since contracted by 96%, while transaction volume fell by 93%.** The submitter population grew in step with transaction count through early Shelley, peaking at 790,335 unique addresses and 1,566,974 transactions at epoch 304 — the CNFT minting frenzy. From epoch 310 onward the population collapsed faster than volume: by epoch 384, unique submitters had fallen to 101K while transactions remained above 330K. The decline continued through the post-Alonzo era: by epoch 500, 58K submitters generated 217K transactions; at epoch 623, 30,505 submitters generated 105,851 transactions. The fee base has consolidated dramatically: a population one twenty-sixth the size of its peak still sustains two thirds of the per-epoch transaction rate seen during 2023–2024.
+> **Finding CEN.O9.F2 — Roughly 30% of fee revenue is generated by addresses that structurally cannot participate in delegation, and this share has been stable since the Alonzo era.** Over the recent 6-epoch window (622–627), enterprise-script addresses (`addr1w`) generate 17.0% of fees, enterprise-key addresses (`addr1v`) 10.8%, and legacy Byron 2.3%, totalling 30.1%. These addresses have no staking credential — the reward mechanism taxes a constituency it excludes. The non-stakeable fee share has oscillated between 18% and 44% since epoch 300, averaging ~25%. The structural floor is set by DeFi contract activity; the ceiling by speculative episodes. At no point since Alonzo has the non-stakeable share fallen below 14%.
 
-> **Finding CEN.O8.F2 — The address-to-transaction ratio fell from 0.88 (epoch 210) to 0.29 (epoch 623) — a structural consolidation signal.** Over the recent 6-epoch window (epochs 618–623), throughput averaged 118,922 transactions per epoch with 38,003 ADA in fees and 32,707 unique submitters — a lower baseline than the Alonzo-era peaks but consistent with the 2024–2025 steady state. Cumulative Shelley-era throughput totals **117.6M transactions** and **37.7M ADA** in fees; the all-time peak occurred at epoch 304 (1,566,974 tx, 790,335 submitters, 308,294 ADA in fees). These aggregates establish the absolute scale of the fee-generating economy, but say nothing about who generates it — that requires the address-level decomposition below.
+### 6.3. ~3,800 smart contracts carry a third of the fees
 
-#### 6.3.2. Submitter population decomposition
+![Transaction volume and script activity](figures/tx_type_composition_627.png)
 
-![Population decomposition by address type](figures/submitter_population_623.png)
+*CEN.6.4 — Script versus simple transactions across the Shelley era. Script activity peaked at **29.2%** of count (epoch 355) and **61.7%** of fees (epoch 330) during the Alonzo "DeFi summer", and has since stabilised at **9–14%** of count with a persistent **~1.5×** per-transaction fee premium.*
 
-*CEN.6.2 — Submitter population decomposed by CIP-19 address type across epochs 208–623. Base-key dominates at **73.4%** (epoch 623) but base-script grew from near-zero to **8.3%**; legacy Byron addresses fell from **48%** to **6.3%** as the Shelley format became universal.*
+The fee-decomposition chart in §6.2 grouped addresses by the *kind* of payment instrument they carry. This section zooms in on the sub-population the chain depends on most heavily relative to its size: **the smart contracts**.
 
-The stacked area chart decomposes the submitter population by **CIP-19 address type** across the full Shelley era (epochs 208–623). Base-key addresses (blue) dominate the area; the remaining types are layered above.
+Script transactions first appeared at **epoch 290 (Alonzo HFC)**, initially at **0.09%** of volume. Activity **exploded** between epochs 308 and 340, reaching a peak script share of **29.2%** (epoch 355) and a peak script fee share of **61.7%** (epoch 330) — the "DeFi summer" of the Alonzo era consumed over half of all fee revenue while representing less than a third of transaction count.
 
-**Three structural transitions** span the timeline.
+Since epoch ~370, script activity **retreated sharply** — falling below **10% of transaction count** by epoch 500 and stabilising around **9–14%** through the Conway era. The **fee premium persists**: over the recent window (622–627), scripts account for **11.0%** of transaction count but **16.5%** of fees — a **1.50× multiplier** structurally embedded via Plutus execution costs.
 
-- **Legacy Byron addresses collapsed** from **48%** of submitters (epoch 208) to **6.3%** (epoch 623) as the Shelley-era address format became universal.
-- **Enterprise-key addresses** (`addr1v`) — addresses without a staking credential, typically used by exchanges and institutional custody — grew from **near-zero** to a **stable 10–13% band** from epoch 300 onward.
-- **Script-typed addresses emerged after Alonzo** (epoch ~290) and grew steadily: **base_script** addresses rose from zero to **8.3%** of the submitter population by epoch 623, while **enterprise_script** addresses stabilised at **1–2%**.
+At epoch 627, that premium concentrates on a remarkably small population: **3,851 script addresses** (490 enterprise-script + 3,361 base-script — **12.4%** of the active submitter base) generated **14,481 ADA** in epoch fees, **36.0%** of the total. The average enterprise-script submitter pays **12.1 ADA** per epoch in fees; the average base-key submitter pays **0.83 ADA** — a **14×** per-address premium.
 
-> **Finding CEN.O9.F1 — By address count, the submitter population remains overwhelmingly stakeable, but the script segment has grown structurally.** At epoch 623, 73.4% of unique submitters are base-key (`addr1q`) addresses carrying a staking credential, 9.9% are enterprise-key (`addr1v`), 8.3% are base-script (`addr1z`), 6.3% are legacy Byron, 1.7% are enterprise-script (`addr1w`), and 0.3% are base-other. Compared to the earlier snapshot at epoch 384 (87% base-key, <1% script), the shift is clear: base-key's share dropped 14 pp while base-script grew from 0.4% to 8.3%. The count-based picture, however, remains misleading — the small script population punches far above its weight in fee terms, as the next figure reveals.
+> **Finding CEN.O10.F1 — Script transactions represent 12.5% of post-Alonzo transaction count but 29.6% of cumulative fees — the DeFi economy pays 2.4× the per-transaction rate.** The fee premium peaked above 3× during the Alonzo era (epochs 310–340), when fewer than 30% of transactions commanded over 60% of fees. The premium has moderated to ~1.5× in recent epochs, but remains structurally above parity. For the sustainability argument, this means per-transaction fee intensity is coupled to script adoption — a variable the current incentive design does not address.
 
-#### 6.3.3. Fee revenue decomposition — who pays
+> **Finding CEN.O10.F2 — Script addresses represent 12% of submitters but generate 36% of fee revenue.** At epoch 627, 490 enterprise-script addresses and 3,361 base-script addresses (3,851 total, 12.4% of the population) together generated 14,481 ADA in fees — 36.0% of the epoch total. The average enterprise-script submitter pays 12.1 ADA per epoch in fees; the average base-key submitter pays 0.83 ADA — a 14× premium reflecting Plutus execution costs. The script share of the population has grown sixteen-fold since epoch 384 (from 0.7% to 12.4%) while their fee share roughly held steady around one third, meaning the per-address premium has moderated but the structural dependency on script activity has deepened: the pipeline's fee revenue is coupled to the continued operation of roughly 3,800 smart contracts.
 
-![Fee revenue share by submitter address type](figures/submitter_fee_decomp_623.png)
+### 6.4. The fee floor rests on a few dozen recognisable names
 
-*CEN.6.3 — Fee revenue share by CIP-19 submitter address type across epochs 208–623. At epoch 623, base-key holds **47.2%**, enterprise-script **18.6%**, base-script **16.3%**, enterprise-key **11.5%** — meaning roughly **30%** of fee revenue comes from addresses that structurally cannot delegate.*
+![Fee concentration](figures/fee_concentration_627.png)
 
-The stacked area chart shows the **percentage share of fee revenue** by address type across epochs 208–623. Unlike the population chart above, the composition here is **far more contested**: base-key addresses (blue) hold **less than half the area** by epoch 623, with script and enterprise types filling the remainder.
+*CEN.6.5 — Fee revenue distribution across submitter tiers for epochs 622–627. The top **10** addresses generate **20.0%** of fees and the top **500** generate **58.4%** — out of ~147K active submitters. The top 10 alone account for **110,739 transactions** over six epochs (16.1% of volume).*
 
-The story changes dramatically when measured by **fees rather than headcount**. At epoch 300 (early post-Alonzo), base-key addresses generated **69%** of all fees. By epoch 340, that share had dropped to **62%**, and **enterprise-script addresses — just 197 addresses — had risen from near-zero to 25%** of fee revenue.
+Inside the recent 6-epoch window, the **top 10** fee-paying addresses generate **20.0%** of fees, the **top 500** generate **58.4%**, and the entire long tail of ~146K small contributors splits the remaining 41.6%. **500 addresses out of ~147K (0.34%) pay the majority of fees** — heavy-tailed, but less extreme than delegation stake (Gini 0.976 in §4).
 
-The Alonzo **"DeFi summer"** (epochs 310–340) represented the **peak of non-stakeable fee dominance**, with enterprise-key and enterprise-script together reaching **44% at epoch 328**.
+The heavy-paying core is recognisable, not anonymous. Looking at the top 10:
 
-After the DeFi cool-down, the non-stakeable share settled into a **20–30% band** where it has remained through the Conway era. At epoch 623 the split is: base-key **47.2%**, enterprise-script **18.6%**, base-script **16.3%**, enterprise-key **11.5%**, base-other **3.8%**, legacy **2.6%**.
+- A **MinSwap** DEX-script address leads at **12,105 ADA** over 6 epochs (linked to the **MIN** pool).
+- Two more enterprise-script DEX contracts and several base-script aggregator wallets follow.
+- Pool-tied addresses appear: **TITAN**, **BERRY**, **OYSTR**, and **NUFI** (a NuFi exchange-style operator).
+- A handful of enterprise-key bot wallets fill out the rest.
 
-> **Finding CEN.O9.F2 — Roughly 30% of fee revenue is generated by addresses that structurally cannot participate in delegation, and this share has been stable since the Alonzo era.** At epoch 623, enterprise-script addresses (529 addresses, `addr1w`) generate 18.6% of fees and enterprise-key addresses (3,027, `addr1v`) generate 11.5%, totalling 30.1%. These addresses have no staking credential — the reward mechanism taxes a constituency it excludes. The non-stakeable fee share has oscillated between 18% and 44% since epoch 300, averaging ~25%. The structural floor is set by DeFi contract activity; the ceiling by speculative episodes. At no point since Alonzo has the non-stakeable share fallen below 14%.
+These are not retail users — they are protocol-level actors whose transaction patterns are operational, not discretionary. The chain's fee floor rests on a population small enough to know by name.
 
-> **Finding CEN.O10.F2 — Script addresses represent 10% of submitters but generate 35% of fee revenue.** At epoch 623, 529 enterprise-script addresses and 2,544 base-script addresses (3,073 total, 10.1% of the population) together generated 11,480 ADA in fees — 34.9% of the epoch total. The average enterprise-script submitter pays 11.6 ADA per epoch in fees; the average base-key submitter pays 0.69 ADA — a 17× premium reflecting Plutus execution costs. This concentration has intensified since epoch 384, when script addresses generated 33% of fees from 0.7% of the population. The script share of the population has grown tenfold (from 0.7% to 10%) while their fee share held steady, meaning the per-address premium has moderated but the structural dependency on script activity has deepened: the pipeline's fee revenue is coupled to the continued operation of roughly 3,000 smart contracts.
+> **Finding CEN.O11.F1 — The top 10 fee-paying addresses generate 20.0% of all fee revenue; the top 500 generate 58.4%.** 500 addresses out of ~147K (0.34%) pay the majority of fees. The concentration is heavy-tailed but less extreme than delegation stake (Gini 0.976 in §4). Compared to the prior snapshot at the 618–623 window (top 10 = 24.3%, top 500 = 60.8%), the recent window shows a mild de-concentration of 4 pp at the top — driven by a single very-high-volume address whose activity tapered.
 
-#### 6.3.4. Transaction composition — script vs simple
+> **Finding CEN.O11.F2 — The top 10 fee payers ran 110,739 transactions over 6 epochs (16.1% of volume); the top 50 ran 219,720 transactions (32.0%) — fee-pot stability hinges on a few dozen automated actors.** The top fee payers are dominated by a small set of recognisable archetypes: a DEX-script address (linked to the **MIN** pool, MinSwap) is the largest single contributor at 12,105 ADA over 6 epochs; pools tied to **NUFI** (NuFi exchange-style operator), **TITAN**, **BERRY**, and **OYSTR** appear among the top 10 along with two enterprise-script DEX contracts and several enterprise-key bot wallets. The fee floor of the network depends on a population of ~10 actors whose churn risk is not modelled by any incentive parameter.
 
-![Transaction volume and script activity](figures/tx_type_composition_623.png)
+### 6.5. The people who pay are not the people who get rewarded
 
-*CEN.6.4 — Script versus simple transactions across the Shelley era. Script activity peaked at **29.2%** of count (epoch 355) and **61.7%** of fees (epoch 330) during the Alonzo "DeFi summer", and has since stabilised at **8–12%** of count with a persistent **1.55×** per-transaction fee premium.*
+![Top fee payers vs delegation status](figures/submitter_staking_overlap_627.png)
 
-The top panel overlays transaction volume as a stacked area (simple in blue, script in red) across epochs 208–623. The bottom panel tracks the **script share of transaction count** (blue line) and **fee revenue** (red line). Three hard-fork boundaries are annotated.
+*CEN.6.6 — Decomposition of fee revenue by submitter staking status (left: top 500; right: full population) over the recent window 622–627. **Only 39% of top-500 fee revenue and 42% of all fee revenue come from currently-delegating addresses**; 21% (top 500) and 28% (full) come from base addresses with a stake credential that is not in the epoch 627 delegation set; the remainder (39% / 30%) sits in enterprise or legacy addresses that have no stake credential at all.*
 
-Script transactions first appeared at **epoch 290 (Alonzo HFC)**, initially at **0.09%** of volume. Activity **exploded** between epochs 308 and 340, reaching a peak script share of **29.2%** (epoch 355) and a peak script fee share of **61.7%** (epoch 330).
+The previous four sections looked at submitters in isolation. This one joins them to the delegator population at epoch 627 — the 1.352M addresses that are *supposed* to receive the rewards. Three regimes separate cleanly:
 
-*The "DeFi summer" of the Alonzo era consumed over half of all fee revenue while representing less than a third of transaction count.*
+- **Delegating** — the submitter address is a base address whose `stake_address_id` is in `epoch_stake` at epoch 627.
+- **Has a stake credential, not delegating** — base address whose `stake_address_id` is *not* in `epoch_stake` (either deregistered or never used).
+- **No stake credential** — enterprise (`addr1v`, `addr1w`) or legacy Byron addresses; structurally outside the delegation system.
 
-Since epoch ~370, script activity **retreated sharply** — falling below **10% of transaction count** by epoch 500 and stabilising around **8–12%** through the Conway era.
+Across the recent window, only **41.8%** of fee revenue comes from currently-delegating addresses. The other **58.2%** splits between **28.1%** (base addresses that *could* delegate but aren't) and **30.1%** (addresses that structurally can't delegate at all). From the delegator side the gap is even starker: only **3.1%** of the 1.352M active delegators submit any transaction in the 6-epoch window. The remaining **96.9%** are passive holders — they delegate, accrue rewards, never touch the chain.
 
-The **fee premium persists**: over the most recent window (epochs 618–623), scripts account for **10.3%** of transaction count but **16.0%** of fees. The **1.55× multiplier** is structurally embedded via Plutus execution costs.
+> **Finding CEN.O12.F1 — Only 41.8% of fee revenue comes from currently-delegating addresses; the remaining 58.2% comes from addresses that are not delegating at the snapshot epoch.** Across epochs 622–627, the 1.352M delegators at epoch 627 contributed 41.8% of fee revenue (92,538 ADA out of 221,565). The stakeable-but-inactive segment (base addresses whose stake credentials are not in the delegation set) contributed 28.1% (62,340 ADA). The structurally non-stakeable segment (enterprise + legacy) contributed 30.1% (66,684 ADA). The mismatch is symmetric on both sides: the *funding* base does not match the *reward* base.
 
-> **Finding CEN.O10.F1 — Script transactions represent 12.6% of post-Alonzo transaction count but 29.7% of cumulative fees — the DeFi economy pays 2.4× the per-transaction rate.** The fee premium peaked above 3× during the Alonzo era (epochs 310–340), when fewer than 30% of transactions commanded over 60% of fees. The premium has moderated to ~1.5× in recent epochs, but remains structurally above parity. For the sustainability argument, this means per-transaction fee intensity is coupled to script adoption — a variable the current incentive design does not address.
+> **Finding CEN.O12.F2 — Only 3.1% of delegators submit any transaction in a 6-epoch window; conversely, 55% of submitter stake credentials are also delegating.** Of the 1,352,113 active delegators at epoch 627, only **42,082** appear as the first input of any transaction during epochs 622–627 — a 30-day window. The remaining **1,310,031 (96.9%)** are passive holders: they hold stake, accrue rewards, and never touch the chain. From the other side, the submitter base has 76,561 unique stake credentials over the same window, of which 42,082 (55.0%) are in the delegation set — the rest carry a stake credential that has never been delegated, has been deregistered, or sits idle.
 
-#### 6.3.5. Fee concentration
+> **Finding CEN.O12.F3 — In the top 500 fee-paying addresses, the *largest* segment by fee weight is the no-stake-credential one — 39.4% — followed by the delegating segment at 39.2% and the has-cred-not-delegating segment at 21.4%.** The 213 no-credential addresses (enterprise + legacy) in the top 500 generated 50,960 ADA in fees, slightly more than the 161 delegating addresses (50,685 ADA) and well over the 126 has-cred-not-delegating addresses (27,728 ADA). The pipeline's largest fee contributors are concentrated in the population it cannot reward: half of the heavy-paying actors are structurally outside the delegation game by design (DEX scripts, exchange enterprise wallets), and another fifth are *technically inside* but have *opted out* of delegation. Any fee-redistribution mechanism that passes value back through the delegation channel returns less than 40 ADA in every 100 ADA of fees to the population that paid them.
 
-![Fee concentration](figures/fee_concentration_623.png)
+### 6.6. What this means for the reward pipeline
 
-*CEN.6.5 — Fee revenue distribution across submitter tiers for epochs 618–623. The top **10** addresses generate **24.3%** of fees and the top **500** generate **60.8%** — out of ~151K active submitters. The top 10 alone account for **148,909 transactions** over six epochs (20.9% of volume).*
+Read in sequence, the five sections above describe a system whose fee base is structurally misaligned with its reward base. The population paying for the chain has shrunk to a tight, hyper-active core (§6.1). That core is most of the time stakeable on paper but, when sorted by fee weight, dominated by sub-populations that the reward mechanism either cannot reach (§6.2) or reaches only partially (§6.5). A small number of smart contracts carry a disproportionate fee share (§6.3), and the very top of the distribution is a handful of identifiable protocol actors (§6.4) whose churn is not priced into any incentive parameter.
 
-The figure shows the distribution of fee revenue across submitter tiers for **epochs 618–623** (recent window, Instance B).
+Three structural consequences follow. First, **fee growth is bounded by the size of a known and shrinking population** — increasing fee revenue requires either bringing new submitter populations on-chain or moving more of the existing rate-paying activity onto delegating addresses. Second, **the reward channel is a leaky bucket**: less than 40 ADA in every 100 paid as fees flow back through delegation rewards to the addresses that paid them. Third, **the dependency on ~3,800 smart contracts and ~10 named operators is a single-point-of-failure risk** the current parameter set does not model.
 
-> **Finding CEN.O11.F1 — The top 10 fee-paying addresses generate 24.3% of all fee revenue; the top 500 generate 60.8%.** 500 addresses out of ~151K (0.33%) pay the majority of fees. The concentration is heavy-tailed but less extreme than delegation stake (Gini 0.976 in §4).
-
-> **Finding CEN.O11.F2 — The top 10 fee payers run 148,909 transactions over 6 epochs (20.9% of volume) — their departure would cut the epoch pot's fee component by a quarter.** These are high-frequency automated actors — DEX aggregators, exchange hot wallets, and arbitrage bots. The fee floor of the network depends on a population of ~10 actors whose churn risk is not modelled by any incentive parameter.
+The companion [*Treasury & Pool Pots Distribution*](../../treasury-and-pool-pots-distribution/mainnet-analysis/README.md) translates these population facts into pot-level pressures: the fee component of the epoch pot is too small to substitute for monetary expansion at the current population scale, and the redistribution channel is too narrow to close the funder-vs-beneficiary gap on its own.
 
 
 ## 7. Synthesis
 
-### Key metrics (epoch 623)
+### Key metrics (staking snapshot epoch 623; submitter snapshot epoch 627)
 
 | Metric | Value | Source |
 |---|---|---|
 | Circulating supply | 36.110B ADA | Koios totals (epoch 623) |
 | Staked (delegated) | 21.755B ADA (60.2%) | epoch_stake |
 | Non-participant ADA | 14.355B ADA (39.8%) | residual |
-| _Addressable (reg, !delegated)_ | _134.6M ADA (0.37%)_ | _Koios account_info + Instance A_ |
+| _Addressable (reg, !delegated)_ | _134.6M ADA (0.37%)_ | _Koios account_info + Instance B_ |
 | _No stake credential_ | _14.215B ADA (39.4%)_ | _residual_ |
 | _Deposits_ | _5.5M ADA (<0.1%)_ | _Koios totals_ |
 | Active delegations (raw productive) | 1,355,035 across 2,877 pools | epoch_stake |
@@ -1126,14 +1143,20 @@ The figure shows the distribution of fee revenue across submitter tiers for **ep
 | Delegations per productive pool | ~1,675 | 1,227,281 / 733 |
 | ADA per delegation (raw) | ~16,050 ADA | epoch_stake |
 | Gini coefficient (stake concentration) | 0.976 | tier-aggregated Lorenz |
-| Total transactions (ep 208–623) | 117.6M | §6, Instance B |
-| Total fee revenue (ep 208–623) | 37.7M ADA | §6, Instance B |
-| Top-10 submitters fee share (ep 618–623) | 24.3% | §6, CEN.O11.F1 |
-| Top-500 submitters fee share (ep 618–623) | 60.8% | §6, CEN.O11.F1 |
-| Script tx fee share (post-Alonzo cumulative) | 29.7% | §6, CEN.O10.F1 |
-| Script tx fee share (recent, ep 618–623) | 16.0% | §6, CEN.O10.F1 |
+| Active delegators at epoch 627 | 1,352,113 | epoch_stake (Instance B) |
+| Unique submitters at epoch 627 | 31,176 | §6, Instance B |
+| Total transactions (ep 208–627) | 118.07M | §6, Instance B |
+| Total fee revenue (ep 208–627) | 37.85M ADA | §6, Instance B |
+| Top-10 submitters fee share (ep 622–627) | 20.0% | §6, CEN.O11.F1 |
+| Top-500 submitters fee share (ep 622–627) | 58.4% | §6, CEN.O11.F1 |
+| Script tx fee share (post-Alonzo cumulative) | 29.6% | §6, CEN.O10.F1 |
+| Script tx fee share (recent, ep 622–627) | 16.5% | §6, CEN.O10.F1 |
 | Peak script fee share (ep 330) | 61.7% | §6, CEN.O10.F1 |
-| Fee revenue/epoch (baseline) | ~44K ADA | Treasury sub-report |
+| Fee revenue from currently-delegating addresses (622–627) | 41.8% | §6, CEN.O12.F1 |
+| Fee revenue from no-stake-credential addresses (622–627) | 30.1% | §6, CEN.O12.F1 |
+| Active delegators who submit any tx in 6 epochs | 3.1% (42,082 of 1,352,113) | §6, CEN.O12.F2 |
+| Submitter stake credentials that are also delegating | 55.0% (42,082 of 76,561) | §6, CEN.O12.F2 |
+| Fee revenue/epoch (baseline) | ~37K ADA (622–627 mean) | §6 |
 
 ### Concentration headline
 
@@ -1157,75 +1180,112 @@ The figure shows the distribution of fee revenue across submitter tiers for **ep
 
 1. **Delegator-side entity attribution** — which delegation tiers delegate to exchange pools vs independent pools? The pool-side is resolved; the delegator-side is not.
 2. **Historical single-pool-operator / multi-pool-operator partition** — current snapshot only. Need per-epoch owner-key reconstruction.
-3. **Transaction submitters — overlap with staking populations** (§6) — Address-type decomposition (CEN.O9.F1, CEN.O9.F2, CEN.O10.F2) now covers the full Shelley range (epochs 208–623). The remaining gap is the cross-reference of top fee-paying addresses against `epoch_stake` delegation status (§6.1, question 4: "does the population that funds the pipeline overlap with the population that benefits from it?"). CIP-19 address type provides a first-order proxy, but direct delegation-status lookup for the top-500 fee payers would close the analysis.
+3. **Submitter address vintage / cohort retention** (§6) — Address-type decomposition (CEN.O9), fee concentration (CEN.O11), and the staking overlap (CEN.O12) now cover the full Shelley range (epochs 208–627) on Instance B. The remaining open question is **cohort retention**: of the 30K+ unique submitters per epoch, what fraction was already submitting one year ago, and what fraction is genuinely new? The growth-trajectory finding (CEN.O8.F2) gives the breadth-vs-intensity decomposition at the aggregate level — running script `20_submitter_growth.sql` end-to-end on Instance B (cost: full scan of 335M tx_in rows) would close the per-epoch first-tx attribution.
 
 
 ## 8. Bridges to Companion Analyses
 
-This census provides the **population denominators** that the companion reports take as inputs. Below, each key statistic in the other documents is traced back to its census origin — and **discrepancies between documents are made explicit**.
+This census produces **population denominators** that companion analyses chain off. Each companion doc owns its own framework and snapshot epoch; this section only summarises which census number each one consumes.
 
-### 8.1. Distribution efficiency (epoch 616)
-
-The pools-distribution analysis (`pools-distribution/mainnet-analysis/`) decomposes the pools pot into **three channels** at epoch 616:
-
-| Component | Share | Census root |
+| Companion analysis | Census denominator it consumes | Snapshot epoch |
 |---|---|---|
-| Participation gap | 33.5% | = λ_size × (1 − staking_rate). Census staking rate at epoch 616: ~59.3%. With λ_size = 1/(1+a0) = 1/1.3 ≈ 0.769, gap = 0.769 × 0.407 ≈ 31.3%. The 33.5% figure uses the exact `ada_pots` supply rather than the rounded rate. |
-| Bonus budget unused | 22.5% | = λ_pledge − bonus_captured. λ_pledge = a0/(1+a0) = 0.3/1.3 ≈ 23.1%. The 22.5% means almost all the bonus budget goes uncaptured — pools collectively fail to meet pledge thresholds. |
-| Distributed | 43.7% | = pot − gap − bonus_unused − pledge_shortfall. This is what actually reaches delegators and operators. |
+| [Pools Pot Distribution](../../pools-distribution/mainnet-analysis/) — participation gap, λ_size, λ_pledge | Staking rate (CEN.O7); circulating-vs-staked split | epoch 616 |
+| [Operator's Cut](../../operator-delegator-distribution/mainnet-analysis/) — pledge stances, custodial classes, saturation-scale taxonomy | Productive set (733 pools, 1,227,281 delegations, 21.18B ADA, 83 attributed entities) — identical to §3.4.1 / §4.4.1 | epoch 623 |
+| [Treasury & Pool Pots](../../treasury-and-pool-pots-distribution/mainnet-analysis/) — fee, reserve, treasury pressure | Total fee revenue and submitter overlap (CEN.O8, CEN.O12) | epoch 627 |
+| [Main report](../../../../spo_incentives/report.tex) — main narrative | Staking rate, delegator count (older 548–583 window) | epochs 548–583 |
 
-The participation gap is a *direct function of the staking rate measured in this census*. Every percentage point the staking rate drops increases the gap by **~0.77 pp** (via the λ_size multiplier).
-
-**Epoch drift.** The distribution analysis uses epoch 616, this census goes to 623. The staking rate moved from **~59.3% (616)** to **59.0% (623)** — a **0.3 pp decline** over 7 epochs. The participation gap is therefore **slightly worse at 623** than the 33.5% reported at 616.
-
-### 8.2. Operator's cut
-
-The operator-delegator analysis (`operator-delegator-distribution/mainnet-analysis/`) standardises on the **same productive set used here** (≥ 3M ADA, epoch 623): **733 productive pools**, **1,227,281 active delegations**, **21.18B ADA** — identical to the census denominators in §4.4.1.
-
-The operator doc then decomposes the productive set along **dimensions the census does not cover** — operator self-stake (pledge), operator extraction (commission), and custodial classification (by-pledge / by-extraction / by-delegation):
-
-| Operator's Cut metric (current framework) | Value | Census anchor |
-|---|---|---|
-| 83 attributed entities at productive set | 71 strict multi-pool + 12 attributed single-pool | Identical to §3.4.1 |
-| Custodial-by-pledge entities (owner-stake ratio ≥ 95%) | 10 | Requires pledge data — outside census scope |
-| Custodial-by-extraction entities (margin ≥ 99%) | 57 | Requires reward-parameter data — outside census scope |
-| Custodial-by-delegation entities (median per-delegator ≥ 100K ADA) | 15 | Builds on census stake distribution at the per-pool granularity |
-| Saturation-scale MPOs (aggregate stake ≥ z₀ ≈ 77M) | 48 | Census fleet-size data is a precondition |
-
-> **Note.** Earlier versions of this section quoted "1,270,903 delegation relationships at epoch 614" / "445 hollow entities" / "48 functionally private pools" — these come from the pre-3M-filter framework and have been superseded by the productive-set canonical numbers above. The current operator doc uses the pledge-stance ladder (zero-pledge / marginal / compliant / exemplary) and saturation-scale taxonomy rather than "hollow / private".
-
-### 8.3. Main report (epochs 548–583)
-
-The main report (`spo_incentives/report.tex`) uses an **older analysis window** (epochs 548–583) and Koios-sourced data:
-
-| Main report metric | Value | Census comparison (epoch 623) |
-|---|---|---|
-| Staking rate | ~57.4% | Census: 59.0%. The 1.6 pp gap is real temporal drift — the rate has recovered slightly since the 548–583 window. |
-| Active delegations | ~1.27M | Census: 1.355M. Growth of ~85K delegations over ~40 epochs. |
-| Whale concentration | 4,500 wallets → 68.5% of stake | Census: 4,336 delegations >500K → 71.2%. Consistent with epoch drift. |
-| Pool tiers: 741 healthy, 627 struggling, 1,305 inactive | Based on cumulative rewards + stake thresholds | Census active-pool count (2,877 at epoch 623) is consistent: 741 + 627 + 246 + 1,305 = 2,919 ≈ 2,877 (epoch drift + methodology delta). |
-
-### 8.4. Reconciliation summary
-
-The companion documents were built at **different epochs with different data sources**. This census standardises on **db-sync at epoch 623** and **epoch_stake as the counting method**.
-
-The key numerical shifts when porting companion stats to census methodology:
-
-| What changes | Old value | Census value | Why |
-|---|---|---|---|
-| "Delegator" count | 1.85M (certificates) | 1.355M (epoch_stake) | Certificate ghosts removed |
-| Pool count | 5,919 (certificates) | 2,877 (epoch_stake) | Empty pools removed |
-| Staking rate | 57.4% (epochs 548–583) | 59.0% (epoch 623) | Temporal drift + source alignment |
-| Delegation count | 1.27M (epoch 614, reward-earning pools only) | 1.355M (epoch 623, all staked pools) | Scope + epoch drift |
-
-The **participation gap**, **distribution efficiency**, and **operator-take calculations** all chain off these population numbers. *Cleaning the census denominators propagates through every downstream metric.*
+When a companion stat looks different from a census number, **the difference is almost always one of three things**: (a) certificate counts vs `epoch_stake` (1.85M certs → 1.355M live delegations; 5,919 pool certs → 2,877 live pools), (b) snapshot epoch drift (staking rate 57.4% at 548–583 → 59.0% at 623), or (c) scope (reward-earning pools only at epoch 614 → all staked pools at 623). Apply this lens before flagging a real discrepancy.
 
 
-## 9. Data sources & methodology
+## Appendix A — methodological notes for the submitter analysis
 
-### 9.1. Data sources
+This appendix collects the framing and the operational details for §6. It exists so the body of §6 can stay readable; analysts who want to reproduce or extend the work will find here what they need.
 
-All data comes from **cardano-db-sync** (PostgreSQL, snapshot at epoch 623). **No third-party API.**
+### A.1. The five questions guiding §6
+
+Five questions define the analytical scope. Each maps to one of the five sections in §6.
+
+**Population size and breadth.** How many distinct addresses submit transactions per epoch? How does this compare to the **1.352M active delegations** at epoch 627? Is the fee-generating population larger, smaller, or roughly the same as the staking population — and how has the ratio evolved since Shelley? *Answered in [§6.1 — A shrinking crowd paying for a busy chain](#61-a-shrinking-crowd-paying-for-a-busy-chain).*
+
+**Composition — who is in the population.** The Alonzo hard fork (epoch ~290) introduced Plutus scripts, splitting the submitter population into key-based (transfers, delegation certificates) and script-based (DeFi interactions). How is the population distributed across CIP-19 address types, and how does that distribution differ when you weight by fee revenue? *Answered in [§6.2 — Most submitters can stake](#62-most-submitters-can-stake-but-the-loudest-of-them-cant) and [§6.3 — ~3,800 smart contracts carry a third of the fees](#63-3800-smart-contracts-carry-a-third-of-the-fees).*
+
+**Concentration.** Does fee revenue follow the same power-law pattern as delegation stake (Gini 0.976, §4)? If the top 100 addresses generate the majority of fees, the sustainability of the entire pipeline depends on a handful of actors — and the identity of those actors (DEX contracts, exchange hot wallets, known entities) determines whether the fee base is diversified or fragile. *Answered in [§6.4 — The fee floor rests on a few dozen recognisable names](#64-the-fee-floor-rests-on-a-few-dozen-recognisable-names).*
+
+**Overlap with staking populations.** The structural question: does the population that *funds* the reward pipeline (fee payers) overlap with the population that *benefits* from it (delegators)? If the fee base is dominated by enterprise addresses and script addresses that structurally cannot delegate (§5), the pipeline taxes a constituency it excludes from rewards. Crucially, *having* a stake credential is not the same as *using* it: an `addr1q` address whose stake credential is not in `epoch_stake` is technically capable of delegating but currently is not. Cross-referencing the per-address `stake_address_id` with `epoch_stake` at the snapshot epoch separates three regimes — *delegating* / *has-credential-not-delegating* / *no-credential* — and completes the picture. *Answered in [§6.5 — The people who pay are not the people who get rewarded](#65-the-people-who-pay-are-not-the-people-who-get-rewarded).*
+
+**Growth trajectory.** Is the fee-generating population expanding, contracting, or stable? Is growth driven by new addresses entering (breadth) or by higher activity from existing ones (intensity)? Comparing submitter growth to the delegator growth curve and to the staking-rate decline (CEN.O7) establishes whether the two populations are diverging — and in which direction. *Answered in [§6.1 — A shrinking crowd paying for a busy chain](#61-a-shrinking-crowd-paying-for-a-busy-chain), CEN.O8.F2.*
+
+### A.2. Data sources
+
+The analysis runs end-to-end on **db-sync Instance B** (full, synced from genesis to epoch 628 at the time of writing) and anchors at **epoch 627** — the most recently completed epoch. Instance B retains unpruned `tx_out` rows, which enables address resolution for the submitter-identification heuristic and direct access to `tx_out.stake_address_id` for the staking-overlap analysis.
+
+The query inputs are `tx` (fee, block reference, `script_size`), `tx_in` + `tx_out` (source addresses, `stake_address_id`, `address_has_script`), `block` (epoch attribution), and `epoch_stake` at epoch 627 (delegation snapshot for the overlap analysis).
+
+> **Data coverage.** All findings in §6 are produced from **Instance B alone**. Instance A's pruned schema is no longer required: every script-size, address-resolution, and staking-overlap query now runs against the full unpruned data on Instance B.
+
+### A.3. Submitter-identification heuristic
+
+The submitter-identification heuristic is **the first input of each transaction** (the address that pays the fee). For multi-input transactions this is an approximation — but it covers the vast majority of cases and matches the convention used by wallet software and block explorers.
+
+The "first input" is implemented as the lowest `tx_in.id` for each consuming `tx_in_id`. In newer db-sync schemas, `tx_in.tx_in_id` (formerly `tx_id`) holds the consuming-tx pointer; queries written against the older schema must be updated.
+
+### A.4. Window definitions
+
+- **Full Shelley range** (figures CEN.6.1 — CEN.6.4): epochs 208–627, ~5 years.
+- **Recent window** (§6.4 fee concentration, §6.5 staking overlap, headline percentages in §6.2 and §6.3): **epochs 622–627**, six full epochs, ~30 days. Chosen to match the Cardano reward-payout cadence and to dampen single-epoch spikes.
+
+### A.5. Reproduction scripts
+
+The reproduction SQL is in [`scripts/15_tx_epoch_summary.sql`](scripts/15_tx_epoch_summary.sql) through [`scripts/20_submitter_growth.sql`](scripts/20_submitter_growth.sql); the figures are produced by [`scripts/build_submitter_figures.py`](scripts/build_submitter_figures.py) reading the CSVs in [`data/`](data/). Output CSVs use the `_627` suffix to mark the epoch anchor.
+
+
+## Appendix B — methodological notes for the non-participant analysis
+
+This appendix collects the framing and the operational details for §5. It exists so the body of §5 can stay readable; analysts who want to reproduce or extend the work will find here what they need.
+
+### B.1. The three questions guiding §5
+
+Three questions define the analytical scope. Each maps to one or more sections in §5.
+
+**What kind of address holds the unstaked supply?** Is the 14.4 B non-participant pool one undifferentiated mass, or does it split along an architectural axis the reward mechanism can act on? Two complementary lenses are used: an account-level decomposition by stake-credential status, and an unspent-output decomposition by address shape. *Answered in [Two-fifths of the supply has sat unstaked for over 300 epochs](#51-two-fifths-of-the-supply-has-sat-unstaked-for-over-300-epochs) and [Most non-participants have no staking key](#52-most-non-participants-have-no-staking-key-only-04-of-supply-is-reachable-by-reward-design).*
+
+**How much of the locked share is dormant or lost vs operationally active?** The unspent-output set carries a creation date for each output, which gives a first-order proxy for whether the controlling wallet is alive. Bucketing by creation epoch separates outputs that have not moved since before staking became available (probably-lost) from outputs created in the last few epochs (operationally-active). *Answered in [The locked share splits cleanly between probably-lost and operationally-active](#53-the-locked-share-splits-cleanly-between-probably-lost-and-operationally-active).*
+
+**How much of the unstaked supply can a reward-design change actually reach?** Reframed at population level: how many *distinct* addresses hold the structurally-excluded 2.5 B, how concentrated is their grip, and what does the ranked top of the distribution actually look like? Symmetrically: how many of the nominally-addressable 24,176 accounts are populated and recently active? *Answered in [A few hundred custodians hold three-quarters of the structurally-excluded ADA](#54-a-few-hundred-custodians-hold-three-quarters-of-the-structurally-excluded-ada) and [The "addressable" pool collapses to about 2,100 active accounts](#55-the-addressable-pool-collapses-to-about-2100-active-accounts), with the practical implications spelled out in [What the four levers can and cannot reach](#56-what-the-four-levers-can-and-cannot-reach).*
+
+### B.2. Data sources
+
+All §5 findings run against the same full unpruned db-sync used by §6. The supply totals (circulation, deposits, reward-account balances) come from the per-epoch supply table; the staking-side aggregates from the per-epoch stake snapshot at epoch 623; the per-account balance for the 24,176 nominally-addressable accounts via the public Koios `account_info` endpoint, cross-checked against the on-chain stake-account state.
+
+### B.3. The two complementary lenses
+
+The 14.4 B non-participant pool is decomposed two ways because no single query covers both axes:
+
+- **Account-level decomposition** (`scripts/15_utxo_from_koios.py`). Lists every registered staking key, their delegation status, and (via Koios) their current balance. Yields the headline split into delegated / registered-not-delegated / no-staking-key / deposits used in [Most non-participants have no staking key](#52-most-non-participants-have-no-staking-key-only-04-of-supply-is-reachable-by-reward-design). Cannot see *what kind of address* the no-staking-key ADA sits in.
+
+- **Unspent-output decomposition** (`scripts/16_non_participant_insights.sql` + the existing dormancy snapshots). Walks every unspent output, classifies its address by shape (exchange-style, pre-staking legacy, DeFi contract without staking, base wallet), aggregates by address and by creation epoch. Used for the concentration analysis in §5.4 and the bimodal dormancy split in §5.3. Cannot directly attribute the ~11.8 B residual that sits in base addresses with an unregistered staking key — that gap is closed by the account-level subtraction.
+
+### B.4. Window definition
+
+§5 anchors at **epoch 623** for the staking-side aggregates (matches §3, §4) and at the **current chain tip** (~epoch 628) for the address-level concentration data in §5.4 and the addressable-pool deep-dive in §5.5. The five-epoch drift between the two is small enough not to affect any conclusion (~5 M ADA at the population level).
+
+### B.5. Reproduction scripts
+
+The reproduction SQL is in [`scripts/07_non_participant_decomposition.sql`](scripts/07_non_participant_decomposition.sql) and [`scripts/16_non_participant_insights.sql`](scripts/16_non_participant_insights.sql); the account-level work runs through [`scripts/15_utxo_from_koios.py`](scripts/15_utxo_from_koios.py). The figures are produced by [`scripts/build_non_participant_decomposition_figure.py`](scripts/build_non_participant_decomposition_figure.py), [`scripts/build_dormancy_vintage_figure.py`](scripts/build_dormancy_vintage_figure.py), [`scripts/build_no_cred_concentration_figure.py`](scripts/build_no_cred_concentration_figure.py), and [`scripts/build_addressable_pool_figure.py`](scripts/build_addressable_pool_figure.py). Output CSVs use the `_623` suffix for the staking-side snapshot anchor.
+
+
+## Appendix C — global data sources and methodology
+
+This appendix collects what is true across all sections of the document. Per-section operational notes — submitter heuristic, non-participant decomposition, etc. — live in [Appendix A](#appendix-a-methodological-notes-for-the-submitter-analysis) and [Appendix B](#appendix-b-methodological-notes-for-the-non-participant-analysis).
+
+### C.1. Data sources
+
+All data comes from **cardano-db-sync** (PostgreSQL). **No third-party API**, with one exception flagged in Appendix B (Koios `account_info` cross-check for the 24,176 nominally-addressable accounts in §5).
+
+Two db-sync instances feed the document:
+
+- **Instance A** (pruned, snapshot at **epoch 623**) — used by §2–§5 staking-side aggregates.
+- **Instance B** (full, synced from genesis through epoch 628 at the time of writing) — used by §6 transaction-submitter analysis at **epoch 627**, and by §5's UTxO-level decompositions. Retains unpruned `tx_out` rows, which enables address resolution and direct access to `tx_out.stake_address_id` and `tx_out.address_has_script`.
 
 | Table | Content |
 |---|---|
@@ -1235,9 +1295,9 @@ All data comes from **cardano-db-sync** (PostgreSQL, snapshot at epoch 623). **N
 | `pool_update` + `pool_owner` | Pool registration history and owner keys |
 | `stake_deregistration` | Stake key deregistration events |
 | `tx` | Transaction metadata: fee, block reference, script size |
-| `tx_in` + `tx_out` | Transaction inputs and outputs: source/destination addresses, amounts |
+| `tx_in` + `tx_out` | Transaction inputs and outputs: source/destination addresses, `stake_address_id`, `address_has_script` (Instance B only for the `tx_out` columns) |
 
-### 9.2. Methodology note — iterative cleaning
+### C.2. Method — iterative cleaning
 
 The raw db-sync tables contain **structural noise** that must be understood and progressively removed before drawing conclusions.
 
@@ -1248,4 +1308,4 @@ Each section therefore follows a **raw → clean** structure: the raw query resu
 
 ---
 
-> **Status** — Built on 2026/04/09 from `cardano-db-sync` snapshot at epoch 623.
+> **Status** — Built on 2026/05/04. Staking-side aggregates (§2–§5) anchor on `cardano-db-sync` Instance A snapshot at **epoch 623**; transaction-submitter analysis (§6) anchors on Instance B (full, synced through epoch 628) at **epoch 627**. Last §6 refresh: 2026/05/04.
