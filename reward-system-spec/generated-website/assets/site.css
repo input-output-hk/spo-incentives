@@ -1150,13 +1150,18 @@ h6.section-toggle::before{color:#B7CCF2;opacity:.4}
 .nav-breadcrumb-desc{color:var(--text-muted);font-weight:400;font-style:italic;opacity:.88;letter-spacing:.15px}
 .nav-dd-wrap-light{position:relative}
 .nav-dd-btn-light{background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font:500 11.5px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--text-secondary);padding:8px 13px;transition:all .15s;white-space:nowrap;position:relative}
-/* "EVALUATION" eyebrow tag — anchored to the top-right of the
-   ``CIPs`` dropdown trigger, mirroring the "FUTURE" stamp on
-   .nav-tab-implementation. The button text reads ``CIPs`` (what the
-   dropdown opens to); the eyebrow tag stamps it as the *evaluation*
-   stratum so the role of the tab stays explicit. */
-.nav-dd-btn-solution::after{content:"evaluation";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:var(--cardano-blue);color:#fff;padding:3px 5px;border-radius:3px;border:1px solid var(--cardano-blue);pointer-events:none}
-[data-theme=dark] .nav-dd-btn-solution::after{background:#7B91FF;color:#1a1a1a;border-color:#7B91FF}
+/* The CIPs button text needs the lowercase 's' to read as the
+   initialism. The shared .nav-dd-btn-light has text-transform:
+   uppercase; override here. */
+.nav-dd-btn-solution{text-transform:none;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.2px;padding:10px 16px;color:var(--text-primary)}
+.nav-dd-wrap-light.open .nav-dd-btn-solution{color:var(--cardano-blue);border-color:var(--cardano-blue);background:rgba(0,51,173,.06)}
+
+/* "EVALUATION" eyebrow tag — same white-on-Cardano-blue recipe as
+   FUTURE / PROPOSAL on the neighbouring tabs so the three stamps
+   read as one visual family across the navbar. Anchored top-right
+   of the CIPs button. */
+.nav-dd-btn-solution::after{content:"evaluation";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:var(--cardano-blue);padding:3px 5px;border-radius:3px;border:1px solid var(--cardano-blue);pointer-events:none;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+[data-theme=dark] .nav-dd-btn-solution::after{background:#1a1a1a;color:#7B91FF;border-color:#7B91FF}
 .nav-dd-btn-light:hover{color:var(--text-primary);border-color:var(--text-muted);background:rgba(0,0,0,.02)}
 [data-theme=dark] .nav-dd-btn-light:hover{background:rgba(255,255,255,.04)}
 .nav-dd-wrap-light.open .nav-dd-btn-light{color:var(--infared);border-color:rgba(229,35,33,.4);background:rgba(229,35,33,.05)}
