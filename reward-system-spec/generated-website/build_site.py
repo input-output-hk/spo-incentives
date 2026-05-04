@@ -2829,6 +2829,17 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 .sro-card-pro.collapsed > .sro-findings{
   display:none}
 
+/* Synthesis page only — when an observation card sits inside the
+   evidence tree of a problem-statement card, fold the abstract too
+   when the card is collapsed. The synthesis page is meant to scan
+   as a list of observation titles; the abstract belongs to the
+   expanded view. Sub-report pages (treasury / pools / operator /
+   census / observatory) where the abstract IS the card's primary
+   purpose are untouched. */
+.findings-page .finding-card-evidence-tree
+  .sro-card-pro.collapsed > .sro-abstract{
+  display:none}
+
 /* Findings list — clean rows on the card surface. The whole row
    theme switches to Infared red (the evidence belongs to the IOG
    accent lane), distinct from the Cardano-blue observation chrome
