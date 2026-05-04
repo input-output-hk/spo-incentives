@@ -1188,6 +1188,33 @@ h6.section-toggle::before{color:#B7CCF2;opacity:.4}
 [data-theme=dark] .nav-dd-ref-tag{background:var(--bg);color:var(--text-body)}
 .nav-dd-ref-new{display:inline-block;margin-left:8px;font:700 9px/1 -apple-system,sans-serif;letter-spacing:.7px;color:#0a8a80;background:rgba(22,233,216,.14);border:1px solid rgba(22,233,216,.45);border-radius:3px;padding:2px 5px;text-transform:uppercase;vertical-align:1px}
 [data-theme=dark] .nav-dd-ref-new{color:#16E9D8;background:rgba(22,233,216,.1);border-color:rgba(22,233,216,.35)}
+
+/* "New content available" stamp — anchored to the top-LEFT of any
+   dropdown button whose panel contains at least one .nav-dd-ref-new
+   item. Mirror of the right-side eyebrow tags (FUTURE / EVALUATION
+   / PROPOSAL) but signals freshness rather than category. Uses
+   ``:has()`` to query the wrap for new items, which Chrome / Safari
+   / Firefox 121+ all support. */
+.nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light{
+  position:relative}
+.nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light::before{
+  content:"✦";
+  position:absolute;
+  top:-8px;left:-8px;
+  width:18px;height:18px;
+  border-radius:50%;
+  background:#fff;
+  color:#0a8a80;
+  border:1px solid rgba(22,233,216,.55);
+  display:flex;align-items:center;justify-content:center;
+  font:700 11px/1 -apple-system,sans-serif;
+  box-shadow:0 1px 3px rgba(22,233,216,.30);
+  pointer-events:none;
+  letter-spacing:0;text-transform:none}
+[data-theme=dark] .nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light::before{
+  background:#1a1a1a;
+  color:#16E9D8;
+  border-color:rgba(22,233,216,.45)}
 .nav-dd-ref-pdf{grid-column:2;grid-row:1 / span 2;align-self:center;font:700 9.5px/1 -apple-system,sans-serif;letter-spacing:.6px;color:var(--infared);background:rgba(229,35,33,.08);padding:6px 9px;border-radius:4px;text-transform:uppercase}
 .nav-dd-ref:hover .nav-dd-ref-pdf{background:var(--infared);color:#fff}
 

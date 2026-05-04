@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777882596">
+<link rel="stylesheet" href="assets/site.css?v=1777891792">
 
 
 </head>
@@ -188,7 +188,7 @@ window.MathJax = {
     </a>
     <a href="census.html" class="nav-dd-ref nav-dd-ref-sub">
       <span class="nav-dd-ref-title">The Staking Census<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">Who holds stake — capital, participation<span class="nav-dd-ref-stage">Evidence</span></span>
+      <span class="nav-dd-ref-cite">The four game player populations of Cardano's reward pipeline<span class="nav-dd-ref-stage">Evidence</span></span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Reward Flow</div>
     <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow">
@@ -1825,7 +1825,7 @@ $$</p>
 <p>This section first identifies who these entities are and how many there are (<a href="#421-attribution-method-and-headline-figures">§4.2.1 — Attribution method and headline figures</a>), distinguishes who has enough capital to play the pledge game (<a href="#422-the-scale-class-divide">§4.2.2 — The scale-class divide</a>), classifies them by archetype (<a href="#423-operator-archetypes">§4.2.3 — Operator archetypes</a>), and measures how they behave with respect to pledge (<a href="#424-pledge-compliance-who-plays-and-who-doesnt">§4.2.4 — Pledge compliance: who plays and who doesn't</a>).</p>
 <h4 id="421-attribution-method-and-headline-figures">4.2.1. Attribution method and headline figures</h4>
 <p>Cardano's on-chain data does <strong>not natively group pools by operator</strong> — a pool is registered with a cold key, a VRF key, and optional metadata, but nothing links two pools to the same controlling entity. The attribution therefore relies on a layered pipeline that combines <strong>on-chain signals</strong> (shared owner keys) with <strong>off-chain heuristics</strong> (public brand declarations, relay/metadata clustering, manual resolution against community databases).</p>
-<p><strong>The full pipeline lives in the Census report</strong>, which is the canonical source for entity attribution across the diagnostic — see <a href="census.html#33-cleaning-entity-attribution">Census §3.3 — Cleaning: entity attribution</a> for the methodology and the on-chain-only vs combined-attribution numbers (the order-of-magnitude jump from <strong>4 entities</strong> detected on-chain alone to <strong>85 entities</strong> after layering off-chain signals — the on-chain-only layer misses the bulk of fleet structure).</p>
+<p><strong>The full pipeline lives in the Census report</strong>, which is the canonical source for entity attribution across the diagnostic — see <a href="census.html#33-behind-the-pools-4-entities-on-chain-become-85-with-off-chain-attribution">Census §3.3 — Cleaning: entity attribution</a> for the methodology and the on-chain-only vs combined-attribution numbers (the order-of-magnitude jump from <strong>4 entities</strong> detected on-chain alone to <strong>85 entities</strong> after layering off-chain signals — the on-chain-only layer misses the bulk of fleet structure).</p>
 <p><strong>Headline figures</strong> (productive set = pools ≥3M ADA at epoch 623, the production threshold from <a class="finding-ref" href="pools.html#finding-pol-o3-f1" data-finding="POL.O3.F1" data-short="F3.1" data-group="3" title="POL.O3.F1 · hover for summary, click for detail">POL.O3.F1</a>):</p>
 <table>
 <thead>
@@ -1875,7 +1875,7 @@ $$</p>
 </tr>
 </tbody>
 </table>
-<p>n-MPO is counted on <strong>productive pools only</strong>: an entity that owns several pools but has only one above the 3M threshold is classified as an attributed single-pool operator — <em>not</em> a multi-pool fleet — because the remaining pools are sub-threshold and economically inactive. The 12 attributed single-pool entities collectively own <strong>58 pools</strong> but only 12 are productive; <strong>IOG itself</strong> sits in this bucket (34 owned, 1 productive). See <a href="census.html#341-epoch-623-snapshot">Census §3.4.1</a> for the auditable per-entity breakdown.</p>
+<p>n-MPO is counted on <strong>productive pools only</strong>: an entity that owns several pools but has only one above the 3M threshold is classified as an attributed single-pool operator — <em>not</em> a multi-pool fleet — because the remaining pools are sub-threshold and economically inactive. The 12 attributed single-pool entities collectively own <strong>58 pools</strong> but only 12 are productive; <strong>IOG itself</strong> sits in this bucket (34 owned, 1 productive). See <a href="census.html#341-the-headline-picture-at-epoch-623">Census §3.4.1</a> for the auditable per-entity breakdown.</p>
 <blockquote id="finding-pol-o5-f1"><p class="finding-callout-meta"><span class="finding-callout-meta-prefix">From</span> <span class="finding-callout-meta-obs-num">Observation</span> <a class="finding-callout-meta-link" href="#pol-o5">POL.O5</a> &mdash; <em class="finding-callout-meta-title">83 multi-pool operators control 76.7% of productive stake — and almost none of them pledge</em></p>
 <p><strong><span class="finding-callout-tag"><span class="finding-callout-label">Finding</span><a class="finding-ref" href="pools.html#finding-pol-o5-f1" data-finding="POL.O5.F1" data-short="F5.1" data-group="5" title="POL.O5.F1 · hover for summary, click for detail">#1</a></span> <span class="finding-callout-arrow" aria-hidden="true">&rarr;</span> Three quarters of the network's productive stake sits in 83 named entities.</strong> They operate 449 productive pools (≥3M ADA at epoch 623, the production threshold from <a href="#4121-production-threshold"><a class="finding-ref" href="pools.html#finding-pol-o3-f1" data-finding="POL.O3.F1" data-short="F3.1" data-group="3" title="POL.O3.F1 · hover for summary, click for detail">POL.O3.F1</a></a>) holding 16.24B ADA — 76.7% of productive stake. <strong>71 are strict multi-pool fleets</strong> (n-MPO ≥ 2 productive pools); <strong>12 are attributed single-pool operators</strong> — entities mapped by ticker, metadata, or relay clustering whose nominal fleet may be larger but whose productive footprint is exactly one pool (IOG is the textbook case: 34 owned, 1 productive). The remaining 284 unattributed single-pool operators (4.94B ADA, 23.3% of productive stake) are the numerical majority — but the attribution is a <em>lower bound</em>: operators running entirely separate per-pool infrastructure remain invisible. The unattributed single-pool population is analysed under that caveat in <a href="#43-the-remaining-single-pool-operators">§4.3 — The remaining single-pool operators</a>.</p>
 </blockquote>
@@ -3732,6 +3732,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777882596"></script>
+<script src="assets/site.js?v=1777891792"></script>
 </body>
 </html>
