@@ -62,13 +62,13 @@ PAGES = [
         "active_nav": "intended-game",
     },
     {
-        "slug": "observatory",
+        "slug": "diagnostic",
         "md": "diagnostic/README.md",
-        "html": "observatory.html",
+        "html": "diagnostic.html",
         "title": "The Diagnostic — Mainnet Observatory",
         "hero_h1": "The Diagnostic",
         "hero_sub": "Observations, problem induction, and links to the sub-reports",
-        "active_nav": "observatory",
+        "active_nav": "diagnostic",
     },
     {
         "slug": "census",
@@ -81,14 +81,14 @@ PAGES = [
         "active_nav": "census",
     },
     {
-        "slug": "treasury",
+        "slug": "reserves",
         "code": "TRE",
         "md": "diagnostic/sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md",
-        "html": "treasury.html",
+        "html": "reserves.html",
         "title": "Reserves — Treasury & Pool Pots Distribution",
         "hero_h1": "Reserves",
         "hero_sub": "Treasury and pool-pot distribution — Reward Flow stage 1",
-        "active_nav": "treasury",
+        "active_nav": "reserves",
     },
     {
         "slug": "pools",
@@ -141,13 +141,13 @@ PAGES = [
     },
     # --- Diagnostic — Nakamoto re-evaluation sub-flow -----------------------
     {
-        "slug": "nakamoto-revaluation",
+        "slug": "nakamoto-coefficient",
         "md": "diagnostic/sub-flows/nakamoto-revaluation/README.md",
-        "html": "nakamoto-revaluation.html",
+        "html": "nakamoto-coefficient.html",
         "title": "Nakamoto Coefficient — Mainnet Re-evaluation",
         "hero_h1": "Nakamoto Coefficient",
         "hero_sub": "Mainnet re-evaluation under seven explicit definitions",
-        "active_nav": "observatory",
+        "active_nav": "diagnostic",
     },
     {
         "slug": "edi-replication",
@@ -156,7 +156,7 @@ PAGES = [
         "title": "EDI Replication — Cardano Nakamoto Coefficient",
         "hero_h1": "EDI Replication",
         "hero_sub": "In-house run of the Edinburgh Decentralization Index pipeline",
-        "active_nav": "observatory",
+        "active_nav": "diagnostic",
     },
     # --- Solution Evaluation -------------------------------------------------
     {
@@ -249,7 +249,7 @@ PAGE_BY_CODE = {p["code"]: p for p in PAGES if p.get("code")}
 # for backward compatibility and for any future reintroduction of a
 # synthesis-level token namespace.
 SYNTHESIS_SOURCE_MAP: dict[str, dict[str, str]] = {
-    "1.1": {"code": "TRE", "page": "treasury.html"},
+    "1.1": {"code": "TRE", "page": "reserves.html"},
     "1.2": {"code": "POL", "page": "pools.html"},
     "1.3": {"code": "OPE", "page": "operator.html"},
     "2.1": {"code": "CEN", "page": "census.html"},
@@ -626,7 +626,7 @@ def _render_footer() -> str:
       <ul class="footer-links">
         <li><a href="index.html">V2 Specification</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
-        <li><a href="findings.html">Induced Problems</a></li>
+        <li><a href="problem-statements.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
       </ul>
     </div>
@@ -1625,11 +1625,11 @@ window.MathJax = {{
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-diagnostic">Mainnet Diagnostic</span>
       <span class="nav-dd-stratum-meta">What mainnet is actually doing — synthesis, Reward-Flow evidence, and the prior report</span>
     </div>
-    <a href="findings.html" class="nav-dd-ref nav-dd-ref-hero{cls_findings}">
+    <a href="problem-statements.html" class="nav-dd-ref nav-dd-ref-hero{cls_findings}">
       <span class="nav-dd-ref-title">Induced Problems<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">The structural problems the diagnostic induces from on-chain evidence — design intent vs mainnet reality</span>
     </a>
-    <a href="observatory.html" class="nav-dd-ref{cls_observatory_title}">
+    <a href="diagnostic.html" class="nav-dd-ref{cls_diagnostic_title}">
       <span class="nav-dd-ref-title">The Diagnostic</span>
       <span class="nav-dd-ref-cite">Full narrative — observations, problem induction, and sub-report links</span>
     </a>
@@ -1638,7 +1638,7 @@ window.MathJax = {{
       <span class="nav-dd-ref-cite">The four game player populations of Cardano's reward pipeline<span class="nav-dd-ref-stage">Evidence</span></span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Reward Flow</div>
-    <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_treasury}">
+    <a href="reserves.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_treasury}">
       <span class="nav-dd-ref-title">Reserves<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Treasury & pool-pot distribution<span class="nav-dd-ref-stage">Stage 1</span></span>
     </a>
@@ -1784,9 +1784,9 @@ HERO_BLOCK = """<div class="hero" data-banner="{hero_banner}">
 <div class="content">{content}</div>"""
 
 # Which active-nav slugs fall under which top-level dropdown
-DIAG_ACTIVE = {"findings", "observatory", "census", "treasury", "pools", "operator",
+DIAG_ACTIVE = {"problem-statements", "diagnostic", "census", "reserves", "pools", "operator",
                "single-spo", "entity-lifecycle", "mpo-entity-profiles",
-               "nakamoto-revaluation", "edi-replication"}
+               "nakamoto-coefficient", "edi-replication"}
 SOLUTION_ACTIVE = {
     "solution-evaluation",
     "stake-cap", "cip-0050", "cip-0037",
@@ -1802,10 +1802,10 @@ DESIGN_ACTIVE = {"intended-game"}
 BANNER_VARIANTS = {
     "spec":                "fluid",       # V2 spec — the flagship document
     "intended-game":       "starburst",   # narrative / conceptual
-    "findings":            "overlap",     # synthesis of multiple findings
-    "observatory":         "dots",        # the diagnostic — matches cardano.org research page
+    "problem-statements":            "overlap",     # synthesis of multiple findings
+    "diagnostic":         "dots",        # the diagnostic — matches cardano.org research page
     "census":              "dots",        # Mainnet census evidence
-    "treasury":            "braid",       # Treasury & pool-pots
+    "reserves":            "braid",       # Treasury & pool-pots
     "pools":               "braid",       # Pools-distribution layer
     "operator":            "braid",       # Operator-delegator split
     "solution-evaluation": "overlap",     # cross-CIP analysis & verdict
@@ -1821,10 +1821,10 @@ BANNER_VARIANTS = {
 BREADCRUMBS = {
     "spec": ["V2 Specification"],
     "intended-game": ["Design Support", "The Intended Game"],
-    "findings": ["Mainnet Diagnostic", "Induced Problems"],
-    "observatory": ["Mainnet Diagnostic", "The Diagnostic"],
+    "problem-statements": ["Mainnet Diagnostic", "Induced Problems"],
+    "diagnostic": ["Mainnet Diagnostic", "The Diagnostic"],
     "census": ["Mainnet Diagnostic", "The Staking Census"],
-    "treasury": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
+    "reserves": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
     "pools": ["Mainnet Diagnostic", "Reward Flow", "Pools"],
     "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],    "solution-evaluation": ["Solution Evaluation", "Cross-CIP Analysis & Verdict"],
     "stake-cap": ["Solution Evaluation", "Stake-Cap Layer", "CIP Evaluation Synthesis"],
@@ -1865,10 +1865,10 @@ _HERO_EYEBROW = {
     "spec": "Cardano Reward System",
     # Sub-flow + cross-flow pages: parent zone only.
     "intended-game": "Design Support",
-    "findings": "Mainnet Diagnostic",
-    "observatory": "Mainnet Diagnostic",
+    "problem-statements": "Mainnet Diagnostic",
+    "diagnostic": "Mainnet Diagnostic",
     "census": "Mainnet Diagnostic",
-    "treasury": "Mainnet Diagnostic",
+    "reserves": "Mainnet Diagnostic",
     "pools": "Mainnet Diagnostic",
     "operator": "Mainnet Diagnostic",    "solution-evaluation": "Solution Evaluation",
     "stake-cap": "Solution Evaluation",
@@ -1889,10 +1889,10 @@ def render_shell(page: dict, content_html: str) -> str:
     nav_map = {
         "spec": "cls_spec",
         "intended-game": "cls_intended_game",
-        "findings": "cls_findings",
-        "observatory": "cls_observatory_title",
+        "problem-statements": "cls_findings",
+        "diagnostic": "cls_diagnostic_title",
         "census": "cls_census",
-        "treasury": "cls_treasury",
+        "reserves": "cls_treasury",
         "pools": "cls_pools",
         "operator": "cls_operator",
         "solution-evaluation": "cls_solution_eval",
@@ -1909,8 +1909,8 @@ def render_shell(page: dict, content_html: str) -> str:
         classes[nav_map[active]] = " active"
     # Sub-report pages light up the Diagnostic item as "parent-active" so the
     # hierarchy (Diagnostic → sub-report) stays legible in the dropdown panel.
-    if active in {"census", "treasury", "pools", "operator"}:
-        classes["cls_observatory_title"] = " parent-active"
+    if active in {"census", "reserves", "pools", "operator"}:
+        classes["cls_diagnostic_title"] = " parent-active"
     # Sub-eval pages light up the Solution Evaluation landing as parent-active.
     if active in {"stake-cap", "cip-0050", "cip-0037",
                   "fee-layer", "cip-0023", "cip-0082", "k-parameter"}:
@@ -2228,35 +2228,75 @@ _CROSS_OBS_JS_MARKER = "/* ── Cross-page synthesis-observation source overla
 _CROSS_OBS_CSS = """
 /* ── Cross-page synthesis-observation source overlay + compact §X.Y.2 view ── */
 
-/* Compact list view: one row per synthesis observation that defers to a sub-report */
-.synth-obs-compact{list-style:none;padding:0;margin:18px 0 24px;
-  display:flex;flex-direction:column;gap:10px}
-.synth-obs-row{border:1px solid var(--border);border-radius:8px;padding:14px 16px;
-  background:var(--bg);transition:border-color .15s,box-shadow .15s}
-.synth-obs-row:hover{border-color:var(--infared);box-shadow:0 2px 10px rgba(229,35,33,.06)}
-.synth-obs-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
-.synth-obs-canon{display:inline-flex;align-items:center;padding:3px 10px;border-radius:4px;
-  background:var(--bg-panel);border:1px solid var(--border);
-  font:600 11px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.05em;color:var(--infared);text-decoration:none;
-  transition:background .15s,border-color .15s,color .15s}
-.synth-obs-canon:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
-.synth-obs-title{font:600 14px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--text-primary);flex:1 1 auto;min-width:0}
-.synth-obs-summary{margin:4px 0 10px;font:400 13.5px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--text-secondary)}
-.synth-obs-findings{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.synth-obs-f{display:inline-flex;align-items:center;padding:2px 8px;border-radius:3px;
-  background:var(--bg-panel);border:1px solid var(--border);
-  font:500 10.5px/1.5 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
-  letter-spacing:.03em;color:var(--text-secondary);text-decoration:none;
-  transition:background .15s,border-color .15s,color .15s}
-.synth-obs-f:hover{background:var(--infared);color:#fff;border-color:var(--infared)}
-.synth-obs-source-link{display:inline-flex;align-items:center;gap:4px;
-  font:500 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--text-muted);text-decoration:none;padding-top:4px;
-  border-top:1px dashed var(--border);margin-top:4px;padding-top:8px}
-.synth-obs-source-link:hover{color:var(--infared)}
+/* Single bordered panel containing a 2-column grid of synthesis
+   observations. The outer panel carries the border + subtle background;
+   items inside are bare flex rows with a hover state. The V2-style
+   hover popover on each chip (.obs-ref obs-ref-src) provides abstract,
+   finding count, and click-through — no inline duplication. */
+/* Panel wrapper carries the border. Inside, a header bar names the source
+   sub-report (eyebrow styling + red left accent — same vocabulary as the
+   page banner's .hero-eyebrow), and below it sits the borderless 2-col
+   grid of OBS rows. */
+.synth-obs-panel{margin:24px 0 22px;
+  border:1px solid var(--border);border-radius:8px;
+  background:var(--bg-panel);overflow:hidden}
+[data-theme=dark] .synth-obs-panel{background:rgba(255,255,255,.02)}
+.synth-obs-panel-title{display:flex;align-items:center;gap:10px;
+  margin:0;padding:11px 16px 11px 14px;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  border-left:3px solid var(--infared)}
+.synth-obs-panel-eyebrow{font:500 10.5px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-muted)}
+.synth-obs-panel-sep{font:400 11px/1 "Inter",-apple-system,sans-serif;
+  color:var(--border);user-select:none}
+a.synth-obs-panel-source{display:inline-flex;align-items:center;gap:8px;
+  font:600 11.5px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.10em;text-transform:uppercase;
+  color:var(--text-primary);text-decoration:none;border-bottom:none;
+  transition:color .15s}
+a.synth-obs-panel-source:hover{color:var(--cardano-blue);
+  text-decoration:none;border-bottom:none}
+a.synth-obs-panel-source:hover .synth-obs-panel-arrow{transform:translateX(2px);color:var(--cardano-blue)}
+.synth-obs-panel-arrow{font-size:13px;letter-spacing:0;color:var(--text-muted);
+  transition:transform .15s,color .15s;display:inline-block}
+.synth-obs-compact{list-style:none;margin:0;padding:14px 16px;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  column-gap:18px;row-gap:4px;border:0;background:transparent}
+.synth-obs-row{border-radius:4px;background:transparent}
+/* Row anchor — explicit overrides of the global .obs-ref styling
+   (which would otherwise force inline display, red color, dotted border-bottom,
+   and a red hover background on the entire row). The whole row is the
+   hover target; the popover (V2-style) hydrates from .obs-ref-src. */
+a.synth-obs-link.obs-ref,
+a.synth-obs-link.obs-ref.obs-ref-src{display:flex;align-items:baseline;gap:10px;
+  flex-wrap:nowrap;padding:6px 10px;border-radius:4px;
+  text-decoration:none;color:inherit;background:transparent;
+  border-bottom:none;cursor:pointer;transition:background .15s}
+a.synth-obs-link.obs-ref:hover,
+a.synth-obs-link.obs-ref.obs-ref-src:hover{
+  background:color-mix(in srgb, var(--cardano-blue) 8%, transparent);
+  color:inherit;text-decoration:none;border-bottom:none}
+[data-theme=dark] a.synth-obs-link.obs-ref:hover,
+[data-theme=dark] a.synth-obs-link.obs-ref.obs-ref-src:hover{
+  background:rgba(96,135,233,.12)}
+/* Chip — back to the original "ref tag" look (left of title), but kept
+   compact so the title still leads visually. */
+.synth-obs-canon{display:inline-flex;align-items:center;padding:2px 7px;border-radius:3px;
+  background:var(--bg);border:1px solid var(--border);
+  font:600 10px/1.4 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+  letter-spacing:.04em;color:var(--cardano-blue);
+  flex-shrink:0;transition:background .15s,border-color .15s,color .15s}
+.synth-obs-link:hover .synth-obs-canon{background:var(--cardano-blue);
+  border-color:var(--cardano-blue);color:#fff}
+.synth-obs-title{font:600 13.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:-.005em;color:var(--text-primary);flex:1 1 auto;min-width:0}
+.synth-obs-link:hover .synth-obs-title{color:var(--cardano-blue)}
+@media (max-width:760px){
+  .synth-obs-compact{grid-template-columns:1fr;column-gap:0;row-gap:2px}
+  .synth-obs-panel{padding:18px 14px 12px}
+}
 
 /* Cross-page source overlay — the synthesis-observation link shows the source
    sub-report observation's content in the side panel, with a "Jump to source" CTA. */
@@ -2711,8 +2751,8 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 
 /* Responsive */
 @media (max-width:720px){
-  .synth-obs-row{padding:12px 14px}
-  .synth-obs-head{gap:6px}
+  a.synth-obs-link.obs-ref,
+  a.synth-obs-link.obs-ref.obs-ref-src{padding:10px 12px;gap:8px}
   .sro-head{flex-wrap:wrap;gap:8px;padding:10px 12px}
   .sro-title{flex:1 1 100%;order:3}
   .sro-count{order:2}
@@ -3168,7 +3208,7 @@ _CROSS_OBS_JS = """  /* ── Cross-page synthesis-observation source overlay �
          filename if the human title hasn't been indexed yet. */
       var map={
         'operator.html':"The Operator's Cut",
-        'treasury.html':'Treasury & Pool Pots Distribution',
+        'reserves.html':'Treasury & Pool Pots Distribution',
         'pools.html':'The Pools Pot Distribution Gaps',
         'census.html':'The Staking Census'
       };
@@ -4187,10 +4227,13 @@ def sync_references() -> None:
 # observation body. The classification is explanatory, not statistical.
 
 _OBS_HEADING_RE = re.compile(
-    # Trailing dot is optional — TOC normalisation (commit 37ab992) added a
-    # period after multi-level section numbers (e.g. "1.3.2.") that the
-    # original regex would otherwise reject.
-    r"^###\s+(\d+(?:\.\d+){1,2})\.?\s+Mainnet Observations\s*$",
+    # The diagnostic README places an HTML-comment marker right where the
+    # OBS panel should be rendered — the visible "Mainnet Observations"
+    # H3 was retired so each X.Y section reads as a single narrative arc
+    # (Overview → OBS panel → Problem Induction). The marker carries the
+    # implicit subsection id (e.g. "1.1.2") that the panel still uses for
+    # data attributes and incoming cross-references.
+    r"^<!--\s*mainnet-observations:\s*(\d+(?:\.\d+){1,2})\s*-->\s*$",
     re.MULTILINE,
 )
 # The diagnostic README's observation tables reference the canonical
@@ -4379,11 +4422,15 @@ def _render_obs_card(obs: dict) -> str:
     )
 
 
-# After markdown → HTML, replace the table that follows each Mainnet
-# Observations heading with a cards container.
+# After markdown → HTML, locate the OBS marker and replace the table
+# that follows it with a cards container / synth-obs panel. The marker is
+# an HTML comment (`<!-- mainnet-observations: X.Y.Z -->`) preserved by
+# python-markdown — the visible "Mainnet Observations" H3 was retired so
+# the section reads as a single Overview → OBS panel → Problem Induction
+# arc. Capture the section slug (e.g. "112") for OBS lookup.
 _H3_MAINNET_OBS_RE = re.compile(
-    r'(<h3\s+id="(\d+)-mainnet-observations"[^>]*>.*?</h3>)',
-    re.IGNORECASE | re.DOTALL,
+    r'(<!--\s*mainnet-observations:\s*(\d+(?:\.\d+){1,2})\s*-->)',
+    re.IGNORECASE,
 )
 _TABLE_RE = re.compile(r'<table[\s\S]*?</table>', re.IGNORECASE)
 
@@ -4401,7 +4448,9 @@ def transform_observation_tables(html_body: str, observations: list[dict]) -> st
 
     def _replace(match: re.Match) -> str:
         heading = match.group(1)
-        slug = match.group(2)
+        # The marker captures the section_id with dots (e.g. "1.1.2"); strip
+        # them to match the slug convention used in obs records ("112").
+        slug = match.group(2).replace(".", "")
         obs_list = by_slug.get(slug, [])
         if not obs_list:
             return heading
@@ -4749,7 +4798,7 @@ def rewrite_synth_anchors(
     return _SYNTH_ANCHOR_TEXT_RE.sub(_sub, html_body)
 
 
-# --- Findings extraction (for findings.html synthesis page) --------------
+# --- Findings extraction (for problem-statements.html synthesis page) --------------
 
 # Matches `## X.Y. Problem Induction …` and
 # `### X.Y.Z. Problem Induction …` headings. ``§3.3 Problem Induction``
@@ -4758,7 +4807,7 @@ def rewrite_synth_anchors(
 # TOC normalisation added a period after multi-level section numbers
 # (e.g. ``1.1.3.``) that the original regex would otherwise reject
 # (which is what was stalling extract_findings_from_md and producing
-# ``0 findings`` on findings.html).
+# ``0 findings`` on problem-statements.html).
 _FINDING_HEADING_RE = re.compile(
     r"^(?P<hashes>##|###)\s+(?P<num>\d+(?:\.\d+){1,2})\.?\s+Problem Induction"
     r"\s*(?:→\s*(?P<title>.+?))?\s*$",
@@ -5025,7 +5074,7 @@ def _render_finding_card(
     and the canonical sub-report findings that ground it.
 
     ``num_prefix`` is prepended to the per-card numeric chip — used to
-    namespace the per-group counters on findings.html (e.g. ``μ`` for
+    namespace the per-group counters on problem-statements.html (e.g. ``μ`` for
     Microeconomics, ``M`` for Macroeconomics) so each group restarts
     counting at 1 without colliding with its sibling.
     """
@@ -5176,7 +5225,7 @@ def _render_finding_card(
 
         # Observation card — same .sro-card-pro look as the diagnostic
         # page. Click the head to expand; both the abstract and the
-        # findings list are revealed together (in findings.html only —
+        # findings list are revealed together (in problem-statements.html only —
         # the per-page diagnostic keeps the abstract always visible).
         obs_dom_id = _canon_slug(canon_id)
         nodes_html.append(
@@ -5226,7 +5275,7 @@ def _render_finding_card(
 
     jump_link = (
         f'<a class="finding-jump" '
-        f'href="observatory.html#{finding["anchor"]}" '
+        f'href="diagnostic.html#{finding["anchor"]}" '
         f'title="Open full finding on the Observatory">'
         f'Read full finding on Observatory →</a>'
     )
@@ -5271,7 +5320,7 @@ def _render_findings_content(
     observations: list[dict],
     findings_by_canon_obs: dict[str, list[dict]] | None = None,
 ) -> str:
-    """Produce the body HTML for findings.html."""
+    """Produce the body HTML for problem-statements.html."""
     by_parent_obs = _group_obs_by_parent(observations)
 
     # Sum the canonical findings up front — both the intro chain line
@@ -5340,18 +5389,16 @@ def _render_findings_content(
         '<nav class="findings-toc" aria-label="Problems index">'
         '<div class="findings-toc-group">'
         '<div class="findings-toc-group-head">'
-        '<span class="findings-toc-group-label">Microeconomics</span>'
-        f'<span class="findings-toc-group-count">{len(micro_items)} problems</span>'
+        f'<span class="findings-toc-group-label">Microeconomics <span class="findings-toc-group-count">{len(micro_items)}</span></span>'
         '</div>'
-        '<div class="findings-toc-group-meta">Participant-level gaps — what an individual operator, delegator, or pool faces inside the reward mechanism</div>'
+        '<div class="findings-toc-group-meta">Participant-level gaps</div>'
         f'<div class="findings-toc-group-list">{"".join(micro_items)}</div>'
         '</div>'
         '<div class="findings-toc-group">'
         '<div class="findings-toc-group-head">'
-        '<span class="findings-toc-group-label">Macroeconomics</span>'
-        f'<span class="findings-toc-group-count">{len(macro_items)} problems</span>'
+        f'<span class="findings-toc-group-label">Macroeconomics <span class="findings-toc-group-count">{len(macro_items)}</span></span>'
         '</div>'
-        '<div class="findings-toc-group-meta">System-level gaps — what the reward pipeline as a whole must satisfy to remain solvent, growable, and coherent across price regimes</div>'
+        '<div class="findings-toc-group-meta">System-level gaps</div>'
         f'<div class="findings-toc-group-list">{"".join(macro_items)}</div>'
         '</div>'
         '</nav>'
@@ -5412,10 +5459,10 @@ def _render_findings_content(
         'observations that support it &mdash; click any observation '
         'row to expand its underlying findings. The full prose argument '
         'lives on '
-        '<a href="observatory.html">the Mainnet Observatory</a>; the '
+        '<a href="diagnostic.html">the Mainnet Observatory</a>; the '
         'raw evidence and figures are in the four sub-reports '
         '(<a href="census.html">census</a>, '
-        '<a href="treasury.html">reserves</a>, '
+        '<a href="reserves.html">reserves</a>, '
         '<a href="pools.html">pool distribution</a>, '
         '<a href="operator.html">operator&rsquo;s cut</a>).'
         '</p>'
@@ -5516,7 +5563,7 @@ def _render_findings_content(
 
 
 def build_findings_page() -> Path:
-    """Assemble findings.html from diagnostic/README.md.
+    """Assemble problem-statements.html from diagnostic/README.md.
 
     Aggregates observations + findings and renders them into the shared
     page shell. The nav highlights ``observatory`` as parent-active.
@@ -5543,9 +5590,9 @@ def build_findings_page() -> Path:
     )
 
     page = {
-        "slug": "findings",
+        "slug": "problem-statements",
         "md": "diagnostic/README.md",
-        "html": "findings.html",
+        "html": "problem-statements.html",
         "title": (
             "Induced Problems — The Diagnostic&rsquo;s Conclusions, Grounded in "
             "Mainnet Evidence"
@@ -5555,11 +5602,11 @@ def build_findings_page() -> Path:
             f"{len(findings)} structural problems induced from "
             f"{len(observations)} mainnet observations"
         ),
-        "active_nav": "findings",
+        "active_nav": "problem-statements",
     }
     content_html += _render_page_source_link(page)
     full = render_shell(page, content_html)
-    out = SITE_DIR / "findings.html"
+    out = SITE_DIR / "problem-statements.html"
     out.write_text(full)
     return out
 
@@ -5786,7 +5833,7 @@ def _render_subreport_obs_registry(obs_groups: list[dict]) -> str:
     for g in obs_groups:
         evid = " · ".join(
             re.sub(r"\s+", " ", f["evidence_md"]).strip()
-            for f in g["findings"][:2]
+            for f in g["problem-statements"][:2]
         )
         # Registry content is hydrated into the panel/tooltip without a
         # MathJax re-typeset, so replace ``$…$`` with Unicode approximations.
@@ -5812,7 +5859,7 @@ def _render_subreport_obs_registry(obs_groups: list[dict]) -> str:
         # The cross-page JS uses this to hydrate the side-panel findings list
         # from the already-bundled findings-registry.
         finding_canons = ",".join(
-            (f.get("canon_id") or f["id"]) for f in g["findings"]
+            (f.get("canon_id") or f["id"]) for f in g["problem-statements"]
         )
         findings_attr = (
             f' data-findings="{_html.escape(finding_canons)}"'
@@ -5830,8 +5877,8 @@ def _render_subreport_obs_registry(obs_groups: list[dict]) -> str:
             f'<div class="sro-obs-detail-title">{title_html}</div>'
             f'{abstract_block}'
             f'<div class="sro-obs-detail-summary">{evid_html}</div>'
-            f'<div class="sro-obs-detail-count">{len(g["findings"])} '
-            f'{"findings" if len(g["findings"]) != 1 else "finding"}</div>'
+            f'<div class="sro-obs-detail-count">{len(g["problem-statements"])} '
+            f'{"findings" if len(g["problem-statements"]) != 1 else "finding"}</div>'
             f'</div>'
         )
     return (
@@ -6403,7 +6450,7 @@ def extract_subreport_observations(
     o_defining: dict[int, str] | None = None,
     f_findings_by_id: dict[str, dict] | None = None,
 ) -> list[dict]:
-    """Parse the ``## 1. Mainnet Observations`` section of a sub-report.
+    """Parse the ``# 1. Mainnet Observations`` section of a sub-report.
 
     Returns an ordered list of O-groups. Each group carries:
 
@@ -6426,15 +6473,27 @@ def extract_subreport_observations(
     o_defining = o_defining or {}
     f_findings_by_id = f_findings_by_id or {}
 
-    # Narrow to the Mainnet Observations section (between `## 1. …` and next `##`).
+    # Narrow to the Mainnet Observations section. After the chapter-level
+    # heading shift (each sub-report's `## 1. Mainnet Observations` was
+    # promoted to `# 1.` so chapter rendering matches the diagnostic doc),
+    # the section anchor is an H1 and the section terminates at the next H1.
+    # Fallback to the legacy H2 form so older READMEs that haven't been
+    # shifted yet still parse cleanly.
     sec_m = re.search(
-        r"^##\s+1\.\s+Mainnet Observations\s*$",
+        r"^#\s+1\.\s+Mainnet Observations\s*$",
         md_text, re.MULTILINE,
     )
     if not sec_m:
+        sec_m = re.search(
+            r"^##\s+1\.\s+Mainnet Observations\s*$",
+            md_text, re.MULTILINE,
+        )
+    if not sec_m:
         return []
     start = sec_m.end()
-    next_m = re.search(r"^##\s", md_text[start:], re.MULTILINE)
+    # Section ends at the next sibling-level heading: H1 if anchor was H1,
+    # H2 otherwise. Match either to stay forgiving across the transition.
+    next_m = re.search(r"^#{1,2}\s", md_text[start:], re.MULTILINE)
     end = start + next_m.start() if next_m else len(md_text)
     section_md = md_text[start:end]
 
@@ -6472,7 +6531,7 @@ def extract_subreport_observations(
                 "jump_href": jump_href,
                 "code": row_code,
                 "page_html": page_html,
-                "findings": [],
+                "problem-statements": [],
             }
             groups.append(current)
             continue
@@ -6485,7 +6544,7 @@ def extract_subreport_observations(
             # Legacy short id kept for cross-indexing with ## Findings records.
             fid_short = f"F{o_num}.{f_num}"
             extra = f_findings_by_id.get(f_canon, {}) or f_findings_by_id.get(fid_short, {})
-            current["findings"].append({
+            current["problem-statements"].append({
                 "f_id": fid_short,
                 "canon_id": f_canon,
                 "slug": _canon_slug(f_canon),
@@ -6559,8 +6618,8 @@ def _render_subreport_observations(groups: list[dict]) -> str:
         # findings theme, #N badge as jump-to-source link.
         is_pro = True
         count_label = (
-            f'{len(g["findings"])} '
-            f'{"findings" if len(g["findings"]) != 1 else "finding"}'
+            f'{len(g["problem-statements"])} '
+            f'{"findings" if len(g["problem-statements"]) != 1 else "finding"}'
         )
         if is_pro:
             head_html = (
@@ -6599,7 +6658,7 @@ def _render_subreport_observations(groups: list[dict]) -> str:
         )
         out.append(article_open + head_html + abstract_block
                    + findings_label + '<ol class="sro-findings">')
-        for fi, f in enumerate(g["findings"], 1):
+        for fi, f in enumerate(g["problem-statements"], 1):
             ev_html = _sro_inline_md_to_html(f["evidence_md"])
             ev_html = _highlight_metrics(ev_html)
             sec_html = _sro_inline_md_to_html(f["section_md"])
@@ -6665,7 +6724,7 @@ def _render_subreport_observations(groups: list[dict]) -> str:
 # Code for the diagnostic synthesis itself.
 DIAG_CODE = "SYNTH"
 # Page that hosts the canonical defining tables for synthesis observations.
-DIAG_SYNTH_PAGE = "observatory.html"
+DIAG_SYNTH_PAGE = "diagnostic.html"
 
 
 def _enrich_synth_obs(obs_list: list[dict]) -> list[dict]:
@@ -6760,17 +6819,18 @@ def rewrite_synthesis_obs_citations(html_body: str, synth_obs: list[dict]) -> st
 def transform_subreport_observation_table(html_body: str, groups: list[dict]) -> str:
     """Swap the raw ``<table>`` that follows ``# 1. Mainnet Observations`` for cards.
 
-    The target is always the first ``<table>…</table>`` immediately after
-    ``<h2 id="1-mainnet-observations">``. Everything else on the page is
-    untouched.
+    The target is the first ``<table>…</table>`` immediately after the
+    Mainnet-Observations heading. Accepts either ``<h1>`` (post chapter-level
+    shift, the canonical form) or ``<h2>`` (legacy) so the transformer stays
+    forgiving. Everything else on the page is untouched.
     """
     if not groups:
         return html_body
-    h2_re = re.compile(
-        r'<h2[^>]*id="1-mainnet-observations"[^>]*>.*?</h2>',
+    head_re = re.compile(
+        r'<h[12][^>]*id="1-mainnet-observations"[^>]*>.*?</h[12]>',
         re.DOTALL | re.IGNORECASE,
     )
-    m = h2_re.search(html_body)
+    m = head_re.search(html_body)
     if not m:
         return html_body
     after = html_body[m.end():]
@@ -6784,7 +6844,7 @@ def transform_subreport_observation_table(html_body: str, groups: list[dict]) ->
     return html_body[:start] + new_block + html_body[end:]
 
 
-# --- Cross-page source bundle (for observatory.html synthesis-observation overlays) --------
+# --- Cross-page source bundle (for diagnostic.html synthesis-observation overlays) --------
 
 # Cached so the observatory build path pays the parse cost once across the
 # full build run (all four sub-reports are loaded together).
@@ -6803,7 +6863,7 @@ def _load_all_subreport_data() -> dict[str, object]:
 
     Each ``obs_group`` has its ``canon_id`` (``OPE.O7``), ``slug``
     (``ope-o7``), ``jump_href`` (``operator.html#...``) — ready to paste into
-    cross-page source anchors or a bundled registry on observatory.html.
+    cross-page source anchors or a bundled registry on diagnostic.html.
     """
     global _SUBREPORT_BUNDLE
     if _SUBREPORT_BUNDLE is not None:
@@ -6916,55 +6976,54 @@ def _render_dia_compact_obs(
             # but guard anyway so a missing canon doesn't break the section.
             continue
         canon = src["canon_id"]
-        summary_html = _highlight_metrics(_html.escape(obs["summary"]))
-        summary_html = re.sub(r"\*([^*\n]+?)\*", r"<em>\1</em>", summary_html)
-        findings_chips: list[str] = []
-        for f in src["findings"]:
-            fcanon = f["canon_id"]
-            fhref = (
-                f["jump_href"] if f.get("jump_href")
-                else f"{page_html}#finding-{f['slug']}"
-            )
-            findings_chips.append(
-                f'<a class="synth-obs-f finding-ref" '
-                f'href="{_html.escape(fhref)}" '
-                f'data-finding="{fcanon}" data-short="{f["f_id"]}" '
-                f'data-group="{f["f_group"]}" '
-                f'title="{fcanon} · hover for summary, click for detail">'
-                f'{fcanon}</a>'
-            )
-        findings_row = (
-            f'<div class="synth-obs-findings">{"".join(findings_chips)}</div>'
-            if findings_chips else ""
-        )
         jump_href = src.get("jump_href") or f"{page_html}#srobs-{src['slug']}"
+        # Light row: just the canon chip + title. The hover popover (driven
+        # by `.obs-ref obs-ref-src`) and the finding-detail registry already
+        # carry abstract, finding count, and click-through to the source —
+        # duplicating them here is visual weight, and (more dangerously) a
+        # source of drift between the diagnostic and the matured sub-reports.
         rows.append(
             f'<li class="synth-obs-row" data-section="{obs["section_id"]}" '
             f'data-local="{obs["local_id"]}">'
-            f'<div class="synth-obs-head">'
-            f'<a class="synth-obs-canon obs-ref obs-ref-src" '
+            f'<a class="synth-obs-link obs-ref obs-ref-src" '
             f'href="{_html.escape(jump_href)}" '
             f'data-obs="{obs["global_id"]}" data-tier="{obs["tier"]}" '
             f'data-obs-src="{_html.escape(canon)}" '
             f'data-obs-page="{_html.escape(page_html)}" '
             f'data-obs-href="{_html.escape(jump_href)}" '
-            f'title="Overlay source {canon}">{canon}</a>'
+            f'title="{canon} · hover for summary, click for detail">'
+            f'<span class="synth-obs-canon">{canon}</span>'
             f'<span class="synth-obs-title">{_html.escape(obs["title"])}</span>'
-            f'<span class="obs-tier obs-tier-{obs["tier"]}">{obs["tier_label"]}</span>'
-            f'</div>'
-            f'<p class="synth-obs-summary">{summary_html}</p>'
-            f'{findings_row}'
-            f'<a class="synth-obs-source-link" '
-            f'href="{_html.escape(jump_href)}" '
-            f'title="Open the defining card in the {_html.escape(src_label)} sub-report">'
-            f'Open in {_html.escape(src_label)} →</a>'
+            f'</a>'
             f'</li>'
         )
+    section_id = section_obs[0]["section_id"]
+    section_slug = section_id.replace(".", "")
+    sub_report_href = page_html
+    # Pro-style legend bar inside the panel, echoing the page banner: red
+    # vertical accent on the left, eyebrow-styled "MAINNET OBSERVATIONS"
+    # tracked-out, em-dash, then the source sub-report name as a jump link.
+    # The link affords navigation to the full sub-report; the chevron is a
+    # subtle directional cue without competing with the row-level chips.
+    legend = (
+        f'<span class="synth-obs-panel-eyebrow">Mainnet Observations</span>'
+        f'<span class="synth-obs-panel-sep">—</span>'
+        f'<a class="synth-obs-panel-source" href="{_html.escape(sub_report_href)}" '
+        f'title="Open the {_html.escape(src_label)} sub-report">'
+        f'{_html.escape(src_label)}'
+        f'<span class="synth-obs-panel-arrow" aria-hidden="true">→</span>'
+        f'</a>'
+    )
+    # The panel itself carries the legacy `#XYZ-mainnet-observations` anchor
+    # so cross-document links written before the X.Y.2 heading was retired
+    # still scroll to the right place.
     return (
-        '<ul class="synth-obs-compact" data-obs-section="'
-        + section_obs[0]["section_id"] + '">'
+        f'<header class="synth-obs-panel" id="{section_slug}-mainnet-observations" '
+        f'data-obs-section="{section_id}">'
+        f'<div class="synth-obs-panel-title">{legend}</div>'
+        f'<ul class="synth-obs-compact" data-obs-section="{section_id}">'
         + "".join(rows)
-        + '</ul>'
+        + '</ul></header>'
     )
 
 
@@ -6989,7 +7048,9 @@ def transform_observation_tables_with_sources(
 
     def _replace(match: re.Match) -> str:
         heading = match.group(1)
-        slug = match.group(2)
+        # The marker captures the section_id with dots (e.g. "1.1.2"); strip
+        # them to match the slug convention used in obs records ("112").
+        slug = match.group(2).replace(".", "")
         obs_list = by_slug.get(slug, [])
         if not obs_list:
             return heading
@@ -7342,7 +7403,7 @@ def build_page(page: dict) -> Path:
     # Sub-report pages (code="TRE"/"POL"/"OPE"/"CEN") define their own O#
     # observations and do not reference SYNTH.X.Y.O# — so they skip the
     # cross-page bundle.
-    is_observatory = page["slug"] == "observatory"
+    is_diagnostic = page["slug"] == "diagnostic"
     is_subreport = bool(page.get("code"))
     source_lookup: dict[str, dict] = {}
     cross_obs_groups: list[dict] = []
@@ -7393,7 +7454,7 @@ def build_page(page: dict) -> Path:
     # Rewrite inline ``(SYNTH.X.Y.O#)`` citations on every non-sub-report page.
     # Observatory resolves against its own observations (same MD); other
     # pages resolve against the cached diagnostic observations.
-    rewrite_obs = observations if is_observatory else (
+    rewrite_obs = observations if is_diagnostic else (
         [] if is_subreport else _load_diagnostic_observations()
     )
     if rewrite_obs:
@@ -7645,7 +7706,7 @@ def build_pdf_viewer_page() -> Path:
 
 def main(argv: list[str]) -> int:
     slugs = [a for a in argv[1:] if not a.startswith("-")]
-    valid_slugs = {p["slug"] for p in PAGES} | {"findings", "my-bookmarks", "pdf-viewer"}
+    valid_slugs = {p["slug"] for p in PAGES} | {"problem-statements", "my-bookmarks", "pdf-viewer"}
     wanted = PAGES if not slugs else [p for p in PAGES if p["slug"] in slugs]
     if slugs:
         missing = set(slugs) - valid_slugs
@@ -7671,7 +7732,7 @@ def main(argv: list[str]) -> int:
 
     # Synthesis page — derived from diagnostic/README.md, no standalone MD.
     # Always regenerated when all pages are built, or on explicit `findings` slug.
-    if not slugs or "findings" in slugs:
+    if not slugs or "problem-statements" in slugs:
         print(f"  {'findings':16s} ← diagnostic/README.md (synthesis)")
         findings_out = build_findings_page()
         print(f"  {' ':16s}  → {findings_out.relative_to(SITE_DIR)}")

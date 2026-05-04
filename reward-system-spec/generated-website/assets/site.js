@@ -1,5 +1,73 @@
 (function(){
 var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fluid-red'];var pick=v[Math.floor(Math.random()*v.length)];document.addEventListener('DOMContentLoaded',function(){var h=document.querySelector('.hero');if(h)h.setAttribute('data-banner',pick);});
+
+  /* ── Theme toggle ──
+     Inline onclick="toggleTheme()" on the header button. Persists the
+     choice in localStorage; reads it back on every page load. */
+  window.toggleTheme=function(){
+    var html=document.documentElement;
+    var current=html.getAttribute('data-theme')||'light';
+    var next=current==='dark'?'light':'dark';
+    html.setAttribute('data-theme',next);
+    try{localStorage.setItem('theme',next);}catch(e){}
+    var btn=document.querySelector('.theme-toggle');
+    if(btn) btn.textContent=next==='dark'?'☾':'☀';
+  };
+  (function applyStoredTheme(){
+    var stored;try{stored=localStorage.getItem('theme');}catch(e){}
+    if(stored==='dark'||stored==='light'){
+      document.documentElement.setAttribute('data-theme',stored);
+    }
+    document.addEventListener('DOMContentLoaded',function(){
+      var html=document.documentElement;
+      var t=html.getAttribute('data-theme')||'light';
+      var btn=document.querySelector('.theme-toggle');
+      if(btn) btn.textContent=t==='dark'?'☾':'☀';
+    });
+  })();
+
+  /* ── PDF export ──
+     Inline onclick="printAsPdf()" on the header button. Opens the native
+     print dialogue; the page's print stylesheet handles layout. */
+  window.printAsPdf=function(){ window.print(); };
+
+  /* ── Figure-image lightbox ──
+     Click any image inside `.content` (figures, inline images) to open the
+     full-size view in the lightbox overlay; click the overlay or press
+     Escape to close. The overlay div + CSS are shipped in the page shell;
+     this just wires the interaction. */
+  document.addEventListener('DOMContentLoaded',function(){
+    var overlay=document.getElementById('lightbox');
+    var lbImg=document.getElementById('lb-img');
+    if(!overlay||!lbImg) return;
+    function open(src,alt){
+      lbImg.src=src;
+      lbImg.alt=alt||'';
+      overlay.classList.add('active');
+      document.body.style.overflow='hidden';
+    }
+    function close(){
+      overlay.classList.remove('active');
+      document.body.style.overflow='';
+      // Drop the src after the fade so memory is freed and the next open
+      // doesn't briefly flash the previous image.
+      setTimeout(function(){ if(!overlay.classList.contains('active')) lbImg.src=''; },300);
+    }
+    document.querySelectorAll('.content img').forEach(function(img){
+      // Skip tiny chrome icons (badges, inline glyphs); only zoom real figures.
+      if(img.closest('.no-zoom')) return;
+      img.style.cursor='zoom-in';
+      img.addEventListener('click',function(e){
+        e.preventDefault();
+        open(img.currentSrc||img.src, img.alt);
+      });
+    });
+    overlay.addEventListener('click',close);
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape' && overlay.classList.contains('active')) close();
+    });
+  });
+
   /* ── TOC floating panel ── */
   (function initTocPanel(){
     var inlineToc=document.querySelector('.content > .toc-nav')
@@ -158,6 +226,10 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
   document.querySelectorAll('.content h4[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3','H4']); });
   document.querySelectorAll('.content h3[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3']); });
   document.querySelectorAll('.content h2[id]').forEach(function(h){ makeCollapsible(h,['H1','H2']); });
+  /* H1 chapter-level fold: applied last so the H1 wrapper contains the
+     already-built nested section-body wrappers. CSS suppresses the
+     chevron on H1 (the user prefers no arrow at this level). */
+  document.querySelectorAll('.content h1[id]').forEach(function(h){ makeCollapsible(h,['H1']); });
 
 
   /* ── Back-to-top FAB ──
@@ -324,7 +396,7 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
          filename if the human title hasn't been indexed yet. */
       var map={
         'operator.html':"The Operator's Cut",
-        'treasury.html':'Treasury & Pool Pots Distribution',
+        'reserves.html':'Treasury & Pool Pots Distribution',
         'pools.html':'The Pools Pot Distribution Gaps',
         'census.html':'The Staking Census'
       };

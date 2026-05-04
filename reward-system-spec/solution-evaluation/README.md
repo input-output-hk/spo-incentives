@@ -13,7 +13,7 @@ The [V2 specification](../README.md) turns each of those problems into a **named
 
 *The question this folder asks: do those pre-existing proposals — written before the diagnostic — actually deliver the milestones V2 names? Partially? Not at all? Or do some of them, by side-effect, regress on a milestone they don't claim to address?*
 
-## Table of Contents
+# Table of Contents
 
 - [1. How this evaluation works](#1-how-this-evaluation-works)
 - [2. The candidates and how to read them](#2-the-candidates-and-how-to-read-them)
@@ -37,7 +37,7 @@ The [V2 specification](../README.md) turns each of those problems into a **named
 - [5. Toward a new proposal](#5-toward-a-new-proposal)
 - [6. References](#6-references)
 
-## 1. How this evaluation works
+# 1. How this evaluation works
 
 Each candidate is taken on its own terms. The method is the same for every CIP:
 
@@ -48,11 +48,11 @@ Each candidate is taken on its own terms. The method is the same for every CIP:
 
 What this evaluation does **not** do: it does not invent new CIPs (a new proposal is in preparation — see [Toward a new proposal](#5-toward-a-new-proposal)); it does not recommend a package or a sequencing across multiple CIPs; it does not advocate for or against any candidate beyond what the structural analysis shows; it does not assume operator behavioural responses where mainnet provides no signal — those claims are flagged as Blind spot rather than treated as predictions.
 
-## 2. The candidates and how to read them
+# 2. The candidates and how to read them
 
 The reward pipeline has **two independent layers**. The four pre-existing CIPs distribute across them:
 
-### 2.1. Stake-cap layer
+## 2.1. Stake-cap layer
 
 Modifies the reward-eligible pool stake $\sigma'$ used inside the SL-D1 reward formula — *upstream* of the operator/member split. The two candidates here propose competing primitives for the same intent: make pledge a binding cap on σ′. → [`pools-distribution/`](pools-distribution/README.md)
 
@@ -61,7 +61,7 @@ Modifies the reward-eligible pool stake $\sigma'$ used inside the SL-D1 reward f
 | [**CIP-0050**](pools-distribution/cip-0050.md) — Pledge Leverage-Based Staking Rewards | Pledge-leverage cap `L` (single scalar) | At L=100, the median retail pool (π = 0.07 %) is clipped to **~7 % of V1 reward** | [CIP-0050](https://cips.cardano.org/cip/CIP-0050) · PR [#242](https://github.com/cardano-foundation/CIPs/pull/242), [#1042](https://github.com/cardano-foundation/CIPs/pull/1042) |
 | [**CIP-0037**](pools-distribution/cip-0037.md) — Dynamic Saturation Based on Pledge | Pledge-linked saturation curve, with 20 % floor + slope + ceiling (three anchors) | At reference parameters, Healthy-tier pools at the median pledge ratio lose **10–64 %** of reward; Large-healthy / Saturated lose **73–82 %** | [CIP-0037](https://cips.cardano.org/cip/CIP-0037) · PR [#163](https://github.com/cardano-foundation/CIPs/pull/163) |
 
-### 2.2. Fee layer
+## 2.2. Fee layer
 
 Modifies the operator/member split *after* the per-pool reward has been computed. The reward envelope itself is untouched. → [`operator-delegator/`](operator-delegator/README.md)
 
@@ -72,9 +72,9 @@ Modifies the operator/member split *after* the per-pool reward has been computed
 
 CIP-0082 stages 3–4 are pool-count expansions — i.e. `k` raises. The mechanical analysis of *what raising `k` actually does to the operator/delegator split, while holding the reward formula fixed* is a sub-document of the CIP-0082 evaluation: → [`operator-delegator/k-parameter.md`](operator-delegator/k-parameter.md). It backs the verdict on CIP-0082's stages 3–4.
 
-## 3. Cross-CIP analysis
+# 3. Cross-CIP analysis
 
-### 3.1. The bundle reduces to two effective candidates
+## 3.1. The bundle reduces to two effective candidates
 
 The four pre-existing CIPs are not four independent design decisions. Once each candidate's primitive is read against the others, two structural relations collapse the bundle:
 
@@ -90,7 +90,7 @@ Net, **governance is choosing between two effective candidates**:
 
 The Coverage matrix below preserves all four CIPs as distinct columns — the granularity is still useful when reading specific milestones, especially because CIP-0082's stages behave very differently from each other — but the headline is that the design space is two-dimensional, not four.
 
-### 3.2. Coverage — Microeconomics
+## 3.2. Coverage — Microeconomics
 
 V2's [Microeconomics chapter](../README.md#3-microeconomics-participant-incentives-and-market-structure) names four milestones — **Operator Viability**, **Pledge**, **Delegator Yield**, **Deconcentration** — each broken into sub-aspects that the specification treats as separately addressable. Below, each milestone is mapped onto its sub-aspects, and each cell records what a candidate does at that level of granularity. Symbols: **●** delivers · **○** partial / indirect · **·** neutral · **▼** regresses on this sub-aspect.
 
@@ -98,7 +98,7 @@ CIP-0082's two distinct phases are kept separate: **stage 2** is the Margin swap
 
 V2's [Macroeconomics milestones](../README.md#4-macroeconomics-a-self-sustaining-and-governable-mechanism) — [Pot Survival](../README.md#41-the-staking-pot-must-survive-reserve-depletion), [Fee Policy](../README.md#42-the-fee-generating-population-must-expand), [Price Robustness](../README.md#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios), [Recalibration Pipeline](../README.md#44-the-mechanism-must-be-governable) — are deliberately omitted from this coverage view: none of the four pre-existing CIPs targets the pre-depletion-vs-post-depletion pot composition, the fee-generating population, or the recalibration cycle, and the price-robustness implications appear in each per-CIP page rather than as a cross-CIP comparison.
 
-#### 3.2.1. Operator Viability
+### 3.2.1. Operator Viability
 
 V2's [Operator Viability milestone](../README.md#31-guarantee-operator-viability-across-the-entire-productive-population) splits into a **structural** sub-milestone (the production-threshold rule the protocol must enforce) and an **economic** sub-milestone (every pool above the production threshold must cover its operational cost).
 
@@ -109,7 +109,7 @@ V2's [Operator Viability milestone](../README.md#31-guarantee-operator-viability
 
 *None of the candidates touches the structural sub-milestone — the production threshold is set by Praos slot mechanics and active stake; no fee-layer parameter or `k`-raise moves it. The economic sub-milestone is where the candidates engage, but every engagement carries a regressive caveat documented in the per-CIP files.*
 
-#### 3.2.2. Pledge
+### 3.2.2. Pledge
 
 V2's [Pledge milestone](../README.md#32-restore-the-notion-of-pledge-among-operators) specifies a single sub-aspect: make pledge a **binding signal** in the reward calculation rather than a small smooth nudge.
 
@@ -119,7 +119,7 @@ V2's [Pledge milestone](../README.md#32-restore-the-notion-of-pledge-among-opera
 
 *Only the stake-cap CIPs target this milestone. Both make pledge binding on the reward-eligible stake σ′; both share a capital-capability bias toward populations that can self-pledge — Custodial-by-extraction stake (~21 % of productive stake) cannot respond. CIP-0037 softens the bottom; CIP-0050 is sharper.*
 
-#### 3.2.3. Delegator Yield
+### 3.2.3. Delegator Yield
 
 V2's [Delegator Yield milestone](../README.md#33-maintain-and-diversify-a-competitive-delegator-yield) splits into three sub-aspects: **base yield competitiveness** (the floor of the delegator return), **rewarding operators who play the game** (yield differentiated by operator effort), and **diversifying the offer** (a delegator should be able to read distinct propositions across pools).
 
@@ -131,7 +131,7 @@ V2's [Delegator Yield milestone](../README.md#33-maintain-and-diversify-a-compet
 
 *CIP-0023 narrows the dispersion delegators see and gives them a cleaner signal across pool sizes. CIP-0082 stage 2 collapses dispersion entirely (same rate everywhere) — which **removes** the fee-based differentiation rather than diversifying it. The stake-cap CIPs introduce a different price-discrimination axis (pledge ratio), which is partial coverage of the "reward those who play the game" sub-aspect.*
 
-#### 3.2.4. Deconcentration
+### 3.2.4. Deconcentration
 
 V2's [Deconcentration milestone](../README.md#34-reduce-the-concentration-effects-that-distort-both-populations) splits into the **operator side** (multi-pool entity concentration), **entity-level awareness in reward distribution** (rewards that account for which entity controls a pool, not just the pool itself), and **differentiated delegation incentives** (titan delegators vs the micro-delegation tail).
 
@@ -143,7 +143,7 @@ V2's [Deconcentration milestone](../README.md#34-reduce-the-concentration-effect
 
 *CIP-0050's revenue-neutral pool-splitting is the sharpest tool for pool-level Deconcentration in the bundle. **None of the candidates addresses entity-level Deconcentration** — the 10 entities holding 1.59 B ₳ via custodial-by-pledge sit above any pool-level cap or floor regardless of the rule. **None addresses the titans-vs-micro-delegators sub-aspect** either — it is a delegator-side incentive question, and no candidate touches the delegator side except through pool-side fee changes.*
 
-### 3.3. The Microeconomics headline
+## 3.3. The Microeconomics headline
 
 The four pre-existing CIPs cover **Pledge** well (stake-cap CIPs deliver the binding-signal sub-aspect), partially **Operator Viability** and **Delegator Yield** (fee CIPs engage the economic and price-discrimination sub-aspects, with regressive caveats), and only the **operator side** of **Deconcentration** (CIP-0050 in particular).
 
@@ -155,7 +155,7 @@ Three Microeconomics sub-aspects are **entirely untouched** by every candidate:
 
 None of the four CIPs was written to target these, because they were drafted before V2 surfaced them as separable problems.
 
-### 3.4. Cross-CIP findings
+## 3.4. Cross-CIP findings
 
 Five mechanical observations stitch the per-CIP analyses into a single cross-CIP readout. Each is grounded in a specific formula property or a specific mainnet measurement; no behavioural prediction is made unless flagged as such.
 
@@ -169,7 +169,7 @@ Five mechanical observations stitch the per-CIP analyses into a single cross-CIP
 
 **F5 — The bonus function `A(ν, π)` is untouched by every candidate.** The cubic suppression of the pledge bonus for sub-half-saturated pools, and the quadratic outer size penalty `ν²` that holds at every pledge ratio, survive intact. The four reforms patch *around* the function rather than *into* it — which is why [the Microeconomics headline](#33-the-microeconomics-headline) identifies sub-aspects no candidate engages.
 
-## 4. Verdict — no-go on the existing bundle
+# 4. Verdict — no-go on the existing bundle
 
 **Bundle no-go on V2.** None of the candidates closes the V2 milestone gap, and the objections are structural — not parameters to tune. Three patterns recur across the five rows below:
 
@@ -189,7 +189,7 @@ Five rows below because CIP-0082's stage 2 and stages 3–4 are evaluated separa
 
 *Each row's Why links to the per-CIP file that backs the claim. The cross-CIP findings these verdicts cite are listed in [Cross-CIP findings](#34-cross-cip-findings) above.*
 
-### 4.1. Stake-cap CIPs (CIP-0050 / CIP-0037)
+## 4.1. Stake-cap CIPs (CIP-0050 / CIP-0037)
 
 Both CIPs target the right intent — binding pledge on σ′ to deliver the [Pledge milestone](../README.md#32-restore-the-notion-of-pledge-among-operators) — but they patch *around* the load-bearing piece of the pledge incentive, not into it.
 
@@ -211,7 +211,7 @@ A second, compounding objection sits on top of the `A` argument: the [capital-ca
 
 Per-CIP detail: [`cip-0050.md`](pools-distribution/cip-0050.md), [`cip-0037.md`](pools-distribution/cip-0037.md). The full `A`-anatomy walkthrough — heatmaps, scenarios, and the cubic-crush analysis — is in the [stake-cap layer synthesis](pools-distribution/README.md).
 
-### 4.2. CIP-0082
+## 4.2. CIP-0082
 
 The four-stage package fails on two of its stages, but the underlying intuition on stage 2 is *half-right* and worth naming explicitly — because the principled separation it gets wrong is what the new proposal needs to get right.
 
@@ -230,7 +230,7 @@ The mechanical consequence of mixing pricing and viability is [the viability-inv
 
 Stage 1 (floor halving, already shipped) is the only stage that survives this evaluation — and it is also the only stage whose mechanical effect is bounded.
 
-### 4.3. CIP-0023
+## 4.3. CIP-0023
 
 CIP-0023 introduces `minPoolMargin` — mechanically identical to CIP-0082 stage 2's `minPoolRate`, and credited as the conceptual seed by CIP-0082's own author. It inherits both halves of stage 2's intuition: the *correct* half (the flat-fee `minPoolCost` is a regressive instrument that needs relief at the small-pool end) and the *incorrect* half (the relief is engineered as a margin-floor — a pricing parameter — rather than as a viability primitive on the reward-distribution layer).
 
@@ -238,7 +238,7 @@ The principled critique in [the verdict on CIP-0082](#42-cip-0082) applies in fu
 
 No independent verdict is needed: if Stage 2 is a no-go, CIP-0023 is too — same conceptual error (pricing-as-viability), less mechanism.
 
-### 4.4. Sub-aspects untouched by the bundle
+## 4.4. Sub-aspects untouched by the bundle
 
 Even setting the regressions aside, the bundle is **structurally incomplete against V2** — see [the Microeconomics headline](#33-the-microeconomics-headline). Three Microeconomics sub-aspects are entirely uncovered:
 
@@ -248,7 +248,7 @@ Even setting the regressions aside, the bundle is **structurally incomplete agai
 
 The four pre-existing CIPs were drafted before V2 surfaced these as separable problems, so this gap is not a failure of the candidates — it is a constraint on what the bundle can deliver at all.
 
-### 4.5. Cumulative read
+## 4.5. Cumulative read
 
 The four pre-existing CIPs each respond to a partial framing of the problem. Treated as a package, **they do not close the V2 milestone set**, and the pieces that do engage individual milestones do so through mechanisms that regress on milestones they do not target. The bundle is not a viable path to V2 as it stands.
 
@@ -260,13 +260,13 @@ This is not a rejection of the underlying intents. CIP-0050 and CIP-0037 capture
 
 The design space therefore needs a fresh proposal that respects three separations: pricing free-market levers stay flexible; the viability backstop lives on the reward-distribution layer; and pool-count expansion is gated on a stake-cap precondition. See [Toward a new proposal](#5-toward-a-new-proposal).
 
-## 5. Toward a new proposal
+# 5. Toward a new proposal
 
 The structural caveats surfaced by [the Verdict above](#4-verdict-no-go-on-the-existing-bundle) — combined with the V2 milestones the existing bundle does not close ([Pot Survival](../README.md#41-the-staking-pot-must-survive-reserve-depletion), [Fee Policy](../README.md#42-the-fee-generating-population-must-expand), the entity-level gap inside [Deconcentration](../README.md#34-reduce-the-concentration-effects-that-distort-both-populations), and the untouched bonus function `A(ν, π)`) — motivate a new proposal currently in preparation.
 
 > *Draft in preparation. This section will be expanded with a summary and linked to the dedicated proposal page once the draft is ready for review.*
 
-## 6. References
+# 6. References
 
 - **V2 specification:** [`../README.md`](../README.md) — Microeconomics & Macroeconomics milestones, evaluation framework.
 - **Mainnet diagnostic:** [`../diagnostic/README.md`](../diagnostic/README.md).
