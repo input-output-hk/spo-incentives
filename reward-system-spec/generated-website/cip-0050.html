@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777901333">
+<link rel="stylesheet" href="assets/site.css?v=1777908112">
 
 
 </head>
@@ -639,7 +639,7 @@ window.MathJax = {
 </table>
 <p>For $L = 100$: the new cap binds whenever the pool's <strong>within-pool pledge ratio</strong> $\pi$ falls below <strong>1 %</strong>. Above 1 %, CIP-0050 is invisible; at or below 1 %, the effective saturation level $\nu'$ is clipped to $L \cdot \pi \cdot \nu$ and the reward shrinks accordingly. <em>The compliance condition reduces to a direct threshold on the pledge ratio.</em></p>
 <p><strong>Visualising the three caps — which one wins, for the median retail pool.</strong></p>
-<figure class="md-figure"><img alt="Which cap binds — median retail pool" src="solution-evaluation/pools-distribution/figures/cip0050_01_three_caps.png"></figure>
+<figure class="md-figure"><img alt="Which cap binds — median retail pool" src="solution-evaluation/pools-distribution/figures/cip0050_01_three_caps.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">C50.2.1</span></span><span class="figcaption-body">Three competing caps for the median retail pool ($\sigma = 15$ M, $p = 10.5$ k): the new pledge-leverage cap $L \cdot p = 1.05$ M ADA wins the min, slicing the reward-eligible stake to 7 % of the pool's actual size.</span></figcaption></figure>
 <p><em>Reading.</em> σ' = min of the three bars = <strong>1.05 M ₳</strong> (the third cap, $L \cdot p$). The new pledge cap slices the pool's reward-eligible stake down to 7 % of its actual size. This is the mechanical signature of CIP-0050: when the median mainnet pool is evaluated against the three caps, the new pledge cap is dramatically smaller than the other two, and it wins the min.</p>
 <p><strong>Design surface.</strong></p>
 <table>
@@ -805,7 +805,7 @@ window.MathJax = {
 </table>
 <p><strong>The core consequence.</strong> For a given $L$, the reform partitions the pool population by a single threshold on the <strong>within-pool pledge ratio</strong> $\pi$: at or above $1/L$, CIP-0050 is inactive; below it, the effective saturation level $\nu'$ is clipped to $L \cdot \pi \cdot \nu$ and the pool reward scales with the clip ratio $\nu'/\nu = L \cdot \pi$. Scenarios A and C both illustrate "cap does not bind" but for different reasons — A is compliant on pledge ratio; C is bounded by V1 saturation before the pledge cap can bite.</p>
 <p><strong>The three scenarios side by side.</strong></p>
-<figure class="md-figure"><img alt="Pool reward preserved — three scenarios" src="solution-evaluation/pools-distribution/figures/cip0050_03_scenarios.png"></figure>
+<figure class="md-figure"><img alt="Pool reward preserved — three scenarios" src="solution-evaluation/pools-distribution/figures/cip0050_03_scenarios.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">C50.2.2</span></span><span class="figcaption-body">Reward fraction preserved across the three scenarios at $L = 100$: compliant (A) and saturated (C) pools keep 100 %; the zero-pledge median retail pool (B) drops to ~7 % — a binary line at $\pi = 1/L$.</span></figcaption></figure>
 <p><em>Reading.</em> The two compliant pools (A and C) see zero change. The median retail pool (B) — which is where 78 % of staked ADA sits per POL.O2.F1 — is cut to 7 %. The reform draws a <strong>binary line</strong> on the pledge-ratio axis at $1/L$: above it, invisible; below it, severe.</p>
 <h3 id="23-how-much-pledge-does-an-operator-need">2.3. How much pledge does an operator need?</h3>
 <p>For any pool with stake $\sigma$, the minimum pledge to escape clipping at $L = 100$ is:</p>
@@ -868,14 +868,14 @@ window.MathJax = {
 <p><strong>Reading the table.</strong> At $L = 100$, a Healthy-tier pool needs <strong>150 k ADA</strong> (≈ $37 k USD at \$0.25/ADA) to escape clipping. A Saturated-tier pool needs <strong>770 k ADA</strong> (≈ &#92;$192 k USD). At the tighter $L = 10$ the CIP considers, the pledge requirement is <strong>10× higher</strong> — a Healthy pool would need 1.5 M ADA (≈ &#92;$375 k USD).</p>
 <h3 id="24-visualising-the-cap-the-pledge-cliff-at-the-1l-threshold">2.4. Visualising the σ' cap — the "pledge cliff" at the 1/L threshold</h3>
 <p><strong>How the σ' is computed — the three-way min.</strong></p>
-<figure class="md-figure"><img alt="σ' three-way-min decision" src="solution-evaluation/pools-distribution/figures/cip0050_09_sigma_prime_decision.png"></figure>
+<figure class="md-figure"><img alt="σ' three-way-min decision" src="solution-evaluation/pools-distribution/figures/cip0050_09_sigma_prime_decision.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">C50.2.3</span></span><span class="figcaption-body">Decision flow for the three-way min computing $\sigma'$: each pool falls into one of three regimes — Clipped (pledge cap binds), Unaffected (actual stake binds), or V1 saturation ($1/k$ binds, CIP-0050 is a no-op).</span></figcaption></figure>
 <p><em>Reading the flow.</em> Each pool's effective stake σ' is the smallest of three caps. Which cap binds partitions the pool population into three regimes: <strong>Clipped</strong> (new pledge-leverage cap binds — pool reward reduced to V1 × L·p/σ), <strong>Unaffected</strong> (actual stake binds — full V1 reward), <strong>V1 saturation</strong> (the legacy 1/k cap still binds, CIP-0050 is a no-op for these pools).</p>
 <p><strong>Reward preserved vs pledge ratio — the cliff shape at different L values.</strong></p>
-<figure class="md-figure"><img alt="Reward multiplier curve" src="solution-evaluation/pools-distribution/figures/cip0050_02_reward_curve.png"></figure>
+<figure class="md-figure"><img alt="Reward multiplier curve" src="solution-evaluation/pools-distribution/figures/cip0050_02_reward_curve.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">C50.2.4</span></span><span class="figcaption-body">Reward fraction preserved as a function of within-pool pledge ratio $\pi$ for four leverage values: linear ramp up to the cliff at $\pi = 1/L$, flat at 100 % above. Median-pool marker at $\pi = 0.07\,\%$ falls in the clipped regime for every $L \geq 10$.</span></figcaption></figure>
 <p><em>Four curves shown: </em><em>L = 1 000</em><em> (near-inactive — cliff at 0.1 %), </em><em>L = 100</em><em> (CIP sweet-spot high end — cliff at 1 %), </em><em>L = 25</em><em>, </em><em>L = 10</em><em> (CIP sweet-spot low end — cliff at 10 %). Higher L = earlier cliff = less aggressive clipping. All curves are linear up to the cliff, then flat at 100 %. The median mainnet pool at ρ = 0.07 % (POL.O2.F1) is explicitly marked on the L=100 curve — 7 % of V1 reward preserved.</em></p>
 <p><strong>Where the mainnet stake sits today relative to the cliff.</strong> The stake-weighted-median retail pledge ratio is <strong>0.07 %</strong> (POL.O2.F1). That is marked on the X axis above and falls in the clipped regime at every L ≥ 10. At the CIP's recommended $L = 100$, the median pool preserves only 7 % of its V1 reward.</p>
 <p><strong>The ramp, seen from the median mainnet pool.</strong></p>
-<figure class="md-figure"><img alt="Ramp impact on median pool" src="solution-evaluation/pools-distribution/figures/cip0050_08_ramp_impact.png"></figure>
+<figure class="md-figure"><img alt="Ramp impact on median pool" src="solution-evaluation/pools-distribution/figures/cip0050_08_ramp_impact.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">C50.2.5</span></span><span class="figcaption-body">Ramp impact on the median retail pool ($\pi = 0.07\,\%$): reward preserved drops from ~100 % at activation ($L=10\,000$) to ~7 % at the long-run target ($L=100$) and ~1.75 % at $L=25$.</span></figcaption></figure>
 <p><em>Reading.</em> Each step of the CIP's staged ramp compresses the median pool's reward by roughly an order of magnitude. The "activation" step ($L = 10\,000$) is designed to be a no-op — only pools with pledge ratio below 0.01 % are affected. At $L = 1\,000$ the median pool starts to feel the clip (~70 % preserved). At $L = 100$ (the CIP's long-run target) the median pool is reduced to 7 %. At the optional $L = 25$ step it falls to ~1.75 %.</p>
 <p><strong>Summary table for precision:</strong></p>
 <table>
@@ -1000,7 +1000,7 @@ window.MathJax = {
 </ul>
 <p>The reform's <strong>signal to the network</strong> is: <em>"to operate a pool that captures delegation, you must prove 1 % of the pool's stake in personal capital"</em>. That signal is clean in principle — it is exactly the pledge-as-binding-commitment V2 §3.2 asks for — but it <strong>selects for the operator's capital capability</strong>, which does not correlate with operator quality or network contribution (see §3.2).</p>
 <p><strong>Minimum pledge to escape clipping, by tier — a visual ladder.</strong></p>
-<figure class="md-figure"><img alt="Minimum pledge requirements by tier" src="solution-evaluation/pools-distribution/figures/cip0050_04_pledge_requirements.png"></figure>
+<figure class="md-figure"><img alt="Minimum pledge requirements by tier" src="solution-evaluation/pools-distribution/figures/cip0050_04_pledge_requirements.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">C50.2.6</span></span><span class="figcaption-body">Minimum pledge needed per tier to escape clipping: a Healthy pool requires 150 k ADA at $L=100$ and 1.5 M ADA at $L=10$ — linear in pool stake and in $1/L$.</span></figcaption></figure>
 <p><em>Two bars per tier (orange = L=100, red = L=10). At L = 100, a Healthy-tier pool operator needs 150 k ₳ (~$37 k USD at \$0.25/ADA) of self-pledge. At L = 10, the same operator needs 1.5 M ₳ (~&#92;$375 k USD). The capital threshold scales </em><em>linearly with pool stake</em><em> (at fixed L) and </em><em>linearly with 1/L</em><em> (at fixed stake) — a quadratic compounding across the two axes as the ramp tightens.</em></p>
 <p><strong>The pool-size sweep at median pledge.</strong> At the stake-weighted-median pledge ratio of 0.07 %, the fraction of reward preserved is the <em>same</em> for every pool size (7 %) — but the absolute stake clipped scales with σ:</p>
 <table>
@@ -1097,7 +1097,7 @@ window.MathJax = {
 </table>
 <p>Only options 1 and 4 are accessible to every operator. Options 2 and 3 depend respectively on having capital to lock and on being willing to shrink.</p>
 <p><strong>MPO fleet example — the revenue-neutrality of pool-splitting (S1.F2 in action).</strong> Consider an operator with 1 M ₳ of pledge capital and a fleet of delegation-attracting pools. Under V1 vs CIP-0050 at $L = 100$:</p>
-<figure class="md-figure"><img alt="MPO fleet capacity vs pool count" src="solution-evaluation/pools-distribution/figures/cip0050_05_mpo_fleet.png"></figure>
+<figure class="md-figure"><img alt="MPO fleet capacity vs pool count" src="solution-evaluation/pools-distribution/figures/cip0050_05_mpo_fleet.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">C50.2.7</span></span><span class="figcaption-body">Fleet reward-eligible capacity vs pool count for an operator with 1 M ADA pledge: capacity plateaus at $L \cdot P$ = 100 M ADA once $L \cdot p < 1/k$, making pool-splitting revenue-neutral.</span></figcaption></figure>
 <p><em>Reading.</em> At $L = 100$ with 1 M ADA pledge, the fleet-wide reward-eligible cap is $L \cdot P = 100$ M ADA. Below 4 pools, the pools hit the V1 saturation cap ($1/k \approx 77$ M) before the pledge-leverage cap binds — so the fleet capacity is bounded by V1 saturation at ~77 M ADA. From 4 pools onward, $L \cdot p < 1/k$ per pool so the pledge-leverage cap binds and fleet capacity plateaus at exactly $L \cdot P$. <strong>The MPO fleet-expansion reward advantage disappears</strong>: splitting 1 M of pledge across 100 pools gives the same aggregate reward envelope as across 4 pools.</p>
 <table>
 <thead>
@@ -1149,7 +1149,7 @@ window.MathJax = {
 </table>
 <p>The corrected 2-pool row: with 500 k pledge per pool, $L \cdot p = 50$ M, which is below $1/k \approx 77$ M, so $L \cdot p$ binds at 50 M per pool and the fleet cap is 100 M (not 77 M). The chart above reflects the binding-cap logic: the two-pool case sits at 77 M only if pool σ ≤ 50 M each (reaching the V1 cap before the pledge cap). This nuance tightens the theorem but doesn't change the direction: <strong>above the threshold where $L \cdot p < 1/k$, fleet capacity = $L \cdot P$ constant</strong>.</p>
 <h3 id="27-operator-decision-tree-the-four-response-paths">2.7. Operator decision tree — the four response paths</h3>
-<figure class="md-figure"><img alt="Operator decision tree under CIP-0050" src="solution-evaluation/pools-distribution/figures/cip0050_10_operator_decision_tree.png"></figure>
+<figure class="md-figure"><img alt="Operator decision tree under CIP-0050" src="solution-evaluation/pools-distribution/figures/cip0050_10_operator_decision_tree.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">C50.2.8</span></span><span class="figcaption-body">Four response paths an operator faces under the new cap (accept the cut, raise pledge, shrink, exit), gated by the question "do you have 1/L of pool stake in liquid capital to lock?".</span></figcaption></figure>
 <p><em>Reading the tree.</em> Options 1 and 4 are available to every operator; options 2 and 3 require specific conditions the majority of the mainnet retail population does not satisfy. The <strong>central question</strong> CIP-0050 poses to each operator is at the first decision node: "do you have 1/L of your pool's stake in liquid capital willing to lock it?". The diagnostic answers — for 78 % of stake, and for 42 of 48 saturation-scale MPOs — no, by revealed preference.</p>
 <h3 id="28-the-delegator-perspective-what-a-10-k-delegator-sees">2.8. The delegator perspective — what a 10 k delegator sees</h3>
 <p>A delegator holding 10 000 ₳ in a pool that gets clipped experiences the cut as a <strong>per-ADA ROS reduction</strong>. The net ROS formula under unchanged fee-layer parameters is approximately:</p>
@@ -1199,7 +1199,7 @@ window.MathJax = {
 </table>
 <p>A delegator in Scenario B — a typical retail pool on mainnet today — would see their <strong>yield drop from ~227 ₳/yr to ~16 ₳/yr</strong> per 10 k ADA staked. On 10 k ADA over a year, that is the difference between <strong>&#92;$56 vs &#92;$4</strong> at &#92;$0.25/ADA. At this level of compression, delegators have strong incentive to re-delegate — but per OPE.O7.F1, the observed delegator response to yield signals is not reliable, so whether the re-delegation actually occurs is the empirical open question (see §3.3).</p>
 <p><strong>Delegator yield on 10 000 ADA — the three scenarios.</strong></p>
-<figure class="md-figure"><img alt="Delegator yield on 10k ADA" src="solution-evaluation/pools-distribution/figures/cip0050_07_delegator_yield.png"></figure>
+<figure class="md-figure"><img alt="Delegator yield on 10k ADA" src="solution-evaluation/pools-distribution/figures/cip0050_07_delegator_yield.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">C50.2.9</span></span><span class="figcaption-body">Annual yield on a 10 000 ADA stake across the three scenarios: compliant pools preserve ~227 ADA/yr; the zero-pledge median pool collapses to ~16 ADA/yr (a ~93% cut).</span></figcaption></figure>
 <p><em>Reading.</em> Compliant pools (A, C) preserve the V1 yield. The median retail pool (B) — where 78 % of stake sits — collapses the delegator's yield by <strong>~93 %</strong>. A 10 k delegator earning ~&#92;$56/yr (V1) earns ~&#92;$4/yr (B) at &#92;$0.25/ADA. The compression is severe enough that a yield-responsive delegator would move; the empirical question (OPE.O7.F1) is whether delegators <em>are</em> yield-responsive in the data.</p>
 <p><strong>Delegator-side optionality summary.</strong></p>
 <ul>
@@ -1247,7 +1247,7 @@ window.MathJax = {
 <p><strong>The ramp's implicit assumption.</strong> Each step between stages gives operators time to adjust their pledge upward. The reform rests on the assumption that this adjustment occurs <em>before</em> the next step — otherwise the system moves through successive regressive states. Whether the adjustment actually happens is the empirical question analysed in §3.2 of this file.</p>
 <h3 id="210-network-wide-effect-at-l-100-who-is-clipped-who-is-not">2.10. Network-wide effect at L = 100 — who is clipped, who is not</h3>
 <p><strong>Stake-weighted partition of the 21.57 B ₳ productive mainnet (operator-delegator §4.3.3 + POL.O2.F1):</strong></p>
-<figure class="md-figure"><img alt="Network-wide partition under CIP-0050 at L=100" src="solution-evaluation/pools-distribution/figures/cip0050_06_network_partition.png"></figure>
+<figure class="md-figure"><img alt="Network-wide partition under CIP-0050 at L=100" src="solution-evaluation/pools-distribution/figures/cip0050_06_network_partition.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">C50.2.10</span></span><span class="figcaption-body">Stake-weighted partition of the 21.57 B ADA productive mainnet at $L = 100$: ~18 B ADA (84 %) sits in pools that would be clipped or collapsed.</span></figcaption></figure>
 <p><em>Colour encoding: </em><em>red = clipped</em><em>, </em><em>green = unaffected</em><em>, </em><em>orange = mixed</em><em>. The three leftmost segments are custodial (4.55 B ₳ total, 21.1 % of productive); the two rightmost are retail (17.02 B ₳, 78.9 %). The annotation surfaces the headline: ~18 B ADA — 84 % of productive stake — sits in pools where CIP-0050 at L=100 would clip or collapse.</em></p>
 <table>
 <thead>
@@ -1393,6 +1393,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777901333"></script>
+<script src="assets/site.js?v=1777908112"></script>
 </body>
 </html>

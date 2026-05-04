@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777901333">
+<link rel="stylesheet" href="assets/site.css?v=1777908112">
 
 
 </head>
@@ -615,7 +615,7 @@ window.MathJax = {
 </ul>
 <p>The reward-eligible stake becomes $\sigma' = \min(\sigma, \text{sat}(p))$; the reward curve then applies to $\sigma'$: $\hat f' = \bar p \cdot P_{\max} \cdot E(\nu', \pi)$ with $\nu' = \sigma' / z_0$ and $\pi = s/\sigma$ (the pledge ratio is unchanged by the rule). The operator/member split is unchanged.</p>
 <p><strong>Three regimes fall directly from the clamp.</strong></p>
-<figure class="md-figure"><img alt="CIP-0037 saturation curve — three regimes" src="solution-evaluation/pools-distribution/figures/cip0037_01_formula_regimes.png"></figure>
+<figure class="md-figure"><img alt="CIP-0037 saturation curve — three regimes" src="solution-evaluation/pools-distribution/figures/cip0037_01_formula_regimes.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">C37.2.1</span></span><span class="figcaption-body">CIP-0037 saturation curve at reference parameters: floor at 13.49 M ADA (20 % of $z_0$) below 108 k pledge, linear slope through the mid-range, ceiling at 67.44 M ADA above ~540 k pledge.</span></figcaption></figure>
 <table>
 <thead>
 <tr>
@@ -649,7 +649,7 @@ window.MathJax = {
 <li><strong>CIP-0037</strong> effective cap: $\text{clamp}(\ell \cdot p, e \cdot \text{orig\_sat}, \text{orig\_sat})$ — linear in pledge with slope $\ell$, V1 ceiling, <strong>floor at</strong> $e \cdot \text{orig\_sat}$.</li>
 </ul>
 <p>The slope is identical. Reference leverage differs only by convention ($\ell = 125$ vs $L = 100$). The <strong>sole structural difference</strong> is the floor:</p>
-<figure class="md-figure"><img alt="CIP-0037 vs CIP-0050 — same primitive + floor" src="solution-evaluation/pools-distribution/figures/cip0037_02_vs_cip0050.png"></figure>
+<figure class="md-figure"><img alt="CIP-0037 vs CIP-0050 — same primitive + floor" src="solution-evaluation/pools-distribution/figures/cip0037_02_vs_cip0050.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">C37.2.2</span></span><span class="figcaption-body">Side-by-side of CIP-0037 vs CIP-0050: at matched leverage ($\ell = L = 125$, panel b), the 20 % floor is the sole structural difference — the slope and ceiling are identical.</span></figcaption></figure>
 <p>Panel (a) uses each CIP's reference leverage (ℓ=125 for CIP-0037, L=100 for CIP-0050) — the gap conflates the 25 % leverage difference with the floor. Panel (b) matches leverage at $\ell = L = 125$ to <strong>isolate the floor as the sole structural difference</strong>. Reading this correctly reframes the two proposals: <em>CIP-0037 is CIP-0050 plus a floor.</em> Every S1 / S2 / S3 finding below carries across one-for-one, modulated by whether the floor binds in the regime considered.</p>
 <p><strong>Design surface.</strong></p>
 <table>
@@ -1113,6 +1113,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777901333"></script>
+<script src="assets/site.js?v=1777908112"></script>
 </body>
 </html>

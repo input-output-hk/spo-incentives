@@ -65,6 +65,8 @@ Reference leverages differ by convention ($\ell = 125$ vs $L = 100$), not by des
 
 ![CIP-0037 vs CIP-0050 — same primitive + floor](figures/cip0037_02_vs_cip0050.png)
 
+*STK.1.1 — CIP-0037 vs CIP-0050 at matched leverage ($\ell = L = 125$, panel b): the two are the same linear-in-pledge primitive capped at $\text{orig\_sat}$; the only structural difference is CIP-0037's **20 % floor** at zero pledge.*
+
 Panel (b) matches leverage at $\ell = L = 125$ to isolate the floor as the sole structural difference. **CIP-0037 is CIP-0050 plus a floor** — both target V2 §3.2 pledge-as-signal and §3.4 concentration via the same mechanism; CIP-0037 softens the low-pledge edge at a three-scalar governance cost instead of a one-scalar one.
 
 ## 2. Why a new instrument when V1 already has a pledge lever?
@@ -98,6 +100,8 @@ Raising `a₀` shifts more weight from the base term ($\lambda_{\text{size}}\nu$
 
 ![V1 levers vs CIP-0050 / CIP-0037 — Healthy pool](figures/cip_levers_01_smooth_vs_hard.png)
 
+*STK.2.1 — V1 levers vs σ′-clipping CIPs on a Healthy pool: raising $a_0$ from 0.3 → 3.0 cuts zero-pledge reward smoothly to **32 %**; the CIPs leave $a_0$ alone but cliff-clip $\sigma'$ at the pledge threshold, hitting the structurally larger base term.*
+
 Panel (a). For a Healthy pool ($\sigma = 15$ M, $\nu \approx 0.222$): raising $a_0$ from `0.3` → `1.0` drops the zero-pledge reward to **65 %** of baseline; raising to `3.0` drops it to **32 %**. The bonus barely recovers across the full pledge range — even at 600 k of self-pledge the higher-`a₀` curves stay below baseline. **The `a₀` lever cannot make pledge "matter more" without first making low-pledge pools earn less.**
 
 Panel (b). CIP-0050 and CIP-0037 don't touch $(λ_{\min}, λ_{\max})$. They clip $\sigma'$ before the reward formula runs, so the penalty hits the **base term** $λ_{\min} \cdot \nu'$ — which is structurally *much larger* than $λ_{\max} \cdot A$ at any reasonable pool size. That is why their cliff is steep where `a₀` tweaks barely move the needle.
@@ -109,6 +113,8 @@ Both `a₀` (rebalancing) and CIP-0050 / CIP-0037 (clipping) operate **around** 
 #### 2.2.1. Anatomy of the function — before any numbers
 
 ![Structural anatomy of A(ν, π) — heatmap on the unit square + non-monotonicity in π for ν < 0.5](figures/cip_levers_04_A_structural_anatomy.png)
+
+*STK.2.2 — Structure of $A(\nu, \pi)$ on the unit square: the bonus is non-monotone in $\pi$ for any $\nu < 0.5$, with an interior maximum at $\pi^{*} = 1/[2(1-\nu)]$ — sub-half-saturated operators earn **less** by fully self-pledging.*
 
 **(i) The factorisation: pure size factor × pledge-intensity factor.**
 
@@ -222,6 +228,8 @@ Furthermore — and this is pathology (iv) made tangible — Bob is on the *wron
 
 ![The pledge bonus paradox — A(ν, π) at full self-pledge](figures/cip_levers_02_A_anatomy.png)
 
+*STK.2.3 — Full-self-pledge bonus across three operators: Alice (Saturated) earns **37 595×** more bonus than Bob (Sub-reliable) for the same maximum commitment, and all three earn pledge yields below the **2.3 %/yr** passive-delegation alternative.*
+
 Panel (a) is Scenario C as a bar chart at log scale (the disparity is too large for linear axes). Panel (b) re-expresses the same disparity as a "bonus yield" — bonus per ADA of pledge per year — and overlays the passive-delegation yield (~2.3 %/yr from POL.O2.F2) the operator gives up by locking that pledge: Bob's pledge yields **0.0007 %/yr** in bonus, Charles's **0.038 %/yr**, Alice's **0.77 %/yr**. All three are below passive delegation, but Bob is by far the most penalised.
 
 #### 2.2.3. The cubic ν³ — visualised
@@ -229,6 +237,8 @@ Panel (a) is Scenario C as a bar chart at log scale (the disparity is too large 
 Combine the corner-collapse from (ii) with the non-monotone pathology from (iv): the operator who gives the *strongest possible signal* (full self-pledge, $\pi = 1$) is paid by $\nu^3$ — a destruction operator on sub-unit numbers, layered on top of the permanent $\nu^2$ size penalty.
 
 ![The cubic crush — why ν³ destroys small-pool pledge](figures/cip_levers_03_cubic_crush.png)
+
+*STK.2.4 — The cubic $\nu^3$ that emerges at $\pi = 1$ vs the linear "fair share" $\nu$: at Bob's $\nu = 0.03$, the kernel destroys a factor of **~1 137×** of the bonus he would otherwise earn.*
 
 Panel (a) shows `ν³` (red) versus quadratic `ν²` (orange) and linear `ν` (green, "fair share"). On linear axes, the cubic curve hugs zero until `ν ≈ 0.5` and then leaps to 1 at full saturation — so anyone running a pool below half-saturation is in the flat region where pledge barely matters.
 

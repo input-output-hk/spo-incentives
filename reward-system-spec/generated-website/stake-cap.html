@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777901333">
+<link rel="stylesheet" href="assets/site.css?v=1777908112">
 
 
 </head>
@@ -385,7 +385,7 @@ window.MathJax = {
 <li><strong>CIP-0037</strong> clamps the stake cap to $\ell \cdot p$ but places a <strong>floor</strong> at $e \cdot \text{orig\_sat}$ — at zero pledge, $\sigma' = e \cdot \text{orig\_sat} \approx 13.49$ M ₳ at reference.</li>
 </ul>
 <p>Reference leverages differ by convention ($\ell = 125$ vs $L = 100$), not by design intent.</p>
-<figure class="md-figure"><img alt="CIP-0037 vs CIP-0050 — same primitive + floor" src="solution-evaluation/pools-distribution/figures/cip0037_02_vs_cip0050.png"></figure>
+<figure class="md-figure"><img alt="CIP-0037 vs CIP-0050 — same primitive + floor" src="solution-evaluation/pools-distribution/figures/cip0037_02_vs_cip0050.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">STK.1.1</span></span><span class="figcaption-body">CIP-0037 vs CIP-0050 at matched leverage ($\ell = L = 125$, panel b): the two are the same linear-in-pledge primitive capped at $\text{orig\_sat}$; the only structural difference is CIP-0037's 20 % floor at zero pledge.</span></figcaption></figure>
 <p>Panel (b) matches leverage at $\ell = L = 125$ to isolate the floor as the sole structural difference. <strong>CIP-0037 is CIP-0050 plus a floor</strong> — both target V2 §3.2 pledge-as-signal and §3.4 concentration via the same mechanism; CIP-0037 softens the low-pledge edge at a three-scalar governance cost instead of a one-scalar one.</p>
 <h2 id="2-why-a-new-instrument-when-v1-already-has-a-pledge-lever">2. Why a new instrument when V1 already has a pledge lever?</h2>
 <p>V1 already exposes a pledge-incentive knob: the <strong>pledge influence factor</strong> $a_0$ (currently <code>0.3</code> on mainnet). It enters the SL-D1 reward envelope as the weight of the pledge-bonus term:</p>
@@ -426,13 +426,13 @@ window.MathJax = {
 <p>The natural question is therefore: <em>why propose CIP-0050 / CIP-0037 instead of just raising <code>a₀</code>?</em> The answer requires looking at three nested layers — the lever's <strong>shape</strong>, the bonus function's <strong>structure</strong>, and what no proposal currently touches.</p>
 <h3 id="21-the-a0-lever-rebalances-it-doesnt-tilt">2.1. The <code>a₀</code> lever rebalances, it doesn't tilt</h3>
 <p>Raising <code>a₀</code> shifts more weight from the base term ($\lambda_{\text{size}}\nu$) onto the bonus term ($\lambda_{\text{pledge}}A$). For a low-pledge pool this <em>reduces</em> the base by more than the bonus can recover — the operator is punished smoothly, not catalysed.</p>
-<figure class="md-figure"><img alt="V1 levers vs CIP-0050 / CIP-0037 — Healthy pool" src="solution-evaluation/pools-distribution/figures/cip_levers_01_smooth_vs_hard.png"></figure>
+<figure class="md-figure"><img alt="V1 levers vs CIP-0050 / CIP-0037 — Healthy pool" src="solution-evaluation/pools-distribution/figures/cip_levers_01_smooth_vs_hard.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">STK.2.1</span></span><span class="figcaption-body">V1 levers vs σ′-clipping CIPs on a Healthy pool: raising $a_0$ from 0.3 → 3.0 cuts zero-pledge reward smoothly to 32 %; the CIPs leave $a_0$ alone but cliff-clip $\sigma'$ at the pledge threshold, hitting the structurally larger base term.</span></figcaption></figure>
 <p>Panel (a). For a Healthy pool ($\sigma = 15$ M, $\nu \approx 0.222$): raising $a_0$ from <code>0.3</code> → <code>1.0</code> drops the zero-pledge reward to <strong>65 %</strong> of baseline; raising to <code>3.0</code> drops it to <strong>32 %</strong>. The bonus barely recovers across the full pledge range — even at 600 k of self-pledge the higher-<code>a₀</code> curves stay below baseline. <strong>The <code>a₀</code> lever cannot make pledge "matter more" without first making low-pledge pools earn less.</strong></p>
 <p>Panel (b). CIP-0050 and CIP-0037 don't touch $(λ_{\min}, λ_{\max})$. They clip $\sigma'$ before the reward formula runs, so the penalty hits the <strong>base term</strong> $λ_{\min} \cdot \nu'$ — which is structurally <em>much larger</em> than $λ_{\max} \cdot A$ at any reasonable pool size. That is why their cliff is steep where <code>a₀</code> tweaks barely move the needle.</p>
 <h3 id="22-the-deeper-bottleneck-a-itself">2.2. The deeper bottleneck — A(ν, π) itself</h3>
 <p>Both <code>a₀</code> (rebalancing) and CIP-0050 / CIP-0037 (clipping) operate <strong>around</strong> the A function. Neither modifies it. So before plugging any numbers in, dissect the function itself: what does it say structurally?</p>
 <h4 id="221-anatomy-of-the-function-before-any-numbers">2.2.1. Anatomy of the function — before any numbers</h4>
-<figure class="md-figure"><img alt="Structural anatomy of A(ν, π) — heatmap on the unit square + non-monotonicity in π for ν &lt; 0.5" src="solution-evaluation/pools-distribution/figures/cip_levers_04_A_structural_anatomy.png"></figure>
+<figure class="md-figure"><img alt="Structural anatomy of A(ν, π) — heatmap on the unit square + non-monotonicity in π for ν &lt; 0.5" src="solution-evaluation/pools-distribution/figures/cip_levers_04_A_structural_anatomy.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">STK.2.2</span></span><span class="figcaption-body">Structure of $A(\nu, \pi)$ on the unit square: the bonus is non-monotone in $\pi$ for any $\nu < 0.5$, with an interior maximum at $\pi^{*} = 1/[2(1-\nu)]$ — sub-half-saturated operators earn less by fully self-pledging.</span></figcaption></figure>
 <p><strong>(i) The factorisation: pure size factor × pledge-intensity factor.</strong></p>
 <p>A admits a clean multiplicative decomposition:</p>
 <p>$$A(\nu, \pi) \;=\; \underbrace{\nu^2}_{\text{size factor}} \;\cdot\; \underbrace{\pi \cdot \bigl[1 - \pi(1-\nu)\bigr]}_{\text{pledge-intensity factor}}$$</p>
@@ -640,11 +640,11 @@ window.MathJax = {
 </table>
 <p>Even at the <em>maximum possible commitment</em>, Alice earns <strong>37 595× more bonus than Bob</strong> — because the cubic $\nu^3$ that emerges at $\pi = 1$ collapses the bonus on pool size, not on the strength of the commitment signal.</p>
 <p>Furthermore — and this is pathology (iv) made tangible — Bob is on the <em>wrong side</em> of the maximum. His optimal pledge ratio is $\pi^* = 1/[2(1-\nu)] = 1/(2 \cdot 0.9703) \approx 0.515$ (about 51 % of his pool, $p^* \approx 1.03$ M ADA). At full self-pledge he earns 14 ₳/yr; at the interior optimum he would earn ~122 ₳/yr — <strong>8.7× more bonus by withholding half his potential pledge</strong>. The formula explicitly incentivises him to <em>under-commit</em>.</p>
-<figure class="md-figure"><img alt="The pledge bonus paradox — A(ν, π) at full self-pledge" src="solution-evaluation/pools-distribution/figures/cip_levers_02_A_anatomy.png"></figure>
+<figure class="md-figure"><img alt="The pledge bonus paradox — A(ν, π) at full self-pledge" src="solution-evaluation/pools-distribution/figures/cip_levers_02_A_anatomy.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">STK.2.3</span></span><span class="figcaption-body">Full-self-pledge bonus across three operators: Alice (Saturated) earns 37 595× more bonus than Bob (Sub-reliable) for the same maximum commitment, and all three earn pledge yields below the 2.3 %/yr passive-delegation alternative.</span></figcaption></figure>
 <p>Panel (a) is Scenario C as a bar chart at log scale (the disparity is too large for linear axes). Panel (b) re-expresses the same disparity as a "bonus yield" — bonus per ADA of pledge per year — and overlays the passive-delegation yield (~2.3 %/yr from POL.O2.F2) the operator gives up by locking that pledge: Bob's pledge yields <strong>0.0007 %/yr</strong> in bonus, Charles's <strong>0.038 %/yr</strong>, Alice's <strong>0.77 %/yr</strong>. All three are below passive delegation, but Bob is by far the most penalised.</p>
 <h4 id="223-the-cubic-3-visualised">2.2.3. The cubic ν³ — visualised</h4>
 <p>Combine the corner-collapse from (ii) with the non-monotone pathology from (iv): the operator who gives the <em>strongest possible signal</em> (full self-pledge, $\pi = 1$) is paid by $\nu^3$ — a destruction operator on sub-unit numbers, layered on top of the permanent $\nu^2$ size penalty.</p>
-<figure class="md-figure"><img alt="The cubic crush — why ν³ destroys small-pool pledge" src="solution-evaluation/pools-distribution/figures/cip_levers_03_cubic_crush.png"></figure>
+<figure class="md-figure"><img alt="The cubic crush — why ν³ destroys small-pool pledge" src="solution-evaluation/pools-distribution/figures/cip_levers_03_cubic_crush.png"><figcaption><span class="figcaption-label"><span class="figcaption-label-kind">Figure</span><span class="figcaption-label-id">STK.2.4</span></span><span class="figcaption-body">The cubic $\nu^3$ that emerges at $\pi = 1$ vs the linear "fair share" $\nu$: at Bob's $\nu = 0.03$, the kernel destroys a factor of ~1 137× of the bonus he would otherwise earn.</span></figcaption></figure>
 <p>Panel (a) shows <code>ν³</code> (red) versus quadratic <code>ν²</code> (orange) and linear <code>ν</code> (green, "fair share"). On linear axes, the cubic curve hugs zero until <code>ν ≈ 0.5</code> and then leaps to 1 at full saturation — so anyone running a pool below half-saturation is in the flat region where pledge barely matters.</p>
 <p>Panel (b) shows the same curves on log axes — the gap between cubic and linear is <strong>multiplicative</strong>, not additive. For Bob's <code>ν = 0.03</code>: the cubic gives <code>2.6 × 10⁻⁵</code>, while a linear A would give <code>0.030</code> — a <strong>1 137× ratio</strong>. That ratio is what the formula is destroying.</p>
 <p>Panel (c) makes the cubic crush tangible in dollars. Bob's 2 M pool, fully self-pledged:</p>
@@ -840,6 +840,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777901333"></script>
+<script src="assets/site.js?v=1777908112"></script>
 </body>
 </html>

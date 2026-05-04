@@ -252,7 +252,14 @@ SYNTHESIS_SOURCE_MAP: dict[str, dict[str, str]] = {
     "1.1": {"code": "TRE", "page": "reserves.html"},
     "1.2": {"code": "POL", "page": "pools.html"},
     "1.3": {"code": "OPE", "page": "operator.html"},
+    # §2 split into four parallel population sections — each renders its own
+    # OBS panel sourced from the Staking Census sub-report. CEN.O# observations
+    # partition naturally: O1-O2 operators, O3-O6 delegators, O7 non-participants,
+    # O8-O12 transaction submitters.
     "2.1": {"code": "CEN", "page": "census.html"},
+    "2.2": {"code": "CEN", "page": "census.html"},
+    "2.3": {"code": "CEN", "page": "census.html"},
+    "2.4": {"code": "CEN", "page": "census.html"},
 }
 
 # MD path (relative to REPO_ROOT) → output HTML filename
@@ -7234,13 +7241,14 @@ _FIGURE_FOLLOWED_BY_CAP_RE = re.compile(
     re.IGNORECASE | re.DOTALL,
 )
 # A figure caption opens either with the canonical ``CODE.X.Y`` form
-# (``TRE.4.4``, ``POL.3.1``, ``DIA.1.2``, ``CEN.2.3``, ``OPE.4.6``) — the
-# absolute, cross-document reference now baked into every Mainnet
-# Diagnostic MD — or with the legacy ``Figure X.Y`` keyword form left
-# over from older drafts. Either matches.
+# (``TRE.4.4``, ``POL.3.1``, ``DIA.1.2``, ``CEN.2.3``, ``OPE.4.6``,
+# ``C50.2.3``, ``C37.2.1``, ``STK.2.4``) — the absolute,
+# cross-document reference now baked into every Mainnet Diagnostic
+# and CIP-evaluation MD — or with the legacy ``Figure X.Y`` keyword
+# form left over from older drafts. Either matches.
 _FIGURE_CAP_RE = re.compile(
     r'^\s*(?:'
-    r'(?:TRE|POL|OPE|CEN|DIA)\.\d+(?:\.\d+)*'
+    r'(?:TRE|POL|OPE|CEN|DIA|C50|C37|C23|C82|STK|FEE|KPM)\.\d+(?:\.\d+)*'
     r'|'
     r'(?:Figure|Fig\.?|Diagram|Chart|Plot|Table)\b'
     r')',
@@ -7278,7 +7286,7 @@ def _build_figcaption(cap_inner: str) -> str:
     # ``Figure X.Y`` keyword form for any orphan that hasn't been
     # remapped.
     canon_match = re.match(
-        r'\s*((?:TRE|POL|OPE|CEN|DIA)\.\d+(?:\.\d+)*)\s*(?:[—–\-]\s*)?',
+        r'\s*((?:TRE|POL|OPE|CEN|DIA|C50|C37|C23|C82|STK|FEE|KPM)\.\d+(?:\.\d+)*)\s*(?:[—–\-]\s*)?',
         peeled,
         re.IGNORECASE,
     )
