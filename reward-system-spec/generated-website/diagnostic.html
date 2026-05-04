@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777899926">
+<link rel="stylesheet" href="assets/site.css?v=1777901333">
 
 
 </head>
@@ -930,76 +930,7 @@ The security model says: <em>the best pool is a balanced pool.</em></p>
 <p><strong>Instead, it weights size more than three to one.</strong> <em>The formula does not counteract the prior; it reinforces it.</em></p>
 <h5 id="12434-the-pledge-bonus-is-inoperative-at-realistic-scale">1.2.4.3.4. The pledge bonus is inoperative at realistic scale</h5>
 <p>The <strong>23% allocated to the pledge component</strong> is the mechanism's <em>entire</em> budget for making commitment matter. Whether the degree of freedom is real or illusory depends on whether this budget produces <strong>detectable economic differences between strategies at the scales operators actually operate</strong>.</p>
-<p>The following tables trace the pledge bonus across <strong>four pool sizes</strong> — from below the production threshold (3M ₳) up to full saturation — for <strong>five allocation strategies</strong> within a pool of fixed total size.</p>
-<p><strong>At 1M ₳ (sub-threshold, ν ≈ 0.013):</strong></p>
-<table>
-<thead>
-<tr>
-<th>Strategy</th>
-<th>Pledge</th>
-<th>Self-delegation</th>
-<th>Pool reward</th>
-<th>Pledge bonus</th>
-<th>Total yield</th>
-<th>Bonus yield on pledge</th>
-<th>Yield uplift</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Hollow</strong> (0/100)</td>
-<td>0</td>
-<td>1M</td>
-<td>310.4 ADA/ep</td>
-<td>—</td>
-<td>2.27%/yr</td>
-<td>—</td>
-<td>baseline</td>
-</tr>
-<tr>
-<td><strong>Healthy delegation</strong> (20/80)</td>
-<td>200K</td>
-<td>800K</td>
-<td>310.6 ADA/ep</td>
-<td>+0.2 ADA/ep</td>
-<td>2.27%/yr</td>
-<td>0.007%/yr</td>
-<td>+0.06%</td>
-</tr>
-<tr>
-<td><strong>Balanced</strong> (50/50)</td>
-<td>500K</td>
-<td>500K</td>
-<td>310.7 ADA/ep</td>
-<td>+0.3 ADA/ep</td>
-<td>2.27%/yr</td>
-<td>0.004%/yr</td>
-<td>+0.10%</td>
-</tr>
-<tr>
-<td><strong>Healthy pledge</strong> (80/20)</td>
-<td>800K</td>
-<td>200K</td>
-<td>310.6 ADA/ep</td>
-<td>+0.2 ADA/ep</td>
-<td>2.27%/yr</td>
-<td>0.002%/yr</td>
-<td>+0.07%</td>
-</tr>
-<tr>
-<td><strong>Private</strong> (100/0)</td>
-<td>1M</td>
-<td>0</td>
-<td>310.4 ADA/ep</td>
-<td>&lt;0.1 ADA/ep</td>
-<td>2.27%/yr</td>
-<td>&lt;0.001%/yr</td>
-<td>&lt;0.01%</td>
-</tr>
-</tbody>
-</table>
-<p>At sub-threshold scale, <strong>the pledge bonus is undetectable</strong>. Every strategy yields <strong>2.27%/yr</strong>. The best bonus — <strong>Balanced</strong>, at <strong>+0.3 ADA per five-day epoch</strong> — is buried so far below block-production variance that <strong>no delegator, and no operator, can observe it</strong>.</p>
-<p>Private is <strong><em>worse</em></strong> than Balanced and Healthy pledge: the concavity of $A(\nu, \pi)$ at low saturation means the bonus peaks around $\pi^* = 1/(2(1-\nu)) \approx 0.51$ and declines beyond. <em>Full commitment already destroys bonus value at this scale.</em></p>
+<p>The following tables trace the pledge bonus across <strong>three pool sizes above the production threshold</strong> — from a small productive pool through full saturation — for <strong>five allocation strategies</strong> within a pool of fixed total size. Pools below the production threshold (3M ₳) are excluded from the analysis: they are noise-dominated and do not represent the population the mechanism is supposed to incentivise.</p>
 <p><strong>At 20M ₳ (ν ≈ 0.26):</strong></p>
 <table>
 <thead>
@@ -1263,16 +1194,11 @@ END SANDBOX -->
 <p>The analysis in <a href="#124-divergence-with-intended-equilibrium">Divergence with intended equilibrium</a> surfaces <strong>three areas</strong> where the current design can evolve. Each corresponds to a different stage of the operator lifecycle, and each requires a distinct — though interconnected — response.</p>
 <h5 id="12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano">1.2.4.4.1. Enforce the production threshold — build a Rocket Pool for Cardano</h5>
 <p>The analysis in <a href="#1241-entry-below-3m-too-committed-to-just-delegate-too-small-to-operate">Entry — below 3M ₳, too committed to just delegate, too small to operate</a> reveals a <strong>structural contradiction</strong>: the protocol allows anyone to register a pool, but the physics of block production imposes a floor (the 95%-block-probability bar at ~3M ADA) below which operation is unviable.</p>
-<p>At epoch 614, <strong>116 sub-threshold pools (&lt; 1M ₳) carry 0.31% of active stake</strong> — they serve <strong>no consensus function</strong>, dilute the pool marketplace, and mislead delegators into pools that cannot produce reliable yield.</p>
+<p>At epoch 614, <strong>2,144 sub-threshold pools (&lt; 3M ₳) carry 2.7% of active stake</strong> — they serve <strong>no consensus function</strong>, dilute the pool marketplace, and mislead delegators into pools that cannot produce reliable yield.</p>
 <p><strong>Step one: make the threshold explicit.</strong> Ethereum's Beacon Chain requires exactly <strong>32 ETH</strong> to activate a validator — an <strong>explicit production threshold</strong> enforced at the protocol level. The design acknowledges that consensus participation has a minimum scale and makes that minimum <strong>legible</strong>.</p>
 <p>Cardano's threshold is <strong>implicit</strong>, emergent from Poisson statistics. Making it explicit — preventing pool registration below a declared minimum active stake — would <strong>eliminate the sub-threshold noise</strong> that the current design tolerates.</p>
-<p>The threshold need not be rigid: it could be a governance parameter ($\sigma_{\min}$), initially calibrated to the structural production boundary (<strong>~1M ₳</strong>), and adjustable as protocol economics evolve. <em>The effect is not to close the game — it is to stop the game from misleading participants about its rules.</em></p>
-<p>Today, Cardano has <strong><em>two</em> implicit thresholds</strong>:</p>
-<ul>
-<li>a <strong>production floor</strong> (~1M ₳, from Poisson statistics — <a href="#12411-the-structural-floor">The structural floor</a>);</li>
-<li>a <strong>viability floor</strong> (~3M ₳, where the fixed cost exceeds expected rewards — <a href="#12412-a-gate-with-no-sign">A gate with no sign</a>).</li>
-</ul>
-<p>The corridor between them is a design problem that the downstream analysis of the intra-pool split (<a href="#13-operator-delegator-distribution">Operator / Delegator Distribution</a>) must resolve. Whether fee-structure reform can collapse these two thresholds into a <strong>single, legible gate</strong> — and what that means for the operator's entry experience — is examined in <a href="#133-problem-induction">Problem Induction</a>.</p>
+<p>The threshold need not be rigid: it could be a governance parameter ($\sigma_{\min}$), initially calibrated to the structural production boundary (<strong>~3M ₳</strong>, the 95%-block-probability bar — <a href="#12411-the-structural-floor">The structural floor</a>), and adjustable as protocol economics evolve. <em>The effect is not to close the game — it is to stop the game from misleading participants about its rules.</em></p>
+<p>The protocol's <code>minPoolCost</code> floor is a separate, fee-policy concern at the intra-pool split layer (<a href="#12412-a-gate-with-no-sign">A gate with no sign</a>). Whether fee-structure reform can keep the operator's entry experience legible once $\sigma_{\min}$ is enforced is examined in <a href="#133-problem-induction">Problem Induction</a>.</p>
 <p><strong>Step two: build a pooling service for the sub-threshold space.</strong> On Ethereum, the explicit 32 ETH threshold created structural demand for a protocol-level solution to sub-threshold participation.</p>
 <p>Rocket Pool fills this gap: a <strong>permissionless, decentralised liquid staking protocol</strong> where an operator bonds as little as <strong>4 ETH</strong> alongside pooled capital from passive stakers, and a smart contract assembles a full 32 ETH validator. The result is <strong>~4,000 independent node operators</strong> and <strong>~800K ETH staked</strong> — participants who would <strong>never have reached the threshold alone</strong> but who contribute meaningfully to Ethereum's consensus decentralisation.</p>
 <p>The parallel suggests a concrete design direction for Cardano: a <strong><em>pool alliance</em> mechanism</strong>, operating at the protocol level or as a standardised smart-contract layer, that lets sub-threshold participants combine operational commitment and capital to collectively cross the production threshold.</p>
@@ -1904,6 +1830,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777899926"></script>
+<script src="assets/site.js?v=1777901333"></script>
 </body>
 </html>

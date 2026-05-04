@@ -694,21 +694,7 @@ Given the inherent asymmetry established in [Delegating is inherently less const
 
 The **23% allocated to the pledge component** is the mechanism's *entire* budget for making commitment matter. Whether the degree of freedom is real or illusory depends on whether this budget produces **detectable economic differences between strategies at the scales operators actually operate**.
 
-The following tables trace the pledge bonus across **four pool sizes** — from below the production threshold (3M ₳) up to full saturation — for **five allocation strategies** within a pool of fixed total size.
-
-**At 1M ₳ (sub-threshold, ν ≈ 0.013):**
-
-| Strategy | Pledge | Self-delegation | Pool reward | Pledge bonus | Total yield | Bonus yield on pledge | Yield uplift |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| **Hollow** (0/100) | 0 | 1M | 310.4 ADA/ep | — | 2.27%/yr | — | baseline |
-| **Healthy delegation** (20/80) | 200K | 800K | 310.6 ADA/ep | +0.2 ADA/ep | 2.27%/yr | 0.007%/yr | +0.06% |
-| **Balanced** (50/50) | 500K | 500K | 310.7 ADA/ep | +0.3 ADA/ep | 2.27%/yr | 0.004%/yr | +0.10% |
-| **Healthy pledge** (80/20) | 800K | 200K | 310.6 ADA/ep | +0.2 ADA/ep | 2.27%/yr | 0.002%/yr | +0.07% |
-| **Private** (100/0) | 1M | 0 | 310.4 ADA/ep | <0.1 ADA/ep | 2.27%/yr | <0.001%/yr | <0.01% |
-
-At sub-threshold scale, **the pledge bonus is undetectable**. Every strategy yields **2.27%/yr**. The best bonus — **Balanced**, at **+0.3 ADA per five-day epoch** — is buried so far below block-production variance that **no delegator, and no operator, can observe it**.
-
-Private is ***worse*** than Balanced and Healthy pledge: the concavity of $A(\nu, \pi)$ at low saturation means the bonus peaks around $\pi^* = 1/(2(1-\nu)) \approx 0.51$ and declines beyond. *Full commitment already destroys bonus value at this scale.*
+The following tables trace the pledge bonus across **three pool sizes above the production threshold** — from a small productive pool through full saturation — for **five allocation strategies** within a pool of fixed total size. Pools below the production threshold (3M ₳) are excluded from the analysis: they are noise-dominated and do not represent the population the mechanism is supposed to incentivise.
 
 **At 20M ₳ (ν ≈ 0.26):**
 
@@ -825,20 +811,15 @@ The analysis in [Divergence with intended equilibrium](#124-divergence-with-inte
 
 The analysis in [Entry — below 3M ₳, too committed to just delegate, too small to operate](#1241-entry-below-3m-too-committed-to-just-delegate-too-small-to-operate) reveals a **structural contradiction**: the protocol allows anyone to register a pool, but the physics of block production imposes a floor (the 95%-block-probability bar at ~3M ADA) below which operation is unviable.
 
-At epoch 614, **116 sub-threshold pools (< 1M ₳) carry 0.31% of active stake** — they serve **no consensus function**, dilute the pool marketplace, and mislead delegators into pools that cannot produce reliable yield.
+At epoch 614, **2,144 sub-threshold pools (< 3M ₳) carry 2.7% of active stake** — they serve **no consensus function**, dilute the pool marketplace, and mislead delegators into pools that cannot produce reliable yield.
 
 **Step one: make the threshold explicit.** Ethereum's Beacon Chain requires exactly **32 ETH** to activate a validator — an **explicit production threshold** enforced at the protocol level. The design acknowledges that consensus participation has a minimum scale and makes that minimum **legible**.
 
 Cardano's threshold is **implicit**, emergent from Poisson statistics. Making it explicit — preventing pool registration below a declared minimum active stake — would **eliminate the sub-threshold noise** that the current design tolerates.
 
-The threshold need not be rigid: it could be a governance parameter ($\sigma_{\min}$), initially calibrated to the structural production boundary (**~1M ₳**), and adjustable as protocol economics evolve. *The effect is not to close the game — it is to stop the game from misleading participants about its rules.*
+The threshold need not be rigid: it could be a governance parameter ($\sigma_{\min}$), initially calibrated to the structural production boundary (**~3M ₳**, the 95%-block-probability bar — [The structural floor](#12411-the-structural-floor)), and adjustable as protocol economics evolve. *The effect is not to close the game — it is to stop the game from misleading participants about its rules.*
 
-Today, Cardano has ***two* implicit thresholds**:
-
-- a **production floor** (~1M ₳, from Poisson statistics — [The structural floor](#12411-the-structural-floor));
-- a **viability floor** (~3M ₳, where the fixed cost exceeds expected rewards — [A gate with no sign](#12412-a-gate-with-no-sign)).
-
-The corridor between them is a design problem that the downstream analysis of the intra-pool split ([Operator / Delegator Distribution](#13-operator-delegator-distribution)) must resolve. Whether fee-structure reform can collapse these two thresholds into a **single, legible gate** — and what that means for the operator's entry experience — is examined in [Problem Induction](#133-problem-induction).
+The protocol's `minPoolCost` floor is a separate, fee-policy concern at the intra-pool split layer ([A gate with no sign](#12412-a-gate-with-no-sign)). Whether fee-structure reform can keep the operator's entry experience legible once $\sigma_{\min}$ is enforced is examined in [Problem Induction](#133-problem-induction).
 
 **Step two: build a pooling service for the sub-threshold space.** On Ethereum, the explicit 32 ETH threshold created structural demand for a protocol-level solution to sub-threshold participation.
 
