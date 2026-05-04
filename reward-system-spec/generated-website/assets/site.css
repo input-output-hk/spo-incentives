@@ -1150,14 +1150,12 @@ h6.section-toggle::before{color:#B7CCF2;opacity:.4}
 .nav-breadcrumb-desc{color:var(--text-muted);font-weight:400;font-style:italic;opacity:.88;letter-spacing:.15px}
 .nav-dd-wrap-light{position:relative}
 .nav-dd-btn-light{background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font:500 11.5px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--text-secondary);padding:8px 13px;transition:all .15s;white-space:nowrap;position:relative}
-/* "CIPs" eyebrow tag — anchored to the top-right of the Solution
-   Evaluation dropdown trigger, mirroring the "FUTURE" stamp on
-   .nav-tab-implementation. The tab itself sits on a white plate
-   against a Cardano-blue navbar; the tag uses Cardano-blue bg +
-   white text so it pops off the white tab. ``text-transform`` is
-   suppressed here because ``CIPs`` is an initialism that needs the
-   lowercase ``s`` preserved. */
-.nav-dd-btn-solution::after{content:"CIPs";position:absolute;top:-7px;right:-6px;font:600 8.5px/1 -apple-system,sans-serif;letter-spacing:.4px;text-transform:none;background:var(--cardano-blue);color:#fff;padding:3px 5px;border-radius:3px;border:1px solid var(--cardano-blue);pointer-events:none}
+/* "EVALUATION" eyebrow tag — anchored to the top-right of the
+   ``CIPs`` dropdown trigger, mirroring the "FUTURE" stamp on
+   .nav-tab-implementation. The button text reads ``CIPs`` (what the
+   dropdown opens to); the eyebrow tag stamps it as the *evaluation*
+   stratum so the role of the tab stays explicit. */
+.nav-dd-btn-solution::after{content:"evaluation";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:var(--cardano-blue);color:#fff;padding:3px 5px;border-radius:3px;border:1px solid var(--cardano-blue);pointer-events:none}
 [data-theme=dark] .nav-dd-btn-solution::after{background:#7B91FF;color:#1a1a1a;border-color:#7B91FF}
 .nav-dd-btn-light:hover{color:var(--text-primary);border-color:var(--text-muted);background:rgba(0,0,0,.02)}
 [data-theme=dark] .nav-dd-btn-light:hover{background:rgba(255,255,255,.04)}

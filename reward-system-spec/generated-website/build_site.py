@@ -1521,7 +1521,7 @@ window.MathJax = {{
 <!-- Zone 1 (left anchor) — Solution Evaluation: CIP candidates evaluated against V2 -->
 <div class="nav-zone nav-zone-solution">
 <div class="nav-dd-wrap nav-dd-wrap-light">
-<button class="nav-dd-btn-light nav-dd-btn-solution{cls_solution_trigger}" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Solution Evaluation ▾</button>
+<button class="nav-dd-btn-light nav-dd-btn-solution{cls_solution_trigger}" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">CIPs ▾</button>
 <div class="nav-dd-panel-light nav-dd-panel-solution">
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
