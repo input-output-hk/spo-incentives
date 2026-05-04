@@ -75,9 +75,9 @@ PAGES = [
         "code": "CEN",
         "md": "diagnostic/sub-flows/census/mainnet-analysis/README.md",
         "html": "census.html",
-        "title": "The Staking Census — SPO Incentives",
+        "title": "The Staking Census — The Four Game Player Populations",
         "hero_h1": "The Staking Census",
-        "hero_sub": "Who holds stake — capital, distribution, participation",
+        "hero_sub": "The four game player populations of Cardano's reward pipeline — operators, delegators, non-participants, transaction submitters",
         "active_nav": "census",
     },
     {
@@ -1635,7 +1635,7 @@ window.MathJax = {{
     </a>
     <a href="census.html" class="nav-dd-ref nav-dd-ref-sub{cls_census}">
       <span class="nav-dd-ref-title">The Staking Census<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">Who holds stake — capital, participation<span class="nav-dd-ref-stage">Evidence</span></span>
+      <span class="nav-dd-ref-cite">The four game player populations of Cardano's reward pipeline<span class="nav-dd-ref-stage">Evidence</span></span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Reward Flow</div>
     <a href="treasury.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow{cls_treasury}">
@@ -5359,6 +5359,23 @@ def _render_findings_content(
 
     intro = (
         '<div class="findings-intro">'
+        '<div class="admon admon-note findings-cps-banner">'
+        '<div class="admon-label">CPSs in formation</div>'
+        '<p>'
+        'The problems on this page are <strong>Cardano Problem Statements '
+        '(CPSs) in formation</strong>. The lifecycle is '
+        '<em>mainnet evidence &rarr; induced problem (proto-CPS) &rarr; '
+        'V2 specification &rarr; CIPs</em>: each induced problem is scoped '
+        'against shared evidence so candidate solutions can later be '
+        'evaluated against the same problem definition once the work '
+        'moves into the '
+        '<a href="https://github.com/cardano-foundation/CIPs" rel="noopener" '
+        'target="_blank">IntersectMBO/CIPs governance process</a>. '
+        'Earlier draft CPS files were retired in favour of this canonical '
+        'narrative; promotion to formal CPS happens upstream when a '
+        'problem is judged ready.'
+        '</p>'
+        '</div>'
         '<p class="findings-intro-lead">'
         'The diagnostic walks Cardano&rsquo;s reward pipeline from the '
         'reserve to the delegator and asks at every layer: '

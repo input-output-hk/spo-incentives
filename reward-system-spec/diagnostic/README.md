@@ -2,7 +2,9 @@
 
 The *Shelley-era Delegation and Incentives Design Specification* (SL-D1) defined the economic rules that were to guide Cardano toward a stable, decentralised equilibrium of $k$ well-funded stake pools. Five years of mainnet operation have exposed **structural divergences** between that design and the on-chain reality.
 
-This document is the **mainnet observatory**: it follows the reward through every stage of the pipeline, confronts each design intent with the cleaned mainnet evidence, and inducts the structural problems that emerge. Where a stage exhibits a failure for which no *Cardano Problem Statement* (CPS) currently exists in the CIP governance process, this analysis produces the missing CPS so the V2 specification can be scoped against a well-defined problem statement. The diagnostic feeds [**The Cardano Reward System V2 — Specification for a Sustainable Successor**](../README.md).
+This document is the **mainnet observatory**: it follows the reward through every stage of the pipeline, confronts each design intent with the cleaned mainnet evidence, and inducts the structural problems that emerge. The diagnostic feeds [**The Cardano Reward System V2 — Specification for a Sustainable Successor**](../README.md).
+
+> **From Problem Induction to CPS to CIP.** The *Problem Induction* sub-sections in this document (§1.1.3, §1.2.3, §1.3.3, §2.1.3, §2.2.3, §3.3) are **CPSs in formation** — Cardano Problem Statements still maturing in narrative form. The lifecycle is *mainnet evidence → induced problem (proto-CPS) → V2 specification → CIPs*. Each induced problem is scoped against shared evidence so candidate solutions (CIPs) can be evaluated against the same problem definition once the work moves into the IntersectMBO/CIPs governance process. Earlier draft CPS files were retired in favour of the canonical narrative here; promotion to formal CPS happens upstream when a problem is judged ready.
 
 **The pipeline is read as a single dependency chain.** The epoch budget sets the ceiling, the reward curve allocates within it, and the fee structure determines how much of each allocation actually reaches operators and delegators. These stages are not independent layers — a failure at any stage propagates downstream, and a fix at one stage can be undone by a distortion at another. The pipeline runs on populations ([The Player Populations](#2-the-player-populations)) and against an exchange-rate boundary ([The ₳ Price Constraint](#3-the-price-constraint)) that closes the system. The companion [*The Intended Game*](../the-intended-game/README.md) supplies the normative baseline — what the mechanism was supposed to produce — against which each divergence is measured.
 
@@ -30,7 +32,7 @@ The remainder of the document follows the pipeline stage by stage: [the reward f
     - [1.2.2. Mainnet Observations](#122-mainnet-observations)
     - [1.2.3. Problem Induction → Closing the Consensus Incentive Gap](#123-problem-induction-closing-the-consensus-incentive-gap)
     - [1.2.4. Divergence with intended equilibrium](#124-divergence-with-intended-equilibrium)
-      - [1.2.4.1. Entry — below 1M ₳, too committed to just delegate, too small to operate](#1241-entry-below-1m-too-committed-to-just-delegate-too-small-to-operate)
+      - [1.2.4.1. Entry — below 3M ₳, too committed to just delegate, too small to operate](#1241-entry-below-3m-too-committed-to-just-delegate-too-small-to-operate)
         - [1.2.4.1.1. The structural floor](#12411-the-structural-floor)
         - [1.2.4.1.2. A gate with no sign](#12412-a-gate-with-no-sign)
         - [1.2.4.1.3. Capital over competence](#12413-capital-over-competence)
@@ -251,7 +253,7 @@ The observations above document *what* the reward curve produces. This section e
 
 The baseline for this analysis is [*The Intended Game*](../the-intended-game/README.md), which describes the game as it should play out.
 
-#### 1.2.4.1. Entry — below 1M ₳, too committed to just delegate, too small to operate
+#### 1.2.4.1. Entry — below 3M ₳, too committed to just delegate, too small to operate
 
 An operator registers a pool, pledges what they can — say **50K ADA** — and starts looking for delegators.
 
@@ -261,21 +263,26 @@ The promise ([*The Intended Game* §1.3.2](../the-intended-game/README.md#32-ope
 
 ##### 1.2.4.1.1. The structural floor
 
-Block production is a **Poisson process**, and below **~1M ₳** in total stake a pool expects less than one block per epoch. **Reward variance equals its own mean** — yield is noise, not signal.
+Block production on Cardano is a **Poisson process**: with ~21,600 slots per epoch and total active stake $S$, a pool of stake $\sigma$ expects $\lambda = 21{,}600 \times \sigma / S$ blocks per epoch. The number actually produced is $\text{Poisson}(\lambda)$, with variance equal to the mean — meaning that **at small $\lambda$, yield is dominated by noise rather than by stake**.
 
-This is the *production threshold* (F3.1): a **hard structural floor** set by the physics of the consensus protocol, not by a tuneable parameter.
+Two regimes follow from this:
 
-Above that sits the *viability threshold* (**~3M ₳**, F3.2): below it, the **340 ₳ fixed cost per epoch exceeds the pool's expected reward**. This second boundary is softer — it depends on the reward curve's parameters and narrows over time as node implementations improve and hardware costs decline.
+- At **$\lambda < 1$ (~< 1M ADA at today's active stake)** the pool expects less than one block per epoch — most epochs produce zero blocks, and reward variance overwhelms the signal entirely. *Yield is noise.*
+- At **$\lambda = 3$ (~3M ADA at today's active stake)** the pool produces ≥ 1 block per epoch with **95% probability** ($1 - e^{-3} = 0.95$). *Yield becomes a usable signal — for the operator's economics, and for delegators choosing pools.*
 
-*But the production threshold is irreducible.*
+The **production threshold** is the second of these — the **95%-block-probability bar at λ=3, ~3M ADA today**. This is the boundary used throughout the analysis (POL.O3.F1, CEN.O1.F1) and the one delegators can actually act on. It is a **hard structural floor** set by the physics of the consensus protocol, not by a tuneable parameter.
+
+A separate, *volatile* concept — the **viability threshold** — is the stake level at which an operator can pay themselves enough to cover real fiat-denominated costs (infrastructure + DevOps labour). At today's ADA/USD price the viability threshold and the production threshold roughly coincide, so we treat the production threshold as the operative entry barrier and discuss viability as a separate ADA-price-dependent concept (POL.O3.F2).
+
+*The production threshold is the irreducible boundary — the floor every operator must clear.*
 
 ##### 1.2.4.1.2. A gate with no sign
 
-Crucially, the mechanism **does not communicate this floor**. Nothing in the protocol tells a prospective operator "do not register a pool below 1M ₳ — it will not produce blocks." **Registration is open at any amount.**
+Crucially, the mechanism **does not communicate this floor**. Nothing in the protocol tells a prospective operator "do not register a pool below ~3M ₳ — it will not produce blocks reliably." **Registration is open at any amount.**
 
 *The game lets participants in, takes their operational costs, and gives nothing in return.*
 
-The result is visible on mainnet: **73% of pools sit below the viability threshold**.
+The result is visible on mainnet: **2,144 of 2,877 pools (75%) sit below the production threshold** and together hold only **2.7% of stake** (CEN.O1.F1, POL.O4.F1). They are sub-block (λ < 1) or sub-reliable (1 ≤ λ < 3) — both noise-dominated, neither a usable yield signal.
 
 These pools have **no reason to exist** — not from a consensus perspective (they contribute negligibly to block production), not from an investment perspective (they destroy value for their delegators), not from any perspective.
 
@@ -303,13 +310,13 @@ An operator with deep expertise and **100K ₳ is invisible** to the reward curv
 
 ##### 1.2.4.1.4. The sub-threshold problem — what Rocket Pool tells us
 
-The preceding sections establish a **structural contradiction**: the protocol allows anyone to register a pool, but the physics of block production imposes a floor (**~1M ₳**) below which operation is noise, and the economics of the fee structure impose a higher floor (**~3M ₳**) below which operation destroys value.
+The preceding sections establish a **structural contradiction**: the protocol allows anyone to register a pool, but the physics of block production imposes a floor (**~3M ₳** at today's active stake — the 95%-block-probability bar) below which operation is noise, not signal. Below ~1M ₳ a pool produces less than one block per epoch in expectation; between ~1M and ~3M it produces blocks but with too much Poisson variance to drive predictable yield. *Either way, the pool destroys value for its delegators and serves no consensus function.*
 
-Between registration and viability lies a corridor that the mechanism does not bridge — *an open door that leads to an empty room*.
+Between registration and the production threshold lies a corridor that the mechanism does not bridge — *an open door that leads to an empty room*.
 
 This is **not unique to Cardano**. Ethereum's consensus layer requires exactly **32 ETH** (~€55K at current prices) to activate a validator — an **explicit production threshold** enforced at the protocol level. The design acknowledges that consensus participation has a minimum scale, and makes that minimum **legible** rather than leaving participants to discover it through economic loss.
 
-Cardano's production threshold is **implicit** — emergent from Poisson statistics, not declared as a parameter. The result is a marketplace where **116 sub-threshold pools** (**11.7%** of rewarded pools) carry **0.31% of stake** and serve no consensus function. They dilute the pool marketplace, mislead delegators, and impose a cost (in operator time, in delegator lost yield) that the protocol could avoid by making the threshold explicit.
+Cardano's production threshold is **implicit** — emergent from Poisson statistics, not declared as a parameter. The result is a marketplace where **2,144 sub-threshold pools** (**75%** of pools with stake) carry only **2.7% of stake** and serve no consensus function. They dilute the pool marketplace, mislead delegators, and impose a cost (in operator time, in delegator lost yield) that the protocol could avoid by making the threshold explicit.
 
 The more interesting question is **what lies on the other side of enforcement**.
 
@@ -341,7 +348,7 @@ The **2,144 sub-threshold pools** carry **2.7% of active stake** and **9.4% of d
 
 All analysis from [Progression — balanced as intended, but private by design](#1242-progression-balanced-as-intended-but-private-by-design) onward restricts the pool set to **rewarded pools above the production threshold** (active stake ≥ 3M ₳). The companion sub-reports — [*The Pools Pot Distribution Gaps*](sub-flows/pools-distribution/mainnet-analysis/README.md), [*The Operator's Cut*](sub-flows/operator-delegator-distribution/mainnet-analysis/README.md) — apply the same filter.
 
-Where the sub-threshold population is relevant ([Entry — below 1M ₳, too committed to just delegate, too small to operate](#1241-entry-below-1m-too-committed-to-just-delegate-too-small-to-operate)), it is analysed in its own right.
+Where the sub-threshold population is relevant ([Entry — below 3M ₳, too committed to just delegate, too small to operate](#1241-entry-below-3m-too-committed-to-just-delegate-too-small-to-operate)), it is analysed in its own right.
 
 #### 1.2.4.2. Progression — balanced as intended, but private by design
 
@@ -832,7 +839,7 @@ The analysis in [Divergence with intended equilibrium](#124-divergence-with-inte
 
 ##### 1.2.4.4.1. Enforce the production threshold — build a Rocket Pool for Cardano
 
-The analysis in [Entry — below 1M ₳, too committed to just delegate, too small to operate](#1241-entry-below-1m-too-committed-to-just-delegate-too-small-to-operate) reveals a **structural contradiction**: the protocol allows anyone to register a pool, but the physics of block production and the economics of the fee structure impose a floor below which operation is unviable.
+The analysis in [Entry — below 3M ₳, too committed to just delegate, too small to operate](#1241-entry-below-3m-too-committed-to-just-delegate-too-small-to-operate) reveals a **structural contradiction**: the protocol allows anyone to register a pool, but the physics of block production imposes a floor (the 95%-block-probability bar at ~3M ADA) below which operation is unviable.
 
 At epoch 614, **116 sub-threshold pools (< 1M ₳) carry 0.31% of active stake** — they serve **no consensus function**, dilute the pool marketplace, and mislead delegators into pools that cannot produce reliable yield.
 
@@ -1244,7 +1251,7 @@ The section is split in two: [The Staking Populations](#21-the-staking-populatio
 
 The Cardano staking ecosystem contains three populations defined by staking role.
 
-**Operators** register pools, pledge capital, produce blocks, and compete for delegation. At epoch 623, **2,877 pools** appear in the staking snapshot with non-zero delegated stake. After removing the sub-block tail (pools below **~1M ADA** that cannot reliably produce blocks), the productive core is **951 pools controlled by 560 entities** — of which **73 named multi-pool operators hold three-quarters of productive stake**. The single-pool operator population (**477 pools, 5.28B ADA**) provides the remaining quarter.
+**Operators** register pools, pledge capital, produce blocks, and compete for delegation. At epoch 623, **2,877 pools** appear in the staking snapshot with non-zero delegated stake. After cutting at the production threshold (≥3M ADA, the 95%-block-probability bar), the productive core is **733 pools controlled by 367 entities** — of which **83 attributed entities** (71 strict multi-pool + 12 attributed single-pool) hold **76.7% of productive stake** through **449 productive pools**. The remaining **23.3%** sits with **284 unattributed single-pool operators (4.94B ADA)**.
 
 *The supply side of the staking market is highly concentrated and stable, not the competitive marketplace the mechanism was designed to produce.*
 
@@ -1338,7 +1345,28 @@ The population that *could* discipline operators — whales, holding **14.1B ADA
 
 #### 2.1.3.3. The non-participant population
 
-<!-- TODO — to be completed once the full non-participant analysis is available. Initial data from CEN.O7: 14.355B ADA (39.8%) outside delegation; only 134.6M addressable; staking rate declining 71% → 59%. -->
+The intended design assumes that any holder *can* delegate — and therefore that participation is a function of the incentive offered. Build a competitive incentive, the assumption goes, and the non-participant pool shrinks.
+
+*The on-chain population shows that most non-participation is structural, not behavioural — the incentive curve has very little ADA to act on.*
+
+**14.36B ADA (39.8% of circulating supply) sits unstaked** (CEN.O7), and that share has been **stable in a 36–39% band for over 300 epochs** despite multiple parameter regimes and yield levels. The staking rate has fallen from **71% (epoch ~260) to 59% (epoch 623)** — a 12 pp loss driven entirely by supply-side expansion (circulating ADA grew from ~32B to ~37B while staked ADA grew from ~23B to only ~22B). *The non-participant pool is growing faster than the staking pool can absorb new entrants.*
+
+The decomposition of the 14.36B reveals that **the incentive ceiling is narrower than the headline figure by an order of magnitude**:
+
+- **Only 134.6M ADA (0.37% of circulation)** belongs to accounts with a *registered stake credential* that have simply not delegated — the *addressable* pool that incentive design can, in principle, reach
+- The remaining **14.2B (39.4%)** sits in addresses with **no stake credential at all** — enterprise (`addr1v`, exchange custody), script-without-staking (`addr1w`, Plutus contracts and DeFi vaults), Byron-era legacy outputs, and base addresses whose staking key was never registered
+- The "addressable" pool itself collapses to **~2,100 active accounts and 0.06% of supply (~22.5M ADA)** once zero-balance shells, dormant accounts, and a single 80M-ADA DeFi vault are removed (CEN.O7.F8)
+
+The structurally-excluded core is **not a faceless retail tail**. Among the 2.5B ADA identified by address shape, **top-3 wallets control 19.1%** and **top-200 control 68.9%** (CEN.O7.F6). The composition splits cleanly into recognisable archetypes: **exchange hot wallets** (1.04B), **pre-staking-era legacy holders** (1.32B, awakening at ~0.8M ADA per epoch), and **DeFi vaults** (a single 80M-ADA contract dominates 89% of the 91M DeFi-locked-no-staking residual). *Exchange custody and pre-staking legacy together account for 96% of identified shapes — the unreachable mass is overwhelmingly inertia, not active opt-out.*
+
+The pool is also **temporally polarised** (CEN.O7.F5): **37%** of the no-credential UTxO value (928M ADA) is pre-staking-era dormant capital, and **44%** (1,110M) is from the last 73 epochs (recent enterprise-address cycling by exchanges and DeFi contracts). *The middle eras are essentially empty — the population splits cleanly between probably-lost and operationally-active, with very little in between.*
+
+The implication for any reward-design change is straightforward and structural:
+
+- **Incentive changes alone** (curve adjustments, fee-structure reforms, yield improvements) can shift at most the **0.37% addressable pool** — and even that, against the headwind of zero-balance shells and the single-vault concentration, has a real ceiling closer to **0.06%** of supply
+- **Moving the structural 39.4%** requires **protocol-level changes**: enabling enterprise-address staking, mandating staking-capable script standards in DeFi protocols, introducing delegation-by-default for newly minted wallets — *not parameter tuning*
+
+*The non-participant population is the single largest structural constraint on the reward pipeline ([§1.1 TRE.O3](#112-mainnet-observations) attributes ~71% of cumulative return-to-reserve to it), and most of it is **structurally beyond the reach of any reward-design change**. Meaningful re-engagement requires changing the address architecture, not the incentive curve.*
 
 ## 2.2. Transaction Submitters
 
@@ -1362,26 +1390,27 @@ The analytical decomposition follows four axes:
 - fee-revenue attribution by category
 - concentration of the fee base
 
-The working data and figures are in the [*Staking Census*](sub-flows/census/mainnet-analysis/README.md) §6; a standalone sub-report will replace the Census section once the analysis is complete.
+The working data, figures, and full population decomposition are in the [*Staking Census*](sub-flows/census/mainnet-analysis/README.md) §6, which now treats this population at the same depth as the staking populations.
 
 ### 2.2.1. Overview
 
-From epoch 208 (Shelley) through epoch 623, the chain processed **117.6 million transactions** generating **37.7M ADA** in cumulative fees.
+From epoch 208 (Shelley) through epoch 627, the chain processed **118.07 million transactions** generating **37.85M ADA** in cumulative fees.
 
-The submitter population peaked at **790,335 unique addresses per epoch** at epoch 304 (post-Alonzo / NFT-minting frenzy) and has since contracted to **30,505** at epoch 623 — a **96%** collapse against a **93%** drop in transaction volume.
+The submitter population peaked at **790,335 unique addresses per epoch** at epoch 304 (post-Alonzo / NFT-minting frenzy) and has since contracted to **31,176** at epoch 627 — a **96%** collapse against a **92%** drop in transaction volume.
 
-*The fee base is consolidating: a population one-twenty-sixth the size of its peak still sustains two-thirds of the per-epoch transaction rate.*
+*The fee base is consolidating: a population one twenty-fifth the size of its peak still sustains three quarters of the per-epoch transaction rate seen during 2023–2024 — the same shrinking core just transacts more often (~3.8 tx per submitter per epoch, vs ~2.0 at peak).*
 
 ### 2.2.2. Mainnet Observations
 
 | # | Observation | Summary |
 | --- | --- | --- |
-| **CEN.O8** | **The submitter population is contracting while transaction volume holds** | Unique submitter addresses fell from a peak of **790,335** (epoch 304) to **30,505** (epoch 623) — a 96% contraction against a 93% drop in transaction volume. The address-to-transaction ratio dropped from 0.88 to 0.29. *The chain is not losing activity; it is losing breadth.* |
-| **CEN.O9** | **By headcount, submitters are overwhelmingly stakeable; by fee weight, the picture inverts** | At epoch 623, 73.4% of submitter addresses carry a staking credential (base-key, `addr1q`). But 30.1% of fee revenue comes from enterprise (`addr1v`) and script (`addr1w`) addresses that structurally cannot delegate — and this share has not fallen below 14% since the Alonzo era. |
-| **CEN.O10** | **Script transactions pay 2.4× the per-tx rate and dominate fee peaks** | Post-Alonzo cumulative: 12.6% of transaction count, 29.7% of fees. At epoch 623, 3,073 script addresses (10.1%) generate 34.9% of epoch fees — the per-address premium is 17× over base-key submitters. |
-| **CEN.O11** | **Fee revenue is heavy-tailed but less extreme than delegation stake** | Over epochs 618–623, the top 10 fee-paying addresses generate 24.3% of all fees and the top 500 generate 60.8% — out of ~151K active submitters. Heavy-tailed but below the delegation Gini of 0.976. |
+| **CEN.O8** | **The active submitter population is shrinking and concentrating into a smaller, more active core** | The submitter population — addresses paying fees in any given epoch — collapsed from a peak of **790,335 actors** (epoch 304) to **31,176** (epoch 627), a **−96%** contraction against only a 92% drop in transactions. The same population now transacts **~3.8× per epoch** (vs ~2.0× at peak), and the address-to-transaction ratio fell from 0.88 (epoch 210) to 0.26 (epoch 627). *The chain is not losing activity; the population doing it is shrinking while each surviving member transacts more often.* |
+| **CEN.O9** | **Two submitter sub-populations coexist: a stakeable head-count majority and a small non-stakeable minority that pays a third of the fees** | At epoch 627, the stakeable majority — base-key (`addr1q`) addresses carrying a stake credential — is **73.3%** of submitter head-count and pays 47.4% of fees. The non-stakeable minority — enterprise (`addr1v`, `addr1w`) and legacy Byron addresses that structurally cannot delegate — is only **~16%** of head-count but generates **30.1%** of fee revenue (averaged 622–627), and that share has not fallen below 14% since the Alonzo era. *The reward pipeline taxes a sub-population it cannot reward.* |
+| **CEN.O10** | **A small DeFi-script sub-population — ~3,800 contracts at epoch 627 — generates a third of the fee base** | The script-using sub-population — base-script (`addr1z`) and enterprise-script (`addr1w`) addresses — is **3,851 actors** at epoch 627 (**12.4%** of submitters) and generates **36.0%** of epoch fees. Across the full post-Alonzo era it represents 12.5% of transaction count but **29.6%** of cumulative fees. The per-address fee rate of an enterprise-script submitter (12.1 ADA/epoch) is **14×** that of a base-key submitter (0.83 ADA/epoch). *The chain's fee floor is supported by ~3,800 smart contracts — a population dimension the current incentive design does not address.* |
+| **CEN.O11** | **The fee-paying population is bimodal: a heavy-paying core of a few hundred high-frequency actors and a long tail of ~147K small contributors** | Over epochs 622–627, the top 10 addresses generate **20.0%** of fees and the top 500 generate **58.4%** — out of ~147K active submitters. The heavy-paying core is recognisable: a MinSwap DEX-script address leads, followed by addresses tied to the **NUFI**, **TITAN**, **BERRY**, and **OYSTR** pools and several enterprise-script DEX contracts and bot wallets. *500 addresses out of 147K (0.34%) pay the majority of fees — the fee floor depends on a sub-population small enough to know by name.* |
+| **CEN.O12** | **The fee-paying population and the delegator population barely overlap — funders and beneficiaries are largely different people** | Joining the submitter set (~147K addresses, epochs 622–627) to the **1,352,113 active delegators at epoch 627**: only **41.8%** of fee revenue comes from currently-delegating addresses, **28.1%** from base addresses whose stake credential is *not* in the delegation set, **30.1%** from addresses with no stake credential. From the delegator side, **only 3.1%** of the 1.352M active delegators submit any transaction in a 6-epoch window. *Fewer than 4 ADA in every 10 ADA of fees flow back to the population that paid them through any reward channel.* |
 
-> **Scope note.** CEN.O8–CEN.O11 characterise the fee-generating population. Together with CEN.O1–CEN.O7 ([The Staking Populations](#21-the-staking-populations)), they define the complete population substrate on which the reward pipeline operates.
+> **Scope note.** CEN.O8–CEN.O12 characterise the fee-generating population. Together with CEN.O1–CEN.O7 ([The Staking Populations](#21-the-staking-populations)), they define the complete population substrate on which the reward pipeline operates.
 
 ### 2.2.3. Problem Induction
 
@@ -1391,17 +1420,18 @@ The reward pipeline's long-term viability rests on a single assumption: *that tr
 
 Today, fees contribute approximately **0.19% of the pot** (TRE.O1, [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution)). Reaching self-sufficiency — a fee-funded pot equivalent to the current expansion-funded one — would require a **12–16× increase in fee revenue** at current transaction volumes ([§1.1 TRE.O1](#112-mainnet-observations)).
 
-**The submitter population is moving in the opposite direction.** The number of distinct fee-paying addresses has contracted from a peak of **790,335 (epoch 304) to 30,505 (epoch 623)** — a **96% decline** — while per-epoch transaction volume fell only 93%, indicating consolidation toward fewer, more active actors (CEN.O8).
+**The submitter population is moving in the opposite direction.** The number of distinct fee-paying addresses has contracted from a peak of **790,335 (epoch 304) to 31,176 (epoch 627)** — a **96% decline** — while per-epoch transaction volume fell only 92%, indicating consolidation toward fewer, more active actors (CEN.O8). The same shrinking core now transacts **~3.8× per epoch** vs ~2.0× at peak — *breadth is collapsing while per-actor intensity is rising*.
 
-At the same time, the most fee-intensive segment of that population — **script-based transactions**, which pay roughly 2.4× the average per-tx rate (CEN.O10) — is dominated by enterprise and script addresses that structurally cannot participate in delegation (CEN.O9).
+At the same time, the most fee-intensive segment of that population — **script-based transactions**, which pay roughly 2.4× the average per-tx rate (CEN.O10) — is concentrated in **~3,800 smart contracts** that, together with enterprise key addresses, generate **36% of recent fees while representing 12% of submitters**. Many of these are structurally non-stakeable (CEN.O9) — *the sub-population that generates the most revenue per transaction is excluded from the rewards it funds*.
 
-*The population that the mechanism needs to grow is shrinking; the sub-population that generates the most revenue per transaction is excluded from the rewards it funds.*
+**Funders and beneficiaries don't overlap.** Joining the submitter set to `epoch_stake` (CEN.O12) shows that only **41.8%** of fee revenue comes from currently-delegating addresses; **30.1%** comes from addresses with no stake credential, and **28.1%** from base addresses that *could* delegate but aren't. From the delegator side, **only 3.1%** of the 1.352M active delegators submit any transaction in a 6-epoch window — the staking population is overwhelmingly passive. *Fewer than 4 ADA in every 10 ADA of fees flow back to the population that paid them through any reward channel.*
 
-The gap between the current fee input and the level required for sustainability is **not a transient shortfall that organic adoption will close**. It is a structural deficit shaped by three converging forces:
+The gap between the current fee input and the level required for sustainability is **not a transient shortfall that organic adoption will close**. It is a structural deficit shaped by four converging forces:
 
 - a contracting submitter population
 - a fee base that concentrates rather than diversifies
 - a growing share of fee revenue generated by addresses outside the staking system
+- an overlap between funders and beneficiaries that is structurally limited (CEN.O12)
 
 No parameter change within the current mechanism alters this trajectory — the fee input is set by transaction demand, not by reward-curve coefficients.
 

@@ -258,9 +258,9 @@ The floor follows a $1/\sigma$ hyperbola: *the operators who charge the most ear
 
 **The operator growth path is not functioning as intended.** The census finds **no trace** of the designed growth trajectory on mainnet.
 
-The single-pool operator population peaked at **555 pools and 39.1% of productive stake** around epoch 300, then contracted continuously to **291 pools and 24%** at epoch 623 — a **48% loss in pool count** and **15 percentage points** in stake share ([*Staking Census* CEN.O1.F6](diagnostic/sub-flows/census/mainnet-analysis/README.md#353-cohort-decomposition-who-holds-the-productive-set)).
+The single-pool operator population peaked at **555 pools and 39.1% of productive stake** around epoch 300, then contracted continuously to **291 pools and 24%** at epoch 623 — a **48% loss in pool count** and **15 percentage points** in stake share ([*Staking Census* CEN.O1.F6](diagnostic/sub-flows/census/mainnet-analysis/README.md#353-who-actually-holds-the-productive-set-today-and-who-used-to)).
 
-The replacement pools that sustain the ~950-pool total are **entity-operated, not new independents**: multi-pool entities grew from 23 to 85, their pool count from 135 to 660 ([*Staking Census* CEN.O1.F7](diagnostic/sub-flows/census/mainnet-analysis/README.md#353-cohort-decomposition-who-holds-the-productive-set)). Capital flows from declining community fleets toward institutional entrants and exchanges — **not** toward the independent tail growing into established entities ([*Staking Census* CEN.O1.F8](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-pipeline-what-the-mechanism-was-designed-to-produce)).
+The replacement pools that sustain the ~950-pool total are **entity-operated, not new independents**: multi-pool entities grew from 23 to 85, their pool count from 135 to 660 ([*Staking Census* CEN.O1.F7](diagnostic/sub-flows/census/mainnet-analysis/README.md#353-who-actually-holds-the-productive-set-today-and-who-used-to)). Capital flows from declining community fleets toward institutional entrants and exchanges — **not** toward the independent tail growing into established entities ([*Staking Census* CEN.O1.F8](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-operator-pipeline-has-no-observable-expression-in-the-data)).
 
 *The absence of evidence for the designed growth path is itself the diagnosis.*
 
@@ -288,7 +288,7 @@ The replacement pools that sustain the ~950-pool total are **entity-operated, no
 <div class="ev-label">Population dynamics</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Productive pool count has held near **950 since epoch 300**, but this masks **3,497 entries vs 3,070 exits** — ~16 pools/epoch turnover (**1.7 %/epoch**). Turnover falls disproportionately on small single-pool operators near the production threshold.</p>
-<p class="ev-sources" markdown="1">Source: [Census — population dynamics](diagnostic/sub-flows/census/mainnet-analysis/README.md#35-population-dynamics-entries-exits-and-turnover).</p>
+<p class="ev-sources" markdown="1">Source: [Census — population dynamics](diagnostic/sub-flows/census/mainnet-analysis/README.md#35-the-market-has-crystallised-replacement-not-growth).</p>
 </div>
 </div>
 
@@ -296,7 +296,7 @@ The replacement pools that sustain the ~950-pool total are **entity-operated, no
 <div class="ev-label">Stake variability</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Pools near the production threshold oscillate in and out of viability: for **9.3 %** of productive pools, stake swings epoch-to-epoch by **50–100 %** of its average; for **3.4 %**, swings exceed the average itself.</p>
-<p class="ev-sources" markdown="1">Source: [Census — pool-size variability](diagnostic/sub-flows/census/mainnet-analysis/README.md#36-pool-size-variability-how-stable-is-a-pools-stake).</p>
+<p class="ev-sources" markdown="1">Source: [Census — pool-size variability](diagnostic/sub-flows/census/mainnet-analysis/README.md#36-a-pools-stake-stability-is-segment-driven-not-random).</p>
 </div>
 </div>
 
@@ -304,7 +304,7 @@ The replacement pools that sustain the ~950-pool total are **entity-operated, no
 <div class="ev-label">Thresholds</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Production threshold rises with total staked ADA — from **~470 K at Shelley launch** to **~1 M at epoch 623**. Single-pool operator population: **477 pools, 5.28 B ADA, 24.5 % of productive stake**, share in slow decline; only **283 above the viability threshold**; **116 sub-threshold pools** carry 0.31 % of active stake.</p>
-<p class="ev-sources" markdown="1">Sources: [Census — historical decomposition](diagnostic/sub-flows/census/mainnet-analysis/README.md#343-historical-decomposition-productive-vs-sub-threshold-pools), [POL.O6](diagnostic/README.md#122-mainnet-observations), [production-threshold proposal](diagnostic/README.md#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano).</p>
+<p class="ev-sources" markdown="1">Sources: [Census — historical decomposition](diagnostic/sub-flows/census/mainnet-analysis/README.md#343-what-the-productive-total-looked-like-before-the-threshold-cut), [POL.O6](diagnostic/README.md#122-mainnet-observations), [production-threshold proposal](diagnostic/README.md#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano).</p>
 </div>
 </div>
 
@@ -636,7 +636,7 @@ An entity operating twenty pools with negligible pledge in each is **indistingui
 
 The demand side exhibits a concentration that **mirrors the supply side**. The median delegator holds **32 ADA**; the mean holds **16,055 ADA** — a **500× gap** ([CEN.O3](diagnostic/README.md#212-mainnet-observations)).
 
-This is not a transient distribution: concentration **crystallised by epoch 300**, and a subsequent **9× growth** in delegator count produced **no measurable change** in the top-1% share ([Census — historical evolution](diagnostic/sub-flows/census/mainnet-analysis/README.md#443-historical-evolution-who-joined-and-where-is-the-capital)). The delegation market is **structurally bimodal**: 42% of delegators are **loyal** (201+ epochs), 21% **volatile** (≤ 5 epochs), with little in between ([CEN.O4](diagnostic/README.md#212-mainnet-observations)).
+This is not a transient distribution: concentration **crystallised by epoch 300**, and a subsequent **9× growth** in delegator count produced **no measurable change** in the top-1% share ([Census — historical evolution](diagnostic/sub-flows/census/mainnet-analysis/README.md#443-concentration-crystallised-by-epoch-300-9-growth-in-delegators-no-change-in-the-top-1)). The delegation market is **structurally bimodal**: 42% of delegators are **loyal** (201+ epochs), 21% **volatile** (≤ 5 epochs), with little in between ([CEN.O4](diagnostic/README.md#212-mainnet-observations)).
 
 **Titan delegators** — those holding 1M+ ADA — average **3.06 lifetime pool switches** against **0.67** for micro-delegators ([CEN.O5](diagnostic/README.md#212-mainnet-observations)). They hold **11B of 21.8B** staked ADA, and only **38%** of their stake sits in loyal delegations: capital is **disproportionately mobile**.
 
@@ -673,7 +673,7 @@ The consequence is:
 <div class="ev-label">Single-pool operator decline</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**284 productive single-pool operators**, stake share in slow decline from **39 % → 25 %** since epoch 300.</p>
-<p class="ev-sources" markdown="1">Sources: [POL.O6](diagnostic/README.md#122-mainnet-observations), [Census — the independent pipeline](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-pipeline-what-the-mechanism-was-designed-to-produce).</p>
+<p class="ev-sources" markdown="1">Sources: [POL.O6](diagnostic/README.md#122-mainnet-observations), [Census — the independent pipeline](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-operator-pipeline-has-no-observable-expression-in-the-data).</p>
 </div>
 </div>
 
