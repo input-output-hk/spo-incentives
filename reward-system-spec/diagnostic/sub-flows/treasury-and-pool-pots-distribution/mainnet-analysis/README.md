@@ -20,7 +20,7 @@ The remainder of the report walks the budget pipeline: [the initial design](#2-t
 
 ## Table of Contents
 
-1. [Mainnet Observations](#1-mainnet-observations)
+1. [Mainnet Observations](treasury.html#1-mainnet-observations)
 2. [The initial design](#2-the-initial-design)
    - 2.1 [Formulas](#21-formulas)
       - 2.1.1 [SL-D1 (Original)](#211-sl-d1-original)
@@ -35,7 +35,7 @@ The remainder of the report walks the budget pipeline: [the initial design](#2-t
    - [4.2. Reserve stock and monetary expansion](#42-reserve-stock-and-monetary-expansion)
    - [4.3. Transaction fees](#43-transaction-fees)
    - [4.4. Deposit obligations](#44-deposit-obligations)
-   - [4.5. Block-production ratio (η)](#45-block-production-ratio-η)
+   - [4.5. Block-production ratio (η)](#45-block-production-ratio)
    - [4.6. Treasury inflow decomposition](#46-treasury-inflow-decomposition)
    - [4.7. Return to reserve](#47-return-to-reserve)
    - [4.8. Protocol parameters](#48-protocol-parameters)
@@ -190,7 +190,7 @@ At epoch 623, this produces:
 
 Two design choices embedded at this stage matter for the rest of the analysis:
 
-- **Cooperative-behavior gate.** The monetary expansion draw is scaled by $\min(\eta, 1)$ — the ratio of blocks actually produced to blocks expected. If pools collectively miss slots, the entire epoch pot shrinks. This discourages sabotage but also means the pot depends on aggregate network health. On mainnet, $\eta$ has averaged 0.977 since Shelley — the gate is satisfied but never binding (see [§4.5 — Block-production ratio (η)](#45-block-production-ratio-)).
+- **Cooperative-behavior gate.** The monetary expansion draw is scaled by $\min(\eta, 1)$ — the ratio of blocks actually produced to blocks expected. If pools collectively miss slots, the entire epoch pot shrinks. This discourages sabotage but also means the pot depends on aggregate network health. On mainnet, $\eta$ has averaged 0.977 since Shelley — the gate is satisfied but never binding (see [§4.5 — Block-production ratio (η)](#45-block-production-ratio)).
 
 - **Fixed split rule.** The treasury/pools ratio is a protocol constant ($\tau$), not a function of network activity or reserve level. It does not adapt as the balance between fees and expansion shifts over time. Both $\rho$ and $\tau$ have been unchanged since Shelley (see [§4.8 — Protocol parameters](#48-protocol-parameters)).
 
@@ -288,7 +288,7 @@ The **realistic capacity ceiling** (red dashed line on the visual) estimates the
 
 Even at this theoretical maximum, fees would cover only **~1.3% of the reserve expansion term** (19.23M ADA at epoch 623). The epoch 620 anomaly briefly exceeded this ceiling during exceptional activity.
 
-The *Analysis of Cardano's Incentive Mechanism* (Lopez de Lara, 2025; hereafter the *Incentive Mechanism Analysis*, [§5 — Reserve depletion trajectory](#5-reserve-depletion-trajectory)) estimates the network would need to process **12–16× more transactions** than its current realistic maximum capacity to fund rewards through fees alone — requiring **both** a throughput upgrade (Leios) **and** a fundamental shift in network utilization.
+The *Analysis of Cardano's Incentive Mechanism* (Lopez de Lara, 2025; hereafter the *Incentive Mechanism Analysis*, [§5.1 — Reserve depletion trajectory](#51-reserve-depletion-trajectory)) estimates the network would need to process **12–16× more transactions** than its current realistic maximum capacity to fund rewards through fees alone — requiring **both** a throughput upgrade (Leios) **and** a fundamental shift in network utilization.
 
 > **Finding TRE.O1.F2 — Fee revenue is structurally insufficient to fund the pot, even at full capacity.** At epoch 623 fees contribute **~0.17%** of the gross pot, and even the realistic capacity ceiling of **~254K ADA/epoch** (3.1 TPS × 432,000 s × 0.19 ADA) covers only **~1.3%** of the reserve expansion term. Closing the gap requires **12–16× today's realistic maximum throughput** — a step change in both capacity and demand. Until that crossover, the second source named in the SL-D1 formula is a rounding error.
 

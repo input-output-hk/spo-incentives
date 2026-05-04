@@ -1,18 +1,37 @@
 -- §5 Non-Participants — deeper insights queries (Instance B, full UTxO).
 --
+-- IMPORTANT: This Instance B has consumed_by_tx_id always NULL (the
+-- --consumed-tx-out flag is not enabled). We must use anti-join with
+-- tx_in to detect unspent outputs.
+--
 -- Generates six CSVs at /tmp inside the container using server-side COPY.
--- See README.md §5 for the analytical narrative.
 
 SET statement_timeout = 0;
-SET work_mem = '512MB';
+SET work_mem = '256MB';
+SET max_parallel_workers_per_gather = 2;
 
-\echo (A) Address-level concentration of the no-stake-credential UTxO set
+\echo === [1/8] Materialise unspent UTxO snapshot (heavy)
 
-CREATE TEMP VIEW v_no_cred AS
-  SELECT address, payment_cred, value
-  FROM tx_out
-  WHERE consumed_by_tx_id IS NULL
-    AND stake_address_id IS NULL;
+CREATE TEMP TABLE t_unspent AS
+SELECT txo.tx_id,
+       txo.index,
+       txo.address,
+       txo.payment_cred,
+       txo.stake_address_id,
+       txo.address_has_script,
+       txo.value
+FROM tx_out txo
+WHERE NOT EXISTS (
+  SELECT 1 FROM tx_in txi
+  WHERE txi.tx_out_id = txo.tx_id
+    AND txi.tx_out_index = txo.index
+);
+
+CREATE INDEX ON t_unspent (stake_address_id) WHERE stake_address_id IS NOT NULL;
+CREATE INDEX ON t_unspent (address) WHERE stake_address_id IS NULL;
+ANALYZE t_unspent;
+
+\echo === [2/8] Build no-stake-credential per-address aggregate
 
 CREATE TEMP TABLE t_no_cred_addr AS
   SELECT address,
@@ -22,10 +41,16 @@ CREATE TEMP TABLE t_no_cred_addr AS
            WHEN address LIKE 'Ae2%' OR address LIKE 'DdzFF%' THEN 'byron'
            ELSE 'other'
          END                                AS address_type,
+         payment_cred,
          SUM(value)::bigint                 AS lovelace,
          COUNT(*)                           AS utxo_count
-  FROM v_no_cred
-  GROUP BY address;
+  FROM t_unspent
+  WHERE stake_address_id IS NULL
+  GROUP BY address, payment_cred;
+
+ANALYZE t_no_cred_addr;
+
+\echo === [3/8] (A) Address-level concentration of the no-stake-credential UTxO set
 
 COPY (
   WITH ranked AS (
@@ -50,7 +75,7 @@ COPY (
   ORDER BY rank
 ) TO '/tmp/no_cred_top200.csv' WITH CSV HEADER;
 
-\echo (B) Bucketed size distribution of no-cred address holdings
+\echo === [4/8] (B) Bucketed size distribution of no-cred address holdings
 
 COPY (
   WITH bucketed AS (
@@ -85,7 +110,7 @@ COPY (
   ORDER BY address_type, size_bucket
 ) TO '/tmp/no_cred_size_distribution.csv' WITH CSV HEADER;
 
-\echo (C) Stake-address status table — used by (D),(E),(F)
+\echo === [5/8] Stake-address status table
 
 CREATE TEMP TABLE t_stake_status AS
   SELECT
@@ -102,7 +127,7 @@ CREATE TEMP TABLE t_stake_status AS
 
 CREATE INDEX ON t_stake_status (stake_address_id);
 
-\echo (D) Addressable-pool balance distribution (registered, not delegated)
+\echo === [6/8] (C) Addressable-pool balance distribution
 
 CREATE TEMP TABLE t_addressable AS
   SELECT stake_address_id, is_script, reg_tx_id, last_deleg_tx_id IS NOT NULL AS ever_delegated
@@ -116,11 +141,9 @@ CREATE TEMP TABLE t_addr_balance AS
     a.stake_address_id,
     a.is_script,
     a.ever_delegated,
-    COALESCE(SUM(txo.value), 0)::bigint AS lovelace
+    COALESCE(SUM(u.value), 0)::bigint AS lovelace
   FROM t_addressable a
-  LEFT JOIN tx_out txo
-    ON txo.stake_address_id = a.stake_address_id
-   AND txo.consumed_by_tx_id IS NULL
+  LEFT JOIN t_unspent u ON u.stake_address_id = a.stake_address_id
   GROUP BY a.stake_address_id, a.is_script, a.ever_delegated;
 
 COPY (
@@ -145,7 +168,7 @@ COPY (
   ORDER BY credential_type, size_bucket
 ) TO '/tmp/addressable_pool_size.csv' WITH CSV HEADER;
 
-\echo (E) Addressable-pool registration vintage
+\echo === [7/8] (D) Addressable-pool registration vintage
 
 COPY (
   WITH with_epoch AS (
@@ -172,7 +195,7 @@ COPY (
   ORDER BY credential_type, reg_vintage
 ) TO '/tmp/addressable_pool_vintage.csv' WITH CSV HEADER;
 
-\echo (F) Addressable-pool lifecycle (ever-delegated vs never)
+\echo === [8/8] (E) Addressable-pool lifecycle + (F) Top scripthashes
 
 COPY (
   SELECT
@@ -186,20 +209,14 @@ COPY (
   ORDER BY credential_type, lifecycle
 ) TO '/tmp/addressable_pool_lifecycle.csv' WITH CSV HEADER;
 
-\echo (G) Top-N payment credentials (scripthashes) for script-no-cred ADA
-
 COPY (
-  WITH script_no_cred AS (
-    SELECT payment_cred, value, address
-    FROM v_no_cred
-    WHERE address LIKE 'addr1w%'
-  ),
-  per_cred AS (
+  WITH per_cred AS (
     SELECT payment_cred,
            MIN(address)        AS sample_address,
-           COUNT(*)            AS utxo_count,
-           SUM(value)::bigint  AS lovelace
-    FROM script_no_cred
+           SUM(utxo_count)     AS utxo_count,
+           SUM(lovelace)::bigint AS lovelace
+    FROM t_no_cred_addr
+    WHERE address_type = 'enterprise_script'
     GROUP BY payment_cred
   ),
   total AS (SELECT SUM(lovelace) AS t FROM per_cred)
@@ -215,4 +232,19 @@ COPY (
   LIMIT 100
 ) TO '/tmp/script_no_cred_top100.csv' WITH CSV HEADER;
 
-\echo Done.
+-- Sanity check: total no-cred + total with-cred should ≈ circulation - reward - deposits
+COPY (
+  SELECT
+    'no_stake_credential'                         AS category,
+    COUNT(*)                                       AS utxo_count,
+    SUM(value)::bigint                             AS total_lovelace,
+    (SUM(value) / 1000000.0)::bigint               AS total_ada
+  FROM t_unspent
+  WHERE stake_address_id IS NULL
+  UNION ALL
+  SELECT 'has_stake_credential', COUNT(*), SUM(value)::bigint, (SUM(value)/1000000.0)::bigint
+  FROM t_unspent
+  WHERE stake_address_id IS NOT NULL
+) TO '/tmp/utxo_sanity_check.csv' WITH CSV HEADER;
+
+\echo === Done.
