@@ -64,7 +64,7 @@ STANCE_LABELS = {
     "exemplary":     "Exemplary (≥80%)",
     "compliant":     "Compliant (30–80%)",
     "marginal":      "Marginal (2–30%)",
-    "non_compliant": "Non-compliant (<2%)",
+    "non_compliant": "Zero-pledge (<2%)",
 }
 STANCE_STACK = ["non_compliant", "marginal", "compliant", "exemplary"]
 
@@ -191,7 +191,7 @@ def historical_pledge_ada(pool_id, epoch_no, pledge_timelines):
 
 # ── Tier definitions (shared) ──
 TIER_NAMES = [
-    "Dormant", "Sub-production", "Sub-viable", "Healthy",
+    "Dormant", "Sub-block", "Sub-reliable", "Healthy",
     "Large healthy", "Near-saturation", "Saturated", "Oversaturated",
 ]
 TIER_COLORS = [
@@ -247,8 +247,7 @@ def draw_butterfly(pools, z0, epoch, title, subtitle, fig_path,
 
     # Threshold markers
     threshold_after = {
-        1: ("Production\nthreshold",  "1M ADA",  DAWN),
-        2: ("Viability\nthreshold",   "3M ADA",  INFARED),
+        2: ("Production\nthreshold",   "3M ADA",  INFARED),
         6: ("Saturation\nthreshold", f"{z0/1e6:.0f}M ADA", ULTRAVIOLET),
     }
 
@@ -660,7 +659,7 @@ def draw_spo_only_history(epochs, view_a, live_epoch):
         0.97, 0.96,
         f"Epoch {IMA_END_EPOCH}: {report_total:.1f}% of active stake\n"
         f"Epoch {live_epoch}: {live_total:.1f}% of active stake\n"
-        f"Non-compliant: {report_nc:.1f}% → {live_nc:.1f}%\n"
+        f"Zero-pledge: {report_nc:.1f}% → {live_nc:.1f}%\n"
         f"Compliant + exemplary: {report_qual:.1f}% → {live_qual:.1f}%",
         transform=ax.transAxes, ha="right", va="top",
         fontsize=9, color=INK,
@@ -829,7 +828,7 @@ def main():
                       DATA_DIR / "filtered_landscape_spo_only_summary.csv",
                       show_mpo=False)
 
-    # ── Variant 2: SPOs + compliant MPOs (non-compliant MPOs removed) ──
+    # ── Variant 2: SPOs + compliant MPOs (zero-pledge MPOs removed) ──
     with_compliant = [p for p in all_pools if not p["is_nc_mpo"]]
     n2 = len(with_compliant)
     s2 = sum(p["stake"] for p in with_compliant)

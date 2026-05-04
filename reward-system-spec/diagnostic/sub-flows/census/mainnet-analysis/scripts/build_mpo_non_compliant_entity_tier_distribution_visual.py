@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Non-compliant MPO entities by pool-size tier.
+Zero-pledge MPO entities by pool-size tier.
 
 Focus on the entities whose aggregate effective pledge ratio is <2% across
 live pools (>100 ADA). The left panel shows how many live pools each entity
@@ -51,8 +51,8 @@ ENTITY_ID_ALIASES = {
 
 TIER_ORDER = [
     "Dormant",
-    "Sub-production",
-    "Sub-viable",
+    "Sub-block",
+    "Sub-reliable",
     "Healthy",
     "Large healthy",
     "Near-saturation",
@@ -62,8 +62,8 @@ TIER_ORDER = [
 
 TIER_COLORS = {
     "Dormant": GREY_DARK,
-    "Sub-production": DAWN,
-    "Sub-viable": INFARED,
+    "Sub-block": DAWN,
+    "Sub-reliable": INFARED,
     "Healthy": ACID_GREEN,
     "Large healthy": TEAL,
     "Near-saturation": SOLAR_AMBER,
@@ -258,7 +258,7 @@ def main() -> None:
                         ha="center",
                         va="center",
                         fontsize=7.5,
-                        color=BG if tier in {"Sub-viable", "Saturated", "Oversaturated"} else INK,
+                        color=BG if tier in {"Sub-reliable", "Saturated", "Oversaturated"} else INK,
                         fontweight="bold",
                         zorder=4,
                     )
@@ -336,7 +336,7 @@ def main() -> None:
     )
 
     fig.suptitle(
-        "Non-compliant capital-sufficient MPO entities by pool-size tier",
+        "Zero-pledge saturation-scale MPO entities by pool-size tier",
         fontsize=14,
         fontweight="bold",
         color=INK,
@@ -346,7 +346,7 @@ def main() -> None:
         0.27,
         0.885,
         (
-            f"{n_entities} capital-sufficient non-compliant entities (<2% effective pledge) · "
+            f"{n_entities} saturation-scale zero-pledge entities (<2% effective pledge) · "
             f"{total_non_compliant_pools} live pools (>100 ADA) · "
             f"{total_non_compliant_stake / 1e9:.2f}B ADA · epoch {epoch}"
         ),

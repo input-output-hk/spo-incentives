@@ -100,6 +100,97 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
   })();
 
 
+  /* ── Collapsible content sections (h2 - h6) ──
+     Wraps the content of each numbered heading in a .section-body
+     div and toggles .collapsed on click. Restored after the
+     April 30 site.js wipe (commit ff51a62) accidentally dropped it.
+     Lives OUTSIDE the cross-obs marker block so the regenerator
+     in build_site.py preserves it on every rebuild. */
+  function makeCollapsible(heading, stopTags){
+    if(/^objective$/i.test(heading.textContent.trim())) return;
+    var startCollapsed=/^table of contents$/i.test(heading.textContent.trim());
+    heading.classList.add('section-toggle');
+    var wrapper=document.createElement('div');
+    wrapper.className='section-body';
+    var sib=heading.nextElementSibling;
+    var nodes=[];
+    while(sib && stopTags.indexOf(sib.tagName)===-1){
+      nodes.push(sib);
+      sib=sib.nextElementSibling;
+    }
+    if(nodes.length===0){ heading.classList.remove('section-toggle'); return; }
+    heading.after(wrapper);
+    nodes.forEach(function(n){ wrapper.appendChild(n); });
+    if(startCollapsed){
+      wrapper.style.maxHeight='0px';
+      wrapper.classList.add('collapsed');
+      heading.classList.add('collapsed');
+    } else {
+      wrapper.style.maxHeight='none';
+    }
+    heading.addEventListener('click',function(){
+      heading.classList.toggle('collapsed');
+      if(wrapper.classList.contains('collapsed')){
+        wrapper.style.maxHeight=wrapper.scrollHeight+'px';
+        wrapper.classList.remove('collapsed');
+        wrapper.addEventListener('transitionend',function handler(){
+          if(!wrapper.classList.contains('collapsed')) wrapper.style.maxHeight='none';
+          wrapper.removeEventListener('transitionend',handler);
+        });
+      } else {
+        wrapper.style.maxHeight=wrapper.scrollHeight+'px';
+        requestAnimationFrame(function(){ wrapper.style.maxHeight='0px'; wrapper.classList.add('collapsed'); });
+      }
+    });
+    wrapper.querySelectorAll('[id]').forEach(function(el){
+      window.addEventListener('hashchange',function(){
+        if(window.location.hash==='#'+el.id && wrapper.classList.contains('collapsed')){
+          heading.click();
+        }
+      });
+    });
+  }
+  /* Apply bottom-up: deepest first so inner wrappers exist before outer
+     ones. Extends to h5 + h6 so deeply nested sections (e.g. 1.2.4.2.1
+     and 1.2.4.2.1.1) get the same fold affordance as h2-h4. */
+  document.querySelectorAll('.content h6[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3','H4','H5','H6']); });
+  document.querySelectorAll('.content h5[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3','H4','H5']); });
+  document.querySelectorAll('.content h4[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3','H4']); });
+  document.querySelectorAll('.content h3[id]').forEach(function(h){ makeCollapsible(h,['H1','H2','H3']); });
+  document.querySelectorAll('.content h2[id]').forEach(function(h){ makeCollapsible(h,['H1','H2']); });
+
+
+  /* ── Back-to-top FAB ──
+     Floats above the bottom-right corner once the reader has
+     scrolled past the hero. One round button with an upward
+     chevron — click scrolls the window back to the top. Lives
+     OUTSIDE the cross-obs marker block so it survives every
+     rebuild. */
+  (function initBackToTop(){
+    if(document.querySelector('.back-to-top')) return;
+    var btn=document.createElement('button');
+    btn.className='back-to-top';
+    btn.type='button';
+    btn.setAttribute('aria-label','Back to top');
+    btn.title='Back to top';
+    btn.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+
+      '<path fill="none" stroke="currentColor" stroke-width="2" '+
+      'stroke-linecap="round" stroke-linejoin="round" '+
+      'd="M6 14l6-6 6 6"/></svg>';
+    document.body.appendChild(btn);
+    var threshold=320;
+    function update(){
+      if(window.scrollY>threshold) btn.classList.add('visible');
+      else btn.classList.remove('visible');
+    }
+    btn.addEventListener('click',function(){
+      try{ window.scrollTo({top:0,behavior:'smooth'}); }
+      catch(e){ window.scrollTo(0,0); }
+    });
+    window.addEventListener('scroll',update,{passive:true});
+    update();
+  })();
+
 
   /* ── Cross-page synthesis-observation source overlay ──
      When an `.obs-ref` anchor carries `data-obs-src`, hydrate the overlay

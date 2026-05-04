@@ -110,6 +110,54 @@ PAGES = [
         "hero_sub": "The operator's revenue versus the delegator's share — Reward Flow stage 3",
         "active_nav": "operator",
     },
+    # --- Diagnostic — CPS documents -----------------------------------------
+    # --- Diagnostic — Census sub-docs ---------------------------------------
+    {
+        "slug": "single-spo",
+        "md": "diagnostic/sub-flows/census/mainnet-analysis/single-spo/README.md",
+        "html": "single-spo.html",
+        "title": "Single-Pool Operators — The Independent Operator Segment",
+        "hero_h1": "Single-Pool Operators",
+        "hero_sub": "What remains after MPO extraction — the independent base",
+        "active_nav": "census",
+    },
+    {
+        "slug": "entity-lifecycle",
+        "md": "diagnostic/sub-flows/census/mainnet-analysis/entity-lifecycle/README.md",
+        "html": "entity-lifecycle.html",
+        "title": "Entity Lifecycle — Growth, Decline, and Exit on Cardano Mainnet",
+        "hero_h1": "Entity Lifecycle",
+        "hero_sub": "Growth, decline, and exit patterns across 85 identified entities",
+        "active_nav": "census",
+    },
+    {
+        "slug": "mpo-entity-profiles",
+        "md": "diagnostic/sub-flows/census/mainnet-analysis/docs/mpo_entity_profiles.md",
+        "html": "mpo-entity-profiles.html",
+        "title": "MPO Entity Profiles — Annex",
+        "hero_h1": "MPO Entity Profiles",
+        "hero_sub": "Detailed per-entity descriptions grouped by archetype",
+        "active_nav": "census",
+    },
+    # --- Diagnostic — Nakamoto re-evaluation sub-flow -----------------------
+    {
+        "slug": "nakamoto-revaluation",
+        "md": "diagnostic/sub-flows/nakamoto-revaluation/README.md",
+        "html": "nakamoto-revaluation.html",
+        "title": "Nakamoto Coefficient — Mainnet Re-evaluation",
+        "hero_h1": "Nakamoto Coefficient",
+        "hero_sub": "Mainnet re-evaluation under seven explicit definitions",
+        "active_nav": "observatory",
+    },
+    {
+        "slug": "edi-replication",
+        "md": "diagnostic/sub-flows/nakamoto-revaluation/edi-replication/README.md",
+        "html": "edi-replication.html",
+        "title": "EDI Replication — Cardano Nakamoto Coefficient",
+        "hero_h1": "EDI Replication",
+        "hero_sub": "In-house run of the Edinburgh Decentralization Index pipeline",
+        "active_nav": "observatory",
+    },
     # --- Solution Evaluation -------------------------------------------------
     {
         "slug": "solution-evaluation",
@@ -328,6 +376,12 @@ BUILD_DATE = _cfg(
     "SPO_BUILD_DATE",
     time.strftime("%Y/%m/%d"),
 )
+# Cutoff epoch for the on-chain analysis. Surfaced in the hero badge so
+# every page makes the data window explicit (e.g. "Through epoch 623").
+# 623 is the canonical mainnet snapshot used across the diagnostic;
+# its end date is 2026/04/09 (Shelley epoch 208 + 5 days × (623−208)).
+BUILD_EPOCH = _cfg("SPO_BUILD_EPOCH", "623")
+BUILD_EPOCH_DATE = _cfg("SPO_BUILD_EPOCH_DATE", "2026/04/09")
 
 # Hypothesis (web annotation overlay). When enabled, ships
 # https://hypothes.is/embed.js which adds a side panel allowing readers to
@@ -622,6 +676,84 @@ def _render_build_author_html() -> str:
             f'{name_html}</a>'
         )
     return f'<span class="hero-division-author">{name_html}</span>'
+
+
+_ICON_CLOCK = (
+    '<svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" '
+    'fill="none" stroke="currentColor" stroke-width="1.6" '
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    '<circle cx="12" cy="12" r="9"/>'
+    '<polyline points="12 7 12 12 15.5 14"/>'
+    '</svg>'
+)
+_ICON_USER = (
+    '<svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" '
+    'fill="none" stroke="currentColor" stroke-width="1.6" '
+    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>'
+    '<circle cx="12" cy="7" r="3.6"/>'
+    '</svg>'
+)
+
+
+def _render_hero_byline_html() -> str:
+    """Return the hero byline — a single inline typographic strip that
+    sits just under the subtitle. Two segments separated by a hairline:
+    analysis window (cutoff epoch + date) on the left, build provenance
+    (author + date) on the right. No box chrome — just type, icons,
+    and a vertical hairline. Mimics an editorial / research-paper byline
+    so the metadata reads as part of the document, not as a UI panel.
+    """
+    segments: list[str] = []
+
+    if BUILD_EPOCH:
+        epoch_html = _html.escape(BUILD_EPOCH)
+        date_html = (
+            f'<span class="hero-byline-sub"> · {_html.escape(BUILD_EPOCH_DATE)}</span>'
+            if BUILD_EPOCH_DATE else ""
+        )
+        segments.append(
+            '<span class="hero-byline-seg" '
+            'title="Cutoff epoch for the on-chain analysis">'
+            f'{_ICON_CLOCK}'
+            f'<span class="hero-byline-value">Through epoch {epoch_html}{date_html}</span>'
+            '</span>'
+        )
+
+    if BUILD_AUTHOR or BUILD_DATE:
+        if BUILD_AUTHOR and BUILD_AUTHOR_URL:
+            author_html = (
+                f'<a href="{_html.escape(BUILD_AUTHOR_URL)}" '
+                'target="_blank" rel="noopener noreferrer" '
+                'title="Author profile (opens in new tab)" '
+                'class="hero-byline-author">'
+                f'{_html.escape(BUILD_AUTHOR)}</a>'
+            )
+        elif BUILD_AUTHOR:
+            author_html = (
+                f'<span class="hero-byline-author">'
+                f'{_html.escape(BUILD_AUTHOR)}</span>'
+            )
+        else:
+            author_html = ""
+        date_html = (
+            f'<span class="hero-byline-sub"> · {_html.escape(BUILD_DATE)}</span>'
+            if BUILD_DATE else ""
+        )
+        segments.append(
+            '<span class="hero-byline-seg">'
+            f'{_ICON_USER}'
+            f'<span class="hero-byline-value">{author_html}{date_html}</span>'
+            '</span>'
+        )
+
+    if not segments:
+        return ""
+    return (
+        '<div class="hero-byline" aria-label="Document metadata">'
+        + "".join(segments) +
+        '</div>'
+    )
 
 
 def _render_body_data_attrs() -> str:
@@ -1389,7 +1521,7 @@ window.MathJax = {{
 <!-- Zone 1 (left anchor) — Solution Evaluation: CIP candidates evaluated against V2 -->
 <div class="nav-zone nav-zone-solution">
 <div class="nav-dd-wrap nav-dd-wrap-light">
-<button class="nav-dd-btn-light nav-dd-btn-solution{cls_solution_trigger}" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Solution Evaluation ▾</button>
+<button class="nav-dd-btn-light nav-dd-btn-solution{cls_solution_trigger}" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">CIPs ▾</button>
 <div class="nav-dd-panel-light nav-dd-panel-solution">
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
@@ -1645,21 +1777,16 @@ HERO_BLOCK = """<div class="hero" data-banner="{hero_banner}">
     <div class="hero-eyebrow">{hero_eyebrow}</div>
     <h1>{hero_h1}</h1>
     <div class="sub">{hero_sub}</div>
-  </div>
-  <div class="hero-bottombar">
-    <div class="hero-division" aria-label="Build info">
-      <span class="hero-division-dot" aria-hidden="true"></span>
-      <span class="hero-division-label">{hero_build_date}</span>
-      <span class="hero-division-sep" aria-hidden="true">·</span>
-      {hero_build_author_html}
-    </div>
+    {hero_byline_html}
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
 <div class="content">{content}</div>"""
 
 # Which active-nav slugs fall under which top-level dropdown
-DIAG_ACTIVE = {"findings", "observatory", "census", "treasury", "pools", "operator"}
+DIAG_ACTIVE = {"findings", "observatory", "census", "treasury", "pools", "operator",
+               "single-spo", "entity-lifecycle", "mpo-entity-profiles",
+               "nakamoto-revaluation", "edi-replication"}
 SOLUTION_ACTIVE = {
     "solution-evaluation",
     "stake-cap", "cip-0050", "cip-0037",
@@ -1699,8 +1826,7 @@ BREADCRUMBS = {
     "census": ["Mainnet Diagnostic", "The Staking Census"],
     "treasury": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
     "pools": ["Mainnet Diagnostic", "Reward Flow", "Pools"],
-    "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],
-    "solution-evaluation": ["Solution Evaluation", "Cross-CIP Analysis & Verdict"],
+    "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],    "solution-evaluation": ["Solution Evaluation", "Cross-CIP Analysis & Verdict"],
     "stake-cap": ["Solution Evaluation", "Stake-Cap Layer", "CIP Evaluation Synthesis"],
     "cip-0050": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0050"],
     "cip-0037": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0037"],
@@ -1744,8 +1870,7 @@ _HERO_EYEBROW = {
     "census": "Mainnet Diagnostic",
     "treasury": "Mainnet Diagnostic",
     "pools": "Mainnet Diagnostic",
-    "operator": "Mainnet Diagnostic",
-    "solution-evaluation": "Solution Evaluation",
+    "operator": "Mainnet Diagnostic",    "solution-evaluation": "Solution Evaluation",
     "stake-cap": "Solution Evaluation",
     "fee-layer": "Solution Evaluation",
     # CIP pages keep the layer in the eyebrow because the H1 is just the
@@ -1826,8 +1951,7 @@ def render_shell(page: dict, content_html: str) -> str:
                 active, "V2 Reward System &middot; Technical Specification"
             ),
             hero_banner=BANNER_VARIANTS.get(active, "fluid"),
-            hero_build_date=_html.escape(BUILD_DATE) if BUILD_DATE else "",
-            hero_build_author_html=_render_build_author_html(),
+            hero_byline_html=_render_hero_byline_html(),
             content=content_html,
         )
 
@@ -4669,13 +4793,24 @@ _SUBPROBLEM_HEADING_RE = re.compile(
 
 
 def _extract_problem_summary(section_body: str) -> str:
-    """Return the first 1–2 substantive paragraphs of a problem-induction
-    section body, skipping the boilerplate framing line(s).
+    """Return the breathing problem-induction lead — short paragraphs
+    separated by blank lines so the argument is readable on the card.
+
+    The cap is intentionally generous (up to 8 paragraphs) so that
+    well-paced inductions with bolded mini-leads ("**The playing field
+    is half the size...**") can land in full. Sections cut themselves
+    off naturally when they hit a sub-heading, an HTML comment, or
+    drop below the substantive-length floor.
     """
     paras = [p.strip() for p in re.split(r"\n\s*\n", section_body) if p.strip()]
     body_paras: list[str] = []
-    for p in paras[:6]:
+    for p in paras[:20]:
         if p.startswith(("###", "####", "---", "<!--")):
+            break
+        # Hard stop: ``CPS identified.`` and the metadata/closing
+        # paragraphs that follow it don't belong on the card — the
+        # induction lead is upstream of the formal CPS labelling.
+        if p.lstrip().startswith("**CPS identified."):
             break
         # Drop the framing-sentence paragraphs unless we'd otherwise
         # have nothing — a standalone boilerplate line still beats
@@ -4685,14 +4820,19 @@ def _extract_problem_summary(section_body: str) -> str:
             if not body_paras:
                 continue
             break
-        if len(p) > 20:
+        # Substantive-length floor: 20 chars for prose, but bullet
+        # blocks (``- ...``) are kept regardless — the structure
+        # itself carries semantics and short bullets are valid.
+        if len(p) > 20 or p.lstrip().startswith("- "):
             body_paras.append(p)
-        if len(body_paras) >= 2:
+        if len(body_paras) >= 12:
             break
     return "\n\n".join(body_paras)
 
 
-def extract_findings_from_md(md_text: str) -> list[dict]:
+def extract_findings_from_md(
+    md_text: str, src_md: Path | None = None,
+) -> list[dict]:
     """Extract Problem-Induction problem statements from the diagnostic README.
 
     Each Problem Induction section emits one *or more* problem-statement
@@ -4798,6 +4938,7 @@ def extract_findings_from_md(md_text: str) -> list[dict]:
                     "section_preface": preface_for_card,
                     "anchor": anchor,
                     "order": len(findings),
+                    "src_md": src_md,
                 })
         else:
             summary = _extract_problem_summary(section_body)
@@ -4818,17 +4959,40 @@ def extract_findings_from_md(md_text: str) -> list[dict]:
                 "section_preface": "",
                 "anchor": anchor,
                 "order": len(findings),
+                "src_md": src_md,
             })
     return findings
 
 
-def _md_snippet_to_html(md_snippet: str) -> str:
+_MD_LINK_RE = re.compile(
+    r"(?<!\!)(\[(?:[^\[\]]|\[[^\]]*\])*\]\()([^)\s]+)(\s+\"[^\"]*\")?(\))"
+)
+
+
+def _rewrite_md_links_in_text(text: str, src_md: Path) -> str:
+    """Apply just the ``.md → .html`` link-rewrite portion of preprocess_md
+    to a free-floating markdown fragment (e.g. a problem-induction summary
+    extracted out of the page body before its links are rewritten).
+    """
+    def _link_sub(m: re.Match) -> str:
+        prefix, path, title, suffix = (
+            m.group(1), m.group(2), m.group(3) or "", m.group(4),
+        )
+        return f"{prefix}{rewrite_md_link(path, src_md)}{title}{suffix}"
+    return _MD_LINK_RE.sub(_link_sub, text)
+
+
+def _md_snippet_to_html(md_snippet: str, src_md: Path | None = None) -> str:
     """Convert a small markdown fragment to inline HTML.
 
     Used for the finding summary — we don't want the full md pipeline
-    (no toc, no admon). Runs the same math-protection guard and
-    link-rewrite pass so cross-refs remain useful.
+    (no toc, no admon). Runs the same math-protection guard and, when
+    ``src_md`` is provided, applies the page-build link rewrite so
+    ``[POL.O1](sub-flows/.../README.md#pol-o1)`` resolves to
+    ``pools.html#pol-o1`` rather than a raw .md path.
     """
+    if src_md is not None:
+        md_snippet = _rewrite_md_links_in_text(md_snippet, src_md)
     protected, spans = protect_math(md_snippet)
     html = markdown.markdown(
         protected,
@@ -4844,9 +5008,15 @@ def _render_finding_card(
     obs_for_section: list[dict],
     findings_by_canon_obs: dict[str, list[dict]] | None = None,
     index: int = 0,
+    num_prefix: str = "",
 ) -> str:
     """Render a single problem statement as a card with its observations
     and the canonical sub-report findings that ground it.
+
+    ``num_prefix`` is prepended to the per-card numeric chip — used to
+    namespace the per-group counters on findings.html (e.g. ``μ`` for
+    Microeconomics, ``M`` for Macroeconomics) so each group restarts
+    counting at 1 without colliding with its sibling.
     """
     title = finding["finding_title"] or "Problem Induction"
     parent_title = finding["parent_title"]
@@ -4860,7 +5030,8 @@ def _render_finding_card(
         if parent_title
         else f"§{finding['parent']}"
     )
-    summary_html = _md_snippet_to_html(finding["summary"])
+    src_md = finding.get("src_md")
+    summary_html = _md_snippet_to_html(finding["summary"], src_md=src_md)
     scope = {o["local_num"]: o for o in obs_for_section}
     if scope:
         summary_html = _apply_citation_substitution(summary_html, scope)
@@ -4873,7 +5044,7 @@ def _render_finding_card(
     preface_html = ""
     preface_md = finding.get("section_preface", "")
     if preface_md:
-        preface_inner = _md_snippet_to_html(preface_md)
+        preface_inner = _md_snippet_to_html(preface_md, src_md=src_md)
         if scope:
             preface_inner = _apply_citation_substitution(preface_inner, scope)
         preface_inner = _highlight_metrics(preface_inner)
@@ -4904,13 +5075,17 @@ def _render_finding_card(
             f_canon = f.get("canon_id") or ""
             href = f.get("jump_href") or "#"
             evidence = f.get("evidence") or f.get("summary") or ""
-            if len(evidence) > 220:
-                evidence = evidence[:217].rstrip(" ,;") + "…"
             f_num = f_canon.rsplit(".F", 1)[-1] if ".F" in f_canon else ""
             insight = f.get("insight") or ""
+            # Run inline markdown so ``**bold**`` markers in finding cells
+            # render as ``<strong>`` rather than literal asterisks. The
+            # evidence sits inside a collapsible drawer so we don't truncate
+            # — readers expand the observation only when they want detail.
+            evidence_html = _sro_inline_md_to_html(evidence)
+            insight_inner = _sro_inline_md_to_html(insight) if insight else ""
             insight_html = (
                 f'<span class="finding-card-fnode-insight">'
-                f'{_html.escape(insight)}</span>'
+                f'{insight_inner}</span>'
             ) if insight else ""
             rows_html.append(
                 f'<a class="finding-card-fnode" '
@@ -4918,7 +5093,7 @@ def _render_finding_card(
                 f'title="{_html.escape(f_canon)} — open the sub-report row">'
                 f'<span class="finding-card-fnode-num">F{_html.escape(f_num)}</span>'
                 f'<span class="finding-card-fnode-body">'
-                f'<span class="finding-card-fnode-text">{_html.escape(evidence)}</span>'
+                f'<span class="finding-card-fnode-text">{evidence_html}</span>'
                 f'{insight_html}'
                 f'</span>'
                 f'</a>'
@@ -4926,34 +5101,91 @@ def _render_finding_card(
         # Default-collapse every observation. The card opens with the
         # problem statement front-and-centre; readers expand only the
         # observations they want to inspect.
-        is_collapsed = True
-        collapsed_cls = " collapsed"
-        chev_aria = "false"
         f_count_label = (
             f"{len(f_rows)} finding{'s' if len(f_rows) != 1 else ''}"
             if f_rows else "no findings linked"
         )
-        empty_msg = (
-            '<li class="finding-card-onode-empty">'
-            'No canonical findings linked yet.</li>'
-        )
-        rows_block = "".join(rows_html) or empty_msg
+
+        # Observation abstract — column 3 of the canonical row in the
+        # source MD. Rendered between the head and the findings list,
+        # using the same .sro-abstract treatment as the per-page
+        # diagnostic so the synthesis card and the source card read
+        # as the same artefact.
+        summary_md = (o.get("summary") or "").strip()
+        abstract_block = ""
+        if summary_md:
+            summary_inline = _sro_inline_md_to_html(summary_md)
+            if scope:
+                summary_inline = _apply_citation_substitution(summary_inline, scope)
+            summary_inline = _highlight_metrics(summary_inline)
+            abstract_block = (
+                f'<p class="sro-abstract">{summary_inline}</p>'
+            )
+
+        # Build .sro-finding rows (cross-page links into the sub-report)
+        # mirroring the diagnostic page so readers see the same atom in
+        # both views. Each row remains a link — clicking jumps to the
+        # source location; the body shows the evidence text + insight.
+        canon_id = o.get("canon_id") or o["local_id"]
+        sro_rows: list[str] = []
+        for f in f_rows:
+            f_canon = f.get("canon_id") or ""
+            href = f.get("jump_href") or "#"
+            evidence = f.get("evidence") or f.get("summary") or ""
+            f_num = f_canon.rsplit(".F", 1)[-1] if ".F" in f_canon else ""
+            insight = f.get("insight") or ""
+            evidence_html = _sro_inline_md_to_html(evidence)
+            insight_inner = _sro_inline_md_to_html(insight) if insight else ""
+            insight_html = (
+                f'<div class="sro-insight">{insight_inner}</div>'
+            ) if insight else ""
+            sro_rows.append(
+                f'<li class="sro-finding" '
+                f'data-finding="{_html.escape(f_canon)}" '
+                f'data-group="{o["local_num"]}">'
+                f'<a class="sro-fid sro-fid-stack sro-group-{o["local_num"]}" '
+                f'href="{_html.escape(href)}" '
+                f'title="{_html.escape(f_canon)} — open in the sub-report">'
+                f'<span class="sro-fid-label">#{_html.escape(f_num)}</span>'
+                f'<span class="sro-fid-ref">{_html.escape(f_canon)}</span>'
+                f'</a>'
+                f'<div class="sro-body">'
+                f'<div class="sro-evidence">{evidence_html}</div>'
+                f'{insight_html}'
+                f'</div>'
+                f'</li>'
+            )
+        sro_rows_html = "".join(sro_rows)
+        findings_block = ""
+        if sro_rows_html:
+            findings_block = (
+                '<div class="sro-findings-label">Findings</div>'
+                f'<ol class="sro-findings">{sro_rows_html}</ol>'
+            )
+
+        # Observation card — same .sro-card-pro look as the diagnostic
+        # page. Click the head to expand; both the abstract and the
+        # findings list are revealed together (in findings.html only —
+        # the per-page diagnostic keeps the abstract always visible).
+        obs_dom_id = _canon_slug(canon_id)
         nodes_html.append(
-            f'<li class="finding-card-onode{collapsed_cls}" '
+            f'<article class="sro-card sro-card-pro collapsed" '
+            f'id="{obs_dom_id}" '
+            f'data-obs="{_html.escape(canon_id)}" '
+            f'data-group="{o["local_num"]}" '
             f'data-tier="{o["tier"]}">'
-            f'<button class="finding-card-onode-head" type="button" '
-            f'aria-expanded="{chev_aria}" '
-            f'data-target="onode-toggle">'
-            f'<span class="finding-card-onode-chev" aria-hidden="true">▾</span>'
-            f'<span class="finding-card-onode-num">{o["local_id"]}</span>'
-            f'<span class="finding-card-onode-title">'
-            f'{_html.escape(o["title"])}</span>'
-            f'<span class="finding-card-onode-fcount">{f_count_label}</span>'
-            f'</button>'
-            f'<ol class="finding-card-onode-findings">'
-            f'{rows_block}'
-            f'</ol>'
-            f'</li>'
+            f'<header class="sro-head">'
+            f'<span class="sro-badge sro-group-{o["local_num"]}" '
+            f'title="{_html.escape(canon_id)}">{_html.escape(canon_id)}</span>'
+            f'<div class="sro-titles">'
+            f'<span class="sro-eyebrow">Observation {o["local_num"]:02d} · {f_count_label}</span>'
+            f'<h3 class="sro-title">{_html.escape(o["title"])}</h3>'
+            f'</div>'
+            f'<span class="sro-count">{f_count_label}</span>'
+            f'</header>'
+            f'{abstract_block}'
+            f'{findings_block}'
+            f'</article>'
         )
     evidence_html = ""
     if obs_for_section:
@@ -4971,9 +5203,9 @@ def _render_finding_card(
             f'<span class="finding-card-evidence-count">'
             f'{evidence_label}</span>'
             f'</div>'
-            f'<ul class="finding-card-evidence-tree">'
+            f'<div class="finding-card-evidence-tree">'
             f'{"".join(nodes_html)}'
-            f'</ul>'
+            f'</div>'
             f'</div>'
         )
     # else: no observations → render no evidence block at all. The
@@ -4992,9 +5224,12 @@ def _render_finding_card(
     # scale. White display title + Infared-rule eyebrow so each card
     # reads as its own miniature page header. The leading numbered
     # chip pins the card to its position in the list.
-    num_label = f"{index + 1:02d}"
+    num_label = f"{num_prefix}{index + 1:02d}"
+    card_id = f"problem-{finding['section_id'].replace('.', '-')}"
+
     return (
-        f'<article class="finding-card" data-section="{finding["section_id"]}" '
+        f'<article class="finding-card" id="{card_id}" '
+        f'data-section="{finding["section_id"]}" '
         f'data-parent="{finding["parent"]}">'
         f'<header class="finding-card-banner" data-banner="braid">'
         f'<span class="finding-card-banner-eyebrow">{parent_label}</span>'
@@ -5039,6 +5274,78 @@ def _render_findings_content(
                     findings_by_canon_obs.get(canon, [])
                 )
 
+    # Group each finding into Microeconomics or Macroeconomics by section_id.
+    # The split follows the natural economic distinction in the diagnostic:
+    # participant-level gaps (operator/delegator/pool faces a problem inside
+    # the reward mechanism) vs system-level gaps (the network as a whole
+    # must satisfy a sustainability condition through time and across price
+    # regimes).
+    MICRO_SECTIONS = {
+        "1.2.3",   # Closing the Consensus Incentive Gap (pledge)
+        "1.3.3.1", # Guarantee operator viability
+        "1.3.3.2", # Restore competitive delegator yield
+        "2.1.3.1", # Operator population concentration
+        "2.1.3.2", # Frozen power law
+    }
+    MACRO_SECTIONS = {
+        "1.1.3",   # Funding the protocol without a reserve
+        "2.1.3.3", # Non-participant population
+        "2.2.3.1", # Fee input insufficient
+        "2.2.3.2", # Fee-generating population growth
+        "3.3.1",   # Deflation assumption gap
+        "3.3.2",   # Trilemma
+    }
+
+    sorted_findings = sorted(findings, key=lambda r: r.get("order", 0))
+    # Split into two buckets, each renumbered independently from 1.
+    micro_findings = [f for f in sorted_findings if f["section_id"] in MICRO_SECTIONS]
+    macro_findings = [f for f in sorted_findings if f["section_id"] in MACRO_SECTIONS]
+    # Defensive: anything unclassified lands in macro (shouldn't happen).
+    classified = set(f["section_id"] for f in micro_findings + macro_findings)
+    for f in sorted_findings:
+        if f["section_id"] not in classified:
+            macro_findings.append(f)
+
+    def _toc_item(f: dict, group_idx: int, group_prefix: str) -> str:
+        sid = f["section_id"]
+        card_id = f"problem-{sid.replace('.', '-')}"
+        title = f["finding_title"] or "Problem Induction"
+        num_label = f"{group_prefix}{group_idx + 1:02d}"
+        return (
+            f'<a class="findings-toc-item" href="#{card_id}">'
+            f'<span class="findings-toc-num">{_html.escape(num_label)}</span>'
+            f'<span class="findings-toc-title">{_html.escape(title)}</span>'
+            f'</a>'
+        )
+
+    # μ for Micro, M for Macro — short, unambiguous, mathematically conventional.
+    MICRO_PREFIX = "μ"
+    MACRO_PREFIX = "M"
+
+    micro_items = [_toc_item(f, i, MICRO_PREFIX) for i, f in enumerate(micro_findings)]
+    macro_items = [_toc_item(f, i, MACRO_PREFIX) for i, f in enumerate(macro_findings)]
+
+    toc_html = (
+        '<nav class="findings-toc" aria-label="Problems index">'
+        '<div class="findings-toc-group">'
+        '<div class="findings-toc-group-head">'
+        '<span class="findings-toc-group-label">Microeconomics</span>'
+        f'<span class="findings-toc-group-count">{len(micro_items)} problems</span>'
+        '</div>'
+        '<div class="findings-toc-group-meta">Participant-level gaps — what an individual operator, delegator, or pool faces inside the reward mechanism</div>'
+        f'<div class="findings-toc-group-list">{"".join(micro_items)}</div>'
+        '</div>'
+        '<div class="findings-toc-group">'
+        '<div class="findings-toc-group-head">'
+        '<span class="findings-toc-group-label">Macroeconomics</span>'
+        f'<span class="findings-toc-group-count">{len(macro_items)} problems</span>'
+        '</div>'
+        '<div class="findings-toc-group-meta">System-level gaps — what the reward pipeline as a whole must satisfy to remain solvent, growable, and coherent across price regimes</div>'
+        f'<div class="findings-toc-group-list">{"".join(macro_items)}</div>'
+        '</div>'
+        '</nav>'
+    )
+
     intro = (
         '<div class="findings-intro">'
         '<p class="findings-intro-lead">'
@@ -5059,6 +5366,18 @@ def _render_findings_content(
         'opinion, a roadmap, or a fix. It is a question the mechanism '
         'has stopped answering.'
         '</p>'
+        '<p>'
+        'The eleven problems split along an economic distinction that '
+        'runs through every reward-mechanism analysis: participant-level '
+        'gaps (<strong>Microeconomics</strong>, the mechanism as it '
+        'reaches an individual operator, delegator, or pool) and '
+        'system-level gaps (<strong>Macroeconomics</strong>, the '
+        'pipeline-wide conditions for solvency, growth, and price-regime '
+        'coherence). Use the index below to jump to any card; '
+        'observations and supporting findings expand on click within '
+        'each card.'
+        '</p>'
+        f'{toc_html}'
         '<p class="findings-intro-howto">'
         'Each card below opens with the problem statement and a short '
         'synthesis of the induction reasoning, then lists the '
@@ -5095,45 +5414,65 @@ def _render_findings_content(
         '</div>'
     )
 
-    # Single flat list of every problem statement, in document order.
-    # No top-level §1/§2/§3 grouping — each card carries its own
-    # parent label in its header so the topic context isn't lost.
-    cards_html: list[str] = []
-    for idx, f in enumerate(sorted(findings, key=lambda r: r.get("order", 0))):
-        obs_for_section = [
-            o for o in observations
-            if o["parent"] == f["parent"]
-        ]
-        cards_html.append(_render_finding_card(
-            f, obs_for_section, findings_by_canon_obs, index=idx,
-        ))
+    # Cards reshuffled into two grouped sections — Microeconomics first,
+    # Macroeconomics second. Numbering restarts at 1 within each group so
+    # the cards line up with the TOC's μ1-μ5 / M1-M6 indexing above.
+    def _group_section(
+        bucket: list[dict],
+        prefix: str,
+        group_slug: str,
+        group_label: str,
+        group_meta: str,
+    ) -> str:
+        cards = []
+        for i, f in enumerate(bucket):
+            obs_for_section = [
+                o for o in observations if o["parent"] == f["parent"]
+            ]
+            cards.append(_render_finding_card(
+                f, obs_for_section, findings_by_canon_obs,
+                index=i, num_prefix=prefix,
+            ))
+        # Pill is rendered INSIDE the h2 so it shares the brand h2 layout
+        # (display:flex with the trailing ::after line) — title text, then
+        # count chip, then the line stretches naturally to the right.
+        return (
+            f'<section class="findings-group findings-group-{group_slug}" '
+            f'id="findings-group-{group_slug}">'
+            f'<header class="findings-group-head">'
+            f'<h2 class="findings-group-title">'
+            f'<span class="findings-group-title-text">{_html.escape(group_label)}</span>'
+            f'<span class="findings-group-pill">{len(bucket)} problems</span>'
+            f'</h2>'
+            f'<p class="findings-group-meta">{_html.escape(group_meta)}</p>'
+            f'</header>'
+            f'<div class="findings-group-cards">{"".join(cards)}</div>'
+            f'</section>'
+        )
+
+    micro_section = _group_section(
+        micro_findings, MICRO_PREFIX, "micro", "Microeconomics",
+        "Participant-level gaps — what an individual operator, delegator, or pool faces inside the reward mechanism.",
+    )
+    macro_section = _group_section(
+        macro_findings, MACRO_PREFIX, "macro", "Macroeconomics",
+        "System-level gaps — what the reward pipeline as a whole must satisfy to remain solvent, growable, and coherent across price regimes.",
+    )
     list_html = (
-        f'<div class="findings-list">{"".join(cards_html)}</div>'
+        f'<div class="findings-list">{micro_section}{macro_section}</div>'
     )
 
     # Render all observation cards as a hidden registry so the overlay JS
     # (which reads .obs-card DOM) can hydrate details on chip hover/click.
     registry_cards = "".join(_render_obs_card(o) for o in observations)
 
-    # Collapsing handler for the per-observation evidence nodes. Tiny,
-    # idempotent, no dependencies — kept inline so the synthesis page
-    # works even if assets/site.js fails to load.
-    toggle_js = (
-        '<script>'
-        '(function(){'
-        'function bind(){'
-        'document.querySelectorAll(".finding-card-onode-head").forEach(function(b){'
-        'if(b.dataset.bound) return;b.dataset.bound="1";'
-        'b.addEventListener("click",function(){'
-        'var n=b.closest(".finding-card-onode");if(!n)return;'
-        'var open=n.classList.toggle("collapsed");'
-        'b.setAttribute("aria-expanded",open?"false":"true");'
-        '});});}'
-        'if(document.readyState!=="loading")bind();'
-        'else document.addEventListener("DOMContentLoaded",bind);'
-        '})();'
-        '</script>'
-    )
+    # No inline collapse handler — the global initCardCollapse in
+    # assets/site.js already binds to ``.sro-card-pro > .sro-head``,
+    # which matches the cards we render here. The previous inline
+    # script attached a SECOND click listener on the same heads, so
+    # every click toggled .collapsed twice (once per handler) and
+    # cancelled itself — appearing as 'collapse is broken'.
+    toggle_js = ""
 
     body = (
         '<div class="findings-page">'
@@ -5157,7 +5496,7 @@ def build_findings_page() -> Path:
     src_md = REPO_ROOT / "diagnostic/README.md"
     md_text = src_md.read_text()
     observations = extract_observations_from_md(md_text)
-    findings = extract_findings_from_md(md_text)
+    findings = extract_findings_from_md(md_text, src_md=src_md)
 
     # Build a lookup keyed on the canonical observation id
     # (``TRE.O1`` → list of TRE.O1.F# records) so each problem-statement
@@ -5954,6 +6293,63 @@ def rewrite_canonical_obs_citations(
     return _walk_html_skipping(html_body, _transform)
 
 
+# Match an existing ``<a>`` tag whose visible text is a canonical
+# observation id (``POL.O6``, ``CEN.O3``, etc.). After the DIA→canonical
+# remap, the V2 spec MD uses ``[POL.O6](diagnostic/...)`` markdown links
+# directly, which md_to_html turns into a plain <a>POL.O6</a>. Without
+# the rewrite below, those anchors render as ordinary cross-page links —
+# losing the hover tooltip and the click-for-side-panel behaviour the
+# reader had on the previous DIA-prefixed version.
+_CANON_OBS_ANCHOR_TEXT_RE = re.compile(
+    r"<a\b([^>]*)>\s*([A-Z]{3}\.O\d+)\s*</a>",
+    re.IGNORECASE,
+)
+
+
+def rewrite_canonical_obs_anchors(
+    html_body: str,
+    obs_groups_by_canon: dict[str, dict] | None = None,
+) -> str:
+    """Enrich pre-existing ``<a>POL.O6</a>``-style anchors with the
+    overlay class + ``data-obs-src`` attributes so the cross-page hover
+    tooltip and side-panel handlers in ``initCrossObsSource`` bind.
+
+    ``obs_groups_by_canon`` keys: ``"POL.O6"`` etc. → ``obs_group`` dict
+    (from ``_load_all_subreport_data().obs_groups_by_code`` flattened by
+    canon_id). Each obs_group carries ``page_html`` and ``jump_href``.
+    """
+    if not obs_groups_by_canon or "<a" not in html_body:
+        return html_body
+
+    def _sub(m: re.Match) -> str:
+        attrs = m.group(1) or ""
+        canon = m.group(2).strip().upper()
+        g = obs_groups_by_canon.get(canon)
+        if not g:
+            return m.group(0)
+        # Already enriched? Don't double-process.
+        if "obs-ref" in attrs:
+            return m.group(0)
+        # Repoint href to the source row (preserves navigation when JS
+        # is unavailable) and inject the overlay attributes.
+        page_html = g.get("page_html", "")
+        jump_href = g.get("jump_href") or f'{page_html}#{g.get("slug", "")}'
+        # Strip any pre-existing href attribute, then re-add.
+        attrs_no_href = re.sub(r'\s+href="[^"]*"', '', attrs)
+        return (
+            f'<a class="obs-ref obs-ref-src"'
+            f'{attrs_no_href}'
+            f' href="{_html.escape(jump_href)}"'
+            f' data-obs-src="{_html.escape(canon)}"'
+            f' data-obs-page="{_html.escape(page_html)}"'
+            f' data-obs-href="{_html.escape(jump_href)}"'
+            f' title="{_html.escape(canon)} · hover for summary, click for detail">'
+            f'{canon}</a>'
+        )
+
+    return _CANON_OBS_ANCHOR_TEXT_RE.sub(_sub, html_body)
+
+
 # --- Sub-report Mainnet Observations: O# headers + F# rows --------------
 
 # Matches O-header rows:  | | **POL.O1 — Title** | | [optional abstract] |
@@ -6726,6 +7122,166 @@ def classify_table_rows(html_body: str) -> str:
     return _TABLE_TBODY_RE.sub(_process_tbody, html_body)
 
 
+# Two-pass figure wrapping. The first pass wraps every ``<p><img></p>``
+# (and the same-paragraph ``<p><img>caption</p>`` shape) in a bare
+# ``<figure>``. The second pass folds an *adjacent* caption paragraph
+# (italic, opens with ``Figure``/``Fig.``/``Chart``/etc.) into the
+# previous figure as a ``<figcaption>``. Splitting the work like this
+# avoids the bug where a single greedy regex would consume the next
+# paragraph along with the image — including paragraphs that turned
+# out NOT to be captions, leaving subsequent images orphaned.
+_MD_IMG_ONLY_RE = re.compile(
+    r'<p>\s*(?P<img><img\b[^>]*>)\s*</p>',
+    re.IGNORECASE,
+)
+_MD_IMG_INLINE_CAP_RE = re.compile(
+    r'<p>\s*(?P<img><img\b[^>]*>)\s*(?:<br\s*/?>\s*)?'
+    r'(?P<cap>(?:[^<]|<(?!/?p\b))+)</p>',
+    re.IGNORECASE | re.DOTALL,
+)
+_FIGURE_FOLLOWED_BY_CAP_RE = re.compile(
+    r'(<figure class="md-figure"><img\b[^>]*></figure>)'
+    r'\s*<p>(?P<cap>(?:[^<]|<(?!/?p\b))*)</p>',
+    re.IGNORECASE | re.DOTALL,
+)
+# A figure caption opens either with the canonical ``CODE.X.Y`` form
+# (``TRE.4.4``, ``POL.3.1``, ``DIA.1.2``, ``CEN.2.3``, ``OPE.4.6``) — the
+# absolute, cross-document reference now baked into every Mainnet
+# Diagnostic MD — or with the legacy ``Figure X.Y`` keyword form left
+# over from older drafts. Either matches.
+_FIGURE_CAP_RE = re.compile(
+    r'^\s*(?:'
+    r'(?:TRE|POL|OPE|CEN|DIA)\.\d+(?:\.\d+)*'
+    r'|'
+    r'(?:Figure|Fig\.?|Diagram|Chart|Plot|Table)\b'
+    r')',
+    re.IGNORECASE,
+)
+
+
+def _peel_outer_em(s: str) -> str:
+    """If ``s`` is wrapped in a single ``<em>…</em>`` (or fragmented
+    sibling ``<em>``s as the multi-segment captions emit), peel the
+    outer italic layer so the figcaption isn't double-italicised by
+    CSS. Conservative — leaves the string as-is when ambiguous.
+    """
+    m = re.match(r'^\s*<em>(.*)</em>\s*$', s, re.DOTALL)
+    if m and '<em>' not in m.group(1):
+        return m.group(1)
+    if s.count('<em>') > 1:
+        return re.sub(r'</?em>', '', s)
+    return s
+
+
+def _plain_text_prefix(html: str, n: int = 60) -> str:
+    return re.sub(r'<[^>]+>', '', html)[:n].strip()
+
+
+def _build_figcaption(cap_inner: str) -> str:
+    """Take the raw inner HTML of a caption paragraph and return the
+    fully-styled ``<figcaption>`` markup, including the lifted
+    ``[TRE.4.4]`` (or legacy ``[FIGURE 4.1]``) chip when the text
+    starts with one of the recognised forms.
+    """
+    peeled = _peel_outer_em(cap_inner).strip()
+    # Try the canonical ``CODE.X.Y`` form first (now the standard
+    # across the diagnostic MDs); fall back to the legacy
+    # ``Figure X.Y`` keyword form for any orphan that hasn't been
+    # remapped.
+    canon_match = re.match(
+        r'\s*((?:TRE|POL|OPE|CEN|DIA)\.\d+(?:\.\d+)*)\s*(?:[—–\-]\s*)?',
+        peeled,
+        re.IGNORECASE,
+    )
+    if canon_match:
+        canon_id = canon_match.group(1).upper()
+        rest = peeled[canon_match.end():].strip()
+        rest = re.sub(r'^[—–\-]\s*', '', rest)
+        # The chip prefixes the canonical id with the word ``Figure``
+        # so the label reads naturally ('Figure TRE.4.4' rather than a
+        # bare ``TRE.4.4`` that looks like an observation id). MD
+        # source stays compact (``*TRE.4.4 — …*``); the prefix is a
+        # display-only convenience.
+        inner = (
+            f'<span class="figcaption-label">'
+            f'<span class="figcaption-label-kind">Figure</span>'
+            f'<span class="figcaption-label-id">{canon_id}</span>'
+            f'</span>'
+            f'<span class="figcaption-body">{rest}</span>'
+        )
+        return f'<figcaption>{inner}</figcaption>'
+    label_match = re.match(
+        r'\s*(Figure|Fig\.?|Diagram|Chart|Plot|Table)'
+        r'(?:\s+(\d+(?:\.\d+)*))?\s*'
+        r'(?:[—–\-]\s*)?',
+        peeled,
+        re.IGNORECASE,
+    )
+    if label_match:
+        kind = label_match.group(1).rstrip('.')
+        num = label_match.group(2) or ""
+        rest = peeled[label_match.end():].strip()
+        rest = re.sub(r'^[—–\-]\s*', '', rest)
+        label_text = f'{kind} {num}'.strip()
+        inner = (
+            f'<span class="figcaption-label">{label_text}</span>'
+            f'<span class="figcaption-body">{rest}</span>'
+        )
+        return f'<figcaption>{inner}</figcaption>'
+    return f'<figcaption>{peeled}</figcaption>'
+
+
+def wrap_md_figures(html_body: str) -> str:
+    """Wrap markdown image paragraphs in ``<figure>`` and fold their
+    captions in as ``<figcaption>`` so each chart reads as a discrete
+    content unit.
+
+    Two-pass:
+    1. Inline-caption pass — same-paragraph ``<p><img>caption</p>`` —
+       wraps with caption embedded.
+    2. Image-only pass — leftover ``<p><img></p>`` — wraps without
+       caption.
+    3. Adjacent-caption pass — for each bare ``<figure>`` followed by
+       a ``<p>`` whose text starts with a Figure keyword, fold the
+       caption in.
+
+    Splitting the work avoids consuming non-caption paragraphs along
+    with the image (which would orphan any image that came right
+    after).
+    """
+    if "<img" not in html_body:
+        return html_body
+
+    # Pass 1 — same-paragraph caption (inline).
+    def _sub_inline(m: re.Match) -> str:
+        img_tag = m.group("img")
+        cap_inner = (m.group("cap") or "").strip()
+        if cap_inner and _FIGURE_CAP_RE.match(_plain_text_prefix(cap_inner)):
+            return (
+                f'<figure class="md-figure">{img_tag}'
+                f'{_build_figcaption(cap_inner)}'
+                f'</figure>'
+            )
+        return m.group(0)  # not a figure caption — leave as-is
+    html_body = _MD_IMG_INLINE_CAP_RE.sub(_sub_inline, html_body)
+
+    # Pass 2 — bare image paragraphs.
+    def _sub_only(m: re.Match) -> str:
+        return f'<figure class="md-figure">{m.group("img")}</figure>'
+    html_body = _MD_IMG_ONLY_RE.sub(_sub_only, html_body)
+
+    # Pass 3 — fold an adjacent caption paragraph into the figure.
+    def _sub_adj(m: re.Match) -> str:
+        figure = m.group(1)
+        cap_inner = (m.group("cap") or "").strip()
+        if cap_inner and _FIGURE_CAP_RE.match(_plain_text_prefix(cap_inner)):
+            # Re-open the figure tag and inject the caption before </figure>.
+            return figure[:-len('</figure>')] + _build_figcaption(cap_inner) + '</figure>'
+        return m.group(0)  # next paragraph isn't a caption — leave both as-is
+    html_body = _FIGURE_FOLLOWED_BY_CAP_RE.sub(_sub_adj, html_body)
+    return html_body
+
+
 def build_page(page: dict) -> Path:
     src_md = REPO_ROOT / page["md"]
     if not src_md.exists():
@@ -6824,6 +7380,25 @@ def build_page(page: dict) -> Path:
             content_html, rewrite_obs, source_lookup,
         )
 
+    # Canonical-obs anchors: ``[POL.O6](diagnostic/README.md#...)`` after
+    # md_to_html lands as a plain ``<a>POL.O6</a>``. The DIA→canonical
+    # remap means the V2 spec now uses these directly, so we need to
+    # enrich them with the overlay attributes the cross-page hover/click
+    # handler reads. Runs on every non-subreport page (subreports define
+    # their own canon ids and don't link to themselves cross-page).
+    if not is_subreport:
+        bundle = _load_all_subreport_data()
+        obs_by_canon: dict[str, dict] = {}
+        for code, groups in bundle["obs_groups_by_code"].items():
+            for g in groups:
+                canon = g.get("canon_id", "")
+                if canon:
+                    obs_by_canon[canon] = g
+        if obs_by_canon:
+            content_html = rewrite_canonical_obs_anchors(
+                content_html, obs_by_canon,
+            )
+
     # Collect observation titles for the 'From XX.OY — title' breadcrumb
     # that the callout post-processor injects above each Finding blockquote.
     # Sub-reports use their own sro_groups; non-sub-reports pull from the
@@ -6869,6 +7444,11 @@ def build_page(page: dict) -> Path:
         content_html += _render_finding_registry(cross_findings)
 
     content_html = decorate_section_references(content_html, page["html"])
+
+    # Wrap ``<p><img></p>`` (+ following ``<p><em>Figure …</em></p>`` if any)
+    # into a semantic ``<figure>`` block so charts read as a discrete
+    # unit, set apart from body prose.
+    content_html = wrap_md_figures(content_html)
 
     # "View source on GitHub" footer link — sits at the very end of the
     # article content (above the site-footer) so motivated readers can

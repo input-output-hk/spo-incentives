@@ -73,7 +73,7 @@ ARCHETYPE_COLORS: Dict[str, str] = {
 ARCHETYPE_LABELS: Dict[str, str] = {
     "cex":                      "Exchange Custody (CEX)",
     "ivaas":                    "Institutional Validator (IVaaS)",
-    "capital_insufficient":     "Capital-insufficient",
+    "capital_insufficient":     "Sub-saturation fleet",
     "ecosystem":                "Ecosystem Steward",
     "platform":                 "Platform / Wallet",
     "independent_mpo":          "Independent MPO",
@@ -132,12 +132,12 @@ STANCE_LABELS: Dict[str, str] = {
     "exemplary":      "Exemplary",
     "compliant":      "Compliant",
     "marginal":       "Marginal",
-    "non_compliant":  "Non-compliant",
+    "non_compliant":  "Zero-pledge",
 }
 
 STANCE_INLINE_LABELS: Dict[str, str] = {
     "cant_play":      "Can't play",
-    "non_compliant":  "Non-compliant",
+    "non_compliant":  "Zero-pledge",
     "marginal":       "Marginal",
     "compliant":      "Compliant",
     "exemplary":      "Exemplary",
@@ -578,7 +578,7 @@ def figure_current_distribution(
         ax.spines[spine].set_visible(False)
 
     ax.set_title(
-        "MPO entities by archetype — capital-insufficient isolated (epoch 618)",
+        "MPO entities by archetype — sub-saturation isolated (epoch 618)",
         fontsize=12, fontweight="bold", pad=14,
     )
 
@@ -1208,8 +1208,8 @@ def figure_stance_distribution(
     fig.text(
         0.01, 0.01,
         "Same 85 entities decomposed two ways. Top = structural archetype. Bottom = incentive accessibility + bonus capture. "
-        "Can't play = capital-insufficient (< z0 total stake); remaining classes use effective pledge ratio: "
-        "Non-compliant <2% | Marginal 2–30% | Compliant 30–80% | Exemplary ≥80%.",
+        "Can't play = sub-saturation (< z0 total stake); remaining classes use effective pledge ratio: "
+        "Zero-pledge <2% | Marginal 2–30% | Compliant 30–80% | Exemplary ≥80%.",
         ha="left", va="bottom", fontsize=8, color="#555555",
     )
 

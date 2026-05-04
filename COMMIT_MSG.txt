@@ -1,0 +1,99 @@
+diagnostic POL.O5/O6/O7: 3M productive filter, zero-pledge rename, narrative reshape
+
+Productive filter migrated from 1M to 3M ADA across all MPO scripts and
+docs. The Census's old 1M (lambda=1) filter was inconsistent with our
+canonical 3M production threshold (95% block probability, lambda=3 per
+POL.O3.F1). Three scripts updated:
+
+  build_mpo_taxonomy_by_stance_visual.py
+  build_mpo_extraction_visual.py
+  build_mpo_tier_stance_entity_visual.py
+
+Stake sourced from pool_stake_623.csv with PRODUCTIVE_THRESHOLD_ADA = 3M.
+Pledge stays from koios_pool_list_mainnet.csv (registration parameter,
+doesn't drift). Denominators flipped from total active stake (21.75B) to
+productive total (21.18B). Figures regenerated.
+
+Aligned numbers across pools-distribution, parent diagnostic, V2 README,
+solution-evaluation, CPS:
+
+  475 pools     -> 449 productive pools
+  16.29B        -> 16.24B
+  75.5%         -> 76.7% of productive
+  35 sub-sat    -> 35 (unchanged but stake 1.70B -> 1.69B)
+  77 of 83 outside path: 13.93B -> 13.89B (64.6% -> 65.6% of productive)
+  CEX+IVaaS     -> 7.39B (34.9% of productive), 173 productive pools
+  284 indep SPO confirmed at 3M filter
+  561 marginal  -> 51 marginal (the 561 came from the koios any-stake
+                   slice; at productive set there are 51 single-pool
+                   operators in the 2-30% pledge band, holding 685M ADA
+                   = 13.9% of single-pool productive stake)
+  78% indep zero-pledge -> 80.6% (227 of 284 productive pools)
+
+"pledge-bonus-forgoing" renamed to "zero-pledge" across F-rows, body
+callouts, stance ladder table, figure labels (STANCE_LABELS in scripts),
+sub-section heading "Architectural pledge-bonus-forgoing" ->
+"Architectural zero-pledge". The user found "non-compliant" then "pledge-
+bonus-forgoing" both unclear; "zero-pledge (< 2%)" reads cleaner.
+
+POL.O5 narrative reshaped:
+  Title: "83 multi-pool operators control 76.7% of productive stake -
+         and almost none of them pledge"
+  F1 = concentration (76.7% in 83 named entities)
+  F2 = structural ceiling: 48 saturation-scale MPOs concentrate 14.55B
+       = 68.7% of productive stake; chip="Entity-tier concentration"
+  F3 = mass zero-pledge (42 of 48)
+  F4 = architectural barrier: 10 of those 42 are CEX+IVaaS, 7.39B legally
+       cannot pledge (chip: "Architectural barrier - partial explanation")
+  F5 = NEW: the sovereign-MPO puzzle. 32 saturation-scale MPOs hold 4.80B
+       = 22.7% of productive stake. They could pledge but choose not to.
+       This is the strategic abandonment that architecture doesn't explain.
+  F6 = exemplary collapse: only 2 MPOs clear >=80%; CF mandate, Adalite
+       private => mechanism succeeds on exactly one entity
+  F7 = no single-tier reform reaches zero-pledge
+
+Per-entity table inserted in section 4.2.2 listing all 48 saturation-scale
+MPOs sorted by stake (CEX/IVaaS marked with banking emoji), with archetype,
+pool count, stake, % productive, pledge ratio, and stance per entity.
+Total row at bottom (379 productive pools / 14,549M / 68.7%). Top 5 = 25.7%,
+top 10 = 39.1%.
+
+POL.O6 narrative reshaped (single-pool operator section):
+  Title: "Only 284 productive single-pool operators remain - and almost
+         none of them pledge (like MPOs)"
+  Cell broken into 4 short paragraphs (3x inflation / zero-pledge is rational
+  / 51 marginal middle / segment shrinking).
+  F2/F3 inline-define "zero-pledge" and "marginal" so readers landing on POL.O6
+  don't need POL.O5's stance ladder.
+  Section 4.3.2 stance table reset to productive-set numbers
+  (227/51/3/3 instead of 905/561/271/360).
+
+POL.O7 narrative reshaped:
+  Title: "The pledge mechanism reaches only 36% of stake - and the 64%
+         outside it splits into three populations no single parameter
+         can pull back in"
+  Section heading 4.4.4 renamed: "incentive-responsive field" ->
+  "The pledge mechanism's actual reach"
+  F1 = the 36% reach number
+  F2 = three distinct populations (architectural / strategic / sub-scale),
+       each quantified
+  F3 = three different reform levers - raising a0 only addresses the
+       strategic group, and only weakly
+
+Other:
+  - Stale "experiment_pie_mpo_vs_spo.png" (March 24, pre-tier-rename) and
+    7 other tier-labeled figures regenerated.
+  - "independent operator" terminology replaced with "single-pool operator"
+    throughout (memory rule: SPO = Stake Pool Operator, write single-pool
+    operator in full).
+  - Inline data-file references switched to GitHub links so the
+    rendered website navigates correctly. Saved as feedback memory.
+  - Per-entity scale-class definition inlined in POL.O5 cell + F2 row
+    (saturation-scale = aggregate stake >= z0; sub-saturation = below).
+  - Figure 4.6 caption + section 4.2.4 implication note reflowed to new
+    productive-set numbers.
+  - Anchor links re-targeted after sub-section renames.
+
+Census doc still uses 1M productive filter (its own canonical, separate
+concern). The pools-distribution / V2 / solution-evaluation chain now
+fully on 3M.

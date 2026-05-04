@@ -38,4 +38,4 @@ Steady institutional growth: 0.66% of supply at epoch 400, 1.82% at epoch 618. T
 
 ## Source
 
-Existing profile: `sub-flows/pools-distribution/mainnet-analysis/docs/mpo_entity_profiles.md` (IVaaS section). Web research: kiln.fi, 2026/04/07.
+Existing profile: `sub-flows/census/mainnet-analysis/docs/mpo_entity_profiles.md` (IVaaS section). Web research: kiln.fi, 2026/04/07.

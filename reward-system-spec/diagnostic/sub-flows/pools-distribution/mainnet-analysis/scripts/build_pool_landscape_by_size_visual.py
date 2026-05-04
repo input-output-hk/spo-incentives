@@ -44,7 +44,7 @@ ULTRAVIOLET = "#A700FF"
 SOLAR_AMBER = "#FFBA36"
 
 SIZE_CATS = [
-    ("Subscale (<3M)", 0, 3_000_000, INFARED),
+    ("Sub-reliable (<3M)", 0, 3_000_000, INFARED),
     ("Healthy (3M–30M)", 3_000_000, 30_000_000, ACID_GREEN),
     ("Large healthy (30M–60M)", 30_000_000, 60_000_000, ELECTRIC_BLUE),
     ("Near-saturation (60M–z₀)", 60_000_000, None, COBALT_PULSE),

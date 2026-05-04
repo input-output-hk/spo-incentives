@@ -222,11 +222,11 @@ def main():
     ax2.axhline(y=100, color=INFARED, linewidth=1.8, linestyle="--", label="P_max ceiling", alpha=0.8)
     ax2.axhline(y=lam_min * 100, color=DAWN, linewidth=1.2, linestyle=":", label=f"Zero-pledge ceiling ({lam_min*100:.1f}%)", alpha=0.8)
 
-    # Viability threshold
+    # Production threshold (3M)
     viability_idx = sum(1 for p in pools_sorted if p["stake"] >= 3e6)
     if viability_idx > 0 and viability_idx < len(pools_sorted):
         ax2.axvline(x=viability_idx, color=TEXT_DIM, linewidth=0.8, linestyle="--", alpha=0.4)
-        ax2.text(viability_idx + 30, 85, f"Viability threshold\n(~{viability_idx} pools)",
+        ax2.text(viability_idx + 30, 85, f"Healthy tier floor\n(~{viability_idx} pools)",
                  fontsize=8, color=TEXT_DIM, va="top", style="italic")
 
     # Style Panel 2

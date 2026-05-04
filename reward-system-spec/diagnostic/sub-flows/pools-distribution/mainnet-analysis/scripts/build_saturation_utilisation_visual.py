@@ -126,7 +126,7 @@ def main() -> None:
         linewidth=1.5,
         linestyle=":",
         alpha=0.8,
-        label=f"Viability (3M = {viability_pct:.1f}%)",
+        label=f"Production threshold (3M = {viability_pct:.1f}%)",
     )
 
     # Mark k=500 — ULTRAVIOLET

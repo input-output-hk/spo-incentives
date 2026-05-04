@@ -6,9 +6,9 @@ The analysis follows the **85 identified entities** attributed in the census fro
 
 **Roughly half of identified operators are past their peak and contracting.** The lifecycle classification places **42 of 85 entities** in the dead or declining segments. **Two are dead** (current stake below the production threshold), **11 are in severe decline** (< 25% of peak — collectively shed **8.4B ADA**), and **29 are in moderate decline** (25–50% of peak). The largest individual exits include **IOG** (2.67B → 11.7M, completed steward withdrawal), **Binance** (2.98B → 692M, exchange retreat), and **1PCT** (1.27B → 275M, independent fleet erosion). *Community-branded fleets dominate the declining segment — the median decline ratio in this archetype is ~38%, with no single event explaining the slow, persistent outflow of delegations.*
 
-**The capital did not leave the staking ecosystem; it restructured.** The declining and dead entities collectively shed **~14.6B ADA** from their peaks, but total staked ADA grew from **~12B to ~21.8B** over the same period. The redistribution flowed along three channels: **toward institutional validators** (Figment, Blockdaemon, Everstake, Kiln together hold **2.7B**, almost all accumulated after epoch 300); **toward late-arriving exchanges** (Coinbase entered at epoch 296 and grew to **2.6B**, Upbit entered at epoch 398 and is at all-time high); and **toward the independent single-pool operator tail** (the 477 unattributed single-pool operators hold **5.28B ADA**, consistent with the community's cultural preference for single-pool delegation).
+**The capital did not leave the staking ecosystem; it restructured.** The declining and dead entities collectively shed **~14.6B ADA** from their peaks, but total staked ADA grew from **~12B to ~21.8B** over the same period. The redistribution flowed along three channels: **toward institutional validators** (Figment, Blockdaemon, Everstake, Kiln together hold **2.7B**, almost all accumulated after epoch 300); **toward late-arriving exchanges** (Coinbase entered at epoch 296 and grew to **2.6B**, Upbit entered at epoch 398 and is at all-time high); and **toward the single-pool operator tail** (the 284 unattributed single-pool operators hold **5.28B ADA**, consistent with the community's cultural preference for single-pool delegation).
 
-**The growth pattern selects for late entrants and persistence.** **18 entities** are at or near their all-time peak. Five late institutional entrants alone (Coinbase, Figment, Blockdaemon, Everstake, Upbit) hold **5.0B ADA — more than the entire independent single-pool operator segment**. Among community operators, the few that grew against the tide share a pattern of **late peaks (epoch 450–623)** rather than the early-Shelley peaks characteristic of declining peers — suggesting that *persistence and operational quality matter more than first-mover advantage in the long run*.
+**The growth pattern selects for late entrants and persistence.** **18 entities** are at or near their all-time peak. Five late institutional entrants alone (Coinbase, Figment, Blockdaemon, Everstake, Upbit) hold **5.0B ADA — more than the entire single-pool operator segment**. Among community operators, the few that grew against the tide share a pattern of **late peaks (epoch 450–623)** rather than the early-Shelley peaks characteristic of declining peers — suggesting that *persistence and operational quality matter more than first-mover advantage in the long run*.
 
 *The staking ecosystem is not shrinking — it is restructuring*, and the structural shift since epoch 300 has been from community-run fleets toward institutional staking infrastructure.
 
@@ -49,7 +49,7 @@ Each entity is classified into a **lifecycle phase** by comparing its **current 
 
 | Phase | Rule | Entities | Combined peak | Combined current |
 |---|---|---|---|---|
-| **Dead** | Current stake below production threshold (~1M ADA) | 2 | 46M | 0.6M |
+| **Dead** | Current stake below production threshold (~3M ADA) | 2 | 46M | 0.6M |
 | **Declining (severe)** | Current < 25% of peak | 11 | 9,938M | 1,524M |
 | **Declining** | Current 25–50% of peak | 29 | 8,445M | 3,207M |
 | **Stable** | Current 50–90% of peak | 25 | — | — |
@@ -57,7 +57,7 @@ Each entity is classified into a **lifecycle phase** by comparing its **current 
 
 The declining and dead segments together account for **42 of 85 entities** — *roughly half of all identified operators are past their peak and contracting*.
 
-The capital they have lost has not vanished: it **migrated to growing entities** (exchanges entering late, IVaaS providers scaling up) or **dispersed into the independent single-pool operator tail**.
+The capital they have lost has not vanished: it **migrated to growing entities** (exchanges entering late, IVaaS providers scaling up) or **dispersed into the single-pool operator tail**.
 
 
 ## 2. Dead entities
@@ -193,7 +193,7 @@ The most striking growth stories belong to entities that **entered Cardano staki
 | Everstake | Institutional Validator (IVaaS) | e210 | 572M (e623) | 572M | At all-time high; one of the earliest IVaaS to enter Cardano, still growing |
 | Upbit | Exchange Custody | e398 | 575M (e623) | 575M | At all-time high; Korean exchange, entered late, still scaling |
 
-These **five entities alone** hold **5.0B ADA** — *more than the entire independent single-pool operator segment (5.28B)*.
+These **five entities alone** hold **5.0B ADA** — *more than the entire single-pool operator segment (5.28B)*.
 
 Their arrival and growth **post-epoch 300** represents a **structural shift** in the operator landscape from **community-run fleets** toward **institutional staking infrastructure**.
 
@@ -249,11 +249,11 @@ This capital **did not leave the staking ecosystem** — the total staked ADA ha
 
 **Toward late-arriving exchanges.** Coinbase and Upbit entered **after most community fleets had already peaked**. They attracted **fresh capital** (ADA flowing onto exchanges for the first time) and captured some of the delegation that might otherwise have gone to established community operators.
 
-**Toward the independent single-pool operator tail.** The **477 unattributed single-pool operators** hold **5.28B ADA** at epoch 623. While the census cannot track this segment historically (individual single-pool operators are not attributed), the growth of total staked ADA alongside the decline of identified multi-pool entities implies that a **significant portion** of the redistributed capital flowed into the long tail. This is consistent with the Cardano community's **strong cultural preference for single-pool delegation**.
+**Toward the single-pool operator tail.** The **284 unattributed single-pool operators** hold **5.28B ADA** at epoch 623. While the census cannot track this segment historically (individual single-pool operators are not attributed), the growth of total staked ADA alongside the decline of identified multi-pool entities implies that a **significant portion** of the redistributed capital flowed into the long tail. This is consistent with the Cardano community's **strong cultural preference for single-pool delegation**.
 
 > **Observation:** *the staking ecosystem is not shrinking — it is restructuring.*
 
-Capital is moving from **early community fleets** and **retreating exchanges** toward **institutional infrastructure** and the **independent operator segment**. The entities that are growing tend to be either **late institutional entrants** with professional infrastructure or **community operators that peaked late**, suggesting that **persistence and operational quality matter more than first-mover advantage** in the long run.
+Capital is moving from **early community fleets** and **retreating exchanges** toward **institutional infrastructure** and the **single-pool operator segment**. The entities that are growing tend to be either **late institutional entrants** with professional infrastructure or **community operators that peaked late**, suggesting that **persistence and operational quality matter more than first-mover advantage** in the long run.
 
 
 ## 8. Visual summary

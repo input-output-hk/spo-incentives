@@ -20,7 +20,7 @@ RED = '#E52321'
 DAWN = '#EC641D'
 
 tiers = [
-    ('Sub-viable\n(2 M)',          2_000_000),
+    ('Sub-reliable\n(2 M)',          2_000_000),
     ('Healthy\n(15 M)',           15_000_000),
     ('Large-healthy\n(50 M)',     50_000_000),
     ('Near-saturation\n(67 M)',   67_000_000),

@@ -28,7 +28,7 @@ The operator take of 8.7% — above the cell average (6.8%) despite the lowest m
 
 ## Historical trajectory
 
-Steady, gradual decline: 1.06% (ep.400) → 0.72% (ep.618). Consistent market pressure on low-margin operators as the competitive landscape has densified. Over-expansion (12 sub-viable pools at epoch 618) amplifies the cost of this drift.
+Steady, gradual decline: 1.06% (ep.400) → 0.72% (ep.618). Consistent market pressure on low-margin operators as the competitive landscape has densified. Over-expansion (12 sub-reliable pools at epoch 618) amplifies the cost of this drift.
 
 ## Pledge
 
@@ -36,4 +36,4 @@ Steady, gradual decline: 1.06% (ep.400) → 0.72% (ep.618). Consistent market pr
 
 ## Source
 
-Existing profile: `sub-flows/pools-distribution/mainnet-analysis/docs/mpo_entity_profiles.md` (Independent MPO section). Website not extractable.
+Existing profile: `sub-flows/census/mainnet-analysis/docs/mpo_entity_profiles.md` (Independent MPO section). Website not extractable.

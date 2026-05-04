@@ -3,7 +3,7 @@
 Pool Taxonomy filtered by Incentive Stance.
 
 Same butterfly layout as three_thresholds_mainnet.png, but the right-side
-stake bars are stacked by stance (Non-compliant / Marginal / Compliant / Exemplary).
+stake bars are stacked by stance (Zero-pledge / Marginal / Compliant / Exemplary).
 This reveals how pledge-bonus compliance distributes across the size landscape.
 
 Outputs: figures/taxonomy_by_stance_mainnet.png
@@ -51,9 +51,9 @@ STANCE_LABELS = {
     "exemplary":     "Exemplary (≥80%)",
     "compliant":     "Compliant (30–80%)",
     "marginal":      "Marginal (2–30%)",
-    "non_compliant": "Non-compliant (<2%)",
+    "non_compliant": "Zero-pledge (<2%)",
 }
-# Stacking order: non-compliant at base, exemplary on top
+# Stacking order: zero-pledge at base, exemplary on top
 STANCE_STACK = ["non_compliant", "marginal", "compliant", "exemplary"]
 
 
@@ -111,7 +111,7 @@ def main():
     T_bounds = [0, 100e3, 1e6, 3e6, z0 * 0.5, z0 * 0.8, z0 * 0.95, z0 * 1.05, np.inf]
 
     tier_names = [
-        "Dormant", "Sub-production", "Sub-viable", "Healthy",
+        "Dormant", "Sub-block", "Sub-reliable", "Healthy",
         "Large healthy", "Near-saturation", "Saturated", "Oversaturated",
     ]
     tier_colors = [
@@ -151,8 +151,7 @@ def main():
 
     # ── Threshold markers ──
     threshold_after = {
-        1: ("Production\nthreshold",  "1M ADA",  DAWN),
-        2: ("Viability\nthreshold",   "3M ADA",  INFARED),
+        2: ("Production\nthreshold",   "3M ADA",  INFARED),
         6: ("Saturation\nthreshold", f"{z0/1e6:.0f}M ADA", ULTRAVIOLET),
     }
 
@@ -284,7 +283,7 @@ def main():
              ha="center", fontsize=10.5, color=DIM)
 
     # ── Insight footer ──
-    # Compute non-compliant share of viable+ stake
+    # Compute zero-pledge share of viable+ stake
     viable_plus = [p for p in pools if p["stake"] >= 3e6]
     nc_viable = sum(p["stake"] for p in viable_plus if p["stance"] == "non_compliant")
     total_viable = sum(p["stake"] for p in viable_plus)
@@ -294,7 +293,7 @@ def main():
     marginal_count = sum(1 for p in pools if p["stance"] == "marginal" and p["stake"] > 100)
 
     fig.text(0.5, 0.015,
-             f"Non-compliant pools hold {nc_pct:.0f}% of viable-and-above stake. "
+             f"Zero-pledge pools hold {nc_pct:.0f}% of viable-and-above stake. "
              f"The marginal class — {marginal_count} pools, {marginal_total/1e9:.1f}B ADA — "
              f"is the target population for incentive-parameter adjustments.",
              ha="center", fontsize=9.5, color=INFARED,

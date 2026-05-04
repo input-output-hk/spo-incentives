@@ -7,7 +7,7 @@ signal (100 % self-pledge) earn radically different bonuses because A
 favours pool size over commitment.
 
 Panel (a): bar chart — yearly pledge bonus for three fully self-pledged pools
-           (Sub-viable 2 M, Healthy 15 M, Saturated 67 M).  Log scale.
+           (Sub-reliable 2 M, Healthy 15 M, Saturated 67 M).  Log scale.
 
 Panel (b): bonus per ADA of pledge, by pool size, at 100 % self-pledge —
            shows the bonus YIELD scales as ν², so a small operator's
@@ -46,7 +46,7 @@ def A_func(pi, nu):
 
 # Three operators, ALL fully self-pledged (π = ν)
 operators = [
-    ('Bob\nSub-viable',  2_000_000,  '#909090'),
+    ('Bob\nSub-reliable',  2_000_000,  '#909090'),
     ('Charles\nHealthy', 15_000_000, DAWN),
     ('Alice\nSaturated', 67_000_000, RED),
 ]

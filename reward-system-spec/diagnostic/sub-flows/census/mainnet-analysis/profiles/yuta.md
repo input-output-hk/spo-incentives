@@ -36,4 +36,4 @@ Steady moderate decline: 2.00% (ep.400) → 1.20% (ep.618). Gradual and uninterr
 
 ## Source
 
-Existing profile: `sub-flows/pools-distribution/mainnet-analysis/docs/mpo_entity_profiles.md` (CEX section). No usable website content recovered.
+Existing profile: `sub-flows/census/mainnet-analysis/docs/mpo_entity_profiles.md` (CEX section). No usable website content recovered.

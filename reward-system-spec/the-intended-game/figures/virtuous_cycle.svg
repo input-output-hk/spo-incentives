@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 870">
+  <title>The Virtuous Cycle — five aligned dynamics that reinforce the security model</title>
+  <desc>Figure 4 from The Intended Game.</desc>
+  <defs>
+    <style>
+      text { dominant-baseline: alphabetic; }
+      .display { font-family: 'Chivo', 'Inter', sans-serif; font-weight: 600; }
+      .body { font-family: 'Inter', sans-serif; font-weight: 400; }
+      .body-bold { font-family: 'Inter', sans-serif; font-weight: 600; }
+      .body-light { font-family: 'Inter', sans-serif; font-weight: 300; }
+      .eyebrow { font-family: 'Inter', sans-serif; font-weight: 500; letter-spacing: 0.16em; }
+      .caption { font-family: 'Inter', sans-serif; font-weight: 300; font-style: italic; }
+    </style>
+    <marker id="arr-ink2" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L12,6 L0,12 Z" fill="#1a1a1a"/></marker>
+  </defs>
+  <rect width="1600" height="870" fill="#ffffff"/>
+  <text x="60" y="58" class="eyebrow" font-size="13" fill="#E52321">FIG. 4 · §4 THE ALIGNED DYNAMICS</text>
+  <text x="60" y="100" class="display" font-size="34" fill="#1a1a1a">The virtuous cycle — where rational play reinforces the security model</text>
+  <text x="60" y="134" class="body" font-size="17" fill="#6b6b6b">Five moves. Each one is the rational response to the move before it.</text>
+  <line x1="60" y1="160" x2="1540" y2="160" stroke="#e2e0dc" stroke-width="1"/>
+
+  <!-- Center hub -->
+  <circle cx="800" cy="500" r="125" fill="#1a1a1a"/>
+  <text x="800" y="478" class="eyebrow" font-size="10" fill="#EC641D" text-anchor="middle">EQUILIBRIUM</text>
+  <text x="800" y="510" class="display" font-size="20" fill="#ffffff" text-anchor="middle">Incentive-</text>
+  <text x="800" y="538" class="display" font-size="20" fill="#ffffff" text-anchor="middle">compatible</text>
+
+  <!-- Stage 1 TOP — Demand pays in -->
+  <g transform="translate(580,200)">
+    <rect width="440" height="118" rx="8" fill="#faf9f7" stroke="#e2e0dc" stroke-width="1.5"/>
+    <rect width="6" height="118" fill="#E52321"/>
+    <text x="24" y="32" class="eyebrow" font-size="10" fill="#E52321">01 · DEMAND</text>
+    <text x="24" y="64" class="display" font-size="22" fill="#1a1a1a">Demand pays in</text>
+    <text x="24" y="92" class="body" font-size="14" fill="#6b6b6b">transactions fill the epoch pot</text>
+  </g>
+
+  <!-- Stage 2 RIGHT — The pot pays out -->
+  <g transform="translate(1100,360)">
+    <rect width="440" height="118" rx="8" fill="#faf9f7" stroke="#e2e0dc" stroke-width="1.5"/>
+    <rect width="6" height="118" fill="#EC641D"/>
+    <text x="24" y="32" class="eyebrow" font-size="10" fill="#EC641D">02 · REWARDS</text>
+    <text x="24" y="64" class="display" font-size="22" fill="#1a1a1a">The pot pays out</text>
+    <text x="24" y="92" class="body" font-size="14" fill="#6b6b6b">operators and delegators both earn — both rational</text>
+  </g>
+
+  <!-- Stage 3 BOTTOM-RIGHT — Operators raise pledge -->
+  <g transform="translate(1080,620)">
+    <rect width="440" height="118" rx="8" fill="#faf9f7" stroke="#e2e0dc" stroke-width="1.5"/>
+    <rect width="6" height="118" fill="#EC641D"/>
+    <text x="24" y="32" class="eyebrow" font-size="10" fill="#EC641D">03 · PLEDGE</text>
+    <text x="24" y="64" class="display" font-size="22" fill="#1a1a1a">Operators raise pledge</text>
+    <text x="24" y="92" class="body" font-size="14" fill="#6b6b6b">because the mechanism prices commitment</text>
+  </g>
+
+  <!-- Stage 4 BOTTOM-LEFT — Delegators back commitment -->
+  <g transform="translate(80,620)">
+    <rect width="440" height="118" rx="8" fill="#faf9f7" stroke="#e2e0dc" stroke-width="1.5"/>
+    <rect width="6" height="118" fill="#3b7982"/>
+    <text x="24" y="32" class="eyebrow" font-size="10" fill="#3b7982">04 · OVERSIGHT</text>
+    <text x="24" y="64" class="display" font-size="22" fill="#1a1a1a">Delegators back commitment</text>
+    <text x="24" y="92" class="body" font-size="14" fill="#6b6b6b">capital flows to the most pledged pools</text>
+  </g>
+
+  <!-- Stage 5 LEFT — Security emerges -->
+  <g transform="translate(60,360)">
+    <rect width="440" height="118" rx="8" fill="#faf9f7" stroke="#e2e0dc" stroke-width="1.5"/>
+    <rect width="6" height="118" fill="#E52321"/>
+    <text x="24" y="32" class="eyebrow" font-size="10" fill="#E52321">05 · NETWORK</text>
+    <text x="24" y="64" class="display" font-size="22" fill="#1a1a1a">Security emerges</text>
+    <text x="24" y="92" class="body" font-size="14" fill="#6b6b6b">decentralised · accountable · Sybil-resistant</text>
+  </g>
+
+  <!-- Curved clockwise arrows -->
+  <path d="M 1020 290 C 1180 295, 1280 320, 1310 360" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arr-ink2)"/>
+  <path d="M 1310 478 C 1310 540, 1300 600, 1290 620" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arr-ink2)"/>
+  <path d="M 1080 738 C 800 778, 480 778, 510 738" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arr-ink2)"/>
+  <path d="M 230 620 C 200 600, 180 540, 180 478" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arr-ink2)"/>
+  <path d="M 280 360 C 320 310, 440 290, 580 280" fill="none" stroke="#1a1a1a" stroke-width="2" marker-end="url(#arr-ink2)"/>
+
+  <text x="800" y="820" class="body-bold" font-size="14" fill="#E52321" text-anchor="middle">↻  A more valuable network attracts more demand. Back to 01.</text>
+  <text x="800" y="844" class="caption" font-size="13" fill="#6b6b6b" text-anchor="middle">The reward curve's success or failure is measured against this loop closing.</text>
+</svg>

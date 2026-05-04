@@ -72,10 +72,10 @@ def main():
     fig, ax = plt.subplots(figsize=(14, 7.5), facecolor=BG)
     ax.set_facecolor(BG)
 
-    # Sub-viable zone (< 3M ADA)
+    # Sub-reliable zone (< 3M ADA)
     ax.axvspan(0, 3, color=INFARED, alpha=0.06, zorder=0)
     ax.axvline(3, color=INFARED, linewidth=0.7, linestyle=":", alpha=0.5, zorder=1)
-    ax.text(1.5, 52, "Sub-viable\nzone", fontsize=8, color=INFARED,
+    ax.text(1.5, 52, "Sub-reliable\nzone", fontsize=8, color=INFARED,
             ha="center", va="bottom", alpha=0.7, fontstyle="italic")
 
     # Reference lines

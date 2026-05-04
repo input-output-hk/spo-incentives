@@ -1,6 +1,6 @@
 ---
 CPS: ???
-Title: Funding the Protocol Without a Reserve
+Title: CPS-6 — Funding the Protocol Without a Reserve
 Category: Ledger
 Status: Draft
 Authors:
@@ -20,11 +20,11 @@ The two protocol parameters that govern this layer ($\rho = 0.3\%$, $\tau = 20\%
 
 A second-order complication compounds the gap: the mechanism today operates at **~44% distribution efficiency** because **~16.8B ADA (~43.6% of supply)** does not participate in delegation. The undistributed residual returns to reserve, *extending its life by **4.61B ADA** as a side-effect of low participation rather than a design feature*. Any reform that increases participation will improve distribution efficiency *and* accelerate depletion — a tension the current design does not acknowledge.
 
-This CPS formally defines the **reward sustainability problem** at the epoch-budget layer of the reward pipeline. It is grounded in the mainnet evidence documented in the dedicated [Treasury & Pool Pots Distribution — Mainnet Analysis](../mainnet-analysis/README.md) sub-report and invites the community to propose solutions through the CIP process.
+This CPS formally defines the **reward sustainability problem** at the epoch-budget layer of the reward pipeline. It is grounded in the mainnet evidence documented in the dedicated [Treasury & Pool Pots Distribution — Mainnet Analysis](../../diagnostic/sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md) sub-report and invites the community to propose solutions through the CIP process.
 
 ## Problem
 
-This CPS builds upon the mainnet evidence documented in the dedicated [sub-report: Treasury & Pool Pots Distribution — Mainnet Analysis](../mainnet-analysis/README.md), which provides the full empirical analysis, data, figures, and reproduction scripts behind the findings summarised here. All observations below reference the sub-report's observation framework (O1–O4) and their supporting findings (F1.x–F4.x).
+This CPS builds upon the mainnet evidence documented in the dedicated [sub-report: Treasury & Pool Pots Distribution — Mainnet Analysis](../../diagnostic/sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md), which provides the full empirical analysis, data, figures, and reproduction scripts behind the findings summarised here. All observations below reference the sub-report's observation framework (O1–O4) and their supporting findings (F1.x–F4.x).
 
 ### Context
 
@@ -34,7 +34,7 @@ The design was specified in *SL-D1* (Kant, Brünjes & Coutts, 2019) and has been
 
 ### Observations
 
-The [sub-report](../mainnet-analysis/README.md) documents four observations from mainnet data (epochs 208–623) at this pipeline stage:
+The [sub-report](../../diagnostic/sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md) documents four observations from mainnet data (epochs 208–623) at this pipeline stage:
 
 **O1 — The epoch pot is a single-source budget.** Monetary expansion provides ~99.83% of the pot. Transaction fees contribute ~0.17% (epoch 623); deposit flows are unmeasurable at epoch granularity. Block production is reliable (η ≈ 0.977) — the pot assembles as designed. The bottleneck is not operational; it is structural: the revenue mix is almost entirely dependent on a depleting resource.
 

@@ -36,12 +36,12 @@ GREY_MID     = "#AAAAAA"
 # Dormant excluded — near-zero stake inflates pool counts misleadingly
 TIER_NAMES = [
     "Oversaturated", "Saturated", "Near-saturation", "Large healthy",
-    "Healthy", "Sub-viable", "Sub-production",
+    "Healthy", "Sub-reliable", "Sub-block",
 ]
 TIER_COLORS_MAP = {
     "Dormant":          GREY_DARK,
-    "Sub-production":   DAWN,
-    "Sub-viable":       INFARED,
+    "Sub-block":   DAWN,
+    "Sub-reliable":       INFARED,
     "Healthy":          ACID_GREEN,
     "Large healthy":    TEAL,
     "Near-saturation":  SOLAR_AMBER,
@@ -51,7 +51,7 @@ TIER_COLORS_MAP = {
 
 # Internal tier order for digitize (low→high)
 TIER_INTERNAL = [
-    "Dormant", "Sub-production", "Sub-viable", "Healthy",
+    "Dormant", "Sub-block", "Sub-reliable", "Healthy",
     "Large healthy", "Near-saturation", "Saturated", "Oversaturated",
 ]
 

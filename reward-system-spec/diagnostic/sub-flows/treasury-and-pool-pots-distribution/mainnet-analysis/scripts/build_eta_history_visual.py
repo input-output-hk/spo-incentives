@@ -216,19 +216,6 @@ def main() -> None:
     )
     ax1.set_ylim(min(0.45, float(np.nanmin(complete_eta_raw)) - 0.03), max(1.02, float(np.nanmax(complete_eta_raw)) + 0.005))
     ax1.legend(loc="upper right", framealpha=0.95, facecolor=BG_COLOR, edgecolor=GRID_COLOR, labelcolor=TEXT_WHITE, fontsize=9)
-    ax1.text(
-        0.01,
-        0.98,
-        f"Expected blocks/epoch: {expected_blocks_epoch:.0f} | "
-        f"Complete epochs {int(complete_epochs[0])}–{int(complete_epochs[-1])} | "
-        f"Min: {min_eta:.4f}, Max: {max_eta:.4f}, η>1: {over_one_count}",
-        transform=ax1.transAxes,
-        fontsize=8,
-        va="top",
-        ha="left",
-        color=TEXT_DIM,
-        bbox=dict(boxstyle="round,pad=0.5", facecolor=BG_COLOR, edgecolor=GRID_COLOR, alpha=0.8, linewidth=0.8),
-    )
 
     # Panel 2: Zoom on complete epochs with rolling mean
     ax2.set_facecolor(BG_COLOR)

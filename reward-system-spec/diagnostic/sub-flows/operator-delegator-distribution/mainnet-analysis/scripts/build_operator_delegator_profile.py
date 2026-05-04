@@ -58,8 +58,8 @@ HOLLOW_OWNER_THRESHOLD  = 0.10   # owner_stake / active_stake <  10% → hollow 
 PRIVATE_OWNER_THRESHOLD = 0.95   # owner_stake / active_stake >= 95% → private strategy
 # Between 10% and 95% → balanced strategy
 
-PRODUCTION_THRESHOLD_ADA = 1_000_000  # 1M ADA — pools below this cannot produce
-                                       # blocks reliably (see main report §2.4.1.5)
+PRODUCTION_THRESHOLD_ADA = 3_000_000  # 3M ADA — 95% probability of ≥1 block per
+                                       # epoch (λ=3 — see POL.O3.F1 in pools-distribution).
 
 
 def load_pool_history():
@@ -152,7 +152,7 @@ def build_snapshot(hist, latest, owner_snap, pool_list, entity_map,
     """Per-pool reward-split decomposition at latest epoch."""
     snap = hist[hist["epoch_no"] == latest].copy()
     snap = snap[snap["total_pool_rewards_ada"] > 0].copy()
-    # Filter out sub-production-threshold pools (main report §2.4.1.5)
+    # Filter out sub-block-threshold pools (main report §2.4.1.5)
     n_before = len(snap)
     snap = snap[snap["active_stake_ada"] >= PRODUCTION_THRESHOLD_ADA].copy()
     n_after = len(snap)

@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 760">
+  <title>The Trajectory Matrix — three players × Entry / Progression / Endgame</title>
+  <desc>Section 3 overview. Three player classes × three stages of the game.</desc>
+  <defs>
+    <style>
+      text { dominant-baseline: alphabetic; }
+      .display { font-family: 'Chivo', 'Inter', sans-serif; font-weight: 600; }
+      .display-l { font-family: 'Chivo', 'Inter', sans-serif; font-weight: 700; }
+      .body { font-family: 'Inter', sans-serif; font-weight: 400; }
+      .body-bold { font-family: 'Inter', sans-serif; font-weight: 600; }
+      .eyebrow { font-family: 'Inter', sans-serif; font-weight: 500; letter-spacing: 0.16em; }
+    </style>
+  </defs>
+  <rect width="1600" height="760" fill="#ffffff"/>
+
+  <!-- Header band -->
+  <text x="60" y="50" class="eyebrow" font-size="13" fill="#E52321">FIG. 3.0 · §3 THE PROGRESSION</text>
+  <text x="60" y="92" class="display" font-size="32" fill="#1a1a1a">Three trajectories at a glance</text>
+  <text x="60" y="124" class="body" font-size="16" fill="#6b6b6b">How each player class moves from entry to endgame — read across to compare players, down to follow the arc.</text>
+  <line x1="60" y1="148" x2="1540" y2="148" stroke="#e2e0dc" stroke-width="1"/>
+
+  <!-- Column headers (player columns) -->
+  <!-- Stage column header -->
+  <g transform="translate(60,170)">
+    <text x="0" y="38" class="eyebrow" font-size="11" fill="#999">STAGE</text>
+  </g>
+  <!-- Tx submitters header -->
+  <g transform="translate(220,170)">
+    <rect x="0" y="0" width="430" height="6" fill="#E52321"/>
+    <text x="0" y="38" class="eyebrow" font-size="11" fill="#E52321">01 · TRANSACTION SUBMITTERS</text>
+    <text x="0" y="64" class="display" font-size="20" fill="#1a1a1a">From subsidy to self-sufficiency</text>
+  </g>
+  <!-- Operators header -->
+  <g transform="translate(680,170)">
+    <rect x="0" y="0" width="430" height="6" fill="#EC641D"/>
+    <text x="0" y="38" class="eyebrow" font-size="11" fill="#EC641D">02 · OPERATORS</text>
+    <text x="0" y="64" class="display" font-size="20" fill="#1a1a1a">From first pledge to full commitment</text>
+  </g>
+  <!-- Delegators header -->
+  <g transform="translate(1140,170)">
+    <rect x="0" y="0" width="400" height="6" fill="#3b7982"/>
+    <text x="0" y="38" class="eyebrow" font-size="11" fill="#3b7982">03 · DELEGATORS</text>
+    <text x="0" y="64" class="display" font-size="20" fill="#1a1a1a">From passive yield to active oversight</text>
+  </g>
+
+  <!-- Hairline below headers -->
+  <line x1="60" y1="270" x2="1540" y2="270" stroke="#e2e0dc" stroke-width="1.5"/>
+
+  <!-- ============== ROW 1 — ENTRY ============== -->
+  <!-- Stage label -->
+  <g transform="translate(60,300)">
+    <text x="0" y="20" class="eyebrow" font-size="11" fill="#999">STAGE 01</text>
+    <text x="0" y="56" class="display-l" font-size="26" fill="#1a1a1a">Entry</text>
+    <text x="0" y="86" class="body" font-size="13" fill="#6b6b6b">The participation</text>
+    <text x="0" y="104" class="body" font-size="13" fill="#6b6b6b">constraint must hold.</text>
+  </g>
+  <!-- Cell 1: Tx submitters -->
+  <g transform="translate(220,300)">
+    <rect x="0" y="0" width="430" height="120" rx="8" fill="#faf9f7" stroke="#e2e0dc" stroke-width="1"/>
+    <text x="20" y="36" class="display" font-size="18" fill="#1a1a1a">Negligible fees.</text>
+    <text x="20" y="62" class="display" font-size="18" fill="#1a1a1a">Reserve subsidises the game.</text>
+    <text x="20" y="98" class="body" font-size="13" fill="#6b6b6b">Bootstrap regime — staking funded by monetary expansion.</text>
+  </g>
+  <!-- Cell 2: Operators -->
+  <g transform="translate(680,300)">
+    <rect x="0" y="0" width="430" height="120" rx="8" fill="#faf9f7" stroke="#e2e0dc" stroke-width="1"/>
+    <text x="20" y="36" class="display" font-size="18" fill="#1a1a1a">Small pledge. Sub-viable</text>
+    <text x="20" y="62" class="display" font-size="18" fill="#1a1a1a">production. Path must be credible.</text>
+    <text x="20" y="98" class="body" font-size="13" fill="#6b6b6b">Expected reward must exceed pledge + infrastructure cost.</text>
+  </g>
+  <!-- Cell 3: Delegators -->
+  <g transform="translate(1140,300)">
+    <rect x="0" y="0" width="400" height="120" rx="8" fill="#faf9f7" stroke="#e2e0dc" stroke-width="1"/>
+    <text x="20" y="36" class="display" font-size="18" fill="#1a1a1a">Brand-driven choice.</text>
+    <text x="20" y="62" class="display" font-size="18" fill="#1a1a1a">Yield &gt; idle ADA.</text>
+    <text x="20" y="98" class="body" font-size="13" fill="#6b6b6b">Differentiation low; pool selection on social signals.</text>
+  </g>
+
+  <line x1="60" y1="450" x2="1540" y2="450" stroke="#e2e0dc" stroke-width="1"/>
+
+  <!-- ============== ROW 2 — PROGRESSION ============== -->
+  <g transform="translate(60,470)">
+    <text x="0" y="20" class="eyebrow" font-size="11" fill="#999">STAGE 02</text>
+    <text x="0" y="56" class="display-l" font-size="26" fill="#1a1a1a">Progression</text>
+    <text x="0" y="86" class="body" font-size="13" fill="#6b6b6b">Commitment-based</text>
+    <text x="0" y="104" class="body" font-size="13" fill="#6b6b6b">differentiation emerges.</text>
+  </g>
+  <g transform="translate(220,470)">
+    <rect x="0" y="0" width="430" height="120" rx="8" fill="#faf9f7" stroke="#e2e0dc" stroke-width="1"/>
+    <text x="20" y="36" class="display" font-size="18" fill="#1a1a1a">Volume grows.</text>
+    <text x="20" y="62" class="display" font-size="18" fill="#1a1a1a">Fees displace expansion.</text>
+    <text x="20" y="98" class="body" font-size="13" fill="#6b6b6b">Fee/expansion ratio = system's economic maturity.</text>
+  </g>
+  <g transform="translate(680,470)">
+    <rect x="0" y="0" width="430" height="120" rx="8" fill="#faf9f7" stroke="#e2e0dc" stroke-width="1"/>
+    <text x="20" y="36" class="display" font-size="18" fill="#1a1a1a">Pledge rises. Delegation</text>
+    <text x="20" y="62" class="display" font-size="18" fill="#1a1a1a">attracted. Reputation built.</text>
+    <text x="20" y="98" class="body" font-size="13" fill="#6b6b6b">Each step in pledge produces a measurable competitive edge.</text>
+  </g>
+  <g transform="translate(1140,470)">
+    <rect x="0" y="0" width="400" height="120" rx="8" fill="#faf9f7" stroke="#e2e0dc" stroke-width="1"/>
+    <text x="20" y="36" class="display" font-size="18" fill="#1a1a1a">Commitment criteria emerge.</text>
+    <text x="20" y="62" class="display" font-size="18" fill="#1a1a1a">Capital reallocates.</text>
+    <text x="20" y="98" class="body" font-size="13" fill="#6b6b6b">Delegators police via reallocation; the channel goes live.</text>
+  </g>
+
+  <line x1="60" y1="620" x2="1540" y2="620" stroke="#e2e0dc" stroke-width="1"/>
+
+  <!-- ============== ROW 3 — ENDGAME ============== -->
+  <g transform="translate(60,640)">
+    <text x="0" y="20" class="eyebrow" font-size="11" fill="#999">STAGE 03</text>
+    <text x="0" y="56" class="display-l" font-size="26" fill="#1a1a1a">Endgame</text>
+    <text x="0" y="86" class="body" font-size="13" fill="#6b6b6b">The intended</text>
+    <text x="0" y="104" class="body" font-size="13" fill="#6b6b6b">equilibrium.</text>
+  </g>
+  <g transform="translate(220,640)">
+    <rect x="0" y="0" width="430" height="120" rx="8" fill="#faf9f7" stroke="#e2e0dc" stroke-width="1.5"/>
+    <rect x="0" y="0" width="6" height="120" fill="#E52321"/>
+    <text x="20" y="36" class="display" font-size="18" fill="#1a1a1a">Fees fund the pot.</text>
+    <text x="20" y="62" class="display" font-size="18" fill="#1a1a1a">Self-sustaining game.</text>
+    <text x="20" y="98" class="body-bold" font-size="13" fill="#E52321">→ Economic self-sufficiency.</text>
+  </g>
+  <g transform="translate(680,640)">
+    <rect x="0" y="0" width="430" height="120" rx="8" fill="#faf9f7" stroke="#e2e0dc" stroke-width="1.5"/>
+    <rect x="0" y="0" width="6" height="120" fill="#EC641D"/>
+    <text x="20" y="36" class="display" font-size="18" fill="#1a1a1a">High pledge + broad</text>
+    <text x="20" y="62" class="display" font-size="18" fill="#1a1a1a">delegation = max reward.</text>
+    <text x="20" y="98" class="body-bold" font-size="13" fill="#EC641D">→ Cannot be reached by capital alone.</text>
+  </g>
+  <g transform="translate(1140,640)">
+    <rect x="0" y="0" width="400" height="120" rx="8" fill="#faf9f7" stroke="#e2e0dc" stroke-width="1.5"/>
+    <rect x="0" y="0" width="6" height="120" fill="#3b7982"/>
+    <text x="20" y="36" class="display" font-size="18" fill="#1a1a1a">Non-myopic market.</text>
+    <text x="20" y="62" class="display" font-size="18" fill="#1a1a1a">Continuous accountability.</text>
+    <text x="20" y="98" class="body-bold" font-size="13" fill="#3b7982">→ No operator escapes oversight.</text>
+  </g>
+</svg>

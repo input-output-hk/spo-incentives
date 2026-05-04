@@ -38,4 +38,4 @@ Peaked strongly at epoch 410 (1.97% of supply) — a wallet adoption wave — th
 
 ## Source
 
-Existing profile: `sub-flows/pools-distribution/mainnet-analysis/docs/mpo_entity_profiles.md` (Platform section). Web research: nu.fi, 2026/04/07.
+Existing profile: `sub-flows/census/mainnet-analysis/docs/mpo_entity_profiles.md` (Platform section). Web research: nu.fi, 2026/04/07.

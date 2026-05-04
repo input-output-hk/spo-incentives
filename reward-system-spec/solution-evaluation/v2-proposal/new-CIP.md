@@ -1,7 +1,7 @@
 # Whiteboard — V2 reward distribution: ViabilityPackage channel + redesigned envelope
 
 > **Status:** Exploratory draft 2026/04/26. Source material for a future CIP submission. To be challenged, rewritten, or discarded.
-> **Scope:** Re-architect the macro epoch-pot split and the per-pool reward formula to address operator viability ([§3.1](../README.md#31-guarantee-operator-viability-across-the-entire-productive-population)) and pledge as Sybil instrument ([§3.2](../README.md#32-restore-the-notion-of-pledge-among-operators)) jointly, while keeping the two problems on **separate budget channels**.
+> **Scope:** Re-architect the macro epoch-pot split and the per-pool reward formula to address operator viability ([Guarantee operator viability across the entire productive population](../../README.md#31-guarantee-operator-viability-across-the-entire-productive-population)) and pledge as Sybil instrument ([Restore the notion of pledge among operators](../../README.md#32-restore-the-notion-of-pledge-among-operators)) jointly, while keeping the two problems on **separate budget channels**.
 
 ## Executive summary
 
@@ -9,7 +9,7 @@ The current Shelley reward function distributes the entire $PoolsPot^{\text{epoc
 
 This whiteboard takes a different bet, organised around two architectural decisions:
 
-- **Wager 1 — the two problems are one design, on two budget channels.** Operator viability ([§3.1](../README.md#31-guarantee-operator-viability-across-the-entire-productive-population)) and pledge as Sybil instrument ([§3.2](../README.md#32-restore-the-notion-of-pledge-among-operators)) must be designed jointly — a viability mechanism that ignores Sybil leaks, or a pledge mechanism that ignores small-operator viability, fails the same way. **But the budgets are separate**: the viability subsidy is a dedicated *channel* alongside the per-pool reward envelope, sized at the macro level by a new governance fraction $\mu$, never competing with delegator yield.
+- **Wager 1 — the two problems are one design, on two budget channels.** Operator viability ([Guarantee operator viability across the entire productive population](../../README.md#31-guarantee-operator-viability-across-the-entire-productive-population)) and pledge as Sybil instrument ([Restore the notion of pledge among operators](../../README.md#32-restore-the-notion-of-pledge-among-operators)) must be designed jointly — a viability mechanism that ignores Sybil leaks, or a pledge mechanism that ignores small-operator viability, fails the same way. **But the budgets are separate**: the viability subsidy is a dedicated *channel* alongside the per-pool reward envelope, sized at the macro level by a new governance fraction $\mu$, never competing with delegator yield.
 - **Wager 2 — the envelope reverts to Shelley two-term shape, with the pledge term redesigned.** The size mass $\lambda_{\text{size}} \cdot \nu$ is unchanged. The pledge mass $\lambda_{\text{pledge}} \cdot A$ keeps the constitutional encoding ($a_0$, no amendment) but $A$ itself is redesigned to peak at $\pi = 0.5$ with a plateau above — restoring the [delegation-as-counter-power](../the-intended-game/README.md#342-delegation-as-counter-power) accountability that the current Shelley peak-at-$\pi=1$ destroys.
 
 The architecture introduces one new governance parameter ($\mu$, ViabilityPackage share of PoolsPot) and one redesigned pledge function ($A_{\text{new}}(\nu, \pi) = \nu \cdot 4 \bar\pi (1-\bar\pi)$ with $\bar\pi = \min(\pi, 0.5)$). $a_0$, $k$, $\rho$, $\tau$, and the SL-D1 outer structure $\bar p \cdot P_{\max} \cdot E$ are all retained. The whiteboard is the source draft for a forthcoming CIP submission; entity-level Sybil tax ([§3.2.2 R2](../README.md#322-specification)) is scoped out of this iteration's CIP and parked as a follow-up CIP that depends on a separate entity-identity primitive.
@@ -18,13 +18,13 @@ The architecture introduces one new governance parameter ($\mu$, ViabilityPackag
 
 ### 1.1. Why the dependency-chained reading fails
 
-The current V2 reading orders the milestones as a chain: viability ([§3.1](../README.md#31-guarantee-operator-viability-across-the-entire-productive-population)) precedes pledge ([§3.2](../README.md#32-restore-the-notion-of-pledge-among-operators)) precedes delegator yield ([§3.3](../README.md#33-maintain-and-diversify-a-competitive-delegator-yield)) precedes concentration ([§3.4](../README.md#34-reduce-the-concentration-effects-that-distort-both-populations)). The synthesis composes the candidate package the same way: *fee-layer first*, *stake-cap second*, *k raises last*.
+The current V2 reading orders the milestones as a chain: viability ([Guarantee operator viability across the entire productive population](../../README.md#31-guarantee-operator-viability-across-the-entire-productive-population)) precedes pledge ([Restore the notion of pledge among operators](../../README.md#32-restore-the-notion-of-pledge-among-operators)) precedes delegator yield ([Maintain and diversify a competitive delegator yield](../../README.md#33-maintain-and-diversify-a-competitive-delegator-yield)) precedes concentration ([Reduce the concentration effects that distort both populations](../../README.md#34-reduce-the-concentration-effects-that-distort-both-populations)). The synthesis composes the candidate package the same way: *fee-layer first*, *stake-cap second*, *k raises last*.
 
 Two structural objections emerge from re-reading the Diagnostic against the four CIP evaluations.
 
 **Objection A — fee reform is not pledge-neutral.** A flat percentage floor (CIP-0082 stage 2 `minPoolRate`, or any ledger-level proportional cost) collapses the delegator fee-rate dispersion from 38× to 1.00× and reshapes the per-pool revenue gradient. That gradient is the same surface on which pledge-as-signal must live. Rewriting it without simultaneously rewriting the pledge component leaves the pledge instrument designed for a fee structure that no longer exists.
 
-**Objection B — pledge reform is not viability-neutral.** CIP-0050 ($\sigma' = \min(\sigma, 1/k, L\cdot p)$) and CIP-0037 ($\text{sat}(p) = \text{orig\_sat} \cdot \max(e, \min(1/k, p/\text{orig\_sat}\cdot \ell))$) both gate eligible-stake on pledge. The retail single-pool operator (median pledge ratio ≈ 0.07%) is clipped to ~7% of the saturation ceiling at $L = 100$, or to the 20% floor at $e = 0.2$. In either case, **the viability gap that [§3.1](../README.md#31-guarantee-operator-viability-across-the-entire-productive-population) seeks to close is mechanically widened by the very instrument that [§3.2](../README.md#32-restore-the-notion-of-pledge-among-operators) is supposed to introduce**. The chain assumes the layers don't interact; the algebra says they do.
+**Objection B — pledge reform is not viability-neutral.** CIP-0050 ($\sigma' = \min(\sigma, 1/k, L\cdot p)$) and CIP-0037 ($\text{sat}(p) = \text{orig\_sat} \cdot \max(e, \min(1/k, p/\text{orig\_sat}\cdot \ell))$) both gate eligible-stake on pledge. The retail single-pool operator (median pledge ratio ≈ 0.07%) is clipped to ~7% of the saturation ceiling at $L = 100$, or to the 20% floor at $e = 0.2$. In either case, **the viability gap that [Guarantee operator viability across the entire productive population](../../README.md#31-guarantee-operator-viability-across-the-entire-productive-population) seeks to close is mechanically widened by the very instrument that [Restore the notion of pledge among operators](../../README.md#32-restore-the-notion-of-pledge-among-operators) is supposed to introduce**. The chain assumes the layers don't interact; the algebra says they do.
 
 The conclusion is not that the V2 milestone ordering is wrong — it is that **the candidate reward function cannot be a stack**: the fee structure and the pledge structure are two cuts of the same surface and must be co-designed.
 
@@ -34,9 +34,9 @@ A reward function $f$ over a per-pool tuple $(\sigma, p, \pi)$ — with entity-l
 
 > **C1 — Universal viability.** For every pool above the production threshold $\sigma_{\min}$, the operator share of $f$ exceeds a fiat-denominated viability cost across a stated ADA price range, *regardless of pledge level*. Custodial inability to pledge does not cross the viability boundary.
 >
-> **C2 — Material commitment signal.** The yield differential between meaningfully-committed and uncommitted operators is large enough to be visible to delegators (>0.5pp, per [§3.2.2](../README.md#322-specification)) and *increases with entity-level fleet size*, not pool-level pledge ratio.
+> **C2 — Material commitment signal.** The yield differential between meaningfully-committed and uncommitted operators is large enough to be visible to delegators (>0.5pp, per [Specification](../../README.md#322-specification)) and *increases with entity-level fleet size*, not pool-level pledge ratio.
 >
-> **C3 — Architectural recognition of the three populations.** Custodial operators (cannot commit own capital) and independent operators (commit capital out of conviction) are *not* mapped to the same reward branch. The function must distinguish *architectural inability* from *strategic choice* through a means other than pledge ratio alone.
+> **C3 — Architectural recognition of the three populations.** Custodial operators (cannot commit own capital) and single-pool operators (commit capital out of conviction) are *not* mapped to the same reward branch. The function must distinguish *architectural inability* from *strategic choice* through a means other than pledge ratio alone.
 
 A solution that satisfies C1 but not C2 collapses to CIP-0023/0082 — viable but Sybil-permissive. A solution that satisfies C2 but not C1 collapses to CIP-0050/0037 — anti-Sybil but capital-capability-biased. A solution satisfying C2 without C3 collapses custodial to "uncommitted" and reproduces the CIP-0050 zero-pledge break.
 
@@ -50,8 +50,8 @@ The proposal must satisfy a fixed set of constraints that come from the V2 speci
 
 | Origin | Constraint | Quantitative target |
 |---|---|---|
-| [§3.1.2](../README.md#312-structural-enforce-the-production-threshold) — production threshold | A minimum active-stake threshold $\sigma_{\min}$ must be defined and enforced; a sub-threshold pooling-service path must exist | $\sigma_{\min} \approx 1\text{M ADA}$ at current parameters; sub-threshold pool count → 0 |
-| [§3.1.3](../README.md#313-economic-every-productive-pool-must-be-profitable) — economic viability | Every pool at or above $\sigma_{\min}$ must generate operator revenue exceeding fiat operating cost; the floor must be proportional, not fixed | Operator viability rate >90% across the productive set; >50% at ADA = $0.10 |
+| [Structural: enforce the production threshold](../../README.md#312-structural-enforce-the-production-threshold) — production threshold | A minimum active-stake threshold $\sigma_{\min}$ must be defined and enforced; a sub-threshold pooling-service path must exist | $\sigma_{\min} \approx 1\text{M ADA}$ at current parameters; sub-threshold pool count → 0 |
+| [Economic: every productive pool must be profitable](../../README.md#313-economic-every-productive-pool-must-be-profitable) — economic viability | Every pool at or above $\sigma_{\min}$ must generate operator revenue exceeding fiat operating cost; the floor must be proportional, not fixed | Operator viability rate >90% across the productive set; >50% at ADA = $0.10 |
 | [§3.2.2 R1](../README.md#322-specification) — material pledge differential | Yield differential between pledged and unpledged pools must be visible to delegators | >0.5pp |
 | [§3.2.2 R2](../README.md#322-specification) — entity-level pledge | Pledge must be evaluated at the entity level; an entity splitting capital across $n$ pools must not receive the aggregate benefit of $n$ independent pledges | Marginal pledge cost positive and increasing with $n$ |
 | [§3.2.2 R3](../README.md#322-specification) — custodial recognition | The mechanism must distinguish architectural inability to pledge from strategic choice | Custodial population (CEX + IVaaS) must remain viable without pledging delegated capital |
@@ -84,8 +84,8 @@ The whiteboard treats the following pathologies as **pre-conditions to forbid**.
 
 | Anti-pattern | Source CIP(s) | What the formula must not do |
 |---|---|---|
-| Per-pool revenue regressive uplift | CIP-0023, CIP-0082 stage 2 | The marginal change in operator revenue between sub-viable and saturated tiers must not exceed the change at the lower tier (no 50× tier amplification) |
-| MPO fleet amplification | CIP-0023, CIP-0082 | The marginal benefit of the $(n+1)$-th pool to an $n$-pool entity must not be larger than the benefit to the 1st pool of an independent operator (current bundle: ~500× gap) |
+| Per-pool revenue regressive uplift | CIP-0023, CIP-0082 stage 2 | The marginal change in operator revenue between sub-reliable and saturated tiers must not exceed the change at the lower tier (no 50× tier amplification) |
+| MPO fleet amplification | CIP-0023, CIP-0082 | The marginal benefit of the $(n+1)$-th pool to an $n$-pool entity must not be larger than the benefit to the 1st pool of an single-pool operator (current bundle: ~500× gap) |
 | Capital-capability bias | CIP-0050, CIP-0037 | The activation threshold of any pledge-conditioned bonus must scale with pool size, not with absolute pledge — otherwise floor-exit is mechanically regressive |
 | Zero-pledge discontinuity | CIP-0050 | The reward at $\pi = 0$ must be continuous and non-zero for pools that pass the production gate; custodial populations must not collapse |
 | Custodial / strategic conflation | CIP-0050, CIP-0037 | The function must not treat custodial inability and MPO strategic non-pledging through the same reward branch |
@@ -134,7 +134,7 @@ For mainnet at epoch 623 (per [treasury-and-pool-pots-distribution mainnet-analy
 | $ViabilityPackage^{\text{epoch}} = \mu \cdot PoolsPot$ | ~3.08M | 16% |
 | $RewardPot^{\text{epoch}} = (1-\mu) \cdot PoolsPot$ | ~12.3M | 64% |
 
-For $N_q \approx 460$ qualified pools (the §3 [283 viable single-pool + ~180 viable MPO-attached pools](../diagnostic/sub-flows/census/mainnet-analysis/single-spo/README.md) baseline): per-pool injection $X_p = ViabilityPackage / N_q \approx 6700$ ADA/epoch ≈ **489K ADA/year**. At ADA = $0.10$ stress price ([§3.1.3 KPI](../README.md#313-economic-every-productive-pool-must-be-profitable) floor), that delivers ≈ $48,900/year per qualified operator — well above the [§4.5.1](../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#451-the-cost-of-operating-a-pool--infrastructure-and-labour) lower-bound of ~$7,160/year. The pack at $\mu = 20\%$ is *generous*: it covers the cost floor and provides a real operator wage on top.
+For $N_q \approx 460$ qualified pools (the §3 [284 productive single-pool operators + ~176 viable MPO-attached pools](../diagnostic/sub-flows/census/mainnet-analysis/single-spo/README.md) baseline): per-pool injection $X_p = ViabilityPackage / N_q \approx 6700$ ADA/epoch ≈ **489K ADA/year**. At ADA = $0.10$ stress price ([§3.1.3 KPI](../README.md#313-economic-every-productive-pool-must-be-profitable) floor), that delivers ≈ $48,900/year per qualified operator — well above the [The cost of operating a pool — infrastructure and labour](../../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#451-the-cost-of-operating-a-pool-infrastructure-and-labour) lower-bound of ~$7,160/year. The pack at $\mu = 20\%$ is *generous*: it covers the cost floor and provides a real operator wage on top.
 
 The implication: $\mu = 20\%$ is a working starting point, not a target. The actual calibration depends on what the design wants the pack to *cover* — bare cost floor, professional wage, or a graduated allocation between the two. See OQ7.
 
@@ -185,8 +185,8 @@ $$
 
 | Term | Role | Maps to | Change vs. current Shelley |
 |---|---|---|---|
-| $\lambda_{\text{size}} \cdot \nu$ | **Size mass** — stake-accessible component | [§3.3](../README.md#33-maintain-and-diversify-a-competitive-delegator-yield) | Unchanged shape; ceiling reduced by factor $(1-\mu)$ |
-| $\lambda_{\text{pledge}} \cdot A(\nu, \pi)$ | **Pledge mass** — commitment instrument | [§3.2](../README.md#32-restore-the-notion-of-pledge-among-operators) | $A$ redesigned (see §4.4); coefficient encoding unchanged |
+| $\lambda_{\text{size}} \cdot \nu$ | **Size mass** — stake-accessible component | [Maintain and diversify a competitive delegator yield](../../README.md#33-maintain-and-diversify-a-competitive-delegator-yield) | Unchanged shape; ceiling reduced by factor $(1-\mu)$ |
+| $\lambda_{\text{pledge}} \cdot A(\nu, \pi)$ | **Pledge mass** — commitment instrument | [Restore the notion of pledge among operators](../../README.md#32-restore-the-notion-of-pledge-among-operators) | $A$ redesigned (see §4.4); coefficient encoding unchanged |
 
 The **substantive simplification**: the envelope no longer carries a viability term. The convex constraint at the envelope level is the existing two-coefficient constraint $\lambda_{\text{size}} + \lambda_{\text{pledge}} = 1$. The viability budget is sized by $\mu$ (the macro split of §4.1), not by an envelope coefficient.
 
@@ -236,7 +236,7 @@ The eligible-set size $N_q$ in any given epoch is the count of pools satisfying 
 
 | Population | Count above $\nu_{\min}$ | Expected ≥ 1 block per epoch |
 |---|---:|---:|
-| All pools (single-SPO + MPO-attached) | 951 | **~900** |
+| All pools (single-SPO + MPO-attached) | 733 | **~900** |
 | → Above viability threshold (≥3M ADA, $\lambda \geq 3$) | 731 | ~720 (≥ 95%) |
 | → Marginal (1M–3M, $\lambda \in [1, 3]$) | 220 | ~180 (63–95%) |
 | Single-SPO only | 477 | ~440 |
@@ -266,9 +266,9 @@ This **clears the §4.5 lower bound** of \$7,160/year operator floor with margin
 
 The pack quantity $X_p$ is not an opaque ADA figure — it is the protocol's response to a fiat-denominated operating cost that decomposes into two semantically distinct tiers, taken from the diagnostic [§4.5 — *Is operator revenue competitive?*](../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#45-is-operator-revenue-competitive--a-market-benchmark) and finding [OPE.O6.F4](../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#454-implications).
 
-**Tier 1 — Infrastructure cost ($C_{\text{infra}}$).** Hardware, hosting, network, monitoring required to run one block producer + two relays + monitoring/DNS/backups. Per [§4.5.1](../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#451-the-cost-of-operating-a-pool--infrastructure-and-labour): **\$110–270/month** (\$1,320–3,240/year), VPS or bare-metal benchmarks (Hetzner, OVH, Contabo, AWS Lightsail, Q1 2026). Machine-amortisable, drifts slowly, supplier-priced.
+**Tier 1 — Infrastructure cost ($C_{\text{infra}}$).** Hardware, hosting, network, monitoring required to run one block producer + two relays + monitoring/DNS/backups. Per [The cost of operating a pool — infrastructure and labour](../../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#451-the-cost-of-operating-a-pool-infrastructure-and-labour): **\$110–270/month** (\$1,320–3,240/year), VPS or bare-metal benchmarks (Hetzner, OVH, Contabo, AWS Lightsail, Q1 2026). Machine-amortisable, drifts slowly, supplier-priced.
 
-**Tier 2 — Human time cost ($C_{\text{human}}$).** Skilled hours for monitoring, upgrades, security, governance. Per [§4.5.1](../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#451-the-cost-of-operating-a-pool--infrastructure-and-labour): **5–15 hours/month**, with hard-fork spikes. DevOps/SRE rates (ZipRecruiter, Salary.com, PayScale, 2026):
+**Tier 2 — Human time cost ($C_{\text{human}}$).** Skilled hours for monitoring, upgrades, security, governance. Per [The cost of operating a pool — infrastructure and labour](../../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#451-the-cost-of-operating-a-pool-infrastructure-and-labour): **5–15 hours/month**, with hard-fork spikes. DevOps/SRE rates (ZipRecruiter, Salary.com, PayScale, 2026):
 
 | Role | Hourly rate (USD) |
 |---|---:|
@@ -278,7 +278,7 @@ The pack quantity $X_p$ is not an opaque ADA figure — it is the protocol's res
 
 Lower bound (10 hrs/mo × \$43/hr): **\$5,160/year**. Upper bound (20 hrs/mo × \$86/hr) ≈ \$20,000/year.
 
-**Total fiat operating cost.** [§4.5.1](../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#451-the-cost-of-operating-a-pool--infrastructure-and-labour) cites a conservative lower-bound of **~\$7,160/year** (\$2,000 mid-range infra + \$5,160 labour at the lowest market rate). Below this, the operator donates skilled labour to the network — the structural condition finding [OPE.O6.F4](../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#454-implications) names.
+**Total fiat operating cost.** [The cost of operating a pool — infrastructure and labour](../../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#451-the-cost-of-operating-a-pool-infrastructure-and-labour) cites a conservative lower-bound of **~\$7,160/year** (\$2,000 mid-range infra + \$5,160 labour at the lowest market rate). Below this, the operator donates skilled labour to the network — the structural condition finding [OPE.O6.F4](../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#454-implications) names.
 
 ##### The coverage identity
 
@@ -294,7 +294,7 @@ $$
 
 The viability channel must satisfy nine properties.
 
-**P1 — Two-tier additive decomposition.** $X_0 = X_{\text{infra}} + X_{\text{human}}$ at the calibration level: each tier is independently inspected, reviewed, and updated. Mirrors [§4.5.1](../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#451-the-cost-of-operating-a-pool--infrastructure-and-labour).
+**P1 — Two-tier additive decomposition.** $X_0 = X_{\text{infra}} + X_{\text{human}}$ at the calibration level: each tier is independently inspected, reviewed, and updated. Mirrors [The cost of operating a pool — infrastructure and labour](../../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#451-the-cost-of-operating-a-pool-infrastructure-and-labour).
 
 **P2 — Coverage identity.** At the chosen anchor price $e$, $X_0 \cdot e$ covers $C_{\text{infra}}^{\text{USD}} + C_{\text{human}}^{\text{USD}}$ per epoch.
 
@@ -306,7 +306,7 @@ The viability channel must satisfy nine properties.
 
 **P6 — Budget-closure consistency.** $\mu \cdot PoolsPot = \sum_{p \in N_q} X_p$ holds in expectation. Raising the per-pool target $X_0$ without compensating $\mu$ shrinks $N_q$ (budget pressure tightens the qualified set, or per-pool dilution kicks in). Explicit, governable trade-off.
 
-**P7 — Pledge stability under stress rebalance.** When P3 rule (d) fires, governance lifts $\mu$ — *not* $a_0$. The envelope's pledge mass $\lambda_{\text{pledge}} = a_0/(1+a_0)$ is held constant under price stress, so the Sybil-tax mass backing [§3.2](../README.md#32-restore-the-notion-of-pledge-among-operators) does not degrade with market conditions. Delegators absorb the shock through reduced size mass ($P_{\max}$ shrinks proportionally to $1-\mu$); the security mechanism is decoupled from price.
+**P7 — Pledge stability under stress rebalance.** When P3 rule (d) fires, governance lifts $\mu$ — *not* $a_0$. The envelope's pledge mass $\lambda_{\text{pledge}} = a_0/(1+a_0)$ is held constant under price stress, so the Sybil-tax mass backing [Restore the notion of pledge among operators](../../README.md#32-restore-the-notion-of-pledge-among-operators) does not degrade with market conditions. Delegators absorb the shock through reduced size mass ($P_{\max}$ shrinks proportionally to $1-\mu$); the security mechanism is decoupled from price.
 
 ##### Governance-grade price stabilization (P3 rule d), restated for the channel architecture
 
@@ -331,7 +331,7 @@ The political framing is unchanged: delegators (size mass) absorb the shock; ope
 
 ##### Numerical anchor — aligned with §4.5
 
-Taking the [§4.5.1](../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#451-the-cost-of-operating-a-pool--infrastructure-and-labour) low / mid / high cost stack:
+Taking the [The cost of operating a pool — infrastructure and labour](../../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#451-the-cost-of-operating-a-pool-infrastructure-and-labour) low / mid / high cost stack:
 
 | Quantity | Low | Mid | High |
 |---|---:|---:|---:|
@@ -454,7 +454,7 @@ The whiteboard's working hypothesis is *linear ramp with per-epoch gate $n_t \ge
 
 ### 4.4. The pledge term $A$ — redesign with 50/50 saturation and a plateau
 
-The current $A(\nu, \pi) = \nu^2 \pi [1 - \pi(1 - \nu)]$ has its peak at $(\nu = 1,\, \pi = 1)$ — *saturated, fully self-pledged*. That endgame is exactly what the Cardano consensus model is **not** designed to reward: a 100%-pledged saturated pool is a *private* pool, with no external delegation and therefore no [delegation-as-counter-power](../the-intended-game/README.md#342-delegation-as-counter-power) accountability mechanism. The Intended Game [§3.4.6](../the-intended-game/README.md#346-the-structural-requirement) explicitly requires *both* meaningful operator commitment (pledge) *and* meaningful external delegation; pledge alone destroys the second leg, and the reward function should not pay for it.
+The current $A(\nu, \pi) = \nu^2 \pi [1 - \pi(1 - \nu)]$ has its peak at $(\nu = 1,\, \pi = 1)$ — *saturated, fully self-pledged*. That endgame is exactly what the Cardano consensus model is **not** designed to reward: a 100%-pledged saturated pool is a *private* pool, with no external delegation and therefore no [delegation-as-counter-power](../the-intended-game/README.md#342-delegation-as-counter-power) accountability mechanism. The Intended Game [The structural requirement](../the-intended-game/README.md#346-the-structural-requirement) explicitly requires *both* meaningful operator commitment (pledge) *and* meaningful external delegation; pledge alone destroys the second leg, and the reward function should not pay for it.
 
 The whiteboard redesigns $A$ to **saturate at $\pi = 0.5$ and plateau above** — a concave rise from $\pi = 0$ that delivers most of the bonus by 20%, levels off as it approaches 50%, and stays at the maximum for any pledge above 50%:
 
@@ -496,11 +496,11 @@ Eight implications follow from this table.
 
 **I3 — The custodial branch is unchanged on this term.** A custodial pool ($\pi = 0$) still earns $A_{\text{new}} = 0$ — same as current Shelley. The custodial population reaches viability through $V$ and forgoes the commitment bonus by business-model choice. The architectural distinction of [§3.2.2 R3](../README.md#322-specification) is preserved.
 
-**I4 — Small pools are decisively un-penalised.** The shift from $\nu^2$ to $\nu$ multiplies the commitment bonus at the Healthy tier by 4×, at Marginal by 20×, at Sub-viable by 50× (at the 50/50 plateau). Combined with the V pack, this is the structural answer to capital-capability bias: a Marginal-tier operator pledging 50% of their pool's stake earns a *visible* yield differential, exactly what [§3.2.2 R1](../README.md#322-specification) requires.
+**I4 — Small pools are decisively un-penalised.** The shift from $\nu^2$ to $\nu$ multiplies the commitment bonus at the Healthy tier by 4×, at Marginal by 20×, at Sub-reliable by 50× (at the 50/50 plateau). Combined with the V pack, this is the structural answer to capital-capability bias: a Marginal-tier operator pledging 50% of their pool's stake earns a *visible* yield differential, exactly what [§3.2.2 R1](../README.md#322-specification) requires.
 
 **I5 — Delegation-as-counter-power is restored.** Under $A_{\text{new}}$, the operator economically *needs* delegators to reach the plateau without over-committing capital. A pool that fails to attract delegation is structurally pushed below the plateau, reducing yield per ADA pledged. This re-establishes the accountability loop [The Intended Game §3.4.2](../the-intended-game/README.md#342-delegation-as-counter-power) describes.
 
-**I6 — Yield-differential to delegators becomes visible at low pledge already.** Because the curve is concave, even modest pledge (π = 0.10–0.20) extracts 36–64% of the maximum bonus. A pool at $\pi = 0.20$ vs a pool at $\pi = 0$ produces a yield gap delegators can read. The dormant pledge-bonus budget (95.6% return-to-reserve per [POL.O6](../diagnostic/README.md)) becomes a contestable economic dimension *for retail operators*, not just for whales.
+**I6 — Yield-differential to delegators becomes visible at low pledge already.** Because the curve is concave, even modest pledge (π = 0.10–0.20) extracts 36–64% of the maximum bonus. A pool at $\pi = 0.20$ vs a pool at $\pi = 0$ produces a yield gap delegators can read. The dormant pledge-bonus budget (95.6% return-to-reserve per [POL.O7](../diagnostic/README.md)) becomes a contestable economic dimension *for retail operators*, not just for whales.
 
 **I7 — Pledge-bonus utilisation should rise materially.** The plateau means saturating-pool operators no longer face an unreachable target (77M ADA pledge). They reach the maximum at 33.5M and are inert above. The fraction of the $\lambda_{\text{pledge}}$ budget actually distributed should rise from <5% (current) toward [§3.2.2 KPI](../README.md#322-specification) target >50%.
 
@@ -553,9 +553,9 @@ Three V2 milestones map to three governance levers:
 
 | V2 milestone | Lever | Mechanism |
 |---|---|---|
-| [§3.1](../README.md#31-guarantee-operator-viability-across-the-entire-productive-population) operator viability | $\mu$ | Sets ViabilityPackage budget |
-| [§3.2](../README.md#32-restore-the-notion-of-pledge-among-operators) pledge as Sybil signal | $a_0$ + new $A$ shape | Sets pledge mass and its peak location |
-| [§3.3](../README.md#33-maintain-and-diversify-a-competitive-delegator-yield) competitive delegator yield | $1 - \mu$ × $\lambda_{\text{size}}$ | Residual after $\mu$ and $a_0$ are set |
+| [Guarantee operator viability across the entire productive population](../../README.md#31-guarantee-operator-viability-across-the-entire-productive-population) operator viability | $\mu$ | Sets ViabilityPackage budget |
+| [Restore the notion of pledge among operators](../../README.md#32-restore-the-notion-of-pledge-among-operators) pledge as Sybil signal | $a_0$ + new $A$ shape | Sets pledge mass and its peak location |
+| [Maintain and diversify a competitive delegator yield](../../README.md#33-maintain-and-diversify-a-competitive-delegator-yield) competitive delegator yield | $1 - \mu$ × $\lambda_{\text{size}}$ | Residual after $\mu$ and $a_0$ are set |
 
 The current Shelley calibration is the limiting case $\mu = 0$, $a_0 = 0.3$, $A = A_{\text{Shelley}}$. The proposal moves to $\mu = 20\%$ (working value), $a_0 = 0.3$ (unchanged), $A = A_{\text{new}}$ (50/50 plateau redesign). The constitutional cost is **one new parameter** ($\mu$) and **one parameter-update on $A$'s functional form** (the latter a ledger-rule change, not a constitutional bound modification — the bounds $a_0 \in [0.1, 1.0]$ are unchanged).
 
@@ -634,7 +634,7 @@ The structural source remains: the channel allocates per pool, not per entity. W
 
 - **Entity-level $V$** (eliminates the leak by construction): $X$ computed on entity-aggregate stake $\Sigma_{\text{ent}}$, distributed proportionally to the entity's pools. Requires the entity-identity primitive parked as a follow-up CIP.
 
-The whiteboard's stage 1 CIP scope accepts the residual leak: the channel architecture's combination of per-epoch gate, population dilution, and operating-cost matching makes the leak materially smaller than in any of the four evaluated CIPs (CIP-0050/0037 break Sybil entirely at low pledge; CIP-0023/0082 amplify the MPO advantage by 500× per [§3.2.1.1](../README.md#3211-evidence-base)). A stage 2 CIP introduces the entity primitive and closes the leak completely.
+The whiteboard's stage 1 CIP scope accepts the residual leak: the channel architecture's combination of per-epoch gate, population dilution, and operating-cost matching makes the leak materially smaller than in any of the four evaluated CIPs (CIP-0050/0037 break Sybil entirely at low pledge; CIP-0023/0082 amplify the MPO advantage by 500× per [Evidence base](../../README.md#3211-evidence-base)). A stage 2 CIP introduces the entity primitive and closes the leak completely.
 
 ##### Property added
 
