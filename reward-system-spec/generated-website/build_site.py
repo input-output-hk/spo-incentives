@@ -163,8 +163,8 @@ PAGES = [
         "slug": "solution-evaluation",
         "md": "solution-evaluation/README.md",
         "html": "solution-evaluation.html",
-        "title": "Cross-CIP Analysis & Verdict — V2 Reward System",
-        "hero_h1": "Cross-CIP Analysis & Verdict",
+        "title": "Intro & Conclusion of the 4 CIPs — V2 Reward System",
+        "hero_h1": "Intro & Conclusion of the 4 CIPs",
         "hero_sub": "Coverage matrix, cumulative findings, no-go verdict on the bundle",
         "active_nav": "solution-evaluation",
     },
@@ -221,15 +221,6 @@ PAGES = [
         "hero_h1": "CIP-0082 — Improved Rewards Scheme",
         "hero_sub": "Margin swap + k-raises — inverts viability, regenerates 2020",
         "active_nav": "cip-0082",
-    },
-    {
-        "slug": "k-parameter",
-        "md": "solution-evaluation/operator-delegator/k-parameter.md",
-        "html": "k-parameter.html",
-        "title": "k-Parameter Mechanics — Companion to CIP-0082 Stages 3–4",
-        "hero_h1": "k-Parameter Mechanics",
-        "hero_sub": "What raising k does to the operator/delegator split",
-        "active_nav": "k-parameter",
     },
 ]
 
@@ -1533,16 +1524,11 @@ window.MathJax = {{
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
-      <span class="nav-dd-stratum-meta">Five CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
+      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
     </div>
     <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero{cls_solution_eval}">
-      <span class="nav-dd-ref-title">Cross-CIP Analysis &amp; Verdict</span>
+      <span class="nav-dd-ref-title">Intro &amp; Conclusion of the 4 CIPs</span>
       <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, no-go verdict on the bundle</span>
-    </a>
-    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Forward — Parameter Recommendations</div>
-    <a href="solution-evaluation.html#5-recommendations-on-adjustments-to-the-current-mechanism" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
-      <span class="nav-dd-ref-title">In preparation</span>
-      <span class="nav-dd-ref-cite">Adjustments to the current mechanism — IO Research target end of 2026<span class="nav-dd-ref-stage nav-dd-ref-stage-soon">Soon</span></span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
     <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis{cls_stake_cap}">
@@ -1569,10 +1555,6 @@ window.MathJax = {{
     <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_cip_0082}">
       <span class="nav-dd-ref-title">CIP-0082 — Improved Rewards Scheme</span>
       <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
-    </a>
-    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deeper{cls_k_parameter}">
-      <span class="nav-dd-ref-title">k-Parameter mechanics</span>
-      <span class="nav-dd-ref-cite">Sub-document of CIP-0082 stages 3–4<span class="nav-dd-ref-stage">Sub-doc</span></span>
     </a>
   </div>
 </div>
@@ -1797,7 +1779,7 @@ DIAG_ACTIVE = {"problem-statements", "diagnostic", "census", "reserves", "pools"
 SOLUTION_ACTIVE = {
     "solution-evaluation",
     "stake-cap", "cip-0050", "cip-0037",
-    "fee-layer", "cip-0023", "cip-0082", "k-parameter",
+    "fee-layer", "cip-0023", "cip-0082",
 }
 DESIGN_ACTIVE = {"intended-game"}
 
@@ -1822,7 +1804,6 @@ BANNER_VARIANTS = {
     "cip-0037":            "braid",
     "cip-0023":            "braid",
     "cip-0082":            "braid",
-    "k-parameter":         "starburst",   # transversal lever
 }
 
 BREADCRUMBS = {
@@ -1833,14 +1814,13 @@ BREADCRUMBS = {
     "census": ["Mainnet Diagnostic", "The Staking Census"],
     "reserves": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
     "pools": ["Mainnet Diagnostic", "Reward Flow", "Pools"],
-    "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],    "solution-evaluation": ["Solution Evaluation", "Cross-CIP Analysis & Verdict"],
+    "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],    "solution-evaluation": ["Solution Evaluation", "Intro & Conclusion of the 4 CIPs"],
     "stake-cap": ["Solution Evaluation", "Stake-Cap Layer", "CIP Evaluation Synthesis"],
     "cip-0050": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0050"],
     "cip-0037": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0037"],
     "fee-layer": ["Solution Evaluation", "Fee Layer", "CIP Evaluation Synthesis"],
     "cip-0023": ["Solution Evaluation", "Fee Layer", "CIP-0023"],
     "cip-0082": ["Solution Evaluation", "Fee Layer", "CIP-0082"],
-    "k-parameter": ["Solution Evaluation", "Fee Layer", "k-Parameter Mechanics"],
 }
 
 
@@ -1886,7 +1866,6 @@ _HERO_EYEBROW = {
     "cip-0037": "Solution Evaluation &middot; Stake-Cap Layer",
     "cip-0023": "Solution Evaluation &middot; Fee Layer",
     "cip-0082": "Solution Evaluation &middot; Fee Layer",
-    "k-parameter": "Solution Evaluation &middot; Fee Layer",
     "my-bookmarks": "Reader Tools",
 }
 
@@ -1909,7 +1888,6 @@ def render_shell(page: dict, content_html: str) -> str:
         "fee-layer": "cls_fee_layer",
         "cip-0023": "cls_cip_0023",
         "cip-0082": "cls_cip_0082",
-        "k-parameter": "cls_k_parameter",
     }
     classes = {v: "" for v in nav_map.values()}
     if active in nav_map:
@@ -1920,11 +1898,11 @@ def render_shell(page: dict, content_html: str) -> str:
         classes["cls_diagnostic_title"] = " parent-active"
     # Sub-eval pages light up the Solution Evaluation landing as parent-active.
     if active in {"stake-cap", "cip-0050", "cip-0037",
-                  "fee-layer", "cip-0023", "cip-0082", "k-parameter"}:
+                  "fee-layer", "cip-0023", "cip-0082"}:
         classes["cls_solution_eval"] = " parent-active"
     if active in {"cip-0050", "cip-0037"}:
         classes["cls_stake_cap"] = " parent-active"
-    if active in {"cip-0023", "cip-0082", "k-parameter"}:
+    if active in {"cip-0023", "cip-0082"}:
         classes["cls_fee_layer"] = " parent-active"
     cls_diag_trigger = " active" if active in DIAG_ACTIVE else ""
     cls_solution_trigger = " active" if active in SOLUTION_ACTIVE else ""
@@ -2954,7 +2932,7 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
   font-variant-numeric:tabular-nums}
 
 /* Inline evidence tables — when a finding row needs a small reference
-   table (e.g. ROS-responsive segments on k-parameter.md), the MD
+   table (e.g. ROS-responsive segments in cip-0082 §B.3), the MD
    pipe-table syntax doesn't survive the surrounding ``markdown="1"``
    wrappers reliably, so authors emit the table as raw HTML with this
    class. Tight typography matches the Infared finding lane around it. */

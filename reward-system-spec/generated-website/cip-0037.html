@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777963402">
+<link rel="stylesheet" href="assets/site.css?v=1777970059">
 
 
 </head>
@@ -79,16 +79,11 @@ window.MathJax = {
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
-      <span class="nav-dd-stratum-meta">Five CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
+      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
     </div>
     <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero parent-active">
-      <span class="nav-dd-ref-title">Cross-CIP Analysis &amp; Verdict</span>
+      <span class="nav-dd-ref-title">Intro &amp; Conclusion of the 4 CIPs</span>
       <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, no-go verdict on the bundle</span>
-    </a>
-    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Forward — Parameter Recommendations</div>
-    <a href="solution-evaluation.html#5-recommendations-on-adjustments-to-the-current-mechanism" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
-      <span class="nav-dd-ref-title">In preparation</span>
-      <span class="nav-dd-ref-cite">Adjustments to the current mechanism — IO Research target end of 2026<span class="nav-dd-ref-stage nav-dd-ref-stage-soon">Soon</span></span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
     <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis parent-active">
@@ -115,10 +110,6 @@ window.MathJax = {
     <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
       <span class="nav-dd-ref-title">CIP-0082 — Improved Rewards Scheme</span>
       <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
-    </a>
-    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deeper">
-      <span class="nav-dd-ref-title">k-Parameter mechanics</span>
-      <span class="nav-dd-ref-cite">Sub-document of CIP-0082 stages 3–4<span class="nav-dd-ref-stage">Sub-doc</span></span>
     </a>
   </div>
 </div>
@@ -433,7 +424,7 @@ window.MathJax = {
 <h2 id="5-read-more">5. Read more</h2>
 <ul>
 <li><strong>The proposal itself</strong> — <a href="https://cips.cardano.org/cip/CIP-0037">CIP-0037 on cardano-cips.org</a></li>
-<li><strong>How it fits the four-CIP bundle</strong> — <a href="solution-evaluation.html">Cross-CIP Analysis &amp; Verdict</a></li>
+<li><strong>How it fits the four-CIP bundle</strong> — <a href="solution-evaluation.html">Intro &amp; Conclusion of the 4 CIPs</a></li>
 <li><strong>Stake-cap layer comparison with CIP-0050</strong> — <a href="stake-cap.html">Stake-Cap synthesis</a></li>
 <li><strong>Companion stake-cap CIP</strong> — <a href="cip-0050.html">CIP-0050 — Pledge Leverage</a></li>
 <li><strong>Mechanism in detail</strong> (formula, three regimes, kinship with CIP-0050, MPO fleet-split worked example) — <a href="#appendix-a-mechanism-in-detail">Appendix A</a></li>
@@ -1011,7 +1002,7 @@ final_sat = max(new_sat, orig_sat);</code></p>
 <p><strong>Relation to other CIPs.</strong>
 - <strong>CIP-0050</strong> — the other stake-cap candidate. Same V2 targets (§3.2 + pool-level §3.4); different primitive (hard cap vs smooth curve). Same-layer pairing not canonical.
 - <strong>Fee-layer CIPs (CIP-0023, CIP-0082)</strong> — compose cleanly on the mechanical axis (different pipeline stage) but target different V2 milestones.
-- <strong><code>k</code> lever</strong> — $\text{orig\_sat} = \text{Supply}/k$ is a reference scale for CIP-0037; any <code>k</code> change directly reshapes the saturation curve. Standalone k analysis: <a href="k-parameter.html"><code>../operator-delegator/k-parameter.md</code></a>.</p>
+- <strong><code>k</code> lever</strong> — $\text{orig\_sat} = \text{Supply}/k$ is a reference scale for CIP-0037; any <code>k</code> change directly reshapes the saturation curve. Standalone k analysis: <a href="cip-0082.html#b3-standalone-k-lever-deep-dive">cip-0082 §B.3 standalone k-lever deep dive</a>.</p>
 <h3 id="c3-references">C.3. References</h3>
 <ul>
 <li><strong>V2 §3 anchors:</strong> V2 <a href="index.html#32-restore-the-notion-of-pledge-among-operators">§3.2 pledge signal</a>, <a href="index.html#34-reduce-the-concentration-effects-that-distort-both-populations">§3.4 concentration</a>, <a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">§3.1 operator viability</a>.</li>
@@ -1019,7 +1010,7 @@ final_sat = max(new_sat, orig_sat);</code></p>
 <li><strong>Diagnostic findings cited in this file:</strong> POL.O2.F1, POL.O2.F2, POL.O5.F1, POL.O5.F2, POL.O5.F3, POL.O6.F2 (pools-distribution); OPE.O6.F4, OPE.O7.F1 (operator-delegator).</li>
 <li><strong>Companion CIP:</strong> <a href="cip-0050.html"><code>cip-0050.md</code></a> — alternative stake-cap primitive (hard cap vs smooth curve). Same-layer pairing is not canonical; a coherent V2 package picks one.</li>
 <li><strong>Fee-layer companions (§3.1 instruments):</strong> <a href="cip-0023.html"><code>../operator-delegator/cip-0023.md</code></a>, <a href="cip-0082.html"><code>../operator-delegator/cip-0082.md</code></a>. CIP-0037's precondition for constructive deployment is a fee-layer viability instrument active first.</li>
-<li><strong>Transversal lever:</strong> <a href="k-parameter.html"><code>../operator-delegator/k-parameter.md</code></a> — standalone <code>k</code>-raise analysis. $\text{orig\_sat} = \text{Supply}/k$ means any <code>k</code> change directly reshapes the CIP-0037 curve; joint recalibration required.</li>
+<li><strong>Transversal lever:</strong> <a href="cip-0082.html#b3-standalone-k-lever-deep-dive">cip-0082 §B.3 standalone k-lever deep dive</a> — standalone <code>k</code>-raise analysis. $\text{orig\_sat} = \text{Supply}/k$ means any <code>k</code> change directly reshapes the CIP-0037 curve; joint recalibration required.</li>
 <li><strong>Canonical source:</strong> CIP-0037 official page at <a href="https://cips.cardano.org/cip/CIP-0037">cips.cardano.org/cip/CIP-0037</a>; source PR <a href="https://github.com/cardano-foundation/CIPs/pull/163">#163</a>.</li>
 </ul>
 <blockquote>
@@ -1088,6 +1079,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777963402"></script>
+<script src="assets/site.js?v=1777970059"></script>
 </body>
 </html>

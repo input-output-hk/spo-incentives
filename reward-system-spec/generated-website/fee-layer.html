@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777963402">
+<link rel="stylesheet" href="assets/site.css?v=1777970059">
 
 
 </head>
@@ -79,16 +79,11 @@ window.MathJax = {
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
-      <span class="nav-dd-stratum-meta">Five CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
+      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
     </div>
     <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero parent-active">
-      <span class="nav-dd-ref-title">Cross-CIP Analysis &amp; Verdict</span>
+      <span class="nav-dd-ref-title">Intro &amp; Conclusion of the 4 CIPs</span>
       <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, no-go verdict on the bundle</span>
-    </a>
-    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Forward — Parameter Recommendations</div>
-    <a href="solution-evaluation.html#5-recommendations-on-adjustments-to-the-current-mechanism" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
-      <span class="nav-dd-ref-title">In preparation</span>
-      <span class="nav-dd-ref-cite">Adjustments to the current mechanism — IO Research target end of 2026<span class="nav-dd-ref-stage nav-dd-ref-stage-soon">Soon</span></span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
     <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
@@ -115,10 +110,6 @@ window.MathJax = {
     <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
       <span class="nav-dd-ref-title">CIP-0082 — Improved Rewards Scheme</span>
       <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
-    </a>
-    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deeper">
-      <span class="nav-dd-ref-title">k-Parameter mechanics</span>
-      <span class="nav-dd-ref-cite">Sub-document of CIP-0082 stages 3–4<span class="nav-dd-ref-stage">Sub-doc</span></span>
     </a>
   </div>
 </div>
@@ -309,7 +300,7 @@ window.MathJax = {
 </div>
 <div class="content"><p>This folder evaluates the CIPs that act on the <strong>fee layer</strong> of the Cardano reward pipeline — the operator/member split that runs <em>after</em> the SL-D1 reward formula has already produced a per-pool allocation. The reward envelope itself is left untouched by these candidates; what changes is how the resulting pool reward is divided between the operator's take and the delegators' share.</p>
 <p>The two CIPs in scope (<a href="cip-0023.html">CIP-0023</a>, <a href="cip-0082.html">CIP-0082</a>) target the priority-1 problem the <a href="diagnostic.html">mainnet diagnostic</a> identifies for any V2 reform: <strong>small-operator viability</strong>. Today, <strong>73 % of productive pools sit below the ~3 M ADA viability line</strong>, and <strong>no single-pool retail operator earns a competitive wage</strong> — the median 12 410 ADA/yr covers infrastructure but not 5–15 hours/month of skilled labour. Both CIPs correctly identify this population as the target. They differ on the instrument used (margin floor vs rate floor) and whether <code>minPoolCost</code> survives the reform.</p>
-<p>A third candidate filed here — the <a href="k-parameter.html"><code>k</code>-parameter standalone lever</a> — is a transversal protocol parameter rather than a fee-layer primitive, but its standalone analysis holds the pool-distribution formula fixed, so it interacts with operator revenue through the per-pool ceiling $P_{\max} = R/k$ rather than through the reward envelope.</p>
+<p>CIP-0082's stages 3–4 raise the protocol parameter <code>k</code> (target pool count). <code>k</code> is not itself a CIP — it is a transversal protocol parameter, raised here as part of the four-stage package. The standalone k-lever analysis that supports the verdict on those stages lives in <a href="cip-0082.html#b3-standalone-k-lever-deep-dive">cip-0082.md §B.3</a>. The same analysis applies to any future k-recalibration proposal — not only to CIP-0082.</p>
 <p><strong>Verdict on both CIPs: no-go, for one structural reason.</strong></p>
 <p><strong>The two CIPs correctly identify the target — small-operator viability — but mechanically they address ROS attractiveness, not profitability structure.</strong> Both act on fee-layer pricing (flat-fee reduction, margin / rate floors) to make small pools more <em>ROS-attractive</em> to delegators. But neither revises the reward-distribution formula itself. For a hollow pool below saturation, pool reward still scales linearly with pool stake ($\hat f' = R \lambda_{\text{size}} \sigma_{\text{rel}}$). Small-operator <strong>absolute profitability</strong> therefore changes only if delegation actually migrates from large pools to small ones — the fee reform by itself does not raise what a small-pool operator earns at constant size.</p>
 <p><strong>The redistribution bet is unevidenced.</strong> Both CIPs implicitly depend on that migration. The diagnostic does not support it: delegation is not sticky, but not clearly yield-following either — the observed flow tracks brand, wallet integration, and visibility. There is no mainnet signal that the migration will occur at the scale the CIPs need.</p>
@@ -324,9 +315,8 @@ window.MathJax = {
 <ul>
 <li><a href="#1-fee-layer-parameters">1. Fee-layer parameters</a></li>
 <li><a href="#2-the-two-candidates">2. The two candidates</a></li>
-<li><a href="#3-composition-with-other-layers-and-k">3. Composition with other layers and <code>k</code></a></li>
-<li><a href="#4-reading-order">4. Reading order</a></li>
-<li><a href="#5-references">5. References</a></li>
+<li><a href="#3-reading-order">3. Reading order</a></li>
+<li><a href="#4-references">4. References</a></li>
 </ul>
 </nav>
 <h2 id="1-fee-layer-parameters">1. Fee-layer parameters</h2>
@@ -387,51 +377,22 @@ window.MathJax = {
 <td><a href="cip-0082.html"><code>cip-0082.md</code></a></td>
 <td><a href="https://cips.cardano.org/cip/CIP-0082">CIP-0082</a></td>
 </tr>
-<tr>
-<td><strong><code>k</code> lever</strong> — target-pool count (standalone)</td>
-<td><code>stakePoolTargetNum</code></td>
-<td><strong>No-go as standalone</strong> — under weak pledge, MPO fleets absorb new slots</td>
-<td><a href="k-parameter.html"><code>k-parameter.md</code></a></td>
-<td>Protocol parameter — no dedicated CIP; filed here as the standalone analysis holds the pool-distribution formula fixed and affects the operator/member split via $P_{\max} = R/k$</td>
-</tr>
 </tbody>
 </table>
-<p><em>Table 2.1 — Fee-layer-cluster candidates and the verdict carried in their per-CIP files.</em></p>
+<p><em>Table 2.1 — The two fee-layer CIPs and the verdict carried in their per-CIP files.</em></p>
 <p><strong>Mechanical relation between the two CIPs.</strong> CIP-0082 stage 2 is mechanically equivalent to a <em>paired</em> variant of CIP-0023 (reduction of <code>minPoolCost</code> + introduction of a margin floor) — at the extreme calibration: cost taken to zero, rate set to 3 % (vs CIP-0023's illustrative 50 ADA + 1.5 %). The CIP-0082 author credits CIP-0023 explicitly. As live governance items, <strong>CIP-0023 standalone is subsumed by CIP-0082 stage 2</strong> unless governance explicitly declines the hard fork that stage 2 requires.</p>
-<h2 id="3-composition-with-other-layers-and-k">3. Composition with other layers and <code>k</code></h2>
-<table>
-<thead>
-<tr>
-<th>Composition</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CIP-0023 ⊕ CIP-0082 (same-layer)</td>
-<td><strong>Not canonical</strong> — both rewrite the per-pool fee split. Pick one primitive (margin floor or rate floor); union is incoherent</td>
-</tr>
-<tr>
-<td>Fee layer ⊕ stake-cap layer (cross-layer)</td>
-<td><strong>Clean</strong> — layers act on different stages of the reward pipeline. No precedence rule required</td>
-</tr>
-</tbody>
-</table>
-<p><em>Table 3.1 — Composition of the fee-layer candidates with the rest of the bundle.</em></p>
-<p><strong>Design decision.</strong> Is the right primitive a <em>margin</em> floor (CIP-0023) or a <em>rate</em> floor (CIP-0082 stage 2)? Does the absolute floor (<code>minPoolCost</code>) survive the reform? These are analysed in both per-CIP files.</p>
-<p><strong><code>k</code> interaction.</strong> The standalone <code>k</code>-lever analysis at <a href="k-parameter.html"><code>k-parameter.md</code></a> deliberately holds the reward formula fixed. CIP-0082 stages 3–4 raise <code>k</code> from 500 → 750 → 1000, just <strong>6 epochs</strong> after the Margin swap (stage 2) — leaving no window to negotiate, vote, and activate a stake-cap layer in between. Stages 3–4 therefore fire in exactly the regime <a href="k-parameter.html"><code>k-parameter.md</code></a> identifies as regressive: weak pledge, MPO-dominated fleet, empirically non-yield-following delegator base. The package either needs to acquire a stake-cap layer between stage 2 and stage 3, or to remove stages 3–4.</p>
-<p><strong>V2 sequencing — fee layer first, stake-cap second, <code>k</code> third.</strong> A coherent V2 deployment sequences the levers so that each step's preconditions are satisfied by the prior step. Fee-layer reform alone — without a viability primitive on the reward-distribution layer — produces the regressive transfer documented in the per-CIP files; that is why a future proposal must move the viability function to the right layer before any pricing reform is enacted.</p>
-<h2 id="4-reading-order">4. Reading order</h2>
+<p><strong>On the <code>k</code>-raise embedded in CIP-0082 stages 3–4.</strong> The standalone analysis of the <code>k</code> lever — its mechanical effect on the split, its delegator-market assumptions, and its structural limits — lives in <a href="cip-0082.html#b3-standalone-k-lever-deep-dive">cip-0082.md §B.3</a>. It is independently citable from any future k-recalibration proposal because the analysis does not depend on stage 2 being in scope.</p>
+<h2 id="3-reading-order">3. Reading order</h2>
 <ol>
 <li><a href="cip-0023.html"><code>cip-0023.md</code></a> — narrower instrument, single parameter, clearer historical lineage. Start here: every structural finding on the margin-floor mechanism carries into CIP-0082 stage 2.</li>
 <li><a href="cip-0082.html"><code>cip-0082.md</code></a> — broader 4-stage reform that subsumes and extends the CIP-0023 intent. Stage 2 is CIP-0023's paired variant at harsher calibration; stages 3–4 are pool-count expansions.</li>
-<li><a href="k-parameter.html"><code>k-parameter.md</code></a> — the standalone <code>k</code>-lever analysis; companion to CIP-0082 stages 3–4.</li>
 </ol>
-<h2 id="5-references">5. References</h2>
+<p>The standalone k-lever deep dive in <a href="cip-0082.html#b3-standalone-k-lever-deep-dive">cip-0082.md §B.3</a> supports the §3 verdict on stages 3–4 and does not need to be read separately.</p>
+<h2 id="4-references">4. References</h2>
 <ul>
 <li><strong>Folder parent:</strong> <a href="solution-evaluation.html"><code>../README.md</code></a> — solution-evaluation landing + cross-CIP conclusion.</li>
 <li><strong>Cross-layer subfolder:</strong> <a href="stake-cap.html"><code>../pools-distribution/README.md</code></a> — stake-cap-layer evaluations (the principled home for a viability backstop).</li>
-<li><strong>Transversal lever in this folder:</strong> <a href="k-parameter.html"><code>k-parameter.md</code></a> — standalone <code>k</code>-raise analysis; companion to CIP-0082 stages 3–4.</li>
+<li><strong>Standalone k-lever deep dive:</strong> <a href="cip-0082.html#b3-standalone-k-lever-deep-dive">cip-0082.md §B.3</a> — supports CIP-0082's §3 verdict on stages 3–4 and remains independently citable for future k-recalibration proposals.</li>
 <li><strong>Diagnostic anchors:</strong></li>
 <li><a href="operator.html">Operator-delegator distribution</a> — fee-rate hyperbola, no-competitive-wage finding, n-MPO brackets.</li>
 <li><a href="pools.html">Pools distribution</a> — nine-tier pool-size taxonomy, viability and production thresholds.</li>
@@ -502,6 +463,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777963402"></script>
+<script src="assets/site.js?v=1777970059"></script>
 </body>
 </html>

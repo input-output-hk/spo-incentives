@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777963402">
+<link rel="stylesheet" href="assets/site.css?v=1777970059">
 
 
 </head>
@@ -79,16 +79,11 @@ window.MathJax = {
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
-      <span class="nav-dd-stratum-meta">Five CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
+      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
     </div>
     <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero">
-      <span class="nav-dd-ref-title">Cross-CIP Analysis &amp; Verdict</span>
+      <span class="nav-dd-ref-title">Intro &amp; Conclusion of the 4 CIPs</span>
       <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, no-go verdict on the bundle</span>
-    </a>
-    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Forward — Parameter Recommendations</div>
-    <a href="solution-evaluation.html#5-recommendations-on-adjustments-to-the-current-mechanism" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
-      <span class="nav-dd-ref-title">In preparation</span>
-      <span class="nav-dd-ref-cite">Adjustments to the current mechanism — IO Research target end of 2026<span class="nav-dd-ref-stage nav-dd-ref-stage-soon">Soon</span></span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
     <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
@@ -115,10 +110,6 @@ window.MathJax = {
     <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
       <span class="nav-dd-ref-title">CIP-0082 — Improved Rewards Scheme</span>
       <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
-    </a>
-    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deeper">
-      <span class="nav-dd-ref-title">k-Parameter mechanics</span>
-      <span class="nav-dd-ref-cite">Sub-document of CIP-0082 stages 3–4<span class="nav-dd-ref-stage">Sub-doc</span></span>
     </a>
   </div>
 </div>
@@ -766,14 +757,14 @@ window.MathJax = {
 <div class="ev-label">Single-pool operators</div>
 <div class="ev-content">
 <p class="ev-body">Single-pool operators pledge out of conviction rather than economic rationality, receiving almost nothing in return. Their share of active stake is in slow decline.</p>
-<p class="ev-sources">Sources: <a href="diagnostic.html#124313-the-hollow-strategy-dominates-at-every-level-of-aggregation">hollow-strategy analysis</a>, <a href="diagnostic.html#2131-the-operator-population-is-highly-concentrated-and-stable">operator concentration</a>.</p>
+<p class="ev-sources">Sources: <a href="diagnostic.html#124313-the-hollow-strategy-dominates-at-every-level-of-aggregation">hollow-strategy analysis</a>, <a href="diagnostic.html#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus">operator concentration</a>.</p>
 </div>
 </div>
 <div class="ev-card">
 <div class="ev-label">Market structure outcome</div>
 <div class="ev-content">
 <p class="ev-body"><strong>83 attributed entities control 76.7 % of productive stake through 449 productive pools.</strong> The effective entity-level concentration is an <strong>order of magnitude</strong> above the $k$-target equilibrium.</p>
-<p class="ev-sources">Sources: <a class="obs-ref obs-ref-src" href="pools.html#1-mainnet-observations" data-obs-src="POL.O5" data-obs-page="pools.html" data-obs-href="pools.html#1-mainnet-observations" title="POL.O5 · hover for summary, click for detail">POL.O5</a>, <a href="diagnostic.html#2131-the-operator-population-is-highly-concentrated-and-stable">operator concentration</a>.</p>
+<p class="ev-sources">Sources: <a class="obs-ref obs-ref-src" href="pools.html#1-mainnet-observations" data-obs-src="POL.O5" data-obs-page="pools.html" data-obs-href="pools.html#1-mainnet-observations" title="POL.O5 · hover for summary, click for detail">POL.O5</a>, <a href="diagnostic.html#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus">operator concentration</a>.</p>
 </div>
 </div>
 </div>
@@ -987,7 +978,7 @@ window.MathJax = {
 <ul>
 <li><strong>Custodial operators</strong> (CEX + IVaaS: 10 entities, 181 pools, 7.40B ADA) who <em>cannot</em> pledge the capital they manage — the constraint is <strong>architectural</strong>;</li>
 <li><strong>Community and opaque MPO fleets</strong> (42 of 48 saturation-scale entities) who have <em>chosen</em> not to pledge — the <strong>rational response</strong> to the current incentive structure;</li>
-<li><strong>Single-pool operators</strong> who bear the full weight of the fee structure while their market share erodes (<a href="diagnostic.html#2131-the-operator-population-is-highly-concentrated-and-stable">operator concentration</a>).</li>
+<li><strong>Single-pool operators</strong> who bear the full weight of the fee structure while their market share erodes (<a href="diagnostic.html#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus">operator concentration</a>).</li>
 </ul>
 <p>The deeper failure is that <strong>the formula's unit of accounting — the pool — is the wrong unit</strong>. Rewards, saturation caps, and pledge calculations all operate at the pool level. But the <strong>entity</strong> that controls the pools is the economic actor that makes strategic decisions.</p>
 <p>An entity operating twenty pools with negligible pledge in each is <strong>indistinguishable, at the formula level</strong>, from twenty single-pool operators. The mechanism does not merely fail to prevent concentration; <em>it is structurally blind to it</em>.</p>
@@ -1008,7 +999,7 @@ window.MathJax = {
 <div class="ev-label">MPO fleet structure</div>
 <div class="ev-content">
 <p class="ev-body"><strong>83 attributed entities, 449 productive pools, 76.7 % of productive stake.</strong> 12 entities with 11+ pools control <strong>40.4 % of productive stake</strong>.</p>
-<p class="ev-sources">Sources: <a class="obs-ref obs-ref-src" href="pools.html#1-mainnet-observations" data-obs-src="POL.O5" data-obs-page="pools.html" data-obs-href="pools.html#1-mainnet-observations" title="POL.O5 · hover for summary, click for detail">POL.O5</a>, <a href="diagnostic.html#2131-the-operator-population-is-highly-concentrated-and-stable">operator concentration</a>.</p>
+<p class="ev-sources">Sources: <a class="obs-ref obs-ref-src" href="pools.html#1-mainnet-observations" data-obs-src="POL.O5" data-obs-page="pools.html" data-obs-href="pools.html#1-mainnet-observations" title="POL.O5 · hover for summary, click for detail">POL.O5</a>, <a href="diagnostic.html#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus">operator concentration</a>.</p>
 </div>
 </div>
 <div class="ev-card">
@@ -1300,7 +1291,7 @@ window.MathJax = {
 <p>Fee Policy specifies the surveillance and recalibration machinery that addresses this divergence.</p>
 <p><strong>Constitutional alignment.</strong> Tenet 4 (fair compensation) applies symmetrically: transaction submitters whose activity sustains the network are participants whose contribution must be recognised. Tenet 10 (monetary stability) constrains the response from the inflationary side — as fee revenue grows, the corresponding reduction in expansion must respect the guardrails on $\rho$ and $\tau$. The parameter scope of Fee Policy <strong>exceeds the current protocol parameter set</strong>: it comprises both Parameter Update levers (e.g., $minFeeA$, $minFeeB$, governance-action deposits) and structural choices outside the parameter system (rebate mechanisms, submitter reward schemes, eligibility-bridging instruments). Recalibration of fee policy therefore mobilises <strong>both</strong> Conway pathways: Parameter Update Actions for the parameters that exist, and CIPs for the structural choices that do not.</p>
 <h3 id="421-problem-statement">4.2.1. Problem statement</h3>
-<p>The reward pipeline's long-term viability rests on a single assumption: that fees will eventually replace expansion as the dominant pot revenue source (<a href="diagnostic.html#2231-the-fee-input-is-structurally-insufficient">fee-input insufficiency</a>, <a href="diagnostic.html#2232-the-fee-generating-population-must-expand-for-the-pipeline-to-survive">submitter expansion requirement</a>).</p>
+<p>The reward pipeline's long-term viability rests on a single assumption: that fees will eventually replace expansion as the dominant pot revenue source (<a href="diagnostic.html#223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion">Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion</a>).</p>
 <p>Today, fees contribute ~0.19% of the pot; reaching parity requires 12–16× current fee revenue at current transaction volumes. <strong>The submitter population is moving in the opposite direction</strong> (<a class="obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs-src="CEN.O8" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O8 · hover for summary, click for detail">CEN.O8</a>) and the most lucrative submitters are <strong>excluded from the rewards their activity funds</strong> (<a class="obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs-src="CEN.O9" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O9 · hover for summary, click for detail">CEN.O9</a>).</p>
 <p>The mechanism currently has <strong>no instrument</strong> to detect this divergence at the protocol layer. Fee revenue is observable; submitter population dynamics are not part of any governance review. A specification that requires fee growth as a condition of long-term solvency must include the surveillance and recalibration machinery for the population that produces those fees.</p>
 <h4 id="4211-evidence-base">4.2.1.1. Evidence base</h4>
@@ -1337,7 +1328,7 @@ window.MathJax = {
 <div class="ev-label">Structural insufficiency</div>
 <div class="ev-content">
 <p class="ev-body">Closing the funding gap requires <strong>12–16× current fee capacity</strong>; <strong>submitter base is shrinking, not growing</strong>.</p>
-<p class="ev-sources">Source: <a href="diagnostic.html#2231-the-fee-input-is-structurally-insufficient">fee-input insufficiency</a>.</p>
+<p class="ev-sources">Source: <a href="diagnostic.html#223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion">Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion</a>.</p>
 </div>
 </div>
 </div>
@@ -1539,6 +1530,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777963402"></script>
+<script src="assets/site.js?v=1777970059"></script>
 </body>
 </html>

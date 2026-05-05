@@ -27,9 +27,8 @@ The σ′ clip changes *who can earn the V1 reward*; it does not repair what `A`
 ## Table of Contents
 
 - [1. The two candidates — same primitive, different floor](#1-the-two-candidates-same-primitive-different-floor)
-- [2. Composition with other layers, `k`, and V2 sequencing](#2-composition-with-other-layers-k-and-v2-sequencing)
-- [3. Reading order](#3-reading-order)
-- [4. References](#4-references)
+- [2. Reading order](#2-reading-order)
+- [3. References](#3-references)
 - [Appendix A — Why V1's pledge incentive doesn't work](#appendix-a-why-v1s-pledge-incentive-doesnt-work)
   - [A.1. The `a₀` lever rebalances, it doesn't tilt](#a1-the-a0-lever-rebalances-it-doesnt-tilt)
   - [A.2. The deeper bottleneck — `A(ν, π)` itself](#a2-the-deeper-bottleneck-a-itself)
@@ -73,39 +72,17 @@ Panel (b) matches leverage at $\ell = L = 125$ to isolate the floor as the sole 
 
 *Table 1.2 — The two stake-cap candidates and the verdict carried in their per-CIP files.*
 
-## 2. Composition with other layers, `k`, and V2 sequencing
-
-**Same-layer pairing — not canonical.** Stacking CIP-0050 with CIP-0037 (`σ' = min(σ, orig_sat, L·p, sat_{0037}(p))`) is technically well-defined but redundant: both candidates are the same linear-in-pledge primitive capped at `orig_sat`. The stacked rule adds no expressive power over choosing the stricter of the two envelopes plus the floor choice.
-
-**Cross-layer pairing — clean.** Stake-cap × fee-layer composes cleanly: the layers act on different stages of the reward pipeline, so no precedence rule is required.
-
-**Design decision reduces to one question — floor or no floor?**
-
-- **No floor (CIP-0050).** Zero-pledge pools collapse to $\sigma' = 0$ — the hardest possible pressure on the custodial-by-extraction segment (~21 % of productive stake). One governance parameter $L$.
-- **Floor (CIP-0037).** Zero-pledge pools keep 20 % of V1 capacity — softer landing for Sub-reliable tier and below; same clip from Healthy tier up. Two effective governance parameters $(e, \ell)$, plus an absolute pledge anchor $p_{100\%}$ that breaks price-robustness.
-
-All other properties (monotonicity in pledge, MPO fleet-split penalty on the slope, entity-level concentration gap for ceiling-regime pools, small-operator viability risk) carry across one-for-one.
-
-**Interaction with `k`.** Stake-cap reforms and `k` are tightly coupled but in different ways:
-
-- **CIP-0050.** $L$ is dimensionless — independent of `k`. The CIP text argues that $L$ converts a `k` raise from a concentration risk into a decentralisation lever.
-- **CIP-0037.** Both the floor ($e \cdot \text{orig\_sat}$) and the ceiling ($\text{orig\_sat}$) are functions of `k` via $\text{orig\_sat} = \text{Supply}/k$. A `k` change *directly reshapes* the entire saturation curve; joint recalibration of $(e, \ell)$ is required to preserve the intended regime boundaries.
-
-> *Scope note on the standalone `k`-lever analysis.* The `k`-only analysis at [`../operator-delegator/k-parameter.md`](../operator-delegator/k-parameter.md) deliberately holds the reward formula fixed. Once either CIP-0050 or CIP-0037 is active, the standalone analysis no longer directly applies — joint evaluation with the stake-cap primitive is required.
-
-**V2 sequencing — fee layer first.** Stake-cap reforms tighten the viability envelope for undercapitalised single-pool operators — which is why a coherent V2 deployment sequences **fee-layer viability instrument first**, then stake-cap, then `k` calibration. A stake-cap reform deployed without an active viability instrument risks displacing delegation away from the subthreshold tail the operator-viability milestone aims to protect.
-
-## 3. Reading order
+## 2. Reading order
 
 1. [`cip-0050.md`](cip-0050.md) — the primitive in its cleanest one-scalar form ($L$). Start here: every structural finding on the slope carries into CIP-0037.
 2. [`cip-0037.md`](cip-0037.md) — the same primitive with an added floor and two effective governance parameters $(e, \ell)$. Read as "CIP-0050 plus floor" — the formula walkthrough in its Appendix A makes the kinship explicit.
 3. [Appendix A — Why V1's pledge incentive doesn't work](#appendix-a-why-v1s-pledge-incentive-doesnt-work) — the structural critique of `A(ν, π)` itself, which neither CIP modifies. Optional for casual readers; load-bearing for anyone designing a successor proposal.
 
-## 4. References
+## 3. References
 
 - **Folder parent:** [`../README.md`](../README.md) — solution-evaluation landing + cross-CIP conclusion.
 - **Cross-layer subfolder:** [`../operator-delegator/README.md`](../operator-delegator/README.md) — fee-layer evaluations.
-- **Standalone `k`-lever analysis** (held-formula-fixed assumption): [`../operator-delegator/k-parameter.md`](../operator-delegator/k-parameter.md).
+- **Standalone `k`-lever analysis** (held-formula-fixed assumption): [cip-0082 §B.3 standalone k-lever deep dive](../operator-delegator/cip-0082.md#b3-standalone-k-lever-deep-dive).
 - **Diagnostic anchor for the A(ν, π) critique:** [pools-distribution §2.3](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#23-reward-function).
 
 ## Appendix A — Why V1's pledge incentive doesn't work

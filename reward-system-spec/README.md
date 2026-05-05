@@ -455,7 +455,7 @@ $k = 500$ implies 500 independent entities sharing consensus power; the effectiv
 <div class="ev-label">Single-pool operators</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Single-pool operators pledge out of conviction rather than economic rationality, receiving almost nothing in return. Their share of active stake is in slow decline.</p>
-<p class="ev-sources" markdown="1">Sources: [hollow-strategy analysis](diagnostic/README.md#124313-the-hollow-strategy-dominates-at-every-level-of-aggregation), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
+<p class="ev-sources" markdown="1">Sources: [hollow-strategy analysis](diagnostic/README.md#124313-the-hollow-strategy-dominates-at-every-level-of-aggregation), [operator concentration](diagnostic/README.md#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus).</p>
 </div>
 </div>
 
@@ -463,7 +463,7 @@ $k = 500$ implies 500 independent entities sharing consensus power; the effectiv
 <div class="ev-label">Market structure outcome</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**83 attributed entities control 76.7 % of productive stake through 449 productive pools.** The effective entity-level concentration is an **order of magnitude** above the $k$-target equilibrium.</p>
-<p class="ev-sources" markdown="1">Sources: [POL.O5](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
+<p class="ev-sources" markdown="1">Sources: [POL.O5](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus).</p>
 </div>
 </div>
 
@@ -626,7 +626,7 @@ The mechanism was designed for $k$ single-pool operators converging on a balance
 
 - **Custodial operators** (CEX + IVaaS: 10 entities, 181 pools, 7.40B ADA) who *cannot* pledge the capital they manage — the constraint is **architectural**;
 - **Community and opaque MPO fleets** (42 of 48 saturation-scale entities) who have *chosen* not to pledge — the **rational response** to the current incentive structure;
-- **Single-pool operators** who bear the full weight of the fee structure while their market share erodes ([operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable)).
+- **Single-pool operators** who bear the full weight of the fee structure while their market share erodes ([operator concentration](diagnostic/README.md#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus)).
 
 The deeper failure is that **the formula's unit of accounting — the pool — is the wrong unit**. Rewards, saturation caps, and pledge calculations all operate at the pool level. But the **entity** that controls the pools is the economic actor that makes strategic decisions.
 
@@ -657,7 +657,7 @@ The consequence is:
 <div class="ev-label">MPO fleet structure</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">**83 attributed entities, 449 productive pools, 76.7 % of productive stake.** 12 entities with 11+ pools control **40.4 % of productive stake**.</p>
-<p class="ev-sources" markdown="1">Sources: [POL.O5](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-the-operator-population-is-highly-concentrated-and-stable).</p>
+<p class="ev-sources" markdown="1">Sources: [POL.O5](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus).</p>
 </div>
 </div>
 
@@ -922,7 +922,7 @@ Fee Policy specifies the surveillance and recalibration machinery that addresses
 
 ### 4.2.1. Problem statement
 
-The reward pipeline's long-term viability rests on a single assumption: that fees will eventually replace expansion as the dominant pot revenue source ([fee-input insufficiency](diagnostic/README.md#2231-the-fee-input-is-structurally-insufficient), [submitter expansion requirement](diagnostic/README.md#2232-the-fee-generating-population-must-expand-for-the-pipeline-to-survive)).
+The reward pipeline's long-term viability rests on a single assumption: that fees will eventually replace expansion as the dominant pot revenue source ([Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion](diagnostic/README.md#223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion)).
 
 Today, fees contribute ~0.19% of the pot; reaching parity requires 12–16× current fee revenue at current transaction volumes. **The submitter population is moving in the opposite direction** ([CEN.O8](diagnostic/README.md#222-mainnet-observations)) and the most lucrative submitters are **excluded from the rewards their activity funds** ([CEN.O9](diagnostic/README.md#222-mainnet-observations)).
 
@@ -968,7 +968,7 @@ The mechanism currently has **no instrument** to detect this divergence at the p
 <div class="ev-label">Structural insufficiency</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Closing the funding gap requires **12–16× current fee capacity**; **submitter base is shrinking, not growing**.</p>
-<p class="ev-sources" markdown="1">Source: [fee-input insufficiency](diagnostic/README.md#2231-the-fee-input-is-structurally-insufficient).</p>
+<p class="ev-sources" markdown="1">Source: [Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion](diagnostic/README.md#223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion).</p>
 </div>
 </div>
 

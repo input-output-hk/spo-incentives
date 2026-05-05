@@ -2863,7 +2863,7 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
   font-variant-numeric:tabular-nums}
 
 /* Inline evidence tables — when a finding row needs a small reference
-   table (e.g. ROS-responsive segments on k-parameter.md), the MD
+   table (e.g. ROS-responsive segments in cip-0082 §B.3), the MD
    pipe-table syntax doesn't survive the surrounding ``markdown="1"``
    wrappers reliably, so authors emit the table as raw HTML with this
    class. Tight typography matches the Infared finding lane around it. */
@@ -3042,3 +3042,98 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
 @media print{.page-source{display:none}}
 
 /* ── /Cross-page synthesis-observation source overlay + compact §X.Y.2 view ── */
+/* ── Candidate cards (solution-evaluation §2 layer listings) ───────── */
+.cand-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin:14px 0;
+}
+.cand-grid > .cand-card{margin:0}
+@media (max-width:720px){
+  .cand-grid{grid-template-columns:1fr}
+}
+.cand-card{
+  display:block;
+  border:1px solid rgba(0,51,173,.18);
+  border-radius:8px;
+  padding:14px 18px 14px 22px;
+  margin:14px 0;
+  background:linear-gradient(135deg,
+    rgba(0,51,173,.11) 0%,
+    rgba(0,51,173,.05) 45%,
+    rgba(0,51,173,.01) 100%);
+  position:relative;
+  transition:border-color .18s,box-shadow .18s,background .18s;
+}
+.cand-card:hover{
+  border-color:rgba(0,51,173,.42);
+  box-shadow:0 2px 10px rgba(0,51,173,.12);
+  background:linear-gradient(135deg,
+    rgba(0,51,173,.16) 0%,
+    rgba(0,51,173,.07) 45%,
+    rgba(0,51,173,.02) 100%);
+}
+[data-theme=dark] .cand-card{
+  border-color:rgba(31,91,198,.32);
+  background:linear-gradient(135deg,
+    rgba(31,91,198,.22) 0%,
+    rgba(31,91,198,.10) 45%,
+    rgba(31,91,198,.03) 100%);
+}
+[data-theme=dark] .cand-card:hover{
+  border-color:rgba(31,91,198,.55);
+  background:linear-gradient(135deg,
+    rgba(31,91,198,.30) 0%,
+    rgba(31,91,198,.14) 45%,
+    rgba(31,91,198,.05) 100%);
+}
+.cand-card::before{
+  content:"";
+  position:absolute;left:0;top:14px;bottom:14px;width:4px;
+  background:linear-gradient(180deg,var(--cardano-blue) 0%,var(--cardano-blue-2) 100%);
+  border-radius:2px;
+}
+.cand-card-title{
+  display:block;
+  margin:0 0 6px;
+  font:600 15px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:-.15px;
+  color:var(--cardano-blue) !important;
+  text-decoration:none !important;
+}
+.cand-card-title:hover{text-decoration:underline !important}
+[data-theme=dark] .cand-card-title{color:var(--cardano-blue-2) !important}
+.cand-card-body{
+  margin:0 0 10px;
+  font:400 13.5px/1.55 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-body);
+}
+.cand-card-body code{
+  font-size:12.5px;
+  background:var(--bg-code);
+  padding:1px 5px;
+  border-radius:3px;
+}
+.cand-card-source{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:0;
+  font:400 12px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);
+}
+.cand-card-source-label{
+  display:inline-block;
+  font:600 9.5px/1 -apple-system,sans-serif;
+  letter-spacing:.6px;
+  color:var(--text-secondary);
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  border-radius:3px;
+  padding:3px 6px;
+  text-transform:uppercase;
+}
+.cand-card-source a{color:var(--text-secondary) !important;text-decoration:none !important}
+.cand-card-source a:hover{color:var(--infared) !important;text-decoration:underline !important}

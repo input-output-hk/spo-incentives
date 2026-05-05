@@ -4,7 +4,7 @@ This folder evaluates the CIPs that act on the **fee layer** of the Cardano rewa
 
 The two CIPs in scope ([CIP-0023](cip-0023.md), [CIP-0082](cip-0082.md)) target the priority-1 problem the [mainnet diagnostic](../../diagnostic/README.md) identifies for any V2 reform: **small-operator viability**. Today, **73 % of productive pools sit below the ~3 M ADA viability line**, and **no single-pool retail operator earns a competitive wage** — the median 12 410 ADA/yr covers infrastructure but not 5–15 hours/month of skilled labour. Both CIPs correctly identify this population as the target. They differ on the instrument used (margin floor vs rate floor) and whether `minPoolCost` survives the reform.
 
-A third candidate filed here — the [`k`-parameter standalone lever](k-parameter.md) — is a transversal protocol parameter rather than a fee-layer primitive, but its standalone analysis holds the pool-distribution formula fixed, so it interacts with operator revenue through the per-pool ceiling $P_{\max} = R/k$ rather than through the reward envelope.
+CIP-0082's stages 3–4 raise the protocol parameter `k` (target pool count). `k` is not itself a CIP — it is a transversal protocol parameter, raised here as part of the four-stage package. The standalone k-lever analysis that supports the verdict on those stages lives in [cip-0082.md §B.3](cip-0082.md#b3-standalone-k-lever-deep-dive). The same analysis applies to any future k-recalibration proposal — not only to CIP-0082.
 
 **Verdict on both CIPs: no-go, for one structural reason.**
 
@@ -23,9 +23,8 @@ A third candidate filed here — the [`k`-parameter standalone lever](k-paramete
 
 - [1. Fee-layer parameters](#1-fee-layer-parameters)
 - [2. The two candidates](#2-the-two-candidates)
-- [3. Composition with other layers and `k`](#3-composition-with-other-layers-and-k)
-- [4. Reading order](#4-reading-order)
-- [5. References](#5-references)
+- [3. Reading order](#3-reading-order)
+- [4. References](#4-references)
 
 ## 1. Fee-layer parameters
 
@@ -47,38 +46,25 @@ The fee-split formula has three parameters with distinct roles:
 | --- | --- | --- | --- | --- |
 | **CIP-0023** — Fair Min Fees | `minPoolMargin` floor (no hard fork) | **No-go as standalone** — same instrument as CIP-0082 stage 2 with smaller calibration | [`cip-0023.md`](cip-0023.md) | [CIP-0023](https://cips.cardano.org/cip/CIP-0023) · PR [#66](https://github.com/cardano-foundation/CIPs/pull/66) |
 | **CIP-0082** — Improved Rewards Scheme Parameters | 4-stage: `minPoolCost` halving (done) → `minPoolRate = 3 %` (HFC) → `k`-raises | **No-go as standalone** — stage 2 inverts operator revenue, stages 3–4 fire in the wrong regime | [`cip-0082.md`](cip-0082.md) | [CIP-0082](https://cips.cardano.org/cip/CIP-0082) |
-| **`k` lever** — target-pool count (standalone) | `stakePoolTargetNum` | **No-go as standalone** — under weak pledge, MPO fleets absorb new slots | [`k-parameter.md`](k-parameter.md) | Protocol parameter — no dedicated CIP; filed here as the standalone analysis holds the pool-distribution formula fixed and affects the operator/member split via $P_{\max} = R/k$ |
 
-*Table 2.1 — Fee-layer-cluster candidates and the verdict carried in their per-CIP files.*
+*Table 2.1 — The two fee-layer CIPs and the verdict carried in their per-CIP files.*
 
 **Mechanical relation between the two CIPs.** CIP-0082 stage 2 is mechanically equivalent to a *paired* variant of CIP-0023 (reduction of `minPoolCost` + introduction of a margin floor) — at the extreme calibration: cost taken to zero, rate set to 3 % (vs CIP-0023's illustrative 50 ADA + 1.5 %). The CIP-0082 author credits CIP-0023 explicitly. As live governance items, **CIP-0023 standalone is subsumed by CIP-0082 stage 2** unless governance explicitly declines the hard fork that stage 2 requires.
 
-## 3. Composition with other layers and `k`
+**On the `k`-raise embedded in CIP-0082 stages 3–4.** The standalone analysis of the `k` lever — its mechanical effect on the split, its delegator-market assumptions, and its structural limits — lives in [cip-0082.md §B.3](cip-0082.md#b3-standalone-k-lever-deep-dive). It is independently citable from any future k-recalibration proposal because the analysis does not depend on stage 2 being in scope.
 
-| Composition | Status |
-| --- | --- |
-| CIP-0023 ⊕ CIP-0082 (same-layer) | **Not canonical** — both rewrite the per-pool fee split. Pick one primitive (margin floor or rate floor); union is incoherent |
-| Fee layer ⊕ stake-cap layer (cross-layer) | **Clean** — layers act on different stages of the reward pipeline. No precedence rule required |
-
-*Table 3.1 — Composition of the fee-layer candidates with the rest of the bundle.*
-
-**Design decision.** Is the right primitive a *margin* floor (CIP-0023) or a *rate* floor (CIP-0082 stage 2)? Does the absolute floor (`minPoolCost`) survive the reform? These are analysed in both per-CIP files.
-
-**`k` interaction.** The standalone `k`-lever analysis at [`k-parameter.md`](k-parameter.md) deliberately holds the reward formula fixed. CIP-0082 stages 3–4 raise `k` from 500 → 750 → 1000, just **6 epochs** after the Margin swap (stage 2) — leaving no window to negotiate, vote, and activate a stake-cap layer in between. Stages 3–4 therefore fire in exactly the regime [`k-parameter.md`](k-parameter.md) identifies as regressive: weak pledge, MPO-dominated fleet, empirically non-yield-following delegator base. The package either needs to acquire a stake-cap layer between stage 2 and stage 3, or to remove stages 3–4.
-
-**V2 sequencing — fee layer first, stake-cap second, `k` third.** A coherent V2 deployment sequences the levers so that each step's preconditions are satisfied by the prior step. Fee-layer reform alone — without a viability primitive on the reward-distribution layer — produces the regressive transfer documented in the per-CIP files; that is why a future proposal must move the viability function to the right layer before any pricing reform is enacted.
-
-## 4. Reading order
+## 3. Reading order
 
 1. [`cip-0023.md`](cip-0023.md) — narrower instrument, single parameter, clearer historical lineage. Start here: every structural finding on the margin-floor mechanism carries into CIP-0082 stage 2.
 2. [`cip-0082.md`](cip-0082.md) — broader 4-stage reform that subsumes and extends the CIP-0023 intent. Stage 2 is CIP-0023's paired variant at harsher calibration; stages 3–4 are pool-count expansions.
-3. [`k-parameter.md`](k-parameter.md) — the standalone `k`-lever analysis; companion to CIP-0082 stages 3–4.
 
-## 5. References
+The standalone k-lever deep dive in [cip-0082.md §B.3](cip-0082.md#b3-standalone-k-lever-deep-dive) supports the §3 verdict on stages 3–4 and does not need to be read separately.
+
+## 4. References
 
 - **Folder parent:** [`../README.md`](../README.md) — solution-evaluation landing + cross-CIP conclusion.
 - **Cross-layer subfolder:** [`../pools-distribution/README.md`](../pools-distribution/README.md) — stake-cap-layer evaluations (the principled home for a viability backstop).
-- **Transversal lever in this folder:** [`k-parameter.md`](k-parameter.md) — standalone `k`-raise analysis; companion to CIP-0082 stages 3–4.
+- **Standalone k-lever deep dive:** [cip-0082.md §B.3](cip-0082.md#b3-standalone-k-lever-deep-dive) — supports CIP-0082's §3 verdict on stages 3–4 and remains independently citable for future k-recalibration proposals.
 - **Diagnostic anchors:**
   - [Operator-delegator distribution](../../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md) — fee-rate hyperbola, no-competitive-wage finding, n-MPO brackets.
   - [Pools distribution](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md) — nine-tier pool-size taxonomy, viability and production thresholds.
