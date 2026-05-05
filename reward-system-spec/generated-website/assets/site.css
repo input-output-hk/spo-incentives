@@ -2690,7 +2690,32 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 .sro-card.sro-card-pro{border:1px solid var(--border);border-radius:12px;
   background:var(--bg);overflow:hidden;
   box-shadow:0 1px 3px rgba(0,51,173,.04);
-  transition:border-color .15s,box-shadow .15s}
+  margin:42px 0;
+  transition:border-color .15s,box-shadow .15s;
+  position:relative}
+/* Visible breathing room between Pro cards and surrounding prose.
+   When a card sits next to body paragraphs (CIP-evaluation pages,
+   Observatory) the previous tight ``margin:0`` made the card feel
+   like a continuation of the paragraph above it. The 42px margin
+   gives the card air; a 1px hairline rule above and below the card
+   marks the boundary explicitly so the prose doesn't run into it. */
+.sro-card.sro-card-pro::before,
+.sro-card.sro-card-pro::after{
+  content:"";position:absolute;left:14%;right:14%;
+  height:1px;background:var(--border);opacity:.7}
+.sro-card.sro-card-pro::before{top:-22px}
+.sro-card.sro-card-pro::after{bottom:-22px}
+/* Suppress the rules when cards stack consecutively (the synthesis
+   page's evidence tree, mainnet observation lists) — there the
+   cards are siblings and a divider would clutter rather than help. */
+.sro-list .sro-card.sro-card-pro,
+.finding-card-evidence-tree .sro-card.sro-card-pro{
+  margin:0}
+.sro-list .sro-card.sro-card-pro::before,
+.sro-list .sro-card.sro-card-pro::after,
+.finding-card-evidence-tree .sro-card.sro-card-pro::before,
+.finding-card-evidence-tree .sro-card.sro-card-pro::after{
+  display:none}
 .sro-card.sro-card-pro:hover{
   border-color:color-mix(in srgb, var(--cardano-blue) 35%, var(--border));
   box-shadow:0 2px 14px rgba(0,51,173,.08)}
@@ -2836,6 +2861,35 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
   font:600 14px/1.2 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--infared);letter-spacing:-.005em;
   font-variant-numeric:tabular-nums}
+
+/* Inline evidence tables — when a finding row needs a small reference
+   table (e.g. ROS-responsive segments in cip-0082 §B.3), the MD
+   pipe-table syntax doesn't survive the surrounding ``markdown="1"``
+   wrappers reliably, so authors emit the table as raw HTML with this
+   class. Tight typography matches the Infared finding lane around it. */
+.sro-card-pro .sro-evidence-table{
+  width:100%;border-collapse:collapse;margin:10px 0 12px;
+  font-size:12.5px;line-height:1.5;
+  background:rgba(229,35,33,.025);
+  border:1px solid rgba(229,35,33,.18);
+  border-radius:6px;
+  overflow:hidden}
+.sro-card-pro .sro-evidence-table th{
+  font:600 10px/1.3 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  text-transform:uppercase;letter-spacing:.06em;
+  text-align:left;padding:8px 10px 6px;
+  color:var(--text-muted);
+  background:rgba(229,35,33,.06);
+  border-bottom:1px solid rgba(229,35,33,.18);
+  vertical-align:bottom}
+.sro-card-pro .sro-evidence-table td{
+  padding:7px 10px;
+  border-top:1px solid rgba(229,35,33,.10);
+  color:var(--text-body);vertical-align:top}
+.sro-card-pro .sro-evidence-table tbody tr:first-child td{
+  border-top:0}
+.sro-card-pro .sro-evidence-table strong{
+  color:var(--text-primary);font-weight:600}
 .sro-card-pro .sro-fid-ref{
   font:500 10px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
   color:var(--text-muted);letter-spacing:.06em}
@@ -2988,3 +3042,98 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
 @media print{.page-source{display:none}}
 
 /* ── /Cross-page synthesis-observation source overlay + compact §X.Y.2 view ── */
+/* ── Candidate cards (solution-evaluation §2 layer listings) ───────── */
+.cand-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin:14px 0;
+}
+.cand-grid > .cand-card{margin:0}
+@media (max-width:720px){
+  .cand-grid{grid-template-columns:1fr}
+}
+.cand-card{
+  display:block;
+  border:1px solid rgba(0,51,173,.18);
+  border-radius:8px;
+  padding:14px 18px 14px 22px;
+  margin:14px 0;
+  background:linear-gradient(135deg,
+    rgba(0,51,173,.11) 0%,
+    rgba(0,51,173,.05) 45%,
+    rgba(0,51,173,.01) 100%);
+  position:relative;
+  transition:border-color .18s,box-shadow .18s,background .18s;
+}
+.cand-card:hover{
+  border-color:rgba(0,51,173,.42);
+  box-shadow:0 2px 10px rgba(0,51,173,.12);
+  background:linear-gradient(135deg,
+    rgba(0,51,173,.16) 0%,
+    rgba(0,51,173,.07) 45%,
+    rgba(0,51,173,.02) 100%);
+}
+[data-theme=dark] .cand-card{
+  border-color:rgba(31,91,198,.32);
+  background:linear-gradient(135deg,
+    rgba(31,91,198,.22) 0%,
+    rgba(31,91,198,.10) 45%,
+    rgba(31,91,198,.03) 100%);
+}
+[data-theme=dark] .cand-card:hover{
+  border-color:rgba(31,91,198,.55);
+  background:linear-gradient(135deg,
+    rgba(31,91,198,.30) 0%,
+    rgba(31,91,198,.14) 45%,
+    rgba(31,91,198,.05) 100%);
+}
+.cand-card::before{
+  content:"";
+  position:absolute;left:0;top:14px;bottom:14px;width:4px;
+  background:linear-gradient(180deg,var(--cardano-blue) 0%,var(--cardano-blue-2) 100%);
+  border-radius:2px;
+}
+.cand-card-title{
+  display:block;
+  margin:0 0 6px;
+  font:600 15px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:-.15px;
+  color:var(--cardano-blue) !important;
+  text-decoration:none !important;
+}
+.cand-card-title:hover{text-decoration:underline !important}
+[data-theme=dark] .cand-card-title{color:var(--cardano-blue-2) !important}
+.cand-card-body{
+  margin:0 0 10px;
+  font:400 13.5px/1.55 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-body);
+}
+.cand-card-body code{
+  font-size:12.5px;
+  background:var(--bg-code);
+  padding:1px 5px;
+  border-radius:3px;
+}
+.cand-card-source{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:0;
+  font:400 12px/1.4 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--text-muted);
+}
+.cand-card-source-label{
+  display:inline-block;
+  font:600 9.5px/1 -apple-system,sans-serif;
+  letter-spacing:.6px;
+  color:var(--text-secondary);
+  background:var(--bg-panel);
+  border:1px solid var(--border);
+  border-radius:3px;
+  padding:3px 6px;
+  text-transform:uppercase;
+}
+.cand-card-source a{color:var(--text-secondary) !important;text-decoration:none !important}
+.cand-card-source a:hover{color:var(--infared) !important;text-decoration:underline !important}

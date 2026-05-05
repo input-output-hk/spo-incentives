@@ -163,8 +163,8 @@ PAGES = [
         "slug": "solution-evaluation",
         "md": "solution-evaluation/README.md",
         "html": "solution-evaluation.html",
-        "title": "Cross-CIP Analysis & Verdict — V2 Reward System",
-        "hero_h1": "Cross-CIP Analysis & Verdict",
+        "title": "Intro & Conclusion of the 4 CIPs — V2 Reward System",
+        "hero_h1": "Intro & Conclusion of the 4 CIPs",
         "hero_sub": "Coverage matrix, cumulative findings, no-go verdict on the bundle",
         "active_nav": "solution-evaluation",
     },
@@ -222,15 +222,6 @@ PAGES = [
         "hero_sub": "Margin swap + k-raises — inverts viability, regenerates 2020",
         "active_nav": "cip-0082",
     },
-    {
-        "slug": "k-parameter",
-        "md": "solution-evaluation/operator-delegator/k-parameter.md",
-        "html": "k-parameter.html",
-        "title": "k-Parameter Mechanics — Companion to CIP-0082 Stages 3–4",
-        "hero_h1": "k-Parameter Mechanics",
-        "hero_sub": "What raising k does to the operator/delegator split",
-        "active_nav": "k-parameter",
-    },
 ]
 
 # Sub-report 3-letter code lookup. Pages without `code` are not sub-reports
@@ -252,7 +243,14 @@ SYNTHESIS_SOURCE_MAP: dict[str, dict[str, str]] = {
     "1.1": {"code": "TRE", "page": "reserves.html"},
     "1.2": {"code": "POL", "page": "pools.html"},
     "1.3": {"code": "OPE", "page": "operator.html"},
+    # §2 split into four parallel population sections — each renders its own
+    # OBS panel sourced from the Staking Census sub-report. CEN.O# observations
+    # partition naturally: O1-O2 operators, O3-O6 delegators, O7 non-participants,
+    # O8-O12 transaction submitters.
     "2.1": {"code": "CEN", "page": "census.html"},
+    "2.2": {"code": "CEN", "page": "census.html"},
+    "2.3": {"code": "CEN", "page": "census.html"},
+    "2.4": {"code": "CEN", "page": "census.html"},
 }
 
 # MD path (relative to REPO_ROOT) → output HTML filename
@@ -1526,16 +1524,11 @@ window.MathJax = {{
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
-      <span class="nav-dd-stratum-meta">Five CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
+      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
     </div>
     <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero{cls_solution_eval}">
-      <span class="nav-dd-ref-title">Cross-CIP Analysis &amp; Verdict</span>
+      <span class="nav-dd-ref-title">Intro &amp; Conclusion of the 4 CIPs</span>
       <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, no-go verdict on the bundle</span>
-    </a>
-    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Forward — New Proposal</div>
-    <a href="solution-evaluation.html#5-toward-a-new-proposal" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
-      <span class="nav-dd-ref-title">Draft in preparation</span>
-      <span class="nav-dd-ref-cite">V2 spec target with the structural caveats addressed<span class="nav-dd-ref-stage nav-dd-ref-stage-soon">Soon</span></span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
     <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis{cls_stake_cap}">
@@ -1562,10 +1555,6 @@ window.MathJax = {{
     <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_cip_0082}">
       <span class="nav-dd-ref-title">CIP-0082 — Improved Rewards Scheme</span>
       <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
-    </a>
-    <a href="k-parameter.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deeper{cls_k_parameter}">
-      <span class="nav-dd-ref-title">k-Parameter mechanics</span>
-      <span class="nav-dd-ref-cite">Sub-document of CIP-0082 stages 3–4<span class="nav-dd-ref-stage">Sub-doc</span></span>
     </a>
   </div>
 </div>
@@ -1709,15 +1698,15 @@ window.MathJax = {{
       <span class="nav-dd-ref-cite">Kiayias et al. — 2021<span class="nav-dd-ref-tag">IAPG</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
     </a>
-    <a href="pdf-viewer.html?file=references/research-papers/removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf" class="nav-dd-ref">
-      <span class="nav-dd-ref-title">Removing the Minimum Pool Cost</span>
-      <span class="nav-dd-ref-cite">Stouka · Brünjes · Kiayias · Koutsoupias — 2022<span class="nav-dd-ref-tag">RMPC</span></span>
-      <span class="nav-dd-ref-pdf">PDF</span>
-    </a>
     <a href="pdf-viewer.html?file=references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-ref">
       <span class="nav-dd-ref-title">Balancing Participation & Decentralization</span>
       <span class="nav-dd-ref-cite">Kiayias et al. — 2024<span class="nav-dd-ref-tag">BPD</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="https://arxiv.org/abs/2505.04422" class="nav-dd-ref" rel="noopener" target="_blank">
+      <span class="nav-dd-ref-title">Reward Sharing in PoS with No-Pool-Choice Delegators</span>
+      <span class="nav-dd-ref-cite">Kiayias et al. — AFT 2025<span class="nav-dd-ref-tag">AFT-2025</span></span>
+      <span class="nav-dd-ref-pdf">arXiv</span>
     </a>
   </div>
 </div>
@@ -1790,7 +1779,7 @@ DIAG_ACTIVE = {"problem-statements", "diagnostic", "census", "reserves", "pools"
 SOLUTION_ACTIVE = {
     "solution-evaluation",
     "stake-cap", "cip-0050", "cip-0037",
-    "fee-layer", "cip-0023", "cip-0082", "k-parameter",
+    "fee-layer", "cip-0023", "cip-0082",
 }
 DESIGN_ACTIVE = {"intended-game"}
 
@@ -1815,7 +1804,6 @@ BANNER_VARIANTS = {
     "cip-0037":            "braid",
     "cip-0023":            "braid",
     "cip-0082":            "braid",
-    "k-parameter":         "starburst",   # transversal lever
 }
 
 BREADCRUMBS = {
@@ -1826,14 +1814,13 @@ BREADCRUMBS = {
     "census": ["Mainnet Diagnostic", "The Staking Census"],
     "reserves": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
     "pools": ["Mainnet Diagnostic", "Reward Flow", "Pools"],
-    "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],    "solution-evaluation": ["Solution Evaluation", "Cross-CIP Analysis & Verdict"],
+    "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],    "solution-evaluation": ["Solution Evaluation", "Intro & Conclusion of the 4 CIPs"],
     "stake-cap": ["Solution Evaluation", "Stake-Cap Layer", "CIP Evaluation Synthesis"],
     "cip-0050": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0050"],
     "cip-0037": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0037"],
     "fee-layer": ["Solution Evaluation", "Fee Layer", "CIP Evaluation Synthesis"],
     "cip-0023": ["Solution Evaluation", "Fee Layer", "CIP-0023"],
     "cip-0082": ["Solution Evaluation", "Fee Layer", "CIP-0082"],
-    "k-parameter": ["Solution Evaluation", "Fee Layer", "k-Parameter Mechanics"],
 }
 
 
@@ -1879,7 +1866,6 @@ _HERO_EYEBROW = {
     "cip-0037": "Solution Evaluation &middot; Stake-Cap Layer",
     "cip-0023": "Solution Evaluation &middot; Fee Layer",
     "cip-0082": "Solution Evaluation &middot; Fee Layer",
-    "k-parameter": "Solution Evaluation &middot; Fee Layer",
     "my-bookmarks": "Reader Tools",
 }
 
@@ -1902,7 +1888,6 @@ def render_shell(page: dict, content_html: str) -> str:
         "fee-layer": "cls_fee_layer",
         "cip-0023": "cls_cip_0023",
         "cip-0082": "cls_cip_0082",
-        "k-parameter": "cls_k_parameter",
     }
     classes = {v: "" for v in nav_map.values()}
     if active in nav_map:
@@ -1913,11 +1898,11 @@ def render_shell(page: dict, content_html: str) -> str:
         classes["cls_diagnostic_title"] = " parent-active"
     # Sub-eval pages light up the Solution Evaluation landing as parent-active.
     if active in {"stake-cap", "cip-0050", "cip-0037",
-                  "fee-layer", "cip-0023", "cip-0082", "k-parameter"}:
+                  "fee-layer", "cip-0023", "cip-0082"}:
         classes["cls_solution_eval"] = " parent-active"
     if active in {"cip-0050", "cip-0037"}:
         classes["cls_stake_cap"] = " parent-active"
-    if active in {"cip-0023", "cip-0082", "k-parameter"}:
+    if active in {"cip-0023", "cip-0082"}:
         classes["cls_fee_layer"] = " parent-active"
     cls_diag_trigger = " active" if active in DIAG_ACTIVE else ""
     cls_solution_trigger = " active" if active in SOLUTION_ACTIVE else ""
@@ -2774,7 +2759,32 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 .sro-card.sro-card-pro{border:1px solid var(--border);border-radius:12px;
   background:var(--bg);overflow:hidden;
   box-shadow:0 1px 3px rgba(0,51,173,.04);
-  transition:border-color .15s,box-shadow .15s}
+  margin:42px 0;
+  transition:border-color .15s,box-shadow .15s;
+  position:relative}
+/* Visible breathing room between Pro cards and surrounding prose.
+   When a card sits next to body paragraphs (CIP-evaluation pages,
+   Observatory) the previous tight ``margin:0`` made the card feel
+   like a continuation of the paragraph above it. The 42px margin
+   gives the card air; a 1px hairline rule above and below the card
+   marks the boundary explicitly so the prose doesn't run into it. */
+.sro-card.sro-card-pro::before,
+.sro-card.sro-card-pro::after{
+  content:"";position:absolute;left:14%;right:14%;
+  height:1px;background:var(--border);opacity:.7}
+.sro-card.sro-card-pro::before{top:-22px}
+.sro-card.sro-card-pro::after{bottom:-22px}
+/* Suppress the rules when cards stack consecutively (the synthesis
+   page's evidence tree, mainnet observation lists) — there the
+   cards are siblings and a divider would clutter rather than help. */
+.sro-list .sro-card.sro-card-pro,
+.finding-card-evidence-tree .sro-card.sro-card-pro{
+  margin:0}
+.sro-list .sro-card.sro-card-pro::before,
+.sro-list .sro-card.sro-card-pro::after,
+.finding-card-evidence-tree .sro-card.sro-card-pro::before,
+.finding-card-evidence-tree .sro-card.sro-card-pro::after{
+  display:none}
 .sro-card.sro-card-pro:hover{
   border-color:color-mix(in srgb, var(--cardano-blue) 35%, var(--border));
   box-shadow:0 2px 14px rgba(0,51,173,.08)}
@@ -2920,6 +2930,35 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
   font:600 14px/1.2 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   color:var(--infared);letter-spacing:-.005em;
   font-variant-numeric:tabular-nums}
+
+/* Inline evidence tables — when a finding row needs a small reference
+   table (e.g. ROS-responsive segments in cip-0082 §B.3), the MD
+   pipe-table syntax doesn't survive the surrounding ``markdown="1"``
+   wrappers reliably, so authors emit the table as raw HTML with this
+   class. Tight typography matches the Infared finding lane around it. */
+.sro-card-pro .sro-evidence-table{
+  width:100%;border-collapse:collapse;margin:10px 0 12px;
+  font-size:12.5px;line-height:1.5;
+  background:rgba(229,35,33,.025);
+  border:1px solid rgba(229,35,33,.18);
+  border-radius:6px;
+  overflow:hidden}
+.sro-card-pro .sro-evidence-table th{
+  font:600 10px/1.3 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  text-transform:uppercase;letter-spacing:.06em;
+  text-align:left;padding:8px 10px 6px;
+  color:var(--text-muted);
+  background:rgba(229,35,33,.06);
+  border-bottom:1px solid rgba(229,35,33,.18);
+  vertical-align:bottom}
+.sro-card-pro .sro-evidence-table td{
+  padding:7px 10px;
+  border-top:1px solid rgba(229,35,33,.10);
+  color:var(--text-body);vertical-align:top}
+.sro-card-pro .sro-evidence-table tbody tr:first-child td{
+  border-top:0}
+.sro-card-pro .sro-evidence-table strong{
+  color:var(--text-primary);font-weight:600}
 .sro-card-pro .sro-fid-ref{
   font:500 10px/1.2 "JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
   color:var(--text-muted);letter-spacing:.06em}
@@ -7234,13 +7273,14 @@ _FIGURE_FOLLOWED_BY_CAP_RE = re.compile(
     re.IGNORECASE | re.DOTALL,
 )
 # A figure caption opens either with the canonical ``CODE.X.Y`` form
-# (``TRE.4.4``, ``POL.3.1``, ``DIA.1.2``, ``CEN.2.3``, ``OPE.4.6``) — the
-# absolute, cross-document reference now baked into every Mainnet
-# Diagnostic MD — or with the legacy ``Figure X.Y`` keyword form left
-# over from older drafts. Either matches.
+# (``TRE.4.4``, ``POL.3.1``, ``DIA.1.2``, ``CEN.2.3``, ``OPE.4.6``,
+# ``C50.2.3``, ``C37.2.1``, ``STK.2.4``) — the absolute,
+# cross-document reference now baked into every Mainnet Diagnostic
+# and CIP-evaluation MD — or with the legacy ``Figure X.Y`` keyword
+# form left over from older drafts. Either matches.
 _FIGURE_CAP_RE = re.compile(
     r'^\s*(?:'
-    r'(?:TRE|POL|OPE|CEN|DIA)\.\d+(?:\.\d+)*'
+    r'(?:TRE|POL|OPE|CEN|DIA|C50|C37|C23|C82|STK|FEE|KPM)\.\d+(?:\.\d+)*'
     r'|'
     r'(?:Figure|Fig\.?|Diagram|Chart|Plot|Table)\b'
     r')',
@@ -7278,7 +7318,7 @@ def _build_figcaption(cap_inner: str) -> str:
     # ``Figure X.Y`` keyword form for any orphan that hasn't been
     # remapped.
     canon_match = re.match(
-        r'\s*((?:TRE|POL|OPE|CEN|DIA)\.\d+(?:\.\d+)*)\s*(?:[—–\-]\s*)?',
+        r'\s*((?:TRE|POL|OPE|CEN|DIA|C50|C37|C23|C82|STK|FEE|KPM)\.\d+(?:\.\d+)*)\s*(?:[—–\-]\s*)?',
         peeled,
         re.IGNORECASE,
     )
@@ -7369,6 +7409,46 @@ def wrap_md_figures(html_body: str) -> str:
         return m.group(0)  # next paragraph isn't a caption — leave both as-is
     html_body = _FIGURE_FOLLOWED_BY_CAP_RE.sub(_sub_adj, html_body)
     return html_body
+
+
+# Match a CIP-evaluation finding label of the form
+# ``<span class="sro-fid-label">[D] #1</span>`` (or [R], [B]) and
+# rewrite to a styled verdict pill + number. The bracketed letter
+# is a holdover from internal tagging — readers see ``[R]`` and have
+# to know to translate it to ``Regresses``. Lifting the verdict to
+# a coloured pill removes the lookup.
+_VERDICT_LABEL_RE = re.compile(
+    r'<span class="sro-fid-label">\s*\[([DRB])\]\s*#?(\d+)\s*</span>',
+    re.IGNORECASE,
+)
+_VERDICT_NAMES = {
+    "D": ("delivers", "delivers"),
+    "R": ("regresses", "regresses"),
+    "B": ("blind", "blind spot"),
+}
+
+
+def prettify_verdict_labels(html_body: str) -> str:
+    """Turn ``[D]/[R]/[B] #N`` shorthand inside Pro card finding rows
+    into proper verdict pills (DELIVERS / REGRESSES / BLIND SPOT) +
+    the number, so readers don't have to mentally translate the
+    bracketed letter.
+    """
+    if "[D]" not in html_body and "[R]" not in html_body and "[B]" not in html_body:
+        return html_body
+
+    def _sub(m: re.Match) -> str:
+        code = m.group(1).upper()
+        num = m.group(2)
+        slug, label = _VERDICT_NAMES[code]
+        return (
+            f'<span class="sro-fid-label sro-fid-label-{slug}">'
+            f'<span class="sro-verdict sro-verdict-{slug}">{label}</span>'
+            f'<span class="sro-fid-num">#{num}</span>'
+            f'</span>'
+        )
+
+    return _VERDICT_LABEL_RE.sub(_sub, html_body)
 
 
 def build_page(page: dict) -> Path:
@@ -7539,6 +7619,10 @@ def build_page(page: dict) -> Path:
     # unit, set apart from body prose.
     content_html = wrap_md_figures(content_html)
 
+    # Convert hand-authored ``[D]/[R]/[B] #N`` shorthand on CIP-
+    # evaluation finding rows into styled verdict pills.
+    content_html = prettify_verdict_labels(content_html)
+
     # "View source on GitHub" footer link — sits at the very end of the
     # article content (above the site-footer) so motivated readers can
     # always reach the unredacted MD source.
@@ -7655,7 +7739,6 @@ PDF_VIEWER_BODY = """<style>
   titles["delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf"]="Delegation & Incentives Design Spec";
   titles["reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf"]="Reward Sharing Schemes for Stake Pools";
   titles["incentives-against-power-grabs_kiayias-et-al_2021.pdf"]="Stake Pool Incentives Against Power Grabs";
-  titles["removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf"]="Removing the Minimum Pool Cost";
   titles["balancing-participation-decentralization_kiayias-et-al_2024.pdf"]="Balancing Participation & Decentralization";
   titles["spo-incentives-analysis_lopez-de-lara_2025.pdf"]="SPO Incentives Analysis";
   titles["cardano-constitution-2.pdf"]="Cardano Constitution V2";
