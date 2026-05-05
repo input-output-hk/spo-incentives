@@ -1539,10 +1539,10 @@ window.MathJax = {{
       <span class="nav-dd-ref-title">Cross-CIP Analysis &amp; Verdict</span>
       <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, no-go verdict on the bundle</span>
     </a>
-    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Forward — New Proposal</div>
-    <a href="solution-evaluation.html#5-toward-a-new-proposal" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
-      <span class="nav-dd-ref-title">Draft in preparation</span>
-      <span class="nav-dd-ref-cite">V2 spec target with the structural caveats addressed<span class="nav-dd-ref-stage nav-dd-ref-stage-soon">Soon</span></span>
+    <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Forward — Parameter Recommendations</div>
+    <a href="solution-evaluation.html#5-recommendations-on-adjustments-to-the-current-mechanism" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
+      <span class="nav-dd-ref-title">In preparation</span>
+      <span class="nav-dd-ref-cite">Adjustments to the current mechanism — IO Research target end of 2026<span class="nav-dd-ref-stage nav-dd-ref-stage-soon">Soon</span></span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
     <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis{cls_stake_cap}">
@@ -1716,15 +1716,15 @@ window.MathJax = {{
       <span class="nav-dd-ref-cite">Kiayias et al. — 2021<span class="nav-dd-ref-tag">IAPG</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
     </a>
-    <a href="pdf-viewer.html?file=references/research-papers/removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf" class="nav-dd-ref">
-      <span class="nav-dd-ref-title">Removing the Minimum Pool Cost</span>
-      <span class="nav-dd-ref-cite">Stouka · Brünjes · Kiayias · Koutsoupias — 2022<span class="nav-dd-ref-tag">RMPC</span></span>
-      <span class="nav-dd-ref-pdf">PDF</span>
-    </a>
     <a href="pdf-viewer.html?file=references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-ref">
       <span class="nav-dd-ref-title">Balancing Participation & Decentralization</span>
       <span class="nav-dd-ref-cite">Kiayias et al. — 2024<span class="nav-dd-ref-tag">BPD</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="https://arxiv.org/abs/2505.04422" class="nav-dd-ref" rel="noopener" target="_blank">
+      <span class="nav-dd-ref-title">Reward Sharing in PoS with No-Pool-Choice Delegators</span>
+      <span class="nav-dd-ref-cite">Kiayias et al. — AFT 2025<span class="nav-dd-ref-tag">AFT-2025</span></span>
+      <span class="nav-dd-ref-pdf">arXiv</span>
     </a>
   </div>
 </div>
@@ -7379,6 +7379,46 @@ def wrap_md_figures(html_body: str) -> str:
     return html_body
 
 
+# Match a CIP-evaluation finding label of the form
+# ``<span class="sro-fid-label">[D] #1</span>`` (or [R], [B]) and
+# rewrite to a styled verdict pill + number. The bracketed letter
+# is a holdover from internal tagging — readers see ``[R]`` and have
+# to know to translate it to ``Regresses``. Lifting the verdict to
+# a coloured pill removes the lookup.
+_VERDICT_LABEL_RE = re.compile(
+    r'<span class="sro-fid-label">\s*\[([DRB])\]\s*#?(\d+)\s*</span>',
+    re.IGNORECASE,
+)
+_VERDICT_NAMES = {
+    "D": ("delivers", "delivers"),
+    "R": ("regresses", "regresses"),
+    "B": ("blind", "blind spot"),
+}
+
+
+def prettify_verdict_labels(html_body: str) -> str:
+    """Turn ``[D]/[R]/[B] #N`` shorthand inside Pro card finding rows
+    into proper verdict pills (DELIVERS / REGRESSES / BLIND SPOT) +
+    the number, so readers don't have to mentally translate the
+    bracketed letter.
+    """
+    if "[D]" not in html_body and "[R]" not in html_body and "[B]" not in html_body:
+        return html_body
+
+    def _sub(m: re.Match) -> str:
+        code = m.group(1).upper()
+        num = m.group(2)
+        slug, label = _VERDICT_NAMES[code]
+        return (
+            f'<span class="sro-fid-label sro-fid-label-{slug}">'
+            f'<span class="sro-verdict sro-verdict-{slug}">{label}</span>'
+            f'<span class="sro-fid-num">#{num}</span>'
+            f'</span>'
+        )
+
+    return _VERDICT_LABEL_RE.sub(_sub, html_body)
+
+
 def build_page(page: dict) -> Path:
     src_md = REPO_ROOT / page["md"]
     if not src_md.exists():
@@ -7547,6 +7587,10 @@ def build_page(page: dict) -> Path:
     # unit, set apart from body prose.
     content_html = wrap_md_figures(content_html)
 
+    # Convert hand-authored ``[D]/[R]/[B] #N`` shorthand on CIP-
+    # evaluation finding rows into styled verdict pills.
+    content_html = prettify_verdict_labels(content_html)
+
     # "View source on GitHub" footer link — sits at the very end of the
     # article content (above the site-footer) so motivated readers can
     # always reach the unredacted MD source.
@@ -7663,7 +7707,6 @@ PDF_VIEWER_BODY = """<style>
   titles["delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf"]="Delegation & Incentives Design Spec";
   titles["reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf"]="Reward Sharing Schemes for Stake Pools";
   titles["incentives-against-power-grabs_kiayias-et-al_2021.pdf"]="Stake Pool Incentives Against Power Grabs";
-  titles["removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf"]="Removing the Minimum Pool Cost";
   titles["balancing-participation-decentralization_kiayias-et-al_2024.pdf"]="Balancing Participation & Decentralization";
   titles["spo-incentives-analysis_lopez-de-lara_2025.pdf"]="SPO Incentives Analysis";
   titles["cardano-constitution-2.pdf"]="Cardano Constitution V2";
