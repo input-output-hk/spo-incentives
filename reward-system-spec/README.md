@@ -125,7 +125,7 @@ The second pillar is **empirical, not normative** — a measurement of what the 
 - **The reward flow** — how ADA moves from the reserve, through fees, into epoch budgets, into pool pots, and finally into operator and delegator rewards: [budget assembly](diagnostic/README.md#11-treasury-pool-pots-distribution) → [pool pots](diagnostic/README.md#12-pools-distribution) → [operator-delegator split](diagnostic/README.md#13-operator-delegator-distribution).
 - **The player populations** — operators and delegators ([staking populations](diagnostic/README.md#21-the-staking-populations)) and the [transaction submitters](diagnostic/README.md#22-transaction-submitters) that fund the fee component of the reward.
 
-An additional stage audits the [ADA price constraint](diagnostic/README.md#3-the-price-constraint) that binds the mechanism to the exogenous economy.
+An additional stage audits the [₳/Fiat money-constraint layer](diagnostic/README.md#3-the-fiat-money-constraint-layer) that binds the mechanism to the exogenous economy.
 
 **Four sub-reports — the evidence layer.** Each pipeline stage is backed by a dedicated, self-contained sub-report with its own formulas, data, figures, and reproduction scripts:
 
