@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777960927">
+<link rel="stylesheet" href="assets/site.css?v=1777962490">
 
 
 </head>
@@ -311,6 +311,15 @@ window.MathJax = {
 <p><strong>CIP-0082 · Improved Rewards Scheme Parameters</strong> · 2022 · Tobias Fancee · 4-stage package · stage 2 hard fork required · <strong>No-go as a standalone — stage 2 inverts operator revenue, stages 3–4 fire in the wrong regime</strong></p>
 <p><a href="https://cips.cardano.org/cip/CIP-0082">official page</a> · <a href="https://forum.cardano.org/t/cip-improved-rewards-scheme-parameters/112409">forum thread</a> · stage 1 (<code>minPoolCost 340 → 170</code>) <strong>complete on mainnet</strong> at epoch 445 (2023/10/27)</p>
 </blockquote>
+<p>CIP-0082 is the most ambitious of the four CIPs — a four-stage package touching three layers of the reward pipeline at once. Stage 1 (<code>minPoolCost 340 → 170</code>) is already retired on mainnet; the live content is stages 2–4: delete <code>minPoolCost</code> entirely and add <code>minPoolRate = 3 %</code> (stage 2, hard fork), then raise <code>k: 500 → 750 → 1000</code> six epochs later (stages 3–4, parameter changes). The package targets the same diagnostic findings as CIP-0023 (OPE.O1.F4 hyperbola, OPE.O6.F1 operator-fleet asymmetry) plus the entity-level concentration POL.O5.F1 documents at the upper tail.</p>
+<p><strong>CIP-0082 is the cleanest delegator-side fix in the bundle, suboptimal as a standalone — stage 2 inverts operator revenue across the viability line, and stages 3–4 fire in the wrong regime.</strong> The flat 3 % rate compresses delegator dispersion from 38× to 1.00× — a genuine win on the headline §3.3 yield-equalisation claim — but the equalisation is funded by a transfer from sub-reliable pool operators (−9× per pool) to saturated pool operators (+4× per pool), captured most heavily by the 11+ pool MPO bracket (+200 K ADA/yr per entity).</p>
+<p>Three findings frame the verdict:</p>
+<ul>
+<li>Stage 2 delivers cleanly on the delegator side (38× → 1.00×) but inverts per-pool and per-entity operator revenue across the viability line.</li>
+<li>Stages 3–4 raise <code>k</code> six epochs after the Margin swap, with no time to negotiate a stake-cap precondition — the new slots feed the existing multi-pool fleet, repeating the 2020 pattern.</li>
+<li>Stage 2 is mechanically the same primitive as CIP-0023's paired variant, at roughly 2–4× the magnitude on each axis. Voting both as separate items is governance double-counting.</li>
+</ul>
+<p><em>The package gets the right targets and the right layers — but stage 2's revenue inversion lands on the very population V2 §3.1 names as the foundational priority, and stages 3–4 fire before the precondition that would make them constructive.</em></p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <nav class="toc-nav">
 <ul>
@@ -342,33 +351,38 @@ window.MathJax = {
 </ul>
 </nav>
 <h2 id="1-what-cip-0082-proposes">1. What CIP-0082 proposes</h2>
-<p>CIP-0082 is a <strong>four-stage package</strong> that reforms the reward-sharing scheme in sequence:</p>
+<p>CIP-0082 is a four-stage package that reforms the reward-sharing scheme in sequence:</p>
 <ol>
-<li><strong>Floor halving</strong> — <code>minPoolCost: 340 → 170 ADA</code>. <em>Already complete on mainnet at epoch 445 (2023/10/27).</em></li>
-<li><strong>Margin swap</strong> — delete <code>minPoolCost</code> entirely and add <code>minPoolRate = 3 %</code>. The fixed-ADA fee becomes a flat proportional rate. <em>Hard fork required.</em></li>
+<li><strong>Floor halving</strong> — <code>minPoolCost: 340 → 170 ADA</code>. <em>Complete on mainnet at epoch 445 (2023/10/27).</em></li>
+<li><strong>Margin swap</strong> — delete <code>minPoolCost</code> entirely; add <code>minPoolRate = 3 %</code>. The fixed-ADA fee becomes a flat proportional rate. <em>Hard fork required.</em></li>
 <li><strong>First pool-count expansion</strong> — <code>k: 500 → 750</code>. Saturation cap shrinks from ~77 M ADA to ~51 M.</li>
 <li><strong>Second pool-count expansion</strong> — <code>k: 750 → 1000</code>. Saturation cap shrinks to ~38.5 M.</li>
 </ol>
-<p>The author frames the package as a fairness-and-decentralisation reform. Stage 2 is mechanically equivalent to CIP-0023's <em>paired</em> variant (reduce <code>minPoolCost</code>, add a margin floor) at the extreme calibration: cost taken to zero, rate set to 3 %. The author credits CIP-0023 explicitly: <em>"<code>minPoolRate</code> was originally proposed in CIP-0023."</em> Stages 3–4 are pool-count expansions that leave the fee formula unchanged but halve the saturation cap each time, redistributing reward pressure across the top of the distribution.</p>
-<p>Live content of CIP-0082 as a governance item is therefore <strong>stages 2–4</strong> (stage 1 is documentation).</p>
+<p>The author frames the package as a fairness-and-decentralisation reform.</p>
+<p>Stage 2 is mechanically the same as CIP-0023's paired variant — reduce <code>minPoolCost</code>, add a margin floor — at an extreme calibration: cost taken to zero, rate set to 3 %. The author credits CIP-0023 explicitly: <em>"<code>minPoolRate</code> was originally proposed in CIP-0023."</em></p>
+<p>Stages 3–4 leave the fee formula alone but halve the saturation cap each time, redistributing reward pressure across the top of the distribution.</p>
+<p>Live content of CIP-0082 as a governance item is therefore <strong>stages 2–4</strong>. Stage 1 is documentation.</p>
 <h2 id="2-the-problem-it-tries-to-fix">2. The problem it tries to fix</h2>
-<p>The CIP attacks two layers of the reward pipeline at once: the regressive flat fee that penalises delegators of small productive pools (stage 2), and the saturation-cap concentration that lets large pools accumulate the bulk of stake (stages 3–4).</p>
-<p>On the fee side, mainnet today: a 100 k ADA delegator faces an effective fee rate of <strong>27 %</strong> in a 2 M ADA pool versus <strong>0.7 %</strong> in a saturated pool — <strong>38× dispersion</strong> driven entirely by the 170 ADA fixed-cost floor. The author's headline claim is that stage 2 collapses this dispersion to a flat <strong>3 % everywhere</strong> — fee-driven differences in delegator return disappear.</p>
-<p>On the saturation side, the current cap leaves room for at most 500 saturated pools, while the multi-pool operator population already controls 76.7 % of productive stake across 449 productive pools. The author's argument: doubling <code>k</code> to 1000 splits saturated pools, "gets stale delegations moving", and amplifies the pledge bonus by shrinking $z_0 = \text{Supply}/k$.</p>
+<p>The CIP attacks two layers of the reward pipeline at once.</p>
+<h4 id="fee-side-stage-2">Fee side (stage 2).</h4>
+<p>A 100 k ADA delegator on mainnet today faces an effective fee rate of about 27 % in a 2 M ADA pool versus 0.7 % in a saturated pool — a 38× dispersion driven almost entirely by the 170 ADA fixed-cost floor.</p>
+<p>The author's headline claim: stage 2 collapses this to a flat 3 % everywhere. Fee-driven differences in delegator return disappear.</p>
+<h4 id="saturation-side-stages-34">Saturation side (stages 3–4).</h4>
+<p>The current cap leaves room for at most 500 saturated pools. The multi-pool population already controls 76.7 % of productive stake across 449 productive pools.</p>
+<p>The author's argument: doubling <code>k</code> to 1000 splits saturated pools, "gets stale delegations moving", and amplifies the pledge bonus by shrinking $z_0 = \text{Supply}/k$.</p>
 <h2 id="3-verdict-three-reasons-it-fails-as-a-standalone">3. Verdict — three reasons it fails as a standalone</h2>
-<ol>
-<li>
-<p><strong>Stage 2 delivers on the delegator side at the cost of an operator-side inversion.</strong> The flat 3 % rate compresses delegator dispersion from <strong>38× to 1.00×</strong> — a clean win on the headline yield-equalisation claim. But the underlying mechanism is a <strong>revenue transfer</strong>: per-pool operator revenue at Saturated pools rises from 12 410 to <strong>52 560 ADA/yr</strong> (+4×), while Sub-reliable pool operators fall from 12 410 to <strong>1 365 ADA/yr</strong> (−9×). On the fleet axis, an entity running 11+ pools gains <strong>+200 K ADA/yr</strong> while a sub-reliable single-pool operator loses <strong>−11 K ADA/yr</strong>. The delegator-side equalisation is funded by the small-pool tail and captured by the large-fleet top — exactly inverse to the V2 operator-viability target. → <em><a href="#b1-s1-margin-swap-inverts-operator-revenue-across-the-viability-line">Margin-swap inversion in detail</a></em></p>
-</li>
-<li>
-<p><strong>Stages 3–4 fire in the wrong regime — they create slots existing MPO fleets will absorb.</strong> Raising <code>k</code> from 500 to 1000 creates up to <strong>500 new pool slots</strong>. Historical precedent: the 2020 <code>k: 150 → 500</code> raise produced today's MPO landscape (83 entities holding 76.7 % of productive stake). Without an active <strong>stake-cap layer</strong> (CIP-0050 or CIP-0037) to block fleet expansion, the new slots will be absorbed horizontally by the existing fleet at trivial registration cost — the V2 deconcentration milestone fails by re-running the same script that created the current concentration. CIP-0082's own timeline fires stages 3–4 just <strong>6 epochs</strong> after stage 2, leaving no window to negotiate, vote, and activate a stake-cap layer in between. → <em><a href="#b2-s2-k-raises-fire-in-the-wrong-regime">k-raise regime in detail</a></em></p>
-</li>
-<li>
-<p><strong>Stage 2 is the same instrument as CIP-0023, scaled up.</strong> Both stage 2 and CIP-0023 paired add a margin floor on top of a reduced <code>minPoolCost</code>. CIP-0082 takes the cost to zero and the rate to 3 %; CIP-0023 paired takes it to 50 ADA and 1.5 %. The structural critique is identical — operator revenue inverts across the viability line — and the magnitudes scale roughly 2× larger on the pool axis and 4× larger on the n-MPO entity axis. CIP-0082 stage 2 + CIP-0023 standalone is incoherent (same mechanism, two governance items); the coherent governance choice is <strong>stage 2 alone</strong>, deprecating CIP-0023.</p>
-</li>
-</ol>
+<h4 id="1-stage-2-collapses-delegator-dispersion-from-38-to-100-and-inverts-operator-revenue-across-the-viability-line">1. Stage 2 collapses delegator dispersion from 38× to 1.00× — and inverts operator revenue across the viability line.</h4>
+<p>The flat 3 % rate equalises delegator yield to <strong>2.21 %</strong> across the productive range — a clean delivery on the headline §3.3 yield-equalisation claim. The funding mechanism is a revenue reallocation underneath: saturated pool operators rise from 12 410 to <strong>52 560 ADA/yr</strong> (+4×), sub-reliable pool operators fall from 12 410 to <strong>1 365 ADA/yr</strong> (−9×). On the n-MPO axis the spread widens to a +200 K vs −11 K ADA/yr gap between an 11+ pool fleet and a sub-reliable single-pool operator.</p>
+<p><em>The delegator-side equalisation is funded by the small-pool tail and captured by the large-fleet top — the inverse of the V2 §3.1 operator-viability target.</em> → <a href="#b1-s1-margin-swap-inverts-operator-revenue-across-the-viability-line">Margin-swap revenue inversion</a></p>
+<h4 id="2-stages-34-fire-in-the-wrong-regime-new-slots-feed-the-existing-fleet">2. Stages 3–4 fire in the wrong regime — new slots feed the existing fleet.</h4>
+<p>The 2020 <code>k: 150 → 500</code> raise produced today's multi-pool landscape (POL.O5.F1: 83 entities, 449 productive pools, 76.7 % of productive stake). CIP-0082 fires stages 3–4 just <strong>6 epochs after stage 2</strong> — no window to negotiate, vote, and activate a stake-cap layer in between — into the same weak-pledge regime, with the same near-zero registration cost (~500 ADA per pool) and the same near-horizontal MPO infrastructure. The new slots get absorbed by the existing fleet, not by new entrants.</p>
+<p><em>The deconcentration target fails by re-running the script that created the current concentration.</em> → <a href="#b2-s2-k-raises-fire-in-the-wrong-regime">k-raises in the wrong regime</a></p>
+<h4 id="3-stage-2-is-the-same-primitive-as-cip-0023-scaled-up-voting-both-is-incoherent">3. Stage 2 is the same primitive as CIP-0023, scaled up — voting both is incoherent.</h4>
+<p>Both stage 2 and CIP-0023's paired variant add a margin floor on top of a reduced <code>minPoolCost</code>; CIP-0082 takes the cost to zero and the rate to 3 %, CIP-0023 paired stops at 50 ADA and 1.5 %. The structural critique transfers one-for-one: operator revenue inverts across the viability line, with magnitudes roughly <strong>2× larger on the pool axis</strong> and <strong>4× larger on the n-MPO axis</strong> than CIP-0023's.</p>
+<p>The coherent governance choice is stage 2 alone, deprecating CIP-0023 — the CIP-0082 author already credits the predecessor: <em>"<code>minPoolRate</code> was originally proposed in CIP-0023."</em></p>
+<p>The remainder of the document walks the package in three steps: §4 quantifies what each of the four stages does on mainnet today (delegator ROS, per-pool operator revenue, per-entity operator revenue by n-MPO bracket); Appendix A unpacks the four-stage formula change and re-runs the CIP's own 2022 calibration at today's parameters; Appendix B documents the per-finding evidence with verdict tags, including the standalone k-lever findings reproduced from <a href="k-parameter.html"><code>k-parameter.md</code></a>.</p>
 <h2 id="4-what-it-does-to-mainnet-today">4. What it does to mainnet today</h2>
-<p>The Margin swap (stage 2) acts on two axes simultaneously and in opposite directions. Delegator yield equalises at 2.21 %; operator revenue redistributes from small to large.</p>
+<p>The Margin swap (stage 2) acts on two axes at once and in opposite directions: delegator yield equalises at 2.21 %; operator revenue redistributes from small pools to large.</p>
 <p><strong>Delegator net ROS — flat across the productive range</strong> (today vs each stage):</p>
 <table>
 <thead>
@@ -494,7 +508,13 @@ window.MathJax = {
 </tbody>
 </table>
 <p><em>Table 4.3 — Per-entity revenue Δ by n-MPO bracket. A sub-reliable single-pool operator loses 11 K ADA/yr; an 11+ pool MPO entity gains 200 K. The amplification is mechanical — the proportional margin scales with both pool size and pool count.</em></p>
-<p>The summary: <strong>the delegator side wins</strong> (yield floor rises from 0–1.65 % to a flat 2.21 % across the Sub-reliable-and-below tiers); <strong>the operator side regresses</strong> at the very tier the V2 spec identifies as needing protection (sub-reliable pools lose 9× per pool; sub-reliable single-pool operators lose 11 K ADA/yr per entity). The k-raises do not redistribute back to the bottom — they only trim the top. Without a stake-cap layer in between, the new pool slots also feed the existing MPO fleet.</p>
+<p>In summary:</p>
+<ul>
+<li><strong>The delegator side wins.</strong> The yield floor rises from 0–1.65 % to a flat 2.21 % across Sub-reliable-and-below tiers.</li>
+<li><strong>The operator side regresses</strong> at the tier the V2 spec identifies as needing protection. Sub-reliable pools lose 9× per pool; sub-reliable single-pool operators lose 11 K ADA/yr per entity.</li>
+<li>The k-raises do not redistribute back to the bottom. They only trim the top.</li>
+</ul>
+<p>Without a stake-cap layer between stage 2 and stage 3, the new pool slots feed the existing multi-pool fleet.</p>
 <h2 id="5-read-more">5. Read more</h2>
 <ul>
 <li><strong>The proposal itself</strong> — <a href="https://cips.cardano.org/cip/CIP-0082">CIP-0082 on cardano-cips.org</a></li>
@@ -901,8 +921,16 @@ window.MathJax = {
 </tbody>
 </table>
 <p><em>Table A.7 — Per-pool operator annualised revenue by tier across stages.</em></p>
-<p>Today's flat <code>minPoolCost = 170 ADA</code> caps every productive pool's operator revenue at <strong>12 410 ADA/yr</strong> — the signature of the no-competitive-wage finding. The Margin swap replaces the flat cap with a proportional share of the pool reward: Sub-reliable operators fall from 12 410 to 1 365 ADA/yr (a 9× <em>cut</em>), while Saturated operators jump from 12 410 to 52 560 ADA/yr (a 4× <em>multiplication</em>). <strong>The operator-revenue curve inverts across the viability line</strong> — the delegator-side equalisation is funded by a transfer up the operator distribution.</p>
-<p>The pool-count expansions then compress operator revenue at the top of the distribution as $P/k$ shrinks (52 560 → 35 040 → 26 280 at saturation) while leaving the Sub-reliable, Sub-block, and Dormant tiers unchanged at their Margin-swap values. Stages 3–4 <em>do not help the small-pool tail at all</em>; they redistribute revenue <em>among large pools only</em>.</p>
+<p>Today's flat <code>minPoolCost = 170 ADA</code> caps every productive pool's operator revenue at 12 410 ADA/yr — the signature of the no-competitive-wage finding.</p>
+<p>The Margin swap replaces that flat cap with a proportional share of the pool reward:</p>
+<ul>
+<li>Sub-reliable operators fall from 12 410 to 1 365 ADA/yr — a 9× cut.</li>
+<li>Saturated operators jump from 12 410 to 52 560 ADA/yr — a 4× multiplication.</li>
+</ul>
+<p><strong>The operator-revenue curve inverts across the viability line.</strong> The delegator-side equalisation is funded by a transfer up the operator distribution.</p>
+<h4 id="what-stages-34-do-on-top">What stages 3–4 do on top.</h4>
+<p>The pool-count expansions then compress operator revenue at the top of the distribution as $P/k$ shrinks: 52 560 → 35 040 → 26 280 ADA/yr at saturation.</p>
+<p>Sub-reliable, Sub-block, and Dormant tiers are left at their Margin-swap values. Stages 3–4 do not help the small-pool tail at all — they redistribute revenue among large pools only.</p>
 <p><strong>Per-entity revenue by n-MPO bracket</strong> (sums per-pool take across the operator's pools using mean pools/entity and mean pool stake from <a href="operator.html#44-operator-profitability-versus-delegator-return">operator-delegator §4.4</a>, retail hollow segment, epoch 623; 73 epochs/yr):</p>
 <table>
 <thead>
@@ -966,10 +994,18 @@ window.MathJax = {
 </tbody>
 </table>
 <p><em>Table A.8 — Per-entity Δ by n-MPO bracket. The 11+ MPO bracket gains +200 K ADA/yr; the bracket-to-bracket amplification is 7.3× from 2-pool to 11+-pool.</em></p>
-<p>At each bracket's <em>mean</em> pool stake, pools stay below $z_0$ at every k-raise, so <strong>the pool-count expansions do not erode MPO entity revenue</strong>. The Margin-swap uplift is preserved through all later stages. The revenue trimming at the top of the nine-tier table applies to <em>individual high-stake pools</em>, not to the mean MPO pool.</p>
+<p>At each bracket's mean pool stake, pools stay below $z_0$ at every k-raise. The pool-count expansions therefore do not erode multi-pool entity revenue — the Margin-swap uplift is preserved through all later stages.</p>
+<p>The revenue trimming at the top of the nine-tier table applies to individual high-stake pools, not to the mean multi-pool fleet.</p>
 <h2 id="appendix-b-findings">Appendix B — Findings</h2>
-<p>CIP evaluations use a three-level taxonomy mirroring the diagnostic's <code>SUBFLOW.O&lt;n&gt;.F&lt;m&gt;</code>: <strong>S<n></strong> = synthesis-level verdict statement (the title of each card below); <strong>F<m></strong> = quantified finding listed inside the card. Each F is tagged <strong>[D] Delivers · [R] Regresses · [B] Blind spot</strong>. Code prefix <code>CIP-0082.</code> omitted on the rows below — the page is for <code>CIP-0082</code> throughout. Sort within each card: regressions and blind spots before deliveries. Click the count chip on the right of any card header to fold its findings list.</p>
-<p>The Margin swap (stage 2) is mechanically equivalent to CIP-0023's paired variant (reduction of <code>minPoolCost</code> + introduction of a margin floor) at the extreme calibration: <code>minPoolCost → 0</code>, <code>minPoolRate = 3 %</code> vs CIP-0023's illustrative 50 ADA + 1.5 %. The structural effect is the same — delegator-side fee dispersion collapses; operator-side per-pool revenue scales with pool reward and the transfer inverts across the viability line — but the magnitude is roughly doubled on both sides. Two reference tables anchor the cards below:</p>
+<p>Two cards organise the analysis: the operator-revenue inversion driven by the Margin swap (S1), and the wrong-regime firing of the k-raises in stages 3–4 (S2).</p>
+<h4 id="stage-2-is-cip-0023-paired-scaled-up">Stage 2 is CIP-0023 paired, scaled up.</h4>
+<p>The Margin swap is mechanically the same instrument as CIP-0023's paired variant — reduce <code>minPoolCost</code>, add a margin floor — at a more extreme calibration:</p>
+<ul>
+<li>CIP-0082: <code>minPoolCost → 0</code>, <code>minPoolRate = 3 %</code>.</li>
+<li>CIP-0023 paired (illustrative): <code>minPoolCost = 50</code>, <code>minPoolMargin = 1.5 %</code>.</li>
+</ul>
+<p>The structural effect is the same: delegator dispersion collapses, operator revenue inverts across the viability line. The magnitudes here are roughly doubled on both sides.</p>
+<p>Two reference tables anchor the cards below.</p>
 <p><strong>Pool-axis Δ across the canonical nine tiers</strong> (declared margin ≈ 0; column "Δ CIP-0023 paired" carries the CIP-0023 numbers for reference):</p>
 <table>
 <thead>
@@ -1050,7 +1086,7 @@ window.MathJax = {
 </tbody>
 </table>
 <p><em>Table B.2 — Per-pool Δ across the nine canonical tiers under the Margin swap, with CIP-0023 paired Δ for reference. Magnitudes are 2.0–2.5× larger on both sides of the viability line.</em></p>
-<p>Sub-block pools — untouched by CIP-0023 standalone — lose <strong>−151 ADA/ep</strong> here because <code>minPoolCost</code> is gone entirely: every productive pool becomes a proportional-margin contributor, including the tiers that previously collected the full pool reward as the fixed fee.</p>
+<p>Sub-block pools were untouched by CIP-0023 standalone but lose −151 ADA/ep here. The reason: <code>minPoolCost</code> is gone entirely, so every productive pool becomes a proportional-margin contributor — including the tiers that previously kept the full pool reward as the fixed fee.</p>
 <p><strong>Per-entity Δ by n-MPO bracket</strong> (column "Δ CIP-0023 paired" for reference):</p>
 <table>
 <thead>
@@ -1140,14 +1176,15 @@ window.MathJax = {
 </tbody>
 </table>
 <p><em>Table B.3 — Per-entity Δ by n-MPO bracket. The transfer is ~4× larger than CIP-0023 paired on the operator-fleet axis (200 K vs 50 K ADA/yr for the 11+ pool MPO bracket).</em></p>
-<p>Sub-reliable single-pool operators lose ~11 000 ADA/yr — roughly three months' operator cost floor stripped annually from the population the V2 §3.1 spec identifies as needing support. The same structural critique CIP-0023 paired faces, scaled up roughly 4×.</p>
+<p>Sub-reliable single-pool operators lose ~11 000 ADA/yr — roughly three months' operator cost floor stripped annually from the population the V2 §3.1 spec identifies as needing support.</p>
+<p>The structural critique is the same as CIP-0023 paired, scaled up roughly 4×.</p>
 <article class="sro-card sro-card-pro" data-group="1" id="b1-s1-margin-swap-inverts-operator-revenue-across-the-viability-line">
 <header class="sro-head">
 <span class="sro-badge sro-group-1">S1</span>
 <div class="sro-titles"><span class="sro-eyebrow">Synthesis 01 · 3 findings</span><h3 class="sro-title">Margin swap inverts operator revenue across the viability line</h3></div>
 <span class="sro-count">3 findings</span>
 </header>
-<p class="sro-abstract"><strong>The Margin swap inverts operator revenue across the viability line — more aggressively than CIP-0023.</strong> Delegator-side fee dispersion collapses but the equalisation is <em>funded</em> by a transfer from small operators to large ones, with magnitudes roughly doubled vs CIP-0023.</p>
+<p class="sro-abstract"><strong>Delegator dispersion collapses, but the equalisation is funded by a transfer from small pool operators to large ones — with magnitudes roughly twice CIP-0023's.</strong> What looks like a clean delegator-side fix on the surface is a revenue reallocation underneath, and the reallocation runs the wrong way for V2's small-pool target.</p>
 <div class="sro-findings-label">Findings</div>
 <ol class="sro-findings">
 <li class="sro-finding" data-group="1" id="s1-f2">
@@ -1173,7 +1210,8 @@ window.MathJax = {
 </li>
 </ol>
 </article>
-<p>CIP-0082 stages 3–4 raise <code>k</code> from 500 → 750 → 1000 without changing the reward formula. The standalone evaluation of that lever — its mechanical effect on the operator/delegator split, its delegator-market assumptions, and its structural limits — lives in <a href="k-parameter.html"><code>k-parameter.md</code></a>. Three synthesis findings established there:</p>
+<p>Stages 3–4 raise <code>k</code> from 500 → 750 → 1000 without changing the reward formula. The standalone evaluation of that lever — its mechanical effect on the split, its delegator-market assumptions, and its structural limits — lives in <a href="k-parameter.html"><code>k-parameter.md</code></a>.</p>
+<p>Three synthesis findings established there:</p>
 <table>
 <thead>
 <tr>
@@ -1207,7 +1245,7 @@ window.MathJax = {
 <div class="sro-titles"><span class="sro-eyebrow">Synthesis 02 · 2 findings</span><h3 class="sro-title">k-raises fire in the wrong regime</h3></div>
 <span class="sro-count">2 findings</span>
 </header>
-<p class="sro-abstract"><strong>Stages 3–4 fire in the wrong regime — k-raises absorb horizontally into the existing MPO fleet.</strong> With no stake-cap precondition and no redistribution back to the small-pool tail, stages 3–4 preserve the regressive regime the standalone k-analysis warns against.</p>
+<p class="sro-abstract"><strong>Stages 3–4 fire in the wrong regime — new pool slots get absorbed by the existing multi-pool fleet.</strong> With no stake-cap precondition between stage 2 and stage 3, and no redistribution back to small pools, the k-raises preserve the same regressive regime the standalone k-analysis warns against.</p>
 <div class="sro-findings-label">Findings</div>
 <ol class="sro-findings">
 <li class="sro-finding" data-group="2" id="s2-f1">
@@ -1226,7 +1264,8 @@ window.MathJax = {
 </li>
 </ol>
 </article>
-<p><strong>The package either needs to acquire a stake-cap layer between stage 2 and stage 3 or to remove stages 3–4</strong> — firing them in CIP-0082's proposed sequence preserves the regressive regime the standalone k-analysis warns against.</p>
+<h4 id="what-the-package-needs">What the package needs.</h4>
+<p>Either acquire a stake-cap layer between stage 2 and stage 3, or drop stages 3–4. Firing them in the proposed sequence preserves the same regressive regime the standalone k-analysis warns against.</p>
 <h2 id="appendix-c-origin-v2-mapping-and-references">Appendix C — Origin, V2 mapping, and references</h2>
 <h3 id="c1-identity-card">C.1. Identity card</h3>
 <table>
@@ -1441,6 +1480,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777960927"></script>
+<script src="assets/site.js?v=1777962490"></script>
 </body>
 </html>

@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777960927">
+<link rel="stylesheet" href="assets/site.css?v=1777962490">
 
 
 </head>
@@ -311,6 +311,15 @@ window.MathJax = {
 <p><strong>CIP-0037 · Dynamic Saturation Based on Pledge</strong> · 2021 · Casey Gibson · adds three parameters $(e, \ell, p_{100\%})$ · hard fork required · <strong>No-go as a standalone — same as CIP-0050 with a 20 % floor; same coupling to a fee-layer viability fix</strong></p>
 <p><a href="https://cips.cardano.org/cip/CIP-0037">official page</a> · <a href="https://github.com/cardano-foundation/CIPs/pull/163">PR #163</a></p>
 </blockquote>
+<p>CIP-0037 is the second stake-cap candidate in the bundle — same diagnostic target as CIP-0050 (POL.O2.F1: 78 % of staked ADA below 1 % pledge ratio; POL.O2.F2: pledge yield 0.68 %/yr against 2.3 %/yr passive), reached through a different primitive: a smooth saturation curve $\text{sat}(p) = \text{clamp}(\ell \cdot p, e \cdot \text{orig\_sat}, \text{orig\_sat})$ that grows with pledge, with a 20 % floor at the bottom and the V1 cap at the top.</p>
+<p><strong>CIP-0037 is CIP-0050 plus a floor — same primitive, with a softer landing at the bottom and three times the governance surface at the top.</strong> Read side-by-side at matched leverage, the slope and the ceiling are identical; the sole structural difference is the 20 % floor protecting pools below 13.49 M ADA.</p>
+<p>Three findings frame the verdict:</p>
+<ul>
+<li>The 20 % floor delivers a genuine soft landing — every pool below 13.49 M ADA is unaffected at zero pledge, where CIP-0050 would clip to zero.</li>
+<li>Above the floor, the ~108 k ADA absolute pledge hurdle is the same for a 2 M pool and a 50 M pool — capital-capability bias is sharper than CIP-0050's at the operator level.</li>
+<li>Three parameters, an ADA-denominated ceiling anchor, and a <code>k</code>-coupled curve all raise the governance surface against CIP-0050's dimensionless $L$.</li>
+</ul>
+<p><em>The instrument trades a sharper algebra for a softer floor — and pays for the floor with three calibration handles that drift with <code>k</code> and the ADA / USD rate.</em></p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <nav class="toc-nav">
 <ul>
@@ -345,26 +354,38 @@ window.MathJax = {
 </ul>
 </nav>
 <h2 id="1-what-cip-0037-proposes">1. What CIP-0037 proposes</h2>
-<p>CIP-0037 replaces the static V1 saturation cap (~67 M ADA) with a <strong>pledge-indexed saturation curve</strong>. Three regimes shape the curve: a <strong>20 % floor</strong> at zero or near-zero pledge (so a hollow pool still keeps a fifth of the V1 capacity), a <strong>linear slope</strong> in the mid-pledge range, and a <strong>ceiling</strong> at full pledge that recovers the V1 cap. Three parameters — $e$ (floor), $\ell$ (slope), and $p_{100\%}$ (ceiling anchor) — control the curve. HFC required; no re-registration.</p>
-<p>Read alongside <a href="cip-0050.html">CIP-0050</a>, the algebraic content is <strong>the same primitive</strong>: a linear-in-pledge slope capped at the V1 saturation. CIP-0050 leaves zero-pledge pools at zero reward; CIP-0037 keeps them at 20 %. <em>CIP-0037 is essentially CIP-0050 plus a floor.</em></p>
+<p>CIP-0037 replaces the static V1 saturation cap (~67 M ADA) with a saturation curve indexed on pledge. The curve has three regimes:</p>
+<ul>
+<li><strong>20 % floor</strong> at zero or near-zero pledge — a hollow pool still keeps a fifth of the V1 capacity.</li>
+<li><strong>Linear slope</strong> through the mid-pledge range.</li>
+<li><strong>Ceiling</strong> at full pledge that recovers the V1 cap.</li>
+</ul>
+<p>Three parameters control the curve — $e$ (floor), $\ell$ (slope), and $p_{100\%}$ (ceiling anchor). A hard fork is required; no pool re-registration.</p>
+<p>Read alongside <a href="cip-0050.html">CIP-0050</a>, the algebraic content is the same primitive: a linear-in-pledge slope capped at the V1 saturation. The only structural difference is the floor. CIP-0050 leaves zero-pledge pools at zero reward; CIP-0037 keeps them at 20 %. <em>CIP-0037 is CIP-0050 plus a floor.</em></p>
 <h2 id="2-the-problem-it-tries-to-fix">2. The problem it tries to fix</h2>
-<p>Same problem as CIP-0050, framed differently. The CIP's own quote (Casey Gibson, 2021):</p>
+<p>Same problem as CIP-0050, framed differently. The CIP's own framing (Casey Gibson, 2021):</p>
 <blockquote>
 <p><em>"An SPO might have a pledge of 30,000 ADA across 10 pools, while another SPO might have 1,000,000 pledge but only has 1 pool with a small amount of active stake. Since there is no technical advantage to having a high pledge, the meaning and purpose of a pledge is redundant."</em></p>
 </blockquote>
-<p>Today, <strong>78 % of staked ADA sits in pools with pledge ratio under 1 %</strong>, and <strong>42 of the 48 largest multi-pool operators forfeit the pledge bonus entirely</strong>. Operators have rationally decided pledge isn't worth the opportunity cost — pledged ADA yields ~0.68 %/yr vs ~2.3 %/yr from passive delegation. CIP-0037 makes per-pool reward capacity grow with pledge so that splitting a fixed pledge across many pools shrinks each pool's envelope — the MPO fleet-expansion incentive becomes self-defeating.</p>
+<p>The mainnet evidence behind that quote:</p>
+<ul>
+<li><strong>78 % of staked ADA</strong> sits in pools with pledge ratio under 1 %.</li>
+<li><strong>42 of the 48 largest multi-pool operators</strong> forfeit the pledge bonus.</li>
+<li>Pledged ADA yields ~0.68 %/yr; the same ADA placed as passive delegation yields ~2.3 %/yr.</li>
+</ul>
+<p>Operators have rationally decided pledge isn't worth the opportunity cost.</p>
+<p>CIP-0037 makes per-pool reward capacity grow with pledge. Splitting a fixed pledge across many pools shrinks each pool's envelope — the incentive to expand a multi-pool fleet becomes self-defeating.</p>
 <h2 id="3-verdict-three-reasons-it-fails-as-a-standalone">3. Verdict — three reasons it fails as a standalone</h2>
-<ol>
-<li>
-<p><strong>It works on the target, with a softer landing for the smallest pools.</strong> Pledge becomes a load-bearing input to the saturation cap (monotone slope), and zero-pledge pools keep 20 % of V1 capacity instead of dropping to zero. Sub-reliable tier and below are unaffected — a real advantage over CIP-0050's hard break. → <em><a href="#b1-s1-mechanical-sharpness-softened-by-the-20-floor">mechanical sharpness in detail</a></em></p>
-</li>
-<li>
-<p><strong>Same capital-capability bias as CIP-0050, harder above the Healthy tier.</strong> The pledge needed to leave the floor regime is <strong>108 k ADA absolute</strong> at reference parameters — the same threshold for a 2 M pool and a 50 M pool. The fraction of σ that must be self-pledged to escape the floor <em>falls</em> as the pool grows: ~5.4 % for a 2 M pool, ~0.22 % for a 50 M pool. Mechanically regressive — larger operators clear the floor at a smaller pledge ratio. Healthy-tier and above pools at the median retail pledge ratio (0.07 %) lose <strong>10–82 %</strong> of reward. → <em><a href="#b2-s2-capital-capability-bias">capital-capability bias in detail</a></em></p>
-</li>
-<li>
-<p><strong>3× governance surface + price-dependent calibration.</strong> Three parameters $(e, \ell, p_{100\%})$ vs CIP-0050's single dimensionless $L$. The ceiling anchor $p_{100\%} = 500\,000$ ADA is <strong>absolute, not a ratio</strong> — the fiat cost of full pledge shifts directly with the ADA/USD rate (\$50 k at \$0.10/ADA, \$500 k at \$1.00/ADA) and breaks V2 §4.3 price-robustness. Any <code>k</code> change reshapes the entire curve via $\text{orig\_sat} = \text{Supply}/k$ and forces joint recalibration. → <em><a href="#b3-s3-governance-price-robustness-entity-level-and-viability-gaps">governance, price-robustness, and viability gaps in detail</a></em></p>
-</li>
-</ol>
+<h4 id="1-the-20-floor-delivers-the-pledge-signal-with-a-soft-landing-but-only-below-1349-m-ada">1. The 20 % floor delivers the pledge signal with a soft landing — but only below 13.49 M ADA.</h4>
+<p>Pledge becomes a load-bearing input to the saturation cap, monotone on the slope regime, and the <strong>20 % floor protects every pool below 13.49 M ADA</strong> (Dormant, Sub-block, Sub-reliable, and the lower half of the Healthy tier) regardless of pledge level. Zero-pledge pools keep one fifth of V1 capacity instead of dropping to zero.</p>
+<p><em>That is a genuine advantage over CIP-0050's hard break — but it ends at the Healthy-tier midpoint.</em> → <a href="#b1-s1-mechanical-sharpness-softened-by-the-20-floor">The curve as pledge-as-signal — full mechanism</a></p>
+<h4 id="2-above-the-floor-capital-capability-discriminates-harder-as-the-pool-grows">2. Above the floor, capital capability discriminates harder as the pool grows.</h4>
+<p>The pledge needed to leave the floor is <strong>108 k ADA absolute</strong> — the same hurdle for a 2 M pool and a 50 M pool. The fraction of stake an operator must self-pledge to escape the floor therefore <em>falls</em> as the pool grows: ~5.4 % for a 2 M pool, ~0.22 % for a 50 M pool. Larger operators clear the floor on a smaller pledge ratio than smaller operators do — exactly inverse to V2 §3.4's concentration-reduction goal at the operator level.</p>
+<p>Healthy-tier and above pools at the median retail pledge ratio (0.07 %) lose <strong>10–82 % of reward</strong>. → <a href="#b2-s2-capital-capability-bias">Capital-capability bias — full quantification</a></p>
+<h4 id="3-three-parameters-an-ada-denominated-anchor-and-a-k-coupled-curve-triple-the-governance-surface">3. Three parameters, an ADA-denominated anchor, and a <code>k</code>-coupled curve triple the governance surface.</h4>
+<p>Three scalars to calibrate $(e, \ell, p_{100\%})$ against CIP-0050's single dimensionless $L$ — and the ceiling anchor $p_{100\%} = 500\,000$ ADA is <strong>absolute</strong>, so its fiat cost slides with the ADA/USD rate (\$50 k at \$0.10/ADA, \$500 k at \$1.00/ADA, \$2.5 M at \$5.00/ADA). Any <code>k</code> change reshapes the entire curve via $\text{orig\_sat} = \text{Supply}/k$, forcing joint recalibration of all three parameters.</p>
+<p><em>Where CIP-0050 is price-invariant by construction, CIP-0037 needs to be re-pegged on material price moves and re-tuned on every <code>k</code> change.</em> → <a href="#b3-s3-governance-price-robustness-entity-level-and-viability-gaps">Governance, price-robustness, and viability gaps</a></p>
+<p>The remainder of the document walks the proposal in three steps: §4 quantifies what changes on mainnet today; Appendix A unpacks the formula, the three regimes (floor, slope, ceiling), and the structural kinship with CIP-0050; Appendix B documents the per-finding evidence with verdict tags.</p>
 <h2 id="4-what-it-does-to-mainnet-today">4. What it does to mainnet today</h2>
 <figure class="md-figure"><img alt="CIP-0037 saturation curve — three regimes" src="solution-evaluation/pools-distribution/figures/cip0037_01_formula_regimes.png"></figure>
 <p><em>CIP-0037.4.1 — At reference parameters ($e = 0.2$, $\ell = 125$, $p_{100\%} = 500$ k): floor at </em><em>13.49 M ADA</em><em> below 108 k pledge, linear slope through the mid-range, ceiling at </em><em>67.44 M ADA</em><em> above ~540 k pledge.</em></p>
@@ -404,7 +425,13 @@ window.MathJax = {
 </tr>
 </tbody>
 </table>
-<p>The 20 % floor protects pools up to 13.49 M ADA — the lower-half of the Healthy tier and everything below it stays whole at zero pledge. Above that, the same absolute floor-exit threshold (~108 k ADA) applies regardless of pool size, so the harder a pool tries to grow on delegation, the more aggressively it gets clipped at the median retail pledge ratio. Stake-weighted, that puts the entire Custodial-by-extraction segment (2.04 B ADA, 21 % of productive stake — they cannot self-pledge by definition) and most of the Healthy-and-above retail population in the clipped zone.</p>
+<p>The 20 % floor protects pools up to 13.49 M ADA. The lower half of the Healthy tier and everything below it stays whole at zero pledge.</p>
+<p>Above 13.49 M, the same absolute pledge threshold (~108 k ADA) applies regardless of pool size. The harder a pool grows on delegation, the more aggressively the cap clips it at the median retail pledge ratio.</p>
+<p>Stake-weighted, that puts two populations in the clipped zone:</p>
+<ul>
+<li>The entire Custodial-by-extraction segment — 2.04 B ADA, 21 % of productive stake — which cannot self-pledge by definition.</li>
+<li>Most of the Healthy-and-above retail population.</li>
+</ul>
 <h2 id="5-read-more">5. Read more</h2>
 <ul>
 <li><strong>The proposal itself</strong> — <a href="https://cips.cardano.org/cip/CIP-0037">CIP-0037 on cardano-cips.org</a></li>
@@ -796,14 +823,14 @@ final_sat = max(new_sat, orig_sat);</code></p>
 </table>
 <p>At reference parameters, a 16-pool MPO fleet with 1 M pledge actually <strong>gains</strong> fleet capacity vs single-pool (all 16 hit the floor) — the regressive tail the CIP aims to foreclose. The penalty is only active while some pools sit on the slope regime; once enough pools cross into the floor, the splitting penalty vanishes. The CIP-0050 property "pool-splitting revenue-neutral" is <strong>strictly tighter</strong> than CIP-0037's slope-regime penalty.</p>
 <h2 id="appendix-b-findings">Appendix B — Findings</h2>
-<p>CIP evaluations use a three-level taxonomy mirroring the diagnostic's <code>SUBFLOW.O&lt;n&gt;.F&lt;m&gt;</code>: <strong>S<n></strong> = synthesis-level verdict statement (the title of each card below); <strong>F<m></strong> = quantified finding listed inside the card. Each F is tagged <strong>[D] Delivers · [R] Regresses · [B] Blind spot</strong>. Code prefix <code>CIP-0037.</code> omitted on the rows below — the page is for <code>CIP-0037</code> throughout. Sort within each card: regressions and blind spots before deliveries. Click the count chip on the right of any card header to fold its findings list.</p>
+<p>Three cards organise the analysis: what the curve actually delivers (S1), the capital-capability bias from the Healthy tier upward (S2), and the governance, price-robustness, and entity-level gaps unique to this parameterisation (S3).</p>
 <article class="sro-card sro-card-pro" data-group="1" id="b1-s1-mechanical-sharpness-softened-by-the-20-floor">
 <header class="sro-head">
 <span class="sro-badge sro-group-1">S1</span>
 <div class="sro-titles"><span class="sro-eyebrow">Synthesis 01 · 3 findings · the design-strength row</span><h3 class="sro-title">Mechanical sharpness, softened by the 20 % floor</h3></div>
 <span class="sro-count">3 findings</span>
 </header>
-<p class="sro-abstract"><strong>Mechanically sharp on pledge-as-signal, softened at the bottom by the 20 % floor.</strong> Three [D] findings flow directly from the formula — they describe the slope regime's algebraic properties, not behavioural claims.</p>
+<p class="sro-abstract"><strong>What the curve actually delivers: pledge becomes a load-bearing input, the smallest pools stay protected, and fleet-splitting incurs a penalty on the slope regime.</strong> All three properties follow directly from the formula.</p>
 <div class="sro-findings-label">Findings</div>
 <ol class="sro-findings">
 <li class="sro-finding" data-group="1" id="s1-f1">
@@ -829,14 +856,16 @@ final_sat = max(new_sat, orig_sat);</code></p>
 </li>
 </ol>
 </article>
-<p><strong>Caveat on S1.F3 relative to CIP-0050.</strong> CIP-0050 makes pool-splitting <strong>strictly revenue-neutral</strong> (total reward cap across $N$ pools = single-pool cap for any pledge budget). CIP-0037 makes it revenue-neutral <em>only above the floor</em> — below the floor, a split fleet actually gains fleet capacity (every pool hits the 20 % floor). The hard-cap property of CIP-0050 is structurally tighter on §3.4 pool-level.</p>
+<h4 id="where-the-splitting-penalty-stops-working">Where the splitting penalty stops working.</h4>
+<p>CIP-0050 makes pool-splitting strictly revenue-neutral: total reward cap across $N$ pools equals the single-pool cap, for any pledge budget.</p>
+<p>CIP-0037 makes it revenue-neutral <em>only above the floor</em>. Below the floor, a split fleet actually gains capacity — every pool hits the 20 % floor and contributes 13.49 M each. CIP-0050's hard-cap property is structurally tighter on the pool-level concentration target.</p>
 <article class="sro-card sro-card-pro" data-group="2" id="b2-s2-capital-capability-bias">
 <header class="sro-head">
 <span class="sro-badge sro-group-2">S2</span>
 <div class="sro-titles"><span class="sro-eyebrow">Synthesis 02 · 4 findings</span><h3 class="sro-title">Capital-capability bias</h3></div>
 <span class="sro-count">4 findings</span>
 </header>
-<p class="sro-abstract"><strong>Healthy-tier and above clipped at the median retail pledge ratio.</strong> The reform softens at the very bottom via the 20 % floor, but from the Healthy tier upward the discrimination is by capital capability — same as CIP-0050.</p>
+<p class="sro-abstract"><strong>The 20 % floor protects the bottom; the Healthy tier and above are clipped by the median retail pledge ratio.</strong> Once a pool grows past 13.49 M ADA, the same absolute pledge threshold (~108 k ADA) applies regardless of size — so the cap discriminates by capital capability, same as CIP-0050.</p>
 <div class="sro-findings-label">Findings</div>
 <ol class="sro-findings">
 <li class="sro-finding" data-group="2" id="s2-f1">
@@ -869,14 +898,17 @@ final_sat = max(new_sat, orig_sat);</code></p>
 </li>
 </ol>
 </article>
-<p><strong>Composite reading of S2.</strong> The 20 % floor softens CIP-0037 at the very bottom of the distribution (Sub-reliable and below) — a real advantage over CIP-0050's hard break. But from the Healthy tier upward, CIP-0037 clips <strong>even more harshly than a naive reading of the floor suggests</strong>, because the pool-size-independent floor-exit threshold means mid-tier retail pools need absolute pledge levels most operators do not have. The discrimination is by capital capability, same as CIP-0050.</p>
+<h4 id="reading-the-four-findings-together">Reading the four findings together.</h4>
+<p>The 20 % floor softens CIP-0037 at the very bottom — Sub-reliable pools and below stay whole even at zero pledge. That is a real advantage over CIP-0050's hard break.</p>
+<p>From the Healthy tier upward, the picture inverts. The floor-exit threshold of ~108 k ADA is the same absolute amount for a 2 M pool and a 50 M pool. Mid-tier retail pools therefore need absolute pledge levels most operators simply do not have, and the cut bites harder than the floor's headline 20 % suggests.</p>
+<p>The discrimination is by capital capability — same as CIP-0050.</p>
 <article class="sro-card sro-card-pro" data-group="3" id="b3-s3-governance-price-robustness-entity-level-and-viability-gaps">
 <header class="sro-head">
 <span class="sro-badge sro-group-3">S3</span>
 <div class="sro-titles"><span class="sro-eyebrow">Synthesis 03 · 4 findings</span><h3 class="sro-title">Governance, price-robustness, entity-level, and viability gaps</h3></div>
 <span class="sro-count">4 findings</span>
 </header>
-<p class="sro-abstract"><strong>Governance surface, price-robustness, and entity-level gaps compound with the S2 bias.</strong> Three structural costs unique to CIP-0037's parameterisation, plus the small-pool viability risk shared with CIP-0050.</p>
+<p class="sro-abstract"><strong>Three governance costs unique to CIP-0037's parameterisation, plus the same small-pool viability risk as CIP-0050.</strong> Three parameters instead of one, an absolute pledge anchor that drifts with the ADA/USD rate, the same entity-level concentration left untouched, and a softer but real version of the small-pool viability risk.</p>
 <div class="sro-findings-label">Findings</div>
 <ol class="sro-findings">
 <li class="sro-finding" data-group="3" id="s3-f1">
@@ -909,8 +941,20 @@ final_sat = max(new_sat, orig_sat);</code></p>
 </li>
 </ol>
 </article>
-<p><strong>Composite reading.</strong> CIP-0037 and CIP-0050 share the same structural critique: correct target (§3.2 pledge signal), correct layer (reward-distribution pre-split), but capital-capability bias + §3.1 small-pool viability risk + entity-level §3.4 gap. CIP-0037's distinguishing features are (i) a genuine softening at the very bottom via the 20 % floor, (ii) a structural cost in governance surface (3 parameters) and price-robustness (absolute anchor).</p>
-<p><strong>Precondition for constructive deployment.</strong> Same as for CIP-0050: a §3.1 fee-layer viability instrument must be active first to protect the retail population most exposed to σ' clipping. Deployment order: (i) fee-layer viability secures §3.1 + §3.3; (ii) stake-cap instrument (CIP-0037 <em>or</em> CIP-0050) activates §3.2 + pool-level §3.4; (iii) <code>k</code> calibration leverages consolidation.</p>
+<h4 id="putting-the-cards-together">Putting the cards together.</h4>
+<p>CIP-0037 shares the same structural critique as CIP-0050: correct target (the pledge signal), correct layer (reward-distribution pre-split), but with capital-capability bias, small-pool viability risk, and an entity-level concentration gap.</p>
+<p>What CIP-0037 does differently:</p>
+<ul>
+<li><strong>Genuine softening at the very bottom.</strong> The 20 % floor protects all pools below 13.49 M ADA, regardless of pledge.</li>
+<li><strong>Higher governance cost.</strong> Three parameters to calibrate, plus an absolute anchor that drifts with the ADA/USD rate.</li>
+</ul>
+<h4 id="deployment-order-it-needs">Deployment order it needs.</h4>
+<p>Same precondition as CIP-0050: a fee-layer viability instrument must be active first to protect the retail population most exposed to clipping. The sequence:</p>
+<ol>
+<li>Fee-layer viability instrument first — secures small-pool revenue and delegator yield.</li>
+<li>Stake-cap instrument (CIP-0037 <em>or</em> CIP-0050, not both).</li>
+<li><code>k</code> recalibration last, leveraging the consolidation the stake-cap induces.</li>
+</ol>
 <h2 id="appendix-c-origin-v2-mapping-and-references">Appendix C — Origin, V2 mapping, and references</h2>
 <h3 id="c1-identity-card">C.1. Identity card</h3>
 <table>
@@ -1127,6 +1171,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777960927"></script>
+<script src="assets/site.js?v=1777962490"></script>
 </body>
 </html>

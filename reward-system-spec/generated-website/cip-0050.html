@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777960927">
+<link rel="stylesheet" href="assets/site.css?v=1777962490">
 
 
 </head>
@@ -311,6 +311,15 @@ window.MathJax = {
 <p><strong>CIP-0050 · Pledge Leverage-Based Staking Rewards</strong> · 2022, updated 2025 · Liesenfelt et al. · adds one parameter <code>L</code> · hard fork required · <strong>No-go as a standalone — coherent only paired with a fee-layer viability floor</strong></p>
 <p><a href="https://cips.cardano.org/cip/CIP-0050">official page</a> · <a href="https://github.com/cardano-foundation/CIPs/pull/242">original PR #242</a> · <a href="https://github.com/cardano-foundation/CIPs/pull/1042">2025 update PR #1042</a></p>
 </blockquote>
+<p>CIP-0050 attacks the diagnostic's central pledge pathology — <em>95.6 % of the pledge-bonus budget returns to reserve unclaimed</em> (POL.O1.F3), 78 % of staked ADA sits in pools with pledge ratio below 1 % (POL.O2.F1), and pledged ADA earns 0.68 %/yr against 2.3 %/yr passive (POL.O2.F2). The proposal converts pledge from a 22 % yield nudge into a hard cap on reward-eligible stake: a pool collects rewards on at most $L \cdot p$, with $L = 100$ the recommended endpoint.</p>
+<p><strong>CIP-0050 is the sharpest pledge-as-signal lever in the candidate bundle, suboptimal as a standalone — coherent only paired with a fee-layer viability floor.</strong> The cap delivers two structural properties by algebra (zero pledge → zero reward; pool-splitting revenue-neutral), but at $L = 100$ it clips <strong>~84 % of productive stake</strong> and discriminates by capital capability rather than by operator quality.</p>
+<p>Three findings frame the verdict:</p>
+<ul>
+<li>The cap is mechanically sharp — both design properties hold as theorems, not predictions.</li>
+<li>~93 % of median retail pool reward is clipped at $L = 100$, and the custodial CEX / IVaaS segment (21 % of productive stake) collapses to zero by construction.</li>
+<li>The largest concentration on mainnet (10 entities, 1.59 B ADA) sits above the cap untouched; the small-pool tail bleeds out below.</li>
+</ul>
+<p><em>The instrument names the right target and lands cleanly on it — but lands on a population the V2 spec is supposed to protect, not discipline.</em></p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <nav class="toc-nav">
 <ul>
@@ -348,21 +357,34 @@ window.MathJax = {
 </ul>
 </nav>
 <h2 id="1-what-cip-0050-proposes">1. What CIP-0050 proposes</h2>
-<p>CIP-0050 makes pledge a <strong>hard cap</strong> on what each pool can earn. New rule: a pool collects rewards on at most <strong>L × the operator's own pledge</strong>, on top of the existing V1 saturation cap. Pools with no pledge collapse to zero reward; splitting one pool into many doesn't change the total. A single dimensionless parameter $L$ (the proposal targets $L = 100$); HFC required for the new ledger variable; no re-registration. <strong>It is the sharpest pledge-as-signal proposal in the candidate bundle.</strong></p>
+<p>CIP-0050 turns pledge into a hard cap on pool earnings. The new rule: a pool collects rewards on at most $L$ times its operator's own pledge, on top of the existing saturation cap.</p>
+<p>Three consequences fall out immediately:</p>
+<ul>
+<li>A pool with zero pledge earns zero reward.</li>
+<li>Splitting one pool into many leaves the total reward cap unchanged.</li>
+<li>Pledge becomes a binding constraint on what the protocol pays out.</li>
+</ul>
+<p>The instrument adds a single dimensionless parameter $L$ (the proposal targets $L = 100$). It needs a hard fork to install the new ledger variable; no pool re-registration. <strong>It is the sharpest pledge-as-signal proposal in the candidate bundle.</strong></p>
 <h2 id="2-the-problem-it-tries-to-fix">2. The problem it tries to fix</h2>
-<p>Today, pledge has almost no effect on what an operator earns. <strong>78 % of staked ADA sits in pools with pledge ratio under 1 %</strong>; <strong>42 of the 48 largest multi-pool operators forfeit the pledge bonus entirely</strong>. Operators have rationally decided pledge isn't worth the opportunity cost — pledged ADA yields ~0.68 %/yr, while the same ADA placed as passive delegation yields ~2.3 %/yr. The reward formula prices pledge as a soft 22 % nudge, and the operator population has chosen to ignore it. CIP-0050 turns that nudge into a constraint.</p>
+<p>Today, pledge barely affects what an operator earns. The mainnet evidence is clear:</p>
+<ul>
+<li><strong>78 % of staked ADA</strong> sits in pools with pledge ratio under 1 %.</li>
+<li><strong>42 of the 48 largest multi-pool operators</strong> forfeit the pledge bonus entirely.</li>
+<li>Pledged ADA yields ~0.68 %/yr; the same ADA placed as passive delegation yields ~2.3 %/yr.</li>
+</ul>
+<p>Operators have rationally chosen to ignore the pledge bonus — it costs them more than it pays. The reward formula prices pledge as a soft 22 % nudge, and the operator population treats it as cosmetic.</p>
+<p>CIP-0050 converts that nudge into a constraint: no pledge, no reward.</p>
 <h2 id="3-verdict-three-reasons-it-fails-as-a-standalone">3. Verdict — three reasons it fails as a standalone</h2>
-<ol>
-<li>
-<p><strong>It works on what it targets.</strong> Zero-pledge pools earn zero reward; pool-splitting becomes revenue-neutral. Pledge becomes binding on the reward-eligible stake. → <em><a href="#b1-s1-mechanical-sharpness-on-pledge-as-signal">mechanical sharpness in detail</a></em></p>
-</li>
-<li>
-<p><strong>It penalises capability, not quality.</strong> At $L = 100$, the median retail pool — pledge ratio 0.07 % — loses <strong>~93 %</strong> of its reward, regardless of how reliably it produces blocks. The population most clipped is the one that <em>cannot</em> afford to self-pledge, not the one V2 was meant to discipline. The custodial CEX/IVaaS segment (21 % of productive stake) cannot self-pledge at all and collapses to zero reward. → <em><a href="#b2-s2-capital-capability-bias">capital-capability bias in detail</a></em></p>
-</li>
-<li>
-<p><strong>It misses the entity-level concentration and risks the small-pool tail.</strong> The 10 largest custodial-by-pledge entities (1.59 B ADA — the largest stake concentration on mainnet) already self-pledge well above the cap and stay untouched. Meanwhile, the small-pool retail tail gets clipped. Without a companion viability fix on the fee layer, CIP-0050 accelerates exactly the small-pool attrition the V2 spec is meant to prevent. → <em><a href="#b3-s3-entity-level-concentration-gap-and-small-pool-viability-risk">entity-level gap and viability risk in detail</a></em></p>
-</li>
-</ol>
+<h4 id="1-the-cap-is-mechanically-sharp-on-pledge-as-signal-zero-pledge-zero-reward">1. The cap is mechanically sharp on pledge-as-signal — zero pledge, zero reward.</h4>
+<p>A zero-pledge pool earns zero reward; a fleet split across $N$ pools earns the same total cap as one. Both properties hold by algebra, not by behavioural assumption — pledge becomes a binding constraint on the reward-eligible stake.</p>
+<p><em>This is the sharpest pledge-as-signal expression in the candidate bundle</em>, and the only one that makes pool-splitting strictly revenue-neutral at the pool level. → <a href="#b1-s1-mechanical-sharpness-on-pledge-as-signal">The cap as pledge-as-signal — full mechanism</a></p>
+<h4 id="2-93-of-median-retail-pool-reward-is-clipped-by-capital-not-by-network-contribution">2. ~93 % of median retail pool reward is clipped — by capital, not by network contribution.</h4>
+<p>At $L = 100$ and the stake-weighted-median retail pledge ratio of <strong>0.07 %</strong>, the cap binds at $0.07\sigma$ and pool reward drops to <strong>~7 %</strong> of its V1 baseline; <strong>78 % of staked ADA</strong> sits in pools below the 1 % compliance threshold. The custodial CEX / IVaaS segment — <strong>21 % of productive stake</strong> — cannot self-pledge at all and collapses to zero reward by construction.</p>
+<p>The cap draws its line by the operator's capital capability, not by how reliably the pool produces blocks or serves delegators. → <a href="#b2-s2-capital-capability-bias">Capital-capability bias — full quantification</a></p>
+<h4 id="3-the-largest-concentration-on-mainnet-sits-above-the-cap-the-small-pool-tail-bleeds-out-below">3. The largest concentration on mainnet sits above the cap; the small-pool tail bleeds out below.</h4>
+<p>The 10 largest custodial-by-pledge entities — <strong>1.59 B ADA</strong>, the single largest stake concentration on mainnet — already self-pledge well above any reasonable $L \cdot p$ threshold and remain entirely unconstrained. The retail small-pool tail (POL.O6.F2: 78 % of single-pool stake at pledge ratio &lt; 2 %) absorbs the clipping with both operator take and delegator ROS falling proportionally, because the fee-layer split is untouched.</p>
+<p><em>Without a companion viability fix on the fee layer, CIP-0050 accelerates exactly the small-pool attrition the V2 spec is meant to prevent.</em> → <a href="#b3-s3-entity-level-concentration-gap-and-small-pool-viability-risk">Entity-level gap and small-pool viability risk</a></p>
+<p>The remainder of the document walks the proposal in three steps: §4 quantifies what changes on mainnet today; Appendix A unpacks the formula, the three binding regimes, and the four operator response paths; Appendix B documents the per-finding evidence with verdict tags.</p>
 <h2 id="4-what-it-does-to-mainnet-today">4. What it does to mainnet today</h2>
 <figure class="md-figure"><img alt="Network-wide partition under CIP-0050 at L = 100" src="solution-evaluation/pools-distribution/figures/cip0050_06_network_partition.png"></figure>
 <p><em>CIP-0050.4.1 — At the proposal's recommended $L = 100$, </em><em>~18 B ADA — 84 % of productive stake — sits in pools that would be clipped or collapsed</em><em>. Red = clipped, green = unaffected, orange = mixed.</em></p>
@@ -402,7 +424,9 @@ window.MathJax = {
 </tr>
 </tbody>
 </table>
-<p>The asymmetry — 84 % of productive stake clipped or collapsed at the long-run target — is what the CIP's staged ramp ($L = 10\,000 \to 1\,000 \to 100$) tries to soften. The ramp implicitly bets that operators raise pledge between steps; the diagnostic finds little evidence that this happens, and the 2.04 B custodial-by-extraction segment cannot pledge at all by definition.</p>
+<p>84 % of productive stake clipped or collapsed at the long-run target is the headline asymmetry.</p>
+<p>The CIP's staged ramp ($L = 10\,000 \to 1\,000 \to 100$) is meant to soften this. The ramp bets that operators raise pledge between steps.</p>
+<p>The diagnostic finds little evidence that operators do this. And the 2.04 B custodial-by-extraction segment cannot pledge at all — they hold custodied retail funds, not their own capital.</p>
 <h2 id="5-read-more">5. Read more</h2>
 <ul>
 <li><strong>The proposal itself</strong> — <a href="https://cips.cardano.org/cip/CIP-0050">CIP-0050 on cardano-cips.org</a></li>
@@ -1056,14 +1080,14 @@ window.MathJax = {
 </table>
 <p>The ramp's implicit assumption: each step gives operators time to adjust their pledge upward before the next step. The reform rests on the assumption that this adjustment occurs — otherwise the system moves through successive regressive states. Whether the adjustment actually happens is the empirical question analysed in <a href="#b2-s2-capital-capability-bias">Appendix B.2</a>.</p>
 <h2 id="appendix-b-findings">Appendix B — Findings</h2>
-<p>CIP evaluations use a three-level taxonomy mirroring the diagnostic's <code>SUBFLOW.O&lt;n&gt;.F&lt;m&gt;</code>: <strong>S<n></strong> = synthesis-level verdict statement (the title of each card below); <strong>F<m></strong> = quantified finding listed inside the card. Each F is tagged <strong>[D] Delivers · [R] Regresses · [B] Blind spot</strong>. Code prefix <code>CIP-0050.</code> omitted on the rows below — the page is for <code>CIP-0050</code> throughout. Sort within each card: regressions and blind spots before deliveries. Click the count chip on the right of any card header to fold its findings list.</p>
+<p>Three cards below organise the analysis: what the cap actually delivers (S1), why it discriminates by capital capability (S2), and the gaps it leaves on entity-level concentration and small-pool viability (S3).</p>
 <article class="sro-card sro-card-pro" data-group="1" id="b1-s1-mechanical-sharpness-on-pledge-as-signal">
 <header class="sro-head">
 <span class="sro-badge sro-group-1">S1</span>
 <div class="sro-titles"><span class="sro-eyebrow">Synthesis 01 · 2 findings · the design-strength row</span><h3 class="sro-title">Mechanical sharpness on pledge-as-signal</h3></div>
 <span class="sro-count">2 findings</span>
 </header>
-<p class="sro-abstract"><strong>Mechanically sharp on pledge-as-signal: zero-pledge hard break + revenue-neutral pool-splitting.</strong> The two [D] findings are the structural successes of the instrument and flow directly from the formula — they hold as algebraic identities, not behavioural claims.</p>
+<p class="sro-abstract"><strong>What the instrument actually delivers: zero-pledge pools earn nothing, pool-splitting is revenue-neutral.</strong> Both properties follow directly from the formula — they hold as algebra, not as predictions about how operators will react.</p>
 <div class="sro-findings-label">Findings</div>
 <ol class="sro-findings">
 <li class="sro-finding" data-group="1" id="s1-f1">
@@ -1082,14 +1106,14 @@ window.MathJax = {
 </li>
 </ol>
 </article>
-<p>These two properties are why CIP-0050 is the <strong>sharpest pledge-as-signal instrument</strong> in the bundle. They do not depend on behaviour; they hold as algebraic identities.</p>
+<p>Both properties hold by algebra, not by assumption about how operators will behave. That is what makes CIP-0050 the sharpest pledge-as-signal instrument in the bundle.</p>
 <article class="sro-card sro-card-pro" data-group="2" id="b2-s2-capital-capability-bias">
 <header class="sro-head">
 <span class="sro-badge sro-group-2">S2</span>
 <div class="sro-titles"><span class="sro-eyebrow">Synthesis 02 · 3 findings</span><h3 class="sro-title">Capital-capability bias</h3></div>
 <span class="sro-count">3 findings</span>
 </header>
-<p class="sro-abstract"><strong>The reward rule discriminates by the operator's capacity to self-pledge, not by operator quality.</strong> The design is sharp on §3.2 but penalises populations by their capital capability, not by their network contribution.</p>
+<p class="sro-abstract"><strong>The cap discriminates by capital capability, not operator quality.</strong> The design is mechanically clean on the pledge-signal target — but a pool's clipping fate depends on whether the operator has liquid capital to lock, not on how well the pool is run.</p>
 <div class="sro-findings-label">Findings</div>
 <ol class="sro-findings">
 <li class="sro-finding" data-group="2" id="s2-f1">
@@ -1115,14 +1139,21 @@ window.MathJax = {
 </li>
 </ol>
 </article>
-<p><strong>Composite reading of S2.</strong> CIP-0050 penalises two populations that cannot respond (custodial + sub-saturation retail) and one that has <em>chosen</em> not to respond (saturation-scale MPOs). The discrimination is by capital capability, not by operator quality or network contribution. A pool can produce blocks reliably, serve delegators well, and operate with integrity — and still be clipped to a fraction of its reward if its operator does not have the capital to self-pledge above 1 %.</p>
+<h4 id="reading-the-three-findings-together">Reading the three findings together.</h4>
+<p>CIP-0050 penalises three groups for three different reasons:</p>
+<ul>
+<li><strong>Custodial entities (CEX/IVaaS)</strong> — <em>cannot</em> pledge, the funds aren't theirs.</li>
+<li><strong>Sub-saturation retail</strong> — <em>cannot afford</em> to pledge enough, the capital just isn't there.</li>
+<li><strong>Saturation-scale multi-pool fleets</strong> — <em>have chosen</em> not to pledge, because pledge is a worse use of capital than passive delegation.</li>
+</ul>
+<p>The line drawn through the operator population is capital capability, not operator quality. A pool can produce blocks reliably, serve delegators well, and operate with integrity — and still be clipped to a fraction of its reward if its operator does not have liquid capital to lock above 1 % of pool stake.</p>
 <article class="sro-card sro-card-pro" data-group="3" id="b3-s3-entity-level-concentration-gap-and-small-pool-viability-risk">
 <header class="sro-head">
 <span class="sro-badge sro-group-3">S3</span>
 <div class="sro-titles"><span class="sro-eyebrow">Synthesis 03 · 3 findings</span><h3 class="sro-title">Entity-level concentration gap and small-pool viability risk</h3></div>
 <span class="sro-count">3 findings</span>
 </header>
-<p class="sro-abstract"><strong>Entity-level §3.4 concentration gap and §3.1 viability risk to the retail small-pool tail.</strong> Two structural gaps in the reform's coverage, plus one blind spot on the delegator-response channel.</p>
+<p class="sro-abstract"><strong>Two gaps the reform leaves uncovered, plus one assumption it cannot verify.</strong> The biggest stake-concentration on mainnet sits unconstrained, the small-pool tail loses revenue with no compensating channel, and the migration story depends on delegator behaviour that empirically does not happen.</p>
 <div class="sro-findings-label">Findings</div>
 <ol class="sro-findings">
 <li class="sro-finding" data-group="3" id="s3-f1">
@@ -1148,8 +1179,18 @@ window.MathJax = {
 </li>
 </ol>
 </article>
-<p><strong>Composite reading.</strong> CIP-0050 is mechanically sharp on the target it names (pledge-as-signal, §3.2 + pool-level §3.4). It is not, on its own, a viability instrument — and under current mainnet conditions it creates viability risk for the retail small-pool population. A coherent V2 deployment would pair CIP-0050 with an active §3.1 fee-layer viability floor that protects the low-pledge small-pool tail <em>before</em> CIP-0050's cap begins to bind, not after.</p>
-<p><strong>Precondition for constructive deployment.</strong> CIP-0050 is coherent as step 2 of a three-step sequence: (i) fee-layer viability instrument secures §3.1 + §3.3; (ii) CIP-0050 activates §3.2 + pool-level §3.4; (iii) <code>k</code> calibration leverages the MPO-consolidation CIP-0050 induces. Deployment in any other order moves the productive landscape through a regressive intermediate state.</p>
+<h4 id="putting-the-three-cards-together">Putting the three cards together.</h4>
+<p>CIP-0050 is mechanically sharp on the target it names: pledge as a binding signal, plus pool-level concentration relief.</p>
+<p>It is not a viability instrument. Under current mainnet conditions it creates viability risk for the retail small-pool population.</p>
+<p>A coherent deployment pairs CIP-0050 with a fee-layer viability floor that protects low-pledge small pools <strong>before</strong> the cap begins to bite — not after.</p>
+<h4 id="the-deployment-sequence-that-makes-it-work">The deployment sequence that makes it work.</h4>
+<p>CIP-0050 fits as step 2 of three:</p>
+<ol>
+<li>Fee-layer viability instrument first — secures small-pool revenue and delegator yield.</li>
+<li>CIP-0050 activates — pledge becomes binding, pool-splitting becomes revenue-neutral.</li>
+<li><code>k</code> recalibration — leverages the consolidation CIP-0050 induces.</li>
+</ol>
+<p>Any other order moves the productive landscape through a regressive intermediate state.</p>
 <h2 id="appendix-c-origin-v2-mapping-and-references">Appendix C — Origin, V2 mapping, and references</h2>
 <h3 id="c1-identity-card">C.1. Identity card</h3>
 <table>
@@ -1364,6 +1405,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777960927"></script>
+<script src="assets/site.js?v=1777962490"></script>
 </body>
 </html>

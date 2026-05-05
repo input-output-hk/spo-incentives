@@ -68,17 +68,19 @@ The remainder of the document follows the pipeline stage by stage: [the reward f
       - [1.3.3.1. Guarantee operator viability across the productive population](#1331-guarantee-operator-viability-across-the-productive-population)
       - [1.3.3.2. Restore a competitive delegator yield](#1332-restore-a-competitive-delegator-yield)
 - [2. The Player Populations](#2-the-player-populations)
-  - [2.1. The Staking Populations](#21-the-staking-populations)
+  - [2.1. Pool Operators](#21-pool-operators)
     - [2.1.1. Overview](#211-overview)
-    - [2.1.3. Problem Induction](#213-problem-induction)
-      - [2.1.3.1. The operator population is highly concentrated and stable](#2131-the-operator-population-is-highly-concentrated-and-stable)
-      - [2.1.3.2. The stake-holder population is a frozen power law](#2132-the-stake-holder-population-is-a-frozen-power-law)
-      - [2.1.3.3. The non-participant population](#2133-the-non-participant-population)
-  - [2.2. Transaction Submitters](#22-transaction-submitters)
+    - [2.1.3. Problem Induction → The pledge mechanism cannot reach the operator population](#213-problem-induction-the-pledge-mechanism-cannot-reach-the-operator-population)
+  - [2.2. Delegators](#22-delegators)
     - [2.2.1. Overview](#221-overview)
-    - [2.2.3. Problem Induction](#223-problem-induction)
-      - [2.2.3.1. The fee input is structurally insufficient](#2231-the-fee-input-is-structurally-insufficient)
-      - [2.2.3.2. The fee-generating population must expand for the pipeline to survive](#2232-the-fee-generating-population-must-expand-for-the-pipeline-to-survive)
+    - [2.2.3. Problem Induction → The yield signal does not drive delegation](#223-problem-induction-the-yield-signal-does-not-drive-delegation)
+  - [2.3. Non-Participants](#23-non-participants)
+    - [2.3.1. Overview](#231-overview)
+    - [2.3.3. Problem Induction → The reward curve has a 0.37% recruitment ceiling](#233-problem-induction-the-reward-curve-has-a-037-recruitment-ceiling)
+  - [2.4. Transaction Submitters](#24-transaction-submitters)
+    - [2.4.1. Overview](#241-overview)
+    - [2.4.3. Problem Induction → Funders and beneficiaries don't overlap, and the gap is widening](#243-problem-induction-funders-and-beneficiaries-dont-overlap-and-the-gap-is-widening)
+  - [2.5. Synthesis — The Four Populations as a Coupled System](#25-synthesis-the-four-populations-as-a-coupled-system)
 - [3. The ₳ Price Constraint](#3-the-price-constraint)
   - [3.1. Overview](#31-overview)
   - [3.2. The structural requirement](#32-the-structural-requirement)
@@ -1193,62 +1195,30 @@ END SANDBOX -->
 
 # 2. The Player Populations
 
-§1 follows the reward through the pipeline — from epoch budget to pool allocation to operator/delegator split — and documents where the mechanism diverges from its design intent. But the pipeline operates on *populations*:
+§1 follows the reward through the pipeline — from epoch budget to pool allocation to operator/delegator split — and documents where the mechanism diverges from its design intent. But the pipeline operates on **populations**, and each population brings a structural condition no parameter tuning of the current reward curve can move:
 
-- **operators** who register pools
-- **delegators** who fund them
-- **non-participants** whose absence shapes the playing field as much as any parameter
-- **transaction submitters** whose fees are the pipeline's only post-reserve revenue source
+- **operators** ([§2.1](#21-pool-operators)) — concentrated, segmented, mostly architecturally precluded from pledging
+- **delegators** ([§2.2](#22-delegators)) — frozen power law, price-insensitive, drift toward size and visibility rather than commitment
+- **non-participants** ([§2.3](#23-non-participants)) — 39.8% of supply unstaked, 39.4% structurally unreachable by reward design
+- **transaction submitters** ([§2.4](#24-transaction-submitters)) — shrinking and concentrating, generating fees from constituencies the mechanism does not reward
 
-This section maps these four populations.
+Each population gets its own arc — Overview → Mainnet Observations → Problem Induction. The closing [synthesis](#25-synthesis-the-four-populations-as-a-coupled-system) reads the four populations together and names what V2 must address as a coordinated system rather than population by population.
 
-The evidence base is the companion [*Staking Census*](sub-flows/census/mainnet-analysis/README.md), built from db-sync at epoch 623.
+The evidence base is the companion [*Staking Census*](sub-flows/census/mainnet-analysis/README.md) — db-sync at epoch 623 (staking snapshot), epoch 627 (submitter snapshot). Entity attribution clusters by registered owner key and is augmented with manual identification of known operators; concentration figures are therefore **lower bounds**.
 
-> Where §1 asks "how does the reward flow work, and where does it break?", §2 asks "who are the actors, how do they behave, and what structural dynamics constrain them?"
+> Where §1 asks *"how does the reward flow work, and where does it break?"*, §2 asks *"who are the actors, what structural conditions constrain them, and which of those conditions cannot be moved by reward-curve reform alone?"*
 
-The section is split in two: [The Staking Populations](#21-the-staking-populations) covers the three staking populations (operators, delegators, non-participants), and [Transaction Submitters](#22-transaction-submitters) covers transaction submitters — a population orthogonal to the staking roles but central to the pipeline's sustainability.
-
-*Every problem identified in §1 has a population-level cause documented here, and every population dynamic here feeds back into the pipeline failures documented in §1.*
-
-## 2.1. The Staking Populations
+## 2.1. Pool Operators
 
 ### 2.1.1. Overview
 
-The Cardano staking ecosystem contains three populations defined by staking role.
+Operators register pools, pledge capital, produce blocks, and compete for delegation. The intended design assumes a competitive field of $k$ single-pool operators converging toward a balanced equilibrium ([Progression — balanced as intended, but private by design](#1232-progression-balanced-as-intended-but-private-by-design)).
 
-**Operators** register pools, pledge capital, produce blocks, and compete for delegation. At epoch 623, **2,877 pools** appear in the staking snapshot with non-zero delegated stake. After cutting at the production threshold (≥3M ADA, the 95%-block-probability bar), the productive core is **733 pools controlled by 367 entities** — of which **83 attributed entities** (71 strict multi-pool + 12 attributed single-pool) hold **76.7% of productive stake** through **449 productive pools**. The remaining **23.3%** sits with **284 unattributed single-pool operators (4.94B ADA)**.
+At epoch 623, **2,877 pools** appear in the staking snapshot with non-zero delegated stake. After cutting at the production threshold (≥3M ADA, the 95%-block-probability bar), the productive core is **733 pools controlled by 367 entities** — of which **83 attributed entities** (71 strict multi-pool + 12 attributed single-pool) hold **76.7% of productive stake** through **449 productive pools**. The remaining **23.3%** sits with **284 unattributed single-pool operators (4.94B ADA)**.
 
-*The supply side of the staking market is highly concentrated and stable, not the competitive marketplace the mechanism was designed to produce.*
+*The supply side has crystallised since epoch 300 — replacement, not expansion. The headline picture is a market that already converged toward concentration, not the competitive marketplace the mechanism was designed to produce.*
 
-**Delegators** choose which pools to fund and — in the intended design — discipline operators through capital reallocation. At epoch 623, **1,355,035 active delegations** control **21.755B ADA** (**60.2% of circulating supply**). The distribution is a power law with a **Gini of 0.976**: the **top 1,000 delegators (0.07%) control 57% of staked capital**.
-
-*The delegation market crystallised by epoch 300 — subsequent 9× growth in delegator count produced no measurable change in the concentration profile.*
-
-**Non-participants** hold the remaining **14.355B ADA** (**39.8% of circulating supply**) outside the delegation system. This population is the single largest structural constraint on the reward pipeline: it accounts for the majority of the distribution-efficiency gap documented in [§1.1 TRE.O3](#112-mainnet-observations).
-
-The Census decomposes this population by credential status and finds that:
-
-- only **134.6M ADA (0.37% of circulation)** is *addressable* by incentive changes — registered stake credentials that have not delegated
-- the remaining **14.2B** sits in addresses with **no stake credential at all** (enterprise addresses, DeFi-locked scripts, dormant wallets), structurally unreachable without protocol-level changes
-
-**Transaction submitters** pay the fees that fund the epoch pot — the only revenue source that survives reserve depletion. This population is orthogonal to staking roles: a submitter can be an operator, a delegator, a non-participant, or an automated script. The same address that appears as a loyal delegator in the sections above may be a prolific fee payer.
-
-[Transaction Submitters](#22-transaction-submitters) treats this population in detail — its size, concentration, composition (script vs key transactions), and overlap with the staking system — because the structural question it raises (whether the fee base depends on a constituency the reward mechanism does not reward) is distinct from the staking-role dynamics addressed in the present section.
-
-The Census methodology follows a **raw → clean** structure at each layer:
-
-- the raw db-sync query is shown
-- the noise is named (sub-threshold pools, zero-balance certificate ghosts, non-productive delegations)
-- the cleaned population is presented
-- the analytical choices are made explicit and auditable
-
-Entity attribution — clustering by registered owner key, augmented with manual identification of known operators — is a **lower bound on concentration**.
-
-> **Data.** All data comes from **cardano-db-sync** (PostgreSQL, snapshot at epoch 623). No third-party API except Koios for account-level balance reconciliation. The full data, figures, entity analysis, and reproduction scripts live in the dedicated sub-report: [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md).
-
-The staking populations are profiled across seven observations below, organised in three arcs.
-
-**CEN.O1–O2** characterise the supply side — concentration, fleet structure, and stake-volatility segmentation by operator type. **CEN.O3–O6** characterise the demand side — extreme stake concentration, settled tenure distribution, size-driven switching, and the absence of yield-driven behaviour. **CEN.O7** documents the structural boundary between participants and non-participants — the 14.4B ADA outside delegation, and how little of it any reward-design change can actually reach.
+The two observations below characterise the population's two structural features: entity-level concentration, and stake-volatility segmentation by operator type.
 
 <!-- mainnet-observations: 2.1.2 -->
 
@@ -1256,118 +1226,128 @@ The staking populations are profiled across seven observations below, organised 
 | --- | --- | --- |
 | **CEN.O1** | **Multi-pool entities flourished while single-pool operators struggle — 23 → 85 entities (65% → 76% of stake); 555 → 291 single-pool / 39% → 24% of stake** | 75% of registered pools (2,144 of 2,877) sit below the production threshold — 2.7% of stake, economically irrelevant (CEN.O1.F1). 83 attributed entities control 76.7% of productive stake through 449 productive pools (CEN.O1.F2). The productive set is a quasi-equilibrium since epoch 300, tracking a 700–1,000 historical band (733 at epoch 623), with 1.7% turnover per epoch (CEN.O1.F3). 12 entities with 11+ productive pools control 41.0% of productive stake (CEN.O1.F4). CEX + IVaaS (10 entities, 181 pools) hold 7.40B ADA — 34.3% of productive stake at structurally zero pledge (CEN.O1.F5). |
 | **CEN.O2** | **Pool size variability is an institutional rebalancing phenomenon** | Custodial-by-delegation pools show a **median epoch-to-epoch stake variability of 19.3%** (and 21% of them exceed 50% variability); retail pools sit at **median 8.4%**; custodial-by-extraction are the most inert at **median 6.6%** (F3.4). Stake volatility is not random — it is segmented by operator type. |
+
+### 2.1.3. Problem Induction → The pledge mechanism cannot reach the operator population
+
+The intended design treats pledge as the central commitment signal — the lever that aligns operator incentives with consensus security. The on-chain population partitions into three sub-populations, each in a different relationship to that lever:
+
+- **Custodial operators** (CEX + IVaaS — 10 entities, 181 pools, 7.40B ADA — 34.3% of productive stake) **cannot pledge** the capital they manage. The constraint is architectural and legal: exchanges custody retail balances, institutional validators run client assets. *No parameter change moves this stake into the pledge game.*
+
+- **Sovereign saturation-scale MPOs** (32 of 48 saturation-scale entities, 4.80B ADA — 22.7% of productive stake) **could pledge but choose not to**. At their scale the pledge bonus pays less than passive delegation; locking capital is dominated as a strategy. The non-response is rational — and it is the share of the MPO landscape any incentive reform must actually move.
+
+- **Single-pool operators and sub-saturation MPOs** (284 unattributed single-pool + 35 sub-saturation MPOs, 6.63B ADA — 31.3% of productive stake) face a **scale ceiling** on the formula itself. The activation function $A(\nu, \pi) = \nu^2 \cdot \pi[1 - \pi(1-\nu)]$ scales the bonus by pool-size squared *before* pledge is priced; at small $\nu$ the bonus is invisible at any pledge ratio ([The pledge bonus is inoperative at realistic scale](#12334-the-pledge-bonus-is-inoperative-at-realistic-scale)).
+
+The population-level stake variability reinforces the partition (CEN.O2): custodial-by-delegation pools experience **2.3× the volatility** of retail pools — *they operate in a different economic regime, not just a different size band*.
+
+The intra-pool fee structure compounds these structural pressures. The flat-fee floor and uniform margin parameter ([Operator / Delegator Distribution](#13-operator-delegator-distribution)) act as a **regressive tax on the third sub-population** while leaving the first two unaffected — *single-pool operators bear the full cost of a fee structure built for a uniform population that no longer exists*.
+
+*The pledge mechanism — the design's central instrument for operator commitment — reaches at most the third sub-population, and only marginally. The operator population is not a single competitive field. It is a segmented and highly concentrated market where the dominant sub-populations are structurally insensitive to the signal the mechanism relies on.*
+
+**V2 implication.** No single parameter change addresses all three sub-populations — each requires a different lever:
+
+- *Architectural*: accept that custodial stake is permanently outside the pledge mechanism's scope, or redefine the mechanism's recruitment ceiling to exclude it
+- *Strategic*: alter the relative payoff of pledging vs delegating so the bonus is no longer dominated at saturation scale
+- *Sub-scale*: introduce a structural path (e.g., a Rocket-Pool-style alliance layer — [Enforce the production threshold](#12341-enforce-the-production-threshold-build-a-rocket-pool-for-cardano)) for stake that cannot reach saturation alone
+
+V2 must therefore introduce **entity-level awareness** above the per-pool reward curve. The current formula reasons about pools; the population it must shape is entities.
+
+## 2.2. Delegators
+
+### 2.2.1. Overview
+
+Delegators choose which pools to fund and — in the intended design — discipline operators through capital reallocation ([Why balanced should be the intended equilibrium](#12322-why-balanced-should-be-the-intended-equilibrium)). At epoch 623, **1,355,035 active delegations** control **21.755B ADA** (**60.2% of circulating supply**). The distribution is a power law with a Gini of **0.976**: the top 1,000 delegators (0.07%) control **57% of staked capital**.
+
+*The delegation market crystallised by epoch 300 — subsequent 9× growth in delegator count produced no measurable change in the concentration profile.*
+
+The four observations below trace the demand side across two arcs: extreme stake concentration and settled tenure (CEN.O3–O4), and the absence of yield-driven behaviour (CEN.O5–O6).
+
+<!-- mainnet-observations: 2.2.2 -->
+
+| # | Observation | Summary |
+| --- | --- | --- |
 | **CEN.O3** | **Stake concentration among delegators is extreme and frozen** | The median delegator holds 32 ADA; the mean is 16,055 ADA — a 500× gap (F4.1). 1,000 delegators (0.07%) control 57% of staked ADA; Gini = 0.976 (F4.2). Concentration crystallised by epoch 300 and has not moved since — 9× growth in delegator count without affecting the top-1% share (F4.3). |
 | **CEN.O4** | **Most delegators stay put — 42% stuck with the same pool for 2.7+ years, only 21% switch within 25 days, switching down 75% from early Shelley** | Redelegation fell 75% from 2,000–3,500/epoch (early Shelley) to 600–800 (current regime) (F4.4). The delegator base is structurally bimodal: 42% loyal (201+ epochs), 21% volatile (≤ 5 epochs), 37% moderate (F4.5). Custodial and private pools contribute negligible churn (F4.8). |
 | **CEN.O5** | **The bigger the delegation, the more it moves — whales (1M+ ₳) hold 65% of stake and switch ~4× more often than small delegators** | Micro-delegators (< 1K ADA) average 0.67 lifetime switches; whales (1M+) average 3.06 — switching scales monotonically with stake size (F4.6). Whales hold 14.1B of 21.8B staked total, yet only 38% of their stake sits in loyal delegations — capital is disproportionately mobile (F4.7). |
 | **CEN.O6** | **The delegator population doesn't shop on price — half their switches produce zero yield change, switch direction is balanced (30.8% cheaper / 31.5% pricier), and 92% of long-term delegators sit in the cheapest 0–5% margin band** | Half of all switches (50.5%) produce zero yield change (±5 bps); the median ROS differential is +0.02 bps (F4.9). Operator take direction is symmetric: 30.8% lower / 37.7% similar / 31.5% higher — no optimisation pattern (F4.10). Pool size is the only asymmetric signal: delegators drift toward larger pools (F4.11). 92.1% of loyal delegations sit in the 0–5% margin range — loyalty and low fees coexist, not trade off (F4.12). Script-based delegation is negligible: 99.97% of delegations are key-based (F4.13). |
+
+### 2.2.3. Problem Induction → The yield signal does not drive delegation
+
+The intended design assumes a competitive demand side: mobile capital that disciplines operators through reallocation. The on-chain population is a frozen power law that does not respond to the yield signal the mechanism produces.
+
+**Concentration is extreme and structural.** 0.07% of delegators control 57% of stake (Gini 0.976, CEN.O3); the median holds 32 ADA, the mean 16,055 ADA — a 500× gap. The profile **locked in by epoch 300** and has not moved since, despite a 9× growth in delegator count and multiple parameter regimes. The micro-delegation tail (59% of delegations holding 0.05% of stake) is structurally too small to generate signal at all.
+
+**The market is settled, not contested.** Redelegation has fallen **75%** from early-Shelley rates; **42% of delegators have not moved for 2.7+ years** (CEN.O4). The base is bimodal — loyal or volatile, with little in between — and custodial/private pools contribute negligible churn.
+
+**Mobility does not produce competitive pressure** because it is **not yield-driven** (CEN.O5–O6):
+
+- switching scales with stake size — whales switch ~4× more often than micro-delegators — but **half of all switches produce zero yield change**
+- operator-take direction is **symmetric**: 30.8% lower / 31.5% higher — no optimisation pattern
+- the only asymmetric signal is **pool size** — delegators drift toward larger, more visible pools, not toward more committed ones
+- **92% of loyal delegations** sit in the cheapest 0–5% margin band: loyalty and low fees coexist; they don't trade off
+
+The population that *could* discipline operators — whales holding 14.1B ADA — moves, but not in response to anything the formula produces. *The discipline mechanism doesn't operate on price.*
+
+The size-driven asymmetry has a downstream consequence: the **size-visibility-delegation loop** ([The size-visibility-delegation loop](#123235-the-size-visibility-delegation-loop)) is the actual selection rule. Large pools attract delegation; delegation makes them larger; size makes them more visible; visibility attracts more delegation. *Pledge is orthogonal to this dynamic — and so is yield.*
+
+**V2 implication.** Reward-curve reform that relies on yield-driven discipline targets a market that does not exist on-chain. V2 must:
+
+- accept that the **delegator-to-operator discipline channel runs through visibility and brand**, not yield, and design counterbalances rather than enhancements to that channel
+- treat **size-driven concentration** as a structural condition that the curve must counterbalance — pool size is currently the mechanism's strongest asymmetric signal, in the wrong direction
+- **redefine concentration metrics** at the entity level: the headline "1.355M delegators" is misleading; the actionable population is the ~2,200 mega/titan delegations holding 64.6% of stake
+
+## 2.3. Non-Participants
+
+### 2.3.1. Overview
+
+Non-participants hold the remaining **14.355B ADA** (**39.8% of circulating supply**) outside the delegation system. The intended design assumes any holder *can* delegate — and therefore that participation is a function of the incentive offered. The on-chain reality is that most non-participation is **structural**, not behavioural.
+
+The single observation below decomposes the population by credential status and shows why the headline figure overstates what reward design can reach by an order of magnitude.
+
+<!-- mainnet-observations: 2.3.2 -->
+
+| # | Observation | Summary |
+| --- | --- | --- |
 | **CEN.O7** | **The non-participant population is 39.8% of the supply, structurally inert, and held by a tightly-concentrated minority of custodians and legacy holders** | The non-participant population — addresses controlling ADA that is not delegated to any pool — has been stable at 36–39% of circulation for over 300 epochs (14.4B at epoch 623). Only 0.37% of circulation is *reachable* by reward design (registered staking key, not delegated); the remaining 39.4% sits in addresses that cannot delegate without a protocol-level change. The "unreachable" core is **not a faceless retail tail** — 246 wallets hold 74% of it, top-3 alone hold 19%; the addresses split cleanly into recognisable archetypes (exchange hot wallets, institutional cold storage, pre-staking-era legacy holders, DeFi vaults). The "addressable" pool itself collapses to ~2,100 active accounts and 0.06% of supply once zero-balance shells and a single DeFi vault are removed. *The reward mechanism's recruitment ceiling is narrow; meaningful re-engagement requires changing the address architecture, not the incentive curve.* |
 
-### 2.1.3. Problem Induction
+### 2.3.3. Problem Induction → The reward curve has a 0.37% recruitment ceiling
 
-The observations above describe the populations on which the reward pipeline operates. Read together, they reveal that each population exhibits a structural condition that no parameter adjustment within the current mechanism can alter.
-
-#### 2.1.3.1. The operator population is highly concentrated and stable
-
-The intended design assumes a competitive field of $k$ single-pool operators converging toward a balanced equilibrium ([Progression — balanced as intended, but private by design](#1242-progression-balanced-as-intended-but-private-by-design)).
-
-*The on-chain population has already converged — toward concentration, not competition.*
-
-**83 attributed entities control 76.7% of productive stake through 449 productive pools** (CEN.O1) — split as **71 strict multi-pool fleets** (n-MPO ≥ 2 productive pools) plus **12 attributed single-pool operators** (n-MPO = 1, even when more pools are owned but sub-threshold; IOG itself is one of these — 34 owned, 1 productive). The productive set has been in **quasi-equilibrium since epoch 300** (a 700–1,000 historical band as the threshold rises with total stake; **733 pools at epoch 623**), with **1.7% turnover per epoch** — replacement, not expansion. **12 entities operating 11+ productive pools each control 41.0% of productive stake**; the fleet-size distribution is heavy-tailed.
-
-Within this concentrated landscape, three structurally distinct sub-populations coexist:
-
-- **custodial operators** (CEX + IVaaS: 10 entities, 181 pools, **7.40B ADA**) who *cannot* pledge the capital they manage — the constraint is architectural, not economic
-- **community and opaque MPO fleets** (42 of 48 saturation-scale entities) who have *chosen* not to pledge despite the capacity — the rational response to the pledge-value inversion documented in [The inversion](#12436-the-inversion)
-- **single-pool operators** (284 unattributed productive pools, 4.94B ADA) who bear the full cost of the fee structure ([Operator / Delegator Distribution](#13-operator-delegator-distribution)) while their share of productive stake declines
-
-The population-level stake variability reinforces this partition (CEN.O2): custodial-by-delegation pools experience **2.3× the volatility** of retail pools.
-
-*The operator population is not a single competitive field — it is a segmented and highly concentrated market where the dominant sub-populations are structurally insensitive to the pledge signal the mechanism relies on.*
-
-#### 2.1.3.2. The stake-holder population is a frozen power law
-
-The intended design assumes that delegators form a competitive demand side — mobile capital that disciplines operators through reallocation ([Why balanced should be the intended equilibrium](#12422-why-balanced-should-be-the-intended-equilibrium)).
-
-*The on-chain population is a power law that crystallised early and has not moved since.*
-
-**1,000 delegators (0.07% of the base) control 57% of staked ADA**; the Gini coefficient is **0.976** (CEN.O3). The median delegator holds **32 ADA**; the mean is **16,055 ADA** — a **500× gap**. This concentration profile locked in by **epoch 300**: a subsequent 9× growth in delegator count produced no measurable change in the top-1% share.
-
-The delegation market reinforces the freeze (CEN.O4):
-
-- redelegation fell **75%** from early-Shelley rates
-- **42% of delegators have not moved for 2.7+ years**
-- the delegator base is structurally bimodal — loyal or volatile, with little in between
-
-The behavioural evidence completes the picture. Switching scales with stake size (CEN.O5): micro-delegators average **0.67 lifetime switches**; whales average **3.06**. Yet this mobility does not produce competitive pressure because it is **not yield-driven** (CEN.O6):
-
-- half of all switches produce zero yield change
-- operator-take direction is symmetric
-- the only asymmetric signal is pool size — delegators drift toward larger, more visible pools, not toward more committed ones
-
-The population that *could* discipline operators — whales, holding **14.1B ADA** — moves, but not in response to the signals the mechanism produces.
-
-*The stake-holder population is not a competitive demand side. It is a frozen distribution where concentration is extreme, mobility is convenience-driven, and the yield signal that should link delegation to operator commitment is invisible.*
-
-#### 2.1.3.3. The non-participant population
-
-The intended design assumes that any holder *can* delegate — and therefore that participation is a function of the incentive offered. Build a competitive incentive, the assumption goes, and the non-participant pool shrinks.
-
-*The on-chain population shows that most non-participation is structural, not behavioural — the incentive curve has very little ADA to act on.*
-
-**14.36B ADA (39.8% of circulating supply) sits unstaked** (CEN.O7), and that share has been **stable in a 36–39% band for over 300 epochs** despite multiple parameter regimes and yield levels. The staking rate has fallen from **71% (epoch ~260) to 59% (epoch 623)** — a 12 pp loss driven entirely by supply-side expansion (circulating ADA grew from ~32B to ~37B while staked ADA grew from ~23B to only ~22B). *The non-participant pool is growing faster than the staking pool can absorb new entrants.*
-
-The decomposition of the 14.36B reveals that **the incentive ceiling is narrower than the headline figure by an order of magnitude**:
+The decomposition of the 14.36B ADA non-participant pool reveals that **the incentive ceiling is narrower than the headline figure by an order of magnitude**:
 
 - **Only 134.6M ADA (0.37% of circulation)** belongs to accounts with a *registered stake credential* that have simply not delegated — the *addressable* pool that incentive design can, in principle, reach
 - The remaining **14.2B (39.4%)** sits in addresses with **no stake credential at all** — enterprise (`addr1v`, exchange custody), script-without-staking (`addr1w`, Plutus contracts and DeFi vaults), Byron-era legacy outputs, and base addresses whose staking key was never registered
 - The "addressable" pool itself collapses to **~2,100 active accounts and 0.06% of supply (~22.5M ADA)** once zero-balance shells, dormant accounts, and a single 80M-ADA DeFi vault are removed (CEN.O7.F8)
 
-The structurally-excluded core is **not a faceless retail tail**. Among the 2.5B ADA identified by address shape, **top-3 wallets control 19.1%** and **top-200 control 68.9%** (CEN.O7.F6). The composition splits cleanly into recognisable archetypes: **exchange hot wallets** (1.04B), **pre-staking-era legacy holders** (1.32B, awakening at ~0.8M ADA per epoch), and **DeFi vaults** (a single 80M-ADA contract dominates 89% of the 91M DeFi-locked-no-staking residual). *Exchange custody and pre-staking legacy together account for 96% of identified shapes — the unreachable mass is overwhelmingly inertia, not active opt-out.*
+**The structurally-excluded core is not a faceless retail tail.** Among the 2.5B ADA identified by address shape, **top-3 wallets control 19.1%** and **top-200 control 68.9%** (CEN.O7.F6). The composition splits cleanly into recognisable archetypes: **exchange hot wallets** (1.04B), **pre-staking-era legacy holders** (1.32B, awakening at ~0.8M ADA per epoch), and **DeFi vaults** (a single 80M-ADA contract dominates 89% of the 91M DeFi-locked-no-staking residual). *Exchange custody and pre-staking legacy together account for 96% of identified shapes — the unreachable mass is overwhelmingly inertia, not active opt-out.*
 
-The pool is also **temporally polarised** (CEN.O7.F5): **37%** of the no-credential UTxO value (928M ADA) is pre-staking-era dormant capital, and **44%** (1,110M) is from the last 73 epochs (recent enterprise-address cycling by exchanges and DeFi contracts). *The middle eras are essentially empty — the population splits cleanly between probably-lost and operationally-active, with very little in between.*
+The pool is also **temporally polarised** (CEN.O7.F5): **37%** of the no-credential UTxO value is pre-staking-era dormant capital, and **44%** is from the last 73 epochs (recent enterprise-address cycling by exchanges and DeFi contracts). *The middle eras are essentially empty — the population splits cleanly between probably-lost and operationally-active, with very little in between.*
 
-The implication for any reward-design change is straightforward and structural:
+The staking rate has fallen from **71% (epoch ~260) to 59% (epoch 623)** — a 12 pp loss driven entirely by supply-side expansion (circulating ADA grew while staked ADA stayed flat). *The non-participant pool is growing faster than the staking pool can absorb new entrants.*
 
-- **Incentive changes alone** (curve adjustments, fee-structure reforms, yield improvements) can shift at most the **0.37% addressable pool** — and even that, against the headwind of zero-balance shells and the single-vault concentration, has a real ceiling closer to **0.06%** of supply
-- **Moving the structural 39.4%** requires **protocol-level changes**: enabling enterprise-address staking, mandating staking-capable script standards in DeFi protocols, introducing delegation-by-default for newly minted wallets — *not parameter tuning*
+**V2 implication.** Reward-design changes alone can shift at most the 0.37% addressable pool — and even that has a real ceiling closer to **0.06% of supply**. Moving the structural 39.4% requires **protocol-level changes orthogonal to the reward curve**:
 
-*The non-participant population is the single largest structural constraint on the reward pipeline ([§1.1 TRE.O3](#112-mainnet-observations) attributes ~71% of cumulative return-to-reserve to it), and most of it is **structurally beyond the reach of any reward-design change**. Meaningful re-engagement requires changing the address architecture, not the incentive curve.*
+- **enable enterprise-address staking** so CEX hot wallets and similar custody forms can route stake without behavioural change
+- **mandate staking-capable script standards** (`addr1z` over `addr1w`) for new DeFi protocols
+- **introduce delegation-by-default** for newly minted base addresses — making non-participation an opt-out, not the silent default
 
-## 2.2. Transaction Submitters
+V2 must distinguish in its acceptance criteria what reward-design changes can move (≤0.37%) from what address-architecture changes can move (up to 39.4%) — claiming "improved participation" without addressing the structural component is misleading. The non-participant population is the single largest structural constraint on the reward pipeline ([§1.1 TRE.O3](#112-mainnet-observations) attributes ~71% of cumulative return-to-reserve to it), and most of it is **structurally beyond the reach of any reward-design change**.
 
-The reward pipeline is funded almost entirely by monetary expansion today (**~99.8% of the epoch pot**), but the long-term design assumes transaction fees will eventually replace it. The population that generates those fees — transaction submitters — is therefore a **first-order variable for the pipeline's sustainability**.
+## 2.4. Transaction Submitters
 
-This population is **orthogonal to the staking roles** mapped in [The Staking Populations](#21-the-staking-populations). A submitter can be:
+### 2.4.1. Overview
 
-- an operator (pool registration transactions)
-- a delegator (delegation certificates, transfers)
-- a non-participant (exchange withdrawals, DeFi interactions from enterprise addresses)
-- an automated script
+The reward pipeline is funded almost entirely by monetary expansion today (~99.8% of the epoch pot), but the long-term design assumes transaction fees will eventually replace it. The population that generates those fees — transaction submitters — is therefore a **first-order variable for the pipeline's sustainability**.
 
-The same address can appear as a loyal delegator in [The Staking Populations](#21-the-staking-populations) and a prolific fee payer here.
+This population is **orthogonal to the staking roles** mapped in [§2.1](#21-pool-operators)–[§2.3](#23-non-participants). A submitter can be an operator (pool registration transactions), a delegator (delegation certificates, transfers), a non-participant (exchange withdrawals, DeFi interactions from enterprise addresses), or an automated script. The same address that appears as a loyal delegator may be a prolific fee payer here.
 
 *The population overlap is itself analytically significant: if fee revenue is dominated by addresses that do not participate in staking, the reward mechanism funds itself from a constituency it does not reward.*
-
-The analytical decomposition follows four axes:
-
-- population size and trajectory
-- address-type composition (CIP-19 classification)
-- fee-revenue attribution by category
-- concentration of the fee base
-
-The working data, figures, and full population decomposition are in the [*Staking Census*](sub-flows/census/mainnet-analysis/README.md) §6, which now treats this population at the same depth as the staking populations.
-
-### 2.2.1. Overview
 
 From epoch 208 (Shelley) through epoch 627, the chain processed **118.07 million transactions** generating **37.85M ADA** in cumulative fees. The submitter population peaked at **790,335 unique addresses per epoch** at epoch 304 (the post-Alonzo / NFT-minting frenzy) and has since contracted to **31,176** at epoch 627 — a **96%** collapse against a **92%** drop in transaction volume.
 
 *The fee base is consolidating: a population one twenty-fifth the size of its peak still sustains three quarters of the per-epoch transaction rate seen during 2023–2024 — the same shrinking core just transacts more often (~3.8 tx per submitter per epoch, vs ~2.0 at peak).*
 
-The fee-generating population is profiled across five observations below, organised in four arcs.
+The five observations below profile the fee-generating population across four arcs: contraction (CEN.O8), composition (CEN.O9–O10), the heavy-paying core (CEN.O11), and the population gap with delegators (CEN.O12).
 
-**CEN.O8** tracks the population's contraction — −96% from peak, with intensity rising. **CEN.O9–O10** decompose what kinds of addresses pay the fees: a stakeable head-count majority alongside a non-stakeable minority and a small DeFi-script sub-population that together generate a disproportionate share. **CEN.O11** characterises the heavy-paying core — a few hundred recognisable actors (DEXes, exchange wallets, bots). **CEN.O12** joins the submitter set to `epoch_stake` to surface the population gap: funders and beneficiaries barely overlap. Together with CEN.O1–CEN.O7 ([The Staking Populations](#21-the-staking-populations)), they define the complete population substrate on which the reward pipeline operates.
-
-<!-- mainnet-observations: 2.2.2 -->
+<!-- mainnet-observations: 2.4.2 -->
 
 | # | Observation | Summary |
 | --- | --- | --- |
@@ -1377,52 +1357,62 @@ The fee-generating population is profiled across five observations below, organi
 | **CEN.O11** | **The fee-paying population is bimodal: a heavy-paying core of a few hundred high-frequency actors and a long tail of ~147K small contributors** | Over epochs 622–627, the top 10 addresses generate **20.0%** of fees and the top 500 generate **58.4%** — out of ~147K active submitters. The heavy-paying core is recognisable: a MinSwap DEX-script address leads, followed by addresses tied to the **NUFI**, **TITAN**, **BERRY**, and **OYSTR** pools and several enterprise-script DEX contracts and bot wallets. *500 addresses out of 147K (0.34%) pay the majority of fees — the fee floor depends on a sub-population small enough to know by name.* |
 | **CEN.O12** | **The fee-paying population and the delegator population barely overlap — funders and beneficiaries are largely different people** | Joining the submitter set (~147K addresses, epochs 622–627) to the **1,352,113 active delegators at epoch 627**: only **41.8%** of fee revenue comes from currently-delegating addresses, **28.1%** from base addresses whose stake credential is *not* in the delegation set, **30.1%** from addresses with no stake credential. From the delegator side, **only 3.1%** of the 1.352M active delegators submit any transaction in a 6-epoch window. *Fewer than 4 ADA in every 10 ADA of fees flow back to the population that paid them through any reward channel.* |
 
-### 2.2.3. Problem Induction
+### 2.4.3. Problem Induction → Funders and beneficiaries don't overlap, and the gap is widening
 
-#### 2.2.3.1. The fee input is structurally insufficient
+The reward pipeline's long-term viability rests on a single assumption — *that transaction fees will eventually replace monetary expansion as the dominant source of the epoch pot*. The population data exposes two converging structural failures of that assumption.
 
-The reward pipeline's long-term viability rests on a single assumption: *that transaction fees will eventually replace monetary expansion as the dominant source of the epoch pot.*
+**The fee base is structurally insufficient.** Fees contribute approximately **0.19% of the pot** (TRE.O1). Self-sufficiency would require a **12–16× increase in fee revenue** at current transaction volumes ([§1.1 TRE.O1](#112-mainnet-observations)). The submitter population is moving in the opposite direction: a 96% contraction from peak (CEN.O8), with breadth collapsing while per-actor intensity rises. *The shrinking core is doing more work; the pool of distinct fee-payers is getting smaller, not larger.*
 
-Today, fees contribute approximately **0.19% of the pot** (TRE.O1, [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution)). Reaching self-sufficiency — a fee-funded pot equivalent to the current expansion-funded one — would require a **12–16× increase in fee revenue** at current transaction volumes ([§1.1 TRE.O1](#112-mainnet-observations)).
+**The fee base is misaligned with the staking population.** Joining the submitter set to `epoch_stake` (CEN.O12), only **41.8%** of fee revenue comes from currently-delegating addresses. **30.1%** comes from addresses with no stake credential at all (CEN.O9 — enterprise + script + Byron), and **28.1%** from base addresses that *could* delegate but aren't. From the delegator side, **only 3.1%** of the 1.352M active delegators submit any transaction in a 6-epoch window — *the staking population is overwhelmingly passive*.
 
-**The submitter population is moving in the opposite direction.** The number of distinct fee-paying addresses has contracted from a peak of **790,335 (epoch 304) to 31,176 (epoch 627)** — a **96% decline** — while per-epoch transaction volume fell only 92%, indicating consolidation toward fewer, more active actors (CEN.O8). The same shrinking core now transacts **~3.8× per epoch** vs ~2.0× at peak — *breadth is collapsing while per-actor intensity is rising*.
+The most fee-intensive segment of the population — script-based transactions — is concentrated in **~3,800 smart contracts** generating **36% of recent fees while representing 12% of submitters** (CEN.O10). Enterprise-script submitters pay **14×** the per-address rate of base-key submitters. *The constituency that generates the most revenue per transaction is structurally excluded from the rewards it funds.*
 
-At the same time, the most fee-intensive segment of that population — **script-based transactions**, which pay roughly 2.4× the average per-tx rate (CEN.O10) — is concentrated in **~3,800 smart contracts** that, together with enterprise key addresses, generate **36% of recent fees while representing 12% of submitters**. Many of these are structurally non-stakeable (CEN.O9) — *the sub-population that generates the most revenue per transaction is excluded from the rewards it funds*.
+The structural deficit is shaped by four converging forces:
 
-**Funders and beneficiaries don't overlap.** Joining the submitter set to `epoch_stake` (CEN.O12) shows that only **41.8%** of fee revenue comes from currently-delegating addresses; **30.1%** comes from addresses with no stake credential, and **28.1%** from base addresses that *could* delegate but aren't. From the delegator side, **only 3.1%** of the 1.352M active delegators submit any transaction in a 6-epoch window — the staking population is overwhelmingly passive. *Fewer than 4 ADA in every 10 ADA of fees flow back to the population that paid them through any reward channel.*
+- a **contracting** submitter population (volume flat, breadth declining)
+- a fee base that **concentrates** rather than diversifies (top-500 = 58.4% of fees)
+- a growing share of fee revenue generated **outside the staking system** (script + enterprise = 30%)
+- an overlap between funders and beneficiaries that is **structurally limited** (3.1% / 41.8%)
 
-The gap between the current fee input and the level required for sustainability is **not a transient shortfall that organic adoption will close**. It is a structural deficit shaped by four converging forces:
+**No parameter change within the current mechanism alters this trajectory** — the fee input is set by transaction demand, not by reward-curve coefficients. The mechanism design contains no incentive for new actors to submit transactions, no reward channel for addresses that generate fee revenue, and no penalty for fee concentration in a shrinking set.
 
-- a contracting submitter population
-- a fee base that concentrates rather than diversifies
-- a growing share of fee revenue generated by addresses outside the staking system
-- an overlap between funders and beneficiaries that is structurally limited (CEN.O12)
+If the DeFi economy continues to grow as a share of on-chain activity — and the post-Alonzo trend suggests it will — *the fraction of the fee base structurally excluded from rewards will increase*. The mechanism will progressively tax a constituency it cannot reward, with no feedback loop to retain it.
 
-No parameter change within the current mechanism alters this trajectory — the fee input is set by transaction demand, not by reward-curve coefficients.
+**V2 implication.** Fee policy must be a **first-class layer of V2**, not an externality. V2 must:
 
-#### 2.2.3.2. The fee-generating population must expand for the pipeline to survive
+- introduce a **fee-revenue-aware reward channel** that reaches script and enterprise constituencies (which currently fund 30% of fees with zero return through the reward mechanism)
+- close the funders-beneficiaries gap through a routing layer that lets fee-generating activity translate into staking-pipeline value retention
+- treat **submitter retention** (volume × breadth × intensity) as a measurable acceptance criterion, alongside operator viability and delegator yield
+- coordinate fee policy with **address-architecture reform** ([§2.3](#23-non-participants)) — staking-capable script standards close the gap from both sides
 
-The reserve is finite. Its depletion trajectory is documented in [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution); the exact timeline depends on $\rho$ and on whether governance reduces the expansion rate, but the direction is not in question.
+The fee base is not just too small; it is misaligned with the population the mechanism rewards. Self-sufficiency requires reaching populations the reward curve currently cannot see.
 
-When the reserve approaches exhaustion, the epoch pot contracts to whatever fees and deposits provide. At current levels, that means *a pot roughly 500× smaller than the one the staking population is calibrated to expect*.
+## 2.5. Synthesis — The Four Populations as a Coupled System
 
-For the reward pipeline to remain viable, the submitter population must grow along three dimensions:
+Each population has a distinct structural condition. Taken individually, each names a constraint that reward-curve reform alone cannot move. **Taken together, they trace four coordinated layers V2 must operate on simultaneously**:
 
-- **volume** — transactions per epoch
-- **breadth** — distinct fee-paying actors
-- **intensity** — fee per transaction
+| Layer | What it addresses | Population it reaches |
+| --- | --- | --- |
+| **Reward-curve reform** (the layer V2 inherits from SL-D1) | Pool-level allocation, pledge incentive, saturation | The third operator sub-population only ([§2.1](#21-pool-operators)) |
+| **Entity-level awareness** (above the per-pool curve) | Concentration legibility, MPO-aware reward distribution | The first two operator sub-populations + delegator-tier metrics ([§2.1](#21-pool-operators), [§2.2](#22-delegators)) |
+| **Address-architecture reform** (orthogonal to the curve) | Enabling enterprise-address staking, staking-capable script standards, delegation-by-default | The structural 39.4% non-participant share ([§2.3](#23-non-participants)) |
+| **Fee policy** (below the curve) | Fee-revenue-aware reward channel, funders-beneficiaries routing, submitter retention as criterion | The non-stakeable submitter constituency + the script sub-population ([§2.4](#24-transaction-submitters)) |
 
-The current trajectory satisfies the third condition for script transactions but fails the first two: **volume is flat, breadth is declining**. The mechanism design does not address any of the three:
+The four populations are **coupled, not independent**:
 
-- no incentive for new actors to submit transactions
-- no reward for the addresses that generate fee revenue
-- no penalty for the concentration of fees in a shrinking set of addresses
+- **Operator concentration** ([§2.1](#21-pool-operators)) locks in supply-side rigidity that the **delegator market** ([§2.2](#22-delegators)) cannot discipline because the yield signal is invisible
+- **Non-participation** ([§2.3](#23-non-participants)) caps the addressable pool at 0.37% — incentive reform cannot close the participation gap that drives 71% of [TRE.O3's return-to-reserve](#112-mainnet-observations)
+- **Fee misalignment** ([§2.4](#24-transaction-submitters)) means the only post-reserve revenue source flows from populations the staking system structurally excludes — and the gap widens as DeFi grows
 
-*The pipeline's future funding source is treated as exogenous — an assumption that the population data contradicts.*
+Reward-curve reform that does not address all four layers will reproduce the same equilibrium under different parameters. *The reward mechanism cannot be redesigned in isolation — the population substrate is the redesign's binding constraint.*
 
-The problem is compounded by the constituency mismatch documented in CEN.O9: **roughly 30% of fee revenue already comes from addresses that cannot delegate**. If the DeFi economy continues to grow as a share of on-chain activity — and the post-Alonzo trend suggests it will — the fraction of the fee base excluded from rewards will increase.
+V2's acceptance criteria must therefore measure **the system, not its individual layers**:
 
-*The mechanism will progressively tax a population it does not serve, with no feedback loop to retain that population's participation.*
+- not "did the pledge bonus increase?" but "did the share of productive stake responsive to pledge increase?"
+- not "did the staking rate rise?" but "did the addressable share rise, and were architecture changes shipped to grow the addressable pool itself?"
+- not "did fee revenue grow?" but "did the funders-beneficiaries overlap rise, and did submitter breadth recover?"
+
+Each criterion is a **population-level outcome**, scoped against the structural conditions §2 documents. This is the bridge into the milestone framework V2 inherits.
 
 # 3. The ₳ Price Constraint
 
@@ -1446,7 +1436,7 @@ The yield that delegators compare against alternatives — **DeFi, staking on co
 
 - operator viability ([Operator / Delegator Distribution](#13-operator-delegator-distribution)) depends on a minimum fiat-denominated revenue
 - delegator retention depends on competitive fiat-adjusted yield
-- the transaction-fee base ([Transaction Submitters](#22-transaction-submitters)) must ultimately fund the pipeline in real terms, not just nominal ones
+- the transaction-fee base ([Transaction Submitters](#24-transaction-submitters)) must ultimately fund the pipeline in real terms, not just nominal ones
 
 *The mechanism's sustainability therefore requires the ADA price to be at minimum stable, and more precisely deflationary relative to the goods and services its participants consume.* Not because appreciation is desirable in the abstract, but because the pipeline's ADA-denominated output must maintain or increase its real purchasing power as the emission rate declines.
 
@@ -1454,7 +1444,7 @@ The yield that delegators compare against alternatives — **DeFi, staking on co
 
 The reserve depletion documented in [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution) means that the quantity of ADA distributed per epoch will decline over time — by design. The mechanism compensates for this through two implicit assumptions:
 
-- first, that **fees will grow to replace expansion** ([Transaction Submitters](#22-transaction-submitters))
+- first, that **fees will grow to replace expansion** ([Transaction Submitters](#24-transaction-submitters))
 - second, that the **per-unit value of ADA will appreciate** such that fewer ADA deliver equivalent or greater real value
 
 The second assumption is the **deflationary requirement**. It is not stated in the protocol specification, but it is embedded in the economics.
@@ -1470,7 +1460,7 @@ The same logic applies to delegators. A 3% annual return on 10,000 ADA yields 30
 
 *The delegation decision is rational only if the holder expects the ADA itself to appreciate sufficiently that the combined return (yield + price appreciation) exceeds the opportunity cost.* The mechanism does not produce this appreciation; it assumes it.
 
-For submitters, the constraint is subtler. Transaction fees are protocol-determined minimums denominated in ADA. If ADA appreciates, the fiat cost of transacting rises — which could suppress transaction volume and shrink the fee-generating population ([Transaction Submitters](#22-transaction-submitters)).
+For submitters, the constraint is subtler. Transaction fees are protocol-determined minimums denominated in ADA. If ADA appreciates, the fiat cost of transacting rises — which could suppress transaction volume and shrink the fee-generating population ([Transaction Submitters](#24-transaction-submitters)).
 
 *The mechanism needs ADA to be deflationary enough to sustain operator and delegator incentives, but not so deflationary that it prices out the transaction activity that must eventually fund the pipeline.*
 
@@ -1493,9 +1483,9 @@ The protocol's monetary policy — a capped supply with declining emission — c
 The mechanism is therefore **structurally dependent on an exogenous variable it cannot influence**. If the ADA price stagnates or declines in real terms:
 
 - the pipeline's ADA-denominated rewards lose purchasing power
-- **operators exit** ([The operator population is highly concentrated and stable](#2131-the-operator-population-is-highly-concentrated-and-stable) documents the concentration; the marginal operators at the bottom are the first to leave)
-- **delegators undelegate** ([The stake-holder population is a frozen power law](#2132-the-stake-holder-population-is-a-frozen-power-law) documents the frozen power law; the micro-delegators holding 32 ADA median have the least to lose)
-- the staking rate declines further ([§2.1 O7](#212-mainnet-observations))
+- **operators exit** ([The pledge mechanism cannot reach the operator population](#213-problem-induction-the-pledge-mechanism-cannot-reach-the-operator-population) documents the concentration; the marginal operators at the bottom are the first to leave)
+- **delegators undelegate** ([The yield signal does not drive delegation](#223-problem-induction-the-yield-signal-does-not-drive-delegation) documents the frozen power law; the micro-delegators holding 32 ADA median have the least to lose)
+- the staking rate declines further ([§2.3 CEN.O7](#232-mainnet-observations))
 
 Each of these effects reduces the security budget, which in turn reduces the chain's attractiveness, which in turn suppresses demand for ADA — *a reflexive loop with no internal floor*.
 
@@ -1503,14 +1493,13 @@ Each of these effects reduces the security budget, which in turn reduces the cha
 
 The reward pipeline's long-term viability requires three conditions to hold simultaneously:
 
-- the **fee input must grow** ([The fee input is structurally insufficient](#2231-the-fee-input-is-structurally-insufficient))
-- the **submitter population must expand** ([The fee-generating population must expand for the pipeline to survive](#2232-the-fee-generating-population-must-expand-for-the-pipeline-to-survive))
+- the **fee input must grow and the funders-beneficiaries gap must close** ([Funders and beneficiaries don't overlap, and the gap is widening](#243-problem-induction-funders-and-beneficiaries-dont-overlap-and-the-gap-is-widening))
 - the **ADA price must be deflationary in real terms**
 
 These three constraints are **not independent** — they interact, and in some configurations they contradict:
 
-- a **rising ADA price** increases the fiat cost of transacting, which suppresses fee volume and makes the [Transaction Submitters](#22-transaction-submitters) problem harder
-- a **falling ADA price** makes operator and delegator rewards insufficient, which makes the [The Staking Populations](#21-the-staking-populations) problem harder
+- a **rising ADA price** increases the fiat cost of transacting, which suppresses fee volume and makes the [Transaction Submitters](#24-transaction-submitters) problem harder
+- a **falling ADA price** makes operator and delegator rewards insufficient, which makes the [Pool Operators](#21-pool-operators) and [Delegators](#22-delegators) problems harder
 - a **stable ADA price** satisfies neither: operators still face a declining ADA emission, and submitters face no price incentive to transact more
 
 The mechanism design does not acknowledge this trilemma. The reward curve, the fee formula, and the reserve schedule were each designed in isolation:
@@ -1538,5 +1527,5 @@ Each pipeline stage is backed by a dedicated empirical analysis containing the f
 | [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution) Treasury & Pool Pots | [`Treasury & Pool Pots Distribution`](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md) | Epoch-pot assembly, reserve trajectory, fee analysis, return-to-reserve mechanism |
 | [Pools Distribution](#12-pools-distribution) Pools Distribution | [`The Pools Pot Distribution Gaps`](sub-flows/pools-distribution/mainnet-analysis/README.md) | Reward curve formulas, distribution efficiency, pool landscape, entity analysis |
 | [Operator / Delegator Distribution](#13-operator-delegator-distribution) Operator / Delegator | [*The Operator's Cut*](sub-flows/operator-delegator-distribution/mainnet-analysis/README.md) | Intra-pool split formulas, pricing plan landscape, custodial/retail boundary, operator profitability, delegator yield trajectory and structural compression |
-| [The Staking Populations](#21-the-staking-populations) Staking Populations | [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md) | ADA supply decomposition, operator landscape and entity analysis, delegator behaviour and loyalty, non-participant decomposition, population dynamics |
-| [Transaction Submitters](#22-transaction-submitters) Transaction Submitters | [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md) §6 _(standalone doc pending)_ | Submitter population size and trajectory, address-type decomposition, fee-revenue attribution, script vs key composition, concentration |
+| [Pool Operators](#21-pool-operators), [Delegators](#22-delegators), [Non-Participants](#23-non-participants) | [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md) | ADA supply decomposition, operator landscape and entity analysis, delegator behaviour and loyalty, non-participant decomposition, population dynamics |
+| [Transaction Submitters](#24-transaction-submitters) | [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md) §6 | Submitter population size and trajectory, address-type decomposition, fee-revenue attribution, script vs key composition, concentration |

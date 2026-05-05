@@ -109,8 +109,8 @@ Without a codified baseline, "divergence" has no reference point — which is wh
 
 - **[RSS-2020](references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf) — *Reward Sharing Schemes for Stake Pools*** (Brünjes, Kiayias et al., 2020). The formal game-theoretic paper that accompanied SL-D1.
 - **[IAPG-2021](references/research-papers/incentives-against-power-grabs_kiayias-et-al_2021.pdf) — *Incentives Against Power Grabs*** (Kiayias et al., 2021). Analyses the Sybil defence pledge is meant to provide.
-- **[RMPC-2022](references/research-papers/removing-min-pool-cost_stouka-brunjes-kiayias-koutsoupias_2022.pdf) — *Removing the min-pool-cost floor*** (Stouka, Brünjes, Kiayias, Koutsoupias, 2022). Revisits $minPoolCost$ in light of early mainnet evidence.
 - **[BPD-2024](references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf) — *Balancing Participation and Decentralization*** (Kiayias et al., 2024). The most recent theoretical refinement.
+- **[AFT-2025](https://arxiv.org/abs/2505.04422) — *Reward Sharing in PoS with No-Pool-Choice Delegators*** (Kiayias et al., AFT 2025; full version on arXiv). Reframes the operator/delegator incentive landscape when delegators are not strictly yield-maximising — directly relevant to the OPE.O7 family of findings in the Diagnostic.
 
 These are cited where their framing informs a milestone. **None is a constructive foundation this spec builds upon.**
 

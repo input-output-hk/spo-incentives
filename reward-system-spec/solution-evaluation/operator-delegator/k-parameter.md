@@ -2,7 +2,17 @@
 
 > **Lever:** `stakePoolTargetNum` · **Current value:** 500 · **Governance path:** Parameter Change action (no hard fork) · **Companion to** [CIP-0082](cip-0082.md) stages 3–4 · **No-go as a standalone — under the current weak-pledge equilibrium, new pool slots get absorbed horizontally by existing multi-pool fleets**
 
-This is a **sub-document** of the CIP-0082 evaluation, focused on the standalone analysis of the `k` lever — what changes when only the scalar `k` moves, holding the reward formula and the operator/member split formula fixed.
+This is a sub-document of the CIP-0082 evaluation. It looks at `k` on its own — what changes when only the scalar `k` moves while the reward formula and the operator / member split stay fixed. `k` shows up in the SL-D1 reward formula in two derived places ($z_0 = 1/k$ and $P_{\max} = R/k$), and a raise is a single Parameter Change action (no hard fork). The lever appears as stages 3–4 of CIP-0082 and occasionally as a standalone governance proposal — and rests on a single empirical baseline: the 2020 `k: 150 → 500` raise.
+
+**Raising `k` standalone is a regressive lever in today's weak-pledge regime — it compresses the top tail without redistributing, amplifies a pledge bonus no operator profile is positioned to claim, and lets new slots feed the existing multi-pool fleet.** Of the three structural thresholds in the diagnostic, `k` moves only saturation; production and viability are k-invariant.
+
+Three findings frame the verdict:
+
+- The 2020 `k: 150 → 500` raise produced today's 83-entity MPO landscape — registration cost stays ~500 ADA, infrastructure scales near-horizontally, pledge does not bind expansion.
+- The redistribution channel is at most ~8 % of productive stake on demand, and the supply-side amplification runs into the same 0.68 %/yr vs 2.3 %/yr opportunity cost that produces the current non-pledge equilibrium.
+- The mechanical effect lands only on the upper tail; below the new $z_0$, hollow pools see zero change in pool reward, operator revenue, or delegator ROS.
+
+*A standalone k-raise becomes a decentralisation tool only after fee-layer and stake-cap reforms have flipped the regime — fee-layer → stake-cap → k-recalibration is the canonical order.*
 
 ## Table of Contents
 
@@ -23,33 +33,69 @@ This is a **sub-document** of the CIP-0082 evaluation, focused on the standalone
 
 ## 1. What raising `k` proposes
 
-`k` (protocol parameter `stakePoolTargetNum`) is the scalar that sets Cardano's **target pool population**. It is currently **500** and enters the SL-D1 reward formula in two derived places: the per-pool saturation threshold $z_0 = 1/k$ and the per-pool reward ceiling $P_{\max} = R/k$.
+`k` (protocol parameter `stakePoolTargetNum`) sets Cardano's target pool population. It is currently **500** and shows up in the SL-D1 reward formula in two derived places:
 
-A k-raise is a single Parameter Change action (no hard fork, no formula change). It is embedded as **stages 3–4 of CIP-0082** (`500 → 750 → 1000`) and is occasionally advanced as a standalone governance proposal. This document evaluates the *standalone* case — what changes when `k` moves while everything else stays fixed.
+- the per-pool saturation threshold $z_0 = 1/k$;
+- the per-pool reward ceiling $P_{\max} = R/k$.
+
+A k-raise is a single Parameter Change action — no hard fork, no formula change. It appears as stages 3–4 of CIP-0082 (`500 → 750 → 1000`), and occasionally as a standalone governance proposal.
+
+This document evaluates the standalone case: what happens when `k` moves and nothing else does.
 
 ## 2. The problem it tries to fix
 
-The advertised mechanism (from CIP-0082's own rationale):
+CIP-0082's own rationale states the mechanism this way:
 
 > *"Increasing k may get stale delegations moving again by oversaturating large pools. This will cause many delegators to reconsider their delegation, potentially helping smaller community pools find delegations."*
 
-Two stated effects: (i) the saturation cap shrinks, so pools above the new cap lose reward and delegators have an incentive to migrate; (ii) the pledge bonus is amplified for self-pledged pools below the new cap, so pledge becomes a more meaningful signal.
+Two effects are claimed:
 
-The k-raise is also used as a proxy for **decentralisation**: more pools = more operators = lower concentration. Cardano has used the lever exactly once in protocol history — `k: 150 → 500` in August 2020 — and that single natural experiment is the baseline against which any future raise must be evaluated.
+- the saturation cap shrinks, so pools above it lose reward and delegators have an incentive to migrate;
+- the pledge bonus is amplified for self-pledged pools below the cap, making pledge a more meaningful signal.
+
+The lever also doubles as a proxy for **decentralisation**: more pools, more operators, lower concentration.
+
+Cardano has used the lever once — `k: 150 → 500` in August 2020. That single natural experiment is the only empirical baseline available; any future raise has to be evaluated against what actually happened then.
 
 ## 3. Verdict — three reasons it fails as a standalone
 
-1. **History repeats — the 2020 k-raise produced today's MPO concentration, and the same structural economics still apply.** The only previous k-raise (`150 → 500`) produced the multi-pool-operator landscape the diagnostic now documents: **83 attributed entities operate 449 productive pools holding 76.7 % of productive stake**. New pool slots cost ~500 ADA each to register; existing MPO infrastructure scales horizontally; pledge is not binding on fleet expansion. **No mechanism in a standalone k-raise forecloses the absorption pattern.** → *[MPO fleet absorption in detail](#b1-s3-mpo-fleet-absorption-under-weak-pledge)*
+A standalone k-raise does not decentralise stake on today's mainnet. Three reasons, each backed by the diagnostic.
 
-2. **The redistribution channel is too narrow on the demand side and structurally insufficient on the supply side.** *Demand:* the ROS-responsive delegator population is at most **~8 % of productive stake** once custodial holdings, loyal delegations, and yield-identical switches are subtracted. *Supply:* a k-raise amplifies the pledge bonus by a factor proportional to `k` for self-pledged pools — but the **non-pledge equilibrium** persists because the *formula* that produces it (pledge yield 0.68 %/yr structurally below passive-delegation 2.3 %/yr) is unchanged. The amplified bonus is a larger prize for a behaviour operators still have no reason to adopt. → *[narrow segment in detail](#b2-s2-narrow-demand-side-segment-insufficient-operator-side-mechanism)*
+#### 1. The 2020 `k: 150 → 500` raise produced today's 83-entity MPO landscape — the same script reruns.
 
-3. **A k-raise reshapes only the upper tail. The bottom of the distribution — the population V2 §3.1 names as priority — is mechanically unchanged.** Above the new $z_0$, every pool's reward caps at $P_{\max} = R/k$; doubling `k` halves the cap. **Below the new $z_0$, the reward formula has the `k` cancel out exactly** — Sub-reliable, Sub-block, and Dormant tiers see zero change in pool reward, operator revenue, or delegator ROS. The production threshold (Praos slot mechanics) and the viability threshold (hollow-pool break-even) are also k-invariant: a k-raise does not rescue any pool at the production or viability boundary, regardless of how much $z_0$ shrinks. → *[top-tail-only effect in detail](#b3-s1-top-tail-compression-with-narrow-pledge-amplification-bottom-unchanged)*
+Cardano's only previous k-raise produced the multi-pool landscape the diagnostic now documents: **83 attributed entities, 449 productive pools, 76.7 % of productive stake** (POL.O5.F1). The economic gradient is unchanged: new pool slots cost ~500 ADA to register, existing operators scale near-horizontally on relay topology and ops capacity, and pledge does not bind fleet growth (POL.O5.F3: 42 of 48 saturation-scale MPOs already operate at zero pledge).
+
+*A standalone k-raise does nothing to break this pattern — the natural experiment has already been run.* → [MPO fleet absorption under weak pledge](#b1-s3-mpo-fleet-absorption-under-weak-pledge)
+
+#### 2. The redistribution channel is ~8 % of stake on demand, structurally dominated on supply.
+
+On the demand side, decomposing the 21.57 B ADA of productive stake leaves at best **~8 % of productive stake** in the ROS-responsive segment once custodial holdings (21.1 %), loyal tenure ≥ 2.7 yr (~33 %), and yield-identical switches (50.5 % of volatile-tier moves) are stripped out. On the supply side, the amplified pledge bonus runs into the same opportunity cost that produced the current non-pledge equilibrium: pledge yield 0.68 %/yr against passive-delegation yield 2.3 %/yr.
+
+*The k-raise amplifies a prize in linear `k` for a behaviour operators have no reason to adopt — into a delegator base too small to redistribute network-level concentration.* → [Narrow demand, unmoved supply](#b2-s2-narrow-demand-side-segment-insufficient-operator-side-mechanism)
+
+#### 3. `k` moves only saturation — production and viability lines do not budge, and the bottom is mechanically frozen.
+
+Of the three structural thresholds, **`k` moves only saturation**: production ($n \cdot S_{\text{active}} / (L \cdot f)$, Praos slot mechanics) and viability ($c / (R \lambda_{\text{size}} / \text{CircSupply})$, hollow-pool break-even) contain no `k`. Below the new $z_0$, the `k` cancels exactly in the hollow-pool reward formula: Sub-reliable, Sub-block, and Dormant tiers see zero change in pool reward, zero change in operator revenue (capped at `minPoolCost`), zero change in delegator ROS.
+
+*The bottom of the distribution V2 §3.1 names as foundational priority is mechanically untouched.* → [Top-tail compression, bottom unchanged](#b3-s1-top-tail-compression-with-narrow-pledge-amplification-bottom-unchanged)
+
+#### Bottom line.
+
+A standalone k-raise today is not a decentralisation tool — it is a regressive lever in the current weak-pledge regime. It compresses the top of the reward distribution without redistributing revenue, amplifies a pledge bonus that no operator profile is positioned to claim, and lets new slots be absorbed by existing multi-pool fleets.
+
+It becomes a useful decentralisation lever only **after** a fee-layer change makes pledge worthwhile, and a stake-cap layer prevents fleet absorption. The correct sequence is fee-layer → stake-cap → k-recalibration.
+
+The remainder of the document walks the lever in three steps: §4 quantifies the three measurable mainnet effects (top-tail compression, pledge-bonus amplification, bottom-tier invariance); Appendix A unpacks the formulas, separates what `k` does and does not move, and re-runs the calibration at today's parameters; Appendix B documents the per-finding evidence with verdict tags.
 
 ## 4. What it does to mainnet today
 
-A standalone k-raise has three measurable effects: it compresses the top of the reward distribution, it amplifies the pledge bonus for the narrow population of self-pledged pools, and it leaves everything below the new saturation cap mechanically unchanged.
+A standalone k-raise has three measurable effects on mainnet:
 
-**Pool reward across nine tiers (hollow pool, ADA/epoch):**
+- it compresses the top of the reward distribution;
+- it amplifies the pledge bonus for the small population of self-pledged pools;
+- it leaves everything below the new saturation cap mechanically unchanged.
+
+#### Pool reward by tier.
 
 | Canonical tier | Rep. σ | $k = 500$ (current) | $k = 750$ | $k = 1000$ | Change |
 |---|---:|---:|---:|---:|---|
@@ -58,11 +104,24 @@ A standalone k-raise has three measurable effects: it compresses the top of the 
 | Large healthy | 50 M | 15 584 | 15 584 | **11 942** | compressed at $k = 1000$ |
 | Saturated | 77 M | 23 885 | **15 923** | **11 942** | compressed at every step |
 
-*Table 4.1 — Pool reward by tier across k-values. The bottom of the distribution is fully k-invariant; the top compresses ~50 % between k = 500 and k = 1000.*
+*Table 4.1 — Pool reward by tier across k-values. The bottom of the distribution is k-invariant; the top compresses ~50 % between k = 500 and k = 1000.*
 
-**Per-entity revenue is k-invariant under today's flat-fee structure.** Because operator take is capped at `minPoolCost` for every productive tier, every n-MPO bracket sees zero revenue change at any k-value — single-pool through 11+ pool MPO entities all stay at their current revenue. The k-raise *creates new pool slots*; it does not redistribute revenue from existing pools.
+#### Operator revenue does not move.
 
-**The pledge-bonus amplification is real but narrow.** A fully self-pledged 15 M ADA pool's bonus rises from 28 ADA/epoch ($k = 500$) to 218 ADA/epoch ($k = 1000$) — a 7.7× absolute amplification. But the population at the "high pledge + meaningful scale + retail delegation capture" intersection is structurally empty on mainnet: the 10 largest custodial-by-pledge entities (Cardano Foundation 93.9 %, Chuck/Bux 81.1 %, Liqwid 73.9 %) reach high pledge ratios precisely *because* they do not compete for external delegation — their stake is private/treasury-affiliated. Across all 10 entities, only **122 delegations** in total. **The amplified bonus is a prize without a recipient.**
+Operator take is capped at `minPoolCost` for every productive tier. As a result, every n-MPO bracket — from single-pool operators to 11+ pool fleets — sees zero revenue change at any k-value. The top-tail compression is absorbed entirely by the cap.
+
+A k-raise creates new pool slots. It does not redistribute revenue from existing ones.
+
+#### Pledge-bonus amplification is real but lands on no one.
+
+A fully self-pledged 15 M ADA pool sees its bonus grow from 28 ADA/epoch at $k = 500$ to 218 ADA/epoch at $k = 1000$ — a 7.7× amplification.
+
+The catch is who fits the profile. The implicit target — high pledge ratio, meaningful scale, retail delegation capture — does not exist on mainnet:
+
+- The 10 largest custodial-by-pledge entities (Cardano Foundation 93.9 %, Chuck/Bux 81.1 %, Liqwid 73.9 %) reach high pledge precisely because they do not compete for retail delegation: their stake is private or treasury-affiliated. Across all 10 entities, **122 delegations** in total.
+- The pools that do attract retail delegation (Everstake, Coinbase, Binance, AWP/Atomic Wallet) run at near-zero pledge.
+
+The amplified bonus is a prize with no recipient.
 
 ## 5. Read more
 
@@ -95,7 +154,7 @@ with $c$ = `minPoolCost`, $m$ = pool margin. For $\hat f' \le c$, the operator a
 
 ### A.2. What `k` moves and what it does not
 
-A standalone k-raise modifies only the scalar $k$. The formulas above are unchanged. The derived quantities shift:
+A standalone k-raise changes only the scalar `k`. The reward formula is unchanged. A few derived quantities scale with `k`; most do not.
 
 | Quantity | $k = 500$ | $k = 750$ | $k = 1000$ | Nature of change |
 |---|---:|---:|---:|---|
@@ -118,7 +177,9 @@ A standalone k-raise modifies only the scalar $k$. The formulas above are unchan
 - **The production threshold.** From [pools-distribution §4.1.2.1](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#4121-block-production-threshold), the stake needed to produce $n$ blocks/epoch reliably is $\text{stake}_n \approx n \cdot S_{\text{active}} / (L \cdot f)$, where $L = 432\,000$ slots/epoch and $f = 0.05$ are fixed. **No `k` in the formula.**
 - **The viability threshold.** Break-even stake = `minPoolCost` / (Reward per ADA per epoch) = $c / (R \lambda_{\text{size}} / \text{CircSupply})$ — also k-invariant. At today's `minPoolCost = 170`, break-even ≈ 0.54 M ADA.
 
-**Structural consequence.** Of the three thresholds that structure the nine-tier taxonomy (production, viability, saturation), **`k` acts on only one — saturation.** The Sub-block tier (< ~1 M) stays where it is under any k-raise; the Sub-reliable tier (< ~3 M) stays where it is; only the upper saturation line $z_0$ moves.
+#### What this means for the nine-tier taxonomy.
+
+The taxonomy rests on three thresholds: production, viability, saturation. **A k-raise moves only saturation.** The production line (~1 M, Sub-block) and the viability line (~0.54 M, hollow break-even) stay exactly where they are. Only the upper bound $z_0$ shifts — and only the upper tail with it.
 
 ### A.3. Updated calibration at current parameters (epoch 623)
 
@@ -139,9 +200,9 @@ All calibrations use today's parameters: $R \approx 15.53$ M ADA/epoch, $a_0 = 0
 
 *Table A.2 — Pool reward by tier across k-values. Tiers below the new $z_0$ are k-invariant; tiers above converge to a common ceiling.*
 
-**Operator annualised revenue is fully k-invariant** under today's flat-fee structure: every productive pool from Sub-reliable up sees `minPoolCost × 73 = 12 410 ADA/yr` regardless of `k`. The cap-at-`minPoolCost` structure absorbs the top-tail compression entirely. This is the isolation property of `k` in the current fee regime.
+**Operator annualised revenue does not move with `k`.** Every productive pool from Sub-reliable upward earns `minPoolCost × 73 = 12 410 ADA/yr` regardless of the value of `k`. The cap at `minPoolCost` absorbs the top-tail compression entirely — operators never see the cut.
 
-**Delegator net ROS** — k-raise is a delegator-side regression at the top and a non-event at the bottom:
+**Delegator net ROS** is the opposite picture: a cut at the top, no change at the bottom.
 
 | Canonical tier | Rep. σ | $k = 500$ | $k = 750$ | $k = 1000$ |
 |---|---:|---:|---:|---:|
@@ -162,11 +223,11 @@ All calibrations use today's parameters: $R \approx 15.53$ M ADA/epoch, $a_0 = 0
 
 *Table A.4 — Pledge bonus for a fully self-pledged 15 M pool across k-values. 7.7× absolute amplification; annualised, +20 660 ADA/yr.*
 
-This is the only genuinely positive mechanical effect a standalone k-raise delivers — and it lands on a population that is structurally empty for delegation-capturing operators.
+This pledge-bonus amplification is the only positive mechanical effect a standalone k-raise delivers. It also lands on a population that is empty in practice — the operators reaching high pledge ratios at scale are private/treasury-affiliated, not pools that compete for retail delegation.
 
 ## Appendix B — Findings
 
-Findings use a three-level taxonomy: **S<n>** = synthesis-level verdict statement (the title of each card below); **F<m>** = quantified finding listed inside the card. Each F is tagged **[D] Delivers · [R] Regresses · [B] Blind spot**. Code prefix `k-lever.` omitted on the rows below — the page is for `k-lever` throughout. Sort within each card: regressions and blind spots before deliveries. Click the count chip on the right of any card header to fold its findings list.
+The three cards below isolate the three reasons a standalone k-raise fails today: MPO fleet absorption (S3), narrow demand side and unmoved supply side (S2), and top-tail-only mechanical effect (S1). Each card lists its quantified findings.
 
 <article class="sro-card sro-card-pro" id="b1-s3-mpo-fleet-absorption-under-weak-pledge" data-group="3" markdown="1">
 <header class="sro-head">
@@ -188,7 +249,17 @@ Findings use a three-level taxonomy: **S<n>** = synthesis-level verdict statemen
 </ol>
 </article>
 
-**Precondition.** The regression is conditional on weak pledge. Once a stake-cap layer binds (CIP-0050's `L` or CIP-0037's dynamic saturation), MPO fleet expansion is structurally foreclosed — the k-raise then becomes a decentralisation lever (by forcing new entrants to capture the new slots). The correct sequence is: fee-layer → stake-cap → k-recalibration. **A standalone k-raise before a stake-cap is operating in the regressive regime.**
+#### What would change this.
+
+The regression is conditional on weak pledge. Once a stake-cap layer binds — CIP-0050's `L`, or CIP-0037's dynamic saturation — fleet expansion is no longer possible at the upper tail, and new pool slots have to go to new entrants.
+
+In that order, a k-raise becomes a decentralisation tool. The correct sequence is therefore:
+
+1. fee-layer fix (so pledge is not a dominated strategy);
+2. stake-cap (so the upper tail cannot absorb new slots);
+3. k-recalibration.
+
+**A standalone k-raise before a stake-cap makes things worse, not better.**
 
 <article class="sro-card sro-card-pro" id="b2-s2-narrow-demand-side-segment-insufficient-operator-side-mechanism" data-group="2" markdown="1">
 <header class="sro-head">
@@ -222,9 +293,16 @@ The ROS-responsive segment that the k-raise redistribution mechanism actually ta
 </ol>
 </article>
 
-**Composite reading.** The k-raise is not a wrong instrument in the abstract — it is a *narrow* instrument meeting a *narrow* audience on the demand side, and an *insufficient* instrument on the supply side because it leaves the formula that explains the non-pledge equilibrium unchanged.
+#### Why the demand side is narrow and the supply side is unmoved.
 
-**The "high pledge + scale + retail capture" intersection is structurally empty.** The operators reaching high pledge ratios at meaningful scale are precisely the **Custodial-by-pledge segment** — 10 entities, 36 pools, 1.59 B ADA, only **122 delegations** across the whole segment. Named examples: Cardano Foundation (93.9 % pledge ratio), Chuck/Bux (81.1 %), Liqwid (73.9 %) — all private/treasury-affiliated, not delegation-capturing. On the other side, the retail-delegation-capturing brands (Everstake, Coinbase, Binance, AWP / Atomic Wallet) run at near-zero pledge and capture delegation through wallet integration and marketing. The intersection "high pledge + large pool + retail delegation capture" the k-raise's amplified bonus implicitly targets **does not exist on mainnet**.
+A k-raise is not a wrong instrument in the abstract. It is a narrow instrument facing a narrow audience on the demand side, and an insufficient instrument on the supply side because the formula that produces the non-pledge equilibrium is unchanged.
+
+The implicit target of the amplified pledge bonus is "high pledge + meaningful scale + retail delegation capture". On mainnet, this combination does not exist:
+
+- Operators with high pledge ratios at scale are the **Custodial-by-pledge segment** — 10 entities, 36 pools, 1.59 B ADA, only **122 delegations** in total. Cardano Foundation (93.9 % pledge ratio), Chuck/Bux (81.1 %), Liqwid (73.9 %) are all private or treasury-affiliated, not chasing retail.
+- Brands that do attract retail delegation (Everstake, Coinbase, Binance, AWP/Atomic Wallet) run at near-zero pledge and capture delegation through wallet integration and marketing.
+
+The amplified bonus is a larger prize for a profile no one currently fills.
 
 <article class="sro-card sro-card-pro" id="b3-s1-top-tail-compression-with-narrow-pledge-amplification-bottom-unchanged" data-group="1" markdown="1">
 <header class="sro-head">
@@ -254,7 +332,11 @@ The ROS-responsive segment that the k-raise redistribution mechanism actually ta
 </ol>
 </article>
 
-**The arithmetic invariance at the bottom corrects a common misreading.** Earlier iterations of this evaluation, and several governance discussions, conclude that a k-raise "pushes the viability line up" or "makes sub-threshold pools worse". This is not what the formula does when only `k` changes. What pushes the viability line up is a change in the fee structure (e.g. `minPoolCost` increase) or the reward pot (e.g. reserve depletion lowering $R$) — not a change in `k`.
+#### A common misreading, corrected.
+
+A recurring claim — in earlier drafts of this evaluation and in governance discussions — is that a k-raise "pushes the viability line up" and makes sub-threshold pools worse. The formula does not behave that way when only `k` moves.
+
+What does push the viability line up is a change in the fee structure (`minPoolCost`) or the reward pot ($R$, e.g. reserve depletion). A `k` change leaves both untouched.
 
 ## Appendix C — Origin, V2 mapping, and references
 
@@ -271,9 +353,14 @@ The ROS-responsive segment that the k-raise redistribution mechanism actually ta
 
 ### C.2. Origin and context
 
-**Historical moves.** `k` has been raised exactly once in Cardano's live protocol history: **`k: 150 → 500`** in August 2020, roughly one year after Shelley launch. The raise was motivated by the same nominal argument that recurs today — more pools → more decentralisation. The recorded post-event outcome was the emergence of the multi-pool-operator pattern.
+**Historical moves.** `k` has been raised once in Cardano's live history: `k: 150 → 500` in August 2020, about a year after Shelley launch. The argument was the same one heard today — more pools means more decentralisation. The observed outcome was the rise of the multi-pool-operator pattern that the diagnostic now documents.
 
-**Current governance discussions.** Raising `k` is (i) embedded as stages 3–4 of CIP-0082 (`500 → 750 → 1000`), (ii) occasionally advanced as a standalone governance proposal outside the CIP-0082 package. This doc covers the standalone case; the CIP-0082-embedded case is analysed in [`cip-0082.md`](cip-0082.md).
+**Current governance discussions.** A k-raise appears in two forms today:
+
+- as stages 3–4 of CIP-0082 (`500 → 750 → 1000`);
+- as a standalone proposal outside the CIP-0082 package.
+
+This document covers the standalone case. The CIP-0082-embedded case is analysed in [`cip-0082.md`](cip-0082.md).
 
 ### C.3. References
 
