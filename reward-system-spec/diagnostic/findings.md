@@ -38,6 +38,8 @@ observations:
   - obs-112-2
   - obs-112-3
   - obs-112-4
+  - obs-132-8
+  - obs-222-8
 -->
 
 The epoch pot is funded almost entirely by monetary expansion from the reserve
@@ -72,6 +74,8 @@ observations:
   - obs-122-4
   - obs-122-5
   - obs-122-6
+  - obs-132-2
+  - obs-212-1
 -->
 
 Two causes account for **54% of the pools pot returning to reserve** (O1): a
@@ -111,6 +115,10 @@ observations:
   - obs-132-6
   - obs-132-7
   - obs-132-8
+  - obs-212-1
+  - obs-212-3
+  - obs-212-5
+  - obs-212-6
 -->
 
 The intra-pool split fails at both ends. **Operator viability is not
@@ -233,48 +241,90 @@ is declining, and no parameter change within the current mechanism addresses
 any of the three growth dimensions — volume, breadth, intensity — the
 pipeline depends on.
 
-## §3 The ADA Price Constraint
+## §3 The ₳/Fiat Money Constraint Layer
 
 Fees, monetary policy, and the exogenous exchange rate
 
-### 3.3. — The Deflation Assumption the Mechanism Cannot Honour
+### 3.1.1. — Is a finite ₳ supply enough to honour the deflationist promise?
 
 <!-- FINDING
-id: 3.3
-parent: 3
-parent_title: The ADA Price Constraint
+id: 3.1.1
+parent: 3.1
+parent_title: The ₳/Fiat Money Constraint Layer
 tier: sustainability
-observatory_anchor: 33-problem-induction
-observations: []
+observatory_anchor: 311-is-a-finite-supply-enough-to-honour-the-deflationist-promise
+observations:
+  - obs-112-1
+  - obs-112-2
+  - obs-132-8
+  - obs-132-9
+  - obs-212-7
 -->
 
-The protocol's monetary policy — a capped supply with declining emission —
-creates the *conditions* for deflation, but scarcity alone does not produce
-appreciation. Appreciation requires demand growth exceeding supply growth,
-and demand for ADA is a function of on-chain utility: transaction throughput,
-DeFi activity, application adoption, institutional custody, speculative
-interest. None of these are protocol parameters, and none are addressable by
-the incentive mechanism.
+The reward pipeline distributes ADA, but every participant decides in fiat
+terms — operator infrastructure costs, delegator opportunity costs versus
+DeFi alternatives, transaction fees. The mechanism therefore needs the ADA
+price to be **deflationary in real terms** as the emission rate declines:
+otherwise the pipeline's ADA-denominated output loses purchasing power and
+the security budget contracts.
 
-**The mechanism is structurally dependent on an exogenous variable it cannot
-influence.** If the ADA price stagnates or declines in real terms,
-ADA-denominated rewards lose purchasing power: marginal operators exit,
-micro-delegators undelegate, and the staking rate declines further. Each of
-these effects reduces the security budget, which reduces chain attractiveness,
-which suppresses demand for ADA — a reflexive loop with no internal floor.
+The protocol's **only deflationary property is the supply cap**. A capped,
+declining-emission monetary policy creates *scarcity* — a *necessary*
+condition for deflation. *But scarcity alone is not sufficient.* Appreciation
+requires demand growth exceeding supply growth, and demand for ADA is a
+function of on-chain utility (transaction throughput, DeFi activity,
+application adoption, institutional custody, speculative interest) — *none
+of which are protocol parameters*.
 
-**The three long-term viability conditions pull in different directions.**
-The fee input must grow (§2.2.3.1); the submitter population must expand
-(§2.2.3.2); and the ADA price must be deflationary in real terms. A rising
-ADA price raises the fiat cost of transacting and suppresses fee volume; a
-falling ADA price makes operator and delegator rewards insufficient; a stable
-ADA price satisfies neither.
+**The deflationist promise rests on a single property — finite supply — and
+that property is necessary but not sufficient.** Pre-Conway,
+scarcity-as-only-lever was a forced choice: there was no on-chain governance
+pipeline to add complementary properties. Post-Conway, it is a design gap.
+Finite supply was never enough, and the post-Conway era removes the excuse
+for treating it as if it were.
 
-The mechanism design does not acknowledge this trilemma. The reward curve,
-fee formula, and reserve schedule were each calibrated in isolation — the
-reward curve assumes a populated pool landscape, the fee formula assumes
-steady transaction demand, and the reserve schedule assumes that something
-will replace expansion before it runs out.
+### 3.1.2. — The protocol takes the hit of ADA volatility, with no instrument to govern it
+
+<!-- FINDING
+id: 3.1.2
+parent: 3.1
+parent_title: The ₳/Fiat Money Constraint Layer
+tier: sustainability
+observatory_anchor: 312-the-protocol-takes-the-hit-of-ada-volatility-with-no-instrument-to-govern-it
+observations:
+  - obs-112-4
+  - obs-132-8
+  - obs-132-9
+  - obs-222-9
+  - obs-222-12
+-->
+
+Whatever direction the ADA/Fiat exchange rate moves, the mechanism **absorbs
+the consequence passively** — there is no on-chain instrument that responds
+to price observations, redirects emission, or recalibrates fees against
+real-economy conditions. The reward pipeline's long-term viability requires
+three macroeconomic conditions to hold simultaneously: operator and delegator
+real revenue must remain viable (deflationary ADA price), the fee input must
+grow and the submitter population must expand, and the fiat cost of
+transacting must remain low enough to keep activity on Cardano.
+
+These three constraints are not independent. A rising ADA price preserves
+operator and delegator viability but raises the fiat cost of transacting,
+suppressing fee volume; a falling ADA price lowers the fiat cost of
+transacting but compresses operator and delegator real revenue; a stable ADA
+price satisfies neither extreme. *The ₳/Fiat exchange rate is the hidden
+variable that connects all three, and the mechanism offers no instrument to
+manage them.*
+
+**Pre-Conway, the absence of an instrument was a constraint** — there was no
+on-chain mechanism to recalibrate against macroeconomic conditions, so the
+mechanism's passivity was forced. Post-Conway, it is a design gap that the
+governance pipeline can now address: parameter recalibration against price
+observations, oracle-informed fee-formula updates, treasury-funded operator
+support during sustained price downturns, governance-triggered emission
+adjustment under defined trigger conditions. The diagnostic point is that
+**the layer of monetary management exists now** — the mechanism's passivity
+is no longer required.
 
 ## Schema — the `<!-- FINDING … -->` metadata block
 

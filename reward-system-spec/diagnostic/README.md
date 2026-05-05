@@ -6,7 +6,7 @@ This document is the **mainnet observatory**: it follows the reward through ever
 
 > **From Problem Induction to CPS to CIP.** The *Problem Induction* sub-sections in this document (§1.1.3, §1.2.3, §1.3.3, §2.1.3, §2.2.3, §3.3) are **CPSs in formation** — Cardano Problem Statements still maturing in narrative form. The lifecycle is *mainnet evidence → induced problem (proto-CPS) → V2 specification → CIPs*. Each induced problem is scoped against shared evidence so candidate solutions (CIPs) can be evaluated against the same problem definition once the work moves into the IntersectMBO/CIPs governance process. Earlier draft CPS files were retired in favour of the canonical narrative here; promotion to formal CPS happens upstream when a problem is judged ready.
 
-**The pipeline is read as a single dependency chain.** The epoch budget sets the ceiling, the reward curve allocates within it, and the fee structure determines how much of each allocation actually reaches operators and delegators. These stages are not independent layers — a failure at any stage propagates downstream, and a fix at one stage can be undone by a distortion at another. The pipeline runs on populations ([The Player Populations](#2-the-player-populations)) and against an exchange-rate boundary ([The ₳ Price Constraint](#3-the-price-constraint)) that closes the system. The companion [*The Intended Game*](../the-intended-game/README.md) supplies the normative baseline — what the mechanism was supposed to produce — against which each divergence is measured.
+**The pipeline is read as a single dependency chain.** The epoch budget sets the ceiling, the reward curve allocates within it, and the fee structure determines how much of each allocation actually reaches operators and delegators. These stages are not independent layers — a failure at any stage propagates downstream, and a fix at one stage can be undone by a distortion at another. The pipeline runs on populations ([The Player Populations](#2-the-player-populations)) and against an exchange-rate boundary ([The ₳/Fiat Money Constraint Layer](#3-the-fiat-money-constraint-layer)) that closes the system. The companion [*The Intended Game*](../the-intended-game/README.md) supplies the normative baseline — what the mechanism was supposed to produce — against which each divergence is measured.
 
 **The reward formula is at war with its own security model.** SL-D1's reward function reaches its global maximum at a *private* pool — fully self-pledged by a single wealthy operator, with no delegator participation. The security model SL-D1 references requires the *opposite*: a *balanced* configuration where operator commitment and delegator power coexist, so that accountability, delegation as counter-power, Sybil resistance, and decentralisation hold simultaneously. The formula's gradient and the security model's requirement run in opposite directions.
 
@@ -18,7 +18,7 @@ This document is the **mainnet observatory**: it follows the reward through ever
 
 **Most non-participation is unreachable by incentive design.** **14.36B ADA (39.8%)** of circulating supply sits outside delegation. Only **134.6M (0.37%)** belongs to accounts with a registered stake credential that have simply not delegated — the *addressable* pool that incentive changes can, in principle, reach. The remaining **14.2B** sits in addresses with no stake credential at all (enterprise custody, DeFi-locked Plutus contracts, Byron-era legacy, unregistered base addresses). Moving the structural fraction requires protocol-level changes — enabling enterprise-address staking, mandating staking-capable script addresses in DeFi standards — not parameter tuning.
 
-The remainder of the document follows the pipeline stage by stage: [the reward flow](#1-the-reward-flow) decomposes the SL-D1 pipeline into its three stages with a shared arc at each — *design intent → mainnet confrontation → problem induction → CPS check*; [the player populations](#2-the-player-populations) ground the pipeline failures in the structural dynamics of operators, delegators, non-participants, and transaction submitters; [the ADA price constraint](#3-the-price-constraint) sets the boundary conditions within which any solution must operate. Each pipeline stage is backed by a [dedicated sub-report](#sub-reports) listed at the bottom of this document.
+The remainder of the document follows the pipeline stage by stage: [the reward flow](#1-the-reward-flow) decomposes the SL-D1 pipeline into its three stages with a shared arc at each — *design intent → mainnet confrontation → problem induction → CPS check*; [the player populations](#2-the-player-populations) ground the pipeline failures in the structural dynamics of operators, delegators, non-participants, and transaction submitters; [the ₳/Fiat money-constraint layer](#3-the-fiat-money-constraint-layer) sets the boundary conditions within which any solution must operate. Each pipeline stage is backed by a [dedicated sub-report](#sub-reports) listed at the bottom of this document.
 
 # Table of Contents
 
@@ -77,12 +77,11 @@ The remainder of the document follows the pipeline stage by stage: [the reward f
   - [2.2. Transaction Submitters](#22-transaction-submitters)
     - [2.2.1. Overview](#221-overview)
     - [2.2.3. Problem Induction → Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion](#223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion)
-- [3. The ₳ Price Constraint](#3-the-price-constraint)
-  - [3.1. Overview](#31-overview)
-  - [3.2. The structural requirement](#32-the-structural-requirement)
-  - [3.3. Problem Induction](#33-problem-induction)
-    - [3.3.1. The mechanism assumes deflation but cannot produce it](#331-the-mechanism-assumes-deflation-but-cannot-produce-it)
-    - [3.3.2. The three constraints pull in different directions](#332-the-three-constraints-pull-in-different-directions)
+- [3. The ₳/Fiat Money Constraint Layer](#3-the-fiat-money-constraint-layer)
+  - [3.1. Problem Induction](#31-problem-induction)
+    - [3.1.1. Is a finite ₳ supply enough to honour the deflationist promise?](#311-is-a-finite-supply-enough-to-honour-the-deflationist-promise)
+    - [3.1.2. The protocol takes the hit of ADA volatility, with no instrument to govern it](#312-the-protocol-takes-the-hit-of-ada-volatility-with-no-instrument-to-govern-it)
+  - [3.2. Conclusion → The diagnosis as a coupled system](#32-conclusion-the-diagnosis-as-a-coupled-system)
 - [Sub-reports](#sub-reports)
 
 # 1. The Reward Flow
@@ -1241,23 +1240,17 @@ The mismatch is compounded by the trajectory. Roughly 30% of fee revenue already
 
 *The pipeline is funded by a depleting reserve, the fee replacement is two orders of magnitude away from sufficient at current throughput, and the population that would have to fund the post-reserve pot is contracting along the dimensions that matter — concentrated in addresses the pipeline either cannot reward by construction or doesn't reward in practice. The actionable share — base-script contracts whose builders could leverage delegation features — is the lever the mechanism design has to engage. Without it, the pipeline progressively taxes a contracting constituency it does not serve, with no feedback loop to retain that population's participation, and the staking pot cannot survive reserve depletion at current throughput.*
 
-# 3. The ₳ Price Constraint
+# 3. The ₳/Fiat Money Constraint Layer
 
-The preceding sections treat the reward pipeline as a closed system — protocol parameters, on-chain populations, and ADA-denominated flows. But the pipeline does not exist in isolation.
+The preceding sections treat the reward pipeline as a closed system — protocol parameters, on-chain populations, and ADA-denominated flows. *But the pipeline does not exist in isolation.* Every participant makes decisions in fiat terms, and the ADA the mechanism emits only retains its purchasing power if the macroeconomic layer that surrounds the protocol cooperates.
 
-Every participant makes decisions in fiat terms:
+This section inducts the last two problems and closes the diagnostic. The ₳/Fiat money-constraint layer is the **macroeconomic boundary** the preceding stages live inside — and the only one the protocol has *no direct instrument* for. §3.1.1 names the deflation assumption the mechanism cannot honour with the only property it has — finite supply. §3.1.2 names the macroeconomic tension the mechanism design does not acknowledge — the protocol absorbs ADA volatility without lever. §3.2 returns to §1, §2, and §3 together — the diagnosis is a coupled system, not a list of independent failures.
 
-- **operators** paying infrastructure costs
-- **delegators** evaluating opportunity cost
-- **submitters** deciding whether to transact on Cardano or elsewhere
+## 3.1. Problem Induction
 
-*The ADA price is the exchange rate between the protocol's internal economy and the external one, and for the incentive mechanism to remain viable, that exchange rate must trend in a specific direction.*
+### 3.1.1. Is a finite ₳ supply enough to honour the deflationist promise?
 
-## 3.1. Overview
-
-The reward pipeline distributes ADA. Operators and delegators receive ADA-denominated rewards. But the costs that operators bear — **servers, bandwidth, personnel, compliance** — are denominated in fiat.
-
-The yield that delegators compare against alternatives — **DeFi, staking on competing chains, traditional finance** — is evaluated in fiat-adjusted terms. The revenue that submitters generate — transaction fees — is fixed in ADA by the protocol's minimum-fee formula, regardless of what those fees represent in purchasing power.
+The reward pipeline distributes ADA. Operators and delegators receive ADA-denominated rewards. But the costs that operators bear — **servers, bandwidth, personnel, compliance** — are denominated in fiat. The yield that delegators compare against alternatives — **DeFi, staking on competing chains, traditional finance** — is evaluated in fiat-adjusted terms. The revenue that submitters generate — transaction fees — is fixed in ADA by the protocol's minimum-fee formula, regardless of what those fees represent in purchasing power.
 
 **This creates an asymmetry at the heart of the mechanism.** The protocol emits a fixed (and declining) quantity of ADA per epoch. If the fiat price of ADA falls, the real value of rewards falls with it — but the real costs of operation do not:
 
@@ -1265,39 +1258,11 @@ The yield that delegators compare against alternatives — **DeFi, staking on co
 - delegator retention depends on competitive fiat-adjusted yield
 - the transaction-fee base ([Transaction Submitters](#22-transaction-submitters)) must ultimately fund the pipeline in real terms, not just nominal ones
 
-*The mechanism's sustainability therefore requires the ADA price to be at minimum stable, and more precisely deflationary relative to the goods and services its participants consume.* Not because appreciation is desirable in the abstract, but because the pipeline's ADA-denominated output must maintain or increase its real purchasing power as the emission rate declines.
+The mechanism's sustainability therefore requires the ADA price to be at minimum stable, and more precisely **deflationary in real terms** as the emission rate declines — not because appreciation is desirable in the abstract, but because the pipeline's ADA-denominated output must maintain or increase its real purchasing power as the supply of new ADA contracts.
 
-## 3.2. The structural requirement
+Consider the operator population: [Operator / Delegator Distribution](#13-operator-delegator-distribution) documents that the median single-pool operator earns approximately **900 ADA per epoch** after subtracting costs denominated in ADA. At an ADA price of **$0.30**, that is **$270/epoch (~$65/month)**; at **$0.10**, it is **$90/epoch (~$22/month)** — below the infrastructure cost floor for most operators. *The viability threshold is not a fixed ADA quantity; it is a moving target that tracks fiat-denominated costs.* The same logic applies to delegators: a 3% annual return on 10,000 ADA yields 300 ADA — at $0.30, that is **$90/year — competitive with nothing**. The delegation decision is rational only if the holder expects ADA itself to appreciate sufficiently that the combined return (yield + price appreciation) exceeds the opportunity cost. The mechanism does not produce that appreciation; it assumes it.
 
-The reserve depletion documented in [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution) means that the quantity of ADA distributed per epoch will decline over time — by design. The mechanism compensates for this through two implicit assumptions:
-
-- first, that **fees will grow to replace expansion** ([Transaction Submitters](#22-transaction-submitters))
-- second, that the **per-unit value of ADA will appreciate** such that fewer ADA deliver equivalent or greater real value
-
-The second assumption is the **deflationary requirement**. It is not stated in the protocol specification, but it is embedded in the economics.
-
-Consider the operator population: [Operator / Delegator Distribution](#13-operator-delegator-distribution) documents that the median single-pool operator earns approximately **900 ADA per epoch** after subtracting costs denominated in ADA.
-
-- At an ADA price of **$0.30**, that is **$270/epoch (~$65/month)**
-- At **$0.10**, it is **$90/epoch (~$22/month)** — below the infrastructure cost floor for most operators
-
-*The operator viability threshold documented in [Operator / Delegator Distribution](#13-operator-delegator-distribution) is not a fixed ADA quantity; it is a moving target that tracks fiat-denominated costs.*
-
-The same logic applies to delegators. A 3% annual return on 10,000 ADA yields 300 ADA. If ADA is worth $0.30, that is **$90/year — competitive with nothing**.
-
-*The delegation decision is rational only if the holder expects the ADA itself to appreciate sufficiently that the combined return (yield + price appreciation) exceeds the opportunity cost.* The mechanism does not produce this appreciation; it assumes it.
-
-For submitters, the constraint is subtler. Transaction fees are protocol-determined minimums denominated in ADA. If ADA appreciates, the fiat cost of transacting rises — which could suppress transaction volume and shrink the fee-generating population ([Transaction Submitters](#22-transaction-submitters)).
-
-*The mechanism needs ADA to be deflationary enough to sustain operator and delegator incentives, but not so deflationary that it prices out the transaction activity that must eventually fund the pipeline.*
-
-## 3.3. Problem Induction
-
-### 3.3.1. The mechanism assumes deflation but cannot produce it
-
-*The reward pipeline distributes ADA; it does not create demand for ADA.*
-
-The protocol's monetary policy — a capped supply with declining emission — creates the *conditions* for deflation (scarcity), but scarcity alone does not produce appreciation. Appreciation requires demand growth exceeding supply growth, and demand for ADA is a function of the chain's utility:
+**The protocol's only deflationary property is the supply cap.** A capped, declining-emission monetary policy creates *scarcity* — a *necessary* condition for deflation. *But scarcity alone is not sufficient.* Appreciation requires demand growth exceeding supply growth, and demand for ADA is a function of the chain's utility:
 
 - transaction throughput
 - DeFi activity
@@ -1305,54 +1270,62 @@ The protocol's monetary policy — a capped supply with declining emission — c
 - institutional custody
 - speculative interest
 
-*None of these are protocol parameters. None are addressable by the incentive mechanism.*
+*None of these are protocol parameters.* The mechanism is therefore **structurally dependent on an exogenous variable it cannot influence**. If demand stagnates or contracts, the pipeline's ADA-denominated rewards lose purchasing power, **operators exit** ([SPO supply side — fewer and fewer entities participate in consensus](#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus) documents the contraction; the marginal operators at the bottom are the first to leave), **delegators undelegate** ([Arbiter-side distribution — titans move the disciplining capital, but not on yield](#2132-arbiter-side-distribution-titans-move-the-disciplining-capital-but-not-on-yield) documents the frozen power law; the micro-delegators holding 32 ADA median have the least to lose), and the staking rate declines further ([CEN.O7](sub-flows/census/mainnet-analysis/README.md#cen-o7)). Each of these effects reduces the security budget, which reduces the chain's utility, which suppresses demand for ADA — *a reflexive loop with no internal floor*.
 
-The mechanism is therefore **structurally dependent on an exogenous variable it cannot influence**. If the ADA price stagnates or declines in real terms:
+*The deflationist promise rests on a single property — finite supply — and that property is necessary but not sufficient.* For submitters the constraint runs in the opposite direction: transaction fees are protocol-determined minimums denominated in ADA, so if ADA appreciates the fiat cost of transacting rises and can suppress transaction volume ([Transaction Submitters](#22-transaction-submitters)) — the same scarcity property cuts both ways depending on who one asks.
 
-- the pipeline's ADA-denominated rewards lose purchasing power
-- **operators exit** ([SPO supply side — fewer and fewer entities participate in consensus](#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus) documents the contraction; the marginal operators at the bottom are the first to leave)
-- **delegators undelegate** ([Arbiter-side distribution — titans move the disciplining capital, but not on yield](#2132-arbiter-side-distribution-titans-move-the-disciplining-capital-but-not-on-yield) documents the frozen power law; the micro-delegators holding 32 ADA median have the least to lose)
-- the staking rate declines further ([§2.1 O7](#212-mainnet-observations))
+**What the protocol could do instead.** A deflationist promise that rests on supply scarcity alone is brittle. Beyond the supply cap, the protocol has **no demand-side property** to honour the promise: no instrument that adjusts emission against price observations, no treasury operation that absorbs downside exposure, no contract-level reward routing that internalises chain utility. Pre-Conway, scarcity-as-only-lever was a *forced* choice — there was no on-chain governance pipeline to add complementary properties. *Post-Conway, it is a design gap.* The parameters that already exist ($\rho$, $\tau$, $minPoolCost$, $a_0$) can be recalibrated against macroeconomic conditions; the governance pipeline can introduce new instruments that complement scarcity. **The diagnostic point is that finite supply was never enough, and the post-Conway era removes the excuse for treating it as if it were.**
 
-Each of these effects reduces the security budget, which in turn reduces the chain's attractiveness, which in turn suppresses demand for ADA — *a reflexive loop with no internal floor*.
+### 3.1.2. The protocol takes the hit of ADA volatility, with no instrument to govern it
 
-### 3.3.2. The three constraints pull in different directions
+Whatever direction the ADA/Fiat exchange rate moves, the mechanism **absorbs the consequence passively** — there is no on-chain instrument that responds to price observations, redirects emission, or recalibrates fees against real-economy conditions. The reward pipeline's long-term viability requires **three macroeconomic conditions** to hold simultaneously, but the mechanism has no lever to keep any of them on track:
 
-The reward pipeline's long-term viability requires three conditions to hold simultaneously:
-
+- **operator and delegator real revenue** must remain viable, which requires the ADA price to be **deflationary in real terms** as the emission rate declines
 - the **fee input must grow** *and* the **submitter population must expand** ([Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion](#223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion))
-- the **ADA price must be deflationary in real terms**
+- the **fiat cost of transacting** must remain low enough that activity keeps flowing on Cardano rather than migrating to cheaper chains
 
 These three constraints are **not independent** — they interact, and in some configurations they contradict:
 
-- a **rising ADA price** increases the fiat cost of transacting, which suppresses fee volume and makes the [Transaction Submitters](#22-transaction-submitters) problem harder
-- a **falling ADA price** makes operator and delegator rewards insufficient, which makes the [The Staking Populations](#21-the-staking-populations) problem harder
-- a **stable ADA price** satisfies neither: operators still face a declining ADA emission, and submitters face no price incentive to transact more
+- a **rising ADA price** preserves operator and delegator viability but raises the fiat cost of transacting, suppressing fee volume and worsening the demand-side distortion
+- a **falling ADA price** lowers the fiat cost of transacting but compresses operator and delegator real revenue, worsening the staking-population distortions
+- a **stable ADA price** satisfies neither extreme: operators still face a declining ADA emission, and submitters face no incentive structure that responds to real-economy conditions
 
-The mechanism design does not acknowledge this trilemma. The reward curve, the fee formula, and the reserve schedule were each designed in isolation:
+The mechanism design does not acknowledge this tension. The reward curve, the fee formula, and the reserve schedule were each designed in isolation:
 
 - the reward curve assumes a populated pool landscape
 - the fee formula assumes steady transaction demand
 - the reserve schedule assumes that something will replace expansion before it runs out
 
-*The ADA price is the hidden variable that connects all three, and the mechanism offers no instrument to manage the tension between them.*
+*The ₳/Fiat exchange rate is the hidden variable that connects all three, and the mechanism offers no instrument to manage the tension between them.* It absorbs the volatility, with no governance lever to redirect it.
 
-This section is intentionally placed last because it is the constraint that the protocol has the **least ability to address directly**. The preceding sections document problems that have protocol-level solutions — mechanism redesign, parameter changes, structural adjustments. The price constraint is different: it sets the **boundary conditions within which any such solution must operate**.
+**What the post-Conway governance pipeline could do.** Pre-Conway, the absence of an instrument was a *constraint* — there was no on-chain mechanism to recalibrate against macroeconomic conditions, so the mechanism's passivity was forced. *Post-Conway, it is a design gap that the governance pipeline can now address.* Concrete levers exist within the existing constitutional perimeter: parameter recalibration against price observations ($\rho$, $\tau$, $minPoolCost$, $a_0$), oracle-informed fee-formula updates, treasury-funded operator support during sustained price downturns, and governance-triggered emission adjustment under defined trigger conditions. Naming and parameterising these is the work of the companion specification; the diagnostic point is that the **layer of monetary management exists now** — the mechanism's passivity is no longer required.
 
-*A mechanism that requires deflation to function but cannot produce it is a mechanism that depends on external adoption for its internal coherence.*
+This section is intentionally placed last because the macroeconomic boundary is the layer the protocol has historically had the **least ability to address directly**. The preceding sections document problems that have always had protocol-level solutions — mechanism redesign, parameter changes, structural adjustments. The boundary used to be different: it set the **conditions within which any such solution must operate**, with no lever to push back. *That changed with Conway.*
 
----
+*A mechanism that endures volatility without instrument is a pre-Conway artefact. A successor mechanism designed today can choose otherwise.*
 
-The problems diagnosed above are consolidated into formal specifications in [**The Cardano Reward System V2 — Specification for a Sustainable Successor**](../README.md).
+## 3.2. Conclusion → The diagnosis as a coupled system
 
-Each pipeline stage is backed by a dedicated empirical analysis containing the formula derivations, mainnet data, figures, and reproduction scripts.
+The preceding sections document problems at three layers. They are not independent failures but a few feedback loops that interact through the populations, the reward curve, and the ₳/Fiat exchange rate.
+
+**Layer 1 — the reward flow** ([§1](#1-the-reward-flow)) shows that the pipeline distributes the epoch budget through three sequential stages whose distortions compound. The pool pots return ~54% of allocated stake to reserve every epoch, the pledge bonus (95.6% unclaimed) is the single largest addressable inefficiency, and the intra-pool split's regressive flat fee makes single-pool operators progressively unviable. The reward curve targets a balanced equilibrium it is not configured to produce.
+
+**Layer 2 — the populations** ([§2](#2-the-player-populations)) shows that the populations the pipeline operates on do not behave the way the mechanism assumes. The SPO base contracts at every stress wave and multi-pool entities absorb the ground; the arbiter side (titans, 0.07% of the base) holds 57% of staked capital and reallocates it without arbitrating on yield; non-participants are largely unreachable by incentive design. On the demand side, the fee-generating population has fallen 96% from its peak, and the largest payers either cannot or do not delegate.
+
+**Layer 3 — the macroeconomic boundary** ([§3](#3-the-fiat-money-constraint-layer)) shows that the mechanism design depends on a deflationary ADA price it cannot produce, and the three constraints (operator viability, fee growth, transaction cost) pull in different directions with no instrument to manage the tension.
+
+**Coupling, not addition.** The layers are not independent. The reward curve's failure to incentivise pledge (Layer 1) drives the SPO contraction (Layer 2). The SPO contraction reduces the security budget, which reduces the chain's utility, which suppresses demand for ADA (Layer 3). The fee-generating population's misalignment (Layer 2) compounds the deflationary requirement the mechanism cannot honour (Layer 3) because fee growth is itself constrained by the ADA/fiat exchange rate. *No single intervention untangles these by itself.*
+
+A successor mechanism cannot fix one layer without considering the other two. *The successor must be designed as a system — microeconomic instruments operating against macroeconomic boundary conditions — not as a checklist of parameter adjustments.*
+
+The problems diagnosed above are consolidated into formal specifications in [**The Cardano Reward System V2 — Specification for a Sustainable Successor**](../README.md), which translates each layer's findings into milestones with KPIs, recalibration rules, and constitutional alignment. Each pipeline stage and population analysis is backed by a dedicated empirical sub-report listed below.
 
 ## Sub-reports
 
 | Stage | Sub-report | Scope |
 | --- | --- | --- |
-| [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution) Treasury & Pool Pots | [`Treasury & Pool Pots Distribution`](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md) | Epoch-pot assembly, reserve trajectory, fee analysis, return-to-reserve mechanism |
-| [Pools Distribution](#12-pools-distribution) Pools Distribution | [`The Pools Pot Distribution Gaps`](sub-flows/pools-distribution/mainnet-analysis/README.md) | Reward curve formulas, distribution efficiency, pool landscape, entity analysis |
-| [Operator / Delegator Distribution](#13-operator-delegator-distribution) Operator / Delegator | [*The Operator's Cut*](sub-flows/operator-delegator-distribution/mainnet-analysis/README.md) | Intra-pool split formulas, pricing plan landscape, custodial/retail boundary, operator profitability, delegator yield trajectory and structural compression |
-| [Pool Operators](#21-pool-operators), [Delegators](#22-delegators), [Non-Participants](#23-non-participants) | [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md) | ADA supply decomposition, operator landscape and entity analysis, delegator behaviour and loyalty, non-participant decomposition, population dynamics |
-| [Transaction Submitters](#24-transaction-submitters) | [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md) §6 | Submitter population size and trajectory, address-type decomposition, fee-revenue attribution, script vs key composition, concentration |
+| [Treasury & Pool Pots Distribution](#11-treasury-pool-pots-distribution) | [`Treasury & Pool Pots Distribution`](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md) | Epoch-pot assembly, reserve trajectory, fee analysis, return-to-reserve mechanism |
+| [Pools Distribution](#12-pools-distribution) | [`The Pools Pot Distribution Gaps`](sub-flows/pools-distribution/mainnet-analysis/README.md) | Reward curve formulas, distribution efficiency, pool landscape, entity analysis |
+| [Operator / Delegator Distribution](#13-operator-delegator-distribution) | [*The Operator's Cut*](sub-flows/operator-delegator-distribution/mainnet-analysis/README.md) | Intra-pool split formulas, pricing plan landscape, custodial/retail boundary, operator profitability, delegator yield trajectory and structural compression |
+| [The Staking Populations](#21-the-staking-populations) | [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md) | ADA supply decomposition, operator landscape and entity analysis, delegator behaviour and loyalty, non-participant decomposition, population dynamics |
+| [Transaction Submitters](#22-transaction-submitters) | [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md) §6 | Submitter population size and trajectory, address-type decomposition, fee-revenue attribution, script vs key composition, concentration |

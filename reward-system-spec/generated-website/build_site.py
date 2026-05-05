@@ -5383,16 +5383,15 @@ def _render_findings_content(
         "1.2.3",   # Closing the Consensus Incentive Gap (pledge)
         "1.3.3.1", # Guarantee operator viability
         "1.3.3.2", # Restore competitive delegator yield
-        "2.1.3.1", # Operator population concentration
-        "2.1.3.2", # Frozen power law
+        "2.1.3.1", # SPO supply side — entity contraction
+        "2.1.3.2", # Arbiter-side distribution — titans don't arbitrate on yield
     }
     MACRO_SECTIONS = {
         "1.1.3",   # Funding the protocol without a reserve
-        "2.1.3.3", # Non-participant population
-        "2.2.3.1", # Fee input insufficient
-        "2.2.3.2", # Fee-generating population growth
-        "3.3.1",   # Deflation assumption gap
-        "3.3.2",   # Trilemma
+        "2.1.3.3", # Non-participants — secondary distribution problem
+        "2.2.3",   # Demand-side distribution — pot survival + population expansion (merged)
+        "3.1.1",   # Is a finite ₳ supply enough to honour the deflationist promise?
+        "3.1.2",   # The protocol takes the hit of ADA volatility, no instrument to govern it
     }
 
     sorted_findings = sorted(findings, key=lambda r: r.get("order", 0))
