@@ -2690,7 +2690,32 @@ mark.spo-hl{background:color-mix(in srgb, #FFBA36 35%, transparent);
 .sro-card.sro-card-pro{border:1px solid var(--border);border-radius:12px;
   background:var(--bg);overflow:hidden;
   box-shadow:0 1px 3px rgba(0,51,173,.04);
-  transition:border-color .15s,box-shadow .15s}
+  margin:42px 0;
+  transition:border-color .15s,box-shadow .15s;
+  position:relative}
+/* Visible breathing room between Pro cards and surrounding prose.
+   When a card sits next to body paragraphs (CIP-evaluation pages,
+   Observatory) the previous tight ``margin:0`` made the card feel
+   like a continuation of the paragraph above it. The 42px margin
+   gives the card air; a 1px hairline rule above and below the card
+   marks the boundary explicitly so the prose doesn't run into it. */
+.sro-card.sro-card-pro::before,
+.sro-card.sro-card-pro::after{
+  content:"";position:absolute;left:14%;right:14%;
+  height:1px;background:var(--border);opacity:.7}
+.sro-card.sro-card-pro::before{top:-22px}
+.sro-card.sro-card-pro::after{bottom:-22px}
+/* Suppress the rules when cards stack consecutively (the synthesis
+   page's evidence tree, mainnet observation lists) — there the
+   cards are siblings and a divider would clutter rather than help. */
+.sro-list .sro-card.sro-card-pro,
+.finding-card-evidence-tree .sro-card.sro-card-pro{
+  margin:0}
+.sro-list .sro-card.sro-card-pro::before,
+.sro-list .sro-card.sro-card-pro::after,
+.finding-card-evidence-tree .sro-card.sro-card-pro::before,
+.finding-card-evidence-tree .sro-card.sro-card-pro::after{
+  display:none}
 .sro-card.sro-card-pro:hover{
   border-color:color-mix(in srgb, var(--cardano-blue) 35%, var(--border));
   box-shadow:0 2px 14px rgba(0,51,173,.08)}
