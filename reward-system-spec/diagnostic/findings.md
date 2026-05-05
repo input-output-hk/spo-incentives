@@ -161,7 +161,7 @@ id: 2.1.3
 parent: 2.1
 parent_title: The Staking Populations
 tier: concentration
-observatory_anchor: 213-problem-induction
+observatory_anchor: 213-problem-induction-distribution-distortions-across-the-three-populations
 observations:
   - obs-212-1
   - obs-212-2
@@ -170,6 +170,11 @@ observations:
   - obs-212-5
   - obs-212-6
   - obs-212-7
+  - obs-122-5
+  - obs-122-6
+  - obs-132-6
+  - obs-132-7
+  - obs-112-3
 -->
 
 The populations on which the reward pipeline operates each exhibit a
@@ -206,12 +211,14 @@ id: 2.2.3
 parent: 2.2
 parent_title: Transaction Submitters
 tier: fees
-observatory_anchor: 223-problem-induction
+observatory_anchor: 223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion
 observations:
   - obs-222-8
   - obs-222-9
   - obs-222-10
   - obs-222-11
+  - obs-222-12
+  - obs-112-1
 -->
 
 The reward pipeline's long-term viability rests on a single assumption: that
