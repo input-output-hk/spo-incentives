@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777960509">
+<link rel="stylesheet" href="assets/site.css?v=1777960927">
 
 
 </head>
@@ -676,12 +676,43 @@ window.MathJax = {
 <div class="sro-body">
 <div class="sro-evidence"><strong>The ROS-focused delegator segment is a minority of productive stake.</strong> Decomposing the 21.57 B ADA of productive stake:
 
-| Segment | Stake | Share | Responsive to a ROS signal? |
-|---|---:|---:|---|
-| Custodial (funds not discretionary) | 4.55 B | 21.1 % | <strong>No</strong> — funds are custodied, reallocation is not a retail choice |
-| Retail, loyal tenure ≥ 2.7 yr | ~7.15 B | ~33 % | <strong>No</strong> — 42 % of delegations have not moved in 2.7+ years |
-| Retail, volatile tenure &lt; 25 d | ~3.57 B | ~17 % | Potentially — but 50.5 % of switches land on yield-identical pools, and non-identical moves show <strong>visibility</strong>, not yield, asymmetry |
-| Retail, middle tenure | ~6.30 B | ~29 % | Unclear |
+<table class="sro-evidence-table">
+<thead>
+<tr>
+<th>Segment</th>
+<th>Stake</th>
+<th>Share</th>
+<th>Responsive to a ROS signal?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Custodial (funds not discretionary)</td>
+<td>4.55 B</td>
+<td>21.1 %</td>
+<td><strong>No</strong> &mdash; funds are custodied, reallocation is not a retail choice</td>
+</tr>
+<tr>
+<td>Retail, loyal tenure &ge; 2.7 yr</td>
+<td>~7.15 B</td>
+<td>~33 %</td>
+<td><strong>No</strong> &mdash; 42 % of delegations have not moved in 2.7+ years</td>
+</tr>
+<tr>
+<td>Retail, volatile tenure &lt; 25 d</td>
+<td>~3.57 B</td>
+<td>~17 %</td>
+<td>Potentially &mdash; but 50.5 % of switches land on yield-identical pools, and non-identical moves show <strong>visibility</strong>, not yield, asymmetry</td>
+</tr>
+<tr>
+<td>Retail, middle tenure</td>
+<td>~6.30 B</td>
+<td>~29 %</td>
+<td>Unclear</td>
+</tr>
+</tbody>
+</table>
+
 
 The ROS-responsive segment that the k-raise redistribution mechanism actually targets is <strong>at most the subset of the retail-volatile tier whose switches are not yield-identical</strong> — at best ~8 % of productive stake. A single-digit-percent redistribution channel is not a network-level concentration reform.</div>
 </div>
@@ -851,6 +882,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777960509"></script>
+<script src="assets/site.js?v=1777960927"></script>
 </body>
 </html>
