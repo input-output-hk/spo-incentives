@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777962490">
+<link rel="stylesheet" href="assets/site.css?v=1777963402">
 
 
 </head>
@@ -346,12 +346,10 @@ window.MathJax = {
 <li><a href="#b3-s3-entity-level-concentration-gap-and-small-pool-viability-risk">B.3. S3 — Entity-level concentration gap and small-pool viability risk</a></li>
 </ul>
 </li>
-<li><a href="#appendix-c-origin-v2-mapping-and-references">Appendix C — Origin, V2 mapping, and references</a><ul>
+<li><a href="#appendix-c-origin-and-references">Appendix C — Origin and references</a><ul>
 <li><a href="#c1-identity-card">C.1. Identity card</a></li>
 <li><a href="#c2-origin-and-context">C.2. Origin and context</a></li>
-<li><a href="#c3-diagnostic-findings-cited">C.3. Diagnostic findings cited</a></li>
-<li><a href="#c4-missing-cpss-mapping-to-v2-3">C.4. Missing CPSs — mapping to V2 §3</a></li>
-<li><a href="#c5-references">C.5. References</a></li>
+<li><a href="#c3-references">C.3. References</a></li>
 </ul>
 </li>
 </ul>
@@ -434,7 +432,7 @@ window.MathJax = {
 <li><strong>Stake-cap layer comparison with CIP-0037</strong> — <a href="stake-cap.html">Stake-Cap synthesis</a></li>
 <li><strong>Mechanism in detail</strong> (formula, three scenarios, the cliff at the pledge-ratio threshold, operator decision tree, deployment ramp) — <a href="#appendix-a-mechanism-in-detail">Appendix A</a></li>
 <li><strong>Full findings list</strong> (S1–S3 with quantitative findings, capital-capability bias quantification, entity-level gap) — <a href="#appendix-b-findings">Appendix B</a></li>
-<li><strong>Origin, V2-milestone mapping, and diagnostic-finding anchors</strong> — <a href="#appendix-c-origin-v2-mapping-and-references">Appendix C</a></li>
+<li><strong>Origin, V2-milestone mapping, and diagnostic-finding anchors</strong> — <a href="#appendix-c-origin-and-references">Appendix C</a></li>
 </ul>
 <h2 id="appendix-a-mechanism-in-detail">Appendix A — Mechanism in detail</h2>
 <p>This appendix gives the full mechanical decomposition of CIP-0050: the formula, the binding regimes, three worked scenarios, and the operator/delegator response surface. The opener summarises the conclusions; this appendix carries the derivations and figures that back them.</p>
@@ -1191,7 +1189,7 @@ window.MathJax = {
 <li><code>k</code> recalibration — leverages the consolidation CIP-0050 induces.</li>
 </ol>
 <p>Any other order moves the productive landscape through a regressive intermediate state.</p>
-<h2 id="appendix-c-origin-v2-mapping-and-references">Appendix C — Origin, V2 mapping, and references</h2>
+<h2 id="appendix-c-origin-and-references">Appendix C — Origin and references</h2>
 <h3 id="c1-identity-card">C.1. Identity card</h3>
 <table>
 <thead>
@@ -1250,91 +1248,9 @@ window.MathJax = {
 - <strong>Fee-layer CIPs (CIP-0023, CIP-0082)</strong> act on a different layer (post-per-pool-allocation split). CIP-0050 composes cleanly with either on the mechanical axis — they act on sequential stages of the reward pipeline — but the two sets target different V2 milestones.
 - <strong>CIP-0037</strong> is the other stake-cap candidate in this evaluation. Same target (§3.2 pledge signal + §3.4 concentration) via a different primitive (smooth saturation curve vs hard cap). A coherent V2 package picks one stake-cap instrument; stacking both is not canonical.
 - <strong><code>k</code> lever</strong> is the transversal parameter. CIP-0050 text argues $L$ converts a <code>k</code>-raise from a concentration risk into a decentralisation lever (stake-cap CIPs foreclose MPO fleet expansion; new slots therefore go to new operators rather than existing fleets). Standalone k-analysis: <a href="k-parameter.html"><code>../operator-delegator/k-parameter.md</code></a>.</p>
-<h3 id="c3-diagnostic-findings-cited">C.3. Diagnostic findings cited</h3>
-<p>CIP-0050 targets exactly the pledge pathology the mainnet diagnostic documents. Six findings are directly relevant.</p>
-<table>
-<thead>
-<tr>
-<th>Finding</th>
-<th>Why shared</th>
-<th>Supporting observations</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>POL.O2.F1 — 78 % of staked ADA sits in pools with pledge ratio &lt; 1 %; stake-weighted median is 0.07 %</strong></td>
-<td>CIP-0050 at L = 100 begins to bind precisely at the 1 % pledge ratio. The median retail pool sits far below that threshold — so a majority-of-stake population is the direct subject of the reform</td>
-<td>—</td>
-</tr>
-<tr>
-<td><strong>POL.O2.F2 — Pledge yield is 0.68 %/yr at best (full saturation + full self-pledge) vs ~2.3 %/yr on passive delegation</strong></td>
-<td>The CIP assumes operators will respond by increasing pledge. The opportunity-cost data shows pledge is dominated by passive delegation yield; shifting σ' rules does not flip this comparison</td>
-<td>"The 'game' for operators is overwhelmingly about size (ν), not commitment (π)" — POL.O2.F2</td>
-</tr>
-<tr>
-<td><strong>POL.O5.F1 / POL.O5.F2 — 83 attributed entities operate 449 productive pools holding 16.24 B ₳ (76.7 % of productive stake); 48 of them are saturation-scale</strong></td>
-<td>The entity-level concentration metric that matters for Sybil resistance. CIP-0050 is revenue-neutral against pool-splitting but leaves the 10 custodial-by-pledge entities with native pledge unconstrained</td>
-<td>—</td>
-</tr>
-<tr>
-<td><strong>POL.O5.F3 — 42 of 48 saturation-scale MPOs are zero-pledge on pledge</strong></td>
-<td>The population that <em>could</em> respond to CIP-0050 by increasing pledge has already shown it does not choose that option under current rules</td>
-<td>—</td>
-</tr>
-<tr>
-<td><strong>POL.O6.F2 — 78 % of single-pool stake is zero-pledge (pledge ratio &lt; 2 %). Compliant + exemplary hold 5.8 %</strong></td>
-<td>Retail single-pool operators — the population V2 §3.1 targets — empirically do not pledge. CIP-0050 at L = 100 clips this population's reward, accelerating attrition</td>
-<td>—</td>
-</tr>
-<tr>
-<td><strong>OPE.O7.F1 — Delegation is not sticky but not clearly yield-following either</strong></td>
-<td>The CIP's "new entrants will fill the slots vacated by clipped pools" argument requires a delegator-response channel. OPE.O7.F1 shows the observed flow tracks brand / wallet / visibility rather than yield</td>
-<td>—</td>
-</tr>
-</tbody>
-</table>
-<h3 id="c4-missing-cpss-mapping-to-v2-3">C.4. Missing CPSs — mapping to V2 §3</h3>
-<p>CIP-0050 ships with an explicit problem statement: pledge is priced as irrelevant, and the reward formula should make it binding. Mapped to V2 §3:</p>
-<table>
-<thead>
-<tr>
-<th>V2 slot</th>
-<th>What CIP-0050 proposes as the fix</th>
-<th>Weight</th>
-<th>Evidence base</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="index.html#32-restore-the-notion-of-pledge-among-operators">§3.2 Restore the notion of pledge among operators</a></td>
-<td>$L \cdot p$ cap on reward-eligible stake — zero-pledge hard break, pool-splitting revenue-neutral</td>
-<td><strong>Primary</strong></td>
-<td>POL.O2.F1, POL.O2.F2</td>
-</tr>
-<tr>
-<td><a href="index.html#34-reduce-the-concentration-effects-that-distort-both-populations">§3.4 Reduce the concentration effects that distort both populations</a></td>
-<td>Revenue-neutral pool splitting → MPO fleet expansion no longer delivers reward advantage at the pool level</td>
-<td><strong>Secondary (pool-level only)</strong></td>
-<td>POL.O5.F1, POL.O5.F2</td>
-</tr>
-<tr>
-<td><a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">§3.1 Guarantee operator viability across the entire productive population</a></td>
-<td>Not addressed by the instrument. The fee-layer split (<code>minPoolCost</code>, margin) is untouched; the σ' clip only makes low-pledge pools <em>worse</em></td>
-<td><strong>Out of scope</strong> — and potentially regressive without a companion §3.1 instrument</td>
-<td>OPE.O6.F4, POL.O6.F2</td>
-</tr>
-<tr>
-<td><a href="index.html#33-maintain-and-diversify-a-competitive-delegator-yield">§3.3 Maintain and diversify a competitive delegator yield</a></td>
-<td>Not addressed. Delegator ROS reshuffles via σ' clipping but the distribution narrows to pledge-compliant pools</td>
-<td><strong>Out of reach</strong></td>
-<td>—</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Foundational point.</strong> V2 §3.2 (pledge signal) and §3.4 (concentration) are downstream problems that V2 places <em>on top of</em> §3.1 (operator viability). CIP-0050 correctly targets §3.2 but does not address §3.1 — and per the capital-capability bias finding, it may actively worsen the §3.1 population. The instrument is coherent on its own terms but requires a companion §3.1 reform.</p>
-<h3 id="c5-references">C.5. References</h3>
+<h3 id="c3-references">C.3. References</h3>
 <ul>
-<li><strong>Missing-CPS anchors:</strong> <a href="#c4-missing-cpss-mapping-to-v2-3">Appendix C.4</a> of this file; V2 <a href="index.html#32-restore-the-notion-of-pledge-among-operators">§3.2 pledge signal</a>, <a href="index.html#34-reduce-the-concentration-effects-that-distort-both-populations">§3.4 concentration</a>, <a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">§3.1 operator viability</a>.</li>
+<li><strong>V2 §3 anchors:</strong> V2 <a href="index.html#32-restore-the-notion-of-pledge-among-operators">§3.2 pledge signal</a>, <a href="index.html#34-reduce-the-concentration-effects-that-distort-both-populations">§3.4 concentration</a>, <a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">§3.1 operator viability</a>.</li>
 <li><strong>Numerical baselines:</strong> <a href="#a3-how-much-pledge-does-an-operator-need">Appendix A.3</a> of this file (pledge-ratio-to-clip mapping at L=100); <a href="pools.html#413-tier-definitions">pools-distribution §4.1.3</a> (nine-tier taxonomy); <a href="operator.html">operator-delegator §4.3.3</a> (custodial / retail decomposition).</li>
 <li><strong>Diagnostic findings cited in this file:</strong> POL.O2.F1, POL.O2.F2, POL.O5.F1, POL.O5.F2, POL.O5.F3, POL.O6.F2 (pools-distribution); OPE.O6.F4, OPE.O7.F1 (operator-delegator).</li>
 <li><strong>Companion CIP:</strong> <a href="cip-0037.html"><code>cip-0037.md</code></a> — alternative stake-cap primitive (smooth curve vs hard cap). Same-layer pairing is not canonical.</li>
@@ -1405,6 +1321,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777962490"></script>
+<script src="assets/site.js?v=1777963402"></script>
 </body>
 </html>

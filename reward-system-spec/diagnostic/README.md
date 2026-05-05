@@ -1080,11 +1080,13 @@ The Census methodology follows a **raw → clean** structure at each layer:
 
 Entity attribution — clustering by registered owner key, augmented with manual identification of known operators — is a **lower bound on concentration**.
 
-> **Data.** All data comes from **cardano-db-sync** (PostgreSQL, snapshot at epoch 623). No third-party API except Koios for account-level balance reconciliation. The full data, figures, entity analysis, and reproduction scripts are in the dedicated sub-report: [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md).
+> **Data.** All data comes from **cardano-db-sync** (PostgreSQL, snapshot at epoch 623). No third-party API except Koios for account-level balance reconciliation. The full data, figures, entity analysis, and reproduction scripts live in the dedicated sub-report: [*The Staking Census*](sub-flows/census/mainnet-analysis/README.md).
 
-### 2.1.2. Mainnet Observations
+The staking populations are profiled across seven observations below, organised in three arcs.
 
-The population-level analysis yields seven observations. The full evidence is in the [*Staking Census*](sub-flows/census/mainnet-analysis/README.md).
+**CEN.O1–O2** characterise the supply side — concentration, fleet structure, and stake-volatility segmentation by operator type. **CEN.O3–O6** characterise the demand side — extreme stake concentration, settled tenure distribution, size-driven switching, and the absence of yield-driven behaviour. **CEN.O7** documents the structural boundary between participants and non-participants — the 14.4B ADA outside delegation, and how little of it any reward-design change can actually reach.
+
+<!-- mainnet-observations: 2.1.2 -->
 
 | # | Observation | Summary |
 | --- | --- | --- |
@@ -1095,8 +1097,6 @@ The population-level analysis yields seven observations. The full evidence is in
 | **CEN.O5** | **The bigger the delegation, the more it moves — whales (1M+ ₳) hold 65% of stake and switch ~4× more often than small delegators** | Micro-delegators (< 1K ADA) average 0.67 lifetime switches; whales (1M+) average 3.06 — switching scales monotonically with stake size (F4.6). Whales hold 14.1B of 21.8B staked total, yet only 38% of their stake sits in loyal delegations — capital is disproportionately mobile (F4.7). |
 | **CEN.O6** | **The delegator population doesn't shop on price — half their switches produce zero yield change, switch direction is balanced (30.8% cheaper / 31.5% pricier), and 92% of long-term delegators sit in the cheapest 0–5% margin band** | Half of all switches (50.5%) produce zero yield change (±5 bps); the median ROS differential is +0.02 bps (F4.9). Operator take direction is symmetric: 30.8% lower / 37.7% similar / 31.5% higher — no optimisation pattern (F4.10). Pool size is the only asymmetric signal: delegators drift toward larger pools (F4.11). 92.1% of loyal delegations sit in the 0–5% margin range — loyalty and low fees coexist, not trade off (F4.12). Script-based delegation is negligible: 99.97% of delegations are key-based (F4.13). |
 | **CEN.O7** | **The non-participant population is 39.8% of the supply, structurally inert, and held by a tightly-concentrated minority of custodians and legacy holders** | The non-participant population — addresses controlling ADA that is not delegated to any pool — has been stable at 36–39% of circulation for over 300 epochs (14.4B at epoch 623). Only 0.37% of circulation is *reachable* by reward design (registered staking key, not delegated); the remaining 39.4% sits in addresses that cannot delegate without a protocol-level change. The "unreachable" core is **not a faceless retail tail** — 246 wallets hold 74% of it, top-3 alone hold 19%; the addresses split cleanly into recognisable archetypes (exchange hot wallets, institutional cold storage, pre-staking-era legacy holders, DeFi vaults). The "addressable" pool itself collapses to ~2,100 active accounts and 0.06% of supply once zero-balance shells and a single DeFi vault are removed. *The reward mechanism's recruitment ceiling is narrow; meaningful re-engagement requires changing the address architecture, not the incentive curve.* |
-
-> **Scope note.** CEN.O1–CEN.O2 characterise the supply side (operators). CEN.O3–CEN.O6 characterise the demand side (delegators). CEN.O7 documents the structural boundary between participants and non-participants. Together, they define the population substrate on which the reward pipeline (§1) operates.
 
 ### 2.1.3. Problem Induction
 
@@ -1195,13 +1195,15 @@ The working data, figures, and full population decomposition are in the [*Stakin
 
 ### 2.2.1. Overview
 
-From epoch 208 (Shelley) through epoch 627, the chain processed **118.07 million transactions** generating **37.85M ADA** in cumulative fees.
-
-The submitter population peaked at **790,335 unique addresses per epoch** at epoch 304 (post-Alonzo / NFT-minting frenzy) and has since contracted to **31,176** at epoch 627 — a **96%** collapse against a **92%** drop in transaction volume.
+From epoch 208 (Shelley) through epoch 627, the chain processed **118.07 million transactions** generating **37.85M ADA** in cumulative fees. The submitter population peaked at **790,335 unique addresses per epoch** at epoch 304 (the post-Alonzo / NFT-minting frenzy) and has since contracted to **31,176** at epoch 627 — a **96%** collapse against a **92%** drop in transaction volume.
 
 *The fee base is consolidating: a population one twenty-fifth the size of its peak still sustains three quarters of the per-epoch transaction rate seen during 2023–2024 — the same shrinking core just transacts more often (~3.8 tx per submitter per epoch, vs ~2.0 at peak).*
 
-### 2.2.2. Mainnet Observations
+The fee-generating population is profiled across five observations below, organised in four arcs.
+
+**CEN.O8** tracks the population's contraction — −96% from peak, with intensity rising. **CEN.O9–O10** decompose what kinds of addresses pay the fees: a stakeable head-count majority alongside a non-stakeable minority and a small DeFi-script sub-population that together generate a disproportionate share. **CEN.O11** characterises the heavy-paying core — a few hundred recognisable actors (DEXes, exchange wallets, bots). **CEN.O12** joins the submitter set to `epoch_stake` to surface the population gap: funders and beneficiaries barely overlap. Together with CEN.O1–CEN.O7 ([The Staking Populations](#21-the-staking-populations)), they define the complete population substrate on which the reward pipeline operates.
+
+<!-- mainnet-observations: 2.2.2 -->
 
 | # | Observation | Summary |
 | --- | --- | --- |
@@ -1210,8 +1212,6 @@ The submitter population peaked at **790,335 unique addresses per epoch** at epo
 | **CEN.O10** | **A small DeFi-script sub-population — ~3,800 contracts at epoch 627 — generates a third of the fee base** | The script-using sub-population — base-script (`addr1z`) and enterprise-script (`addr1w`) addresses — is **3,851 actors** at epoch 627 (**12.4%** of submitters) and generates **36.0%** of epoch fees. Across the full post-Alonzo era it represents 12.5% of transaction count but **29.6%** of cumulative fees. The per-address fee rate of an enterprise-script submitter (12.1 ADA/epoch) is **14×** that of a base-key submitter (0.83 ADA/epoch). *The chain's fee floor is supported by ~3,800 smart contracts — a population dimension the current incentive design does not address.* |
 | **CEN.O11** | **The fee-paying population is bimodal: a heavy-paying core of a few hundred high-frequency actors and a long tail of ~147K small contributors** | Over epochs 622–627, the top 10 addresses generate **20.0%** of fees and the top 500 generate **58.4%** — out of ~147K active submitters. The heavy-paying core is recognisable: a MinSwap DEX-script address leads, followed by addresses tied to the **NUFI**, **TITAN**, **BERRY**, and **OYSTR** pools and several enterprise-script DEX contracts and bot wallets. *500 addresses out of 147K (0.34%) pay the majority of fees — the fee floor depends on a sub-population small enough to know by name.* |
 | **CEN.O12** | **The fee-paying population and the delegator population barely overlap — funders and beneficiaries are largely different people** | Joining the submitter set (~147K addresses, epochs 622–627) to the **1,352,113 active delegators at epoch 627**: only **41.8%** of fee revenue comes from currently-delegating addresses, **28.1%** from base addresses whose stake credential is *not* in the delegation set, **30.1%** from addresses with no stake credential. From the delegator side, **only 3.1%** of the 1.352M active delegators submit any transaction in a 6-epoch window. *Fewer than 4 ADA in every 10 ADA of fees flow back to the population that paid them through any reward channel.* |
-
-> **Scope note.** CEN.O8–CEN.O12 characterise the fee-generating population. Together with CEN.O1–CEN.O7 ([The Staking Populations](#21-the-staking-populations)), they define the complete population substrate on which the reward pipeline operates.
 
 ### 2.2.3. Problem Induction
 
