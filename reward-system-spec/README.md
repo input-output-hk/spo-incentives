@@ -1,39 +1,39 @@
 # The Cardano Reward System V2 — Specification for a Sustainable Successor
 
-Cardano's reward mechanism is the rule that decides, every five days, how newly minted ADA is shared among the participants who keep the network running — the **stake-pool operators** who produce blocks, and the **delegators** who back them with their stake.
+**This document is the formal specification for an upcoming revision of Cardano's reward mechanism.** It defines the **outcomes** a successor must achieve — not the reward curve, not the parameter values, not the implementation. Those are *design* questions, to be resolved in the candidate proposals that respond to this spec.
 
-Those rules were written in **2019**, went live in **August 2020**, and have **not been revisited since**.
+The aim is **common ground**: a yardstick against which candidate designs can be proposed, compared, and evaluated — rather than debated in the abstract.
 
-For most of that period the surrounding protocol was unfinished: smart contracts had not yet arrived, there was no on-chain governance process to adjust anything, the fee-paying economy that smart contracts would later generate did not exist, and the reserve from which rewards are minted was large enough that questions of long-term sustainability could be postponed. The mechanism was, in effect, **calibrated for a simpler chain** — governed off-chain, with a single kind of participant, and a runway measured in decades.
+## 0.1. Where this spec sits
 
-Five years of on-chain evidence tell a different story.
+This specification is one of the working artefacts on the [Cardano Reward System V2 working website](index.html). The design artefacts and empirical evidence it reasons from are detailed in [§1 Foundations](#1-foundations) below — they are not re-listed here. The forward link is the [Existing CIPs evaluation](solution-evaluation/README.md), which scores the four reward-related CIPs already on the governance table against the milestones defined here.
 
-- The operator population has **stratified into a thin viable tier and a long non-viable tail**.
-- **Pledge** — the personal ADA an operator commits to their own pool, designed as the central signal of skin in the game — has become **functionally irrelevant** for most of the network.
-- Block production has drifted toward a handful of **concentrated multi-pool entities**, while billions of ADA sit outside consensus, held by accounts that cannot or do not stake.
-- The reserve is **depleting on the mathematical schedule set in 2019**, with no transition plan for the moment it runs out.
+The work this site is centred on follows a single lifecycle: *mainnet evidence → induced problem (proto-CPS) → V2 specification → CIPs*. The diagnostic surfaces problems against the normative baseline; the [Induced Problems](problem-statements.html) page synthesises them into **Cardano Problem Statements (CPSs) in formation**; this specification turns each CPS into a milestone with a measurable acceptance criterion; the CIP evaluation scores governance-stage proposals against those milestones. Promotion to formal CPS happens upstream when a problem is judged ready.
 
-These outcomes are not the result of parameters tuned to the wrong value; they are **structural consequences of rules designed for a chain, a population, and an institutional context that no longer exist**. The full evidence is laid out in the companion [*Diagnostic — Mainnet Observatory*](diagnostic/README.md), which this specification builds on.
+## 0.2. The toolkit V2 can draw on
 
-What has also changed, fortunately, is the toolkit a successor can draw on:
+The original V1 mechanism was calibrated for a chain that was, at the time, governed off-chain, with a single kind of participant, a not-yet-existent fee-paying economy, and a runway measured in decades.
+
+Five years later, the toolkit a successor can draw on has changed:
 
 - **On-chain governance** — a community process for reviewing and adjusting parameters, which did not exist when the original values were locked in.
 - **A treasury**, funded by a share of every epoch's pot, already large enough to serve as a stabilisation instrument.
 - **A fee base driven by smart contracts** — a new class of fee-paying activity that did not exist when the original mechanism was written, with further throughput expansion on the roadmap.
 - **Five years of empirical record** to reason from.
 
-With all of that in place, the question is no longer whether the reward mechanism needs revision; it is **what a replacement must satisfy to count as an improvement**. This document answers that question.
+## 0.3. Reading the spec — dependency chain, milestones, KPIs
 
-It does *not* prescribe a new reward curve, new parameter values, or a specific implementation — those are *design* questions, to be resolved in the community proposals and simulation work that respond to this specification. Instead, it defines the **outcomes** a successor mechanism must achieve, each grounded in the evidence of the Diagnostic, each stated as **a problem paired with a measurable acceptance criterion**.
+The problems the spec addresses are not independent. They form a **dependency chain** — some must be resolved before others become tractable — and the milestones in the sections that follow are ordered along that chain.
 
-The aim is a **common ground** on which candidate designs can be proposed, compared, and evaluated — rather than debated in the abstract.
-
-The problems the specification addresses are not independent. They form a **dependency chain** — some must be resolved before others become tractable — and the milestones in the sections that follow are ordered along that chain. Each milestone is framed as an **outcome**, broken into **sub-milestones** that can be worked on sequentially, and paired with **Key Performance Indicators** that serve as its acceptance criteria.
+Each milestone is framed as an **outcome**, broken into **sub-milestones** that can be worked on sequentially, and paired with **Key Performance Indicators** that serve as its acceptance criteria.
 
 **Naming convention.** Throughout this document, milestones are referred to by name — *Operator Viability*, *Pledge*, *Delegator Yield*, *Deconcentration*, *Pot Survival*, *Fee Policy*, *Price Robustness*, *Recalibration Pipeline*. Each named reference is a link to the section that defines it. The chapter and section numbers in the table of contents below serve navigation; the names carry the meaning.
 
 # Table of Contents
 
+- [0.1. Where this spec sits](#01-where-this-spec-sits)
+- [0.2. The toolkit V2 can draw on](#02-the-toolkit-v2-can-draw-on)
+- [0.3. Reading the spec — dependency chain, milestones, KPIs](#03-reading-the-spec-dependency-chain-milestones-kpis)
 - [1. Foundations](#1-foundations)
   - [1.1. Prior art — what V2 draws on](#11-prior-art-what-v2-draws-on)
   - [1.2. The Diagnostic — the empirical layer](#12-the-diagnostic-the-empirical-layer)
@@ -136,7 +136,7 @@ An additional stage audits the [₳/Fiat money-constraint layer](diagnostic/READ
 
 Each sub-report organises its content as a two-level hierarchy: **findings** (F1.1, F1.2, …) — fine-grained empirical atoms backed by on-chain data — cluster into **observations** (O1, O2, …) — structural claims about mechanism behaviour. No structural claim ever stands alone; each is backed by an explicit cluster of empirical atoms.
 
-**Problem induction — the Diagnostic itself.** [*The Diagnostic*](diagnostic/README.md) is the glue. It does not re-derive findings — it imports a condensed observations table from each sub-report and performs the step the sub-reports stop short of. Each pipeline stage carries a dedicated *Problem Induction* subsection that reads the observations against the normative baseline from *The Intended Game* and promotes them from factual claims into **structural problem statements** — the problems each milestone in this specification then answers.
+**Problem induction — the Diagnostic itself.** [*The Diagnostic*](diagnostic/README.md) is the glue. It does not re-derive findings — it imports a condensed observations table from each sub-report and performs the step the sub-reports stop short of. Each pipeline stage carries a dedicated *Problem Induction* subsection that reads the observations against the normative baseline from *The Intended Game* and promotes them from factual claims into **structural problem statements** — the problems each milestone in this specification then answers. These problem statements are also surfaced as a curated synthesis on the **[Induced Problems](problem-statements.html)** page — a canonical, cross-citable view of the **Cardano Problem Statements (CPSs) in formation** that the milestones below draw on.
 
 The infrastructure that powers these queries — a local cardano-node + cardano-db-sync stack — lives at [`mainnet-indexer/`](../mainnet-indexer/README.md) and is the **reproducibility layer** behind every empirical claim.
 
