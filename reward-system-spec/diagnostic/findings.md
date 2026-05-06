@@ -38,8 +38,6 @@ observations:
   - obs-112-2
   - obs-112-3
   - obs-112-4
-  - obs-132-8
-  - obs-222-8
 -->
 
 The epoch pot is funded almost entirely by monetary expansion from the reserve
@@ -75,8 +73,6 @@ observations:
   - obs-122-5
   - obs-122-6
   - obs-122-7
-  - obs-132-2
-  - obs-212-1
 -->
 
 Two causes account for **54% of the pools pot returning to reserve** (O1): a
@@ -109,17 +105,28 @@ tier: mechanism
 observatory_anchor: 133-problem-induction
 observations:
   - obs-132-1
-  - obs-132-2
-  - obs-132-3
-  - obs-132-4
   - obs-132-5
   - obs-132-6
   - obs-132-7
   - obs-132-8
   - obs-132-9
-  - obs-212-1
-  - obs-212-3
-  - obs-212-5
+  - obs-212-6
+-->
+
+<!-- FINDING
+id: 1.3.3.1
+observations:
+  - obs-132-1
+  - obs-132-6
+-->
+
+<!-- FINDING
+id: 1.3.3.2
+observations:
+  - obs-132-5
+  - obs-132-7
+  - obs-132-8
+  - obs-132-9
   - obs-212-6
 -->
 
@@ -174,9 +181,33 @@ observations:
   - obs-212-7
   - obs-122-5
   - obs-122-6
-  - obs-132-6
   - obs-132-7
-  - obs-112-3
+-->
+
+<!-- FINDING
+id: 2.1.3.1
+observations:
+  - obs-212-1
+  - obs-122-5
+  - obs-122-6
+  - obs-132-3
+-->
+
+<!-- FINDING
+id: 2.1.3.2
+observations:
+  - obs-212-2
+  - obs-212-3
+  - obs-212-4
+  - obs-212-5
+  - obs-212-6
+  - obs-132-7
+-->
+
+<!-- FINDING
+id: 2.1.3.3
+observations:
+  - obs-212-7
 -->
 
 The populations on which the reward pipeline operates each exhibit a
@@ -219,7 +250,6 @@ observations:
   - obs-222-9
   - obs-222-10
   - obs-222-11
-  - obs-222-12
   - obs-112-1
 -->
 
@@ -263,11 +293,8 @@ parent_title: The ₳/Fiat Money Constraint Layer
 tier: sustainability
 observatory_anchor: 311-is-a-finite-supply-enough-to-honour-the-deflationist-promise
 observations:
-  - obs-112-1
   - obs-112-2
-  - obs-132-8
   - obs-132-9
-  - obs-212-7
 -->
 
 The reward pipeline distributes ADA, but every participant decides in fiat
@@ -302,10 +329,7 @@ tier: sustainability
 observatory_anchor: 312-the-protocol-takes-the-hit-of-ada-volatility-with-no-instrument-to-govern-it
 observations:
   - obs-112-4
-  - obs-132-8
   - obs-132-9
-  - obs-222-9
-  - obs-222-12
 -->
 
 Whatever direction the ADA/Fiat exchange rate moves, the mechanism **absorbs
