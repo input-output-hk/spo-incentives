@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778058493">
+<link rel="stylesheet" href="assets/site.css?v=1778068798">
 
 
 </head>
@@ -317,7 +317,10 @@ window.MathJax = {
 <li><a href="#22-fee-layer-cip-0023-cip-0082">2.2. Fee layer — CIP-0023 / CIP-0082</a></li>
 </ul>
 </li>
-<li><a href="#3-conclusion">3. Conclusion</a></li>
+<li><a href="#3-conclusion">3. Conclusion</a><ul>
+<li><a href="#31-direct-engagement-with-the-cardano-incentives-working-groups-coordinated-proposal-set">3.1. Direct engagement with the Cardano Incentives Working Group's coordinated proposal set</a></li>
+</ul>
+</li>
 <li><a href="#4-recommendations-on-adjustments-to-the-current-mechanism">4. Recommendations on adjustments to the current mechanism</a><ul>
 <li><a href="#41-why-gradual-not-radical">4.1. Why gradual, not radical</a></li>
 <li><a href="#42-four-moves-on-the-reward-distribution-layer">4.2. Four moves on the reward-distribution layer</a></li>
@@ -432,6 +435,25 @@ window.MathJax = {
 <li><strong>Pool-count expansion (CIP-0082 stages 3–4)</strong> addresses Deconcentration by raising <code>k</code> without a stake-cap precondition, so the new pool slots fire in the same MPO-fleet absorption regime that produced today's concentration — see <a href="cip-0082.html#b3-standalone-k-lever-deep-dive">cip-0082 §B.3</a>.</li>
 </ul>
 <p>The design space therefore points toward parameter-level adjustments that respect three separations: pricing free-market levers stay flexible; the viability backstop lives on the reward-distribution layer; and pool-count expansion is gated on a stake-cap precondition.</p>
+<h2 id="31-direct-engagement-with-the-cardano-incentives-working-groups-coordinated-proposal-set">3.1. Direct engagement with the Cardano Incentives Working Group's coordinated proposal set</h2>
+<p>Beyond the four CIPs evaluated above, the <strong>Cardano Incentives Working Group</strong> (<a href="https://incentives.solutions">incentives.solutions</a>) has authored an adjacent set of proposals — overlapping at points, orthogonal at others. The three pieces this evaluation engages directly:</p>
+<ul>
+<li><strong><a href="https://incentives.solutions/cip-50-rebirth/">CIP-50 Rebirth</a></strong> — modernised case for CIP-0050. Engaged at length in the per-CIP file <a href="cip-0050.html"><code>cip-0050.md</code></a>: the Sybil-framing context (§2), the RSS-simulation reality-check (§4), the k-synergy framing (§A.10), and the three findings cards (Appendix B).</li>
+<li><strong><a href="https://incentives.solutions/k-1-000-gov-action-draft/">K=1000 governance action draft</a></strong> <em>(2025/12/13)</em> — a proposal to raise <code>stakePoolTargetNum</code> from 500 to 1 000.</li>
+<li><strong><a href="https://cips.cardano.org/cip/CIP-163">CIP-163 — Time-Bound Delegation with Dynamic Rewards</a></strong> — inactive-stake expiration paired with full-pot rewards distribution.</li>
+</ul>
+<h4 id="on-the-k1000-simulation-result">On the K=1000 simulation result.</h4>
+<p>The K=1000 draft cites a forward-looking Reward-Sharing Simulation result: <em>"K=1,000 would almost double our Nakamoto coefficient compared to K=500's baseline of 116, achieving approximately 226 at K=1,000."</em> This is a markedly stronger claim than the +1-entity result the same advocates published in their CIP-50 Rebirth FAQ (where L's marginal effect at k=2 000 was ~159 → ~160).</p>
+<p>This evaluation's position remains as documented in <a href="cip-0082.html#b3-standalone-k-lever-deep-dive">cip-0082 §B.3</a>: the <strong>2020 <code>k: 150 → 500</code></strong> raise is the only natural experiment Cardano has run on <code>k</code> at scale, and it produced today's MPO landscape (<a class="obs-ref obs-ref-src" href="pools.html#1-mainnet-observations" data-obs-src="POL.O5" data-obs-page="pools.html" data-obs-href="pools.html#1-mainnet-observations" title="POL.O5 · hover for summary, click for detail">POL.O5</a>.F1: 83 entities, 449 productive pools, 76.7 % of productive stake). The forward-looking RSS run and the backward-looking mainnet record are not reconciled by either side. Absent a stake-cap precondition that prevents fleet absorption — and absent a viability instrument protecting the small-pool tail while the cap bites — the 2020 evidence weighs heavier.</p>
+<h4 id="cross-position-confirmation-of-the-viability-gap">Cross-position confirmation of the viability gap.</h4>
+<p>The K=1000 draft acknowledges, in its own words, that <em>"873 active operators (54 % of the total) remain below the 3 M ADA threshold required for consistent block production"</em> and flags this as <em>"high social risk"</em> from <em>"operator disillusionment"</em> about the <em>"viability gap"</em>.</p>
+<p>This matches the diagnostic's finding (<a class="obs-ref obs-ref-src" href="pools.html#1-mainnet-observations" data-obs-src="POL.O6" data-obs-page="pools.html" data-obs-href="pools.html#1-mainnet-observations" title="POL.O6 · hover for summary, click for detail">POL.O6</a>: 73 % of productive pools below the ~3 M ADA viability line) and is consistent across both positions. What differs is the <strong>response</strong>: the K=1000 proposal does not address the gap directly, while the <a href="#4-recommendations-on-adjustments-to-the-current-mechanism">recommendations in §4</a> place a viability instrument (the conditional <code>λ_viability</code> sub-budget) on the reward-distribution layer as the precondition for any constructive <code>k</code>-raise.</p>
+<h4 id="cip-163-orthogonal-to-the-formula-distortion-analysis">CIP-163 — orthogonal to the formula-distortion analysis.</h4>
+<p>CIP-163 targets the <strong>participation gap</strong> the diagnostic also documents (<a class="obs-ref obs-ref-src" href="pools.html#1-mainnet-observations" data-obs-src="POL.O1" data-obs-page="pools.html" data-obs-href="pools.html#1-mainnet-observations" title="POL.O1 · hover for summary, click for detail">POL.O1</a>.F2: 31.6 % of the pool pot returns to reserve due to unstaked ADA — an upstream cause, outside formula control). Mechanism: inactive stake stops earning rewards; the freed budget redistributes to active pools via full-pot rewards.</p>
+<p>CIP-163 does <strong>not</strong> address the bonus function <code>A(ν, π)</code>, the size-vs-commitment weighting, or the wasted pledge-bonus budget. If CIP-163 ships, the absolute pool pot reaching active operators grows, but the structural distortions the <a href="#4-recommendations-on-adjustments-to-the-current-mechanism">recommendations in §4</a> target are unchanged.</p>
+<p><strong>Side effect to watch — yield uplift without diagnosis.</strong> Redistributing the reserve return raises absolute yields network-wide. The misallocation across the nine-tier ladder stays in place, but it now sits under a yield boost the population reads as good news — the structural distortions become harder to see behind higher headline numbers. Pools positioned to absorb the redirected delegation flows experience a euphoria moment the formula does not earn them, and delegation movement under those conditions tracks absolute yield deltas rather than relative pool quality — the rebalancing is potentially uncontrolled.</p>
+<p>The reform conversation depends on the population reading distortion as distortion. A window of apparent prosperity competes against that and momentarily crowds out structural diagnosis — which is why CIP-163 reads better as a coordinated companion to the four-move package than as a standalone deployment ahead of it.</p>
+<p>The two proposal sets are therefore <strong>complements, not competitors</strong>: CIP-163 fixes what the formula does <em>not</em> control (upstream participation); the four-move package fixes what it <em>does</em> control (downstream allocation). Sequencing matters: deploying the formula reform alongside (or ahead of) the participation fix preserves the diagnostic clarity the reform case rests on.</p>
 <h1 id="4-recommendations-on-adjustments-to-the-current-mechanism">4. Recommendations on adjustments to the current mechanism</h1>
 <p>A set of parameter-level recommendations is in preparation by IO Research, targeting end of 2026. The recommendations respect the <strong>three layer separations</strong> isolated in <a href="#3-conclusion">§3 Conclusion</a> — pricing levers stay flexible, viability lives on the reward-distribution layer, pool-count expansion is gated on a stake-cap precondition — and propose a <strong>gradual path</strong> that reinforces the pledge signal at its source rather than gating it.</p>
 <h2 id="41-why-gradual-not-radical">4.1. Why gradual, not radical</h2>
@@ -539,6 +561,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778058493"></script>
+<script src="assets/site.js?v=1778068798"></script>
 </body>
 </html>
