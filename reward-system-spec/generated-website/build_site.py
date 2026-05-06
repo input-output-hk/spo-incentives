@@ -44,9 +44,18 @@ REPO_ROOT = SITE_DIR.parent.resolve()  # reward-system-spec/
 # hero label/h1/sub, active nav tab (None for home).
 PAGES = [
     {
-        "slug": "index",
-        "md": "README.md",
+        "slug": "whats-next",
+        "md": "whats-next/README.md",
         "html": "index.html",
+        "title": "Cardano Reward System V2 — Welcome",
+        "hero_h1": "Welcome",
+        "hero_sub": "The Cardano Reward System V2 working website — analysis, evidence, and directions in ideation",
+        "active_nav": "implementation",
+    },
+    {
+        "slug": "v2-spec",
+        "md": "README.md",
+        "html": "v2-spec.html",
         "title": "Cardano Reward System — Proposal for Specification V2",
         "hero_h1": "Proposal for Specification V2",
         "hero_sub": "Based on Mainnet Evidence and Prior Work",
@@ -165,7 +174,7 @@ PAGES = [
         "html": "solution-evaluation.html",
         "title": "Intro & Conclusion of the 4 CIPs — V2 Reward System",
         "hero_h1": "Intro & Conclusion of the 4 CIPs",
-        "hero_sub": "Coverage matrix, cumulative findings, no-go verdict on the bundle",
+        "hero_sub": "V2 milestones × the four CIPs — wrong-layer verdict across the bundle, gradual fix in preparation",
         "active_nav": "solution-evaluation",
     },
     {
@@ -622,7 +631,7 @@ def _render_footer() -> str:
     <div class="footer-col">
       <h4 class="footer-heading">Specification</h4>
       <ul class="footer-links">
-        <li><a href="index.html">V2 Specification</a></li>
+        <li><a href="v2-spec.html">V2 Specification</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
         <li><a href="problem-statements.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
@@ -1511,7 +1520,7 @@ window.MathJax = {{
 
 <!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
 <div class="nav-zone nav-zone-implementation">
-<span class="nav-tab-implementation" title="What follows the spec — engineering implementation of the V2 mechanism">What&rsquo;s next ?</span>
+<a href="index.html" class="nav-tab-implementation{cls_implementation}" title="What follows the spec — engineering implementation of the V2 mechanism">What&rsquo;s next ?</a>
 </div>
 
 <span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
@@ -1519,12 +1528,12 @@ window.MathJax = {{
 <!-- Zone 1 (left anchor) — Solution Evaluation: CIP candidates evaluated against V2 -->
 <div class="nav-zone nav-zone-solution">
 <div class="nav-dd-wrap nav-dd-wrap-light">
-<button class="nav-dd-btn-light nav-dd-btn-solution{cls_solution_trigger}" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">CIPs ▾</button>
+<button class="nav-dd-btn-light nav-dd-btn-solution{cls_solution_trigger}" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Existing CIPs ▾</button>
 <div class="nav-dd-panel-light nav-dd-panel-solution">
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
-      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
+      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — bundle no-go; analytical directions discussed in the §4 of the synthesis</span>
     </div>
     <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero{cls_solution_eval}">
       <span class="nav-dd-ref-title">Intro &amp; Conclusion of the 4 CIPs</span>
@@ -1565,7 +1574,7 @@ window.MathJax = {{
 
 <!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
 <div class="nav-zone nav-zone-output">
-<a href="index.html" class="nav-tab-spec-big{cls_spec}">V2 Specification</a>
+<a href="v2-spec.html" class="nav-tab-spec-big{cls_spec}">V2 Specification</a>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
@@ -1593,7 +1602,7 @@ window.MathJax = {{
       <span class="nav-dd-ref-title">Source on GitHub</span>
       <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
     </a>
-    <a href="index.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+    <a href="v2-spec.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
       <span class="nav-dd-ref-title">Constitutional framework in the V2 spec</span>
       <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 spec</span></span>
     </a>
@@ -1789,6 +1798,7 @@ DESIGN_ACTIVE = {"intended-game"}
 # hero-header SVG/PNG assets (in assets/cardano/). Maps slug → variant key
 # (matching the data-banner CSS selector). Default is "fluid" if absent.
 BANNER_VARIANTS = {
+    "implementation":      "starburst",   # What's next? — landing page
     "spec":                "fluid",       # V2 spec — the flagship document
     "intended-game":       "starburst",   # narrative / conceptual
     "problem-statements":            "overlap",     # synthesis of multiple findings
@@ -1807,6 +1817,7 @@ BANNER_VARIANTS = {
 }
 
 BREADCRUMBS = {
+    "implementation": ["What's next?"],
     "spec": ["V2 Specification"],
     "intended-game": ["Design Support", "The Intended Game"],
     "problem-statements": ["Mainnet Diagnostic", "Induced Problems"],
@@ -1848,7 +1859,9 @@ def _render_breadcrumb(active: str, description: str = "") -> str:
 # Never repeat the page H1 or sub. Empty string means no eyebrow (the H1
 # carries enough context on its own — used for zone-landing pages).
 _HERO_EYEBROW = {
-    # V2 Spec landing.
+    # Landing — What's next? page.
+    "implementation": "Cardano Reward System",
+    # V2 Spec.
     "spec": "Cardano Reward System",
     # Sub-flow + cross-flow pages: parent zone only.
     "intended-game": "Design Support",
@@ -1873,6 +1886,7 @@ _HERO_EYEBROW = {
 def render_shell(page: dict, content_html: str) -> str:
     active = page["active_nav"]
     nav_map = {
+        "implementation": "cls_implementation",
         "spec": "cls_spec",
         "intended-game": "cls_intended_game",
         "problem-statements": "cls_findings",
@@ -4929,6 +4943,48 @@ def _extract_problem_summary(section_body: str) -> str:
     return "\n\n".join(body_paras)
 
 
+# findings.md observations-override parser ---------------------------------
+#
+# diagnostic/findings.md curates an explicit `observations:` list per
+# problem-induction section, including cross-section evidence rows that
+# wouldn't be picked up by simple parent matching. When a finding card's
+# section_id (or its parent if the card is sub-numbered like 1.3.3.1)
+# matches an entry in findings.md, the override list is used as the
+# authoritative obs set for that card.
+_FINDINGS_MD_BLOCK_RE = re.compile(
+    r"<!--\s*FINDING\s*([\s\S]*?)-->",
+    re.MULTILINE,
+)
+_FINDINGS_MD_ID_RE = re.compile(r"^\s*id:\s*(\S+)\s*$", re.MULTILINE)
+_FINDINGS_MD_OBS_RE = re.compile(r"^\s*-\s*(obs-\d+-\d+)\s*$", re.MULTILINE)
+
+
+def parse_findings_md_obs_overrides(
+    findings_md_path: Path,
+) -> dict[str, list[str]]:
+    """Return ``{finding_id: [obs_global_id, ...]}`` from findings.md.
+
+    The order in the YAML list is preserved so the rendered evidence tree
+    follows the editorial ordering chosen in findings.md (typically
+    section-ascending, primary first, cross-refs after). Missing file is
+    not an error — the caller falls back to parent-section matching.
+    """
+    if not findings_md_path.exists():
+        return {}
+    text = findings_md_path.read_text()
+    overrides: dict[str, list[str]] = {}
+    for block in _FINDINGS_MD_BLOCK_RE.finditer(text):
+        body = block.group(1)
+        m_id = _FINDINGS_MD_ID_RE.search(body)
+        if not m_id:
+            continue
+        fid = m_id.group(1)
+        obs_list = _FINDINGS_MD_OBS_RE.findall(body)
+        if obs_list:
+            overrides[fid] = obs_list
+    return overrides
+
+
 def extract_findings_from_md(
     md_text: str, src_md: Path | None = None,
 ) -> list[dict]:
@@ -5358,9 +5414,18 @@ def _render_findings_content(
     findings: list[dict],
     observations: list[dict],
     findings_by_canon_obs: dict[str, list[dict]] | None = None,
+    obs_overrides: dict[str, list[str]] | None = None,
 ) -> str:
-    """Produce the body HTML for problem-statements.html."""
+    """Produce the body HTML for problem-statements.html.
+
+    ``obs_overrides`` is the findings.md override map (finding-id →
+    list of obs global ids). When present, a card's evidence tree uses
+    that explicit list — including cross-section observations —
+    instead of the default parent-section matching.
+    """
     by_parent_obs = _group_obs_by_parent(observations)
+    obs_overrides = obs_overrides or {}
+    obs_by_global_id = {o["global_id"]: o for o in observations}
 
     # Sum the canonical findings up front — both the intro chain line
     # and the stats strip below show this number.
@@ -5539,9 +5604,27 @@ def _render_findings_content(
     ) -> str:
         cards = []
         for i, f in enumerate(bucket):
-            obs_for_section = [
-                o for o in observations if o["parent"] == f["parent"]
-            ]
+            # Resolve obs list with findings.md override priority.
+            # Sub-numbered cards (e.g. "1.3.3.1") inherit their parent
+            # section's findings.md entry ("1.3.3") since the editorial
+            # cross-references are scoped at the Problem-Induction level.
+            sid = f["section_id"]
+            sid_parts = sid.split(".")
+            override_key = sid if sid in obs_overrides else (
+                ".".join(sid_parts[:3])
+                if len(sid_parts) >= 4 and ".".join(sid_parts[:3]) in obs_overrides
+                else None
+            )
+            if override_key:
+                obs_for_section = [
+                    obs_by_global_id[gid]
+                    for gid in obs_overrides[override_key]
+                    if gid in obs_by_global_id
+                ]
+            else:
+                obs_for_section = [
+                    o for o in observations if o["parent"] == f["parent"]
+                ]
             cards.append(_render_finding_card(
                 f, obs_for_section, findings_by_canon_obs,
                 index=i, num_prefix=prefix,
@@ -5611,6 +5694,14 @@ def build_findings_page() -> Path:
     observations = extract_observations_from_md(md_text)
     findings = extract_findings_from_md(md_text, src_md=src_md)
 
+    # findings.md is the authoritative observation map per problem
+    # induction — including the cross-section evidence rows that simple
+    # parent matching misses. Empty / missing → falls back to parent
+    # matching inside _render_findings_content.
+    obs_overrides = parse_findings_md_obs_overrides(
+        REPO_ROOT / "diagnostic/findings.md"
+    )
+
     # Build a lookup keyed on the canonical observation id
     # (``TRE.O1`` → list of TRE.O1.F# records) so each problem-statement
     # card can surface the supporting findings from the sub-reports.
@@ -5625,6 +5716,7 @@ def build_findings_page() -> Path:
 
     content_html = _render_findings_content(
         findings, observations, findings_by_canon_obs,
+        obs_overrides=obs_overrides,
     )
 
     page = {

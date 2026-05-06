@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778052166">
+<link rel="stylesheet" href="assets/site.css?v=1778056430">
 
 
 </head>
@@ -66,7 +66,7 @@ window.MathJax = {
 
 <!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
 <div class="nav-zone nav-zone-implementation">
-<span class="nav-tab-implementation" title="What follows the spec — engineering implementation of the V2 mechanism">What&rsquo;s next ?</span>
+<a href="index.html" class="nav-tab-implementation" title="What follows the spec — engineering implementation of the V2 mechanism">What&rsquo;s next ?</a>
 </div>
 
 <span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
@@ -74,12 +74,12 @@ window.MathJax = {
 <!-- Zone 1 (left anchor) — Solution Evaluation: CIP candidates evaluated against V2 -->
 <div class="nav-zone nav-zone-solution">
 <div class="nav-dd-wrap nav-dd-wrap-light">
-<button class="nav-dd-btn-light nav-dd-btn-solution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">CIPs ▾</button>
+<button class="nav-dd-btn-light nav-dd-btn-solution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Existing CIPs ▾</button>
 <div class="nav-dd-panel-light nav-dd-panel-solution">
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
-      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
+      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — bundle no-go; analytical directions discussed in the §4 of the synthesis</span>
     </div>
     <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero">
       <span class="nav-dd-ref-title">Intro &amp; Conclusion of the 4 CIPs</span>
@@ -120,7 +120,7 @@ window.MathJax = {
 
 <!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
 <div class="nav-zone nav-zone-output">
-<a href="index.html" class="nav-tab-spec-big">V2 Specification</a>
+<a href="v2-spec.html" class="nav-tab-spec-big">V2 Specification</a>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
@@ -148,7 +148,7 @@ window.MathJax = {
       <span class="nav-dd-ref-title">Source on GitHub</span>
       <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
     </a>
-    <a href="index.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+    <a href="v2-spec.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
       <span class="nav-dd-ref-title">Constitutional framework in the V2 spec</span>
       <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 spec</span></span>
     </a>
@@ -299,7 +299,7 @@ window.MathJax = {
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
 <div class="content"><p>The <em>Shelley-era Delegation and Incentives Design Specification</em> (SL-D1) defined the economic rules that were to guide Cardano toward a stable, decentralised equilibrium of $k$ well-funded stake pools. Five years of mainnet operation have exposed <strong>structural divergences</strong> between that design and the on-chain reality.</p>
-<p>This document is the <strong>mainnet observatory</strong>: it follows the reward through every stage of the pipeline, confronts each design intent with the cleaned mainnet evidence, and inducts the structural problems that emerge. The diagnostic feeds <a href="index.html"><strong>The Cardano Reward System V2 — Specification for a Sustainable Successor</strong></a>.</p>
+<p>This document is the <strong>mainnet observatory</strong>: it follows the reward through every stage of the pipeline, confronts each design intent with the cleaned mainnet evidence, and inducts the structural problems that emerge. The diagnostic feeds <a href="v2-spec.html"><strong>The Cardano Reward System V2 — Specification for a Sustainable Successor</strong></a>.</p>
 <blockquote>
 <p><strong>From Problem Induction to CPS to CIP.</strong> The <em>Problem Induction</em> sub-sections in this document (§1.1.3, §1.2.3, §1.3.3, §2.1.3, §2.2.3, §3.3) are <strong>CPSs in formation</strong> — Cardano Problem Statements still maturing in narrative form. The lifecycle is <em>mainnet evidence → induced problem (proto-CPS) → V2 specification → CIPs</em>. Each induced problem is scoped against shared evidence so candidate solutions (CIPs) can be evaluated against the same problem definition once the work moves into the IntersectMBO/CIPs governance process. Earlier draft CPS files were retired in favour of the canonical narrative here; promotion to formal CPS happens upstream when a problem is judged ready.</p>
 </blockquote>
@@ -1503,7 +1503,7 @@ END SANDBOX -->
 <p><strong>Layer 3 — the macroeconomic boundary</strong> (<a href="#3-the-fiat-money-constraint-layer">§3</a>) shows that the mechanism design depends on a deflationary ADA price it cannot produce, and the three constraints (operator viability, fee growth, transaction cost) pull in different directions with no instrument to manage the tension.</p>
 <p><strong>Coupling, not addition.</strong> The layers are not independent. The reward curve's failure to incentivise pledge (Layer 1) drives the SPO contraction (Layer 2). The SPO contraction reduces the security budget, which reduces the chain's utility, which suppresses demand for ADA (Layer 3). The fee-generating population's misalignment (Layer 2) compounds the deflationary requirement the mechanism cannot honour (Layer 3) because fee growth is itself constrained by the ADA/fiat exchange rate. <em>No single intervention untangles these by itself.</em></p>
 <p>A successor mechanism cannot fix one layer without considering the other two. <em>The successor must be designed as a system — microeconomic instruments operating against macroeconomic boundary conditions — not as a checklist of parameter adjustments.</em></p>
-<p>The problems diagnosed above are consolidated into formal specifications in <a href="index.html"><strong>The Cardano Reward System V2 — Specification for a Sustainable Successor</strong></a>, which translates each layer's findings into milestones with KPIs, recalibration rules, and constitutional alignment. Each pipeline stage and population analysis is backed by a dedicated empirical sub-report listed below.</p>
+<p>The problems diagnosed above are consolidated into formal specifications in <a href="v2-spec.html"><strong>The Cardano Reward System V2 — Specification for a Sustainable Successor</strong></a>, which translates each layer's findings into milestones with KPIs, recalibration rules, and constitutional alignment. Each pipeline stage and population analysis is backed by a dedicated empirical sub-report listed below.</p>
 <h2 id="sub-reports">Sub-reports</h2>
 <table>
 <thead>
@@ -1557,7 +1557,7 @@ END SANDBOX -->
     <div class="footer-col">
       <h4 class="footer-heading">Specification</h4>
       <ul class="footer-links">
-        <li><a href="index.html">V2 Specification</a></li>
+        <li><a href="v2-spec.html">V2 Specification</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
         <li><a href="problem-statements.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
@@ -1604,6 +1604,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778052166"></script>
+<script src="assets/site.js?v=1778056430"></script>
 </body>
 </html>

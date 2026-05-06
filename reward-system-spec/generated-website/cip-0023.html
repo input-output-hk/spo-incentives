@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778052166">
+<link rel="stylesheet" href="assets/site.css?v=1778056430">
 
 
 </head>
@@ -66,7 +66,7 @@ window.MathJax = {
 
 <!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
 <div class="nav-zone nav-zone-implementation">
-<span class="nav-tab-implementation" title="What follows the spec — engineering implementation of the V2 mechanism">What&rsquo;s next ?</span>
+<a href="index.html" class="nav-tab-implementation" title="What follows the spec — engineering implementation of the V2 mechanism">What&rsquo;s next ?</a>
 </div>
 
 <span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
@@ -74,12 +74,12 @@ window.MathJax = {
 <!-- Zone 1 (left anchor) — Solution Evaluation: CIP candidates evaluated against V2 -->
 <div class="nav-zone nav-zone-solution">
 <div class="nav-dd-wrap nav-dd-wrap-light">
-<button class="nav-dd-btn-light nav-dd-btn-solution active" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">CIPs ▾</button>
+<button class="nav-dd-btn-light nav-dd-btn-solution active" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Existing CIPs ▾</button>
 <div class="nav-dd-panel-light nav-dd-panel-solution">
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
-      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — bundle no-go, fresh proposal in preparation</span>
+      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — bundle no-go; analytical directions discussed in the §4 of the synthesis</span>
     </div>
     <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero parent-active">
       <span class="nav-dd-ref-title">Intro &amp; Conclusion of the 4 CIPs</span>
@@ -120,7 +120,7 @@ window.MathJax = {
 
 <!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
 <div class="nav-zone nav-zone-output">
-<a href="index.html" class="nav-tab-spec-big">V2 Specification</a>
+<a href="v2-spec.html" class="nav-tab-spec-big">V2 Specification</a>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
@@ -148,7 +148,7 @@ window.MathJax = {
       <span class="nav-dd-ref-title">Source on GitHub</span>
       <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
     </a>
-    <a href="index.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+    <a href="v2-spec.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
       <span class="nav-dd-ref-title">Constitutional framework in the V2 spec</span>
       <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 spec</span></span>
     </a>
@@ -995,7 +995,7 @@ window.MathJax = {
 <p><strong>Historical placement.</strong> Written before Conway-era governance and before CIP-0082 — whose stage 2 reproduces the margin-floor mechanism under a different name (<code>minPoolRate</code>). CIP-0023 is therefore both a live technical proposal and a historical reference point for the margin-floor concept that CIP-0082 later operationalises within a staged path.</p>
 <h3 id="c3-references">C.3. References</h3>
 <ul>
-<li><strong>V2 §3.1 anchor:</strong> V2 <a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">§3.1 Guarantee operator viability across the entire productive population</a>.</li>
+<li><strong>V2 §3.1 anchor:</strong> V2 <a href="v2-spec.html#31-guarantee-operator-viability-across-the-entire-productive-population">§3.1 Guarantee operator viability across the entire productive population</a>.</li>
 <li><strong>Numerical baseline:</strong> <a href="#a3-updated-calibration-at-current-parameters-epoch-623">Appendix A.3</a> of this file (per-pool reward derivation at $z_0 = 77$ M ₳, saturated-pool reward ≈ 24 000 ADA/ep, <code>minPoolCost = 170</code> ADA).</li>
 <li><strong>Diagnostic findings:</strong> <a href="operator.html"><code>../../diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md</code></a> — OPE.O1.F4 ($1/\sigma$ hyperbola), OPE.O6.F1 (42× revenue at 6× price), OPE.O6.F4 (no competitive wage for single-pool operators).</li>
 <li><strong>Successor CIP:</strong> <a href="cip-0082.html"><code>cip-0082.md</code></a> — stage 2 absorbs the margin-floor mechanism; stages 1, 3, 4 extend the reform to the full fee layer.</li>
@@ -1020,7 +1020,7 @@ window.MathJax = {
     <div class="footer-col">
       <h4 class="footer-heading">Specification</h4>
       <ul class="footer-links">
-        <li><a href="index.html">V2 Specification</a></li>
+        <li><a href="v2-spec.html">V2 Specification</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
         <li><a href="problem-statements.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
@@ -1067,6 +1067,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778052166"></script>
+<script src="assets/site.js?v=1778056430"></script>
 </body>
 </html>

@@ -67,6 +67,8 @@ The fix is **gradual, at the source**, not at the gate: repair `A(ν, π)`; redu
 
 → Full argument, the four-move gradual path, and the Appendix-A walkthrough of `A`: [stake-cap layer synthesis](pools-distribution/README.md). Per-CIP detail: [`cip-0050.md`](pools-distribution/cip-0050.md), [`cip-0037.md`](pools-distribution/cip-0037.md).
 
+> *Counter-argument engaged.* This evaluation responds directly to the [CIP-50 Rebirth proposal](https://incentives.solutions/cip-50-rebirth/), which advocates the cap (L = 10–100) paired with a `k`-raise to 2 000 as a Sybil-resistance and decentralisation instrument. The mechanical claims their case rests on are correct (zero pledge → zero reward; pool-splitting revenue-neutral); the diagnostic disagrees on what those claims accomplish in today's regime. The detailed engagement lives in [`cip-0050.md`](pools-distribution/cip-0050.md): the Sybil-framing context (§2), the RSS-simulation reality-check (§4), the k-synergy framing (§A.10), and the three findings cards (Appendix B).
+
 ## 2.2. Fee layer — CIP-0023 / CIP-0082
 
 The fee layer modifies the operator/member split *after* the per-pool reward has been computed. The reward envelope itself is untouched. → [`operator-delegator/`](operator-delegator/README.md)
@@ -174,5 +176,6 @@ A repaired `A` with a reduced `λ_size` is what activates this budget. **It is n
 - **Per-layer indexes:** [`pools-distribution/README.md`](pools-distribution/README.md), [`operator-delegator/README.md`](operator-delegator/README.md).
 - **Per-CIP evaluations:** [`pools-distribution/cip-0050.md`](pools-distribution/cip-0050.md), [`pools-distribution/cip-0037.md`](pools-distribution/cip-0037.md), [`operator-delegator/cip-0023.md`](operator-delegator/cip-0023.md), [`operator-delegator/cip-0082.md`](operator-delegator/cip-0082.md) (with §B.3 carrying the standalone k-lever deep dive that supports the verdict on stages 3–4).
 - **Canonical CIP sources:** [cardano-foundation/CIPs](https://github.com/cardano-foundation/CIPs) on GitHub; per-CIP page at [cips.cardano.org](https://cips.cardano.org/).
+- **External advocate publication engaged in this evaluation:** [CIP-50 Rebirth — Claims, Problems, and Evidence](https://incentives.solutions/cip-50-rebirth/) (Liesenfelt et al., on `incentives.solutions`) — published case for CIP-0050 paired with a `k`-raise. The radical-vs-gradual reframing in [§2.1](#21-stake-cap-layer-cip-0050-cip-0037) engages directly with this proposal; [`cip-0050.md`](pools-distribution/cip-0050.md) §A.10 addresses the k-synergy framing it advances, and §4 references the Edinburgh Reward-Sharing Simulation results it cites.
 
 > **Status:** Active 2026/04/22. Working folder evaluating the live CIPs and parameter-level proposals against the V2 specification.
