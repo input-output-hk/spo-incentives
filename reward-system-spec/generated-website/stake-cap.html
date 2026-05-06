@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1777978874">
+<link rel="stylesheet" href="assets/site.css?v=1778052166">
 
 
 </head>
@@ -294,7 +294,7 @@ window.MathJax = {
     <div class="hero-eyebrow">Solution Evaluation</div>
     <h1>CIP Evaluation Synthesis</h1>
     <div class="sub">Two stake-cap shapes, same intent — CIP-0050 + CIP-0037</div>
-    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/05/05</span></span></span></div>
+    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/05/06</span></span></span></div>
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
@@ -308,14 +308,32 @@ window.MathJax = {
 <li>a cubic <code>ν³</code> collapse at full self-pledge — a saturated operator earns <strong>37 595×</strong> more bonus than a 2 M operator at maximum commitment, because the size factor cubes when the pledge factor saturates.</li>
 </ul>
 <p>The σ′ clip changes <em>who can earn the V1 reward</em>; it does not repair what <code>A</code> does to the pledge signal. The relative bonus disparity, the under-commitment incentive, and the cubic crush all carry through unchanged.</p>
-<p><strong>A genuine V2 stake-cap reform must redesign <code>A</code></strong> with three properties no CIP currently in scope delivers:</p>
+<p><strong>Why the radical approach backfires.</strong> Today, almost no one pledges at scale: the stake-weighted median pool sits at π = <strong>0.07 %</strong>, <strong>78 %</strong> of staked ADA is in pools below 1 % pledge ratio, and <strong>42 of the 48</strong> saturation-scale multi-pool operators forfeit the pledge bonus entirely. We do not actually know how much of the SPO landscape <em>could</em> comply if a hard pledge cap were switched on — and what mainnet shows so far is <em>almost no one</em>.</p>
+<p>Under that condition, the cap hits <strong>every</strong> segment of the operator population hard at the same time:</p>
 <ul>
+<li><strong>Small / single-pool retail operators</strong> — the median retail pool is clipped to ~7 % of its V1 reward (median π = 0.07 % × L = 100), without the liquid capital to raise pledge above the cap.</li>
+<li><strong>Multi-pool entities</strong> — clipped on the per-pool axis: splitting pledge across many pools shrinks each pool's reward envelope, and even large fleets do not have the pledge to comply at scale across all their pools.</li>
+<li><strong>Custodial-by-extraction operators</strong> (CEX / IVaaS, ~21 % of productive stake) — clipped to zero because they cannot self-pledge custodied retail funds by construction.</li>
+</ul>
+<p>The blast radius covers the bulk of the productive population, and the resulting reward collapse <strong>risks destabilising consensus itself</strong>. If most operators see their net income fall sharply at the same time, some will reduce or shut down their infrastructure — and Cardano's block-production reliability degrades. A reform meant to <em>strengthen</em> the network's commitment signal ends up <em>weakening</em> the network's basic operation. The direction of effect runs <em>opposite</em> to the <a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">V2 Operator Viability milestone</a>, the milestone V2 names as foundational.</p>
+<p><strong>A more gradual path makes more sense.</strong> A genuine V2 stake-cap reform should reinforce the pledge signal <strong>at its source</strong> rather than gating it, by combining four moves on the reward-distribution layer:</p>
+<ul>
+<li><strong>Repair <code>A(ν, π)</code></strong> so pledge is not a dominated strategy at any operator size:</li>
 <li>a <strong>smoother operator onset at low ν</strong> — no cubic crush of small pools as they grow;</li>
 <li>a design that <strong>does not privilege fully-private pools (π = 1)</strong> — the V2 target is not "everyone runs a 100 %-pledged pool";</li>
 <li>explicit reward for the <strong>balanced-commitment regime (π ≈ 0.5)</strong> — pledge serving as a credible signal <em>and</em> the pool remaining open to delegation.</li>
+<li>
+<p><strong>Reduce <code>λ_size</code></strong> so the <em>commitment</em> axis carries more of the signal and the <em>size</em> axis carries less. Today the envelope <code>E(ν, π) = λ_size·ν + λ_pledge·A(ν, π)</code> is split <code>λ_size ≈ 76.9 %</code> + <code>λ_pledge ≈ 23.1 %</code> (set by <code>a₀ = 0.3</code>). This rebalancing only makes sense once <code>A</code> is repaired — otherwise it amplifies the broken gradient. The size-weight cut <strong>does double duty</strong>: it reduces what low-pledge pools currently extract via the size axis, <em>and</em> the freed weight funds the viability slice in the next move.</p>
+</li>
+<li>
+<p><strong>Add a viability package for pools entering the lifecycle — open a new <code>λ_viability</code> sub-budget.</strong> Today the envelope is split <strong>two ways</strong> (<code>λ_size + λ_pledge</code>); the recommendation is a <strong>three-way split</strong> <code>λ_size + λ_pledge + λ_viability</code>, <strong>without raising the total pool pot</strong>. While transaction-fee inflows are still small, the global allocation stays where it is; it grows back naturally as Tx fees mature into a larger share of the pot. The funding source for <code>λ_viability</code> is the <code>λ_size</code> reduction above — <em>nothing new is taken from elsewhere; nothing is asked from the reserve</em>.</p>
+</li>
 </ul>
-<p><strong>Capital-capability bias compounds the <code>A</code> objection.</strong> By making pledge binding, both CIPs implicitly discriminate by the operator's capital, not by operator quality. Custodial entities (~21 % of productive stake) hold custodied retail funds they legally cannot self-pledge — their reward collapses to the pledge floor regardless of operator quality. Retail small operators (78 % of single-pool stake is zero-pledge) mostly do not have the capital to raise pledge — their only response is reduced reward or exit. The reform rewards the population that <em>can</em> pledge and penalises the population that <em>cannot</em>, independent of whether the penalised pools produce reliable blocks, serve delegators well, or contribute to decentralisation by any other measure. Even if <code>A</code> were repaired, the σ′ primitive on its own would still pressure the wrong segment.</p>
-<p><strong>Side effect on small-operator viability.</strong> Small retail pools that have attracted delegation in reliance on V1 rules see their σ′ clipped — both operator revenue and delegator ROS drop. This is the <em>opposite direction</em> of the V2 <a href="index.html#31-guarantee-operator-viability-across-the-entire-productive-population">Operator Viability milestone</a>. A stake-cap instrument that restores pledge-as-signal is legitimate on its own terms, but it should not be deployed without an active viability instrument protecting the low-pledge retail population the stake-cap rule would otherwise penalise.</p>
+<p><code>λ_viability</code> is <strong>conditional</strong>, not unconditional: a pool benefits from the viability slice <strong>only if its operator pledges according to rules to be specified</strong> (e.g. a minimum pledge ratio or a pledge-growth schedule across lifecycle stages). The viability function therefore lives on the <strong>reward-distribution layer (pre-split)</strong>, not bolted onto pricing — pricing tools (<code>minPoolCost</code>, margin, rate) stay free as competitive levers (see the <a href="fee-layer.html">fee-layer synthesis</a>).</p>
+<ul>
+<li><strong>Activate the <code>λ_pledge</code> budget that has been underused for years.</strong> POL.O1.F3 documents that <strong>95.6 % of the pledge-bonus budget already returns to the reserve unused every epoch</strong> — the single largest addressable inefficiency in the system today. A repaired <code>A</code> with a reduced <code>λ_size</code> is what activates this budget; it is not new ADA, it is unused ADA already inside the formula's envelope.</li>
+</ul>
+<p>This gradual path lets the pledge signal recover <strong>with</strong> the operator population, not against it. A hard cap stacked on top of today's regime, by contrast, sends an even larger share of the pool pot back to the reserve and worsens viability for every SPO segment at once — exactly the pathology V2 needs to eliminate, not amplify.</p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <nav class="toc-nav">
 <ul>
@@ -775,7 +793,7 @@ window.MathJax = {
         <span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit
       </div>
       <div class="footer-meta">
-        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/05/05</span></div>
+        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/05/06</span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Author</span><span class="footer-meta-val"><a href="https://www.linkedin.com/in/nhenin/" rel="noopener" target="_blank">Nicolas Henin<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Source</span><span class="footer-meta-val"><a href="https://github.com/input-output-hk/spo-incentives" rel="noopener" target="_blank">input-output-hk/spo-incentives<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
       </div>
@@ -801,6 +819,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1777978874"></script>
+<script src="assets/site.js?v=1778052166"></script>
 </body>
 </html>

@@ -14,15 +14,31 @@ Two CIPs are in scope: [CIP-0050](cip-0050.md) and [CIP-0037](cip-0037.md). Both
 
 The σ′ clip changes *who can earn the V1 reward*; it does not repair what `A` does to the pledge signal. The relative bonus disparity, the under-commitment incentive, and the cubic crush all carry through unchanged.
 
-**A genuine V2 stake-cap reform must redesign `A`** with three properties no CIP currently in scope delivers:
+**Why the radical approach backfires.** Today, almost no one pledges at scale: the stake-weighted median pool sits at π = **0.07 %**, **78 %** of staked ADA is in pools below 1 % pledge ratio, and **42 of the 48** saturation-scale multi-pool operators forfeit the pledge bonus entirely. We do not actually know how much of the SPO landscape *could* comply if a hard pledge cap were switched on — and what mainnet shows so far is *almost no one*.
 
-- a **smoother operator onset at low ν** — no cubic crush of small pools as they grow;
-- a design that **does not privilege fully-private pools (π = 1)** — the V2 target is not "everyone runs a 100 %-pledged pool";
-- explicit reward for the **balanced-commitment regime (π ≈ 0.5)** — pledge serving as a credible signal *and* the pool remaining open to delegation.
+Under that condition, the cap hits **every** segment of the operator population hard at the same time:
 
-**Capital-capability bias compounds the `A` objection.** By making pledge binding, both CIPs implicitly discriminate by the operator's capital, not by operator quality. Custodial entities (~21 % of productive stake) hold custodied retail funds they legally cannot self-pledge — their reward collapses to the pledge floor regardless of operator quality. Retail small operators (78 % of single-pool stake is zero-pledge) mostly do not have the capital to raise pledge — their only response is reduced reward or exit. The reform rewards the population that *can* pledge and penalises the population that *cannot*, independent of whether the penalised pools produce reliable blocks, serve delegators well, or contribute to decentralisation by any other measure. Even if `A` were repaired, the σ′ primitive on its own would still pressure the wrong segment.
+- **Small / single-pool retail operators** — the median retail pool is clipped to ~7 % of its V1 reward (median π = 0.07 % × L = 100), without the liquid capital to raise pledge above the cap.
+- **Multi-pool entities** — clipped on the per-pool axis: splitting pledge across many pools shrinks each pool's reward envelope, and even large fleets do not have the pledge to comply at scale across all their pools.
+- **Custodial-by-extraction operators** (CEX / IVaaS, ~21 % of productive stake) — clipped to zero because they cannot self-pledge custodied retail funds by construction.
 
-**Side effect on small-operator viability.** Small retail pools that have attracted delegation in reliance on V1 rules see their σ′ clipped — both operator revenue and delegator ROS drop. This is the *opposite direction* of the V2 [Operator Viability milestone](../../README.md#31-guarantee-operator-viability-across-the-entire-productive-population). A stake-cap instrument that restores pledge-as-signal is legitimate on its own terms, but it should not be deployed without an active viability instrument protecting the low-pledge retail population the stake-cap rule would otherwise penalise.
+The blast radius covers the bulk of the productive population, and the resulting reward collapse **risks destabilising consensus itself**. If most operators see their net income fall sharply at the same time, some will reduce or shut down their infrastructure — and Cardano's block-production reliability degrades. A reform meant to *strengthen* the network's commitment signal ends up *weakening* the network's basic operation. The direction of effect runs *opposite* to the [V2 Operator Viability milestone](../../README.md#31-guarantee-operator-viability-across-the-entire-productive-population), the milestone V2 names as foundational.
+
+**A more gradual path makes more sense.** A genuine V2 stake-cap reform should reinforce the pledge signal **at its source** rather than gating it, by combining four moves on the reward-distribution layer:
+
+- **Repair `A(ν, π)`** so pledge is not a dominated strategy at any operator size:
+  - a **smoother operator onset at low ν** — no cubic crush of small pools as they grow;
+  - a design that **does not privilege fully-private pools (π = 1)** — the V2 target is not "everyone runs a 100 %-pledged pool";
+  - explicit reward for the **balanced-commitment regime (π ≈ 0.5)** — pledge serving as a credible signal *and* the pool remaining open to delegation.
+- **Reduce `λ_size`** so the *commitment* axis carries more of the signal and the *size* axis carries less. Today the envelope `E(ν, π) = λ_size·ν + λ_pledge·A(ν, π)` is split `λ_size ≈ 76.9 %` + `λ_pledge ≈ 23.1 %` (set by `a₀ = 0.3`). This rebalancing only makes sense once `A` is repaired — otherwise it amplifies the broken gradient. The size-weight cut **does double duty**: it reduces what low-pledge pools currently extract via the size axis, *and* the freed weight funds the viability slice in the next move.
+
+- **Add a viability package for pools entering the lifecycle — open a new `λ_viability` sub-budget.** Today the envelope is split **two ways** (`λ_size + λ_pledge`); the recommendation is a **three-way split** `λ_size + λ_pledge + λ_viability`, **without raising the total pool pot**. While transaction-fee inflows are still small, the global allocation stays where it is; it grows back naturally as Tx fees mature into a larger share of the pot. The funding source for `λ_viability` is the `λ_size` reduction above — *nothing new is taken from elsewhere; nothing is asked from the reserve*.
+
+  `λ_viability` is **conditional**, not unconditional: a pool benefits from the viability slice **only if its operator pledges according to rules to be specified** (e.g. a minimum pledge ratio or a pledge-growth schedule across lifecycle stages). The viability function therefore lives on the **reward-distribution layer (pre-split)**, not bolted onto pricing — pricing tools (`minPoolCost`, margin, rate) stay free as competitive levers (see the [fee-layer synthesis](../operator-delegator/README.md)).
+
+- **Activate the `λ_pledge` budget that has been underused for years.** POL.O1.F3 documents that **95.6 % of the pledge-bonus budget already returns to the reserve unused every epoch** — the single largest addressable inefficiency in the system today. A repaired `A` with a reduced `λ_size` is what activates this budget; it is not new ADA, it is unused ADA already inside the formula's envelope.
+
+This gradual path lets the pledge signal recover **with** the operator population, not against it. A hard cap stacked on top of today's regime, by contrast, sends an even larger share of the pool pot back to the reserve and worsens viability for every SPO segment at once — exactly the pathology V2 needs to eliminate, not amplify.
 
 ## Table of Contents
 
