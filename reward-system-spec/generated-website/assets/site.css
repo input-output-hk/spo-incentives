@@ -3228,3 +3228,40 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
   color:var(--text-body);
 }
 [data-theme=dark] .content h3 + blockquote strong{color:var(--cardano-blue-2)}
+
+/* ── Inline brand marks in landing-page prose ────────────────────────
+   Need higher specificity than `.content img` to override the default
+   block / max-width / border / margin / cursor / hover rules above. */
+.content img.iog-logo-inline,
+.content img.cardano-logo-inline{
+  display:inline-block;
+  max-width:none;
+  width:auto;
+  margin:0;
+  padding:0;
+  border:none;
+  border-radius:0;
+  box-shadow:none;
+  cursor:default;
+  transition:none;
+}
+.content img.iog-logo-inline:hover,
+.content img.cardano-logo-inline:hover{box-shadow:none;transform:none}
+
+.content img.iog-logo-inline{
+  height:16px;
+  vertical-align:-3px;
+  margin:0 2px 0 6px;
+  filter:invert(1) brightness(0);
+  opacity:.85;
+}
+[data-theme=dark] .content img.iog-logo-inline{filter:none;opacity:1}
+
+.content img.cardano-logo-inline{
+  height:18px;
+  vertical-align:-4px;
+  margin:0 4px 0 2px;
+  filter:invert(1) brightness(0);
+  opacity:.9;
+}
+[data-theme=dark] .content img.cardano-logo-inline{filter:none;opacity:1}

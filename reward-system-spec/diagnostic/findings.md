@@ -38,9 +38,7 @@ observations:
   - obs-112-2
   - obs-112-3
   - obs-112-4
-  - obs-122-1
   - obs-132-8
-  - obs-212-7
   - obs-222-8
 -->
 
@@ -78,8 +76,6 @@ observations:
   - obs-122-6
   - obs-122-7
   - obs-132-2
-  - obs-132-6
-  - obs-132-7
   - obs-212-1
 -->
 
@@ -112,8 +108,6 @@ parent_title: Operator / Delegator Distribution
 tier: mechanism
 observatory_anchor: 133-problem-induction
 observations:
-  - obs-112-2
-  - obs-112-3
   - obs-132-1
   - obs-132-2
   - obs-132-3
@@ -227,11 +221,6 @@ observations:
   - obs-222-11
   - obs-222-12
   - obs-112-1
-  - obs-112-2
-  - obs-112-3
-  - obs-112-4
-  - obs-122-1
-  - obs-132-8
 -->
 
 The reward pipeline's long-term viability rests on a single assumption: that
@@ -279,7 +268,6 @@ observations:
   - obs-132-8
   - obs-132-9
   - obs-212-7
-  - obs-222-8
 -->
 
 The reward pipeline distributes ADA, but every participant decides in fiat

@@ -2,9 +2,9 @@
 
 You are on the **landing page** of a working website that gathers, in one place, **the analysis, the evidence, and the recommendations** for an upcoming revision of Cardano's reward mechanism.
 
-This work is being conducted by the **Cardano Business Unit (CBU)** within Input Output Group. The aim: give the Cardano community a shared empirical and analytical foundation against which any proposal can be evaluated on common ground.
+This work is being conducted by the **Cardano Business Unit (CBU)** within <img class="iog-logo-inline" src="assets/iog-full-logo-white.png" alt="Input | Output Group" />. The aim: give the Cardano community a shared empirical and analytical foundation against which any proposal can be evaluated on common ground.
 
-The body of work has a name: **Reward System V2**.
+The body of work has a name: <img class="cardano-logo-inline" src="assets/cardano/cardano-logomark-white.svg" alt="Cardano" /> **Cardano Reward System V2**.
 
 It is **not yet a deployed mechanism, nor a finalised proposal**. It is a *new specification* we are authoring — one that defines what a successor to today's reward mechanism must satisfy. The site you are on is where that specification, the evidence behind it, and the analysis around it all live.
 
