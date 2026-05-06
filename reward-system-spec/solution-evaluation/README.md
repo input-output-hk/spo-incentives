@@ -20,6 +20,7 @@ The [V2 specification](../README.md) turns each of those problems into a **named
   - [2.1. Stake-cap layer — CIP-0050 / CIP-0037](#21-stake-cap-layer-cip-0050-cip-0037)
   - [2.2. Fee layer — CIP-0023 / CIP-0082](#22-fee-layer-cip-0023-cip-0082)
 - [3. Conclusion](#3-conclusion)
+  - [3.1. Direct engagement with the Cardano Incentives Working Group's coordinated proposal set](#31-direct-engagement-with-the-cardano-incentives-working-groups-coordinated-proposal-set)
 - [4. Recommendations on adjustments to the current mechanism](#4-recommendations-on-adjustments-to-the-current-mechanism)
   - [4.1. Why gradual, not radical](#41-why-gradual-not-radical)
   - [4.2. Four moves on the reward-distribution layer](#42-four-moves-on-the-reward-distribution-layer)
@@ -117,6 +118,38 @@ This is not a rejection of the underlying intents. CIP-0050 and CIP-0037 capture
 - **Pool-count expansion (CIP-0082 stages 3–4)** addresses Deconcentration by raising `k` without a stake-cap precondition, so the new pool slots fire in the same MPO-fleet absorption regime that produced today's concentration — see [cip-0082 §B.3](operator-delegator/cip-0082.md#b3-standalone-k-lever-deep-dive).
 
 The design space therefore points toward parameter-level adjustments that respect three separations: pricing free-market levers stay flexible; the viability backstop lives on the reward-distribution layer; and pool-count expansion is gated on a stake-cap precondition.
+
+## 3.1. Direct engagement with the Cardano Incentives Working Group's coordinated proposal set
+
+Beyond the four CIPs evaluated above, the **Cardano Incentives Working Group** ([incentives.solutions](https://incentives.solutions)) has authored an adjacent set of proposals — overlapping at points, orthogonal at others. The three pieces this evaluation engages directly:
+
+- **[CIP-50 Rebirth](https://incentives.solutions/cip-50-rebirth/)** — modernised case for CIP-0050. Engaged at length in the per-CIP file [`cip-0050.md`](pools-distribution/cip-0050.md): the Sybil-framing context (§2), the RSS-simulation reality-check (§4), the k-synergy framing (§A.10), and the three findings cards (Appendix B).
+- **[K=1000 governance action draft](https://incentives.solutions/k-1-000-gov-action-draft/)** *(2025/12/13)* — a proposal to raise `stakePoolTargetNum` from 500 to 1 000.
+- **[CIP-163 — Time-Bound Delegation with Dynamic Rewards](https://cips.cardano.org/cip/CIP-163)** — inactive-stake expiration paired with full-pot rewards distribution.
+
+#### On the K=1000 simulation result.
+
+The K=1000 draft cites a forward-looking Reward-Sharing Simulation result: *"K=1,000 would almost double our Nakamoto coefficient compared to K=500's baseline of 116, achieving approximately 226 at K=1,000."* This is a markedly stronger claim than the +1-entity result the same advocates published in their CIP-50 Rebirth FAQ (where L's marginal effect at k=2 000 was ~159 → ~160).
+
+This evaluation's position remains as documented in [cip-0082 §B.3](operator-delegator/cip-0082.md#b3-standalone-k-lever-deep-dive): the **2020 `k: 150 → 500`** raise is the only natural experiment Cardano has run on `k` at scale, and it produced today's MPO landscape ([POL.O5](diagnostic/README.md#122-mainnet-observations).F1: 83 entities, 449 productive pools, 76.7 % of productive stake). The forward-looking RSS run and the backward-looking mainnet record are not reconciled by either side. Absent a stake-cap precondition that prevents fleet absorption — and absent a viability instrument protecting the small-pool tail while the cap bites — the 2020 evidence weighs heavier.
+
+#### Cross-position confirmation of the viability gap.
+
+The K=1000 draft acknowledges, in its own words, that *"873 active operators (54 % of the total) remain below the 3 M ADA threshold required for consistent block production"* and flags this as *"high social risk"* from *"operator disillusionment"* about the *"viability gap"*.
+
+This matches the diagnostic's finding ([POL.O6](diagnostic/README.md#122-mainnet-observations): 73 % of productive pools below the ~3 M ADA viability line) and is consistent across both positions. What differs is the **response**: the K=1000 proposal does not address the gap directly, while the [recommendations in §4](#4-recommendations-on-adjustments-to-the-current-mechanism) place a viability instrument (the conditional `λ_viability` sub-budget) on the reward-distribution layer as the precondition for any constructive `k`-raise.
+
+#### CIP-163 — orthogonal to the formula-distortion analysis.
+
+CIP-163 targets the **participation gap** the diagnostic also documents ([POL.O1](diagnostic/README.md#122-mainnet-observations).F2: 31.6 % of the pool pot returns to reserve due to unstaked ADA — an upstream cause, outside formula control). Mechanism: inactive stake stops earning rewards; the freed budget redistributes to active pools via full-pot rewards.
+
+CIP-163 does **not** address the bonus function `A(ν, π)`, the size-vs-commitment weighting, or the wasted pledge-bonus budget. If CIP-163 ships, the absolute pool pot reaching active operators grows, but the structural distortions the [recommendations in §4](#4-recommendations-on-adjustments-to-the-current-mechanism) target are unchanged.
+
+**Side effect to watch — yield uplift without diagnosis.** Redistributing the reserve return raises absolute yields network-wide. The misallocation across the nine-tier ladder stays in place, but it now sits under a yield boost the population reads as good news — the structural distortions become harder to see behind higher headline numbers. Pools positioned to absorb the redirected delegation flows experience a euphoria moment the formula does not earn them, and delegation movement under those conditions tracks absolute yield deltas rather than relative pool quality — the rebalancing is potentially uncontrolled.
+
+The reform conversation depends on the population reading distortion as distortion. A window of apparent prosperity competes against that and momentarily crowds out structural diagnosis — which is why CIP-163 reads better as a coordinated companion to the four-move package than as a standalone deployment ahead of it.
+
+The two proposal sets are therefore **complements, not competitors**: CIP-163 fixes what the formula does *not* control (upstream participation); the four-move package fixes what it *does* control (downstream allocation). Sequencing matters: deploying the formula reform alongside (or ahead of) the participation fix preserves the diagnostic clarity the reform case rests on.
 
 # 4. Recommendations on adjustments to the current mechanism
 
