@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import hashlib
 import html as _html
+import json
 import re
 import shutil
 import sys
@@ -351,10 +352,16 @@ def _resolve_analytics_provider() -> str:
 
 ACTIVE_ANALYTICS = _resolve_analytics_provider()
 
-GISCUS_REPO = _cfg("SPO_GISCUS_REPO", "")
-GISCUS_REPO_ID = _cfg("SPO_GISCUS_REPO_ID", "")
-GISCUS_CATEGORY = _cfg("SPO_GISCUS_CATEGORY", "General")
-GISCUS_CATEGORY_ID = _cfg("SPO_GISCUS_CATEGORY_ID", "")
+GISCUS_REPO = _cfg("SPO_GISCUS_REPO", "input-output-hk/spo-incentives")
+# Public node id resolved from `GET https://api.github.com/repos/<owner>/<repo>`.
+# Stable per repo; safe to bake the default in.
+GISCUS_REPO_ID = _cfg("SPO_GISCUS_REPO_ID", "R_kgDOP8tN7g")
+# CPS = the Discussions category that hosts one thread per induced
+# Cardano Problem Statement (μ01..M05). The category id below was
+# resolved on first run of `scripts/bootstrap_giscus_discussions.py`
+# against `input-output-hk/spo-incentives` and is stable across runs.
+GISCUS_CATEGORY = _cfg("SPO_GISCUS_CATEGORY", "CPS")
+GISCUS_CATEGORY_ID = _cfg("SPO_GISCUS_CATEGORY_ID", "DIC_kwDOP8tN7s4C8gv2")
 GISCUS_MAPPING = _cfg("SPO_GISCUS_MAPPING", "pathname")
 GISCUS_THEME = _cfg("SPO_GISCUS_THEME", "preferred_color_scheme")
 GISCUS_LANG = _cfg("SPO_GISCUS_LANG", "en")
@@ -5158,6 +5165,25 @@ def _md_snippet_to_html(md_snippet: str, src_md: Path | None = None) -> str:
     return html
 
 
+_GISCUS_PROBLEMS_PATH = Path(__file__).resolve().parent / "data" / "giscus-problems.json"
+_GISCUS_PROBLEMS_CACHE: dict | None = None
+
+
+def _giscus_problems_mapping() -> dict:
+    """Return the problem-id → Discussion-info dict from the bootstrap
+    JSON, cached for the run. Empty dict when the file is missing or
+    malformed (the page still builds, the CTA just stays hidden)."""
+    global _GISCUS_PROBLEMS_CACHE
+    if _GISCUS_PROBLEMS_CACHE is not None:
+        return _GISCUS_PROBLEMS_CACHE
+    try:
+        data = json.loads(_GISCUS_PROBLEMS_PATH.read_text())
+        _GISCUS_PROBLEMS_CACHE = data.get("problems", {}) or {}
+    except (FileNotFoundError, ValueError):
+        _GISCUS_PROBLEMS_CACHE = {}
+    return _GISCUS_PROBLEMS_CACHE
+
+
 def _render_finding_card(
     finding: dict,
     obs_for_section: list[dict],
@@ -5382,10 +5408,24 @@ def _render_finding_card(
     num_label = f"{num_prefix}{index + 1:02d}"
     card_id = f"problem-{finding['section_id'].replace('.', '-')}"
 
+    # Bake the per-problem GitHub Discussion URL into the article tag
+    # at build time. Read from the bootstrap mapping written by
+    # `scripts/bootstrap_giscus_discussions.py`. When the JSON or the
+    # entry is missing the attribute is omitted and the JS leaves the
+    # CTA hidden.
+    discuss_attr = ""
+    info = _giscus_problems_mapping().get(card_id)
+    if info and info.get("discussion_number"):
+        discuss_url = (
+            f'https://github.com/{GISCUS_REPO}/discussions/'
+            f'{info["discussion_number"]}'
+        )
+        discuss_attr = f' data-discussion-href="{_html.escape(discuss_url)}"'
+
     return (
         f'<article class="finding-card" id="{card_id}" '
         f'data-section="{finding["section_id"]}" '
-        f'data-parent="{finding["parent"]}">'
+        f'data-parent="{finding["parent"]}"{discuss_attr}>'
         f'<header class="finding-card-banner" data-banner="braid">'
         f'<span class="finding-card-banner-eyebrow">{parent_label}</span>'
         f'<div class="finding-card-banner-row">'

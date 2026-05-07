@@ -1,0 +1,69 @@
+{
+  "synced_at": "2026/05/07 12:35 UTC",
+  "repo": "input-output-hk/spo-incentives",
+  "repo_id": "R_kgDOP8tN7g",
+  "category": "CPS",
+  "category_id": "DIC_kwDOP8tN7s4C8gv2",
+  "problems": {
+    "problem-1-2-3": {
+      "discussion_id": "D_kwDOP8tN7s4AmNxK",
+      "discussion_number": 31,
+      "token": "μ01",
+      "title": "Closing the Consensus Incentive Gap"
+    },
+    "problem-1-3-3-1": {
+      "discussion_id": "D_kwDOP8tN7s4AmNxL",
+      "discussion_number": 32,
+      "token": "μ02",
+      "title": "Guarantee operator viability across the productive population"
+    },
+    "problem-1-3-3-2": {
+      "discussion_id": "D_kwDOP8tN7s4AmNxM",
+      "discussion_number": 33,
+      "token": "μ03",
+      "title": "Restore a competitive delegator yield"
+    },
+    "problem-2-1-3-1": {
+      "discussion_id": "D_kwDOP8tN7s4AmNxN",
+      "discussion_number": 34,
+      "token": "μ04",
+      "title": "SPO supply side — fewer and fewer entities participate in consensus"
+    },
+    "problem-2-1-3-2": {
+      "discussion_id": "D_kwDOP8tN7s4AmNxO",
+      "discussion_number": 35,
+      "token": "μ05",
+      "title": "Arbiter-side distribution — titans move the disciplining capital, but not on yield"
+    },
+    "problem-1-1-3": {
+      "discussion_id": "D_kwDOP8tN7s4AmNxP",
+      "discussion_number": 36,
+      "token": "M01",
+      "title": "Funding the Protocol Without a Reserve"
+    },
+    "problem-2-1-3-3": {
+      "discussion_id": "D_kwDOP8tN7s4AmNxQ",
+      "discussion_number": 37,
+      "token": "M02",
+      "title": "Non-participants — a secondary distribution problem behind the active-player dynamics"
+    },
+    "problem-2-2-3": {
+      "discussion_id": "D_kwDOP8tN7s4AmNxR",
+      "discussion_number": 38,
+      "token": "M03",
+      "title": "Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion"
+    },
+    "problem-3-1-1": {
+      "discussion_id": "D_kwDOP8tN7s4AmNxS",
+      "discussion_number": 39,
+      "token": "M04",
+      "title": "Is a finite ₳ supply enough to honour the deflationist promise?"
+    },
+    "problem-3-1-2": {
+      "discussion_id": "D_kwDOP8tN7s4AmNxT",
+      "discussion_number": 40,
+      "token": "M05",
+      "title": "The protocol takes the hit of ADA volatility, with no instrument to govern it"
+    }
+  }
+}

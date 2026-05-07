@@ -1358,6 +1358,41 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
         activate(idx, { silent:true });
       }
 
+      // Inject a per-card "Discuss" CTA. The Discussion URL is baked
+      // into the article's `data-discussion-href` attribute by
+      // `build_site.py` via `scripts/bootstrap_giscus_discussions.py`'s
+      // mapping JSON — no runtime fetch.
+      var GH_OCTICON =
+        '<svg class="finding-card-discuss-icon" viewBox="0 0 16 16" aria-hidden="true">'+
+          '<path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 '+
+          '5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49'+
+          '-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 '+
+          '1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78'+
+          '-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08'+
+          '-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 '+
+          '1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 '+
+          '2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 '+
+          '1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58'+
+          '-8-8-8z"/></svg>';
+
+      cards.forEach(function(card){
+        if (!card.id) return;
+        if (card.querySelector('.finding-card-discuss')) return;
+        var href = card.getAttribute('data-discussion-href');
+        if (!href) return;
+        var cta = document.createElement('a');
+        cta.className = 'finding-card-discuss';
+        cta.target = '_blank';
+        cta.rel = 'noopener';
+        cta.href = href;
+        cta.innerHTML = GH_OCTICON +
+          '<span class="finding-card-discuss-text">Discuss</span>'+
+          '<span class="finding-card-discuss-arrow" aria-hidden="true">&#x2197;</span>';
+        var bannerEl = card.querySelector('.finding-card-banner') || card.querySelector('.finding-card-content') || card;
+        bannerEl.appendChild(cta);
+        if (bannerEl.classList && bannerEl.classList.contains('finding-card-banner')) bannerEl.classList.add('has-discuss');
+      });
+
       activate(0, { silent:true });
       syncHash();
       window.addEventListener('hashchange', syncHash);
