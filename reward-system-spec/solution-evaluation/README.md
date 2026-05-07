@@ -127,6 +127,18 @@ Beyond the four CIPs evaluated above, the **Cardano Incentives Working Group** (
 - **[K=1000 governance action draft](https://incentives.solutions/k-1-000-gov-action-draft/)** *(2025/12/13)* — a proposal to raise `stakePoolTargetNum` from 500 to 1 000.
 - **[CIP-163 — Time-Bound Delegation with Dynamic Rewards](https://cips.cardano.org/cip/CIP-163)** — inactive-stake expiration paired with full-pot rewards distribution.
 
+#### Underlying premise — pledge is one signal of commitment, not the only one.
+
+The Working Group's coordinated set rests on a single foundational premise: the pledge ratio is the binding signal of operator commitment, and the population of multi-pool fleets that has rationally chosen to forgo the pledge bonus must therefore be treated as Sybil-adjacent and capped at the σ′ layer. Every proposal in the set — the pledge-leverage cap (CIP-50 Rebirth), K=1000, CIP-163's redistribution to active stake — inherits this premise.
+
+Pledge *is* an important signal of commitment; this evaluation does not contest that. The diagnostic puts it at the centre of the reform: the wasted `λ_pledge` envelope ([POL.O1](diagnostic/README.md#122-mainnet-observations).F3: 95.6 % returns to reserve) is the headline finding the four-move package targets, and a redesigned bonus function `A(ν, π)` is the first move of that package.
+
+The premise that breaks down is the move from *one signal* to *only signal*. A multi-pool fleet that has run reliable infrastructure for years, attracted and retained delegators on the open market, built tooling and services on top of Cardano, and brought enterprise integrations into the ecosystem has placed substantial assets beyond pledge into the consensus equation — revenue streams, brand capital, operational know-how, customer relationships. From a consensus-economics standpoint these are also skin in the game: losing them is costly, and that cost is what makes honest behaviour rational. The pledge ratio captures self-stake. It does not capture the rest.
+
+The diagnostic's framing follows from this. The problem is not that the multi-pool-fleet population *exists* or that it is concentrated — it is that the formula no longer **balances** its weight against the smaller-pool contribution it was meant to coexist with. There is too much of one pole relative to the others, and the pledge signal that should counterweigh it is unrecognised. A radical budget reduction targeting this population — without redesigning `A(ν, π)`, and without using the levers the envelope already provides (`λ_size`, `λ_pledge`, the unused viability budget) — does not restore that balance. It tilts the imbalance from the other side.
+
+The three engagements below apply this lens to the Working Group's specific proposals.
+
 #### On the K=1000 simulation result.
 
 The K=1000 draft cites a forward-looking Reward-Sharing Simulation result: *"K=1,000 would almost double our Nakamoto coefficient compared to K=500's baseline of 116, achieving approximately 226 at K=1,000."* This is a markedly stronger claim than the +1-entity result the same advocates published in their CIP-50 Rebirth FAQ (where L's marginal effect at k=2 000 was ~159 → ~160).

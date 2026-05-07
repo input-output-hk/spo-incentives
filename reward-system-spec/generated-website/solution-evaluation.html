@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778068798">
+<link rel="stylesheet" href="assets/site.css?v=1778142591">
 
 
 </head>
@@ -294,7 +294,7 @@ window.MathJax = {
     <div class="hero-eyebrow">Solution Evaluation</div>
     <h1>Intro & Conclusion of the 4 CIPs</h1>
     <div class="sub">V2 milestones × the four CIPs — wrong-layer verdict across the bundle, gradual fix in preparation</div>
-    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/05/06</span></span></span></div>
+    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/05/07</span></span></span></div>
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
@@ -442,6 +442,12 @@ window.MathJax = {
 <li><strong><a href="https://incentives.solutions/k-1-000-gov-action-draft/">K=1000 governance action draft</a></strong> <em>(2025/12/13)</em> — a proposal to raise <code>stakePoolTargetNum</code> from 500 to 1 000.</li>
 <li><strong><a href="https://cips.cardano.org/cip/CIP-163">CIP-163 — Time-Bound Delegation with Dynamic Rewards</a></strong> — inactive-stake expiration paired with full-pot rewards distribution.</li>
 </ul>
+<h4 id="underlying-premise-pledge-is-one-signal-of-commitment-not-the-only-one">Underlying premise — pledge is one signal of commitment, not the only one.</h4>
+<p>The Working Group's coordinated set rests on a single foundational premise: the pledge ratio is the binding signal of operator commitment, and the population of multi-pool fleets that has rationally chosen to forgo the pledge bonus must therefore be treated as Sybil-adjacent and capped at the σ′ layer. Every proposal in the set — the pledge-leverage cap (CIP-50 Rebirth), K=1000, CIP-163's redistribution to active stake — inherits this premise.</p>
+<p>Pledge <em>is</em> an important signal of commitment; this evaluation does not contest that. The diagnostic puts it at the centre of the reform: the wasted <code>λ_pledge</code> envelope (<a class="obs-ref obs-ref-src" href="pools.html#1-mainnet-observations" data-obs-src="POL.O1" data-obs-page="pools.html" data-obs-href="pools.html#1-mainnet-observations" title="POL.O1 · hover for summary, click for detail">POL.O1</a>.F3: 95.6 % returns to reserve) is the headline finding the four-move package targets, and a redesigned bonus function <code>A(ν, π)</code> is the first move of that package.</p>
+<p>The premise that breaks down is the move from <em>one signal</em> to <em>only signal</em>. A multi-pool fleet that has run reliable infrastructure for years, attracted and retained delegators on the open market, built tooling and services on top of Cardano, and brought enterprise integrations into the ecosystem has placed substantial assets beyond pledge into the consensus equation — revenue streams, brand capital, operational know-how, customer relationships. From a consensus-economics standpoint these are also skin in the game: losing them is costly, and that cost is what makes honest behaviour rational. The pledge ratio captures self-stake. It does not capture the rest.</p>
+<p>The diagnostic's framing follows from this. The problem is not that the multi-pool-fleet population <em>exists</em> or that it is concentrated — it is that the formula no longer <strong>balances</strong> its weight against the smaller-pool contribution it was meant to coexist with. There is too much of one pole relative to the others, and the pledge signal that should counterweigh it is unrecognised. A radical budget reduction targeting this population — without redesigning <code>A(ν, π)</code>, and without using the levers the envelope already provides (<code>λ_size</code>, <code>λ_pledge</code>, the unused viability budget) — does not restore that balance. It tilts the imbalance from the other side.</p>
+<p>The three engagements below apply this lens to the Working Group's specific proposals.</p>
 <h4 id="on-the-k1000-simulation-result">On the K=1000 simulation result.</h4>
 <p>The K=1000 draft cites a forward-looking Reward-Sharing Simulation result: <em>"K=1,000 would almost double our Nakamoto coefficient compared to K=500's baseline of 116, achieving approximately 226 at K=1,000."</em> This is a markedly stronger claim than the +1-entity result the same advocates published in their CIP-50 Rebirth FAQ (where L's marginal effect at k=2 000 was ~159 → ~160).</p>
 <p>This evaluation's position remains as documented in <a href="cip-0082.html#b3-standalone-k-lever-deep-dive">cip-0082 §B.3</a>: the <strong>2020 <code>k: 150 → 500</code></strong> raise is the only natural experiment Cardano has run on <code>k</code> at scale, and it produced today's MPO landscape (<a class="obs-ref obs-ref-src" href="pools.html#1-mainnet-observations" data-obs-src="POL.O5" data-obs-page="pools.html" data-obs-href="pools.html#1-mainnet-observations" title="POL.O5 · hover for summary, click for detail">POL.O5</a>.F1: 83 entities, 449 productive pools, 76.7 % of productive stake). The forward-looking RSS run and the backward-looking mainnet record are not reconciled by either side. Absent a stake-cap precondition that prevents fleet absorption — and absent a viability instrument protecting the small-pool tail while the cap bites — the 2020 evidence weighs heavier.</p>
@@ -535,7 +541,7 @@ window.MathJax = {
         <span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit
       </div>
       <div class="footer-meta">
-        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/05/06</span></div>
+        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/05/07</span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Author</span><span class="footer-meta-val"><a href="https://www.linkedin.com/in/nhenin/" rel="noopener" target="_blank">Nicolas Henin<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Source</span><span class="footer-meta-val"><a href="https://github.com/input-output-hk/spo-incentives" rel="noopener" target="_blank">input-output-hk/spo-incentives<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
       </div>
@@ -561,6 +567,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778068798"></script>
+<script src="assets/site.js?v=1778142591"></script>
 </body>
 </html>
