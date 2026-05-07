@@ -297,14 +297,9 @@ MD_TO_HTML_MAP = {p["md"]: p["html"] for p in PAGES}
 #   - GISCUS_THEME: "preferred_color_scheme" follows the user's OS theme;
 #     swap for "light" / "dark" / a custom theme URL if needed.
 #
-# Finding reactions
-#   - REACTIONS_ENABLED: when True (and Plausible is configured), thumbs
-#     up/down buttons attach to every `.sro-finding`. Each click fires a
-#     custom Plausible event with `{finding: "OPE.O1.F2", sentiment: "up"}`
-#     props. SessionStorage prevents double-counting within a session.
-#   - No persistent backend is required: counts live in the Plausible
-#     dashboard. Switch to a Cloudflare Worker + KV if a live counter
-#     in-page is needed later.
+# (The previous Useful / Not useful per-finding reaction buttons were
+# removed. Discussion now happens on per-problem GitHub Discussion threads
+# via the per-card "Discuss" CTA on problem-statements.html.)
 
 import os as _os
 
@@ -365,8 +360,6 @@ GISCUS_CATEGORY_ID = _cfg("SPO_GISCUS_CATEGORY_ID", "DIC_kwDOP8tN7s4C8gv2")
 GISCUS_MAPPING = _cfg("SPO_GISCUS_MAPPING", "pathname")
 GISCUS_THEME = _cfg("SPO_GISCUS_THEME", "preferred_color_scheme")
 GISCUS_LANG = _cfg("SPO_GISCUS_LANG", "en")
-
-REACTIONS_ENABLED = _cfg("SPO_REACTIONS_ENABLED", "1") not in ("0", "false", "no")
 
 # Canonical "source of truth" repo for the spec — used by the footer
 # (View on GitHub, file an issue, Discussions). Falls back to the
@@ -777,8 +770,6 @@ def _render_body_data_attrs() -> str:
     parts = []
     if ACTIVE_ANALYTICS:
         parts.append(f'data-analytics="{ACTIVE_ANALYTICS}"')
-    if REACTIONS_ENABLED and ACTIVE_ANALYTICS:
-        parts.append('data-reactions="1"')
     if GISCUS_REPO:
         parts.append('data-giscus="1"')
     if HIGHLIGHTS_ENABLED:
@@ -2512,44 +2503,6 @@ a.obs-panel-finding-fid:hover .obs-panel-finding-id{color:var(--text-secondary)}
 .sro-nature{font-style:italic;color:var(--text-muted)}
 .sro-nature::before{content:"· ";color:var(--border);font-style:normal}
 
-/* Reader feedback — thumbs up/down per .sro-finding.
-   Sits in the .sro-meta row, far right. Pill-shaped with a persistent
-   border so they read as buttons at a glance; hover lifts them into
-   Infrared, active state saturates. */
-.feedback-react{display:inline-flex;align-items:center;gap:6px;
-  margin-left:auto;padding-left:12px;
-  border-left:1px solid var(--border)}
-.feedback-react-btn{display:inline-flex;align-items:center;gap:6px;
-  padding:5px 12px;border-radius:14px;
-  background:var(--bg);border:1px solid var(--border);
-  color:var(--text-secondary);cursor:pointer;
-  font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  letter-spacing:.02em;
-  transition:color .15s,background .15s,border-color .15s,transform .15s,box-shadow .15s}
-.feedback-react-btn svg{width:14px;height:14px;fill:none;
-  stroke:currentColor;stroke-width:1.6;
-  stroke-linecap:round;stroke-linejoin:round}
-.feedback-react-up:hover{color:var(--infared);
-  background:color-mix(in srgb, var(--infared) 10%, transparent);
-  border-color:var(--infared);
-  box-shadow:0 1px 6px rgba(229,35,33,.18)}
-.feedback-react-down:hover{color:#444;
-  background:var(--bg-panel);border-color:#888;
-  box-shadow:0 1px 6px rgba(0,0,0,.12)}
-.feedback-react-up.is-active{color:#fff;background:var(--infared);
-  border-color:var(--infared);font-weight:700;
-  box-shadow:0 1px 8px rgba(229,35,33,.30)}
-.feedback-react-down.is-active{color:#fff;background:#444;
-  border-color:#444;font-weight:700;
-  box-shadow:0 1px 8px rgba(0,0,0,.20)}
-.feedback-react-pulse{transform:scale(1.10)}
-.feedback-react-label{font-variant-numeric:tabular-nums}
-@media (max-width:520px){
-  .feedback-react-label{display:none}
-  .feedback-react{padding-left:8px}
-  .feedback-react-btn{padding:5px 9px}
-}
-
 /* Per-page Giscus comments block — anchored below the article content,
    above the site footer. Designed to look like an editorial footer note
    rather than a forum widget so it doesn't fight with the report's
@@ -3396,27 +3349,20 @@ _CROSS_OBS_JS = """  /* ── Cross-page synthesis-observation source overlay �
     });
   })();
 
-  /* ── Reader feedback: analytics custom events + finding reactions ──
-     Provider-agnostic: calls into `window.spoTrack(name, propsFlat)`,
-     a global injected by the analytics head bridge that maps to either
-     Plausible or Umami transparently. The script is a no-op when no
-     analytics provider is configured (the body has no `data-analytics`
-     attribute). Per-session idempotency via sessionStorage so hammering
-     a button only counts once per (page, finding, sentiment) in a given
-     session — keeps the dashboard signal clean. */
+  /* ── Reader feedback: overlay engagement events ──
+     Provider-agnostic: calls into `window.spoTrack(name, propsFlat)`, a
+     global injected by the analytics head bridge that maps to either
+     Plausible or Umami transparently. No-op when no analytics provider
+     is configured. The previous Useful / Not useful buttons on each
+     finding row were dropped — discussion now happens on per-problem
+     GitHub Discussion threads via the per-card "Discuss" CTA. */
   (function initReaderFeedback(){
     function track(name,props){
       if(typeof window.spoTrack==='function'){
         try{window.spoTrack(name,props||{});}catch(e){}
       }
     }
-    var body=document.body;
-    if(!body) return;
-    var hasReactions=body.getAttribute('data-reactions')==='1';
     var pageId=location.pathname.split('/').pop()||'index.html';
-
-    /* Overlay engagement events — listener is cheap; the track() helper
-       guards the call when no provider is configured. */
     document.addEventListener('click',function(ev){
       var t=ev.target;
       if(!t||!t.closest) return;
@@ -3433,69 +3379,6 @@ _CROSS_OBS_JS = """  /* ── Cross-page synthesis-observation source overlay �
         track('Overlay Open',{kind:'finding',target:fid,page:pageId});
       }
     },true);
-
-    /* Reaction buttons — injected once per .sro-finding, only when the
-       page declares data-reactions="1". The dashboard records sentiment
-       as a custom prop so the editor can sort findings by 👍/👎 weight. */
-    if(!hasReactions) return;
-    var findings=document.querySelectorAll('.sro-finding[data-finding]');
-    if(!findings.length) return;
-    var SK='spo:react:';
-
-    function isSent(canon,sent){
-      try{return sessionStorage.getItem(SK+canon+':'+sent)==='1';}
-      catch(e){return false;}
-    }
-    function markSent(canon,sent){
-      try{sessionStorage.setItem(SK+canon+':'+sent,'1');}catch(e){}
-    }
-
-    function makeBtn(canon,sent,label,svg){
-      var b=document.createElement('button');
-      b.type='button';
-      b.className='feedback-react-btn feedback-react-'+sent;
-      b.setAttribute('data-finding',canon);
-      b.setAttribute('data-sentiment',sent);
-      b.setAttribute('aria-label',label+' — '+canon);
-      b.setAttribute('title',label);
-      b.innerHTML=svg+'<span class="feedback-react-label">'+label+'</span>';
-      if(isSent(canon,sent)) b.classList.add('is-active');
-      b.addEventListener('click',function(ev){
-        ev.preventDefault();ev.stopPropagation();
-        if(isSent(canon,sent)){
-          /* Already counted this session — visual confirm only. */
-          b.classList.add('is-active');
-          return;
-        }
-        track('Finding Reaction',{finding:canon,sentiment:sent,page:pageId});
-        markSent(canon,sent);
-        b.classList.add('is-active');
-        b.classList.add('feedback-react-pulse');
-        setTimeout(function(){b.classList.remove('feedback-react-pulse');},420);
-      });
-      return b;
-    }
-
-    var SVG_UP='<svg viewBox="0 0 16 16" aria-hidden="true">'
-      +'<path d="M3 8.5h2.2L7 3.5c.7-.2 1.4.4 1.3 1.1L8 7.5h3.6c.8 0 1.4.7 1.2 1.5L12 12c-.2.7-.8 1.2-1.5 1.2H6L3 13"/>'
-      +'</svg>';
-    var SVG_DOWN='<svg viewBox="0 0 16 16" aria-hidden="true">'
-      +'<path d="M3 7.5h2.2L7 12.5c.7.2 1.4-.4 1.3-1.1L8 8.5h3.6c.8 0 1.4-.7 1.2-1.5L12 4c-.2-.7-.8-1.2-1.5-1.2H6L3 3"/>'
-      +'</svg>';
-
-    findings.forEach(function(li){
-      if(li.querySelector('.feedback-react')) return;
-      var canon=li.getAttribute('data-finding');
-      if(!canon) return;
-      var meta=li.querySelector('.sro-meta');
-      var host=document.createElement('div');
-      host.className='feedback-react';
-      host.setAttribute('role','group');
-      host.setAttribute('aria-label','Reactions for '+canon);
-      host.appendChild(makeBtn(canon,'up','Useful',SVG_UP));
-      host.appendChild(makeBtn(canon,'down','Not useful',SVG_DOWN));
-      if(meta){meta.appendChild(host);}else{li.appendChild(host);}
-    });
   })();
 
   /* ── L1: Passive engagement events ──
@@ -3853,10 +3736,8 @@ _CROSS_OBS_JS = """  /* ── Cross-page synthesis-observation source overlay �
       var canon=li.getAttribute('data-finding');
       var title=(li.querySelector('.sro-evidence')||{}).textContent||'';
       var meta=li.querySelector('.sro-meta');
-      var react=li.querySelector('.feedback-react');
       var btn=makeBtn(canon,title.substring(0,140),title);
-      if(react){react.appendChild(btn);}
-      else if(meta){meta.appendChild(btn);}
+      if(meta){meta.appendChild(btn);}
       else{li.appendChild(btn);}
     });
   })();

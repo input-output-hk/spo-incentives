@@ -524,27 +524,20 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
     });
   })();
 
-  /* ── Reader feedback: analytics custom events + finding reactions ──
-     Provider-agnostic: calls into `window.spoTrack(name, propsFlat)`,
-     a global injected by the analytics head bridge that maps to either
-     Plausible or Umami transparently. The script is a no-op when no
-     analytics provider is configured (the body has no `data-analytics`
-     attribute). Per-session idempotency via sessionStorage so hammering
-     a button only counts once per (page, finding, sentiment) in a given
-     session — keeps the dashboard signal clean. */
+  /* ── Reader feedback: overlay engagement events ──
+     Provider-agnostic: calls into `window.spoTrack(name, propsFlat)`, a
+     global injected by the analytics head bridge that maps to either
+     Plausible or Umami transparently. No-op when no analytics provider
+     is configured. The previous Useful / Not useful buttons on each
+     finding row were dropped — discussion now happens on per-problem
+     GitHub Discussion threads via the per-card "Discuss" CTA. */
   (function initReaderFeedback(){
     function track(name,props){
       if(typeof window.spoTrack==='function'){
         try{window.spoTrack(name,props||{});}catch(e){}
       }
     }
-    var body=document.body;
-    if(!body) return;
-    var hasReactions=body.getAttribute('data-reactions')==='1';
     var pageId=location.pathname.split('/').pop()||'index.html';
-
-    /* Overlay engagement events — listener is cheap; the track() helper
-       guards the call when no provider is configured. */
     document.addEventListener('click',function(ev){
       var t=ev.target;
       if(!t||!t.closest) return;
@@ -561,69 +554,6 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
         track('Overlay Open',{kind:'finding',target:fid,page:pageId});
       }
     },true);
-
-    /* Reaction buttons — injected once per .sro-finding, only when the
-       page declares data-reactions="1". The dashboard records sentiment
-       as a custom prop so the editor can sort findings by 👍/👎 weight. */
-    if(!hasReactions) return;
-    var findings=document.querySelectorAll('.sro-finding[data-finding]');
-    if(!findings.length) return;
-    var SK='spo:react:';
-
-    function isSent(canon,sent){
-      try{return sessionStorage.getItem(SK+canon+':'+sent)==='1';}
-      catch(e){return false;}
-    }
-    function markSent(canon,sent){
-      try{sessionStorage.setItem(SK+canon+':'+sent,'1');}catch(e){}
-    }
-
-    function makeBtn(canon,sent,label,svg){
-      var b=document.createElement('button');
-      b.type='button';
-      b.className='feedback-react-btn feedback-react-'+sent;
-      b.setAttribute('data-finding',canon);
-      b.setAttribute('data-sentiment',sent);
-      b.setAttribute('aria-label',label+' — '+canon);
-      b.setAttribute('title',label);
-      b.innerHTML=svg+'<span class="feedback-react-label">'+label+'</span>';
-      if(isSent(canon,sent)) b.classList.add('is-active');
-      b.addEventListener('click',function(ev){
-        ev.preventDefault();ev.stopPropagation();
-        if(isSent(canon,sent)){
-          /* Already counted this session — visual confirm only. */
-          b.classList.add('is-active');
-          return;
-        }
-        track('Finding Reaction',{finding:canon,sentiment:sent,page:pageId});
-        markSent(canon,sent);
-        b.classList.add('is-active');
-        b.classList.add('feedback-react-pulse');
-        setTimeout(function(){b.classList.remove('feedback-react-pulse');},420);
-      });
-      return b;
-    }
-
-    var SVG_UP='<svg viewBox="0 0 16 16" aria-hidden="true">'
-      +'<path d="M3 8.5h2.2L7 3.5c.7-.2 1.4.4 1.3 1.1L8 7.5h3.6c.8 0 1.4.7 1.2 1.5L12 12c-.2.7-.8 1.2-1.5 1.2H6L3 13"/>'
-      +'</svg>';
-    var SVG_DOWN='<svg viewBox="0 0 16 16" aria-hidden="true">'
-      +'<path d="M3 7.5h2.2L7 12.5c.7.2 1.4-.4 1.3-1.1L8 8.5h3.6c.8 0 1.4-.7 1.2-1.5L12 4c-.2-.7-.8-1.2-1.5-1.2H6L3 3"/>'
-      +'</svg>';
-
-    findings.forEach(function(li){
-      if(li.querySelector('.feedback-react')) return;
-      var canon=li.getAttribute('data-finding');
-      if(!canon) return;
-      var meta=li.querySelector('.sro-meta');
-      var host=document.createElement('div');
-      host.className='feedback-react';
-      host.setAttribute('role','group');
-      host.setAttribute('aria-label','Reactions for '+canon);
-      host.appendChild(makeBtn(canon,'up','Useful',SVG_UP));
-      host.appendChild(makeBtn(canon,'down','Not useful',SVG_DOWN));
-      if(meta){meta.appendChild(host);}else{li.appendChild(host);}
-    });
   })();
 
   /* ── L1: Passive engagement events ──
@@ -981,10 +911,8 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
       var canon=li.getAttribute('data-finding');
       var title=(li.querySelector('.sro-evidence')||{}).textContent||'';
       var meta=li.querySelector('.sro-meta');
-      var react=li.querySelector('.feedback-react');
       var btn=makeBtn(canon,title.substring(0,140),title);
-      if(react){react.appendChild(btn);}
-      else if(meta){meta.appendChild(btn);}
+      if(meta){meta.appendChild(btn);}
       else{li.appendChild(btn);}
     });
   })();
