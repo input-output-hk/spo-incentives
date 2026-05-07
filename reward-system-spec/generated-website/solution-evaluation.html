@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778142591">
+<link rel="stylesheet" href="assets/site.css?v=1778143441">
 
 
 </head>
@@ -457,7 +457,9 @@ window.MathJax = {
 <h4 id="cip-163-orthogonal-to-the-formula-distortion-analysis">CIP-163 — orthogonal to the formula-distortion analysis.</h4>
 <p>CIP-163 targets the <strong>participation gap</strong> the diagnostic also documents (<a class="obs-ref obs-ref-src" href="pools.html#1-mainnet-observations" data-obs-src="POL.O1" data-obs-page="pools.html" data-obs-href="pools.html#1-mainnet-observations" title="POL.O1 · hover for summary, click for detail">POL.O1</a>.F2: 31.6 % of the pool pot returns to reserve due to unstaked ADA — an upstream cause, outside formula control). Mechanism: inactive stake stops earning rewards; the freed budget redistributes to active pools via full-pot rewards.</p>
 <p>CIP-163 does <strong>not</strong> address the bonus function <code>A(ν, π)</code>, the size-vs-commitment weighting, or the wasted pledge-bonus budget. If CIP-163 ships, the absolute pool pot reaching active operators grows, but the structural distortions the <a href="#4-recommendations-on-adjustments-to-the-current-mechanism">recommendations in §4</a> target are unchanged.</p>
-<p><strong>Side effect to watch — yield uplift without diagnosis.</strong> Redistributing the reserve return raises absolute yields network-wide. The misallocation across the nine-tier ladder stays in place, but it now sits under a yield boost the population reads as good news — the structural distortions become harder to see behind higher headline numbers. Pools positioned to absorb the redirected delegation flows experience a euphoria moment the formula does not earn them, and delegation movement under those conditions tracks absolute yield deltas rather than relative pool quality — the rebalancing is potentially uncontrolled.</p>
+<p><strong>The reserve return is a diagnostic instrument, not a leak.</strong> Cardano's reward circuit carries a built-in audit signal: the share of the pool pot that the formula does not allocate to active operators returns to the reserve. That return is not the network leaking value — it is the network measuring its own misallocation and <strong>withholding payment until the misallocation gets fixed</strong>. The mainnet diagnostic that backs this work was, in substance, an exercise in reading that signal: 31.6 % of the pool pot returning (<a class="obs-ref obs-ref-src" href="pools.html#1-mainnet-observations" data-obs-src="POL.O1" data-obs-page="pools.html" data-obs-href="pools.html#1-mainnet-observations" title="POL.O1 · hover for summary, click for detail">POL.O1</a>.F2) surfaced the participation gap; 95.6 % of the <code>λ_pledge</code> envelope returning (<a class="obs-ref obs-ref-src" href="pools.html#1-mainnet-observations" data-obs-src="POL.O1" data-obs-page="pools.html" data-obs-href="pools.html#1-mainnet-observations" title="POL.O1 · hover for summary, click for detail">POL.O1</a>.F3) surfaced the bonus-function distortion. Without the reserve-return channel, neither finding would have a quantitative anchor.</p>
+<p>CIP-163 redistributes that signal rather than acting on it. The unstaked-ADA share is captured and pushed back into active-pool rewards via full-pot distribution; what the system was withholding becomes a yield boost handed to the same pools whose absorption pattern produced the misallocation. From the audit standpoint this is <em>sweeping the inefficiency under the rug</em> — paying out before correcting, which is precisely the discipline the reserve-return mechanism was designed to enforce. In this evaluation's view, that is a <span class="red-flag">red flag</span>.</p>
+<p><strong>Downstream — uncontrolled delegation rebalancing.</strong> The yield boost lands unevenly: pools positioned to absorb the redirected flows experience an unearned euphoria moment the formula does not justify. Delegation movement under those conditions tracks absolute yield deltas rather than relative pool quality, and the resulting stake-rebalancing is potentially uncontrolled.</p>
 <p>The reform conversation depends on the population reading distortion as distortion. A window of apparent prosperity competes against that and momentarily crowds out structural diagnosis — which is why CIP-163 reads better as a coordinated companion to the four-move package than as a standalone deployment ahead of it.</p>
 <p>The two proposal sets are therefore <strong>complements, not competitors</strong>: CIP-163 fixes what the formula does <em>not</em> control (upstream participation); the four-move package fixes what it <em>does</em> control (downstream allocation). Sequencing matters: deploying the formula reform alongside (or ahead of) the participation fix preserves the diagnostic clarity the reform case rests on.</p>
 <h1 id="4-recommendations-on-adjustments-to-the-current-mechanism">4. Recommendations on adjustments to the current mechanism</h1>
@@ -567,6 +569,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778142591"></script>
+<script src="assets/site.js?v=1778143441"></script>
 </body>
 </html>

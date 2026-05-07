@@ -3265,3 +3265,21 @@ a.sro-fid,.sro-card-pro a.sro-fid{padding:0;flex-shrink:0;
   opacity:.9;
 }
 [data-theme=dark] .content img.cardano-logo-inline{filter:none;opacity:1}
+
+/* ── Inline red-flag emphasis (Infared brand red + flag glyph) ── */
+.red-flag{
+  color:#E52321;
+  font-weight:600;
+  white-space:nowrap;
+}
+.red-flag::before{
+  content:"";
+  display:inline-block;
+  width:0.85em;
+  height:0.95em;
+  margin-right:0.3em;
+  vertical-align:-0.12em;
+  background-color:#E52321;
+  -webkit-mask:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 1.5v13a.5.5 0 0 0 1 0V10h7.5a.5.5 0 0 0 .4-.8L9.5 6 12 2.5a.5.5 0 0 0-.4-.8H4V1.5a.5.5 0 0 0-1 0z'/%3E%3C/svg%3E") no-repeat center / contain;
+  mask:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 1.5v13a.5.5 0 0 0 1 0V10h7.5a.5.5 0 0 0 .4-.8L9.5 6 12 2.5a.5.5 0 0 0-.4-.8H4V1.5a.5.5 0 0 0-1 0z'/%3E%3C/svg%3E") no-repeat center / contain;
+}
