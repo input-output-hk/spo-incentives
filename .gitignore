@@ -15,6 +15,10 @@ scenarii-evaluation-legacy/data/koios_pool_owner_history_mainnet.csv
 # Raw and processed data for the delegator/analysis pipelines — too large
 # for git. Reproduce via the ingestion scripts in the analysis folders.
 data/
+# …except the runtime-data directory shipped with the generated website
+# (giscus-problems.json mapping for the per-problem Discuss CTA, etc.).
+!reward-system-spec/generated-website/data/
+!reward-system-spec/generated-website/data/**
 
 # DuckDB is an embedded file, not a service — ignore it.
 *.duckdb

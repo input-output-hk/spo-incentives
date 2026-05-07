@@ -524,27 +524,20 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
     });
   })();
 
-  /* ── Reader feedback: analytics custom events + finding reactions ──
-     Provider-agnostic: calls into `window.spoTrack(name, propsFlat)`,
-     a global injected by the analytics head bridge that maps to either
-     Plausible or Umami transparently. The script is a no-op when no
-     analytics provider is configured (the body has no `data-analytics`
-     attribute). Per-session idempotency via sessionStorage so hammering
-     a button only counts once per (page, finding, sentiment) in a given
-     session — keeps the dashboard signal clean. */
+  /* ── Reader feedback: overlay engagement events ──
+     Provider-agnostic: calls into `window.spoTrack(name, propsFlat)`, a
+     global injected by the analytics head bridge that maps to either
+     Plausible or Umami transparently. No-op when no analytics provider
+     is configured. The previous Useful / Not useful buttons on each
+     finding row were dropped — discussion now happens on per-problem
+     GitHub Discussion threads via the per-card "Discuss" CTA. */
   (function initReaderFeedback(){
     function track(name,props){
       if(typeof window.spoTrack==='function'){
         try{window.spoTrack(name,props||{});}catch(e){}
       }
     }
-    var body=document.body;
-    if(!body) return;
-    var hasReactions=body.getAttribute('data-reactions')==='1';
     var pageId=location.pathname.split('/').pop()||'index.html';
-
-    /* Overlay engagement events — listener is cheap; the track() helper
-       guards the call when no provider is configured. */
     document.addEventListener('click',function(ev){
       var t=ev.target;
       if(!t||!t.closest) return;
@@ -561,69 +554,6 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
         track('Overlay Open',{kind:'finding',target:fid,page:pageId});
       }
     },true);
-
-    /* Reaction buttons — injected once per .sro-finding, only when the
-       page declares data-reactions="1". The dashboard records sentiment
-       as a custom prop so the editor can sort findings by 👍/👎 weight. */
-    if(!hasReactions) return;
-    var findings=document.querySelectorAll('.sro-finding[data-finding]');
-    if(!findings.length) return;
-    var SK='spo:react:';
-
-    function isSent(canon,sent){
-      try{return sessionStorage.getItem(SK+canon+':'+sent)==='1';}
-      catch(e){return false;}
-    }
-    function markSent(canon,sent){
-      try{sessionStorage.setItem(SK+canon+':'+sent,'1');}catch(e){}
-    }
-
-    function makeBtn(canon,sent,label,svg){
-      var b=document.createElement('button');
-      b.type='button';
-      b.className='feedback-react-btn feedback-react-'+sent;
-      b.setAttribute('data-finding',canon);
-      b.setAttribute('data-sentiment',sent);
-      b.setAttribute('aria-label',label+' — '+canon);
-      b.setAttribute('title',label);
-      b.innerHTML=svg+'<span class="feedback-react-label">'+label+'</span>';
-      if(isSent(canon,sent)) b.classList.add('is-active');
-      b.addEventListener('click',function(ev){
-        ev.preventDefault();ev.stopPropagation();
-        if(isSent(canon,sent)){
-          /* Already counted this session — visual confirm only. */
-          b.classList.add('is-active');
-          return;
-        }
-        track('Finding Reaction',{finding:canon,sentiment:sent,page:pageId});
-        markSent(canon,sent);
-        b.classList.add('is-active');
-        b.classList.add('feedback-react-pulse');
-        setTimeout(function(){b.classList.remove('feedback-react-pulse');},420);
-      });
-      return b;
-    }
-
-    var SVG_UP='<svg viewBox="0 0 16 16" aria-hidden="true">'
-      +'<path d="M3 8.5h2.2L7 3.5c.7-.2 1.4.4 1.3 1.1L8 7.5h3.6c.8 0 1.4.7 1.2 1.5L12 12c-.2.7-.8 1.2-1.5 1.2H6L3 13"/>'
-      +'</svg>';
-    var SVG_DOWN='<svg viewBox="0 0 16 16" aria-hidden="true">'
-      +'<path d="M3 7.5h2.2L7 12.5c.7.2 1.4-.4 1.3-1.1L8 8.5h3.6c.8 0 1.4-.7 1.2-1.5L12 4c-.2-.7-.8-1.2-1.5-1.2H6L3 3"/>'
-      +'</svg>';
-
-    findings.forEach(function(li){
-      if(li.querySelector('.feedback-react')) return;
-      var canon=li.getAttribute('data-finding');
-      if(!canon) return;
-      var meta=li.querySelector('.sro-meta');
-      var host=document.createElement('div');
-      host.className='feedback-react';
-      host.setAttribute('role','group');
-      host.setAttribute('aria-label','Reactions for '+canon);
-      host.appendChild(makeBtn(canon,'up','Useful',SVG_UP));
-      host.appendChild(makeBtn(canon,'down','Not useful',SVG_DOWN));
-      if(meta){meta.appendChild(host);}else{li.appendChild(host);}
-    });
   })();
 
   /* ── L1: Passive engagement events ──
@@ -981,10 +911,8 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
       var canon=li.getAttribute('data-finding');
       var title=(li.querySelector('.sro-evidence')||{}).textContent||'';
       var meta=li.querySelector('.sro-meta');
-      var react=li.querySelector('.feedback-react');
       var btn=makeBtn(canon,title.substring(0,140),title);
-      if(react){react.appendChild(btn);}
-      else if(meta){meta.appendChild(btn);}
+      if(meta){meta.appendChild(btn);}
       else{li.appendChild(btn);}
     });
   })();
@@ -1357,6 +1285,41 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
         if (idx < 0) return;
         activate(idx, { silent:true });
       }
+
+      // Inject a per-card "Discuss" CTA. The Discussion URL is baked
+      // into the article's `data-discussion-href` attribute by
+      // `build_site.py` via `scripts/bootstrap_giscus_discussions.py`'s
+      // mapping JSON — no runtime fetch.
+      var GH_OCTICON =
+        '<svg class="finding-card-discuss-icon" viewBox="0 0 16 16" aria-hidden="true">'+
+          '<path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 '+
+          '5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49'+
+          '-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 '+
+          '1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78'+
+          '-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08'+
+          '-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 '+
+          '1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 '+
+          '2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 '+
+          '1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58'+
+          '-8-8-8z"/></svg>';
+
+      cards.forEach(function(card){
+        if (!card.id) return;
+        if (card.querySelector('.finding-card-discuss')) return;
+        var href = card.getAttribute('data-discussion-href');
+        if (!href) return;
+        var cta = document.createElement('a');
+        cta.className = 'finding-card-discuss';
+        cta.target = '_blank';
+        cta.rel = 'noopener';
+        cta.href = href;
+        cta.innerHTML = GH_OCTICON +
+          '<span class="finding-card-discuss-text">Discuss</span>'+
+          '<span class="finding-card-discuss-arrow" aria-hidden="true">&#x2197;</span>';
+        var bannerEl = card.querySelector('.finding-card-banner') || card.querySelector('.finding-card-content') || card;
+        bannerEl.appendChild(cta);
+        if (bannerEl.classList && bannerEl.classList.contains('finding-card-banner')) bannerEl.classList.add('has-discuss');
+      });
 
       activate(0, { silent:true });
       syncHash();
