@@ -372,7 +372,7 @@ the heading. Fields:
   `fees`, `sustainability`, `general`. Drives the filter chips on
   `problem-statements.html`.
 - **observatory_anchor** — the `id=…` in the rendered `diagnostic.html`
-  that the *Read full finding on Observatory →* link points to.
+  that the *Read full finding on the Mainnet Diagnostic →* link points to.
 - **observations** — YAML list of global observation ids (`obs-XYZ-N`) from
   `diagnostic/README.md` that support the finding. Empty list is valid
   (§3.3 currently has none — the supporting material is narrative, not a
@@ -391,7 +391,7 @@ pipeline as observation bodies.
   (`## 3.3 Problem Induction` with `### 3.3.x` children) did not match the
   `### X.Y.Z` pattern. Treated here as a single finding at id `3.3`
   consolidating §3.3.1 and §3.3.2. Splitting into two separate findings is an
-  option if the Observatory page keeps them distinct.
-- **Observatory anchor for §3.3** is a placeholder (`33-problem-induction`).
+  option if the Mainnet Diagnostic page keeps them distinct.
+- **Diagnostic anchor for §3.3** is a placeholder (`33-problem-induction`).
   The actual slug depends on the python-markdown TOC rule applied when
   `diagnostic.html` is rebuilt; confirm after the next build.

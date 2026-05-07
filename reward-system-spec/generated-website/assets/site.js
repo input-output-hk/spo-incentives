@@ -1230,4 +1230,139 @@ var v=['fluid','braid','braid-red','dots','overlap','zoom','zoom-full','ada','fl
   /* ── /Pro observation card — header collapse ── */
   /* ── /Cross-page synthesis-observation source overlay ── */
 
+/* ── Problem-statements page — carousel mode ── */
+  (function(){
+    document.addEventListener('DOMContentLoaded', function(){
+      var list = document.querySelector('.findings-list');
+      if (!list) return;
+      var cards = Array.prototype.slice.call(list.querySelectorAll('.finding-card'));
+      if (cards.length < 2) return;
+      var indexLinks = Array.prototype.slice.call(document.querySelectorAll('.findings-toc-item'));
+      list.classList.add('findings-list--carousel');
+
+      var nav = document.createElement('div');
+      nav.className = 'findings-carousel-nav';
+      nav.setAttribute('role','navigation');
+      nav.setAttribute('aria-label','Problem carousel');
+      nav.innerHTML =
+        '<button type="button" class="findings-carousel-btn findings-carousel-prev" aria-label="Previous problem">'+
+          '<span class="findings-carousel-arrow" aria-hidden="true">&larr;</span> Prev'+
+        '</button>'+
+        '<div class="findings-carousel-meta" aria-live="polite">'+
+          '<span class="findings-carousel-group"></span>'+
+          '<span class="findings-carousel-counter"></span>'+
+        '</div>'+
+        '<button type="button" class="findings-carousel-btn findings-carousel-next" aria-label="Next problem">'+
+          'Next <span class="findings-carousel-arrow" aria-hidden="true">&rarr;</span>'+
+        '</button>';
+      list.parentNode.insertBefore(nav, list);
+
+      // Mirror the same nav below the cards so users can navigate without
+      // scrolling back up after reading a long card.
+      var navBottom = nav.cloneNode(true);
+      navBottom.classList.add('findings-carousel-nav-bottom');
+      list.parentNode.insertBefore(navBottom, list.nextSibling);
+
+      var prevBtns = [nav.querySelector('.findings-carousel-prev'), navBottom.querySelector('.findings-carousel-prev')];
+      var nextBtns = [nav.querySelector('.findings-carousel-next'), navBottom.querySelector('.findings-carousel-next')];
+      var counterEls = [nav.querySelector('.findings-carousel-counter'), navBottom.querySelector('.findings-carousel-counter')];
+      var groupEls = [nav.querySelector('.findings-carousel-group'), navBottom.querySelector('.findings-carousel-group')];
+      var currentIdx = 0;
+
+      function indexOfId(id){
+        for (var i=0;i<cards.length;i++){ if(cards[i].id===id) return i; }
+        return -1;
+      }
+
+      function activate(idx, opts){
+        opts = opts || {};
+        if (idx < 0 || idx >= cards.length) return;
+        currentIdx = idx;
+        cards.forEach(function(c){ c.classList.remove('is-active'); });
+        var card = cards[idx];
+        card.classList.add('is-active');
+
+        // Highlight matching TOC item
+        indexLinks.forEach(function(a){
+          a.classList.toggle('is-active', a.getAttribute('href') === '#' + card.id);
+        });
+
+        // Update counter — show μ##/M## token + index/total
+        var idLink = null;
+        for (var i=0;i<indexLinks.length;i++){
+          if (indexLinks[i].getAttribute('href') === '#' + card.id){ idLink = indexLinks[i]; break; }
+        }
+        var idTok = idLink ? (idLink.querySelector('.findings-toc-num') || {}).textContent : '';
+        var counterHtml = '<span class="findings-carousel-counter-id">'+
+          (idTok || '')+'</span><strong>'+(idx+1)+'</strong> / '+cards.length;
+        counterEls.forEach(function(el){ if(el) el.innerHTML = counterHtml; });
+
+        // Update group label from the enclosing section's title
+        var section = card.closest('.findings-group');
+        var groupTitle = section ? section.querySelector('.findings-group-title-text') : null;
+        var groupText = groupTitle ? groupTitle.textContent : '';
+        groupEls.forEach(function(el){ if(el) el.textContent = groupText; });
+
+        // Buttons (top + bottom)
+        prevBtns.forEach(function(b){ if(b) b.disabled = (idx === 0); });
+        nextBtns.forEach(function(b){ if(b) b.disabled = (idx === cards.length - 1); });
+
+        // Update hash without scroll-jump
+        if (!opts.silent && card.id){
+          try{ history.replaceState(null, '', '#' + card.id); }catch(e){}
+        }
+
+        // Scroll to nav when navigation came from outside the carousel
+        if (opts.scroll){
+          try{ nav.scrollIntoView({ block:'start', behavior:'smooth' }); }catch(e){
+            try{ nav.scrollIntoView(); }catch(e2){}
+          }
+        }
+      }
+
+      prevBtns.forEach(function(b){
+        if(b) b.addEventListener('click', function(){
+          if(currentIdx>0) activate(currentIdx-1, { scroll:b===prevBtns[1] });
+        });
+      });
+      nextBtns.forEach(function(b){
+        if(b) b.addEventListener('click', function(){
+          if(currentIdx<cards.length-1) activate(currentIdx+1, { scroll:b===nextBtns[1] });
+        });
+      });
+
+      indexLinks.forEach(function(a){
+        a.addEventListener('click', function(e){
+          var href = a.getAttribute('href') || '';
+          if (href[0] !== '#') return;
+          var idx = indexOfId(href.slice(1));
+          if (idx < 0) return;
+          e.preventDefault();
+          activate(idx, { scroll:true });
+        });
+      });
+
+      document.addEventListener('keydown', function(e){
+        if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+        if (e.target && e.target.isContentEditable) return;
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        if (e.key === 'ArrowLeft' && currentIdx > 0){ activate(currentIdx-1); }
+        else if (e.key === 'ArrowRight' && currentIdx < cards.length-1){ activate(currentIdx+1); }
+      });
+
+      function syncHash(){
+        var hash = (window.location.hash || '').replace('#','');
+        if (!hash) return;
+        var idx = indexOfId(hash);
+        if (idx < 0) return;
+        activate(idx, { silent:true });
+      }
+
+      activate(0, { silent:true });
+      syncHash();
+      window.addEventListener('hashchange', syncHash);
+    });
+  })();
+  /* ── /Problem-statements page — carousel mode ── */
+
 })();
