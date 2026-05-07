@@ -1,8 +1,8 @@
-# The Diagnostic — Mainnet Observatory: Synthesis of Observations Across the Reward Pipeline
+# The Mainnet Diagnostic: Synthesis of Observations Across the Reward Pipeline
 
 The *Shelley-era Delegation and Incentives Design Specification* (SL-D1) defined the economic rules that were to guide Cardano toward a stable, decentralised equilibrium of $k$ well-funded stake pools. Five years of mainnet operation have exposed **structural divergences** between that design and the on-chain reality.
 
-This document is the **mainnet observatory**: it follows the reward through every stage of the pipeline, confronts each design intent with the cleaned mainnet evidence, and inducts the structural problems that emerge. The diagnostic feeds [**The Cardano Reward System V2 — Specification for a Sustainable Successor**](../README.md).
+This document is the **Mainnet Diagnostic**: it follows the reward through every stage of the pipeline, confronts each design intent with the cleaned mainnet evidence, and inducts the structural problems that emerge. The diagnostic feeds [**The Cardano Reward System V2 — Specification for a Sustainable Successor**](../README.md).
 
 > **From Problem Induction to CPS to CIP.** The *Problem Induction* sub-sections in this document (§1.1.3, §1.2.3, §1.3.3, §2.1.3, §2.2.3, §3.3) are **CPSs in formation** — Cardano Problem Statements still maturing in narrative form. The lifecycle is *mainnet evidence → induced problem (proto-CPS) → V2 specification → CIPs*. Each induced problem is scoped against shared evidence so candidate solutions (CIPs) can be evaluated against the same problem definition once the work moves into the IntersectMBO/CIPs governance process. Earlier draft CPS files were retired in favour of the canonical narrative here; promotion to formal CPS happens upstream when a problem is judged ready.
 

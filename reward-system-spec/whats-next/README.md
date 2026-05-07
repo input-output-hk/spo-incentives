@@ -89,7 +89,7 @@ The Intended Game is the **normative reference** the Mainnet Diagnostic measures
 
 ### 2.2. Mainnet Diagnostic — the empirical foundation
 
-A multi-stage observatory of Cardano's reward pipeline as it actually behaves on mainnet today, answering four operational questions:
+A multi-stage diagnostic of Cardano's reward pipeline as it actually behaves on mainnet today, answering four operational questions:
 
 - **Who participates?**
 - **Where does stake concentrate?**

@@ -74,7 +74,7 @@ PAGES = [
         "slug": "diagnostic",
         "md": "diagnostic/README.md",
         "html": "diagnostic.html",
-        "title": "The Diagnostic — Mainnet Observatory",
+        "title": "The Mainnet Diagnostic",
         "hero_h1": "The Diagnostic",
         "hero_sub": "Observations, problem induction, and links to the sub-reports",
         "active_nav": "diagnostic",
@@ -5371,8 +5371,8 @@ def _render_finding_card(
     jump_link = (
         f'<a class="finding-jump" '
         f'href="diagnostic.html#{finding["anchor"]}" '
-        f'title="Open full finding on the Observatory">'
-        f'Read full finding on Observatory →</a>'
+        f'title="Open full finding on the Mainnet Diagnostic">'
+        f'Read full finding on the Mainnet Diagnostic →</a>'
     )
 
     # Cardano-blue banner head, mirroring the page hero on a smaller
@@ -5562,7 +5562,7 @@ def _render_findings_content(
         'observations that support it &mdash; click any observation '
         'row to expand its underlying findings. The full prose argument '
         'lives on '
-        '<a href="diagnostic.html">the Mainnet Observatory</a>; the '
+        '<a href="diagnostic.html">the Mainnet Diagnostic</a>; the '
         'raw evidence and figures are in the four sub-reports '
         '(<a href="census.html">census</a>, '
         '<a href="reserves.html">reserves</a>, '
