@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778223721">
+<link rel="stylesheet" href="assets/site.css?v=1778238939">
 
 
 </head>
@@ -118,9 +118,9 @@ window.MathJax = {
 
 <span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
 
-<!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
+<!-- Zone 2 — V2 Roadmap: the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
 <div class="nav-zone nav-zone-output">
-<a href="v2-spec.html" class="nav-tab-spec-big">V2 Specification</a>
+<a href="v2-roadmap.html" class="nav-tab-roadmap" title="V2 Roadmap — directions of exploration and concrete milestones">V2 Roadmap</a>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
@@ -148,9 +148,9 @@ window.MathJax = {
       <span class="nav-dd-ref-title">Source on GitHub</span>
       <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
     </a>
-    <a href="v2-spec.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
-      <span class="nav-dd-ref-title">Constitutional framework in the V2 spec</span>
-      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 spec</span></span>
+    <a href="v2-roadmap.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the V2 Roadmap</span>
+      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 Roadmap</span></span>
     </a>
   </div>
 </div>
@@ -292,7 +292,7 @@ window.MathJax = {
 <li><strong>Delegator yield is barely differentiated by pool quality</strong> — today's delegator fee-rate dispersion across the productive range is <strong>38×</strong> (27.3 % at Sub-reliable pools vs 0.71 % at saturation); the dispersion delegators see is dominated by fee structure, not by performance, and delegation flow does not track yield.</li>
 <li><strong>Stake concentration bypasses the anti-Sybil mechanics at the entity level</strong> — 83 attributed entities operating 449 productive pools today control 76.7 % of productive stake; multi-pool operators capture a majority, the very pattern the formula's pledge term was meant to discourage.</li>
 </ul>
-<p>The <a href="v2-spec.html">V2 specification</a> turns each of those problems into a <strong>named milestone</strong> — a concrete outcome the next generation of the reward system must deliver. Four are foreground microeconomics — <a href="v2-spec.html#31-guarantee-operator-viability-across-the-entire-productive-population">Operator Viability</a>, <a href="v2-spec.html#32-restore-the-notion-of-pledge-among-operators">Pledge</a>, <a href="v2-spec.html#33-maintain-and-diversify-a-competitive-delegator-yield">Delegator Yield</a>, <a href="v2-spec.html#34-reduce-the-concentration-effects-that-distort-both-populations">Deconcentration</a> — and four are macroeconomics or transversal — <a href="v2-spec.html#41-the-staking-pot-must-survive-reserve-depletion">Pot Survival</a>, <a href="v2-spec.html#42-the-fee-generating-population-must-expand">Fee Policy</a>, <a href="v2-spec.html#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios">Price Robustness</a>, and the <a href="v2-spec.html#44-the-mechanism-must-be-governable">Recalibration Pipeline</a>. The dependency chain is strict: Operator Viability → Pledge → Delegator Yield → Deconcentration → Pot Survival → Fee Policy.</p>
+<p>The <a href="v2-roadmap.html">V2 specification</a> turns each of those problems into a <strong>named milestone</strong> — a concrete outcome the next generation of the reward system must deliver. Four are foreground microeconomics — <a href="v2-roadmap.html#31-guarantee-operator-viability-across-the-entire-productive-population">Operator Viability</a>, <a href="v2-roadmap.html#32-restore-the-notion-of-pledge-among-operators">Pledge</a>, <a href="v2-roadmap.html#33-maintain-and-diversify-a-competitive-delegator-yield">Delegator Yield</a>, <a href="v2-roadmap.html#34-reduce-the-concentration-effects-that-distort-both-populations">Deconcentration</a> — and four are macroeconomics or transversal — <a href="v2-roadmap.html#41-the-staking-pot-must-survive-reserve-depletion">Pot Survival</a>, <a href="v2-roadmap.html#42-the-fee-generating-population-must-expand">Fee Policy</a>, <a href="v2-roadmap.html#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios">Price Robustness</a>, and the <a href="v2-roadmap.html#44-the-mechanism-must-be-governable">Recalibration Pipeline</a>. The dependency chain is strict: Operator Viability → Pledge → Delegator Yield → Deconcentration → Pot Survival → Fee Policy.</p>
 <p><strong>But the CIP backlog already contained proposals before this diagnostic was performed.</strong> <a href="cip-0023.html">CIP-0023</a> (2021), <a href="cip-0037.html">CIP-0037</a> (2021), <a href="cip-0050.html">CIP-0050</a> (2021), and <a href="cip-0082.html">CIP-0082</a> (2024) were each drafted with their own framing, their own evidence, and their own design choices. Most are still on the table for governance ratification today. None of them were written with the V2 specification in hand, because V2 did not exist yet.</p>
 <p><em>The question this folder asks: do those pre-existing proposals — written before the diagnostic — actually deliver the milestones V2 names? Partially? Not at all? Or do some of them, by side-effect, regress on a milestone they don't claim to address?</em></p>
 <h1 id="table-of-contents">Table of Contents</h1>
@@ -347,7 +347,7 @@ window.MathJax = {
 <p>Both CIPs target a real broken signal: pledge no longer functions as a binding signal of operator commitment. <strong>78 % of staked ADA sits in pools with pledge ratio under 1 %</strong>; <strong>42 of the 48 largest multi-pool operators forfeit the pledge bonus</strong>; pledged ADA yields 0.68 %/yr while passive delegation yields ~2.3 %/yr. Both respond with a σ′ clip that makes pledge bind the reward-eligible stake.</p>
 <p><strong>Verdict on both: ▼ no-go</strong>, for two stacked reasons.</p>
 <p>The load-bearing piece is the bonus function <code>A(ν, π)</code> inside the SL-D1 reward envelope, and neither CIP touches it. <code>A</code> produces today's equilibrium: it carries a quadratic <code>ν²</code> size penalty at every pledge ratio, a non-monotonicity in π that incentivises small operators to <em>under-commit</em> (a 2 M operator earns 8.7× more bonus by pledging 51 % than 100 %), and a cubic <code>ν³</code> collapse at full self-pledge. The σ′ clip changes <em>who can earn the V1 reward</em>; it does not repair what <code>A</code> does to the pledge signal.</p>
-<p>A second objection compounds: <strong>the approach is too radical for today's regime</strong>. Almost no one pledges at scale — median π = 0.07 %, 78 % of stake below 1 %, 42 of 48 saturation MPOs forfeit. The cap then hits <strong>every</strong> segment of the operator population at the same time: small / single-pool retail (no liquid capital), multi-pool entities (clipped on the per-pool axis, can't comply across all pools), and custodial-by-extraction (~21 % of productive stake — legally cannot self-pledge custodied retail funds). The blast radius covers the bulk of the productive population, and the resulting reward collapse risks <strong>destabilising consensus itself</strong>: if most operators see income fall sharply at once, infrastructure gets reduced or shut down and Cardano's block-production reliability degrades. The direction of effect runs <em>opposite</em> to the <a href="v2-spec.html#31-guarantee-operator-viability-across-the-entire-productive-population">V2 Operator Viability milestone</a>.</p>
+<p>A second objection compounds: <strong>the approach is too radical for today's regime</strong>. Almost no one pledges at scale — median π = 0.07 %, 78 % of stake below 1 %, 42 of 48 saturation MPOs forfeit. The cap then hits <strong>every</strong> segment of the operator population at the same time: small / single-pool retail (no liquid capital), multi-pool entities (clipped on the per-pool axis, can't comply across all pools), and custodial-by-extraction (~21 % of productive stake — legally cannot self-pledge custodied retail funds). The blast radius covers the bulk of the productive population, and the resulting reward collapse risks <strong>destabilising consensus itself</strong>: if most operators see income fall sharply at once, infrastructure gets reduced or shut down and Cardano's block-production reliability degrades. The direction of effect runs <em>opposite</em> to the <a href="v2-roadmap.html#31-guarantee-operator-viability-across-the-entire-productive-population">V2 Operator Viability milestone</a>.</p>
 <p>The fix is <strong>gradual, at the source</strong>, not at the gate: repair <code>A(ν, π)</code>; reduce <code>λ_size</code> so the commitment axis carries more of the signal; add a fee-layer viability package for new operators reaching productive scale; activate the <code>λ_pledge</code> budget that already returns to reserve unused (POL.O1.F3: 95.6 %) — <em>not new ADA, unused ADA already inside the formula's envelope</em>.</p>
 <p>→ Full argument, the four-move gradual path, and the Appendix-A walkthrough of <code>A</code>: <a href="stake-cap.html">stake-cap layer synthesis</a>. Per-CIP detail: <a href="cip-0050.html"><code>cip-0050.md</code></a>, <a href="cip-0037.html"><code>cip-0037.md</code></a>.</p>
 <blockquote>
@@ -482,7 +482,7 @@ window.MathJax = {
 <p>A repaired <code>A</code> with a reduced <code>λ_size</code> is what activates this budget. <strong>It is not new ADA — it is unused ADA already inside the formula's envelope.</strong> A gradual reform that successfully restores commitment-as-signal will, by the same act, also recover the largest inefficiency the diagnostic flags. A radical cap on top of today's regime does the opposite: it sends an even larger share of the pool pot back to the reserve and worsens viability for every SPO segment at once.</p>
 <h1 id="5-references">5. References</h1>
 <ul>
-<li><strong>V2 specification:</strong> <a href="v2-spec.html"><code>../README.md</code></a> — Microeconomics &amp; Macroeconomics milestones, evaluation framework.</li>
+<li><strong>V2 specification:</strong> <a href="v2-roadmap.html"><code>../README.md</code></a> — Microeconomics &amp; Macroeconomics milestones, evaluation framework.</li>
 <li><strong>Mainnet diagnostic:</strong> <a href="diagnostic.html"><code>../diagnostic/README.md</code></a>.</li>
 <li><strong>Mechanism-intent narrative:</strong> <a href="intended-game.html"><code>../the-intended-game/README.md</code></a>.</li>
 <li><strong>Per-layer indexes:</strong> <a href="stake-cap.html"><code>pools-distribution/README.md</code></a>, <a href="fee-layer.html"><code>operator-delegator/README.md</code></a>.</li>
@@ -509,7 +509,7 @@ window.MathJax = {
     <div class="footer-col">
       <h4 class="footer-heading">Specification</h4>
       <ul class="footer-links">
-        <li><a href="v2-spec.html">V2 Specification</a></li>
+        <li><a href="v2-roadmap.html">V2 Roadmap</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
         <li><a href="problem-statements.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
@@ -556,6 +556,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778223721"></script>
+<script src="assets/site.js?v=1778238939"></script>
 </body>
 </html>

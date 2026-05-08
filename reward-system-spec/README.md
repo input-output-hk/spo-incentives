@@ -1,1131 +1,476 @@
-# The Cardano Reward System V2 — Specification for a Sustainable Successor
+This page picks up where [Induced Problems](problem-statements.html) leaves off and asks the next question in the chain: *given these 9 structural problems, in what order does the system evolve toward a coherent V2?*
 
-**This document is the formal specification for an upcoming revision of Cardano's reward mechanism.** It defines the **outcomes** a successor must achieve — not the reward curve, not the parameter values, not the implementation. Those are *design* questions, to be resolved in the candidate proposals that respond to this spec.
+Reaching that order is not a ranking exercise. The 9 problems are pitched at very different levels of abstraction — some are foundational concerns about what the protocol *is for*, others are specific quantitative shortfalls, still others are lens-of-view framings that re-illuminate the same underlying issue from different angles. A flat numeric ranking would miss those distinctions and would produce a roadmap that wastes effort on the wrong scale of fix.
 
-The aim is **common ground**: a yardstick against which candidate designs can be proposed, compared, and evaluated — rather than debated in the abstract.
+The bet of this page is that **a clear priority order makes solutions emerge**. Once the 9 problems are mapped — by abstraction level, by hierarchical dependence, by the lens-of-view relationships that bind some of them together — candidate designs cluster around the high-priority items naturally, and the V2 work stops looking like a flat list of fixes and starts looking like a *sequenced roadmap* that the system can actually evolve along.
 
-## 0.1. Where this spec sits
+<div class="cps-lifecycle" aria-label="CPS lifecycle">
+<a class="cps-stage cps-stage-done" href="diagnostic.html" title="The Mainnet Diagnostic — observations &amp; findings">
+<span class="cps-stage-num">Stage 01</span>
+<span class="cps-stage-label">Mainnet evidence</span>
+<span class="cps-stage-meta">Observations &amp; Findings</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="problem-statements.html" title="Induced Problems — proto-CPS scoped against the diagnostic">
+<span class="cps-stage-num">Stage 02</span>
+<span class="cps-stage-label">Induced problem</span>
+<span class="cps-stage-meta">proto-CPS</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<div class="cps-stage cps-stage-current" title="You are here — V2 Roadmap in progress">
+<span class="cps-stage-num">Stage 03</span>
+<span class="cps-stage-label">V2 Roadmap</span>
+<span class="cps-stage-meta">Directions &amp; milestones &middot; this page</span>
+</div>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="solution-evaluation.html" title="Evaluation of the four reward-related CIPs against V2 milestones">
+<span class="cps-stage-num">Stage 04</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance</span>
+</a>
+</div>
 
-This specification is one of the working artefacts on the [Cardano Reward System V2 working website](index.html). The design artefacts and empirical evidence it reasons from are detailed in [§1 Foundations](#1-foundations) below — they are not re-listed here. The forward link is the [Existing CIPs evaluation](solution-evaluation/README.md), which scores the four reward-related CIPs already on the governance table against the milestones defined here.
+The 9 problems below are the starting point — repeated here so the chain of reasoning stays in view, and so each can be opened in its own card on [Induced Problems](problem-statements.html) for the full evidence and observations.
 
-The work this site is centred on follows a single lifecycle: *mainnet evidence → induced problem (proto-CPS) → V2 specification → CIPs*. The diagnostic surfaces problems against the normative baseline; the [Induced Problems](problem-statements.html) page synthesises them into **Cardano Problem Statements (CPSs) in formation**; this specification turns each CPS into a milestone with a measurable acceptance criterion; the CIP evaluation scores governance-stage proposals against those milestones. Promotion to formal CPS happens upstream when a problem is judged ready.
-
-## 0.2. The toolkit V2 can draw on
-
-The original V1 mechanism was calibrated for a chain that was, at the time, governed off-chain, with a single kind of participant, a not-yet-existent fee-paying economy, and a runway measured in decades.
-
-Five years later, the toolkit a successor can draw on has changed:
-
-- **On-chain governance** — a community process for reviewing and adjusting parameters, which did not exist when the original values were locked in.
-- **A treasury**, funded by a share of every epoch's pot, already large enough to serve as a stabilisation instrument.
-- **A fee base driven by smart contracts** — a new class of fee-paying activity that did not exist when the original mechanism was written, with further throughput expansion on the roadmap.
-- **Five years of empirical record** to reason from.
-
-## 0.3. Reading the spec — dependency chain, milestones, KPIs
-
-The problems the spec addresses are not independent. They form a **dependency chain** — some must be resolved before others become tractable — and the milestones in the sections that follow are ordered along that chain.
-
-Each milestone is framed as an **outcome**, broken into **sub-milestones** that can be worked on sequentially, and paired with **Key Performance Indicators** that serve as its acceptance criteria.
-
-**Naming convention.** Throughout this document, milestones are referred to by name — *Operator Viability*, *Pledge*, *Delegator Yield*, *Deconcentration*, *Pot Survival*, *Fee Policy*, *Price Robustness*, *Recalibration Pipeline*. Each named reference is a link to the section that defines it. The chapter and section numbers in the table of contents below serve navigation; the names carry the meaning.
+<nav class="findings-toc" aria-label="Induced problems — starting point for V2 prioritisation">
+<div class="findings-toc-group">
+<div class="findings-toc-group-head"><span class="findings-toc-group-label">Microeconomics <span class="findings-toc-group-count">5</span></span></div>
+<div class="findings-toc-group-meta">Participant-level gaps</div>
+<div class="findings-toc-group-list">
+<a class="findings-toc-item" href="problem-statements.html#problem-1-2-3"><span class="findings-toc-num">μ01</span><span class="findings-toc-title">Closing the Consensus Incentive Gap: The pledge paradox &amp; Non-Participant problem</span></a>
+<a class="findings-toc-item" href="problem-statements.html#problem-1-3-3-1"><span class="findings-toc-num">μ02</span><span class="findings-toc-title">Guarantee operator viability across the productive population</span></a>
+<a class="findings-toc-item" href="problem-statements.html#problem-1-3-3-2"><span class="findings-toc-num">μ03</span><span class="findings-toc-title">Restore a competitive delegator yield — soon to fall below 2% AYI</span></a>
+<a class="findings-toc-item" href="problem-statements.html#problem-2-1-3-1"><span class="findings-toc-num">μ04</span><span class="findings-toc-title">SPO (Supply-side) — fewer and fewer entities participate in consensus</span></a>
+<a class="findings-toc-item" href="problem-statements.html#problem-2-1-3-2"><span class="findings-toc-num">μ05</span><span class="findings-toc-title">Delegator (Arbiter-side) — titans move the disciplining capital, but not on yield</span></a>
+</div>
+</div>
+<div class="findings-toc-group">
+<div class="findings-toc-group-head"><span class="findings-toc-group-label">Macroeconomics <span class="findings-toc-group-count">4</span></span></div>
+<div class="findings-toc-group-meta">System-level gaps</div>
+<div class="findings-toc-group-list">
+<a class="findings-toc-item" href="problem-statements.html#problem-1-1-3"><span class="findings-toc-num">M01</span><span class="findings-toc-title">Funding the Protocol Without a Reserve</span></a>
+<a class="findings-toc-item" href="problem-statements.html#problem-2-2-3"><span class="findings-toc-num">M02</span><span class="findings-toc-title">Tx Submitter (Demand-side) — fees, the canonical answer to M01, are not growing fast enough at current throughput</span></a>
+<a class="findings-toc-item" href="problem-statements.html#problem-3-1-1"><span class="findings-toc-num">M03</span><span class="findings-toc-title">A deflationist ₳ — what mechanisms can complement finite supply?</span></a>
+<a class="findings-toc-item" href="problem-statements.html#problem-3-1-2"><span class="findings-toc-num">M04</span><span class="findings-toc-title">₳/Fiat volatility — what instruments can wire governance to price observations?</span></a>
+</div>
+</div>
+</nav>
 
 # Table of Contents
 
-- [0.1. Where this spec sits](#01-where-this-spec-sits)
-- [0.2. The toolkit V2 can draw on](#02-the-toolkit-v2-can-draw-on)
-- [0.3. Reading the spec — dependency chain, milestones, KPIs](#03-reading-the-spec-dependency-chain-milestones-kpis)
-- [1. Foundations](#1-foundations)
-  - [1.1. Prior art — what V2 draws on](#11-prior-art-what-v2-draws-on)
-  - [1.2. The Diagnostic — the empirical layer](#12-the-diagnostic-the-empirical-layer)
-  - [1.3. Governance — the Cardano Constitution](#13-governance-the-cardano-constitution)
-- [2. Constitutional framework](#2-constitutional-framework)
-  - [2.1. The normative foundation — three tenets](#21-the-normative-foundation-three-tenets)
-  - [2.2. The governance pathway — parameter updates within guardrails](#22-the-governance-pathway-parameter-updates-within-guardrails)
-  - [2.3. The entity gap — a pool-level Constitution meeting an entity-level problem](#23-the-entity-gap-a-pool-level-constitution-meeting-an-entity-level-problem)
-  - [2.4. How the milestones below cite the Constitution](#24-how-the-milestones-below-cite-the-constitution)
-- [3. Microeconomics — participant incentives and market structure](#3-microeconomics-participant-incentives-and-market-structure)
-  - [3.1. Guarantee operator viability across the entire productive population](#31-guarantee-operator-viability-across-the-entire-productive-population)
-    - [3.1.1. Problem statement](#311-problem-statement)
-      - [3.1.1.1. Evidence base](#3111-evidence-base)
-    - [3.1.2. Structural: enforce the production threshold](#312-structural-enforce-the-production-threshold)
-    - [3.1.3. Economic: every productive pool must be profitable](#313-economic-every-productive-pool-must-be-profitable)
-  - [3.2. Restore the notion of pledge among operators](#32-restore-the-notion-of-pledge-among-operators)
-    - [3.2.1. Problem statement](#321-problem-statement)
-      - [3.2.1.1. Evidence base](#3211-evidence-base)
-    - [3.2.2. Specification](#322-specification)
-  - [3.3. Maintain and diversify a competitive delegator yield](#33-maintain-and-diversify-a-competitive-delegator-yield)
-    - [3.3.1. Make the base yield competitive](#331-make-the-base-yield-competitive)
-    - [3.3.2. Make the yield reward operators who play the game](#332-make-the-yield-reward-operators-who-play-the-game)
-    - [3.3.3. Diversify the delegation offer](#333-diversify-the-delegation-offer)
-  - [3.4. Reduce the concentration effects that distort both populations](#34-reduce-the-concentration-effects-that-distort-both-populations)
-    - [3.4.1. Problem statement](#341-problem-statement)
-      - [3.4.1.1. The operator side — multi-pool entity concentration](#3411-the-operator-side-multi-pool-entity-concentration)
-      - [3.4.1.2. The delegator side — titan delegators versus the micro-delegation tail](#3412-the-delegator-side-titan-delegators-versus-the-micro-delegation-tail)
-      - [3.4.1.3. Evidence base](#3413-evidence-base)
-    - [3.4.2. Entity-level awareness in reward distribution](#342-entity-level-awareness-in-reward-distribution)
-    - [3.4.3. Differentiated delegation incentives — titans versus micro-delegators](#343-differentiated-delegation-incentives-titans-versus-micro-delegators)
-- [4. Macroeconomics — a self-sustaining and governable mechanism](#4-macroeconomics-a-self-sustaining-and-governable-mechanism)
-  - [4.1. The staking pot must survive reserve depletion](#41-the-staking-pot-must-survive-reserve-depletion)
-    - [4.1.1. Problem statement](#411-problem-statement)
-      - [4.1.1.1. Evidence base](#4111-evidence-base)
-    - [4.1.2. Surveillance and recalibration of $\rho$ and $\tau$](#412-surveillance-and-recalibration-of-math36-and-math37)
-  - [4.2. The fee-generating population must expand](#42-the-fee-generating-population-must-expand)
-    - [4.2.1. Problem statement](#421-problem-statement)
-      - [4.2.1.1. Evidence base](#4211-evidence-base)
-    - [4.2.2. Surveillance and recalibration of fee policy](#422-surveillance-and-recalibration-of-fee-policy)
-  - [4.3. The mechanism must function across a range of ADA price scenarios](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios)
-    - [4.3.1. The price-scenario validation clause](#431-the-price-scenario-validation-clause)
-    - [4.3.2. Why this is a clause, not a cycle](#432-why-this-is-a-clause-not-a-cycle)
-  - [4.4. The mechanism must be governable](#44-the-mechanism-must-be-governable)
-    - [4.4.1. Why a defined process is the specification, not the design](#441-why-a-defined-process-is-the-specification-not-the-design)
-    - [4.4.2. The Conway-era recalibration pipeline](#442-the-conway-era-recalibration-pipeline)
-    - [4.4.3. Forward path — toward ad-hoc readiness](#443-forward-path-toward-ad-hoc-readiness)
-- [5. Evaluation framework](#5-evaluation-framework)
+- [1. Constitutional framework](#1-constitutional-framework)
+  - [1.1. The normative foundation — Tenets 4, 9, 10](#11-the-normative-foundation-tenets-4-9-10)
+    - [1.1.1. Tenet 4 — Fair compensation](#111-tenet-4-fair-compensation)
+    - [1.1.2. Tenet 9 — Fair treatment](#112-tenet-9-fair-treatment)
+    - [1.1.3. Tenet 10 — Monetary stability](#113-tenet-10-monetary-stability)
+  - [1.2. The governance pathway — parameter updates within guardrails](#12-the-governance-pathway-parameter-updates-within-guardrails)
+    - [1.2.1. Per-parameter detail](#121-per-parameter-detail)
+  - [1.3. The entity gap — a pool-level Constitution meeting an entity-level problem](#13-the-entity-gap-a-pool-level-constitution-meeting-an-entity-level-problem)
+  - [1.4. How the priority work below cites the Constitution](#14-how-the-priority-work-below-cites-the-constitution)
+- [2. Microeconomics — participant incentives and market structure](#2-microeconomics-participant-incentives-and-market-structure)
+  - [2.1. Milestone 1 — Repair pledge, sustain the small SPO base](#21-milestone-1-repair-pledge-sustain-the-small-spo-base)
+    - [2.1.1. Why this bundle, and why it comes first](#211-why-this-bundle-and-why-it-comes-first)
+    - [2.1.2. The proposed direction — a coordinated four-move repair on the reward-distribution layer](#212-the-proposed-direction-a-coordinated-four-move-repair-on-the-reward-distribution-layer)
+  - [2.2. Milestone 2 — Maintain and diversify a competitive delegator yield](#22-milestone-2-maintain-and-diversify-a-competitive-delegator-yield)
+    - [2.2.1. The three faces of the yield problem](#221-the-three-faces-of-the-yield-problem)
+    - [2.2.2. What smart contracts unlock — diversification and programmable pledge](#222-what-smart-contracts-unlock-diversification-and-programmable-pledge)
+  - [2.3. Milestone 3 — A Pool Alliance, rocket-pool-like for Cardano](#23-milestone-3-a-pool-alliance-rocket-pool-like-for-cardano)
+    - [2.3.1. Why the production threshold deserves reinforcing](#231-why-the-production-threshold-deserves-reinforcing)
+    - [2.3.2. The two-step plan — make the threshold explicit, and build the Pool Alliance below it](#232-the-two-step-plan-make-the-threshold-explicit-and-build-the-pool-alliance-below-it)
+  - [2.4. Milestone 4 — Scale up with the non-participant population](#24-milestone-4-scale-up-with-the-non-participant-population)
+  - [2.5. Research axis — reduce the concentration effects that distort both populations](#25-research-axis-reduce-the-concentration-effects-that-distort-both-populations)
+    - [2.5.1. Entity-level awareness — the supply-side question](#251-entity-level-awareness-the-supply-side-question)
+    - [2.5.2. Titan-tier differentiation — the demand-side question](#252-titan-tier-differentiation-the-demand-side-question)
+- [3. Macro-economics — instrumentation, recalibration, and the path to auto-regulation](#3-macro-economics-instrumentation-recalibration-and-the-path-to-auto-regulation)
+  - [3.1. Milestone 1 — Reward System Extension — A Governance Dashboard for the System Properties & Populations](#31-milestone-1-reward-system-extension-a-governance-dashboard-for-the-system-properties-populations)
+    - [3.1.1. The four surveillance lines, and what each one watches](#311-the-four-surveillance-lines-and-what-each-one-watches)
+    - [3.1.2. From governed interventionism to gradual auto-regulation](#312-from-governed-interventionism-to-gradual-auto-regulation)
+  - [3.2. Research axis — deflationist ADA and its volatility](#32-research-axis-deflationist-ada-and-its-volatility)
+    - [3.2.1. The deflationist promise — complementary monetary properties beyond finite supply](#321-the-deflationist-promise-complementary-monetary-properties-beyond-finite-supply)
+    - [3.2.2. Wiring governance to macro signals — recalibration against price observations](#322-wiring-governance-to-macro-signals-recalibration-against-price-observations)
 
-# 1. Foundations
+Three working axes anchor the reasoning over these 9 problems.
 
-This specification does not start from scratch.
+*Abstract vs actionable.* Some are foundational design concerns — *Funding the Protocol Without a Reserve* (M01) is the canonical example. Others are specific quantitative shortfalls — *Restore a competitive delegator yield* (μ03) is the canonical actionable problem. Tackling the abstract ones requires a foundational design effort; tackling the actionable ones can proceed with parameter-level work. A priority order that treats them as siblings misallocates effort.
 
-Two **design artefacts** define what the mechanism was intended to do — they are the **normative reference** every milestone measures divergence from. Four **research papers** sit around this subject as adjacent inspiration; the spec draws on them lightly but does not extend them.
+*Hierarchical dependence.* Several problems are specific directions of broader ones. M02, M03 and M04 are three directions inside M01 — fee growth, complementary monetary properties, macro-feedback instruments. Listing the four as peers loses the implication chain.
 
-A prior **community analysis** gives the empirical work its starting point, and a new companion document — ***The Diagnostic*** — builds a **holistic audit** on top of it, grounded in four dedicated sub-reports. The **Cardano Constitution** sits alongside the spec as the governance layer the specification must comply with.
+*Lens-of-view problems.* μ01 is not a discrete problem but a lens of view over the entire reward mechanism: *does reward distribution produce the operator equilibrium it was designed to produce?* Most other μ-problems can be re-expressed as instances of it. Treating μ01 as an item alongside its own instances is a category error.
 
-The diagram below maps these documents and how they feed into the specification.
+These three axes — abstraction, dependence, and lens-of-view — are the working tools. The priority order they produce, and the candidate solutions that cluster against it, are what the rest of this page will turn into as the work proceeds.
 
-![Foundations — what the V2 Specification reasons from](figures/foundations_overview.png)
+# 1. Constitutional framework
 
-**Reading the diagram.** Solid arrows mark substantive dependencies; the dashed arrow marks **inspiration only** — the four research papers frame questions this document also addresses but are not extended. The ★ marks the **two novel companion documents** written for this specification. The constitutional framework is developed in [Constitutional framework](#2-constitutional-framework); the [Cardano Constitution v2](https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2) is the governing reference.
+Before any priority order is committed, the [Cardano Constitution v2](https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2) (ratified at epoch 609) sets the boundaries the work has to respect. It provides both the **normative foundation** — what the protocol owes to its participants — and the **governance pathway** — what can be changed through Parameter Update actions versus what would require constitutional evolution.
 
-## 1.1. Prior art — what V2 draws on
+The 9 induced problems are not equally constrained by this framework. Some directly invoke ratified tenets and can be advanced through existing governance machinery; others touch parameters within explicit guardrail ranges; one (entity-level dynamics, surfaced through μ04) sits in a constitutional gap that has to be resolved one way or another before its candidate solutions become actionable.
 
-**Design artefacts — the normative reference.** The specification reasons against two documents:
+## 1.1. The normative foundation — Tenets 4, 9, 10
 
-- **[SL-D1](references/design-specs/delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf) — *Delegation Incentives Design Specification*, Level 1** (Kant, Brünjes, Coutts, 2019). The original Shelley-era engineering artefact. Every parameter in the current mechanism — $a_0$, $k$, $\rho$, $\tau$, $minPoolCost$ — has its canonical definition here.
-- **★ [*The Intended Game*](the-intended-game/README.md)** *(written for this spec)*. The intended equilibrium was implicit in SL-D1 but nowhere stated as a coherent narrative. This companion document makes it **explicit and testable**: the three player populations, the operator progression from first pledge to full commitment, the four security properties (liveness, safety, Sybil resistance, non-triviality), and the virtuous cycle aligned play is meant to produce.
+Three tenets of the Constitution are directly relevant to the 9 induced problems. Each is explored in its own sub-section below: which problems it grounds, where the current mechanism falls short of it, and what a candidate solution has to demonstrate to remain compliant.
 
-Without a codified baseline, "divergence" has no reference point — which is why *The Intended Game* had to be written before the spec could be.
+### 1.1.1. Tenet 4 — Fair compensation
 
-**Research papers — adjacent inspiration only.** Four papers frame questions this document also addresses, but are **not extended or adopted as backbone**:
+> *Operators and delegators who maintain the network are entitled to fair compensation for their contribution.*
 
-- **[RSS-2020](references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf) — *Reward Sharing Schemes for Stake Pools*** (Brünjes, Kiayias et al., 2020). The formal game-theoretic paper that accompanied SL-D1.
-- **[IAPG-2021](references/research-papers/incentives-against-power-grabs_kiayias-et-al_2021.pdf) — *Incentives Against Power Grabs*** (Kiayias et al., 2021). Analyses the Sybil defence pledge is meant to provide.
-- **[BPD-2024](references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf) — *Balancing Participation and Decentralization*** (Kiayias et al., 2024). The most recent theoretical refinement.
-- **[AFT-2025](https://arxiv.org/abs/2505.04422) — *Reward Sharing in PoS with No-Pool-Choice Delegators*** (Kiayias et al., AFT 2025; full version on arXiv). Reframes the operator/delegator incentive landscape when delegators are not strictly yield-maximising — directly relevant to the OPE.O7 family of findings in the Diagnostic.
+This tenet grounds three induced problems:
 
-These are cited where their framing informs a milestone. **None is a constructive foundation this spec builds upon.**
-
-## 1.2. The Diagnostic — the empirical layer
-
-The second pillar is **empirical, not normative** — a measurement of what the mechanism actually produced over **five years of mainnet operation**. ***[The Diagnostic](diagnostic/README.md)*** — written for this spec — starts from a prior community analysis and extends it into a holistic, methodically structured audit.
-
-**Starting point — Carlos's prior analysis.** The empirical work begins where [**SD-L** — *Analysis of Cardano's Incentive Mechanism*](references/previous-analasys/spo-incentives-analysis_lopez-de-lara_2025.pdf) (Lopez de Lara, 2025) left off. SD-L established many of the observations — pledge dilution, fee-structure regressivity, delegator immobility — that the Diagnostic revisits, systematises, and grounds in primary on-chain data. The Diagnostic extends it along two axes: **broader scope** (a holistic view of the whole mechanism) and **systematic methodology** (everything decomposed into findings and observations that can be tracked, cited, and contested).
-
-**Two structural lenses.** Rather than chasing isolated questions, the Diagnostic audits the mechanism holistically through two lenses:
-
-- **The reward flow** — how ADA moves from the reserve, through fees, into epoch budgets, into pool pots, and finally into operator and delegator rewards: [budget assembly](diagnostic/README.md#11-treasury-pool-pots-distribution) → [pool pots](diagnostic/README.md#12-pools-distribution) → [operator-delegator split](diagnostic/README.md#13-operator-delegator-distribution).
-- **The player populations** — operators and delegators ([staking populations](diagnostic/README.md#21-the-staking-populations)) and the [transaction submitters](diagnostic/README.md#22-transaction-submitters) that fund the fee component of the reward.
-
-An additional stage audits the [₳/Fiat money-constraint layer](diagnostic/README.md#3-the-fiat-money-constraint-layer) that binds the mechanism to the exogenous economy.
-
-**Four sub-reports — the evidence layer.** Each pipeline stage is backed by a dedicated, self-contained sub-report with its own formulas, data, figures, and reproduction scripts:
-
-- **[Treasury & Pool Pots Distribution](diagnostic/sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md)** — epoch-budget assembly, reserve trajectory, fee composition. Feeds the diagnostic's [budget-assembly](diagnostic/README.md#11-treasury-pool-pots-distribution) analysis.
-- **[The Pools Pot Distribution Gaps](diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md)** — reward-curve behaviour, pledge economics, tier stratification. Feeds the diagnostic's [pool-pots](diagnostic/README.md#12-pools-distribution) analysis.
-- **[The Operator's Cut](diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md)** — intra-pool reward split, commission market. Feeds the diagnostic's [operator-delegator split](diagnostic/README.md#13-operator-delegator-distribution) analysis.
-- **[The Staking Census](diagnostic/sub-flows/census/mainnet-analysis/README.md)** — populations, transaction submitters, fee-base concentration. Feeds the diagnostic's [staking populations](diagnostic/README.md#21-the-staking-populations) and [transaction submitters](diagnostic/README.md#22-transaction-submitters) analyses.
-
-Each sub-report organises its content as a two-level hierarchy: **findings** (F1.1, F1.2, …) — fine-grained empirical atoms backed by on-chain data — cluster into **observations** (O1, O2, …) — structural claims about mechanism behaviour. No structural claim ever stands alone; each is backed by an explicit cluster of empirical atoms.
-
-**Problem induction — the Diagnostic itself.** [*The Diagnostic*](diagnostic/README.md) is the glue. It does not re-derive findings — it imports a condensed observations table from each sub-report and performs the step the sub-reports stop short of. Each pipeline stage carries a dedicated *Problem Induction* subsection that reads the observations against the normative baseline from *The Intended Game* and promotes them from factual claims into **structural problem statements** — the problems each milestone in this specification then answers. These problem statements are also surfaced as a curated synthesis on the **[Induced Problems](problem-statements.html)** page — a canonical, cross-citable view of the **Cardano Problem Statements (CPSs) in formation** that the milestones below draw on.
-
-The infrastructure that powers these queries — a local cardano-node + cardano-db-sync stack — lives at [`mainnet-indexer/`](../mainnet-indexer/README.md) and is the **reproducibility layer** behind every empirical claim.
-
-## 1.3. Governance — the Cardano Constitution
-
-The [Cardano Constitution v2](https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2) (ratified at epoch 609) is the governance document the protocol currently operates under — and therefore **the one this specification must comply with**.
-
-> **Read the Constitution.** [View the PDF inline](pdf-viewer.html?file=references/governance/cardano-constitution-2.pdf) · [download the PDF](references/governance/cardano-constitution-2.pdf) · [source markdown on `IntersectMBO/cardano-constitution`](https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2).
-
-Two practical consequences flow from this:
-
-- every milestone below has to be checked against the **constitutional tenets** that apply to it (fair compensation, fair treatment, monetary stability…);
-- every parameter change the milestones imply has to fit within the **guardrails** the Constitution defines (e.g., $a_0 \in [0.1, 1.0]$, $k \in [250, 2000]$, $minPoolCost \in [0, 500]$ ADA) and go through the **governance process** it prescribes.
-
-The constitutional framework is developed in full in [Constitutional framework](#2-constitutional-framework).
-
-# 2. Constitutional framework
-
-The [Cardano Constitution v2](https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2) (ratified at epoch 609) provides both the **normative foundation** and the **governance pathway** for the milestones that follow.
-
-## 2.1. The normative foundation — three tenets
-
-Three tenets are directly relevant.
-
-**Tenet 4 — Fair compensation.** Operators and delegators who maintain the network are entitled to fair compensation for their contribution.
-
-This tenet grounds three milestones:
-
-- [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population);
-- [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield);
-- [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion) — reserve sustainability.
+- [μ02 — Guarantee operator viability across the productive population](problem-statements.html#problem-1-3-3-1);
+- [μ03 — Restore a competitive delegator yield — soon to fall below 2% AYI](problem-statements.html#problem-1-3-3-2);
+- [M01 — Funding the Protocol Without a Reserve](problem-statements.html#problem-1-1-3) — the long-term funding pathway through which compensation is delivered.
 
 Any mechanism that **systematically under-compensates productive participants** violates the Constitution's own standard.
 
-**Tenet 9 — Fair treatment.** All participants in the Cardano ecosystem shall be treated fairly and shall not be subject to unjustifiable discrimination.
+### 1.1.2. Tenet 9 — Fair treatment
+
+> *All participants in the Cardano ecosystem shall be treated fairly and shall not be subject to unjustifiable discrimination.*
 
 Two features of the current mechanism fall short of this standard:
 
-- the fee structure imposes a **48% effective cost on sub-reliable operators** while charging **1.5% near saturation** ([OPE.O1](diagnostic/README.md#132-mainnet-observations));
-- the pledge mechanism provides **no material reward for commitment** ([POL.O7](diagnostic/README.md#122-mainnet-observations)).
+- the fee structure imposes a **48% effective cost on sub-reliable operators** while charging **1.5% near saturation** ([OPE.O1](diagnostic.html#132-mainnet-observations));
+- the pledge mechanism provides **no material reward for commitment** ([POL.O7](diagnostic.html#122-mainnet-observations)).
 
-Three milestones address this gap, each along a different dimension:
+Three induced problems address this gap, each along a different dimension:
 
-- [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population);
-- [Pledge](#32-restore-the-notion-of-pledge-among-operators);
-- [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations) — entity-level accounting.
+- [μ01 — Closing the Consensus Incentive Gap: The pledge paradox & Non-Participant problem](problem-statements.html#problem-1-2-3) — the pledge dimension and the inclusion-of-outside-participants face;
+- [μ02 — Guarantee operator viability across the productive population](problem-statements.html#problem-1-3-3-1) — the fee-structure dimension;
+- [μ04 — SPO (Supply-side) — fewer and fewer entities participate in consensus](problem-statements.html#problem-2-1-3-1) — the entity-level distortion that pool-level fairness cannot address on its own.
 
-**Tenet 10 — Monetary stability.** The protocol shall not dilute or inflate ada in a manner that is inconsistent with the long-term sustainability and integrity of the ecosystem.
+### 1.1.3. Tenet 10 — Monetary stability
+
+> *The protocol shall not dilute or inflate ada in a manner that is inconsistent with the long-term sustainability and integrity of the ecosystem.*
 
 This tenet constrains:
 
-- [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion) — the funding-model transition;
-- [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios) — the monetary-expansion parameters;
-- any instrument that draws on the **reserve or treasury** to fund operator support.
+- [M01 — Funding the Protocol Without a Reserve](problem-statements.html#problem-1-1-3) — the funding-model transition;
+- [M03 — A deflationist ₳ — what mechanisms can complement finite supply?](problem-statements.html#problem-3-1-1) — complementary monetary properties beyond the supply cap;
+- [M04 — ₳/Fiat volatility — what instruments can wire governance to price observations?](problem-statements.html#problem-3-1-2) — macro-feedback instruments and any tool that draws on the **reserve or treasury** to fund operator support.
 
-## 2.2. The governance pathway — parameter updates within guardrails
+## 1.2. The governance pathway — parameter updates within guardrails
 
 The Constitution also defines the **governance pathway**.
 
 Five parameters shape the reward mechanism. Each is bounded by a **guardrail range** and modifiable through **Parameter Update governance actions**:
 
-| Parameter | CIP range | Guardrail range |
-| --- | --- | --- |
-| $minPoolCost$ | MPC-01 to MPC-03 | $[0, 500]$ ADA |
-| $a_0$ | PPI-01 to PPI-04 | $[0.1, 1.0]$ |
-| $k$ | SPTN-01 to SPTN-04 | $[250, 2000]$ |
-| $\rho$ | ME-01 to ME-05 | $[0.001, 0.005]$ |
-| $\tau$ | TC-01 to TC-05 | $[0.1, 0.3]$ |
+| Parameter | What it controls | Current value (mainnet) | Guardrail range | CIP range |
+| --- | --- | --- | --- | --- |
+| $minPoolCost$ | Flat-fee floor every pool charges from its rewards before margin is applied | 170 ADA | $[0, 500]$ ADA | MPC-01 to MPC-03 |
+| $a_0$ | Pledge-influence factor — weight the reward formula gives to operator self-pledge | 0.30 (Shelley default) | $[0.1, 1.0]$ | PPI-01 to PPI-04 |
+| $k$ | Optimal/saturation pool count — the network is "calibrated" for $k$ saturated pools, each holding $\approx 1/k$ of total stake | 500 (Shelley default) | $[250, 2000]$ | SPTN-01 to SPTN-04 |
+| $\rho$ | Per-epoch monetary expansion rate — the slice of the reserve drawn into the epoch pot every epoch | 0.003 (0.3 %, Shelley default) | $[0.001, 0.005]$ | ME-01 to ME-05 |
+| $\tau$ | Treasury cut — fraction of the epoch pot routed to the treasury before pool distribution | 0.20 (20 %, Shelley default) | $[0.1, 0.3]$ | TC-01 to TC-05 |
 
-Parameter Updates require a **51–75% approval threshold** depending on the parameter class. Changes to critical parameters must additionally observe a **90-day publication-to-submission timeline**.
+Parameter Updates require a **51–75 % approval threshold** depending on the parameter class. Changes to critical parameters must additionally observe a **90-day publication-to-submission timeline**.
 
-This is a lower bar than Constitutional amendment (Article IV). The milestones in this section can, in principle, be advanced through the existing governance machinery **without amending the Constitution itself**.
+This is a lower bar than Constitutional amendment (Article IV). Several of the 9 induced problems can, in principle, be advanced through the existing governance machinery **without amending the Constitution itself**.
 
-## 2.3. The entity gap — a pool-level Constitution meeting an entity-level problem
+### 1.2.1. Per-parameter detail
+
+**`minPoolCost` — the flat-fee floor.** The only one of the five that has been adjusted post-Shelley: cut from 340 to 170 ADA in epoch 445 by [CIP-0082](cip-0082.html) stage 1, after years of debate over its regressive effect on small operators. Inside the current guardrail [0, 500] ADA, parameter updates can move it further down (toward 0) or back up to the ceiling. The flat fee follows a $1/\sigma$ hyperbola: it absorbs **47.5 % of pool reward at the sub-reliable tier** but only **1.5 % near saturation** ([OPE.O1](diagnostic.html#132-mainnet-observations)). Touches:
+
+- [μ02 — operator viability](problem-statements.html#problem-1-3-3-1) directly — the corridor where pools produce blocks but cannot sustain operators *is* the flat-fee corridor;
+- [μ03 — delegator yield](problem-statements.html#problem-1-3-3-2) indirectly — at small pools, every additional ADA the operator absorbs as flat fee is taken out of the delegator's net return.
+
+**$a_0$ — pledge-influence factor.** Set by Shelley at 0.3, unchanged since. In the reward envelope $E(\nu, \pi) = \lambda_{\text{size}}\,\nu + \lambda_{\text{pledge}}\,A(\nu, \pi)$, $a_0 = 0.3$ implies $\lambda_{\text{size}} \approx 76.9 \%$ and $\lambda_{\text{pledge}} \approx 23.1 \%$ — the size axis dominates, the commitment axis is a small smooth nudge. Inside its guardrail [0.1, 1.0], parameter updates can shift more weight to either axis, but the **structure of the bonus function $A(\nu, \pi)$ itself is fixed** — $a_0$ only re-weights it. Touches:
+
+- [μ01 — Closing the Consensus Incentive Gap](problem-statements.html#problem-1-2-3) directly — $a_0$ is the lever that determines how much the reward formula weights pledge versus pool size; with the current $A$ structure, even raising $a_0$ amplifies the existing non-monotonicity rather than fixing it ([POL.O7](diagnostic.html#122-mainnet-observations));
+- [μ04 — SPO supply side](problem-statements.html#problem-2-1-3-1) indirectly — pledge weight changes the strategic calculus of new entrants and of consolidators.
+
+**$k$ — optimal/saturation pool count.** Set by Shelley at 500, unchanged since. With ~22 B ADA staked, the per-pool saturation point sits at ~44 M ADA. [CIP-0082](cip-0082.html) stages 3–4 propose raising $k$ to 750 then 1000 (well inside the [250, 2000] guardrail). Higher $k$ means more pools can saturate and earn maximal reward density, but also a smaller average pool size — which compounds the flat-fee drag in the absence of complementary `minPoolCost` work. Touches:
+
+- [μ04 — SPO supply side](problem-statements.html#problem-2-1-3-1) directly — $k$ controls how many "slots" the network can sustain at saturation, and therefore the structural ceiling on entity dispersion;
+- [μ02 — operator viability](problem-statements.html#problem-1-3-3-1) — average pool size scales as $1/k$, so raising $k$ in isolation can *deepen* the viability gap rather than close it.
+
+**$\rho$ — monetary expansion rate.** Set by Shelley at 0.003 (0.3 % per epoch), unchanged since. $\rho$ controls how fast the reserve is drawn into the epoch pot, and therefore the entire emission trajectory. Inside its guardrail [0.001, 0.005], parameter updates can slow expansion (extending the reserve runway and softening dilution) or accelerate it (front-loading rewards at the cost of an earlier exhaustion date). Touches:
+
+- [M01 — Funding the Protocol Without a Reserve](problem-statements.html#problem-1-1-3) directly — $\rho$ is *the* lever on the source side of the funding question, and any V2 transition plan has to declare what happens to $\rho$ as fees grow;
+- [M03 — A deflationist ₳](problem-statements.html#problem-3-1-1) — $\rho$ shapes the supply trajectory toward the cap and is therefore one of the levers a deflationist mechanism can complement;
+- [M04 — ₳/Fiat volatility](problem-statements.html#problem-3-1-2) — $\rho$ is the natural target for any macro-feedback instrument that adjusts emission against price observations.
+
+**$\tau$ — treasury cut.** Set by Shelley at 0.20 (20 % of the epoch pot), unchanged since. $\tau$ routes a slice of the epoch pot into the treasury before pool distribution. Inside its guardrail [0.1, 0.3], parameter updates can grow the treasury's share (more headroom for treasury-funded interventions, less left for pool rewards) or shrink it (the inverse trade). Touches:
+
+- [M01 — Funding the Protocol Without a Reserve](problem-statements.html#problem-1-1-3) — the treasury is one of the three protocol-level resources any post-reserve funding model can draw on (alongside fees and a redesigned emission curve);
+- [M04 — ₳/Fiat volatility](problem-statements.html#problem-3-1-2) — treasury operations are one candidate macro-feedback instrument (treasury-funded operator support during sustained price downturns is a frequently-cited example).
+
+**Where this lands for the priority work.** The fact that all five parameters sit inside guardrails the Constitution already approves means that for several of the 9 induced problems, candidate solutions are at most a Parameter Update away from being tractable — μ02 and μ03 most directly, since both are moved by `minPoolCost` and `k` inside their guardrails. The harder problems are the ones whose candidate solutions require *new instruments* the Constitution doesn't yet name: M03 (complementary monetary properties beyond finite supply) and M04 (macro-feedback wiring) both fall in this class. They sit closer to the entity-gap question of §1.3.
+
+## 1.3. The entity gap — a pool-level Constitution meeting an entity-level problem
 
 The Constitution operates at the **pool level**: it governs pool parameters and pool-level constraints.
 
 The concept of operator *entity* — a cluster of pools sharing a common controller — has **no constitutional anchor**.
 
-[Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations) therefore occupies a distinct position. It can be resolved along one of two paths:
+[μ04 — SPO (Supply-side) — fewer and fewer entities participate in consensus](problem-statements.html#problem-2-1-3-1) therefore occupies a distinct position. It can be resolved along one of two paths:
 
 - **constitutional evolution** — recognise entities as first-class participants;
 - a **protocol-level mechanism** — achieve entity-level accounting within the existing constitutional framework.
 
-## 2.4. How the milestones below cite the Constitution
+The choice between these two paths is itself a priority question: constitutional evolution is the higher-bar path (Article IV amendment), but a protocol-level workaround can drift if entity attribution remains best-effort. Both options stay open at this stage.
 
-The milestones below reference their constitutional grounding explicitly:
+## 1.4. How the priority work below cites the Constitution
 
-- where a tenet supports the milestone, it is cited;
-- where a guardrail constrains the parameter space, the bounds are noted;
-- where a gap exists, it is identified.
+The priority order over the 9 induced problems — and the candidate solutions that cluster against it — will reference their constitutional grounding explicitly:
 
-**The Constitution is not decoration** — it is the governance instrument through which these specifications become actionable.
+- where a tenet supports addressing a problem, it is cited;
+- where a guardrail constrains the parameter space available to a candidate solution, the bounds are noted;
+- where a gap exists (entity-level concerns, monetary instruments not yet wired in), it is identified and the resolution path (constitutional evolution vs protocol workaround) is named.
 
+**The Constitution is not decoration** — it is the governance instrument through which the priority work below becomes actionable.
 
-# 3. Microeconomics — participant incentives and market structure
+# 2. Microeconomics — participant incentives and market structure
 
-The first group of milestones addresses the **microeconomics** of the mechanism: the participant-level incentive structures that shape **operator behaviour**, **pledge commitment**, **delegator yield**, and **market concentration**.
+The first group of milestones addresses the **microeconomics** of the mechanism: the participant-level incentive structures that shape **operator behaviour**, **pledge commitment**, **delegator yield**, and **market concentration**. These are the problems that manifest at the individual actor level — the reward curve, the fee structure, the pledge function, and the entity-recognition gap.
 
-These are the problems that manifest at the individual actor level — the reward curve, the fee structure, the pledge function, and the entity-recognition gap. Their resolution is a **precondition** for the macroeconomic sustainability addressed in [Macroeconomics](#4-macroeconomics-a-self-sustaining-and-governable-mechanism).
+The framing here departs slightly from a milestone-per-problem decomposition. Several of the 9 induced problems are tightly coupled at the reward-distribution layer — repairs to one without the others tend to undo themselves. Where that coupling is real, the milestone bundles them; where it is loose, downstream milestones address the remaining faces in turn.
 
-## 3.1. Guarantee operator viability across the entire productive population
+## 2.1. Milestone 1 — Repair pledge, sustain the small SPO base
 
-This is the **foundational specification**. Every other problem — delegator yield, staking-pot sustainability, population dynamics — rests on a network of operators that can sustain themselves economically. **If operators cannot survive, nothing else matters.**
+This milestone bundles two of the 9 induced problems whose repairs share a single mechanism layer:
 
-**Constitutional alignment.** Tenet 4 (fair compensation) requires that operators who maintain the network receive adequate remuneration. Tenet 9 (fair treatment) prohibits the unjustifiable discrimination that the current $1/\sigma$ fee structure imposes on small operators. The relevant governance parameters — $minPoolCost$ (MPC-01 to MPC-03, range [0, 500] ADA) and $k$ (SPTN-01 to SPTN-04, range [250, 2000]) — are modifiable through Parameter Update actions, making the structural and economic specifications below **actionable within the existing governance framework**.
+- the **pledge paradox** dimension of [μ01 — Closing the Consensus Incentive Gap](problem-statements.html#problem-1-2-3) — the operator side of the broken commitment signal: pledge yield 0.68 %/yr against ~2.3 %/yr from passive delegation, 78 % of staked ADA in pools below 1 % pledge, 42 of 48 saturation-scale MPOs forfeiting the bonus;
+- [μ02 — Guarantee operator viability across the productive population](problem-statements.html#problem-1-3-3-1) — the corridor where 73 % of pools sit below the viability line and no single-pool retail operator earns a competitive wage.
 
-### 3.1.1. Problem statement
+### 2.1.1. Why this bundle, and why it comes first
 
-The mechanism was designed so that a new operator who pledges an initial amount and attracts delegation follows a **legible progression** — from new pool to established pool to fully committed pool — with delegation providing the growth path beyond the initial commitment ([*The Intended Game* — operator progression](the-intended-game/README.md#32-operators-from-first-pledge-to-full-commitment)).
+Both problems sit on the same layer (the reward-distribution layer, *upstream* of the operator/member fee split), and both call for the same kind of fix — a coordinated repair of the reward envelope that simultaneously rebalances the pledge axis and opens a viability sub-budget. **Splitting the fix across separate milestones produces partial repairs that mutually undermine each other.** Raising `k` without addressing the flat-fee drag deepens the viability gap; raising `a_0` without repairing `A(ν, π)` amplifies the existing non-monotonicity; bolting viability into pricing tools (CIP-0023 / CIP-0082 stage 2 style) regresses delegator yield ([fee-layer synthesis](fee-layer.html)). The bundle is mechanical, not editorial.
 
-Today's single-pool operator with 2M ADA of delegation and a proven track record should be tomorrow's established entity. The mechanism must support this trajectory. **Two structural gaps prevent it from doing so.**
+The **non-participant** dimension of μ01 (bringing reachable but inert ADA back into staking) and the **strengthening of the productive threshold** are addressed in their own milestones below — Milestone 3 (Pool Alliance) and Milestone 4 (non-participant scale-up) — not folded into this one. **The order is load-bearing: before scaling up, the root causes have to be fixed.** Pulling more participants into the staking system, or making it easier for new operators to clear the productive threshold, *while the pledge signal is still broken and the small-SPO viability gap is still open*, does not dilute the existing concentration — it amplifies it: the new capital and the new entrants both flow toward the dominant fleets and the visibility-driven defaults that today's distortions reward. Milestone 1 fixes the structural ground; Milestones 3 and 4 grow on it. Reversing the sequence is a recipe for enlarging the very pathologies the diagnostic surfaces.
 
-**The viability gap.** The fixed-cost floor ($minPoolCost$) absorbs **47.5% of pool reward at the sub-reliable tier** but only **1.5% near saturation** ([OPE.O1](diagnostic/README.md#132-mainnet-observations)).
+**Constitutional alignment.** Tenet 9 (fair treatment) is the load-bearing anchor: the current $1/\sigma$ flat-fee structure imposes a 48 % effective cost on sub-reliable operators while charging 1.5 % near saturation ([OPE.O1](diagnostic.html#132-mainnet-observations)) — a textbook *unjustifiable discrimination* against small operators. Tenet 4 (fair compensation) compounds this: under-compensated single-pool operators (median ~25 K ADA/yr, ~$6.25 K at $0.25/ADA) violate the Constitution's own standard of fair compensation. The relevant governance parameters — `minPoolCost` (MPC-01 to MPC-03), `a_0` (PPI-01 to PPI-04), and `k` (SPTN-01 to SPTN-04) — are all modifiable through Parameter Update actions inside their ratified guardrails, making the directions below **actionable within the existing governance framework**.
 
-This opens a gap of **~870 pools** between the production threshold (~3M ADA) and the viability threshold (~3M ADA), where pools produce blocks but cannot sustain their operators economically ([viability-gap analysis](diagnostic/README.md#1331-guarantee-operator-viability-across-the-productive-population)). No single-pool operator in the retail market earns a competitive wage: the median earns **~25,000 ADA/yr** — enough to cover infrastructure but not the 5–15 hrs/month of skilled work ([OPE.O6](diagnostic/README.md#132-mainnet-observations)).
+### 2.1.2. The proposed direction — a coordinated four-move repair on the reward-distribution layer
 
-The floor follows a $1/\sigma$ hyperbola: *the operators who charge the most earn the least.*
+The candidate solution this milestone reprises is the **four-move gradual path** developed in the [Solution Evaluation §4 — Recommendations on adjustments to the current mechanism](solution-evaluation.html#4-recommendations-on-adjustments-to-the-current-mechanism). The four moves act on the reward-distribution layer (pre-split), at the source of the broken signals, without touching the fee-pricing layer that should remain a free competitive lever:
 
-**The operator growth path is not functioning as intended.** The census finds **no trace** of the designed growth trajectory on mainnet.
+1. **Repair `A(ν, π)`** — the pledge-bonus structure inside the SL-D1 reward envelope. Three pathologies in the current `A` produce today's non-pledging equilibrium: a quadratic `ν²` size penalty that crushes small pools, a non-monotonicity in `π` that incentivises sub-half-saturated operators to *under-commit*, and a cubic `ν³` collapse at full self-pledge. A repaired `A` must (a) smooth the operator onset at low `ν`, (b) avoid privileging fully-private pools (`π = 1`), and (c) reward the balanced-commitment regime (`π ≈ 0.5`).
 
-The single-pool operator population peaked at **555 pools and 39.1% of productive stake** around epoch 300, then contracted continuously to **291 pools and 24%** at epoch 623 — a **48% loss in pool count** and **15 percentage points** in stake share ([*Staking Census* CEN.O1.F6](diagnostic/sub-flows/census/mainnet-analysis/README.md#353-who-actually-holds-the-productive-set-today-and-who-used-to)).
+2. **Reduce `λ_size` so the commitment axis carries more of the signal.** Today `λ_size ≈ 76.9 %` against `λ_pledge ≈ 23.1 %` (set by `a_0 = 0.3`). The size axis dominates; the commitment axis is a small smooth nudge. Reducing `λ_size` (equivalently, raising `a_0` toward the [0.1, 1.0] guardrail's upper half) lets the commitment signal weigh more — but the calibration only makes sense **after `A` is repaired**; raising `a_0` against today's broken `A` amplifies the existing bias rather than correcting it.
 
-The replacement pools that sustain the ~950-pool total are **entity-operated, not new independents**: multi-pool entities grew from 23 to 85, their pool count from 135 to 660 ([*Staking Census* CEN.O1.F7](diagnostic/sub-flows/census/mainnet-analysis/README.md#353-who-actually-holds-the-productive-set-today-and-who-used-to)). Capital flows from declining community fleets toward institutional entrants and exchanges — **not** toward the independent tail growing into established entities ([*Staking Census* CEN.O1.F8](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-operator-pipeline-has-no-observable-expression-in-the-data)).
+3. **Add a `λ_viability` sub-budget for pools entering the lifecycle.** A three-way split of the reward envelope — `λ_size + λ_pledge + λ_viability` — without raising the total pool pot. The viability slice is **conditional**: a pool benefits from it only if its operator pledges according to a rule to be specified (e.g. a minimum pledge ratio or a pledge-growth schedule across lifecycle stages). This gives new operators a structural path to productive scale without trapping them in V1's `minPoolCost` floor at small sizes — *and* preserves the principled separation that `minPoolCost` and `minPoolMargin` stay flexible competitive levers ([fee-layer synthesis](fee-layer.html)). Funding for `λ_viability` comes from the `λ_size` reduction in move 2.
 
-*The absence of evidence for the designed growth path is itself the diagnosis.*
+4. **Activate the `λ_pledge` budget that has been underused for years.** [POL.O1.F3](diagnostic.html#122-mainnet-observations) documents that **95.6 % of the pledge-bonus budget already returns to the reserve unused every epoch** — 3.43 M ADA/epoch (≈ 250 M ADA/yr), 22.1 % of the entire pool pot, the single largest addressable inefficiency in the reward pipeline today. A repaired `A` with a reduced `λ_size` is what activates this budget. **It is not new ADA — it is unused ADA already inside the formula's envelope.**
 
-#### 3.1.1.1. Evidence base
+The four moves are sequenced: **1 then 2 then 3 then 4** is not arbitrary — each step requires the previous to have landed before its calibration becomes meaningful.
 
-<div class="ev-list" markdown="1">
+## 2.2. Milestone 2 — Maintain and diversify a competitive delegator yield
 
-<div class="ev-card" markdown="1">
-<div class="ev-label">Fee structure</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">The distortion comes from the fixed-cost floor, not from the commission market. A sub-reliable operator absorbs **48.3 %** of pool rewards yet earns **24,820 ADA/yr**; an 11+-pool MPO absorbs **7.7 %** yet earns **1,035,496 ADA/yr** — **42× more revenue at 6× less effective price**. The commission market is healthy: 69 % competitive, median margin stable for 405 epochs.</p>
-<p class="ev-sources" markdown="1">Sources: [OPE.O1, OPE.O2, OPE.O6](diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#1-mainnet-observations).</p>
-</div>
-</div>
+This milestone takes up [μ03 — Restore a competitive delegator yield — soon to fall below 2% AYI](problem-statements.html#problem-1-3-3-2). The work has two dimensions, captured in the title: **maintain** the absolute return at a level that keeps staking competitive with on-chain alternatives, and **diversify** the delegation offer so the yield comes from more than a single depleting source.
 
-<div class="ev-card" markdown="1">
-<div class="ev-label">Fee floor trajectory</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">The floor's burden grows as the reserve depletes: the fixed-cost share of pool rewards rises mechanically, progressively extending the viability gap toward pools in the **5–10 M range**.</p>
-<p class="ev-sources" markdown="1">Source: [OPE.O8](diagnostic/README.md#132-mainnet-observations).</p>
-</div>
-</div>
+**V1 was designed before the tools V2 inherits existed.** The reward mechanism on mainnet today was specified in 2019 and went live in August 2020 — *before* Plutus (smart contracts arrived with the Alonzo hard fork in September 2021), *before* on-chain governance (Conway, 2024), and before a smart-contract-driven fee economy of any size. Within those constraints, a single conservative yield architecture was chosen: a base return derived from monetary expansion (`ρ`) modulated by the participation rate, distributed through pure on-chain delegation with no lockup, no slashing, no programmable variants. *That was the right choice for the chain that existed in 2020.*
 
-<div class="ev-card" markdown="1">
-<div class="ev-label">Population dynamics</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Productive pool count has held near **950 since epoch 300**, but this masks **3,497 entries vs 3,070 exits** — ~16 pools/epoch turnover (**1.7 %/epoch**). Turnover falls disproportionately on small single-pool operators near the production threshold.</p>
-<p class="ev-sources" markdown="1">Source: [Census — population dynamics](diagnostic/sub-flows/census/mainnet-analysis/README.md#35-the-market-has-crystallised-replacement-not-growth).</p>
-</div>
-</div>
+[§1.3.3.2 of the diagnostic](diagnostic.html#1332-restore-a-competitive-delegator-yield-soon-to-fall-below-2-ayi) names the trade-off cleanly: *"what Cardano gains in design (no lockup, no slashing, no minimum, no custodial transfer) it pays for in yield: delegation is a conviction bet on ADA appreciation, not a yield-seeking decision."* At today's level the trade-off begins to bite — the 2.0 % yield sits below the USD risk-free rate (4.3 %) and at the bottom of the PoS chains' yield ladder, with only the S&P 500 dividend yield lower ([OPE.O9](diagnostic.html#132-mainnet-observations)). V2's design surface — *with* smart contracts and on-chain governance now in place — has the room to keep the maximally-flexible default *and* expose optional products that recover the yield premium for delegators willing to commit. That is the substantive shift this milestone proposes.
 
-<div class="ev-card" markdown="1">
-<div class="ev-label">Stake variability</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Pools near the production threshold oscillate in and out of viability: for **9.3 %** of productive pools, stake swings epoch-to-epoch by **50–100 %** of its average; for **3.4 %**, swings exceed the average itself.</p>
-<p class="ev-sources" markdown="1">Source: [Census — pool-size variability](diagnostic/sub-flows/census/mainnet-analysis/README.md#36-a-pools-stake-stability-is-segment-driven-not-random).</p>
-</div>
-</div>
+### 2.2.1. The three faces of the yield problem
 
-<div class="ev-card" markdown="1">
-<div class="ev-label">Thresholds</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Production threshold rises with total staked ADA — from **~470 K at Shelley launch** to **~1 M at epoch 623**. Single-pool operator population: **477 pools, 5.28 B ADA, 24.5 % of productive stake**, share in slow decline; only **283 above the viability threshold**; **116 sub-threshold pools** carry 0.31 % of active stake.</p>
-<p class="ev-sources" markdown="1">Sources: [Census — historical decomposition](diagnostic/sub-flows/census/mainnet-analysis/README.md#343-what-the-productive-total-looked-like-before-the-threshold-cut), [POL.O6](diagnostic/README.md#122-mainnet-observations), [production-threshold proposal](diagnostic/README.md#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano).</p>
-</div>
-</div>
+The problem decomposes along three dimensions, each of which a candidate solution has to address jointly:
 
-<div class="ev-card" markdown="1">
-<div class="ev-label">Incentive alignment</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">The current fee structure **favours operators who amortise the fixed cost across large fleets**. Small single-pool operators — from whom tomorrow's established entities should emerge — face the highest effective cost burden. The incentive gradient runs counter to the mechanism's design intent.</p>
-<p class="ev-sources" markdown="1">Sources: [OPE.O1, OPE.O6](diagnostic/sub-flows/operator-delegator-distribution/mainnet-analysis/README.md#1-mainnet-observations).</p>
-</div>
-</div>
+- **Competitive as an investment.** Staking competes for capital with DeFi, lending markets, and off-chain alternatives. If the absolute return is not attractive, rational capital migrates and the consensus layer loses the participation it depends on.
+- **Rewarding the right operators.** Today the yield spread between balanced and hollow operators at equivalent pool sizes is **0.39 pp** — noise ([OPE.O5](diagnostic.html#132-mainnet-observations)). Half of all pool switches produce zero yield change ([CEN.O6](diagnostic.html#212-mainnet-observations)), and delegation follows visibility rather than yield ([OPE.O7](diagnostic.html#132-mainnet-observations)) — a signal-quality problem the mechanism has the surface to repair.
+- **A product range frozen in 2020.** In Shelley's era no smart-contract capability existed — the only delegation product was, and still is, liquid delegation at a uniform yield. Plutus and the extended UTXO model now provide the infrastructure for a richer staking market that V2 has not yet exploited.
 
-</div>
+### 2.2.2. What smart contracts unlock — diversification and programmable pledge
 
-### 3.1.2. Structural: enforce the production threshold
+The diversify direction is the operative content of this milestone — three product types that build above the baseline liquid-delegation default:
 
-The protocol must make the production threshold **explicit and enforceable**. Below this threshold, pools cannot reliably produce blocks — their existence **misleads delegators** and **dilutes the operator marketplace**.
+- **Lock-up tiers with differentiated APY.** Delegators who commit capital for a defined period (e.g. 6, 36, 73 epochs) accept reduced liquidity in exchange for a yield premium. The result is a **term structure** that rewards long-horizon commitment and stabilises the stake base single-pool operators depend on.
+- **Liquid staking derivatives.** Smart-contract wrappers that issue transferable tokens representing staked ADA, letting delegators maintain liquidity (trade, lend, use as collateral in DeFi) while the underlying stake continues to earn rewards and contribute to consensus security. This is the product that brings capital currently parked in DeFi back into the staking pool.
+- **Automated delegation strategies.** Programmable vaults that rebalance across pools according to defined criteria (yield optimisation, decentralisation weighting, entity-level quality scores), lowering the information and operational burden on individual delegators.
 
-**Specification.** The mechanism must define a minimum active-stake threshold ($\sigma_{\min}$) below which pool registration is not permitted. Two requirements.
+The baseline liquid delegation **remains**. These products build *above* it, so the delegation market offers a *spectrum of commitment–remuneration profiles* rather than a single undifferentiated choice. *Higher commitment — longer lock-up, less liquidity — earns a higher return.* That is the relationship through which the delegation market becomes a market in the economic sense: multiple products, multiple risk–return points, and a price signal that reflects the value of the commitment each delegator makes.
 
-**R1 — The threshold must enforce the structural production boundary.** Currently **~1M ADA**, derived from the Poisson statistics of block production ([the structural floor](diagnostic/README.md#12411-the-structural-floor)) — a **mathematical property of the protocol**, not an empirical observation.
+**Pledge handled as programmable commitment, not a binary cliff.** The current pledge mechanism's pledge-not-met cliff (the entire pool's rewards go to zero for the epoch — 2.1 % of the pot today, [POL.O1](diagnostic.html#122-mainnet-observations)) was the cleanest enforcement available with Shelley's certificate primitives. With a Plutus-based pledge layer built *on top of Milestone 1's reward-formula repair*, the same commitment can be expressed with **graduated rules** — proportional rewards, partial unwinds, time-vested attestations — and pledged capital can remain composable with the smart-contract ecosystem rather than being frozen out of it. The asymmetries that smart-contract primitives can resolve are documented in detail at [§1.2.4.3.2 — Delegating is inherently less constraining than pledging](diagnostic.html#12432-delegating-is-inherently-less-constraining-than-pledging) and [§1.2.4.3.4 — The pledge bonus is inoperative at realistic scale](diagnostic.html#12434-the-pledge-bonus-is-inoperative-at-realistic-scale).
 
-The protocol already defines this boundary **indirectly**; the specification requires making it **explicit and enforced**. A pool below this threshold cannot reliably produce blocks; its presence in the registry is **noise**.
+**Constitutional alignment.** Tenet 4 (fair compensation) extends to delegators: participants who commit capital to consensus security are entitled to a return that reflects that contribution. Tenet 10 (monetary stability) constrains the obvious lever — raising `ρ` to compensate for declining real yield would inflate ADA against the long-term sustainability standard. Smart-contract-based instruments fit that constraint cleanly: they redistribute capital *behaviour* (lock-up window, programmable commitment) without inflating supply.
 
-**R2 — A legitimate sub-threshold path must exist.** A protocol-level or smart-contract-based **pooling service** (analogous to Rocket Pool on Ethereum — [the production-threshold proposal](diagnostic/README.md#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano)) must allow technically capable participants with insufficient capital to combine operational commitment with pooled delegation, **cross the threshold collectively**, and operate a full pool.
+This milestone sequences after Milestone 1 because the active-player split (operators vs delegators) cannot be repaired at the delegator end while the operator end is still in the flat-fee corridor — any yield raise that doesn't first repair the operator-viability gap simply expands the regressive transfer the diagnostic documents ([OPE.O5](diagnostic.html#132-mainnet-observations)).
 
-The pooling service transforms the empty corridor between *"committed to this network"* and *"producing blocks for this network"* into a **supported trajectory**. An operator who enters the alliance with 100K ADA, proves operational competence, and graduates to independent operation is exactly the kind of participant the protocol should incubate. The current mechanism offers that participant nothing but a misleading registration form.
+## 2.3. Milestone 3 — A Pool Alliance, rocket-pool-like for Cardano
 
-The effect is a **clean marketplace**:
+This milestone proposes a concrete candidate solution along **two reinforcing steps** the diagnostic already lays out: make the production threshold explicit at the protocol level, and build a Rocket-Pool-like *Pool Alliance* below it so that enforcement opens a structural entry path rather than closing one. It addresses two of the 9 induced problems together:
 
-- every registered pool can produce blocks;
-- the sub-threshold space is served by a dedicated mechanism rather than abandoned to noise;
-- the operator entry experience becomes legible — **one gate, one threshold, one supported path below it**.
+- [μ02 — Guarantee operator viability](problem-statements.html#problem-1-3-3-1) — the production/viability threshold gap that today's lone entrant has to clear unaided;
+- [μ04 — SPO (Supply-side) — fewer and fewer entities participate in consensus](problem-statements.html#problem-2-1-3-1) — the contraction of the single-pool operator base from 555 to 291 pools, while multi-pool fleets grew from 23 to 85 entities ([CEN.O1](diagnostic.html#212-mainnet-observations)).
 
-| KPI | Definition | Current | Target |
-| --- | --- | --- | --- |
-| Sub-threshold pool count | Pools below $\sigma_{\min}$ | ~116 | 0 (structurally enforced) |
-| Pooling-service participation | Operators in sub-threshold pooling mechanism | 0 (does not exist) | > 0 — the path must exist |
+### 2.3.1. Why the production threshold deserves reinforcing
 
-### 3.1.3. Economic: every productive pool must be profitable
+The diagnostic shows that **1,987 of 2,718 pools (73 %) sit below the 95 %-block-probability bar at ~3 M ADA**: they collectively hold only 2.7 % of stake and produce blocks too sporadically to carry a meaningful consensus signal ([POL.O4](diagnostic.html#122-mainnet-observations)). The diagnostic's own framing is direct — this segment is *"ghost capacity"* and *"noise-dominated"*: pools that exist on-chain, draw operator and infrastructure effort, and muddy the pool marketplace for delegators, without contributing measurably to the security output. From the protocol's point of view, this is signal noise the network is paying for.
 
-Enforcing the production threshold eliminates the structural noise. But the viability gap is not only structural — **it is economic**.
+The diagnostic also names the underlying gap concisely: between registration and the production threshold lies a corridor the mechanism does not bridge — *"an open door that leads to an empty room"* ([§1.2.4.1.4](diagnostic.html#12414-the-sub-threshold-problem-what-rocket-pool-tells-us)). The intended-game narrative is explicit about what should be there instead: a new operator's entry should be *individually rational* and the path from new pool, to established pool, to fully committed pool should be a *legible arc* both operators and delegators can follow ([*The Intended Game* §3.2 — Operators from first pledge to full commitment](intended-game.html#32-operators-from-first-pledge-to-full-commitment)). The 73 % sub-block tail is the empirical record of what happens when participants try to walk that arc without scaffolding.
 
-The $minPoolCost$ floor creates a viability threshold (**~3M ADA**) *above* the production threshold (**~1M ADA**). A pool that crosses $\sigma_{\min}$ and produces blocks is **not automatically profitable**. This milestone closes that gap.
+### 2.3.2. The two-step plan — make the threshold explicit, and build the Pool Alliance below it
 
-**Specification.** The mechanism must ensure that every pool at or above $\sigma_{\min}$ generates sufficient operator revenue to cover real-world operating costs. Three requirements.
+**Step 1 — Make the production threshold explicit (`σ_min`).** Ethereum's Beacon Chain requires exactly **32 ETH** to activate a validator — an explicit threshold enforced at the protocol level. Cardano's production threshold is *implicit*, emergent from Poisson statistics rather than declared as a parameter. Promoting it to a declared minimum at the pool-registration boundary cleans the marketplace: pools below the threshold no longer register, the 73 % tail compresses, and delegators see a marketplace where every visible pool actually carries consensus weight.
 
-**R1 — The fixed-cost floor must be eliminated or replaced by a proportional mechanism.** The current $minPoolCost$ follows a **regressive $1/\sigma$ hyperbola** that penalises small pools and subsidises large ones. A percentage-based $minPoolRate$ that scales with pool reward would close the viability gap **by construction**: a pool earning 1,000 ADA pays the same *fraction* as a pool earning 100,000 ADA.
+The cleanup is sharp because the cost is concentrated: today **2,144 of 2,877 pools (75 %)** sit below the production threshold and together hold only **2.7 % of active stake** ([POL.O4](diagnostic.html#122-mainnet-observations)). The 2,146 pools removed from the visible marketplace carry **9.4 % of delegations** but **almost no stake-weight** — the delegations they hold are the micro-delegator residuals that today feed into noise. After enforcement, the marketplace shrinks from **~2,877 visible pools to ~731 productive pools**, every one of which produces ≥1 block per epoch with ≥95 % probability. The stake those 2,146 pools currently warehouse (~600 M ADA cumulatively) is freed to flow toward the productive set or, via the Pool Alliance below, toward new entrants on a structural growth path.
 
-**R2 — The profitability logic must be described and legible.** Operators must be able to compute, **before registering a pool**, whether that pool will be profitable at a given stake level and ADA price. The current system requires navigating an implicit cost structure that only reveals its regressive nature *after* operation begins.
+**Step 2 — Build the Pool Alliance below the threshold so enforcement opens a path.** Ethereum's Rocket Pool demonstrates this primitive at scale: a permissionless, decentralised liquid-staking protocol where an operator bonds as little as **4 ETH** alongside pooled capital from passive stakers, and a smart contract assembles a full 32 ETH validator — producing **~4 000 independent node operators** and **~800 K ETH staked** by participants who would never have crossed the solo-validator threshold alone ([§1.2.4.4.1](diagnostic.html#12441-enforce-the-production-threshold-build-a-rocket-pool-for-cardano)).
 
-**R3 — The profitability parameters must be reviewable by governance.** Operator costs are **fiat-denominated** while operator revenue is **ADA-denominated**. The mechanism must provide governance with the instruments to manage this asymmetry — whether through periodic parameter review (linked to the [Recalibration Pipeline](#44-the-mechanism-must-be-governable)), oracle-informed adjustment, or treasury-funded operator support during sustained price downturns.
+Adapted to Cardano's distinctive properties (no lockup, no slashing, no minimum stake for delegation), a **Pool Alliance** would expose the same primitive at the SPO entry path:
 
-The third point is **critical**. The current mechanism defines $minPoolCost$ as a fixed ADA amount that has been adjusted **exactly once** (340 → 170 ADA) since Shelley launch. Its fiat-equivalent value has fluctuated from **~$170 to ~$17** depending on ADA price, with **no protocol-level awareness** of this variation.
+- an **operator bond** — a technically capable participant pledges what they can (the diagnostic offers ~100 K ADA as a working figure) and commits to running infrastructure; this is their skin-in-the-game, analogous to Rocket Pool's operator bond;
+- **capital matching** — delegators who want to support decentralisation at a level above passive delegation contribute to the alliance, the pooled stake crosses the production threshold, the operator runs the pool;
+- **shared infrastructure** — monitoring, key management, attestation tooling that today fall on the lone entrant become alliance-level services.
 
-A successor mechanism must acknowledge the fiat/ADA asymmetry *structurally*, and give governance concrete instruments to manage it — periodic review, oracle-informed adjustment, or treasury-funded operator support during sustained price downturns.
+The two steps reinforce each other. Enforcing `σ_min` cleans the marketplace; the Pool Alliance ensures that enforcement opens a legitimate route rather than closing one. Together they recover what the intended-game calls the *"open seat at the deflationary table"* — a credible entry path for participants with skill and partial capital, so consensus participation no longer requires either pre-existing personal wealth or a custodial mandate.
 
-The combined effect of the [Production Threshold](#312-structural-enforce-the-production-threshold) and [Pool Profitability](#313-economic-every-productive-pool-must-be-profitable) sub-specs is a **single legible gate**: below $\sigma_{\min}$, the pooling service operates; at $\sigma_{\min}$, the operator is **immediately economically viable**. The viability gap disappears: the capital barrier is reduced to the production minimum, the economic barrier is eliminated, and **expertise and commitment weigh more than capital alone**.
+> **A side note on technical complexity.** The two-step plan is straightforward to state but involves several non-trivial design decisions the next phase of work has to commit on: the `σ_min` enforcement model (block at registration vs continuous requirement with grace period), the Pool Alliance materialisation (native ledger primitive vs Plutus service layer vs hybrid), the migration path for the ~2,144 currently-registered sub-threshold pools, and — most consequentially — **the MPO-at-saturation question**.
+>
+> Under `σ_min`, an MPO whose pool saturates faces several new options where today they face essentially one. *Stop expanding* (the intended Sybil defence reactivated). *Commit fresh `σ_min` as genuine pledge per new pool* (real economic cost, no longer ~500 ADA per certificate). *Join the Pool Alliance with a smaller operator bond plus capital matching* (the legitimate sub-`σ_min` path). And a fourth candidate worth flagging: **register the new pool as an on-chain cellular division of the saturated one** — the saturation event itself becomes the moment at which the MPO declares an explicit entity link, the new pool inherits its lineage in the on-chain record, and the protocol gains the entity-level attribution it lacks today. The biological metaphor is the right one: cells divide *transparently*, with every daughter cell traceable to its parent. The same primitive turns the saturation event from an opaque fragmentation (today's pattern, where an entity registers a fresh pool with no on-chain link to the saturated one) into a transparent expansion.
+>
+> Read this way, **cellular division is more than a candidate primitive — it is a *pressure instrument* that reintroduces the notion of entity into the protocol**, incentive-compatible and without requiring either a constitutional amendment for new entity primitives or off-chain clustering. The MPO chooses to declare the entity link because the alternative (stop expanding, or commit a fresh `σ_min` of pledge per pool) is more costly. The mechanism's entity surface emerges incrementally from each legitimate growth act, declaration by declaration. The [entity-level research axis (§2.5.1)](#251-entity-level-awareness-the-supply-side-question) develops this further as a concrete protocol-level mechanism for entity awareness.
+>
+> Each option above is a real design question; together they map the technical layer this milestone has to resolve. They are flagged here as the next layer of work, not as blockers.
 
-| KPI | Definition | Current | Target |
-| --- | --- | --- | --- |
-| Dead-zone population | Pools between production and viability thresholds | ~870 | 0 |
-| Operator viability rate | Productive pools where revenue > fiat operating cost | ~60% (at $0.30/ADA) | >90% across the productive set |
-| Single-pool operator count | Viable single-pool operators | 283 | >$k/2$ (currently 250) |
-| Viability at stress price | Productive pools viable at ADA = $0.10 | <20% est. | >50% |
+**Constitutional alignment.** Tenet 9 (fair treatment) is the load-bearing anchor: today's implicit capital threshold acts as a *de facto* barrier that excludes operators with skill but not capital, while custodial entities holding 21 % of productive stake clear it by virtue of their mandate ([OPE.O3](diagnostic.html#132-mainnet-observations)). Making the threshold explicit and pairing it with a structural sub-threshold path opens consensus participation along the inclusivity arc the intended-game describes, while removing the noise the residual sub-block tail injects into the security signal.
 
-> **Dependency note.** [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population) is the foundation. [Pledge](#32-restore-the-notion-of-pledge-among-operators) depends on it: pledge is only meaningful once operators are viable. [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield) depends on it: the yield that reaches delegators is shaped by the fee structure Operator Viability reforms. [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion) depends on it: a viable operator population is a prerequisite for any funding-model transition. The reward curve — the design instrument that implements the economic incentives — must be calibrated to serve Operator Viability through Delegator Yield simultaneously; it is a tool, not a specification.
+This milestone sequences after Milestone 1 because the alliance economics depend on the reward-distribution layer being repaired first — a Rocket-Pool-like collective layered on top of today's flat-fee corridor would mutualise the regressive cost rather than remove it. With the corridor closed by M1, the alliance becomes a structurally healthy entry path rather than a workaround for a corridor still in place.
 
-## 3.2. Restore the notion of pledge among operators
+## 2.4. Milestone 4 — Scale up with the non-participant population
 
-*Depends on [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population).* With operators viable across the productive population, the question becomes:
+This milestone takes up the **second face of [μ01](problem-statements.html#problem-1-2-3)** — the non-participant population that Milestone 1 deliberately leaves untouched: the 39.8 % of circulating supply outside delegation, of which only 0.37 % is reachable by reward-design changes alone ([CEN.O7](diagnostic.html#212-mainnet-observations)). The remaining 39.4 % sits in addresses that **cannot delegate without a protocol-level change** — exchange hot wallets, institutional cold storage, pre-staking-era legacy wallets, DeFi script addresses without staking parts.
 
-> Does the mechanism distinguish between an operator who **commits capital** to the network, and one who — without pledging — has nonetheless captured saturating delegation through **brand, scale, or exchange custody**?
+The composition matters for what the milestone has to deliver. The 2.5 B residual is concentrated, not diffuse: 246 wallets hold 74 % of it, the top 10 hold 41.6 %. Re-engaging this pool is therefore not a retail-recruitment problem but a **protocol-architecture problem** with a small, identifiable counterparty list. Three protocol-level instruments shape the candidate solution space:
 
-**Constitutional alignment.** Tenet 9 (fair treatment) supports the restoration of pledge as an economic signal: treating committed operators identically to hollow fleets that contribute no capital is itself a form of **unjustifiable discrimination** — it penalises commitment.
+- enabling exchange-style and custodial address shapes to delegate;
+- mandating staking-capable script standards in DeFi (a single 80 M-ADA contract holds 89 % of the DeFi-without-staking residual);
+- introducing delegation-by-default for newly-minted wallets.
 
-The key parameter, $a_0$ (poolPledgeInfluence, PPI-01 to PPI-04), is bounded by the Constitution at **[0.1, 1.0]** and modifiable through Parameter Update actions. The current value ($a_0 = 0.3$) sits near the bottom of the range; the guardrail permits up to a **threefold increase** without constitutional amendment. The $k$ parameter (SPTN-01 to SPTN-04, range [250, 2000]) also shapes the pledge dynamics: the ratio of pledged capital to saturation level determines whether the Sybil tax binds.
+**Constitutional alignment.** Tenet 9 (fair treatment) has a less obvious application here: participants who hold ADA but cannot delegate by virtue of the address shape they were issued are *structurally excluded* from the rewards their capital underwrites — a discrimination by inheritance, not by behaviour. Closing that gap aligns the participation surface with the Constitution's standard.
 
-### 3.2.1. Problem statement
+This milestone is sequenced last among the microeconomic milestones for the reason the diagnostic spells out explicitly: expanding the participant pool *before* the active-player dynamics are repaired enlarges the existing concentration rather than diluting it. Once Milestones 1, 2, and 3 have set the active-player ground straight, scaling the participant base becomes a coherent move rather than a concentration-amplifier.
 
-**Why pledge exists.** The security model of the Cardano consensus layer requires that the $k$-pool target represents $k$ *independent* block-producing entities — **not** $k$ certificates controlled by a handful of actors.
+## 2.5. Research axis — reduce the concentration effects that distort both populations
 
-The property that makes this assumption defensible is *Sybil resistance*: creating additional block-producing identities must carry a cost high enough that fragmentation is **economically dominated** by honest, single-pool operation ([*The Intended Game* — Sybil resistance](the-intended-game/README.md#343-sybil-resistance-making-fragmentation-expensive)).
+This section is **a research axis**, not a committed milestone. The substantive question — *can the mechanism reduce the concentration effects that distort both sides of the staking market?* — is real and well-evidenced, but the candidate instruments need more analysis and design work before they can be promoted to a milestone with a specific direction.
 
-In **proof of work**, Sybil resistance is physical — each identity requires hardware and electricity that cannot be shared. In **proof of stake**, identity is cheap: registering a new pool costs a certificate deposit (~500 ADA) and an operational setup that an experienced operator can replicate in hours.
+The diagnostic documents concentration on **two fronts**:
 
-The saturation cap ($k$) was designed to limit concentration by capping the delegation any single pool can receive — but the cap operates on *pools*, not on *entities*. An operator who saturates one pool registers a second and continues growing. **The cap fragments pools, not power.**
+- **Supply side.** **83 attributed entities** control **76.7 %** of productive stake through **449 productive pools** ([POL.O5](diagnostic.html#122-mainnet-observations)), while single-pool operators have contracted from 555 to 291 productive pools ([POL.O6](diagnostic.html#122-mainnet-observations)). The reward formula evaluates pools *independently* — it does not see that twenty pools share the same controller. Saturation, intended to prevent concentration, fragments *pools* but not *entities*.
+- **Demand side.** **1,000 delegators (0.07 % of the base) control 57 % of staked ADA**; the Gini coefficient is **0.976** ([CEN.O3](diagnostic.html#212-mainnet-observations)). Concentration crystallised by epoch 300 and 9× population growth has not budged the top-1 % share.
 
-Pledge is the mechanism's answer. Brünjes & Kiayias ([2020, §4](references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf)) formalise this through the $a_0$ parameter: the reward function includes a **pledge-sensitive component** designed so that splitting capital across $n$ pools **dilutes the pledge bonus per pool**. The intended cost of a Sybil attack scales as $O(n)$ in committed capital — the *Sybil tax*. If the reward formula penalises low-pledge pools sufficiently, the marginal cost of the $n$-th pool exceeds its marginal reward and the expansion becomes **unprofitable**.
+Both concentrations are *structural*, both *crystallised early*, and *neither responds* to the current incentive design. Milestones 1–4 set up the conditions in which a deconcentration intervention becomes coherent — but they do not, in themselves, deliver it. That is the work this research axis names.
 
-There is a critical distinction in *how* this cost operates:
+The **constitutional question** is part of why this is staged as a research axis rather than a milestone. As §1.3 of this roadmap notes, the Constitution operates at the **pool level** — its guardrails govern pool parameters (`k`, `a_0`, `minPoolCost`), not entity-level or delegator-tier constructs. Reducing concentration can in principle be reached along three paths:
 
-- when it comes from the **pledge mechanism itself** — forfeiting a meaningful bonus by fragmenting — the *design* provides the defence;
-- when it comes from **raw capital requirements alone**, the defence is incidental, not engineered ([*The Intended Game* — Sybil resistance](the-intended-game/README.md#343-sybil-resistance-making-fragmentation-expensive)).
+- **Within the existing perimeter** — a calibrated reward curve that makes pledge dilution across multiple pools carry real economic cost, working through the parameters the Constitution already approves.
+- **Through constitutional evolution** — introducing entity-level primitives directly via Article IV amendment, recognising entities as first-class participants alongside pools.
+- **Through incentive-compatible pressure instruments** — getting the protocol to entity awareness *organically*, by making entity declaration the natural cost of legitimate growth, without amending the Constitution. The **cellular-division candidate developed in [Milestone 3](#23-milestone-3-a-pool-alliance-rocket-pool-like-for-cardano)** is the canonical example: under `σ_min`, an MPO whose pool saturates can register a new pool only by declaring the entity link to the parent pool on-chain. The MPO chooses to declare because the alternative (stop expanding, or commit a fresh `σ_min` of genuine pledge per pool) is more costly. The mechanism's entity surface then emerges incrementally — declaration by declaration — from the operator lifecycle itself.
 
-**What went wrong.** At $a_0 = 0.3$, the relationship between pledge and reward is so weak that it provides **no behavioural incentive**. A pool pledging 1M ADA receives a bonus that amounts to **fractions of a percent** of its total reward — invisible to delegators, irrelevant to the operator's business case ([mainnet pledge data](diagnostic/README.md#12431-what-mainnet-reveals)).
+Choosing between these three paths — or combining them — is itself a design decision the research axis has to mature. The third path is particularly promising because it carries the lowest constitutional bar while still producing the entity-level attribution surface the protocol needs.
 
-The marginal cost of registering an additional pool is **~500 ADA**; the marginal reward is a **full share** of the curve. The rational strategy — which the market has discovered — is to **expand**.
+### 2.5.1. Entity-level awareness — the supply-side question
 
-The mechanism creates **three structural populations** that respond to pledge differently:
+The reward formula's unit of accounting is the pool. The economic actor making strategic decisions is the *entity* — a cluster of pools sharing a common controller. An entity operating twenty pools with negligible pledge in each is **indistinguishable, at the formula level**, from twenty single-pool operators each pledging the same total.
 
-- **Custodial operators** who *cannot* pledge — the constraint is architectural;
-- **MPO fleets** who *choose not to* — the rational response to a negligible incentive;
-- **Single-pool operators** who pledge **out of conviction** rather than economic rationality.
+This is the structural root of the Sybil-tax failure documented in [the multi-pool entity analysis](diagnostic.html#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures): the marginal cost of an additional pool is roughly the certificate registration fee, while the marginal reward is a full share of the curve. The Sybil tax exists in the formula but is *inoperative* at the pool level. Reactivating it requires evaluating pledge, saturation, and reward-scaling at the entity level — directly via on-chain entity primitives, or indirectly via a reward curve calibrated so that pledge dilution across `n` pools carries a real economic cost.
 
-The net result is a proof-of-stake system where the Sybil defence operates through **incidental wealth constraints** — not through the designed pledge mechanism — and where **83 attributed entities** operating **449 productive pools** control **76.7% of productive stake** with no protocol-level cost for having done so.
+Open research questions for this axis:
 
-$k = 500$ implies 500 independent entities sharing consensus power; the effective operator count is an **order of magnitude below** that target. The saturation cap has produced ~3,000 pool certificates — far more than $k$ — but the power behind those certificates is concentrated in fewer hands than the equilibrium requires.
+- **What does an on-chain entity primitive look like?** The existing owner-key registration provides one attribution surface; a richer primitive would let the protocol evaluate aggregate pledge, aggregate stake, and fleet structure at the entity level. One concrete candidate, surfaced in [Milestone 3's MPO-at-saturation discussion](#232-the-two-step-plan-make-the-threshold-explicit-and-build-the-pool-alliance-below-it), is **on-chain cellular division at the saturation event** — register a new pool as an explicit daughter of the saturated parent, so the entity tree is built incrementally from each legitimate expansion act. The framing matters: this is **a pressure instrument**, not a mandate. The protocol does not force MPOs to declare entities directly; it makes the declaration the natural cost of legitimate growth under `σ_min`, so the entity tree emerges organically as MPOs walk the lifecycle. *That is how the notion of entity gets reintroduced into the protocol — incentive-compatible, without a constitutional amendment for new primitives, and without relying on best-effort off-chain clustering.* The trade-off between attribution rigour and operator privacy is part of the open work.
+- **Can the same outcome be approximated within the current pool-level perimeter?** A reward curve that makes pledge dilution costly per-pool (rather than cost-free) may approximate entity-level accounting through pool-level instruments alone — but the parameter space the existing `a_0` and `k` guardrails open has to be mapped against the empirical fleet structure to know whether the approximation is tight enough.
+- **What does the saturation cap mean at entity level?** An entity-wide saturation ceiling, a graduated penalty for fleet expansion, or a cap on the number of fully-rewarded pools per entity — each is a different design point with different governance implications. The interaction with Milestone 1's `A(ν, π)` repair is also open: the four-move repair changes the gradient operators face per pool, which changes the calculus of fleet expansion.
 
-*Pools have fragmented; power has not.*
+The principle this axis preserves: **entities remain free to operate multiple pools.** The research is not about prohibiting fleets but about ensuring that the economic advantage of fleet expansion *decreases* rather than *increases* with fleet size — the opposite of today's regime.
 
-#### 3.2.1.1. Evidence base
+### 2.5.2. Titan-tier differentiation — the demand-side question
 
-<div class="ev-list" markdown="1">
+The mechanism today treats a 32-ADA micro-delegation and a 50 M-ADA titan delegation **identically**: same proportional return, same per-ADA governance weight, no incentive differentiated by size, tenure, or governance engagement.
 
-<div class="ev-card" markdown="1">
-<div class="ev-label">Pledge-bonus utilisation</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">**95.6 %** of the pledge-bonus budget returns to the reserve unused. The instrument exists in the formula but is **economically inert**.</p>
-<p class="ev-sources" markdown="1">Source: [POL.O7](diagnostic/README.md#122-mainnet-observations).</p>
-</div>
-</div>
+The diagnostic surfaces what the demand-side concentration looks like in motion. **Titan delegators** (1 M+ ADA) average **3.06 lifetime pool switches** against **0.67** for micro-delegators ([CEN.O5](diagnostic.html#212-mainnet-observations)). They hold ~11 B of 21.8 B staked ADA, but only **38 %** of their stake sits in loyal delegations: capital is *disproportionately mobile*. Yet that mobility does not produce competitive pressure — half of all switches produce zero yield change, and the only asymmetric signal driving redelegation is **pool size**, not commitment ([CEN.O6](diagnostic.html#212-mainnet-observations)). The population with the *power* to discipline operators has no structured *reason* to exercise it; the population the protocol depends on for *broad participation* receives no signal that its commitment matters.
 
-<div class="ev-card" markdown="1">
-<div class="ev-label">Entity-level pledge behaviour</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">**77 of 83** multi-pool entities are outside the pledge-response path entirely. Only **6 entities (7 %)** respond to the pledge signal.</p>
-<p class="ev-sources" markdown="1">Source: [multi-pool entity analysis](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures).</p>
-</div>
-</div>
+Open research questions for this axis:
 
-<div class="ev-card" markdown="1">
-<div class="ev-label">Custodial constraint</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">CEX + IVaaS operators (**10 entities, 181 pools, 7.40 B ADA**) cannot pledge the capital they manage — delegated ADA belongs to end users. The constraint is architectural, not strategic.</p>
-<p class="ev-sources" markdown="1">Source: [hollow-strategy analysis](diagnostic/README.md#124313-the-hollow-strategy-dominates-at-every-level-of-aggregation).</p>
-</div>
-</div>
+- **What does delegation-tier differentiation look like in practice?** Tenure-weighted yield, governance-participation rebates, titan-specific channels through Milestone 2's lock-up and liquid-staking-derivative products — these are candidate instruments, not yet committed. The interaction with [Milestone 2](#22-milestone-2-maintain-and-diversify-a-competitive-delegator-yield) is direct: M2 builds the product spectrum, this axis explores how to differentiate access across tiers.
+- **How is titan governance influence channelled toward decentralisation?** A 50 M-ADA delegation is not merely a larger version of a 32-ADA delegation — it carries qualitatively different consequences for pool selection, operator viability, and Conway-era governance outcomes. Candidate instruments include delegation-weighted governance signals, transparency requirements for large delegations, and incentive structures that reward titans who spread capital across multiple single-pool operators rather than concentrating in a single fleet.
+- **How does micro-delegation stay viable as a participation channel?** The median 32-ADA delegator earns ~0.64 ADA/yr in staking rewards — economically negligible, but the participation it represents is not. Any titan-tier instrument has to be designed without making micro-delegation more costly to express.
 
-<div class="ev-card" markdown="1">
-<div class="ev-label">Fleet expansion cost</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Marginal cost of a new pool is **~500 ADA** (certificate deposit); marginal reward is a full share of the reward curve. **The Sybil tax is effectively priced at zero.**</p>
-<p class="ev-sources" markdown="1">Source: [mainnet pledge data](diagnostic/README.md#12431-what-mainnet-reveals).</p>
-</div>
-</div>
+**Sequencing.** This research axis sits *after* Milestones 1–4 because every candidate instrument it might commit to depends on the active-player ground being repaired first. With pledge re-armed (M1), delegator yield diversified (M2), the productive threshold reinforced (M3), and the participant base grown coherently (M4), a deconcentration intervention finds the mechanism in the state where its effects are interpretable. Started earlier, the same intervention layered on top of today's distortions risks amplifying what it is meant to reduce.
 
-<div class="ev-card" markdown="1">
-<div class="ev-label">Single-pool operators</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Single-pool operators pledge out of conviction rather than economic rationality, receiving almost nothing in return. Their share of active stake is in slow decline.</p>
-<p class="ev-sources" markdown="1">Sources: [hollow-strategy analysis](diagnostic/README.md#124313-the-hollow-strategy-dominates-at-every-level-of-aggregation), [operator concentration](diagnostic/README.md#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus).</p>
-</div>
-</div>
+# 3. Macro-economics — instrumentation, recalibration, and the path to auto-regulation
 
-<div class="ev-card" markdown="1">
-<div class="ev-label">Market structure outcome</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">**83 attributed entities control 76.7 % of productive stake through 449 productive pools.** The effective entity-level concentration is an **order of magnitude** above the $k$-target equilibrium.</p>
-<p class="ev-sources" markdown="1">Sources: [POL.O5](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus).</p>
-</div>
-</div>
+Where [§2 Microeconomics](#2-microeconomics-participant-incentives-and-market-structure) addresses the participant-level incentives that shape operator behaviour, pledge commitment, delegator yield, and market structure, **§3 Macro-economics addresses the system-level conditions that keep those participant-level incentives operating correctly through time**. Micro is *what the mechanism does at any given epoch*; macro is *how the protocol observes itself, anticipates drift, and recalibrates when conditions move*.
 
-</div>
+The Conway-era governance pipeline (2024) is the infrastructure V1 did not have: a community-driven process for adjusting parameters within constitutional guardrails. V2's macro chapter is, in large part, about **using that pipeline well** — equipping it with the instruments to see what the mechanism is doing, the triggers to act when it drifts, and the discipline to gradually retire manual intervention as the ecosystem matures.
 
-### 3.2.2. Specification
+The framing this chapter takes seriously: **Cardano is a mature blockchain, but the reward mechanism is not yet auto-regulating**. The path from today's heavy parameter inertia (`ρ`, `τ`, `a_0`, `k` unchanged since Shelley) to a self-regulating mechanism passes through a phase of **informed, governed interventionism** — and the work this chapter scopes is the instrumentation and recalibration discipline that makes that phase legible. As new protocol features land (Leios for throughput, tier-pricing for fee structure, the broader fee-economy expansion the M2 / Tx Submitter line addresses), the manual layer can lighten. Until they do, the dashboard and trigger discipline named below are the difference between a protocol that pilots itself with instruments and one that flies blind.
 
-A successor mechanism must reintroduce pledge as a **consequential economic force** that makes identity multiplication **progressively expensive**. The Sybil cost must operate through the *designed reward structure*, not through incidental wealth constraints.
+## 3.1. Milestone 1 — Reward System Extension — A Governance Dashboard for the System Properties & Populations
 
-Four requirements.
+This milestone proposes a single, foundational macro instrument: **a governance dashboard that monitors the four player populations of the staking pipeline, anticipates structural drift, and triggers a community-driven recalibration process when defined conditions are crossed**. The dashboard is not itself a recalibration mechanism — Conway's parameter-update process already provides that. The dashboard is the *surveillance and trigger layer* that makes the recalibration process *informed* and *timely* rather than ad-hoc.
 
-**R1 — The reward penalty for low pledge must be behaviourally significant.** The marginal cost of the $n$-th pool must exceed its marginal reward at a fleet size **well below** the current unchecked expansion frontier.
+The four player populations the diagnostic surfaces — operators (Supply-side), delegators (Arbiter-side), submitters (Demand-side), non-participants — each have their own **structural KPIs**, their own **threat patterns**, and their own **recalibration parameters** the Conway pipeline can move. Pieces of this surveillance already exist across the ecosystem, and **the milestone is a structured extension of that foundation, not a replacement**:
 
-The target is a yield differential **>0.5pp** between meaningfully pledged and minimally pledged pools — **visible to delegators** and **material to the operator's business case**. At the current near-zero differential, the rational strategy is to expand; the revised mechanism must make that strategy **dominated**.
+- **[IntersectMBO's Cardano Governance Health Dashboard](https://gov-health.intersectmbo.org/)** — developed by the Governance Health Working Group (GHWG) under CIP-1694, it already operationalises a structured KPI framework across *Ada Holder Participation*, *DRep Activity*, and *SPO Participation*, with trend lines, drill-downs, and a system-status header. This is the closest existing analog to what the milestone proposes.
+- **[SanchoNet's GovTool](https://gov.tools/)** — the testbed and operational interface for Conway-era governance actions, where DReps, committees, and ada holders coordinate.
+- **Community-built pool and reward analytics** — [PoolTool](https://pooltool.io/), [AdaStat](https://adastat.net/), [Cexplorer](https://cexplorer.io/), the [Cardano reward calculator](https://github.com/cardano-foundation/cardano-reward-calculator) — that surface live pool-level metrics, performance trends, and reward projections, and form the de-facto observability layer SPOs and delegators already use.
+- **The diagnostic this roadmap is anchored on** is itself one such piece, run on demand from on-chain data with off-chain processing — a snapshot-style instrument rather than a continuous one.
 
-**R2 — Pledge must be evaluated at the entity level, not the pool level.** An entity splitting 1M ADA across ten pools must **not** receive the same aggregate pledge benefit as ten single-pool operators each pledging 1M ADA. The entire point of pledge is to impose the $O(n)$ capital cost on exactly this behaviour.
+What the milestone proposes is to **extend and consolidate that foundation along three complementary axes**: *(a)* extend the surveillance from the three governance-health dimensions to the **four player populations** the staking pipeline depends on (adding the demand-side / submitters and the non-participants explicitly); *(b)* tie each KPI to **named trigger conditions** that route to a defined community process when crossed, rather than leaving the signal as observation-only; and *(c)* align the surveillance with the V2 microeconomic milestones, so that what the dashboard watches is precisely what those milestones move. The work is consolidation and structured extension, not duplication.
 
-Entity-level pledge accounting is the mechanism through which [Pledge](#32-restore-the-notion-of-pledge-among-operators) and [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations) interact.
+**Constitutional alignment.** Tenet 10 (monetary stability) is the load-bearing anchor. *"The protocol shall not dilute or inflate ada in a manner that is inconsistent with the long-term sustainability and integrity of the ecosystem"* presupposes that the protocol can *observe* whether dilution is consistent with the standard. Without instrumentation, that observation is impossible — the standard is unenforceable in practice. The dashboard is the surface on which Tenet 10 becomes operational. The Conway-era governance pipeline, in turn, provides the legitimate path through which the dashboard's trigger conditions translate into action.
 
-**R3 — The mechanism must distinguish inability to pledge from choice not to pledge.** Custodial operators (CEX, IVaaS) **cannot** pledge delegated capital — the constraint is architectural, not strategic. The design must accommodate this structural reality rather than treating **custodial inability** and **strategic extraction** as the same signal.
+### 3.1.1. The four surveillance lines, and what each one watches
 
-**R4 — The pledge parameters must be governable.** The real cost of pledging ADA depends on the ADA price, the DeFi opportunity cost of locked capital, and the composition of the operator population — **all of which evolve**. The pledge parameters must be reviewable and adjustable through the Conway-era governance process, not **frozen at deployment values** as $a_0$ has been since Shelley launch.
+Each line corresponds to one of the four player populations and tracks the structural KPIs the diagnostic uses to evaluate the equilibrium the mechanism is producing. Where the [microeconomic milestones](#2-microeconomics-participant-incentives-and-market-structure) act on those equilibria, this milestone watches them.
 
-Pledge is **not** a reward bonus for good behaviour. It is the protocol's **only on-chain instrument** for making the $k$-pool equilibrium a **Nash equilibrium** rather than a theoretical construct.
+- **Supply-side surveillance — operator viability and entity structure.** Tracks the productive-pool count, the sub-viability tail share, the median single-pool retail wage, the entity-level Herfindahl, and the share of saturation-scale MPOs holding non-zero pledge. Trigger conditions detect drift toward the patterns the [pledge-repair milestone (§2.1)](#21-milestone-1-repair-pledge-sustain-the-small-spo-base) closes (the flat-fee corridor, the broken pledge equilibrium) and the entity-concentration patterns the [§2.5 research axis](#25-research-axis-reduce-the-concentration-effects-that-distort-both-populations) tracks.
+- **Arbiter-side surveillance — delegator yield and concentration.** Tracks the absolute delegator AYI (current ~2 % and falling), the yield spread between balanced and hollow operators (current 0.39 pp, target >1 pp from the [delegator-yield milestone (§2.2)](#22-milestone-2-maintain-and-diversify-a-competitive-delegator-yield)), the Gini of stake concentration, the delegation-tier participation rate (lock-up, liquid-staking-derivative adoption from §2.2), and the redelegation responsiveness signal.
+- **Demand-side surveillance — fee economy and submitter base.** Tracks fee revenue as a share of the epoch pot (today ~0.19 %, the [induced-problem M02 / Tx Submitter line](problem-statements.html#problem-2-2-3) addresses growth), distinct fee-paying addresses per epoch, the script-vs-key submitter split, and the gap between current fee throughput and self-sufficiency.
+- **Non-participant surveillance — outside-the-game dynamics.** Tracks the staking rate (today 60 %, falling), the addressable-vs-structural split inside the non-participant pool, and the rate at which protocol-level interventions from the [non-participant scale-up milestone (§2.4)](#24-milestone-4-scale-up-with-the-non-participant-population) actually re-engage capital.
 
-Without a credible Sybil tax, the $k$ target is unreachable, and the system converges on the concentrated structure the analysis documents. Restoring this tax — through the **designed pledge mechanism**, not through wealth alone — is the **prerequisite** for every subsequent milestone that touches market structure ([Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield), [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations)).
+Each line's KPIs feed two consumers: the **community process** (when a trigger fires, the relevant constituency is alerted to consider a recalibration), and **the diagnostic itself** (the dashboard becomes the running record of how the mechanism evolves epoch by epoch, replacing the snapshot-style diagnostics like the one this roadmap is anchored on with a continuous instrument).
 
-| KPI | Definition | Current | Target |
-| --- | --- | --- | --- |
-| Pledge-bonus utilisation | Fraction of available pledge-bonus budget actually distributed | <5% | >50% — the instrument must be in active use |
-| Pledge-responsive entities | MPO entities within the pledge-response path | 7 of 85 (8%) | >50% of entities by stake weight |
-| Yield differential (pledged vs unpledged) | Delegator yield gap between meaningfully pledged and minimally pledged pools | ~0 | >0.5pp — visible to delegators |
-| Pledge cost of fleet expansion | Marginal pledge capital required for the $n$-th pool in a fleet | ~0 | Positive and increasing with $n$ |
+### 3.1.2. From governed interventionism to gradual auto-regulation
 
-> **Dependency note.** [Pledge](#32-restore-the-notion-of-pledge-among-operators) depends on [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population): pledge is only meaningful once the viability gap is closed — requiring pledge from operators who cannot sustain themselves is not Sybil resistance, it is exclusion. Pledge feeds directly into [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations): entity-level pledge evaluation is the mechanism through which Pledge and Deconcentration interact. [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield) depends on Pledge: the yield differential that makes delegation consequential is partially driven by the pledge signal. Pledge also interacts with [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios): the real cost of pledging ADA depends on the ADA price and the opportunity cost in DeFi — parameters that fluctuate with market conditions.
+The dashboard is explicitly designed as a **transitional instrument**. The trajectory it serves has three phases:
 
-## 3.3. Maintain and diversify a competitive delegator yield
+- **Phase 1 — heavy governed interventionism (today and the V2 transition).** Parameters are static, the Conway pipeline is fresh, the dashboard does not yet exist. Manual community process carries the entire recalibration load. This is where the milestone starts.
+- **Phase 2 — informed governed interventionism (after the dashboard lands).** The dashboard runs, triggers fire when conditions cross structural thresholds, the community process is alerted on a defined cadence rather than ad-hoc. The intervention is still manual but it is *informed* — proposals to move `ρ`, `τ`, `minPoolCost`, `a_0`, `k` come anchored on the surveillance evidence rather than on a generic argument.
+- **Phase 3 — gradual auto-regulation (as Leios, tier-pricing, and the fee economy mature).** As new protocol features absorb load — Leios increases throughput and therefore the fee base, tier-pricing differentiates the fee economy, the microeconomic milestones reduce the dependency on monetary expansion — the manual layer can lighten. Some trigger conditions become *automatic recalibrations* within pre-agreed envelopes; others remain manual because they touch constitutional concerns. The dashboard remains the surveillance layer; the *intervention* layer increasingly retires.
 
-*Depends on [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population), [Pledge](#32-restore-the-notion-of-pledge-among-operators).* With operators viable and pledge restored as an economic signal, the question becomes:
+**Cardano is a mature blockchain, but the reward mechanism is not yet auto-regulating.** This milestone names the transition path explicitly — and the dashboard is what makes Phase 2 (and eventually Phase 3) reachable. Started without instruments, the recalibration work either does not happen (the V1 inertia we have today) or happens reactively after damage. With the dashboard, the work happens preventively, on the structural thresholds the diagnostic has identified.
 
-> Does the delegation market **reward the participants who sustain the network** — and does it offer them anything beyond a **single, undifferentiated product**?
+This milestone sits **somewhat in parallel** to the microeconomic milestones rather than after them — the surveillance plumbing can be built while the participant-level work is in progress, and the diagnostic instruments themselves are largely already prototyped (this roadmap is anchored on them). The full *value* of the milestone, however, depends on the microeconomic milestones landing: a dashboard that surveils a static, unchanging mechanism is a less useful instrument than one that surveils a mechanism that has just been recalibrated and needs to be observed under its new behaviour.
 
-**Constitutional alignment.** Tenet 4 (fair compensation) extends to delegators: participants who commit capital to consensus security are entitled to a return that reflects that contribution. Tenet 10 (monetary stability) constrains the instruments: the yield cannot be sustained by inflationary mechanisms that dilute ada's long-term value.
+## 3.2. Research axis — deflationist ADA and its volatility
 
-The monetary-expansion parameter $\rho$ (ME-01 to ME-05, range [0.001, 0.005]) and the treasury cut $\tau$ (TC-01 to TC-05, range [0.1, 0.3]) define the **funding envelope** within which delegation yield operates — both are modifiable through governance but **bounded by the Constitution**.
+This section bundles two macro induced problems whose candidate solutions are still in the design-question stage. Both bear directly on **Tenet 10 (monetary stability)**, and both share the same constraint: the valid design space is narrower than it first appears, because every candidate instrument has to remain consistent with long-term sustainability and *must not* be a stealth-inflationary lever in disguise. That is part of why the work belongs in the research-axis register rather than in a committed milestone.
 
-The problem has **three faces**:
+The diagnostic frames both as open questions, not as failures the mechanism must repair. *"Pre-Conway, scarcity-as-only-lever was a forced choice — there was no on-chain governance pipeline to add complementary properties. Post-Conway, it is a design gap."* Closing the gap is what the design work this research axis names is for.
 
-- **Competitive as an investment.** Staking competes for capital with DeFi protocols, liquid markets, and off-chain alternatives. If the return is not attractive in absolute terms, **rational capital leaves the staking pool** regardless of how well the mechanism distributes it.
-- **Rewarding the right operators.** Balanced single-pool operators return **1.98%** while hollow MPO fleets return **2.08%** — the operator who commits capital is *penalised* for commitment ([OPE.O5](diagnostic/README.md#132-mainnet-observations)). The yield spread is **0.39pp (noise)**, and **half of all pool switches produce zero yield change** ([CEN.O6](diagnostic/README.md#212-mainnet-observations)).
-- **A product range frozen in 2020.** In Shelley's era, **no smart-contract capability existed** — the only product was liquid delegation at a uniform yield. Five years later, Plutus scripts and the extended UTXO model provide infrastructure for a richer staking market that **Cardano has not yet exploited**.
+### 3.2.1. The deflationist promise — complementary monetary properties beyond finite supply
 
-### 3.3.1. Make the base yield competitive
+This research thread takes up [M03 — A deflationist ₳: what mechanisms can complement finite supply?](problem-statements.html#problem-3-1-1). The protocol's only deflationary property today is the **supply cap**. The diagnostic's reading is that the cap is *necessary but not sufficient*: appreciation in real terms requires demand growth to exceed supply growth, and demand for ADA is a function of on-chain utility (transaction throughput, DeFi activity, application adoption, institutional custody, speculative interest) — *none of which are protocol parameters*. The cap is a static scarcity lever; it does not, on its own, drive demand.
 
-**Staking is an investment.** The delegator who commits ADA to a pool forgoes DeFi yield, liquidity premiums, and off-chain alternatives.
+What V2 can usefully explore is a second class of monetary properties that *complement* the cap without inflating supply. Candidate families worth dedicated analysis:
 
-If the base staking return is not competitive with those alternatives, **rational capital migrates** — and the consensus layer loses the participation it depends on. The base yield must be attractive enough, in absolute terms, that staking remains **a credible allocation** for a diversified ADA holder.
+- **Treasury operations as a demand-side lever.** The treasury accumulates ADA at rate `τ`. Treasury-funded ecosystem development (grants, infrastructure, application incentives) directly increases on-chain utility, which feeds back into ADA demand. The trade-off between treasury accumulation (a Tenet 10 sustainability concern) and treasury deployment (an ecosystem-growth lever) is itself a research question — and the post-Conway governance pipeline is the natural surface on which to make that trade-off explicit.
+- **Targeted burn mechanisms.** Transaction-fee burn (à la EIP-1559), governance-triggered burn, or burn-on-specific-actions would make ADA structurally deflationary along a second axis beyond the cap. Each carries Tenet 10 implications, governance-design choices, and trade-offs against the fee economy the [Tx Submitter milestone work](problem-statements.html#problem-2-2-3) depends on.
+- **Demand-side tokenomic instruments.** Programmable-pledge composability ([§2.2's smart-contract layer](#22-milestone-2-maintain-and-diversify-a-competitive-delegator-yield)), liquid-staking-derivative yield, ADA-as-DeFi-collateral integrations — each makes ADA more *useful*, increasing demand without touching supply. The interaction with the microeconomic milestones is direct.
 
-**Specification.** Two requirements.
+Each is a design space, not a committed direction. Choosing among them — or combining them — is part of the work this research thread will mature.
 
-**R1 — The base yield must be competitive with risk-adjusted on-chain alternatives.** This does **not** mean matching the highest DeFi yield — staking carries lower risk and provides a public good. But the gap must be **narrow enough** that the opportunity cost of staking does not drive **systematic capital flight** from the consensus layer.
+### 3.2.2. Wiring governance to macro signals — recalibration against price observations
 
-**R2 — The yield must remain robust across ADA price scenarios.** A return that is competitive at $0.50 but irrelevant at $2.00 — or vice versa — **fails the test**.
+This research thread takes up [M04 — ₳/Fiat volatility: what instruments can wire governance to price observations?](problem-statements.html#problem-3-1-2). Whatever direction the ADA/fiat exchange rate moves, the mechanism today absorbs the consequence passively — there is no on-chain instrument that responds to price observations, redirects emission, or recalibrates fees against real-economy conditions.
 
-This connects directly to [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios): the base yield is not a fixed parameter but a **function** of the funding model, the ADA price, and the DeFi opportunity cost of capital.
+The diagnostic articulates three macro conditions the reward pipeline's long-term viability requires, and they do not move independently:
 
-| KPI | Definition | Current | Target |
-| --- | --- | --- | --- |
-| Base delegator yield | Net annualised return to a delegator in a productive pool | ~2% | Competitive with risk-adjusted DeFi lending rates |
-| Staking participation rate | Fraction of circulating ADA staked | ~63% | ≥60% — sustained through market cycles |
-| Capital retention | Net flow of ADA between staking and DeFi per epoch | Not tracked | Net neutral or positive toward staking |
+- **operator and delegator real revenue must remain viable** (deflationary ADA price);
+- **the fee input must grow** and the submitter population must expand;
+- **the fiat cost of transacting must remain low enough** to keep activity on Cardano.
 
-### 3.3.2. Make the yield reward operators who play the game
+A rising ADA price preserves operator and delegator viability but raises the fiat cost of transacting, suppressing fee volume. A falling ADA price lowers the fiat cost of transacting but compresses operator and delegator real revenue. A stable ADA price satisfies neither extreme. *The ₳/fiat exchange rate is the hidden variable connecting all three, and the protocol today has no instrument to manage them.*
 
-The base yield being competitive is **necessary but not sufficient**. The mechanism must also ensure that the yield *differentiates* between operator types — that delegators who choose a balanced, pledged, single-pool operator receive a **materially better return** than those who park stake in a hollow fleet.
+Pre-Conway, the absence of an instrument was forced. Post-Conway, the governance pipeline can wire one in — but the design choices are open:
 
-Today, the spread is **noise**: 0.39pp across the retail market ([OPE.O5](diagnostic/README.md#132-mainnet-observations)), invisible to delegators, with **delegation following visibility rather than return** ([OPE.O7](diagnostic/README.md#132-mainnet-observations)).
+- **Oracle integration.** What price oracles does the protocol trust, at what cadence, with what tolerance for transient noise versus structural moves? The integration boundary (native ledger feature vs Plutus-based service vs hybrid) is itself a design decision.
+- **Trigger conditions for recalibration.** When does the protocol recalibrate — against what threshold, with what governance approval bar, with what cadence? The dashboard from [§3.1](#31-milestone-1-reward-system-extension-a-governance-dashboard-for-the-system-properties-populations) is the surface on which trigger conditions get evaluated; this thread asks what *macro-signal* triggers belong on that surface.
+- **Treasury-funded volatility absorption.** Treasury support for operators during sustained ADA-price downturns is a frequently-cited candidate. The trade-off between treasury size, deployment scope, and Tenet 10 monetary-stability constraints is the design question.
+- **Price-feedback components in the emission curve.** Adjusting `ρ` against price observations under defined trigger conditions is the most direct candidate. It interacts both with §3.2.1's deflationist work (any emission adjustment is also a deflationist lever) and with Tenet 10's sustainability boundary.
 
-The $minPoolCost$ floor absorbs a disproportionate share of small-pool rewards **before any yield reaches delegators** ([OPE.O1](diagnostic/README.md#132-mainnet-observations), [OPE.O8](diagnostic/README.md#132-mainnet-observations)). And entity-level information — fleet size, aggregate pledge ratio, operator profitability — is **absent from the on-chain data**, so delegators cannot distinguish a committed single-pool operator from one node in an anonymous fleet ([the size-visibility loop](diagnostic/README.md#12435-the-size-visibility-delegation-loop)).
+Each is a design space, not a committed direction. The interaction with §3.2.1 is direct: any volatility instrument has to be consistent with the deflationist framing, and any deflationist instrument has to be robust across the volatility range.
 
-**Specification.** Three requirements.
+**Interaction with [Milestone 1 (the governance dashboard)](#31-milestone-1-reward-system-extension-a-governance-dashboard-for-the-system-properties-populations).** The dashboard is the natural surface on which deflationist and volatility instruments would be observed *if* they were eventually deployed. Building the dashboard early — even before the M03 / M04 candidate solutions mature — pays off twice: first as the surveillance layer the recalibration discipline rests on, and second as the observation layer any future macro instrument has to be evaluated against. The same KPIs the dashboard tracks (staking rate, fee-revenue share, operator real wage in fiat terms) are the inputs that make this research thread evaluable in the first place.
 
-**R1 — The yield differential between entity types must be material.** The spread between balanced, hollow, and custodial operators at equivalent pool sizes must **exceed 1pp**. The current 0.39pp spread is noise ([OPE.O5](diagnostic/README.md#132-mainnet-observations)); delegators must be able to **see** a material difference between committing to a balanced single-pool operator and parking stake in a hollow fleet.
-
-*The mechanism must make commitment pay — visibly.*
-
-**R2 — Entity-level information must be visible to delegators.** Fleet size, aggregate pledge ratio, and entity-level profitability must be available **on-chain**, so that delegation decisions can be informed by the structural attributes the mechanism rewards — not only by pool-level brand and size ([the size-visibility loop](diagnostic/README.md#12435-the-size-visibility-delegation-loop)).
-
-Without this information, the yield signal from R1 is **uninterpretable**.
-
-**R3 — Delegator mobility must produce competitive pressure.** The current regime where half of all switches produce **zero yield change** ([CEN.O6](diagnostic/README.md#212-mainnet-observations)) must give way to a market where redelegation **carries information** and **exerts discipline**.
-
-When a delegator moves, **the move must matter** — to the delegator's return, and to the operator's revenue.
-
-| KPI | Definition | Current | Target |
-| --- | --- | --- | --- |
-| Yield differential (balanced vs hollow) | Net delegator yield gap between balanced and hollow pools at equivalent size | ~0 (or negative: balanced 1.98% vs hollow 2.08%) | >1pp in favour of balanced |
-| Entity-info visibility | Delegator-visible entity-level metadata on-chain | None | Fleet size, aggregate pledge, entity yield — available on-chain |
-| Delegation responsiveness | Fraction of redelegations producing >50bp yield change | <50% | >60% |
-
-### 3.3.3. Diversify the delegation offer
-
-The Shelley delegation model was designed **before Plutus existed**. The only product was — and still is — **liquid delegation at a uniform yield**.
-
-The smart-contract infrastructure now available on Cardano opens a design space that the original mechanism could not exploit: delegation products where the delegator accepts a **stronger commitment** or a **different risk profile**, and receives a **differentiated remuneration** in return.
-
-**Specification.** The mechanism — or its smart-contract extensions — must enable delegation products that go beyond the Shelley baseline. Three requirements.
-
-**R1 — Lock-up tiers with differentiated APY.** Delegators who commit capital for a defined period (e.g., 6 epochs, 36 epochs, 73 epochs) accept **reduced liquidity** in exchange for a **yield premium**. The result is a **term structure** that rewards long-horizon commitment and stabilises the stake base that single-pool operators depend on.
-
-**R2 — Liquid staking derivatives.** Smart-contract wrappers that issue **transferable tokens** representing staked ADA, allowing delegators to **maintain liquidity** (trade, lend, use as collateral in DeFi) while their underlying stake continues to earn rewards and contribute to consensus security.
-
-*This is the product that brings capital currently parked in DeFi back into the staking pool.*
-
-**R3 — Automated delegation strategies.** Programmable vaults that rebalance across pools according to defined criteria (yield optimisation, decentralisation weighting, entity-level quality scores), **lowering the information and operational burden** on individual delegators.
-
-The baseline liquid delegation model **remains**. These products build *above* it, so that the delegation market offers a **spectrum of commitment-remuneration profiles** rather than a single undifferentiated choice.
-
-The relationship is explicit: **higher commitment — longer lock-up, less liquidity, more exposure — earns a higher return**. This is the mechanism through which the delegation market becomes **a market in the economic sense**: multiple products, multiple risk-return points, and a price signal that reflects the value of the commitment each delegator makes.
-
-| KPI | Definition | Current | Target |
-| --- | --- | --- | --- |
-| Delegation product diversity | Number of structurally distinct staking products available | 1 (liquid delegation only) | ≥3 (liquid + lock-up tiers + liquid staking derivative) |
-| Lock-up participation rate | Fraction of staked ADA committed to lock-up tiers | 0% | >10% — enough to stabilise the stake base |
-| DeFi-staking overlap | ADA simultaneously staked and deployed in DeFi via liquid staking | 0 | >0 — the path must exist |
-
-> **Dependency note.** [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield) depends on [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population) and [Pledge](#32-restore-the-notion-of-pledge-among-operators): a competitive yield is meaningless if operators cannot sustain themselves, and the yield signal that drives delegation must be anchored in a pledge mechanism that works. The [base-yield sub-spec](#331-make-the-base-yield-competitive) interacts with [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion) and [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios): the absolute yield level depends on the funding model and the ADA price. The [yield-differentiation sub-spec](#332-make-the-yield-reward-operators-who-play-the-game) interacts directly with [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations): the yield differential and entity-info visibility it requires depend on the entity-level reward accounting Deconcentration introduces. The [delegation-diversification sub-spec](#333-diversify-the-delegation-offer) leverages post-Alonzo smart-contract infrastructure and interacts with [Fee Policy](#42-the-fee-generating-population-must-expand): liquid staking derivatives and DeFi-staking overlap expand the fee base while reinforcing staking participation.
-
-## 3.4. Reduce the concentration effects that distort both populations
-
-*Depends on [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population), [Pledge](#32-restore-the-notion-of-pledge-among-operators), [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield).* With operators viable, pledge restored as economic signal, and delegation diversified, the question becomes:
-
-> Does the market structure that distributes rewards actually serve decentralisation — or does concentration on *both sides* of the market prevent the equilibrium from emerging?
-
-The analysis documents concentration on **two fronts**:
-
-- **Supply side.** **83 attributed entities** control **75.5%** of productive stake through **449 productive pools** ([POL.O5](diagnostic/README.md#122-mainnet-observations)), while single-pool operators shrink to **284 productive pools and 24.5%** of productive stake ([POL.O6](diagnostic/README.md#122-mainnet-observations)).
-- **Demand side.** **1,000 delegators** (0.07% of the base) control **57% of staked ADA**; the Gini coefficient is **0.976** ([CEN.O3](diagnostic/README.md#212-mainnet-observations)).
-
-Both concentrations are **structural**, both **crystallised early**, and **neither responds** to the current incentive design.
-
-**Constitutional alignment.** Tenet 9 (fair treatment) supports action on both fronts: a mechanism that rewards fleet expansion at near-zero marginal cost while penalising single-pool operators **does not treat participants fairly**; a mechanism that produces identical outcomes for a 32-ADA micro-delegator and a 50M-ADA titan offers **no differentiated incentive** for the capital commitment each represents.
-
-However, the Constitution currently operates at the **pool level** — its guardrails govern pool parameters ($k$, $a_0$, $minPoolCost$), not entity-level or delegator-tier constructs. The concept of operator *entity* has **no constitutional anchor**.
-
-Implementing entity-level reward accounting may therefore require either:
-
-- a **protocol-level mechanism** within existing pool-level parameters; or
-- a **constitutional evolution** if the design requires new on-chain primitives.
-
-The existing $a_0$ and $k$ guardrails provide substantial design space, but the most ambitious versions of this milestone may eventually require **governance action beyond parameter adjustment**.
-
-### 3.4.1. Problem statement
-
-#### 3.4.1.1. The operator side — multi-pool entity concentration
-
-The reward formula evaluates pools **independently** — it does not know that twenty pools share the same controller. The saturation cap, intended to prevent concentration, fragments *pools* but not *entities*: an operator who saturates registers a new pool and continues growing, at **negligible marginal cost** ([multi-pool entity analysis](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures)).
-
-The mechanism was designed for $k$ single-pool operators converging on a balanced equilibrium (Brünjes & Kiayias, 2020). It encounters instead a **highly concentrated and segmented market** where three structurally distinct sub-populations coexist:
-
-- **Custodial operators** (CEX + IVaaS: 10 entities, 181 pools, 7.40B ADA) who *cannot* pledge the capital they manage — the constraint is **architectural**;
-- **Community and opaque MPO fleets** (42 of 48 saturation-scale entities) who have *chosen* not to pledge — the **rational response** to the current incentive structure;
-- **Single-pool operators** who bear the full weight of the fee structure while their market share erodes ([operator concentration](diagnostic/README.md#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus)).
-
-The deeper failure is that **the formula's unit of accounting — the pool — is the wrong unit**. Rewards, saturation caps, and pledge calculations all operate at the pool level. But the **entity** that controls the pools is the economic actor that makes strategic decisions.
-
-An entity operating twenty pools with negligible pledge in each is **indistinguishable, at the formula level**, from twenty single-pool operators. The mechanism does not merely fail to prevent concentration; *it is structurally blind to it*.
-
-#### 3.4.1.2. The delegator side — titan delegators versus the micro-delegation tail
-
-The demand side exhibits a concentration that **mirrors the supply side**. The median delegator holds **32 ADA**; the mean holds **16,055 ADA** — a **500× gap** ([CEN.O3](diagnostic/README.md#212-mainnet-observations)).
-
-This is not a transient distribution: concentration **crystallised by epoch 300**, and a subsequent **9× growth** in delegator count produced **no measurable change** in the top-1% share ([Census — historical evolution](diagnostic/sub-flows/census/mainnet-analysis/README.md#443-concentration-crystallised-by-epoch-300-9-growth-in-delegators-no-change-in-the-top-1)). The delegation market is **structurally bimodal**: 42% of delegators are **loyal** (201+ epochs), 21% **volatile** (≤ 5 epochs), with little in between ([CEN.O4](diagnostic/README.md#212-mainnet-observations)).
-
-**Titan delegators** — those holding 1M+ ADA — average **3.06 lifetime pool switches** against **0.67** for micro-delegators ([CEN.O5](diagnostic/README.md#212-mainnet-observations)). They hold **11B of 21.8B** staked ADA, and only **38%** of their stake sits in loyal delegations: capital is **disproportionately mobile**.
-
-Yet this mobility does **not produce competitive pressure** because it is **not yield-driven**: half of all switches produce zero yield change (±5 bps), operator-take direction is symmetric, and **the only asymmetric signal is pool size** — delegators drift toward larger, more visible pools, not toward more committed ones ([CEN.O6](diagnostic/README.md#212-mainnet-observations)).
-
-The mechanism treats a 32-ADA micro-delegation and a 50M-ADA titan delegation **identically**: both earn the same proportional return, both have the same governance weight per ADA, and neither receives any incentive differentiated by the scale or stability of commitment.
-
-The consequence is:
-
-- the population with the **power to discipline operators** — titans — has **no structured reason** to exercise it;
-- the population the protocol depends on for **broad participation** — micro-delegators — receives **no signal** that their commitment matters.
-
-#### 3.4.1.3. Evidence base
-
-<div class="ev-list" markdown="1">
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">MPO fleet structure</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">**83 attributed entities, 449 productive pools, 76.7 % of productive stake.** 12 entities with 11+ pools control **40.4 % of productive stake**.</p>
-<p class="ev-sources" markdown="1">Sources: [POL.O5](diagnostic/README.md#122-mainnet-observations), [operator concentration](diagnostic/README.md#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus).</p>
-</div>
-</div>
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">Sybil cost</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Marginal cost of a new pool is **~500 ADA**; marginal reward is a full share of the curve. **77 of 83** MPO entities are outside the pledge-response path.</p>
-<p class="ev-sources" markdown="1">Sources: [POL.O7](diagnostic/README.md#122-mainnet-observations), [mainnet pledge data](diagnostic/README.md#12431-what-mainnet-reveals).</p>
-</div>
-</div>
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">Single-pool operator decline</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">**284 productive single-pool operators**, stake share in slow decline from **39 % → 25 %** since epoch 300.</p>
-<p class="ev-sources" markdown="1">Sources: [POL.O6](diagnostic/README.md#122-mainnet-observations), [Census — the independent pipeline](diagnostic/sub-flows/census/mainnet-analysis/README.md#354-the-independent-operator-pipeline-has-no-observable-expression-in-the-data).</p>
-</div>
-</div>
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">Delegator concentration</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">**1,000 delegators (0.07 %) control 57 % of staked ADA.** Gini = **0.976**. Frozen since epoch 300.</p>
-<p class="ev-sources" markdown="1">Source: [CEN.O3](diagnostic/README.md#212-mainnet-observations).</p>
-</div>
-</div>
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">Titan mobility</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Whales (1 M+) average **3.06 switches**; micro (< 1 K) average **0.67**. Mobility scales with size but is **not yield-driven**.</p>
-<p class="ev-sources" markdown="1">Sources: [CEN.O5, CEN.O6](diagnostic/README.md#212-mainnet-observations).</p>
-</div>
-</div>
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">Yield signal failure</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">**50.5 % of switches produce zero yield change.** Pool size is the only asymmetric signal.</p>
-<p class="ev-sources" markdown="1">Source: [CEN.O6](diagnostic/README.md#212-mainnet-observations).</p>
-</div>
-</div>
-
-</div>
-
-### 3.4.2. Entity-level awareness in reward distribution
-
-The reward mechanism must transition from **pool-level** to **entity-level** accounting for the economic parameters that shape market structure.
-
-This does **not** mean collapsing all pools into a single reward calculation — pools remain the unit of block production and consensus participation. It means that the **economic incentives** (pledge accounting, saturation behaviour, reward scaling) must recognise **the entity behind the pools**.
-
-This transition raises a **constitutional question**. The Cardano Constitution (v2) governs pool-level parameters — $k$, $a_0$, $minPoolCost$ — and its guardrails are defined in terms of pools, not entities. The concept of operator *entity* has **no constitutional standing**. Yet the evidence is unambiguous: **83 attributed entities operating 449 productive pools control 75.5%** of productive stake, and the formula's blindness to this structure is the **root cause of the Sybil defence failure** ([multi-pool entity analysis](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures)).
-
-Two paths exist.
-
-- **Within the current constitutional perimeter.** The existing $a_0$ guardrail (PPI-01 to PPI-04, range [0.1, 1.0]) and $k$ guardrail (SPTN-01 to SPTN-04, range [250, 2000]) provide design space for **entity-aware incentive structures** that do not require new on-chain primitives. A reward curve calibrated so that pledge dilution across multiple pools carries real economic cost can **approximate** entity-level accounting through pool-level instruments alone.
-- **Through constitutional evolution.** Introducing an **on-chain entity registry** and evaluating pledge, saturation, and reward-scaling at the entity level directly. This path demands a CIP, a governance vote, and potentially a constitutional amendment under Article IV — a higher bar, but one that **addresses the structural blindness** rather than working around it.
-
-The specification below is compatible with **both paths**. The requirements define *what* the mechanism must achieve; whether it achieves it through entity-level primitives or through calibrated pool-level instruments is a **design choice**.
-
-**Specification.** Four requirements.
-
-**R1 — Define a protocol-level concept of operator entity.** A cluster of pools sharing a common controller, identifiable through the existing owner-key registration or an equivalent on-chain attribution mechanism.
-
-*The entity is the economic actor; the pool is the consensus unit. The mechanism must distinguish between the two.*
-
-**R2 — Evaluate pledge, saturation, and reward-scaling at the entity level.** An entity that splits 1M ADA of pledge across 10 pools must **not** receive the same aggregate pledge benefit as 10 single-pool operators each pledging 1M ADA.
-
-Pool-level evaluation is the **root cause** of the current Sybil blindness ([multi-pool entity analysis](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures)); entity-level evaluation is **the structural fix**.
-
-**R3 — Define how the saturation cap interacts with entity-level accounting.** Whether through an **entity-wide saturation ceiling** (total delegation across all pools), a **graduated penalty** for fleet expansion, or a **cap on the number of pools per entity** that receive full rewards — the mechanism must prevent the current pattern where saturating a pool and registering a new one carries negligible marginal cost.
-
-**R4 — Preserve market freedom.** Entities must remain free to operate multiple pools. The specification does **not** call for prohibition. What it requires is that the economic advantage of fleet expansion *decrease* rather than *increase* with fleet size — the **opposite** of the current regime, where an additional pool costs a certificate registration and yields a full share of the reward curve.
-
-The research literature supports this direction. Kiayias et al. (2021) demonstrate that anti-cartel properties emerge from the **interaction** of pledge cost, delegation dynamics, and capacity constraints — not from any single instrument.
-
-Entity-level pledge accounting **reactivates the Sybil tax** that exists in the formula but is currently inoperative at the pool level ([multi-pool entity analysis](diagnostic/README.md#12443-multi-pool-operators-and-the-need-for-anti-monopoly-countermeasures)): if pledge is evaluated per entity, splitting capital across $n$ pools dilutes the per-pool pledge benefit with **real economic cost**, not merely notional cost.
-
-| KPI | Definition | Current | Target |
-| --- | --- | --- | --- |
-| Entity-level Herfindahl index | Concentration of staked supply across entities (not pools) | ~0.02 (83 attributed entities, 76.7% of productive stake) | < 0.015 — measurable deconcentration |
-| MPO fleet cost gradient | Marginal pledge cost of the $n$-th pool in a fleet | ~0 (negligible) | Positive and increasing with $n$ |
-| Single-pool operator stake share | Productive stake in single-pool single-pool operators | ~25% (declining) | >35% — the independent base must stabilise and grow |
-
-### 3.4.3. Differentiated delegation incentives — titans versus micro-delegators
-
-The demand side of the market requires its own structural intervention. The mechanism currently produces a **flat yield per ADA** regardless of the size, stability, or governance engagement of the delegation.
-
-A 50M-ADA titan and a 32-ADA micro-delegator earn the **same proportional return** and exert the **same per-ADA governance weight**. Neither receives any incentive to behave in ways that serve the equilibrium the protocol targets.
-
-**Specification.** Three requirements.
-
-**R1 — The mechanism must differentiate delegation tiers by commitment profile.** Delegation **size**, **tenure**, and **governance participation** represent distinct levels of commitment to the network. The mechanism — or its smart-contract extensions — must offer **differentiated returns** that reflect these profiles.
-
-This interacts directly with the [delegation-diversification sub-spec](#333-diversify-the-delegation-offer) (lock-up tiers, liquid staking): the delegation product spectrum provides the **instrument** through which differentiation operates.
-
-**R2 — Titan delegations must carry governance responsibility.** Delegators controlling disproportionate stake exert disproportionate influence on pool selection, operator viability, and — through the Conway-era governance process — on protocol parameters. The mechanism must make this influence **visible** and, where possible, **channel it toward decentralisation** rather than further concentration.
-
-The mechanism may act through:
-
-- **delegation-weighted governance signals**;
-- **transparency requirements** for large delegations;
-- **incentive structures** that reward titan delegators who spread capital across multiple single-pool operators rather than concentrating in a single fleet.
-
-A 50M-ADA delegation is **not merely a larger version** of a 32-ADA delegation; it is a **qualitatively different act with qualitatively different consequences**.
-
-**R3 — Micro-delegations must remain viable and meaningful.** The median 32-ADA delegator earns **~0.64 ADA/year** in staking rewards. This is economically negligible, but the **participation it represents is not**.
-
-The mechanism must preserve — and ideally strengthen — the viability of micro-delegation as a **participation channel**, ensuring that transaction costs, minimum thresholds, and governance complexity do not exclude the **broad base** on which the protocol's legitimacy rests.
-
-| KPI | Definition | Current | Target |
-| --- | --- | --- | --- |
-| Titan delegation spread | Average number of distinct entities receiving delegation from top-1000 delegators | Not tracked | >3 — titans should diversify across operators |
-| Titan governance participation | Fraction of top-1% delegators participating in governance votes | Not tracked | >30% — the power must be exercised |
-| Micro-delegator retention | Epoch-over-epoch retention rate for delegators below 1K ADA | Not tracked | >95% — broad participation must be sustained |
-| Delegation-tier yield differential | Yield difference between long-tenure and short-tenure delegations | 0 (uniform) | >0 — tenure must be rewarded |
-
-> **Dependency note.** [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations) depends on [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population), [Pledge](#32-restore-the-notion-of-pledge-among-operators), and [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield). The entity-level pledge accounting operates through the reward curve — the design instrument that serves Operator Viability through Deconcentration simultaneously. The [delegation-tier sub-spec](#343-differentiated-delegation-incentives-titans-versus-micro-delegators) interacts directly with the [delegation-diversification sub-spec](#333-diversify-the-delegation-offer): the delegation products defined in Delegator Yield provide the instruments through which delegation-tier differentiation operates. Deconcentration also interacts with [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios): entity-level economics and delegation-tier incentives must remain coherent across ADA-price scenarios.
-
-
-# 4. Macroeconomics — a self-sustaining and governable mechanism
-
-[Microeconomics](#3-microeconomics-participant-incentives-and-market-structure) defines what the micro-economy must satisfy at any given epoch: viable operators, meaningful pledge, competitive delegation, deconcentrated populations. **This chapter defines the dashboard from which those conditions are kept true through time.**
-
-The metaphor is operational. A reward mechanism is a system the protocol pilots — not a static contract it signs and forgets. Five years of inertia on $\rho$, $\tau$ and $minPoolCost$ ([TRE.O4](diagnostic/README.md#112-mainnet-observations)) document the failure mode of flying without instruments: the parameters could not be observed, could not be questioned, and were therefore never adjusted. **A specification that produces the correct equilibrium once but offers no instrumentation to pilot it is not a specification of the mechanism — it is a snapshot of one of its states.**
-
-This chapter closes that gap. For each macro-condition the system must preserve, it defines four operational components.
-
-| Component | Function | Where it lives |
-|---|---|---|
-| **Surveillance KPIs** | The instruments — what the protocol observes, per epoch, to know whether the condition still holds | [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion), [Fee Policy](#42-the-fee-generating-population-must-expand) |
-| **Trigger conditions** | The warning lights — the structural form of the conditions under which a recalibration is justified | [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion), [Fee Policy](#42-the-fee-generating-population-must-expand) |
-| **Recalibration scope** | The flight controls — which parameters can be moved, within which constitutional bounds | [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion), [Fee Policy](#42-the-fee-generating-population-must-expand), [Recalibration Pipeline](#44-the-mechanism-must-be-governable) |
-| **Acceptance criterion** | The validation discipline — the [Microeconomics](#3-microeconomics-participant-incentives-and-market-structure) KPIs every proposed value must preserve, across the [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios) scenarios | All milestones |
-
-**Rhythmed, not ad-hoc — a pragmatic principle.** The ideal regime is event-driven: a cycle opens the moment a warning light comes on. Conway-era governance is not yet mature enough to operate that regime safely — proposals require deliberation windows, the Constitutional Committee is still establishing its review cadence, and SPO ratification thresholds have not yet been stress-tested against contested proposals. **Until that machinery has matured, the spec adopts a rhythmed regime: cycles open at fixed intervals, warning lights are read at each cycle boundary, and a fired warning determines whether the cycle produces a recalibration proposal or renews the parameters at their current values.** The forward path back to an event-driven regime is described in the [Forward Path](#443-forward-path-toward-ad-hoc-readiness) section below.
-
-**Constitutional anchor.** This chapter operationalises the **parameter-guardrail discipline** of the [Governance Pathway](#22-the-governance-pathway-parameter-updates-within-guardrails). Every cycle defined below proposes movements **inside** the constitutional ranges (ME-01..ME-05 for $\rho$, TC-01..TC-05 for $\tau$, fee-related parameters within their declared bounds). Movements outside the ranges remain available but require a constitutional amendment, not a Parameter Update Action — a distinction the [Recalibration Pipeline](#442-the-conway-era-recalibration-pipeline) codifies.
-
-![The macro dashboard — piloting the micro-economy through time](figures/macro_dashboard_loop.png)
-
-Two **recalibration cycles** instrument the macro-conditions on which long-term sustainability rests: [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion), which keeps the staking pot fundable through reserve depletion, and [Fee Policy](#42-the-fee-generating-population-must-expand), which keeps the fee-generating population on a path that can replace monetary expansion. A **validation clause** — [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios) — imposes a three-scenario stress test on every proposal those cycles produce. An **operational doctrine** — the [Recalibration Pipeline](#44-the-mechanism-must-be-governable) — defines cadence, governance pathway, composition rule, and the forward path back toward an ad-hoc regime.
-
-## 4.1. The staking pot must survive reserve depletion
-
-*Depends on [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population), [Pledge](#32-restore-the-notion-of-pledge-among-operators), [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield), [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations).*
-
-The staking pot is **~99.8% reserve-funded** ([TRE.O1](diagnostic/README.md#112-mainnet-observations)). The reserve has crossed its half-life ([TRE.O2](diagnostic/README.md#112-mainnet-observations)) and will deplete on the mathematical schedule set in 2019, with **no transition plan** for the moment fee revenue must take over. The two parameters governing the draw — $\rho$ (reserve-to-pot rate) and $\tau$ (treasury share) — have **never been adjusted since Shelley** ([TRE.O4](diagnostic/README.md#112-mainnet-observations)).
-
-**The problem this section addresses is not whether to lower $\rho$ or raise $\tau$ to specific values; it is the absence of any process under which those parameters could be observed, questioned, or recalibrated.** The Pot Survival cycle below specifies that process.
-
-Without [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population), [Pledge](#32-restore-the-notion-of-pledge-among-operators), [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield), and [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations) in place, the funding-model transition is **academic** — there is no system worth piloting through it.
-
-**Constitutional alignment.** Tenet 10 (monetary stability) directly constrains the funding-model transition. The reserve draw-down rate ($\rho$, ME-01 to ME-05, range $[0.001, 0.005]$) and the treasury allocation ($\tau$, TC-01 to TC-05, range $[0.1, 0.3]$) are the primary levers, both **bounded by guardrails**. Any transition path that draws more aggressively from the reserve or inflates the supply beyond guardrail bounds requires **constitutional amendment**, not merely a governance vote.
-
-### 4.1.1. Problem statement
-
-The reserve-to-pot rate ($\rho$) determines how fast the reserve is consumed; the treasury share ($\tau$) determines how much of the resulting pot returns to the staking layer rather than to the treasury. Together they govern the **runway** in epochs over which the current funding model can operate.
-
-The current values ($\rho = 0.003$, $\tau = 0.2$) were chosen in 2019 when the chain had no smart-contract economy, no on-chain governance, and a fee base of structural irrelevance. Five years on, **none of these conditions hold**, yet **neither parameter has been subject to a single governance proposal** ([TRE.O4](diagnostic/README.md#112-mainnet-observations)).
-
-The diagnostic establishes the funding-model context: monetary expansion provides ~99.8% of the pot today; closing the fee gap to self-sufficiency requires **12–16× current fee capacity** ([TRE.O1](diagnostic/README.md#112-mainnet-observations)). That capacity expansion has no defined timeline. Reserve depletion does ([TRE.O2](diagnostic/README.md#112-mainnet-observations)).
-
-The mechanism cannot be allowed to discover its funding-model transition by *running out of reserve*. A surveillance and recalibration cycle must be in place **before** the trajectory becomes binding.
-
-#### 4.1.1.1. Evidence base
-
-<div class="ev-list" markdown="1">
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">Funding composition</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Monetary expansion provides **~99.8 %** of the epoch pot; fees **~0.19 %**. Self-sufficiency requires **12–16× current fee capacity**.</p>
-<p class="ev-sources" markdown="1">Source: [TRE.O1](diagnostic/README.md#112-mainnet-observations).</p>
-</div>
-</div>
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">Reserve trajectory</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Reserve **half-depleted (13.29 B → 6.53 B ADA)** in 5.5 years. Significant reward pressure expected at epochs **1000–1200 (~2028–2029)**.</p>
-<p class="ev-sources" markdown="1">Source: [TRE.O2](diagnostic/README.md#112-mainnet-observations).</p>
-</div>
-</div>
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">Realised vs potential</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Only **~44 %** of the budget reaches operators/delegators; **4.55 B ADA cumulative** (~70 % of current reserve) has returned to the reserve as undistributed rewards.</p>
-<p class="ev-sources" markdown="1">Source: [TRE.O3](diagnostic/README.md#112-mainnet-observations).</p>
-</div>
-</div>
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">Parameter inertia</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">$\rho = 0.3\,\%$ and $\tau = 20\,\%$ unchanged since Shelley; **no governance proposal has ever targeted them**.</p>
-<p class="ev-sources" markdown="1">Source: [TRE.O4](diagnostic/README.md#112-mainnet-observations).</p>
-</div>
-</div>
-
-</div>
-
-### 4.1.2. Surveillance and recalibration of $\rho$ and $\tau$
-
-The cycle defined below operates under the cadence specified by the [Recalibration Pipeline](#442-the-conway-era-recalibration-pipeline). Triggers are evaluated **at each cycle boundary**; a fired trigger does not open an emergency window.
-
-**R1 — The instruments.** The mechanism must publish, **per epoch**, the following observable quantities:
-
-- **pot composition** — the ratio of fee-funded to expansion-funded pot revenue;
-- **runway** — projected number of epochs to reserve depletion under current $\rho$;
-- **realised-to-potential ratio** — fraction of the budget that reaches the staking layer rather than returning to reserve.
-
-These KPIs are observable on-chain without additional instrumentation; their computation must be specified in protocol-level terms so that surveillance does not depend on external tooling.
-
-**R2 — The warning lights.** The pot-survival cycle must produce a proposal **whenever any of the following structural conditions holds at the cycle boundary**:
-
-- the **runway** falls below a constitutional minimum (form: a fixed lower bound on epochs-to-depletion under current parameters);
-- the **pot composition** drifts away from the trajectory toward fee-funded sustainability (form: fee share decreases or fails to grow over a multi-cycle window);
-- the **realised-to-potential ratio** drops below the level at which the funding model can support the [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population) KPIs.
-
-The specification fixes the **form** of these conditions. The numeric thresholds — minimum runway, required fee-share growth rate, realisation floor — are **design choices** to be set by the candidate proposal that implements this milestone.
-
-**R3 — The flight controls.** A pot-survival proposal may move:
-
-- $\rho$ within ME-01..ME-05 ($[0.001, 0.005]$);
-- $\tau$ within TC-01..TC-05 ($[0.1, 0.3]$);
-- the joint $(\rho, \tau)$ allocation, treated as a coupled decision rather than two independent levers.
-
-A proposal that requires $\rho$ or $\tau$ outside their constitutional ranges is **out of scope** for the pot-survival cycle and falls under the amendment pathway codified in the [recalibration pipeline](#442-the-conway-era-recalibration-pipeline).
-
-**R4 — The acceptance criterion.** Any proposed $(\rho', \tau')$ pair must, **under simulation**, preserve the KPIs of:
-
-- [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population) — viability across the productive population;
-- [Pledge](#32-restore-the-notion-of-pledge-among-operators) — pledge as a meaningful economic signal;
-- [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield) — competitive yield to delegators;
-- [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations) — entity-level deconcentration;
-
-and satisfy [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios) (validation under three ADA price scenarios).
-
-The proposal admitted to the Conway pipeline must include three artefacts: **(i)** the proposed $(\rho', \tau')$ values, **(ii)** the simulation evidence that those values preserve the [Microeconomics KPIs](#3-microeconomics-participant-incentives-and-market-structure) above, and **(iii)** the price-scenario validation per [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios). **A proposal that improves Pot Survival while degrading any Microeconomics KPI does not satisfy this milestone.** The acceptance criterion is **conjunctive on preservation, disjunctive on improvement**.
-
-| Surveillance KPI | Definition | Form of trigger |
-|---|---|---|
-| Pot composition | $\text{fees}_t / \text{pot}_t$ | Multi-cycle decline or stagnation below trajectory |
-| Runway | Epochs to reserve depletion under current $\rho$ | Drops below constitutional minimum |
-| Realised-to-potential ratio | Pot reaching staking layer ÷ pot defined by formula | Drops below floor required by [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population) |
-
-> **Dependency note.** Pot Survival is meaningful only once the four [Microeconomics](#3-microeconomics-participant-incentives-and-market-structure) milestones — Operator Viability, Pledge, Delegator Yield, Deconcentration — are satisfied: a recalibration cycle that preserves a degraded micro-economy preserves the wrong target. Conversely, the micro-economy drifts over time without surveillance. The relationship is **bidirectional but temporally ordered** — the micro-economy must be reached first, then Pot Survival keeps it true.
-
-## 4.2. The fee-generating population must expand
-
-*Depends on [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations).*
-
-The funding-model transition is a question of **revenue**, not only of expense. [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion) governs the rate at which the reserve funds the pot; **Fee Policy** below governs the rate at which fees replace it. The two are not interchangeable — a recalibration that lowers $\rho$ without growing fees does not improve sustainability; it accelerates depletion of the staking-layer income.
-
-The diagnostic establishes that the fee-generating population is **contracting**: unique submitter addresses fell from a peak of **790,335** at epoch 304 to **30,505** at epoch 623 — a **96% collapse** against a 93% drop in transaction volume ([CEN.O8](diagnostic/README.md#222-mainnet-observations)). Fee revenue is consolidating toward fewer, more active actors. The most fee-intensive segment — script transactions, paying **2.4×** the per-tx average — comes disproportionately from addresses that **structurally cannot delegate** ([CEN.O9, CEN.O10](diagnostic/README.md#222-mainnet-observations)).
-
-Fee Policy specifies the surveillance and recalibration machinery that addresses this divergence.
-
-**Constitutional alignment.** Tenet 4 (fair compensation) applies symmetrically: transaction submitters whose activity sustains the network are participants whose contribution must be recognised. Tenet 10 (monetary stability) constrains the response from the inflationary side — as fee revenue grows, the corresponding reduction in expansion must respect the guardrails on $\rho$ and $\tau$. The parameter scope of Fee Policy **exceeds the current protocol parameter set**: it comprises both Parameter Update levers (e.g., $minFeeA$, $minFeeB$, governance-action deposits) and structural choices outside the parameter system (rebate mechanisms, submitter reward schemes, eligibility-bridging instruments). Recalibration of fee policy therefore mobilises **both** Conway pathways: Parameter Update Actions for the parameters that exist, and CIPs for the structural choices that do not.
-
-### 4.2.1. Problem statement
-
-The reward pipeline's long-term viability rests on a single assumption: that fees will eventually replace expansion as the dominant pot revenue source ([Tx Submitter (Demand-side) — at current throughput, the staking pot does not survive reserve depletion](diagnostic/README.md#223-problem-induction-tx-submitter-demand-side-at-current-throughput-the-staking-pot-does-not-survive-reserve-depletion)).
-
-Today, fees contribute ~0.19% of the pot; reaching parity requires 12–16× current fee revenue at current transaction volumes. **The submitter population is moving in the opposite direction** ([CEN.O8](diagnostic/README.md#222-mainnet-observations)) and the most lucrative submitters are **excluded from the rewards their activity funds** ([CEN.O9](diagnostic/README.md#222-mainnet-observations)).
-
-The mechanism currently has **no instrument** to detect this divergence at the protocol layer. Fee revenue is observable; submitter population dynamics are not part of any governance review. A specification that requires fee growth as a condition of long-term solvency must include the surveillance and recalibration machinery for the population that produces those fees.
-
-#### 4.2.1.1. Evidence base
-
-<div class="ev-list" markdown="1">
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">Population trajectory</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Unique input addresses per epoch: **~512 K (epoch 300) → ~158 K (epoch 384)** — a **69 % decline**. Transaction count held above 300 K.</p>
-<p class="ev-sources" markdown="1">Source: [CEN.O8](diagnostic/README.md#222-mainnet-observations).</p>
-</div>
-</div>
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">Eligibility mismatch</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">82 % of submitter addresses carry a staking credential by headcount; **30.6 % of fee revenue** comes from enterprise/script addresses that cannot delegate.</p>
-<p class="ev-sources" markdown="1">Source: [CEN.O9](diagnostic/README.md#222-mainnet-observations).</p>
-</div>
-</div>
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">Fee concentration</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Script transactions: **12.6 % of count, 29.7 % of fees**; **> 40 %** during high-DeFi epochs.</p>
-<p class="ev-sources" markdown="1">Source: [CEN.O10](diagnostic/README.md#222-mainnet-observations).</p>
-</div>
-</div>
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">Revenue concentration</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Top **10** fee-paying addresses: **30.5 % of fees**; top **500: 51.5 %**. Heavy-tailed but below delegation Gini.</p>
-<p class="ev-sources" markdown="1">Source: [CEN.O11](diagnostic/README.md#222-mainnet-observations).</p>
-</div>
-</div>
-
-<div class="ev-card" markdown="1">
-<div class="ev-label">Structural insufficiency</div>
-<div class="ev-content" markdown="1">
-<p class="ev-body" markdown="1">Closing the funding gap requires **12–16× current fee capacity**; **submitter base is shrinking, not growing**.</p>
-<p class="ev-sources" markdown="1">Source: [Tx Submitter (Demand-side) — at current throughput, the staking pot does not survive reserve depletion](diagnostic/README.md#223-problem-induction-tx-submitter-demand-side-at-current-throughput-the-staking-pot-does-not-survive-reserve-depletion).</p>
-</div>
-</div>
-
-</div>
-
-### 4.2.2. Surveillance and recalibration of fee policy
-
-**R1 — The instruments.** The mechanism must publish, **per epoch**:
-
-- **submitter count** — distinct fee-paying addresses;
-- **submitter composition** — share of fees from delegation-eligible vs. structurally-ineligible addresses (script, enterprise);
-- **fee revenue trajectory** — multi-cycle moving average of total fees and the $\text{fees}/\text{pot}$ ratio.
-
-**R2 — The warning lights.** Fee Policy must produce a proposal whenever:
-
-- the **submitter count** declines over a multi-cycle window;
-- the **fee revenue trajectory** fails to track the path Pot Survival requires at the planned cadence;
-- the **share of fees from ineligible addresses** rises beyond the level at which [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations) KPIs can hold.
-
-The numeric thresholds — minimum window, required growth rate, ineligibility ceiling — remain design choices.
-
-**R3 — The flight controls.** A Fee Policy proposal may move:
-
-- the **fee parameters that exist in the protocol parameter set**, subject to their constitutional ranges (Parameter Update Action pathway);
-- the **fee-policy structures that do not yet exist** — submitter reward schemes, rebate mechanisms, eligibility-bridging instruments — through the **CIP pathway**, which a Parameter Update Action cannot reach.
-
-This dual-pathway character is not optional. A candidate that uses only Parameter Update Actions is bounded by the existing parameter expressivity, which the diagnostic shows is structurally insufficient. A candidate that uses only CIPs forfeits the recalibration agility that Parameter Update Actions provide.
-
-**R4 — The acceptance criterion.** A Fee Policy proposal must:
-
-- preserve the [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations) KPIs (entity-level Gini, top-10 stake share);
-- be **compatible with Pot Survival** — the proposed fee-policy change must not require a $(\rho, \tau)$ adjustment that exceeds the Pot Survival parameter scope;
-- satisfy [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios).
-
-Compatibility with Pot Survival is the **critical coupling**: a fee policy that grows revenue only at one ADA price level is not a transition path; it is a single-scenario calibration.
-
-| Surveillance KPI | Definition | Form of trigger |
-|---|---|---|
-| Submitter count | Distinct fee-paying addresses per epoch | Multi-cycle decline |
-| Eligible-fee share | Fees from delegation-eligible addresses ÷ total fees | Drops below floor required by [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations) |
-| Fee revenue trajectory | Multi-cycle MA of fees and $\text{fees}/\text{pot}$ | Diverges from path required by [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion) |
-
-> **Dependency note.** Fee Policy interacts with [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations): an eligibility-bridging instrument that brings script/enterprise addresses into delegation must do so without re-introducing the entity-level concentration that Deconcentration is calibrated to dissolve. Fee Policy and Pot Survival are **coupled** — a proposal under one that violates the other is not admissible.
-
-## 4.3. The mechanism must function across a range of ADA price scenarios
-
-*Transversal — applies as a validation clause to every proposal opened by Pot Survival or Fee Policy.*
-
-The ADA price is **not a parameter the protocol can move**. It is the **boundary condition** under which every parameter the protocol can move must be evaluated. Price Robustness is therefore not a milestone that triggers its own cycle; it is a **validation discipline imposed on every cycle** opened by the two milestones above.
-
-**Constitutional alignment.** Tenet 10 (monetary stability) is the primary anchor: the protocol shall not dilute or inflate ada in a manner inconsistent with long-term sustainability. This binds every instrument that touches the ADA price channel — reserve draw-down, fee policy, treasury-funded operator support. The guardrail ranges on $\rho$ and $\tau$ define the **corridor** within which price-robust solutions must operate.
-
-### 4.3.1. The price-scenario validation clause
-
-Every proposal $\mathcal{P}$ produced by Pot Survival or Fee Policy must be simulated against **at least three ADA-price scenarios** before admission to the Conway pipeline:
-
-- **stress** — sustained price below the level at which fiat-denominated [Pool Profitability](#313-economic-every-productive-pool-must-be-profitable) costs collapse the Operator Viability KPIs;
-- **stable** — price within the band observed over the surveillance window preceding the cycle;
-- **appreciating** — sustained price above the surveillance window, at which ADA-denominated rewards exceed fiat operating costs by a margin that reduces the dependency on $\rho$ and $\tau$ levers.
-
-The numeric definition of each scenario is a design choice. The **structure** of the validation — three scenarios, each with the [Microeconomics](#3-microeconomics-participant-incentives-and-market-structure), Pot Survival, and Fee Policy KPIs computed in full — is the specification.
-
-A proposal that satisfies its KPIs in only one or two of the three scenarios is **not admissible**. The acceptance criterion is **conjunctive across scenarios**, mirroring the conjunctive structure of preservation at the milestone level.
-
-### 4.3.2. Why this is a clause, not a cycle
-
-Price Robustness does not have its own surveillance KPIs because the ADA price is not under protocol control. It does not have its own warning lights because price movement does not, in itself, justify a recalibration — only price movement that **causes a Pot Survival or Fee Policy trigger to fire** justifies one, and that case is already covered by those cycles. Price Robustness ensures that whenever such a recalibration happens, the proposal is **robust to the price scenarios the protocol cannot control**, not optimised for the price observed at the cycle boundary.
-
-This is the architectural difference between a *milestone* and a *clause* in the V2 specification: milestones produce proposals; clauses validate them.
-
-> **Dependency note.** Price Robustness is the discipline that prevents single-scenario calibration. A proposal that improves Pot Survival or Fee Policy KPIs only at the prevailing price is no improvement at all; it is a recalibration that the next price movement will reverse. Price Robustness makes this failure mode **inadmissible by construction**.
-
-## 4.4. The mechanism must be governable
-
-*Transversal — applies to every milestone above.*
-
-Pot Survival, Fee Policy and Price Robustness specify **what** must be observed, when a proposal is justified, and what that proposal must satisfy. This section specifies **how the cycle operates**: its cadence, its pipeline through Conway-era governance, its rule for composing simultaneous triggers, and its forward path back toward an ad-hoc regime.
-
-**Constitutional alignment.** This milestone is *about* the Constitution's governance machinery itself. **Article II §6** establishes the standards for governance actions; **Article IV** defines the amendment process. The Conway-era infrastructure ([CIP-1694](https://github.com/cardano-foundation/CIPs/blob/master/CIP-1694/README.md)) provides the on-chain mechanisms — DRep voting, Constitutional Committee review, SPO ratification.
-
-### 4.4.1. Why a defined process is the specification, not the design
-
-The pre-V2 mechanism was governed off-chain, with a single class of decision-maker and no codified review cadence. Five years of inertia on $\rho$, $\tau$, and $minPoolCost$ ([TRE.O4](diagnostic/README.md#112-mainnet-observations)) document the failure mode of an undefined process: parameters that cannot be moved are equivalent to parameters that cannot be wrong.
-
-V2 must not repeat this failure. **Pot Survival, Fee Policy and Price Robustness are meaningful only if the loop they describe is itself specified** — cadence, pipeline, scope, composition. Without that specification, the milestones above describe a loop that has no clock.
-
-The cadence itself, the exact thresholds on the trigger conditions, and the precise pipeline timings are **design choices** to be set by the candidate proposal that implements V2. This section fixes the **structural form** of those choices and the **constitutional bounds** within which they must fall.
-
-### 4.4.2. The Conway-era recalibration pipeline
-
-**R1 — Cadence.** The cycle must operate on a **fixed periodicity** at least as long as the **90-day publication-to-submission window** mandated for critical parameters by the Constitution. The exact periodicity — annual, biennial, aligned to a reserve-depletion milestone — is a design choice. The specification fixes only the **form**: cycles are scheduled, not event-driven, and the cadence must respect the constitutional floor on deliberation.
-
-**R2 — Pipeline.** A proposal admitted to a cycle must traverse the Conway pipeline as defined by [CIP-1694](https://github.com/cardano-foundation/CIPs/blob/master/CIP-1694/README.md): DRep deliberation and vote, Constitutional Committee review for compatibility with the tenets and guardrails, SPO ratification under the threshold appropriate to the action class:
-
-- **Parameter Update Actions** within the constitutional ranges — threshold per CIP-1694, typically in the **51–75%** band depending on the parameter group;
-- **Constitutional amendments** for proposals that exceed the ranges — the higher-threshold pathway codified in **Article IV**.
-
-The distinction between the two action classes is **strict**: a proposal whose parameter scope exits the constitutional ranges cannot be smuggled through the Parameter Update path. This pipeline makes the distinction enforceable at the cycle boundary by requiring the proposal to declare its action class as part of admission.
-
-**R3 — Composition rule for simultaneous triggers.** When the Pot Survival and Fee Policy triggers fire at the same cycle boundary, the cycle must produce a **single composed proposal** that addresses both, not a sequence of independent proposals. Composition is required because:
-
-- the acceptance criteria of the two cycles are bidirectional — a Fee Policy proposal that violates Pot Survival is inadmissible, and vice versa;
-- separate proposals for coupled cycles produce **trajectory ambiguity** — each is admissible in isolation, but the combined effect is uncharacterised.
-
-When only one trigger fires, the proposal addresses that cycle alone; the surveillance KPIs of the silent cycle are reported as evidence that no recalibration is required there.
-
-**R4 — Triggers as evidence, not authorisation.** A fired trigger establishes that a recalibration *is justified*; it does not establish *what the new values should be*. The proposal's authorisation comes from the Conway pipeline, not from the trigger. This separation is what allows the mechanism to remain **recalibratable without being unstable**: a fired trigger is a question, not a command.
-
-### 4.4.3. Forward path — toward ad-hoc readiness
-
-The rhythmed regime specified above is a **pragmatic compromise**. The ideal regime is **event-driven**: a cycle opens the moment a trigger fires, regardless of the calendar. The rhythmed regime is adopted because Conway-era governance has not yet operated long enough to support event-driven cycles safely.
-
-The transition criteria — what would have to be true for ad-hoc cycles to become feasible — are themselves part of the specification:
-
-- **DRep cadence maturity** — DRep deliberation must demonstrate the capacity to produce proposals within the surveillance window without compromising review quality;
-- **Constitutional Committee throughput** — the Committee must establish a review cadence that does not become the bottleneck of an event-driven cycle;
-- **SPO ratification stability** — ratification thresholds must be stress-tested against contested proposals before they govern emergency cycles.
-
-When these conditions hold, the spec admits a transition to an **event-driven** regime in which fired triggers open cycles directly. The transition itself is a governance action subject to the Recalibration Pipeline.
-
-> **Dependency note.** The Recalibration Pipeline applies to every preceding milestone. [Microeconomics](#3-microeconomics-participant-incentives-and-market-structure) parameter changes flow through the same Conway pipeline as Pot Survival and Fee Policy proposals; the difference is in the cycle scope — Microeconomics is open continuously to candidate proposals, while this chapter is operated on cadence. Every candidate proposed under Microeconomics must be implementable through the Conway pathway this section defines, and every cycle opened on the macro dashboard must respect the [Microeconomics KPIs](#3-microeconomics-participant-incentives-and-market-structure) as its preservation condition.
-
-# 5. Evaluation framework
-
-The eight milestones above define **what** a successor mechanism must achieve. The KPI tables embedded in each milestone define **how to measure** whether a proposed solution succeeds.
-
-The dependency chain follows a strict order:
-
-> [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population) → [Pledge](#32-restore-the-notion-of-pledge-among-operators) → [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield) → [Deconcentration](#34-reduce-the-concentration-effects-that-distort-both-populations) → [Pot Survival](#41-the-staking-pot-must-survive-reserve-depletion) → [Fee Policy](#42-the-fee-generating-population-must-expand),
-> with [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios) and the [Recalibration Pipeline](#44-the-mechanism-must-be-governable) **transversal**.
-
-A candidate that addresses Deconcentration without first satisfying Operator Viability, Pledge, and Delegator Yield is **building on a foundation that does not exist**.
-
-Any candidate design — whether a single CIP, a coordinated package of parameter changes, or a full mechanism replacement — can be evaluated by the following process.
-
-**Simulation against current mainnet state.** The candidate must be initialised from the **actual population structure** at a recent epoch (not from a clean-slate $k$-pool equilibrium). The simulation must run forward under **at least three ADA-price scenarios** (stress, stable, appreciating) and report the trajectory of **every KPI** listed in the relevant specifications.
-
-**Transition path from V1.** The candidate must specify the migration mechanics: which parameters change, in what sequence, with what governance approvals, and over what time horizon.
-
-*A mechanism that is optimal in steady state but unreachable from the current state is not a solution.*
-
-**Interaction audit.** The milestones interact through the dependency chain. A solution to [Operator Viability](#31-guarantee-operator-viability-across-the-entire-productive-population) reshapes the pool landscape on which [Delegator Yield](#33-maintain-and-diversify-a-competitive-delegator-yield) operates. A solution to [Fee Policy](#42-the-fee-generating-population-must-expand) can conflict with [Price Robustness](#43-the-mechanism-must-function-across-a-range-of-ada-price-scenarios) if it requires fee reductions that suppress revenue.
-
-The candidate must demonstrate that it does **not solve one milestone at the cost of another**. The reward curve — the design instrument that serves Operator Viability, Pledge, Delegator Yield and Deconcentration **simultaneously** — must be evaluated as a **single coherent system**, not as a collection of independent parameter choices.
-
-**Conway-era governance compatibility.** The candidate must be implementable through the on-chain governance process. Parameter changes must map to existing governance actions; structural changes must specify the CIP path.
-
-A design that requires **off-chain coordination without on-chain enforcement** is not a protocol-level solution. The [Recalibration Pipeline](#44-the-mechanism-must-be-governable) applies to every candidate: the proposed mechanism must embed its own review and recalibration triggers.
-
-The milestones are intentionally framed as *what must be true*, not *how to make it true*. The design space is large — the community may converge on:
-
-- a **single coordinated redesign**,
-- a **sequence of targeted CIPs**, or
-- a **hybrid approach**.
-
-What this analysis provides is the **shared problem definition** that any such effort must be scoped against.
-
-The era in which the mechanism could be left untouched because the reserve was large and governance was absent is **over**.
-
-The tools exist. The evidence is in. *The roadmap is here.*
+> **Status:** Roadmap in progress, started 2026/05/08. This page is the canonical V2 working document — directions of exploration and concrete milestones, anchored on the 9 induced problems.

@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778223721">
+<link rel="stylesheet" href="assets/site.css?v=1778238656">
 
 
 </head>
@@ -121,6 +121,13 @@ window.MathJax = {
 <!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
 <div class="nav-zone nav-zone-output">
 <a href="v2-spec.html" class="nav-tab-spec-big active">V2 Specification</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
+<!-- Zone 2.1 — V2 Roadmap: working document proposing directions of exploration and concrete milestones; the canonical V2 spec stays in Zone 2 as historical reference -->
+<div class="nav-zone nav-zone-output">
+<a href="v2-roadmap.html" class="nav-tab-roadmap" title="V2 Roadmap — directions of exploration and concrete milestones (working document)">V2 Roadmap</a>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
@@ -1276,7 +1283,7 @@ window.MathJax = {
 <p>Fee Policy specifies the surveillance and recalibration machinery that addresses this divergence.</p>
 <p><strong>Constitutional alignment.</strong> Tenet 4 (fair compensation) applies symmetrically: transaction submitters whose activity sustains the network are participants whose contribution must be recognised. Tenet 10 (monetary stability) constrains the response from the inflationary side — as fee revenue grows, the corresponding reduction in expansion must respect the guardrails on $\rho$ and $\tau$. The parameter scope of Fee Policy <strong>exceeds the current protocol parameter set</strong>: it comprises both Parameter Update levers (e.g., $minFeeA$, $minFeeB$, governance-action deposits) and structural choices outside the parameter system (rebate mechanisms, submitter reward schemes, eligibility-bridging instruments). Recalibration of fee policy therefore mobilises <strong>both</strong> Conway pathways: Parameter Update Actions for the parameters that exist, and CIPs for the structural choices that do not.</p>
 <h3 id="421-problem-statement">4.2.1. Problem statement</h3>
-<p>The reward pipeline's long-term viability rests on a single assumption: that fees will eventually replace expansion as the dominant pot revenue source (<a href="diagnostic.html#223-problem-induction-tx-submitter-demand-side-at-current-throughput-the-staking-pot-does-not-survive-reserve-depletion">Tx Submitter (Demand-side) — at current throughput, the staking pot does not survive reserve depletion</a>).</p>
+<p>The reward pipeline's long-term viability rests on a single assumption: that fees will eventually replace expansion as the dominant pot revenue source (<a href="diagnostic.html#223-problem-induction-tx-submitter-demand-side-fees-the-canonical-answer-to-m01-are-not-growing-fast-enough-at-current-throughput">Tx Submitter (Demand-side) — fees, the canonical answer to M01, are not growing fast enough at current throughput</a>).</p>
 <p>Today, fees contribute ~0.19% of the pot; reaching parity requires 12–16× current fee revenue at current transaction volumes. <strong>The submitter population is moving in the opposite direction</strong> (<a class="obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs-src="CEN.O8" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O8 · hover for summary, click for detail">CEN.O8</a>) and the most lucrative submitters are <strong>excluded from the rewards their activity funds</strong> (<a class="obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs-src="CEN.O9" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O9 · hover for summary, click for detail">CEN.O9</a>).</p>
 <p>The mechanism currently has <strong>no instrument</strong> to detect this divergence at the protocol layer. Fee revenue is observable; submitter population dynamics are not part of any governance review. A specification that requires fee growth as a condition of long-term solvency must include the surveillance and recalibration machinery for the population that produces those fees.</p>
 <h4 id="4211-evidence-base">4.2.1.1. Evidence base</h4>
@@ -1313,7 +1320,7 @@ window.MathJax = {
 <div class="ev-label">Structural insufficiency</div>
 <div class="ev-content">
 <p class="ev-body">Closing the funding gap requires <strong>12–16× current fee capacity</strong>; <strong>submitter base is shrinking, not growing</strong>.</p>
-<p class="ev-sources">Source: <a href="diagnostic.html#223-problem-induction-tx-submitter-demand-side-at-current-throughput-the-staking-pot-does-not-survive-reserve-depletion">Tx Submitter (Demand-side) — at current throughput, the staking pot does not survive reserve depletion</a>.</p>
+<p class="ev-sources">Source: <a href="diagnostic.html#223-problem-induction-tx-submitter-demand-side-fees-the-canonical-answer-to-m01-are-not-growing-fast-enough-at-current-throughput">Tx Submitter (Demand-side) — fees, the canonical answer to M01, are not growing fast enough at current throughput</a>.</p>
 </div>
 </div>
 </div>
@@ -1515,6 +1522,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778223721"></script>
+<script src="assets/site.js?v=1778238656"></script>
 </body>
 </html>

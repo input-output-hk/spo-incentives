@@ -57,14 +57,14 @@ reveal that the mechanism is not producing the conditions for its own
 sustainability: the funding source is exhausting, the participation base is
 incomplete, and the governing parameters are frozen.
 
-### 1.2.3. — Closing the Consensus Incentive Gap
+### 1.2.3. — Closing the Consensus Incentive Gap: The pledge paradox & Non-Participant problem
 
 <!-- FINDING
 id: 1.2.3
 parent: 1.2
 parent_title: Pools Distribution
 tier: mechanism
-observatory_anchor: 123-problem-induction-closing-the-consensus-incentive-gap
+observatory_anchor: 123-problem-induction-closing-the-consensus-incentive-gap-the-pledge-paradox-non-participant-problem
 observations:
   - obs-122-1
   - obs-122-2
@@ -73,6 +73,7 @@ observations:
   - obs-122-5
   - obs-122-6
   - obs-122-7
+  - obs-212-7
 -->
 
 Two causes account for **54% of the pools pot returning to reserve** (O1): a
@@ -244,7 +245,7 @@ id: 2.2.3
 parent: 2.2
 parent_title: Transaction Submitters
 tier: fees
-observatory_anchor: 223-problem-induction-tx-submitter-demand-side-at-current-throughput-the-staking-pot-does-not-survive-reserve-depletion
+observatory_anchor: 223-problem-induction-tx-submitter-demand-side-fees-the-canonical-answer-to-m01-are-not-growing-fast-enough-at-current-throughput
 observations:
   - obs-222-8
   - obs-222-9
@@ -284,14 +285,14 @@ pipeline depends on.
 
 Fees, monetary policy, and the exogenous exchange rate
 
-### 3.1.1. — Is a finite ₳ supply enough to honour the deflationist promise?
+### 3.1.1. — A deflationist ₳ — what mechanisms can complement finite supply?
 
 <!-- FINDING
 id: 3.1.1
 parent: 3.1
 parent_title: The ₳/Fiat Money Constraint Layer
 tier: sustainability
-observatory_anchor: 311-is-a-finite-supply-enough-to-honour-the-deflationist-promise
+observatory_anchor: 311-a-deflationist-what-mechanisms-can-complement-finite-supply
 observations:
   - obs-112-2
   - obs-132-9
@@ -319,14 +320,14 @@ pipeline to add complementary properties. Post-Conway, it is a design gap.
 Finite supply was never enough, and the post-Conway era removes the excuse
 for treating it as if it were.
 
-### 3.1.2. — The protocol takes the hit of ADA volatility, with no instrument to govern it
+### 3.1.2. — ₳/Fiat volatility — what instruments can wire governance to price observations?
 
 <!-- FINDING
 id: 3.1.2
 parent: 3.1
 parent_title: The ₳/Fiat Money Constraint Layer
 tier: sustainability
-observatory_anchor: 312-the-protocol-takes-the-hit-of-ada-volatility-with-no-instrument-to-govern-it
+observatory_anchor: 312-fiat-volatility-what-instruments-can-wire-governance-to-price-observations
 observations:
   - obs-112-4
   - obs-132-9

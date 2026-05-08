@@ -1288,6 +1288,22 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
    instead of a tinted pill. */
 .nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px solid var(--cardano-blue);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap;box-shadow:0 2px 6px var(--cardano-blue-soft);position:relative}
 
+/* V2 Roadmap — working document proposing directions of exploration
+   and concrete milestones, sitting next to the canonical V2
+   Specification (which stays as historical reference). Same shape
+   language as .nav-tab-spec-big (Cardano blue plate) but with a
+   dashed border to read as 'in progress' and a 'DRAFT' eyebrow tag
+   instead of PROPOSAL. The pair (V2 Spec | V2 Roadmap) reads as
+   'historical reference → active working document' at a glance. */
+.nav-tab-roadmap{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px dashed rgba(255,255,255,.65);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap;box-shadow:0 2px 6px var(--cardano-blue-soft);position:relative}
+.nav-tab-roadmap::after{content:"draft";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:var(--cardano-blue);padding:3px 5px;border-radius:3px;border:1px solid var(--cardano-blue)}
+[data-theme=dark] .nav-tab-roadmap::after{background:#1a1a1a;color:#7B91FF;border-color:#7B91FF}
+.nav-tab-roadmap:hover{background:#0028a0;border-color:rgba(255,255,255,.85);box-shadow:0 4px 14px var(--cardano-blue-glow)}
+.nav-tab-roadmap.active{background:#001f80;border-color:rgba(255,255,255,.95);box-shadow:0 3px 12px var(--cardano-blue-glow)}
+[data-theme=dark] .nav-tab-roadmap{background:var(--cardano-blue);border-color:rgba(255,255,255,.55);color:#fff}
+[data-theme=dark] .nav-tab-roadmap:hover{background:#1d49c4;border-color:rgba(255,255,255,.75)}
+[data-theme=dark] .nav-tab-roadmap.active{background:#0040d3;border-color:rgba(255,255,255,.85)}
+
 /* Induced Problems — standalone tab between Constitution and
    Mainnet Diagnostic, in the gradient-fade zone of .nav-pages.
    Inherits the same neutral chrome as the right-side dropdowns

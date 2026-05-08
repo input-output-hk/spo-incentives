@@ -67,17 +67,18 @@ CATEGORY_NAME = "CPS"
 # back to its card.
 PROBLEMS = [
     # Microeconomics
-    ("problem-1-2-3",   "μ01", "Closing the Consensus Incentive Gap"),
+    ("problem-1-2-3",   "μ01", "Closing the Consensus Incentive Gap: The pledge paradox & Non-Participant problem"),
     ("problem-1-3-3-1", "μ02", "Guarantee operator viability across the productive population"),
-    ("problem-1-3-3-2", "μ03", "Restore a competitive delegator yield"),
-    ("problem-2-1-3-1", "μ04", "SPO supply side — fewer and fewer entities participate in consensus"),
-    ("problem-2-1-3-2", "μ05", "Arbiter-side distribution — titans move the disciplining capital, but not on yield"),
+    ("problem-1-3-3-2", "μ03", "Restore a competitive delegator yield — soon to fall below 2% AYI"),
+    ("problem-2-1-3-1", "μ04", "SPO (Supply-side) — fewer and fewer entities participate in consensus"),
+    ("problem-2-1-3-2", "μ05", "Delegator (Arbiter-side) — titans move the disciplining capital, but not on yield"),
     # Macroeconomics
     ("problem-1-1-3",   "M01", "Funding the Protocol Without a Reserve"),
-    ("problem-2-1-3-3", "M02", "Non-participants — a secondary distribution problem behind the active-player dynamics"),
-    ("problem-2-2-3",   "M03", "Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion"),
-    ("problem-3-1-1",   "M04", "Is a finite ₳ supply enough to honour the deflationist promise?"),
-    ("problem-3-1-2",   "M05", "The protocol takes the hit of ADA volatility, with no instrument to govern it"),
+    # M02 (Non-participants) was absorbed into μ01 as the non-participant face of
+    # the same lens-of-view incentive-gap problem. Numbers shift down accordingly.
+    ("problem-2-2-3",   "M02", "Tx Submitter (Demand-side) — fees, the canonical answer to M01, are not growing fast enough at current throughput"),
+    ("problem-3-1-1",   "M03", "A deflationist ₳ — what mechanisms can complement finite supply?"),
+    ("problem-3-1-2",   "M04", "₳/Fiat volatility — what instruments can wire governance to price observations?"),
 ]
 
 GRAPHQL_ENDPOINT = "https://api.github.com/graphql"
