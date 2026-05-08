@@ -1145,7 +1145,12 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
 /* ── Breadcrumb bar — single source of truth for "where am I" (lives inside .site-nav as its 3rd row) ── */
 .nav-breadcrumb{background:var(--bg);border-bottom:1px solid var(--border);padding:7px 20px;font:400 11.5px/1.3 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text-muted);display:flex;align-items:center;flex-wrap:wrap;gap:6px;letter-spacing:.1px}
 [data-theme=dark] .nav-breadcrumb{background:var(--bg)}
-.nav-breadcrumb:empty{display:none}
+/* Top-level pages emit an empty breadcrumb — render an invisible
+   non-breaking space via ::before so the band has the *exact* same height
+   as a populated one (the text reserves the line-box just like real
+   crumb items would). Pseudo-element doesn't break the :empty match
+   semantics elsewhere. */
+.nav-breadcrumb:empty::before{content:"\00a0";visibility:hidden}
 .nav-breadcrumb-item{color:var(--text-secondary)}
 .nav-breadcrumb-current{color:var(--text-primary);font-weight:600}
 .nav-breadcrumb-sep{color:var(--text-muted);opacity:.55;font-size:13px;padding:0 2px}

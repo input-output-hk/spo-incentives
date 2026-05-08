@@ -1,24 +1,67 @@
-# The Mainnet Diagnostic: Synthesis of Observations Across the Reward Pipeline
+# The Mainnet Diagnostic — Synthesis of Observations Across the Reward Pipeline
 
-The *Shelley-era Delegation and Incentives Design Specification* (SL-D1) defined the economic rules that were to guide Cardano toward a stable, decentralised equilibrium of $k$ well-funded stake pools. Five years of mainnet operation have exposed **structural divergences** between that design and the on-chain reality.
+The <a href="pdf-viewer.html?file=references/design-specs/delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf"><em>Shelley-era Delegation and Incentives Design Specification</em> (SL-D1)</a> defined the economic rules that were to guide Cardano toward a stable, decentralised equilibrium of $k$ well-funded stake pools.
 
-This document is the **Mainnet Diagnostic**: it follows the reward through every stage of the pipeline, confronts each design intent with the cleaned mainnet evidence, and inducts the structural problems that emerge. The diagnostic feeds [**The Cardano Reward System V2 — Specification for a Sustainable Successor**](../README.md).
+Five years of mainnet operation have produced a settled landscape that diverges from that design in specific, observable ways. **This document is the empirical record of those divergences.**
 
-> **From Problem Induction to CPS to CIP.** The *Problem Induction* sub-sections in this document (§1.1.3, §1.2.3, §1.3.3, §2.1.3, §2.2.3, §3.3) are **CPSs in formation** — Cardano Problem Statements still maturing in narrative form. The lifecycle is *mainnet evidence → induced problem (proto-CPS) → V2 specification → CIPs*. Each induced problem is scoped against shared evidence so candidate solutions (CIPs) can be evaluated against the same problem definition once the work moves into the IntersectMBO/CIPs governance process. Earlier draft CPS files were retired in favour of the canonical narrative here; promotion to formal CPS happens upstream when a problem is judged ready.
+The goal is to make them **explicit and structural** — to read each one not as a parameter tuned to the wrong value, but as the predictable outcome of rules whose surrounding context (governance, smart contracts, fee economy, reserve runway) has shifted since 2019.
 
-**The pipeline is read as a single dependency chain.** The epoch budget sets the ceiling, the reward curve allocates within it, and the fee structure determines how much of each allocation actually reaches operators and delegators. These stages are not independent layers — a failure at any stage propagates downstream, and a fix at one stage can be undone by a distortion at another. The pipeline runs on populations ([The Player Populations](#2-the-player-populations)) and against an exchange-rate boundary ([The ₳/Fiat Money Constraint Layer](#3-the-fiat-money-constraint-layer)) that closes the system. The companion [*The Intended Game*](../the-intended-game/README.md) supplies the normative baseline — what the mechanism was supposed to produce — against which each divergence is measured.
+Every divergence is then named as a *structural problem* the next reward mechanism must address. The substantive output — the **9 induced problems** the diagnostic surfaces — lives on the dedicated [**Induced Problems**](../generated-website/problem-statements.html) page; what follows here is the evidence-and-induction record behind it.
 
-**The reward formula is at war with its own security model.** SL-D1's reward function reaches its global maximum at a *private* pool — fully self-pledged by a single wealthy operator, with no delegator participation. The security model SL-D1 references requires the *opposite*: a *balanced* configuration where operator commitment and delegator power coexist, so that accountability, delegation as counter-power, Sybil resistance, and decentralisation hold simultaneously. The formula's gradient and the security model's requirement run in opposite directions.
+<div class="cps-lifecycle" aria-label="CPS lifecycle">
+<div class="cps-stage cps-stage-current" title="You are here — the Mainnet Diagnostic, observations &amp; findings">
+<span class="cps-stage-num">Stage 01</span>
+<span class="cps-stage-label">Mainnet evidence</span>
+<span class="cps-stage-meta">Observations &amp; Findings &middot; this page</span>
+</div>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="../generated-website/problem-statements.html" title="Induced Problems — proto-CPS scoped against the diagnostic">
+<span class="cps-stage-num">Stage 02</span>
+<span class="cps-stage-label">Induced problem</span>
+<span class="cps-stage-meta">proto-CPS</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="../generated-website/v2-roadmap.html" title="V2 Roadmap — directions of exploration and concrete milestones">
+<span class="cps-stage-num">Stage 03</span>
+<span class="cps-stage-label">V2 Roadmap</span>
+<span class="cps-stage-meta">Directions &amp; milestones</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="../generated-website/solution-evaluation.html" title="Evaluation of the four reward-related CIPs against V2 milestones">
+<span class="cps-stage-num">Stage 04</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance</span>
+</a>
+</div>
 
-**Mainnet's resolution: neither private nor balanced — *hollow*.** Five years have produced a settled landscape where the pledge mechanism is economically inoperative — stake-weighted median pool pledge ratio **0.07%**, best-case pledge-bonus yield **0.68%/yr** below the **~2.3%/yr** passive-delegation alternative — and **445 of 502 above-threshold entities** (controlling **85.6%** of active stake) operate at zero or near-zero pledge. The reward pipeline runs at **~44% distribution efficiency**: **54%** of the pools pot returns to reserve every epoch, dominated by a participation gap (**31.6%**) and a pledge-bonus budget that goes **95.6% unclaimed** (**22.1%** of the pot). The wasted bonus is the *single largest addressable inefficiency in the system* — and unlike the participation gap, it is entirely within reach of formula reform.
+The widget above places this document at **Stage 01** of the V2 work — the empirical foundation.
 
-**The single-pool operator base has collapsed; entities have filled the gap.** From a peak of **555 productive pools / 39.1%** of stake at epoch 300 to **291 pools / 24.4%** at epoch 623 — a **48%** loss in the segment the mechanism was supposed to grow. The replacement pools that keep the productive total at ~950 are entity-operated: across the registered set the attribution layer counts **85 multi-pool entities** today (vs **23** in 2020), of which **83 remain productive at epoch 623** — controlling **449 productive pools (76.7% of productive stake)**. Ten centralised exchanges and institutional validators alone hold **34.3%** of productive stake at architecturally zero pledge. *The designed progression path from new entrant to established operator has no observable expression in the mainnet data.*
+The companion [*The Intended Game*](../the-intended-game/README.md) supplies the normative baseline of what V1 was supposed to produce. The diagnostic measures every divergence against that baseline and inducts the structural problems that:
 
-**The mechanism is on a structural clock.** The reserve has crossed its half-life (**13.29B → 6.45B ADA** in ~5.7 years) and trends toward exhaustion around **epoch 1000–1200 (~2028–2029)**. Fees the design assumes will replace monetary expansion contribute **~0.19%** of the current epoch pot; closing the gap requires **12–16×** current capacity. The fee-generating population is contracting and consolidating: the submitter base has fallen by an order of magnitude since its peak, the top 500 addresses now pay the majority of fees, and roughly **30%** of fee revenue comes from enterprise and script addresses that structurally cannot delegate — *the mechanism taxes a constituency it excludes from rewards*. Meanwhile delegator yield has fallen from **5.3% → 2.0%** with $R^2 = 0.99$ against the reserve curve, compressing past the threshold where delegators can differentiate pools.
+- [**Induced Problems** (Stage 02)](../generated-website/problem-statements.html) carries forward as proto-CPSs,
+- the [**V2 Roadmap** (Stage 03)](../README.md) organises into milestones,
+- and the [**CIPs Evaluation** (Stage 04)](../solution-evaluation/README.md) reads the four pre-existing reward CIPs against.
 
-**Most non-participation is unreachable by incentive design.** **14.36B ADA (39.8%)** of circulating supply sits outside delegation. Only **134.6M (0.37%)** belongs to accounts with a registered stake credential that have simply not delegated — the *addressable* pool that incentive changes can, in principle, reach. The remaining **14.2B** sits in addresses with no stake credential at all (enterprise custody, DeFi-locked Plutus contracts, Byron-era legacy, unregistered base addresses). Moving the structural fraction requires protocol-level changes — enabling enterprise-address staking, mandating staking-capable script addresses in DeFi standards — not parameter tuning.
+**The approach** is to walk the SL-D1 reward pipeline stage by stage, applying the same analytical arc at each:
 
-The remainder of the document follows the pipeline stage by stage: [the reward flow](#1-the-reward-flow) decomposes the SL-D1 pipeline into its three stages with a shared arc at each — *design intent → mainnet confrontation → problem induction → CPS check*; [the player populations](#2-the-player-populations) ground the pipeline failures in the structural dynamics of operators, delegators, non-participants, and transaction submitters; [the ₳/Fiat money-constraint layer](#3-the-fiat-money-constraint-layer) sets the boundary conditions within which any solution must operate. Each pipeline stage is backed by a [dedicated sub-report](#sub-reports) listed at the bottom of this document.
+> *design intent → mainnet confrontation → problem induction → CPS check*
+
+Every claim is anchored to a canonical observation code (`TRE.O#`, `POL.O#`, `OPE.O#`, `CEN.O#`) tied to a specific finding in one of four sub-reports. Theory enters only where the formula or the security model is being characterised; everywhere else, the load is carried by mainnet observation.
+
+The pipeline is read as a **single dependency chain** rather than a set of independent layers — the epoch budget sets the ceiling, the reward curve allocates within it, and the fee structure determines what actually reaches operators and delegators. A fix at one stage can be undone by a distortion at another.
+
+**The four sub-reports** that carry the per-stage evidence, threaded into the synthesis below:
+
+- **[Treasury & Pool Pots Distribution](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md)** — epoch-pot assembly, reserve trajectory, fee analysis, return-to-reserve mechanism. Threaded into [§1.1](#11-treasury-pool-pots-distribution).
+- **[The Pools Pot Distribution Gaps](sub-flows/pools-distribution/mainnet-analysis/README.md)** — reward curve formulas, distribution efficiency, pool landscape, entity analysis. Threaded into [§1.2](#12-pools-distribution).
+- **[The Operator's Cut](sub-flows/operator-delegator-distribution/mainnet-analysis/README.md)** — intra-pool split formulas, pricing-plan landscape, custodial/retail boundary, operator profitability, delegator-yield trajectory. Threaded into [§1.3](#13-operator-delegator-distribution).
+- **[The Staking Census](sub-flows/census/mainnet-analysis/README.md)** — ADA supply decomposition, operator and delegator landscape, non-participant decomposition, transaction-submitter dynamics. Threaded into [§2 The Player Populations](#2-the-player-populations).
+
+**The synthesis itself** follows the pipeline in three movements:
+
+- [**§1 The Reward Flow**](#1-the-reward-flow) decomposes the SL-D1 pipeline stage by stage with the shared analytical arc.
+- [**§2 The Player Populations**](#2-the-player-populations) grounds the pipeline observations in the structural dynamics of operators, delegators, non-participants, and transaction submitters.
+- [**§3 The ₳/Fiat Money Constraint Layer**](#3-the-fiat-money-constraint-layer) sets the boundary conditions within which any solution must operate.
 
 # Table of Contents
 
@@ -506,7 +549,7 @@ This creates a direct contradiction with the security requirement established in
 > The formula says: *the best pool is a private pool.*
 > The security model says: *the best pool is a balanced pool.*
 
-*The mechanism is at war with itself.*
+*The mechanism's two requirements pull in different directions.*
 
 ![The Playing Field — what a pool can earn vs. what it costs (epoch 616 pool-history snapshot)](../the-intended-game/figures/playing_field_mainnet.png)
 *DIA.1.0 — Left: reward composition at full saturation — the ceiling is $P_{\max}$ at full pledge, full saturation. Right: reward by pool size, comparing size-only reward (green) to the pledge premium (purple). The left panel shows where the formula points; the right panel shows why the journey there is irrelevant. Data: epoch 616 pool-history snapshot (the formula shape is parameter-driven and unchanged through epoch 623).*
@@ -766,7 +809,7 @@ A competing operator who pledges nothing and deploys that capital toward marketi
 
 The strategy the formula was supposed to make suboptimal — capital deployed outside the pledge mechanism toward delegation growth — is the one that **dominates**.
 
-The mainnet data in [What mainnet reveals](#12431-what-mainnet-reveals) is **not a failure of adoption**. *It is the rational response to a mechanism at war with itself.*
+The mainnet data in [What mainnet reveals](#12431-what-mainnet-reveals) is **not a failure of adoption**. *It is the rational response to a mechanism whose reward gradient and security requirement point in different directions.*
 
 <!-- SANDBOX — 2.5 Proposed Solutions Evaluation (to be revisited)
 
