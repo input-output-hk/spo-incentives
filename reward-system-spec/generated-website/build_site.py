@@ -1611,6 +1611,13 @@ window.MathJax = {{
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
 
+<!-- Zone 2.7 — Induced Problems (proto-CPS bridge between diagnostic and V2 spec) -->
+<div class="nav-zone nav-zone-problems">
+<a href="problem-statements.html" class="nav-tab-problems-big{cls_findings}" title="The structural problems the diagnostic induces from on-chain evidence">Induced Problems</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
 <!-- Zone 3 — Mainnet Diagnostic (observed reality) -->
 <div class="nav-zone nav-zone-diag">
 <div class="nav-dd-wrap nav-dd-wrap-light">
@@ -1619,13 +1626,9 @@ window.MathJax = {{
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-diagnostic">Mainnet Diagnostic</span>
-      <span class="nav-dd-stratum-meta">What mainnet is actually doing — synthesis, Reward-Flow evidence, and the prior report</span>
+      <span class="nav-dd-stratum-meta">What mainnet is actually doing — Reward-Flow evidence, the staking census, and the prior report</span>
     </div>
-    <a href="problem-statements.html" class="nav-dd-ref nav-dd-ref-hero{cls_findings}">
-      <span class="nav-dd-ref-title">Induced Problems<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">The structural problems the diagnostic induces from on-chain evidence — design intent vs mainnet reality</span>
-    </a>
-    <a href="diagnostic.html" class="nav-dd-ref{cls_diagnostic_title}">
+    <a href="diagnostic.html" class="nav-dd-ref nav-dd-ref-hero{cls_diagnostic_title}">
       <span class="nav-dd-ref-title">The Diagnostic</span>
       <span class="nav-dd-ref-cite">Full narrative — observations, problem induction, and sub-report links</span>
     </a>
@@ -1659,7 +1662,7 @@ window.MathJax = {{
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
 
-<!-- Zone 4 — Design Support (intended mechanism) -->
+<!-- Zone 4 — Design Support (intended mechanism + research foundations) -->
 <div class="nav-zone nav-zone-design">
 <div class="nav-dd-wrap nav-dd-wrap-light">
 <button class="nav-dd-btn-light nav-dd-btn-design{cls_design_trigger}" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Design Support ▾</button>
@@ -1667,7 +1670,7 @@ window.MathJax = {{
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-design">Design Support</span>
-      <span class="nav-dd-stratum-meta">The intended mechanism — formal spec + the narrative it never came with</span>
+      <span class="nav-dd-stratum-meta">The intended mechanism — formal spec, narrative companion, and the academic antecedents the design rests on</span>
     </div>
     <a href="intended-game.html" class="nav-dd-ref{cls_intended_game}">
       <span class="nav-dd-ref-title">The Intended Game<span class="nav-dd-ref-new">New</span></span>
@@ -1678,39 +1681,23 @@ window.MathJax = {{
       <span class="nav-dd-ref-cite">Kant · Brünjes · Coutts — 2019<span class="nav-dd-ref-tag">SL-D1</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
     </a>
-  </div>
-</div>
-</div>
-</div>
-
-<span class="nav-flow-arrow" aria-hidden="true">←</span>
-
-<!-- Zone 5 — Research Papers (academic foundations) -->
-<div class="nav-zone nav-zone-research">
-<div class="nav-dd-wrap nav-dd-wrap-light">
-<button class="nav-dd-btn-light nav-dd-btn-research" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Research Papers ▾</button>
-<div class="nav-dd-panel-light nav-dd-panel-research">
-  <div class="nav-dd-stratum">
-    <div class="nav-dd-stratum-head">
-      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-research">Research Papers</span>
-      <span class="nav-dd-stratum-meta">Academic antecedents and adjacent work on reward schemes</span>
-    </div>
-    <a href="pdf-viewer.html?file=references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf" class="nav-dd-ref">
+    <div class="nav-dd-ref-group-label">Research Papers</div>
+    <a href="pdf-viewer.html?file=references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf" class="nav-dd-ref nav-dd-ref-sub">
       <span class="nav-dd-ref-title">Reward Sharing Schemes for Stake Pools</span>
       <span class="nav-dd-ref-cite">Brünjes · Kiayias · Koutsoupias · Stouka — 2020<span class="nav-dd-ref-tag">RSS-2020</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
     </a>
-    <a href="pdf-viewer.html?file=references/research-papers/incentives-against-power-grabs_kiayias-et-al_2021.pdf" class="nav-dd-ref">
+    <a href="pdf-viewer.html?file=references/research-papers/incentives-against-power-grabs_kiayias-et-al_2021.pdf" class="nav-dd-ref nav-dd-ref-sub">
       <span class="nav-dd-ref-title">Incentives Against Power Grabs</span>
       <span class="nav-dd-ref-cite">Kiayias et al. — 2021<span class="nav-dd-ref-tag">IAPG</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
     </a>
-    <a href="pdf-viewer.html?file=references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-ref">
+    <a href="pdf-viewer.html?file=references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-ref nav-dd-ref-sub">
       <span class="nav-dd-ref-title">Balancing Participation & Decentralization</span>
       <span class="nav-dd-ref-cite">Kiayias et al. — 2024<span class="nav-dd-ref-tag">BPD</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
     </a>
-    <a href="https://arxiv.org/abs/2505.04422" class="nav-dd-ref" rel="noopener" target="_blank">
+    <a href="https://arxiv.org/abs/2505.04422" class="nav-dd-ref nav-dd-ref-sub" rel="noopener" target="_blank">
       <span class="nav-dd-ref-title">Reward Sharing in PoS with No-Pool-Choice Delegators</span>
       <span class="nav-dd-ref-cite">Kiayias et al. — AFT 2025<span class="nav-dd-ref-tag">AFT-2025</span></span>
       <span class="nav-dd-ref-pdf">arXiv</span>
@@ -1780,7 +1767,7 @@ HERO_BLOCK = """<div class="hero" data-banner="{hero_banner}">
 <div class="content">{content}</div>"""
 
 # Which active-nav slugs fall under which top-level dropdown
-DIAG_ACTIVE = {"problem-statements", "diagnostic", "census", "reserves", "pools", "operator",
+DIAG_ACTIVE = {"diagnostic", "census", "reserves", "pools", "operator",
                "single-spo", "entity-lifecycle", "mpo-entity-profiles",
                "nakamoto-coefficient", "edi-replication"}
 SOLUTION_ACTIVE = {
@@ -5430,23 +5417,6 @@ def _render_findings_content(
 
     intro = (
         '<div class="findings-intro">'
-        '<div class="admon admon-note findings-cps-banner">'
-        '<div class="admon-label">CPSs in formation</div>'
-        '<p>'
-        'The problems on this page are <strong>Cardano Problem Statements '
-        '(CPSs) in formation</strong>. The lifecycle is '
-        '<em>mainnet evidence &rarr; induced problem (proto-CPS) &rarr; '
-        'V2 specification &rarr; CIPs</em>: each induced problem is scoped '
-        'against shared evidence so candidate solutions can later be '
-        'evaluated against the same problem definition once the work '
-        'moves into the '
-        '<a href="https://github.com/cardano-foundation/CIPs" rel="noopener" '
-        'target="_blank">IntersectMBO/CIPs governance process</a>. '
-        'Earlier draft CPS files were retired in favour of this canonical '
-        'narrative; promotion to formal CPS happens upstream when a '
-        'problem is judged ready.'
-        '</p>'
-        '</div>'
         '<p class="findings-intro-lead">'
         'The diagnostic walks Cardano&rsquo;s reward pipeline from the '
         'reserve to the delegator and asks at every layer: '
@@ -5466,7 +5436,45 @@ def _render_findings_content(
         'has stopped answering.'
         '</p>'
         '<p>'
-        'The eleven problems split along an economic distinction that '
+        'Each one is a <strong>Cardano Problem Statement (CPS) in '
+        'formation</strong> &mdash; scoped against shared evidence so '
+        'candidate solutions can later be evaluated against the same '
+        'definition once the work moves into the '
+        '<a href="https://github.com/cardano-foundation/CIPs" rel="noopener" '
+        'target="_blank">IntersectMBO/CIPs governance process</a>.'
+        '</p>'
+        '<div class="cps-lifecycle" aria-label="CPS lifecycle">'
+        '<a class="cps-stage cps-stage-done" href="diagnostic.html" '
+        'title="The Mainnet Diagnostic — observations & findings">'
+        '<span class="cps-stage-num">Stage 01</span>'
+        '<span class="cps-stage-label">Mainnet evidence</span>'
+        '<span class="cps-stage-meta">Observations &amp; Findings</span>'
+        '</a>'
+        '<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>'
+        '<div class="cps-stage cps-stage-current" '
+        'title="You are here — induced problems, scoped against the diagnostic">'
+        '<span class="cps-stage-num">Stage 02</span>'
+        '<span class="cps-stage-label">Induced problem</span>'
+        '<span class="cps-stage-meta">proto-CPS &middot; this page</span>'
+        '</div>'
+        '<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>'
+        '<a class="cps-stage cps-stage-future" href="v2-spec.html" '
+        'title="The V2 Specification Proposal — milestones &amp; KPIs">'
+        '<span class="cps-stage-num">Stage 03</span>'
+        '<span class="cps-stage-label">V2 Specification Proposal</span>'
+        '<span class="cps-stage-meta">Milestones &amp; KPIs</span>'
+        '</a>'
+        '<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>'
+        '<a class="cps-stage cps-stage-future" '
+        'href="solution-evaluation.html" '
+        'title="Evaluation of the four reward-related CIPs against V2 milestones">'
+        '<span class="cps-stage-num">Stage 04</span>'
+        '<span class="cps-stage-label">CIPs (Evaluation)</span>'
+        '<span class="cps-stage-meta">IntersectMBO governance</span>'
+        '</a>'
+        '</div>'
+        '<p>'
+        f'The {len(findings)} problems split along an economic distinction that '
         'runs through every reward-mechanism analysis: participant-level '
         'gaps (<strong>Microeconomics</strong>, the mechanism as it '
         'reaches an individual operator, delegator, or pool) and '
