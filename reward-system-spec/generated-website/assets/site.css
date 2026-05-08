@@ -1152,7 +1152,7 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
 .nav-breadcrumb-desc-sep{color:var(--text-muted);opacity:.4;font-size:12px;padding:0 2px 0 6px}
 .nav-breadcrumb-desc{color:var(--text-muted);font-weight:400;font-style:italic;opacity:.88;letter-spacing:.15px}
 .nav-dd-wrap-light{position:relative}
-.nav-dd-btn-light{background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font:500 11.5px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--text-secondary);padding:8px 13px;transition:all .15s;white-space:nowrap;position:relative}
+.nav-dd-btn-light{background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.2px;color:var(--text-secondary);padding:9px 14px;transition:all .15s;white-space:nowrap;position:relative}
 /* The CIPs button text needs the lowercase 's' to read as the
    initialism. The shared .nav-dd-btn-light has text-transform:
    uppercase; override here. */
@@ -1287,6 +1287,28 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
    at this destination, so it gets the brand colour at full saturation
    instead of a tinted pill. */
 .nav-tab-spec-big{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px solid var(--cardano-blue);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap;box-shadow:0 2px 6px var(--cardano-blue-soft);position:relative}
+
+/* Induced Problems — standalone tab between Constitution and
+   Mainnet Diagnostic, in the gradient-fade zone of .nav-pages.
+   Inherits the same neutral chrome as the right-side dropdowns
+   (.nav-dd-btn-diag / -design / -research): solid white plate,
+   uppercase Inter, subtle shadow. Carries the standard "new"
+   eyebrow stamp via ::before, matching the recipe used on the
+   light dropdowns that surface fresh content. */
+.nav-tab-problems-big{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.2px;color:var(--text-secondary);background:#fff;border:1px solid var(--border);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.06);position:relative}
+.nav-tab-problems-big:hover{color:var(--text-primary);border-color:var(--text-muted);background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.10)}
+/* Active state intentionally identical to resting state — the
+   page hero / breadcrumb already signal the current page; the
+   nav itself stays visually uniform across the four light tabs
+   (Constitution / Induced Problems / Mainnet Diagnostic / Design
+   Support). */
+.nav-tab-problems-big.active{color:var(--text-secondary);background:#fff;border-color:var(--border);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark] .nav-tab-problems-big{color:#FFB07A;border-color:rgba(255,176,122,.55);background:rgba(20,20,24,.85);box-shadow:inset 0 0 0 999px rgba(236,100,29,.10)}
+/* "NEW" eyebrow stamp — same recipe as the other light
+   dropdowns that contain fresh content, so the page reads as
+   one signal family. */
+.nav-tab-problems-big::before{content:"new";position:absolute;top:-7px;left:-6px;font:700 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:#0a8a80;padding:3px 5px;border-radius:3px;border:1px solid rgba(22,233,216,.55);box-shadow:0 1px 2px rgba(22,233,216,.18);pointer-events:none}
+[data-theme=dark] .nav-tab-problems-big::before{background:#1a1a1a;color:#16E9D8;border-color:rgba(22,233,216,.45)}
 /* "PROPOSAL" eyebrow tag — same shape language as the "FUTURE"
    stamp on .nav-tab-implementation, anchored to the top-right of
    the V2 Specification tab so the spec reads as 'this is a
@@ -1739,6 +1761,69 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
   border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;gap:4px}
 .findings-stat-num{font-size:28px;font-weight:500;color:var(--infared);letter-spacing:-.8px;line-height:1.1}
 .findings-stat-lbl{font-size:11.5px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted)}
+
+/* CPS lifecycle ribbon — visual rendition of the
+   evidence → proto-CPS → V2 spec → CIPs chain.
+   Each stage is a chip with a stage number, label, and
+   meta sub-label; the current stage carries the Infared
+   accent so the reader sees where the page sits in the
+   pipeline at a glance. Past stages stay subtle (Cardano
+   blue tint), future stages are dashed-outlined to read
+   as not-yet-realised. */
+.cps-lifecycle{
+  display:flex;gap:10px;margin:22px 0 26px;align-items:stretch;
+  flex-wrap:wrap}
+.cps-stage{
+  flex:1;min-width:175px;display:flex;flex-direction:column;
+  gap:6px;padding:14px 16px 13px;background:var(--bg);
+  border:1px solid var(--border);border-radius:10px;
+  text-decoration:none;position:relative;
+  transition:border-color .15s,background .15s,transform .15s}
+a.cps-stage:hover{transform:translateY(-1px)}
+.cps-stage-num{
+  font:600 10px/1 'Chivo','Inter',-apple-system,sans-serif;
+  letter-spacing:1.6px;color:var(--text-muted);
+  text-transform:uppercase}
+.cps-stage-label{
+  font:600 14.5px/1.25 'Chivo','Inter',-apple-system,sans-serif;
+  color:var(--text-primary);letter-spacing:-.2px}
+.cps-stage-meta{
+  font:400 11.5px/1.35 'Inter',-apple-system,sans-serif;
+  color:var(--text-muted);margin-top:auto}
+.cps-stage-arrow{
+  flex-shrink:0;align-self:center;
+  font:600 22px/1 'Inter',-apple-system,sans-serif;
+  color:var(--text-muted);opacity:.55;user-select:none;
+  padding:0 2px}
+/* Past stages — subtle Cardano blue tint, signalling work done. */
+.cps-stage-done{
+  border-color:var(--cardano-link-line);
+  background:linear-gradient(0deg,var(--cardano-blue-soft),var(--cardano-blue-soft)),var(--bg)}
+.cps-stage-done .cps-stage-num{color:var(--cardano-blue)}
+[data-theme=dark] .cps-stage-done{
+  border-color:rgba(143,177,255,.32);
+  background:linear-gradient(0deg,rgba(143,177,255,.07),rgba(143,177,255,.07)),var(--bg)}
+[data-theme=dark] .cps-stage-done .cps-stage-num{color:#8FB1FF}
+/* Current stage — the page you're on. Infared border + a
+   small "you are here" pill in the corner. */
+.cps-stage-current{
+  border:1.5px solid var(--infared);
+  background:var(--bg);
+  box-shadow:0 1px 0 rgba(229,35,33,.12),0 6px 18px -10px rgba(229,35,33,.35)}
+.cps-stage-current .cps-stage-num{color:var(--infared)}
+.cps-stage-current::after{
+  content:'YOU ARE HERE';position:absolute;top:-8px;right:14px;
+  background:var(--infared);color:#fff;
+  font:700 8.5px/1 'Chivo','Inter',sans-serif;letter-spacing:1.2px;
+  padding:4px 8px;border-radius:3px}
+/* Future stages — dashed border so they read as not-yet. */
+.cps-stage-future{border-style:dashed;opacity:.78}
+.cps-stage-future:hover{opacity:1}
+@media (max-width:780px){
+  .cps-lifecycle{flex-direction:column}
+  .cps-stage-arrow{transform:rotate(90deg);align-self:center;padding:2px 0}
+  .cps-stage{min-width:0}
+}
 
 .findings-controls{display:flex;gap:14px;align-items:center;flex-wrap:wrap;
   margin:18px 0 28px;padding:12px 14px;background:var(--bg);

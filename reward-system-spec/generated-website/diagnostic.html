@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778160463">
+<link rel="stylesheet" href="assets/site.css?v=1778223721">
 
 
 </head>
@@ -159,6 +159,13 @@ window.MathJax = {
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
 
+<!-- Zone 2.7 — Induced Problems (proto-CPS bridge between diagnostic and V2 spec) -->
+<div class="nav-zone nav-zone-problems">
+<a href="problem-statements.html" class="nav-tab-problems-big" title="The structural problems the diagnostic induces from on-chain evidence">Induced Problems</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
 <!-- Zone 3 — Mainnet Diagnostic (observed reality) -->
 <div class="nav-zone nav-zone-diag">
 <div class="nav-dd-wrap nav-dd-wrap-light">
@@ -167,13 +174,9 @@ window.MathJax = {
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-diagnostic">Mainnet Diagnostic</span>
-      <span class="nav-dd-stratum-meta">What mainnet is actually doing — synthesis, Reward-Flow evidence, and the prior report</span>
+      <span class="nav-dd-stratum-meta">What mainnet is actually doing — Reward-Flow evidence, the staking census, and the prior report</span>
     </div>
-    <a href="problem-statements.html" class="nav-dd-ref nav-dd-ref-hero">
-      <span class="nav-dd-ref-title">Induced Problems<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">The structural problems the diagnostic induces from on-chain evidence — design intent vs mainnet reality</span>
-    </a>
-    <a href="diagnostic.html" class="nav-dd-ref active">
+    <a href="diagnostic.html" class="nav-dd-ref nav-dd-ref-hero active">
       <span class="nav-dd-ref-title">The Diagnostic</span>
       <span class="nav-dd-ref-cite">Full narrative — observations, problem induction, and sub-report links</span>
     </a>
@@ -207,7 +210,7 @@ window.MathJax = {
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
 
-<!-- Zone 4 — Design Support (intended mechanism) -->
+<!-- Zone 4 — Design Support (intended mechanism + research foundations) -->
 <div class="nav-zone nav-zone-design">
 <div class="nav-dd-wrap nav-dd-wrap-light">
 <button class="nav-dd-btn-light nav-dd-btn-design" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Design Support ▾</button>
@@ -215,7 +218,7 @@ window.MathJax = {
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-design">Design Support</span>
-      <span class="nav-dd-stratum-meta">The intended mechanism — formal spec + the narrative it never came with</span>
+      <span class="nav-dd-stratum-meta">The intended mechanism — formal spec, narrative companion, and the academic antecedents the design rests on</span>
     </div>
     <a href="intended-game.html" class="nav-dd-ref">
       <span class="nav-dd-ref-title">The Intended Game<span class="nav-dd-ref-new">New</span></span>
@@ -226,39 +229,23 @@ window.MathJax = {
       <span class="nav-dd-ref-cite">Kant · Brünjes · Coutts — 2019<span class="nav-dd-ref-tag">SL-D1</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
     </a>
-  </div>
-</div>
-</div>
-</div>
-
-<span class="nav-flow-arrow" aria-hidden="true">←</span>
-
-<!-- Zone 5 — Research Papers (academic foundations) -->
-<div class="nav-zone nav-zone-research">
-<div class="nav-dd-wrap nav-dd-wrap-light">
-<button class="nav-dd-btn-light nav-dd-btn-research" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Research Papers ▾</button>
-<div class="nav-dd-panel-light nav-dd-panel-research">
-  <div class="nav-dd-stratum">
-    <div class="nav-dd-stratum-head">
-      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-research">Research Papers</span>
-      <span class="nav-dd-stratum-meta">Academic antecedents and adjacent work on reward schemes</span>
-    </div>
-    <a href="pdf-viewer.html?file=references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf" class="nav-dd-ref">
+    <div class="nav-dd-ref-group-label">Research Papers</div>
+    <a href="pdf-viewer.html?file=references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf" class="nav-dd-ref nav-dd-ref-sub">
       <span class="nav-dd-ref-title">Reward Sharing Schemes for Stake Pools</span>
       <span class="nav-dd-ref-cite">Brünjes · Kiayias · Koutsoupias · Stouka — 2020<span class="nav-dd-ref-tag">RSS-2020</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
     </a>
-    <a href="pdf-viewer.html?file=references/research-papers/incentives-against-power-grabs_kiayias-et-al_2021.pdf" class="nav-dd-ref">
+    <a href="pdf-viewer.html?file=references/research-papers/incentives-against-power-grabs_kiayias-et-al_2021.pdf" class="nav-dd-ref nav-dd-ref-sub">
       <span class="nav-dd-ref-title">Incentives Against Power Grabs</span>
       <span class="nav-dd-ref-cite">Kiayias et al. — 2021<span class="nav-dd-ref-tag">IAPG</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
     </a>
-    <a href="pdf-viewer.html?file=references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-ref">
+    <a href="pdf-viewer.html?file=references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-ref nav-dd-ref-sub">
       <span class="nav-dd-ref-title">Balancing Participation & Decentralization</span>
       <span class="nav-dd-ref-cite">Kiayias et al. — 2024<span class="nav-dd-ref-tag">BPD</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
     </a>
-    <a href="https://arxiv.org/abs/2505.04422" class="nav-dd-ref" rel="noopener" target="_blank">
+    <a href="https://arxiv.org/abs/2505.04422" class="nav-dd-ref nav-dd-ref-sub" rel="noopener" target="_blank">
       <span class="nav-dd-ref-title">Reward Sharing in PoS with No-Pool-Choice Delegators</span>
       <span class="nav-dd-ref-cite">Kiayias et al. — AFT 2025<span class="nav-dd-ref-tag">AFT-2025</span></span>
       <span class="nav-dd-ref-pdf">arXiv</span>
@@ -294,7 +281,7 @@ window.MathJax = {
     <div class="hero-eyebrow">Mainnet Diagnostic</div>
     <h1>The Diagnostic</h1>
     <div class="sub">Observations, problem induction, and links to the sub-reports</div>
-    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/05/07</span></span></span></div>
+    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/05/08</span></span></span></div>
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
@@ -386,8 +373,8 @@ window.MathJax = {
 <li><a href="#21-the-staking-populations">2.1. The Staking Populations</a><ul>
 <li><a href="#211-overview">2.1.1. Overview</a></li>
 <li><a href="#213-problem-induction-distribution-distortions-across-the-three-populations">2.1.3. Problem Induction → Distribution distortions across the three populations</a><ul>
-<li><a href="#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus">2.1.3.1. SPO supply side — fewer and fewer entities participate in consensus</a></li>
-<li><a href="#2132-arbiter-side-distribution-titans-move-the-disciplining-capital-but-not-on-yield">2.1.3.2. Arbiter-side distribution — titans move the disciplining capital, but not on yield</a></li>
+<li><a href="#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus">2.1.3.1. SPO (Supply-side) — fewer and fewer entities participate in consensus</a></li>
+<li><a href="#2132-delegator-arbiter-side-titans-move-the-disciplining-capital-but-not-on-yield">2.1.3.2. Delegator (Arbiter-side) — titans move the disciplining capital, but not on yield</a></li>
 <li><a href="#2133-non-participants-a-secondary-distribution-problem-behind-the-active-player-dynamics">2.1.3.3. Non-participants — a secondary distribution problem behind the active-player dynamics</a></li>
 </ul>
 </li>
@@ -395,7 +382,7 @@ window.MathJax = {
 </li>
 <li><a href="#22-transaction-submitters">2.2. Transaction Submitters</a><ul>
 <li><a href="#221-overview">2.2.1. Overview</a></li>
-<li><a href="#223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion">2.2.3. Problem Induction → Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion</a></li>
+<li><a href="#223-problem-induction-tx-submitter-demand-side-at-current-throughput-the-staking-pot-does-not-survive-reserve-depletion">2.2.3. Problem Induction → Tx Submitter (Demand-side) — at current throughput, the staking pot does not survive reserve depletion</a></li>
 </ul>
 </li>
 </ul>
@@ -1358,7 +1345,7 @@ END SANDBOX -->
 <h3 id="213-problem-induction-distribution-distortions-across-the-three-populations">2.1.3. Problem Induction → Distribution distortions across the three populations</h3>
 <p>The observations above describe two active populations and one residual population. Read together, they reveal a <em>distribution distortion</em> on each side of the active staking market and a separate, secondary distortion on the non-participating side.</p>
 <p>The order in which these problems are inducted matters. The SPO-side and arbiter-side concentrations are the levers the reward mechanism can move; the non-participant gap is largely beyond its reach. Repairing the active-player dynamics is therefore the primary task — expanding the participant pool before that repair would import the existing imbalances onto a larger base, not dilute them.</p>
-<h4 id="2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus">2.1.3.1. SPO supply side — fewer and fewer entities participate in consensus</h4>
+<h4 id="2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus">2.1.3.1. SPO (Supply-side) — fewer and fewer entities participate in consensus</h4>
 <p>The intended design assumes a competitive field of $k$ single-pool operators converging toward a balanced equilibrium (<a href="#1242-progression-balanced-as-intended-but-private-by-design">Progression — balanced as intended, but private by design</a>).</p>
 <p><em>Mainnet runs the opposite trajectory: at every stress wave the chain crosses, single-pool operators fall and multi-pool entities absorb the ground they leave.</em></p>
 <p>Single-pool operators have fallen from <strong>555 productive pools and 39.1% of productive stake</strong> at epoch 300 to <strong>291 pools and 24%</strong> at epoch 623 — a <strong>48% drop</strong> in pool count and <strong>15 percentage points</strong> of stake share. Over the same window, multi-pool entities grew from <strong>23 to 85</strong>, and their stake share rose from <strong>65% to 76%</strong> (<a class="obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs-src="CEN.O1" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O1 · hover for summary, click for detail">CEN.O1</a>). The replacement pools that keep the productive total around 950 are entity-operated; the independent base is hollowing out, not stable.</p>
@@ -1374,7 +1361,7 @@ END SANDBOX -->
 <p>First, <strong>$k$ counts pools, not block-producing entities</strong>. A registered pool that does not produce a block in expectation does not participate in consensus; counting it in the $k$ denominator inflates the apparent decentralisation. The relevant population is pools above the production floor — pools producing <strong>at least one block per epoch in expectation</strong> — and below that floor, the consensus contribution is statistical noise, not a stake in the network. <em>Sizing $k$ against the registered set, rather than the productive set, is a category error.</em></p>
 <p>Second, <strong>$k$ is entity-blind, and the design has not compensated for what $k$ cannot see</strong>. The protocol cannot identify the operator behind 20 pools, but the design has to take that into account <em>for security reasons</em>: 449 pools controlled by 83 entities collapse, at the consensus level, to <strong>83 actors, not 449</strong>. <em>Treating them as 449 independent participants is a security failure, not a measurement detail.</em> The mechanism must counterbalance the entity-level concentration through the instruments it has — pledge accounting, reward-curve calibration, saturation behaviour — even while remaining entity-blind at the enforcement layer.</p>
 <p><em>The operator base is contracting, not competing. The $k$ parameter — which counts every registered pool and ignores the entity behind it — cannot see the contraction it was meant to prevent.</em></p>
-<h4 id="2132-arbiter-side-distribution-titans-move-the-disciplining-capital-but-not-on-yield">2.1.3.2. Arbiter-side distribution — titans move the disciplining capital, but not on yield</h4>
+<h4 id="2132-delegator-arbiter-side-titans-move-the-disciplining-capital-but-not-on-yield">2.1.3.2. Delegator (Arbiter-side) — titans move the disciplining capital, but not on yield</h4>
 <p>The intended design casts delegators as the arbiters of the operator market — mobile capital that disciplines operators by moving toward better offers (<a href="#12422-why-balanced-should-be-the-intended-equilibrium">Why balanced should be the intended equilibrium</a>).</p>
 <p><em>Mainnet has produced a power law that crystallised early and has not moved since; the capital that could arbitrate is concentrated in a population that does not use the signal it holds.</em></p>
 <p><strong>1,000 delegators (0.07% of the base) control 57% of staked ADA</strong>; the Gini coefficient is <strong>0.976</strong> (<a class="obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs-src="CEN.O3" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O3 · hover for summary, click for detail">CEN.O3</a>). The median delegator holds <strong>32 ADA</strong>; the mean is <strong>16,055 ADA</strong> — a <strong>500× gap</strong>. This concentration profile locked in by <strong>epoch 300</strong>: a subsequent 9× growth in delegator count produced no measurable change in the top-1% share.</p>
@@ -1406,7 +1393,7 @@ END SANDBOX -->
 <p>The pool is also <strong>temporally polarised</strong> (<a href="census.html#cen-o7-f5">CEN.O7.F5</a>): <strong>37%</strong> of the no-credential UTxO value (928M ADA) is pre-staking-era dormant capital, and <strong>44%</strong> (1,110M) is from the last 73 epochs (recent enterprise-address cycling by exchanges and DeFi contracts). <em>The middle eras are essentially empty — the population splits cleanly between probably-lost and operationally-active, with very little in between.</em></p>
 <p>Two implications follow, and together they demote the non-participant population to a <em>secondary</em> concern in the diagnostic priority order.</p>
 <p>The first is a <strong>quantitative ceiling</strong>. Incentive changes alone (curve adjustments, fee-structure reforms, yield improvements) can shift at most the <strong>0.37% addressable pool</strong> — and even that, against the headwind of zero-balance shells and the single-vault concentration, has a real ceiling closer to <strong>0.06%</strong> of supply. Moving the structural 39.4% requires <strong>protocol-level changes</strong> — enabling enterprise-address staking, mandating staking-capable script standards in DeFi protocols, introducing delegation-by-default for newly minted wallets — <em>not parameter tuning</em>.</p>
-<p>The second is an <strong>order-of-operations</strong> argument. The active-player distortions documented in <a href="#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus">SPO supply side — fewer and fewer entities participate in consensus</a> and <a href="#2132-arbiter-side-distribution-titans-move-the-disciplining-capital-but-not-on-yield">Arbiter-side distribution — titans move the disciplining capital, but not on yield</a> determine <em>what happens to any newly recruited capital</em>. A delegator brought in today inherits the same frozen distribution: the median switch produces zero yield change, the size-visibility loop steers stake toward the dominant fleets, and the pledge signal is invisible. Expanding the participant pool <em>before</em> repairing the active-player dynamics enlarges the existing concentration rather than dilutes it.</p>
+<p>The second is an <strong>order-of-operations</strong> argument. The active-player distortions documented in <a href="#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus">SPO (Supply-side) — fewer and fewer entities participate in consensus</a> and <a href="#2132-delegator-arbiter-side-titans-move-the-disciplining-capital-but-not-on-yield">Delegator (Arbiter-side) — titans move the disciplining capital, but not on yield</a> determine <em>what happens to any newly recruited capital</em>. A delegator brought in today inherits the same frozen distribution: the median switch produces zero yield change, the size-visibility loop steers stake toward the dominant fleets, and the pledge signal is invisible. Expanding the participant pool <em>before</em> repairing the active-player dynamics enlarges the existing concentration rather than dilutes it.</p>
 <p><em>The non-participant population is the single largest structural constraint on the reward pipeline (<a class="obs-ref obs-ref-src" href="reserves.html#1-mainnet-observations" data-obs-src="TRE.O3" data-obs-page="reserves.html" data-obs-href="reserves.html#1-mainnet-observations" title="TRE.O3 · hover for summary, click for detail">TRE.O3</a> attributes ~71% of cumulative return-to-reserve to it), but most of it is structurally beyond the reach of any reward-design change, and the share that can be reached should be reached only after the active-player distribution is repaired. The diagnostic priority is to clean up the dynamics among the participating populations first; population growth follows.</em></p>
 <h2 id="22-transaction-submitters">2.2. Transaction Submitters</h2>
 <p>The reward pipeline is funded almost entirely by monetary expansion today (<strong>~99.8% of the epoch pot</strong>), but the long-term design assumes transaction fees will eventually replace it. The population that generates those fees — transaction submitters — is therefore a <strong>first-order variable for the pipeline's sustainability</strong>.</p>
@@ -1435,7 +1422,7 @@ END SANDBOX -->
 <!-- mainnet-observations: 2.2.2 -->
 
 <header class="synth-obs-panel" id="222-mainnet-observations" data-obs-section="2.2.2"><div class="synth-obs-panel-title"><span class="synth-obs-panel-eyebrow">Mainnet Observations</span><span class="synth-obs-panel-sep">—</span><a class="synth-obs-panel-source" href="census.html" title="Open the The Staking Census sub-report">The Staking Census<span class="synth-obs-panel-arrow" aria-hidden="true">→</span></a></div><ul class="synth-obs-compact" data-obs-section="2.2.2"><li class="synth-obs-row" data-section="2.2.2" data-local="O8"><a class="synth-obs-link obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs="obs-222-8" data-tier="fees" data-obs-src="CEN.O8" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O8 · hover for summary, click for detail"><span class="synth-obs-canon">CEN.O8</span><span class="synth-obs-title">The active submitter population is shrinking and concentrating into a smaller, more active core</span></a></li><li class="synth-obs-row" data-section="2.2.2" data-local="O9"><a class="synth-obs-link obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs="obs-222-9" data-tier="fees" data-obs-src="CEN.O9" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O9 · hover for summary, click for detail"><span class="synth-obs-canon">CEN.O9</span><span class="synth-obs-title">Two submitter sub-populations coexist: a stakeable head-count majority and a small non-stakeable minority that pays a third of the fees</span></a></li><li class="synth-obs-row" data-section="2.2.2" data-local="O10"><a class="synth-obs-link obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs="obs-222-10" data-tier="fees" data-obs-src="CEN.O10" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O10 · hover for summary, click for detail"><span class="synth-obs-canon">CEN.O10</span><span class="synth-obs-title">A small DeFi-script sub-population — ~3,800 contracts at epoch 627 — generates a third of the fee base</span></a></li><li class="synth-obs-row" data-section="2.2.2" data-local="O11"><a class="synth-obs-link obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs="obs-222-11" data-tier="fees" data-obs-src="CEN.O11" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O11 · hover for summary, click for detail"><span class="synth-obs-canon">CEN.O11</span><span class="synth-obs-title">The fee-paying population is bimodal: a heavy-paying core of a few hundred high-frequency actors and a long tail of ~147K small contributors</span></a></li><li class="synth-obs-row" data-section="2.2.2" data-local="O12"><a class="synth-obs-link obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs="obs-222-12" data-tier="demand" data-obs-src="CEN.O12" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O12 · hover for summary, click for detail"><span class="synth-obs-canon">CEN.O12</span><span class="synth-obs-title">The fee-paying population and the delegator population barely overlap — funders and beneficiaries are largely different people</span></a></li></ul></header>
-<h3 id="223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion">2.2.3. Problem Induction → Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion</h3>
+<h3 id="223-problem-induction-tx-submitter-demand-side-at-current-throughput-the-staking-pot-does-not-survive-reserve-depletion">2.2.3. Problem Induction → Tx Submitter (Demand-side) — at current throughput, the staking pot does not survive reserve depletion</h3>
 <p>The reward pipeline draws ~99.8% of the epoch pot from monetary expansion today, and the long-term design assumes transaction fees will eventually replace it. That replacement rests on <strong>two conditions</strong> holding simultaneously: the fee input must reach a level comparable to the post-reserve pot, and the population producing the fees must expand to fund it.</p>
 <p>Mainnet shows that <strong>neither condition holds at current throughput</strong>. The pot is funded almost entirely by a depleting reserve, the fee replacement is two orders of magnitude too low, and the population producing the fees is contracting along the dimensions that matter — concentrated in addresses the pipeline either cannot reward by construction or doesn't reward in practice.</p>
 <p><strong>The fee floor is two orders of magnitude away from sufficient.</strong> Today, fees contribute approximately <strong>0.19% of the pot</strong> (<a class="obs-ref obs-ref-src" href="reserves.html#1-mainnet-observations" data-obs-src="TRE.O1" data-obs-page="reserves.html" data-obs-href="reserves.html#1-mainnet-observations" title="TRE.O1 · hover for summary, click for detail">TRE.O1</a>). Reaching self-sufficiency — a fee-funded pot equivalent to the current expansion-funded one — would require a <strong>12–16× increase in fee revenue</strong> at current transaction volumes (<a class="obs-ref obs-ref-src" href="reserves.html#1-mainnet-observations" data-obs-src="TRE.O1" data-obs-page="reserves.html" data-obs-href="reserves.html#1-mainnet-observations" title="TRE.O1 · hover for summary, click for detail">TRE.O1</a>). The reserve itself is finite: its depletion trajectory is documented in <a href="#11-treasury-pool-pots-distribution">Treasury &amp; Pool Pots Distribution</a>, and when it approaches exhaustion, the epoch pot contracts to whatever fees and deposits provide. <em>At current throughput, that means a pot roughly 500× smaller than the one the staking population is calibrated to expect.</em></p>
@@ -1470,14 +1457,14 @@ END SANDBOX -->
 <li>institutional custody</li>
 <li>speculative interest</li>
 </ul>
-<p><em>None of these are protocol parameters.</em> The mechanism is therefore <strong>structurally dependent on an exogenous variable it cannot influence</strong>. If demand stagnates or contracts, the pipeline's ADA-denominated rewards lose purchasing power, <strong>operators exit</strong> (<a href="#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus">SPO supply side — fewer and fewer entities participate in consensus</a> documents the contraction; the marginal operators at the bottom are the first to leave), <strong>delegators undelegate</strong> (<a href="#2132-arbiter-side-distribution-titans-move-the-disciplining-capital-but-not-on-yield">Arbiter-side distribution — titans move the disciplining capital, but not on yield</a> documents the frozen power law; the micro-delegators holding 32 ADA median have the least to lose), and the staking rate declines further (<a class="obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs-src="CEN.O7" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O7 · hover for summary, click for detail">CEN.O7</a>). Each of these effects reduces the security budget, which reduces the chain's utility, which suppresses demand for ADA — <em>a reflexive loop with no internal floor</em>.</p>
+<p><em>None of these are protocol parameters.</em> The mechanism is therefore <strong>structurally dependent on an exogenous variable it cannot influence</strong>. If demand stagnates or contracts, the pipeline's ADA-denominated rewards lose purchasing power, <strong>operators exit</strong> (<a href="#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus">SPO (Supply-side) — fewer and fewer entities participate in consensus</a> documents the contraction; the marginal operators at the bottom are the first to leave), <strong>delegators undelegate</strong> (<a href="#2132-delegator-arbiter-side-titans-move-the-disciplining-capital-but-not-on-yield">Delegator (Arbiter-side) — titans move the disciplining capital, but not on yield</a> documents the frozen power law; the micro-delegators holding 32 ADA median have the least to lose), and the staking rate declines further (<a class="obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs-src="CEN.O7" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O7 · hover for summary, click for detail">CEN.O7</a>). Each of these effects reduces the security budget, which reduces the chain's utility, which suppresses demand for ADA — <em>a reflexive loop with no internal floor</em>.</p>
 <p><em>The deflationist promise rests on a single property — finite supply — and that property is necessary but not sufficient.</em> For submitters the constraint runs in the opposite direction: transaction fees are protocol-determined minimums denominated in ADA, so if ADA appreciates the fiat cost of transacting rises and can suppress transaction volume (<a href="#22-transaction-submitters">Transaction Submitters</a>) — the same scarcity property cuts both ways depending on who one asks.</p>
 <p><strong>What the protocol could do instead.</strong> A deflationist promise that rests on supply scarcity alone is brittle. Beyond the supply cap, the protocol has <strong>no demand-side property</strong> to honour the promise: no instrument that adjusts emission against price observations, no treasury operation that absorbs downside exposure, no contract-level reward routing that internalises chain utility. Pre-Conway, scarcity-as-only-lever was a <em>forced</em> choice — there was no on-chain governance pipeline to add complementary properties. <em>Post-Conway, it is a design gap.</em> The parameters that already exist ($\rho$, $\tau$, $minPoolCost$, $a_0$) can be recalibrated against macroeconomic conditions; the governance pipeline can introduce new instruments that complement scarcity. <strong>The diagnostic point is that finite supply was never enough, and the post-Conway era removes the excuse for treating it as if it were.</strong></p>
 <h3 id="312-the-protocol-takes-the-hit-of-ada-volatility-with-no-instrument-to-govern-it">3.1.2. The protocol takes the hit of ADA volatility, with no instrument to govern it</h3>
 <p>Whatever direction the ADA/Fiat exchange rate moves, the mechanism <strong>absorbs the consequence passively</strong> — there is no on-chain instrument that responds to price observations, redirects emission, or recalibrates fees against real-economy conditions. The reward pipeline's long-term viability requires <strong>three macroeconomic conditions</strong> to hold simultaneously, but the mechanism has no lever to keep any of them on track:</p>
 <ul>
 <li><strong>operator and delegator real revenue</strong> must remain viable, which requires the ADA price to be <strong>deflationary in real terms</strong> as the emission rate declines</li>
-<li>the <strong>fee input must grow</strong> <em>and</em> the <strong>submitter population must expand</strong> (<a href="#223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion">Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion</a>)</li>
+<li>the <strong>fee input must grow</strong> <em>and</em> the <strong>submitter population must expand</strong> (<a href="#223-problem-induction-tx-submitter-demand-side-at-current-throughput-the-staking-pot-does-not-survive-reserve-depletion">Tx Submitter (Demand-side) — at current throughput, the staking pot does not survive reserve depletion</a>)</li>
 <li>the <strong>fiat cost of transacting</strong> must remain low enough that activity keeps flowing on Cardano rather than migrating to cheaper chains</li>
 </ul>
 <p>These three constraints are <strong>not independent</strong> — they interact, and in some configurations they contradict:</p>
@@ -1578,7 +1565,7 @@ END SANDBOX -->
         <span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit
       </div>
       <div class="footer-meta">
-        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/05/07</span></div>
+        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/05/08</span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Author</span><span class="footer-meta-val"><a href="https://www.linkedin.com/in/nhenin/" rel="noopener" target="_blank">Nicolas Henin<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Source</span><span class="footer-meta-val"><a href="https://github.com/input-output-hk/spo-incentives" rel="noopener" target="_blank">input-output-hk/spo-incentives<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
       </div>
@@ -1604,6 +1591,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778160463"></script>
+<script src="assets/site.js?v=1778223721"></script>
 </body>
 </html>
