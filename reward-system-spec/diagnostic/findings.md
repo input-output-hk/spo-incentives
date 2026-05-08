@@ -244,7 +244,7 @@ id: 2.2.3
 parent: 2.2
 parent_title: Transaction Submitters
 tier: fees
-observatory_anchor: 223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion
+observatory_anchor: 223-problem-induction-tx-submitter-demand-side-at-current-throughput-the-staking-pot-does-not-survive-reserve-depletion
 observations:
   - obs-222-8
   - obs-222-9

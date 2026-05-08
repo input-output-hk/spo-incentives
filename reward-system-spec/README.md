@@ -922,7 +922,7 @@ Fee Policy specifies the surveillance and recalibration machinery that addresses
 
 ### 4.2.1. Problem statement
 
-The reward pipeline's long-term viability rests on a single assumption: that fees will eventually replace expansion as the dominant pot revenue source ([Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion](diagnostic/README.md#223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion)).
+The reward pipeline's long-term viability rests on a single assumption: that fees will eventually replace expansion as the dominant pot revenue source ([Tx Submitter (Demand-side) — at current throughput, the staking pot does not survive reserve depletion](diagnostic/README.md#223-problem-induction-tx-submitter-demand-side-at-current-throughput-the-staking-pot-does-not-survive-reserve-depletion)).
 
 Today, fees contribute ~0.19% of the pot; reaching parity requires 12–16× current fee revenue at current transaction volumes. **The submitter population is moving in the opposite direction** ([CEN.O8](diagnostic/README.md#222-mainnet-observations)) and the most lucrative submitters are **excluded from the rewards their activity funds** ([CEN.O9](diagnostic/README.md#222-mainnet-observations)).
 
@@ -968,7 +968,7 @@ The mechanism currently has **no instrument** to detect this divergence at the p
 <div class="ev-label">Structural insufficiency</div>
 <div class="ev-content" markdown="1">
 <p class="ev-body" markdown="1">Closing the funding gap requires **12–16× current fee capacity**; **submitter base is shrinking, not growing**.</p>
-<p class="ev-sources" markdown="1">Source: [Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion](diagnostic/README.md#223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion).</p>
+<p class="ev-sources" markdown="1">Source: [Tx Submitter (Demand-side) — at current throughput, the staking pot does not survive reserve depletion](diagnostic/README.md#223-problem-induction-tx-submitter-demand-side-at-current-throughput-the-staking-pot-does-not-survive-reserve-depletion).</p>
 </div>
 </div>
 

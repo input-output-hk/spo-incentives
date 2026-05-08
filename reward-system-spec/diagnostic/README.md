@@ -71,12 +71,12 @@ The remainder of the document follows the pipeline stage by stage: [the reward f
   - [2.1. The Staking Populations](#21-the-staking-populations)
     - [2.1.1. Overview](#211-overview)
     - [2.1.3. Problem Induction → Distribution distortions across the three populations](#213-problem-induction-distribution-distortions-across-the-three-populations)
-      - [2.1.3.1. SPO supply side — fewer and fewer entities participate in consensus](#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus)
-      - [2.1.3.2. Arbiter-side distribution — titans move the disciplining capital, but not on yield](#2132-arbiter-side-distribution-titans-move-the-disciplining-capital-but-not-on-yield)
+      - [2.1.3.1. SPO (Supply-side) — fewer and fewer entities participate in consensus](#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus)
+      - [2.1.3.2. Delegator (Arbiter-side) — titans move the disciplining capital, but not on yield](#2132-delegator-arbiter-side-titans-move-the-disciplining-capital-but-not-on-yield)
       - [2.1.3.3. Non-participants — a secondary distribution problem behind the active-player dynamics](#2133-non-participants-a-secondary-distribution-problem-behind-the-active-player-dynamics)
   - [2.2. Transaction Submitters](#22-transaction-submitters)
     - [2.2.1. Overview](#221-overview)
-    - [2.2.3. Problem Induction → Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion](#223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion)
+    - [2.2.3. Problem Induction → Tx Submitter (Demand-side) — at current throughput, the staking pot does not survive reserve depletion](#223-problem-induction-tx-submitter-demand-side-at-current-throughput-the-staking-pot-does-not-survive-reserve-depletion)
 - [3. The ₳/Fiat Money Constraint Layer](#3-the-fiat-money-constraint-layer)
   - [3.1. Problem Induction](#31-problem-induction)
     - [3.1.1. Is a finite ₳ supply enough to honour the deflationist promise?](#311-is-a-finite-supply-enough-to-honour-the-deflationist-promise)
@@ -1099,7 +1099,7 @@ The observations above describe two active populations and one residual populati
 
 The order in which these problems are inducted matters. The SPO-side and arbiter-side concentrations are the levers the reward mechanism can move; the non-participant gap is largely beyond its reach. Repairing the active-player dynamics is therefore the primary task — expanding the participant pool before that repair would import the existing imbalances onto a larger base, not dilute them.
 
-#### 2.1.3.1. SPO supply side — fewer and fewer entities participate in consensus
+#### 2.1.3.1. SPO (Supply-side) — fewer and fewer entities participate in consensus
 
 The intended design assumes a competitive field of $k$ single-pool operators converging toward a balanced equilibrium ([Progression — balanced as intended, but private by design](#1242-progression-balanced-as-intended-but-private-by-design)).
 
@@ -1125,7 +1125,7 @@ Second, **$k$ is entity-blind, and the design has not compensated for what $k$ c
 
 *The operator base is contracting, not competing. The $k$ parameter — which counts every registered pool and ignores the entity behind it — cannot see the contraction it was meant to prevent.*
 
-#### 2.1.3.2. Arbiter-side distribution — titans move the disciplining capital, but not on yield
+#### 2.1.3.2. Delegator (Arbiter-side) — titans move the disciplining capital, but not on yield
 
 The intended design casts delegators as the arbiters of the operator market — mobile capital that disciplines operators by moving toward better offers ([Why balanced should be the intended equilibrium](#12422-why-balanced-should-be-the-intended-equilibrium)).
 
@@ -1171,7 +1171,7 @@ Two implications follow, and together they demote the non-participant population
 
 The first is a **quantitative ceiling**. Incentive changes alone (curve adjustments, fee-structure reforms, yield improvements) can shift at most the **0.37% addressable pool** — and even that, against the headwind of zero-balance shells and the single-vault concentration, has a real ceiling closer to **0.06%** of supply. Moving the structural 39.4% requires **protocol-level changes** — enabling enterprise-address staking, mandating staking-capable script standards in DeFi protocols, introducing delegation-by-default for newly minted wallets — *not parameter tuning*.
 
-The second is an **order-of-operations** argument. The active-player distortions documented in [SPO supply side — fewer and fewer entities participate in consensus](#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus) and [Arbiter-side distribution — titans move the disciplining capital, but not on yield](#2132-arbiter-side-distribution-titans-move-the-disciplining-capital-but-not-on-yield) determine *what happens to any newly recruited capital*. A delegator brought in today inherits the same frozen distribution: the median switch produces zero yield change, the size-visibility loop steers stake toward the dominant fleets, and the pledge signal is invisible. Expanding the participant pool *before* repairing the active-player dynamics enlarges the existing concentration rather than dilutes it.
+The second is an **order-of-operations** argument. The active-player distortions documented in [SPO (Supply-side) — fewer and fewer entities participate in consensus](#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus) and [Delegator (Arbiter-side) — titans move the disciplining capital, but not on yield](#2132-delegator-arbiter-side-titans-move-the-disciplining-capital-but-not-on-yield) determine *what happens to any newly recruited capital*. A delegator brought in today inherits the same frozen distribution: the median switch produces zero yield change, the size-visibility loop steers stake toward the dominant fleets, and the pledge signal is invisible. Expanding the participant pool *before* repairing the active-player dynamics enlarges the existing concentration rather than dilutes it.
 
 *The non-participant population is the single largest structural constraint on the reward pipeline ([TRE.O3](sub-flows/treasury-and-pool-pots-distribution/mainnet-analysis/README.md#tre-o3) attributes ~71% of cumulative return-to-reserve to it), but most of it is structurally beyond the reach of any reward-design change, and the share that can be reached should be reached only after the active-player distribution is repaired. The diagnostic priority is to clean up the dynamics among the participating populations first; population growth follows.*
 
@@ -1219,7 +1219,7 @@ The fee-generating population is profiled across five observations below, organi
 | **CEN.O11** | **The fee-paying population is bimodal: a heavy-paying core of a few hundred high-frequency actors and a long tail of ~147K small contributors** | Over epochs 622–627, the top 10 addresses generate **20.0%** of fees and the top 500 generate **58.4%** — out of ~147K active submitters. The heavy-paying core is recognisable: a MinSwap DEX-script address leads, followed by addresses tied to the **NUFI**, **TITAN**, **BERRY**, and **OYSTR** pools and several enterprise-script DEX contracts and bot wallets. *500 addresses out of 147K (0.34%) pay the majority of fees — the fee floor depends on a sub-population small enough to know by name.* |
 | **CEN.O12** | **The fee-paying population and the delegator population barely overlap — funders and beneficiaries are largely different people** | Joining the submitter set (~147K addresses, epochs 622–627) to the **1,352,113 active delegators at epoch 627**: only **41.8%** of fee revenue comes from currently-delegating addresses, **28.1%** from base addresses whose stake credential is *not* in the delegation set, **30.1%** from addresses with no stake credential. From the delegator side, **only 3.1%** of the 1.352M active delegators submit any transaction in a 6-epoch window. *Fewer than 4 ADA in every 10 ADA of fees flow back to the population that paid them through any reward channel.* |
 
-### 2.2.3. Problem Induction → Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion
+### 2.2.3. Problem Induction → Tx Submitter (Demand-side) — at current throughput, the staking pot does not survive reserve depletion
 
 The reward pipeline draws ~99.8% of the epoch pot from monetary expansion today, and the long-term design assumes transaction fees will eventually replace it. That replacement rests on **two conditions** holding simultaneously: the fee input must reach a level comparable to the post-reserve pot, and the population producing the fees must expand to fund it.
 
@@ -1270,7 +1270,7 @@ Consider the operator population: [Operator / Delegator Distribution](#13-operat
 - institutional custody
 - speculative interest
 
-*None of these are protocol parameters.* The mechanism is therefore **structurally dependent on an exogenous variable it cannot influence**. If demand stagnates or contracts, the pipeline's ADA-denominated rewards lose purchasing power, **operators exit** ([SPO supply side — fewer and fewer entities participate in consensus](#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus) documents the contraction; the marginal operators at the bottom are the first to leave), **delegators undelegate** ([Arbiter-side distribution — titans move the disciplining capital, but not on yield](#2132-arbiter-side-distribution-titans-move-the-disciplining-capital-but-not-on-yield) documents the frozen power law; the micro-delegators holding 32 ADA median have the least to lose), and the staking rate declines further ([CEN.O7](sub-flows/census/mainnet-analysis/README.md#cen-o7)). Each of these effects reduces the security budget, which reduces the chain's utility, which suppresses demand for ADA — *a reflexive loop with no internal floor*.
+*None of these are protocol parameters.* The mechanism is therefore **structurally dependent on an exogenous variable it cannot influence**. If demand stagnates or contracts, the pipeline's ADA-denominated rewards lose purchasing power, **operators exit** ([SPO (Supply-side) — fewer and fewer entities participate in consensus](#2131-spo-supply-side-fewer-and-fewer-entities-participate-in-consensus) documents the contraction; the marginal operators at the bottom are the first to leave), **delegators undelegate** ([Delegator (Arbiter-side) — titans move the disciplining capital, but not on yield](#2132-delegator-arbiter-side-titans-move-the-disciplining-capital-but-not-on-yield) documents the frozen power law; the micro-delegators holding 32 ADA median have the least to lose), and the staking rate declines further ([CEN.O7](sub-flows/census/mainnet-analysis/README.md#cen-o7)). Each of these effects reduces the security budget, which reduces the chain's utility, which suppresses demand for ADA — *a reflexive loop with no internal floor*.
 
 *The deflationist promise rests on a single property — finite supply — and that property is necessary but not sufficient.* For submitters the constraint runs in the opposite direction: transaction fees are protocol-determined minimums denominated in ADA, so if ADA appreciates the fiat cost of transacting rises and can suppress transaction volume ([Transaction Submitters](#22-transaction-submitters)) — the same scarcity property cuts both ways depending on who one asks.
 
@@ -1281,7 +1281,7 @@ Consider the operator population: [Operator / Delegator Distribution](#13-operat
 Whatever direction the ADA/Fiat exchange rate moves, the mechanism **absorbs the consequence passively** — there is no on-chain instrument that responds to price observations, redirects emission, or recalibrates fees against real-economy conditions. The reward pipeline's long-term viability requires **three macroeconomic conditions** to hold simultaneously, but the mechanism has no lever to keep any of them on track:
 
 - **operator and delegator real revenue** must remain viable, which requires the ADA price to be **deflationary in real terms** as the emission rate declines
-- the **fee input must grow** *and* the **submitter population must expand** ([Demand-side distribution — with current throughput, the staking pot does not survive reserve depletion](#223-problem-induction-demand-side-distribution-with-current-throughput-the-staking-pot-does-not-survive-reserve-depletion))
+- the **fee input must grow** *and* the **submitter population must expand** ([Tx Submitter (Demand-side) — at current throughput, the staking pot does not survive reserve depletion](#223-problem-induction-tx-submitter-demand-side-at-current-throughput-the-staking-pot-does-not-survive-reserve-depletion))
 - the **fiat cost of transacting** must remain low enough that activity keeps flowing on Cardano rather than migrating to cheaper chains
 
 These three constraints are **not independent** — they interact, and in some configurations they contradict:
