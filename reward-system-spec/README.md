@@ -4,6 +4,8 @@ Reaching that order is not a ranking exercise. The 9 problems are pitched at ver
 
 The bet of this page is that **a clear priority order makes solutions emerge**. Once the 9 problems are mapped — by abstraction level, by hierarchical dependence, by the lens-of-view relationships that bind some of them together — candidate designs cluster around the high-priority items naturally, and the V2 work stops looking like a flat list of fixes and starts looking like a *sequenced roadmap* that the system can actually evolve along.
 
+**The page is offered as an ideation document**, not as a closed proposal. The directions and milestones below are starting points for community shaping — to be refined, challenged, sequenced, or replaced through the conversation that builds V2.
+
 <div class="cps-lifecycle" aria-label="CPS lifecycle">
 <a class="cps-stage cps-stage-done" href="diagnostic.html" title="The Mainnet Diagnostic — observations &amp; findings">
 <span class="cps-stage-num">Stage 01</span>
@@ -286,7 +288,7 @@ This milestone sequences after Milestone 1 because the active-player split (oper
 
 ## 2.3. Milestone 3 — A Pool Alliance, rocket-pool-like for Cardano
 
-This milestone proposes a concrete candidate solution along **two reinforcing steps** the diagnostic already lays out: make the production threshold explicit at the protocol level, and build a Rocket-Pool-like *Pool Alliance* below it so that enforcement opens a structural entry path rather than closing one. It addresses two of the 9 induced problems together:
+This milestone outlines a concrete candidate solution along **two reinforcing steps** the diagnostic already lays out: make the production threshold explicit at the protocol level, and build a Rocket-Pool-like *Pool Alliance* below it so that enforcement opens a structural entry path rather than closing one. It addresses two of the 9 induced problems together:
 
 - [μ02 — Guarantee operator viability](problem-statements.html#problem-1-3-3-1) — the production/viability threshold gap that today's lone entrant has to clear unaided;
 - [μ04 — SPO (Supply-side) — fewer and fewer entities participate in consensus](problem-statements.html#problem-2-1-3-1) — the contraction of the single-pool operator base from 555 to 291 pools, while multi-pool fleets grew from 23 to 85 entities ([CEN.O1](diagnostic.html#212-mainnet-observations)).
@@ -396,7 +398,7 @@ The framing this chapter takes seriously: **Cardano is a mature blockchain, but 
 
 ## 3.1. Milestone 1 — Reward System Extension — A Governance Dashboard for the System Properties & Populations
 
-This milestone proposes a single, foundational macro instrument: **a governance dashboard that monitors the four player populations of the staking pipeline, anticipates structural drift, and triggers a community-driven recalibration process when defined conditions are crossed**. The dashboard is not itself a recalibration mechanism — Conway's parameter-update process already provides that. The dashboard is the *surveillance and trigger layer* that makes the recalibration process *informed* and *timely* rather than ad-hoc.
+This milestone outlines a single, foundational macro instrument: **a governance dashboard that monitors the four player populations of the staking pipeline, anticipates structural drift, and triggers a community-driven recalibration process when defined conditions are crossed**. The dashboard is not itself a recalibration mechanism — Conway's parameter-update process already provides that. The dashboard is the *surveillance and trigger layer* that makes the recalibration process *informed* and *timely* rather than ad-hoc.
 
 The four player populations the diagnostic surfaces — operators (Supply-side), delegators (Arbiter-side), submitters (Demand-side), non-participants — each have their own **structural KPIs**, their own **threat patterns**, and their own **recalibration parameters** the Conway pipeline can move. Pieces of this surveillance already exist across the ecosystem, and **the milestone is a structured extension of that foundation, not a replacement**:
 
@@ -473,4 +475,4 @@ Each is a design space, not a committed direction. The interaction with §3.2.1 
 
 **Interaction with [Milestone 1 (the governance dashboard)](#31-milestone-1-reward-system-extension-a-governance-dashboard-for-the-system-properties-populations).** The dashboard is the natural surface on which deflationist and volatility instruments would be observed *if* they were eventually deployed. Building the dashboard early — even before the M03 / M04 candidate solutions mature — pays off twice: first as the surveillance layer the recalibration discipline rests on, and second as the observation layer any future macro instrument has to be evaluated against. The same KPIs the dashboard tracks (staking rate, fee-revenue share, operator real wage in fiat terms) are the inputs that make this research thread evaluable in the first place.
 
-> **Status:** Roadmap in progress, started 2026/05/08. This page is the canonical V2 working document — directions of exploration and concrete milestones, anchored on the 9 induced problems.
+> **Status:** Ideation in progress, started 2026/05/08. This page is the canonical V2 working document — directions of exploration and milestones offered for community shaping, anchored on the 9 induced problems.

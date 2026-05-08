@@ -61,9 +61,9 @@ PAGES = [
         "slug": "v2-roadmap",
         "md": "README.md",
         "html": "v2-roadmap.html",
-        "title": "Cardano Reward System — V2 Roadmap (in progress)",
+        "title": "Cardano Reward System — V2 Roadmap (ideation in progress)",
         "hero_h1": "V2 Roadmap",
-        "hero_sub": "A working roadmap — directions of exploration and concrete milestones, rooted in the 9 induced problems",
+        "hero_sub": "Ideation in progress — directions of exploration and milestones offered for community shaping, anchored on the 9 induced problems",
         "active_nav": "roadmap",
     },
     {
@@ -177,8 +177,8 @@ PAGES = [
         "slug": "solution-evaluation",
         "md": "solution-evaluation/README.md",
         "html": "solution-evaluation.html",
-        "title": "Intro & Conclusion of the 4 CIPs — V2 Reward System",
-        "hero_h1": "Intro & Conclusion of the 4 CIPs",
+        "title": "The four pre-existing CIPs against the 9 induced problems — V2 Reward System",
+        "hero_h1": "The four pre-existing CIPs against the 9 induced problems",
         "hero_sub": "V2 milestones × the four CIPs — wrong-layer verdict across the bundle, gradual fix in preparation",
         "active_nav": "solution-evaluation",
     },
@@ -1057,6 +1057,12 @@ def _rel_to_site(src_md: Path, target: str) -> str:
     Convention: if the resolved path lies under diagnostic/, the leading
     "diagnostic/" is stripped, because figures are mirrored into
     generated-website/ without that prefix.
+
+    Likewise, if the source MD authored a link as ``../generated-website/foo``
+    pointing to a sibling generated page, strip the leading "generated-website/"
+    so the output href resolves correctly inside SITE_DIR (otherwise the link
+    would render as ``generated-website/foo.html`` from a page already inside
+    SITE_DIR, doubling the prefix).
     """
     target_abs = _resolve_rel(src_md, target)
     try:
@@ -1067,6 +1073,8 @@ def _rel_to_site(src_md: Path, target: str) -> str:
     rel_str = rel.as_posix()
     if rel_str.startswith("diagnostic/"):
         rel_str = rel_str[len("diagnostic/"):]
+    if rel_str.startswith("generated-website/"):
+        rel_str = rel_str[len("generated-website/"):]
     return rel_str
 
 
@@ -1522,7 +1530,7 @@ window.MathJax = {{
 
 <!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
 <div class="nav-zone nav-zone-implementation">
-<a href="index.html" class="nav-tab-implementation{cls_implementation}" title="What follows the spec — engineering implementation of the V2 mechanism">What&rsquo;s next ?</a>
+<a href="index.html" class="nav-tab-implementation{cls_implementation}" title="V2 working website — analysis, evidence, and directions in ideation">Welcome</a>
 </div>
 
 <span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
@@ -1814,7 +1822,8 @@ BREADCRUMBS = {
     "census": ["Mainnet Diagnostic", "The Staking Census"],
     "reserves": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
     "pools": ["Mainnet Diagnostic", "Reward Flow", "Pools"],
-    "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],    "solution-evaluation": ["Solution Evaluation", "Intro & Conclusion of the 4 CIPs"],
+    "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],
+    "solution-evaluation": ["Solution Evaluation", "Four CIPs vs 9 induced problems"],
     "stake-cap": ["Solution Evaluation", "Stake-Cap Layer", "CIP Evaluation Synthesis"],
     "cip-0050": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0050"],
     "cip-0037": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0037"],
