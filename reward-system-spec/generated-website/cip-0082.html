@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778223721">
+<link rel="stylesheet" href="assets/site.css?v=1778243147">
 
 
 </head>
@@ -66,7 +66,7 @@ window.MathJax = {
 
 <!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
 <div class="nav-zone nav-zone-implementation">
-<a href="index.html" class="nav-tab-implementation" title="What follows the spec — engineering implementation of the V2 mechanism">What&rsquo;s next ?</a>
+<a href="index.html" class="nav-tab-implementation" title="V2 working website — analysis, evidence, and directions in ideation">Welcome</a>
 </div>
 
 <span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
@@ -118,9 +118,9 @@ window.MathJax = {
 
 <span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
 
-<!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
+<!-- Zone 2 — V2 Roadmap: the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
 <div class="nav-zone nav-zone-output">
-<a href="v2-spec.html" class="nav-tab-spec-big">V2 Specification</a>
+<a href="v2-roadmap.html" class="nav-tab-roadmap" title="V2 Roadmap — directions of exploration and concrete milestones">V2 Roadmap</a>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
@@ -148,9 +148,9 @@ window.MathJax = {
       <span class="nav-dd-ref-title">Source on GitHub</span>
       <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
     </a>
-    <a href="v2-spec.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
-      <span class="nav-dd-ref-title">Constitutional framework in the V2 spec</span>
-      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 spec</span></span>
+    <a href="v2-roadmap.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the V2 Roadmap</span>
+      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 Roadmap</span></span>
     </a>
   </div>
 </div>
@@ -1523,7 +1523,8 @@ The ROS-responsive segment that the k-raise redistribution mechanism actually ta
 <p><strong>The single empirical baseline for stages 3–4.</strong> <code>k</code> has been raised once in Cardano's live history: <code>k: 150 → 500</code> in August 2020, about a year after Shelley launch. The argument was the same one heard today — more pools means more decentralisation. The observed outcome was the rise of the multi-pool-operator pattern that the diagnostic now documents (POL.O5.F1: 83 entities, 449 productive pools, 76.7 % of productive stake). This is the empirical anchor for the <a href="#b3-standalone-k-lever-deep-dive">§B.3 standalone k-lever analysis</a>. A k-raise also appears in two governance forms today: as stages 3–4 of this CIP, and as a standalone Parameter Change action outside the CIP-0082 package — both are covered by §B.3.</p>
 <h3 id="c3-references">C.3. References</h3>
 <ul>
-<li><strong>V2 §3 anchors:</strong> V2 <a href="v2-spec.html#31-guarantee-operator-viability-across-the-entire-productive-population">§3.1 operator viability</a>, <a href="v2-spec.html#33-maintain-and-diversify-a-competitive-delegator-yield">§3.3 delegator yield</a>, <a href="v2-spec.html#32-restore-the-notion-of-pledge-among-operators">§3.2 pledge signal</a>, <a href="v2-spec.html#34-reduce-the-concentration-effects-that-distort-both-populations">§3.4 concentration</a>.</li>
+<li><strong>Induced problems addressed (and not):</strong> <a href="problem-statements.html#problem-1-3-3-1">μ02 — Guarantee operator viability</a> — <em>regressed</em> by stage 2's <code>minPoolRate</code> swap (Sub-reliable −9×, +200 K ADA/yr to MPO entities) ; <a href="problem-statements.html#problem-1-3-3-2">μ03 — Restore a competitive delegator yield</a> — touched indirectly via the margin floor ; <a href="problem-statements.html#problem-1-2-3">μ01 — Closing the Consensus Incentive Gap (pledge paradox)</a> — left untouched ; <a href="problem-statements.html#problem-2-1-3-1">μ04 — SPO supply side</a> — <em>regressed</em> by stages 3–4's <code>k</code>-raise on a 3-epoch cadence (regenerates 2020 MPO-fleet absorption pattern).</li>
+<li><strong>V2 Roadmap milestones potentially affected:</strong> <a href="v2-roadmap.html#21-milestone-1-repair-pledge-sustain-the-small-spo-base">V2 Roadmap M1 — Repair pledge, sustain the small SPO base</a> — the four-move package addresses viability on the reward-distribution layer (not via the fee-pricing layer this CIP touches) ; <a href="v2-roadmap.html#22-milestone-2-maintain-and-diversify-a-competitive-delegator-yield">V2 Roadmap M2 — Maintain and diversify a competitive delegator yield</a> — yield work that this CIP's stage 2 mechanically conflicts with.</li>
 <li><strong>Numerical baselines:</strong> <a href="#a4-updated-calibration-at-current-parameters-epoch-623">Appendix A.4</a> of this file (per-pool reward derivation at $z_0 = 77$ M ADA); <a href="operator.html#44-operator-profitability-versus-delegator-return">operator-delegator §4.4</a> (n-MPO brackets); <a href="pools.html#413-tier-definitions">pools-distribution §4.1.3</a> (nine-tier taxonomy).</li>
 <li><strong>Diagnostic findings cited:</strong> OPE.O1.F4, OPE.O1.F1, OPE.O5.F1, OPE.O6.F1, OPE.O7.F1, OPE.O7.F2 (operator-delegator); POL.O2.F1, POL.O2.F2, POL.O3.F5, POL.O3.F6, POL.O5.F1, POL.O5.F3, POL.O6.F2 (pools-distribution); CEN.O4.F2, CEN.O6.F1, CEN.O6.F3 (census).</li>
 <li><strong>Predecessor CIP:</strong> <a href="cip-0023.html"><code>cip-0023.md</code></a> — standalone margin-floor mechanism that CIP-0082 stage 2 absorbs and extends.</li>
@@ -1551,7 +1552,7 @@ The ROS-responsive segment that the k-raise redistribution mechanism actually ta
     <div class="footer-col">
       <h4 class="footer-heading">Specification</h4>
       <ul class="footer-links">
-        <li><a href="v2-spec.html">V2 Specification</a></li>
+        <li><a href="v2-roadmap.html">V2 Roadmap</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
         <li><a href="problem-statements.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
@@ -1598,6 +1599,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778223721"></script>
+<script src="assets/site.js?v=1778243147"></script>
 </body>
 </html>

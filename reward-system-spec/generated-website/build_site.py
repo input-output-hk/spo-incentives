@@ -48,35 +48,39 @@ PAGES = [
         "slug": "whats-next",
         "md": "whats-next/README.md",
         "html": "index.html",
-        "title": "Cardano Reward System V2 — Welcome",
+        "title": "Welcome — Cardano Reward System V2",
         "hero_h1": "Welcome",
         "hero_sub": "The Cardano Reward System V2 working website — analysis, evidence, and directions in ideation",
         "active_nav": "implementation",
     },
+    # V2 Roadmap — the canonical V2 working document. Directions of
+    # exploration and concrete milestones, anchored on the 9 induced
+    # problems. Replaced an earlier "specification draft" page that has
+    # been retired now that the Roadmap supersedes it.
     {
-        "slug": "v2-spec",
+        "slug": "v2-roadmap",
         "md": "README.md",
-        "html": "v2-spec.html",
-        "title": "Cardano Reward System — Proposal for Specification V2",
-        "hero_h1": "Proposal for Specification V2",
-        "hero_sub": "Based on Mainnet Evidence and Prior Work",
-        "active_nav": "spec",
+        "html": "v2-roadmap.html",
+        "title": "Cardano Reward System — V2 Roadmap (ideation in progress)",
+        "hero_h1": "V2 Roadmap",
+        "hero_sub": "Ideation in progress — directions of exploration and milestones offered for community shaping, anchored on the 9 induced problems",
+        "active_nav": "roadmap",
     },
     {
         "slug": "intended-game",
         "md": "the-intended-game/README.md",
         "html": "intended-game.html",
-        "title": "The Intended Game — SPO Incentives",
+        "title": "The Intended Game — Cardano Reward System V2",
         "hero_h1": "The Intended Game",
-        "hero_sub": "Plain-prose companion to the formal SL-D1 design spec",
+        "hero_sub": "Plain-prose companion to the formal SL-D1 design spec — what V1 was meant to produce",
         "active_nav": "intended-game",
     },
     {
         "slug": "diagnostic",
         "md": "diagnostic/README.md",
         "html": "diagnostic.html",
-        "title": "The Mainnet Diagnostic",
-        "hero_h1": "The Diagnostic",
+        "title": "The Mainnet Diagnostic — Cardano Reward System V2",
+        "hero_h1": "The Mainnet Diagnostic",
         "hero_sub": "Observations, problem induction, and links to the sub-reports",
         "active_nav": "diagnostic",
     },
@@ -173,8 +177,8 @@ PAGES = [
         "slug": "solution-evaluation",
         "md": "solution-evaluation/README.md",
         "html": "solution-evaluation.html",
-        "title": "Intro & Conclusion of the 4 CIPs — V2 Reward System",
-        "hero_h1": "Intro & Conclusion of the 4 CIPs",
+        "title": "The four pre-existing CIPs against the 9 induced problems — V2 Reward System",
+        "hero_h1": "The four pre-existing CIPs against the 9 induced problems",
         "hero_sub": "V2 milestones × the four CIPs — wrong-layer verdict across the bundle, gradual fix in preparation",
         "active_nav": "solution-evaluation",
     },
@@ -631,7 +635,7 @@ def _render_footer() -> str:
     <div class="footer-col">
       <h4 class="footer-heading">Specification</h4>
       <ul class="footer-links">
-        <li><a href="v2-spec.html">V2 Specification</a></li>
+        <li><a href="v2-roadmap.html">V2 Roadmap</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
         <li><a href="problem-statements.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
@@ -1053,6 +1057,12 @@ def _rel_to_site(src_md: Path, target: str) -> str:
     Convention: if the resolved path lies under diagnostic/, the leading
     "diagnostic/" is stripped, because figures are mirrored into
     generated-website/ without that prefix.
+
+    Likewise, if the source MD authored a link as ``../generated-website/foo``
+    pointing to a sibling generated page, strip the leading "generated-website/"
+    so the output href resolves correctly inside SITE_DIR (otherwise the link
+    would render as ``generated-website/foo.html`` from a page already inside
+    SITE_DIR, doubling the prefix).
     """
     target_abs = _resolve_rel(src_md, target)
     try:
@@ -1063,6 +1073,8 @@ def _rel_to_site(src_md: Path, target: str) -> str:
     rel_str = rel.as_posix()
     if rel_str.startswith("diagnostic/"):
         rel_str = rel_str[len("diagnostic/"):]
+    if rel_str.startswith("generated-website/"):
+        rel_str = rel_str[len("generated-website/"):]
     return rel_str
 
 
@@ -1518,7 +1530,7 @@ window.MathJax = {{
 
 <!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
 <div class="nav-zone nav-zone-implementation">
-<a href="index.html" class="nav-tab-implementation{cls_implementation}" title="What follows the spec — engineering implementation of the V2 mechanism">What&rsquo;s next ?</a>
+<a href="index.html" class="nav-tab-implementation{cls_implementation}" title="V2 working website — analysis, evidence, and directions in ideation">Welcome</a>
 </div>
 
 <span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
@@ -1570,9 +1582,9 @@ window.MathJax = {{
 
 <span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true">←</span>
 
-<!-- Zone 2 — V2 Specification: the destination, not the conclusion -->
+<!-- Zone 2 — V2 Roadmap: the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
 <div class="nav-zone nav-zone-output">
-<a href="v2-spec.html" class="nav-tab-spec-big{cls_spec}">V2 Specification</a>
+<a href="v2-roadmap.html" class="nav-tab-roadmap{cls_roadmap}" title="V2 Roadmap — directions of exploration and concrete milestones">V2 Roadmap</a>
 </div>
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
@@ -1600,9 +1612,9 @@ window.MathJax = {{
       <span class="nav-dd-ref-title">Source on GitHub</span>
       <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
     </a>
-    <a href="v2-spec.html#2-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
-      <span class="nav-dd-ref-title">Constitutional framework in the V2 spec</span>
-      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 spec</span></span>
+    <a href="v2-roadmap.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the V2 Roadmap</span>
+      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 Roadmap</span></span>
     </a>
   </div>
 </div>
@@ -1784,7 +1796,7 @@ DESIGN_ACTIVE = {"intended-game"}
 # (matching the data-banner CSS selector). Default is "fluid" if absent.
 BANNER_VARIANTS = {
     "implementation":      "starburst",   # What's next? — landing page
-    "spec":                "fluid",       # V2 spec — the flagship document
+    "roadmap":             "fluid",       # V2 Roadmap — directions & milestones
     "intended-game":       "starburst",   # narrative / conceptual
     "problem-statements":            "overlap",     # synthesis of multiple findings
     "diagnostic":         "dots",        # the diagnostic — matches cardano.org research page
@@ -1802,15 +1814,19 @@ BANNER_VARIANTS = {
 }
 
 BREADCRUMBS = {
-    "implementation": ["What's next?"],
-    "spec": ["V2 Specification"],
-    "intended-game": ["Design Support", "The Intended Game"],
-    "problem-statements": ["Mainnet Diagnostic", "Induced Problems"],
-    "diagnostic": ["Mainnet Diagnostic", "The Diagnostic"],
+    # Top-level (first-level navigation tabs / dropdown landings) — empty
+    # breadcrumb: the H1 + nav state already convey the location.
+    "implementation": [],
+    "roadmap": [],
+    "intended-game": [],
+    "problem-statements": [],
+    "diagnostic": [],
+    "solution-evaluation": [],
+    # Sub-pages (inside a dropdown / sub-flow) — keep the trail.
     "census": ["Mainnet Diagnostic", "The Staking Census"],
     "reserves": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
     "pools": ["Mainnet Diagnostic", "Reward Flow", "Pools"],
-    "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],    "solution-evaluation": ["Solution Evaluation", "Intro & Conclusion of the 4 CIPs"],
+    "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],
     "stake-cap": ["Solution Evaluation", "Stake-Cap Layer", "CIP Evaluation Synthesis"],
     "cip-0050": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0050"],
     "cip-0037": ["Solution Evaluation", "Stake-Cap Layer", "CIP-0037"],
@@ -1847,7 +1863,7 @@ _HERO_EYEBROW = {
     # Landing — What's next? page.
     "implementation": "Cardano Reward System",
     # V2 Spec.
-    "spec": "Cardano Reward System",
+    "roadmap": "Cardano Reward System &middot; Roadmap in progress",
     # Sub-flow + cross-flow pages: parent zone only.
     "intended-game": "Design Support",
     "problem-statements": "Mainnet Diagnostic",
@@ -1872,7 +1888,7 @@ def render_shell(page: dict, content_html: str) -> str:
     active = page["active_nav"]
     nav_map = {
         "implementation": "cls_implementation",
-        "spec": "cls_spec",
+        "roadmap": "cls_roadmap",
         "intended-game": "cls_intended_game",
         "problem-statements": "cls_findings",
         "diagnostic": "cls_diagnostic_title",
@@ -5353,7 +5369,7 @@ def _render_findings_content(
     # must satisfy a sustainability condition through time and across price
     # regimes).
     MICRO_SECTIONS = {
-        "1.2.3",   # Closing the Consensus Incentive Gap (pledge)
+        "1.2.3",   # Closing the Consensus Incentive Gap — pledge paradox & non-participant problem (M02 absorbed)
         "1.3.3.1", # Guarantee operator viability
         "1.3.3.2", # Restore competitive delegator yield
         "2.1.3.1", # SPO supply side — entity contraction
@@ -5361,12 +5377,15 @@ def _render_findings_content(
     }
     MACRO_SECTIONS = {
         "1.1.3",   # Funding the protocol without a reserve
-        "2.1.3.3", # Non-participants — secondary distribution problem
         "2.2.3",   # Demand-side distribution — pot survival + population expansion (merged)
-        "3.1.1",   # Is a finite ₳ supply enough to honour the deflationist promise?
-        "3.1.2",   # The protocol takes the hit of ADA volatility, no instrument to govern it
+        "3.1.1",   # A deflationist ₳ — what mechanisms can complement finite supply?
+        "3.1.2",   # ₳/Fiat volatility — what instruments can wire governance to price observations?
     }
-
+    # Sections kept in the diagnostic narrative but absorbed into another
+    # induced-problem card on this page — they don't render as their own
+    # cards. §2.1.3.3 (Non-participants) is folded into μ01 (Closing the
+    # Consensus Incentive Gap) because the non-participant population is
+    # one face of the same lens-of-view problem.
     sorted_findings = sorted(findings, key=lambda r: r.get("order", 0))
     # Split into two buckets, each renumbered independently from 1.
     micro_findings = [f for f in sorted_findings if f["section_id"] in MICRO_SECTIONS]
@@ -5458,11 +5477,11 @@ def _render_findings_content(
         '<span class="cps-stage-meta">proto-CPS &middot; this page</span>'
         '</div>'
         '<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>'
-        '<a class="cps-stage cps-stage-future" href="v2-spec.html" '
-        'title="The V2 Specification Proposal — milestones &amp; KPIs">'
+        '<a class="cps-stage cps-stage-future" href="v2-roadmap.html" '
+        'title="V2 Roadmap — directions of exploration and concrete milestones">'
         '<span class="cps-stage-num">Stage 03</span>'
-        '<span class="cps-stage-label">V2 Specification Proposal</span>'
-        '<span class="cps-stage-meta">Milestones &amp; KPIs</span>'
+        '<span class="cps-stage-label">V2 Roadmap</span>'
+        '<span class="cps-stage-meta">Directions &amp; milestones</span>'
         '</a>'
         '<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>'
         '<a class="cps-stage cps-stage-future" '
@@ -5622,6 +5641,15 @@ def build_findings_page() -> Path:
     md_text = src_md.read_text()
     observations = extract_observations_from_md(md_text)
     findings = extract_findings_from_md(md_text, src_md=src_md)
+
+    # Sections kept in the diagnostic narrative but absorbed into another
+    # induced-problem card on this page — they don't render as their own
+    # cards. §2.1.3.3 (Non-participants) is folded into μ01 (Closing the
+    # Consensus Incentive Gap) because the non-participant population is
+    # one face of the same lens-of-view problem.
+    EXCLUDED_FROM_RENDERING = {"2.1.3.3"}
+    findings = [f for f in findings
+                if f["section_id"] not in EXCLUDED_FROM_RENDERING]
 
     # findings.md is the authoritative observation map per problem
     # induction — including the cross-section evidence rows that simple
