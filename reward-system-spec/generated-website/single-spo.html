@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778160463">
+<link rel="stylesheet" href="assets/site.css?v=1778223721">
 
 
 </head>
@@ -159,6 +159,13 @@ window.MathJax = {
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
 
+<!-- Zone 2.7 — Induced Problems (proto-CPS bridge between diagnostic and V2 spec) -->
+<div class="nav-zone nav-zone-problems">
+<a href="problem-statements.html" class="nav-tab-problems-big" title="The structural problems the diagnostic induces from on-chain evidence">Induced Problems</a>
+</div>
+
+<span class="nav-flow-arrow" aria-hidden="true">←</span>
+
 <!-- Zone 3 — Mainnet Diagnostic (observed reality) -->
 <div class="nav-zone nav-zone-diag">
 <div class="nav-dd-wrap nav-dd-wrap-light">
@@ -167,13 +174,9 @@ window.MathJax = {
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-diagnostic">Mainnet Diagnostic</span>
-      <span class="nav-dd-stratum-meta">What mainnet is actually doing — synthesis, Reward-Flow evidence, and the prior report</span>
+      <span class="nav-dd-stratum-meta">What mainnet is actually doing — Reward-Flow evidence, the staking census, and the prior report</span>
     </div>
-    <a href="problem-statements.html" class="nav-dd-ref nav-dd-ref-hero">
-      <span class="nav-dd-ref-title">Induced Problems<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">The structural problems the diagnostic induces from on-chain evidence — design intent vs mainnet reality</span>
-    </a>
-    <a href="diagnostic.html" class="nav-dd-ref parent-active">
+    <a href="diagnostic.html" class="nav-dd-ref nav-dd-ref-hero parent-active">
       <span class="nav-dd-ref-title">The Diagnostic</span>
       <span class="nav-dd-ref-cite">Full narrative — observations, problem induction, and sub-report links</span>
     </a>
@@ -207,7 +210,7 @@ window.MathJax = {
 
 <span class="nav-flow-arrow" aria-hidden="true">←</span>
 
-<!-- Zone 4 — Design Support (intended mechanism) -->
+<!-- Zone 4 — Design Support (intended mechanism + research foundations) -->
 <div class="nav-zone nav-zone-design">
 <div class="nav-dd-wrap nav-dd-wrap-light">
 <button class="nav-dd-btn-light nav-dd-btn-design" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Design Support ▾</button>
@@ -215,7 +218,7 @@ window.MathJax = {
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-design">Design Support</span>
-      <span class="nav-dd-stratum-meta">The intended mechanism — formal spec + the narrative it never came with</span>
+      <span class="nav-dd-stratum-meta">The intended mechanism — formal spec, narrative companion, and the academic antecedents the design rests on</span>
     </div>
     <a href="intended-game.html" class="nav-dd-ref">
       <span class="nav-dd-ref-title">The Intended Game<span class="nav-dd-ref-new">New</span></span>
@@ -226,39 +229,23 @@ window.MathJax = {
       <span class="nav-dd-ref-cite">Kant · Brünjes · Coutts — 2019<span class="nav-dd-ref-tag">SL-D1</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
     </a>
-  </div>
-</div>
-</div>
-</div>
-
-<span class="nav-flow-arrow" aria-hidden="true">←</span>
-
-<!-- Zone 5 — Research Papers (academic foundations) -->
-<div class="nav-zone nav-zone-research">
-<div class="nav-dd-wrap nav-dd-wrap-light">
-<button class="nav-dd-btn-light nav-dd-btn-research" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Research Papers ▾</button>
-<div class="nav-dd-panel-light nav-dd-panel-research">
-  <div class="nav-dd-stratum">
-    <div class="nav-dd-stratum-head">
-      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-research">Research Papers</span>
-      <span class="nav-dd-stratum-meta">Academic antecedents and adjacent work on reward schemes</span>
-    </div>
-    <a href="pdf-viewer.html?file=references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf" class="nav-dd-ref">
+    <div class="nav-dd-ref-group-label">Research Papers</div>
+    <a href="pdf-viewer.html?file=references/research-papers/reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf" class="nav-dd-ref nav-dd-ref-sub">
       <span class="nav-dd-ref-title">Reward Sharing Schemes for Stake Pools</span>
       <span class="nav-dd-ref-cite">Brünjes · Kiayias · Koutsoupias · Stouka — 2020<span class="nav-dd-ref-tag">RSS-2020</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
     </a>
-    <a href="pdf-viewer.html?file=references/research-papers/incentives-against-power-grabs_kiayias-et-al_2021.pdf" class="nav-dd-ref">
+    <a href="pdf-viewer.html?file=references/research-papers/incentives-against-power-grabs_kiayias-et-al_2021.pdf" class="nav-dd-ref nav-dd-ref-sub">
       <span class="nav-dd-ref-title">Incentives Against Power Grabs</span>
       <span class="nav-dd-ref-cite">Kiayias et al. — 2021<span class="nav-dd-ref-tag">IAPG</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
     </a>
-    <a href="pdf-viewer.html?file=references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-ref">
+    <a href="pdf-viewer.html?file=references/research-papers/balancing-participation-decentralization_kiayias-et-al_2024.pdf" class="nav-dd-ref nav-dd-ref-sub">
       <span class="nav-dd-ref-title">Balancing Participation & Decentralization</span>
       <span class="nav-dd-ref-cite">Kiayias et al. — 2024<span class="nav-dd-ref-tag">BPD</span></span>
       <span class="nav-dd-ref-pdf">PDF</span>
     </a>
-    <a href="https://arxiv.org/abs/2505.04422" class="nav-dd-ref" rel="noopener" target="_blank">
+    <a href="https://arxiv.org/abs/2505.04422" class="nav-dd-ref nav-dd-ref-sub" rel="noopener" target="_blank">
       <span class="nav-dd-ref-title">Reward Sharing in PoS with No-Pool-Choice Delegators</span>
       <span class="nav-dd-ref-cite">Kiayias et al. — AFT 2025<span class="nav-dd-ref-tag">AFT-2025</span></span>
       <span class="nav-dd-ref-pdf">arXiv</span>
@@ -294,7 +281,7 @@ window.MathJax = {
     <div class="hero-eyebrow">Mainnet Diagnostic</div>
     <h1>Single-Pool Operators</h1>
     <div class="sub">What remains after MPO extraction — the independent base</div>
-    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/05/07</span></span></span></div>
+    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/05/08</span></span></span></div>
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
@@ -495,7 +482,7 @@ population where parameter reform could actually shift behaviour.</em></p>
         <span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit
       </div>
       <div class="footer-meta">
-        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/05/07</span></div>
+        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/05/08</span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Author</span><span class="footer-meta-val"><a href="https://www.linkedin.com/in/nhenin/" rel="noopener" target="_blank">Nicolas Henin<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Source</span><span class="footer-meta-val"><a href="https://github.com/input-output-hk/spo-incentives" rel="noopener" target="_blank">input-output-hk/spo-incentives<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
       </div>
@@ -521,6 +508,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778160463"></script>
+<script src="assets/site.js?v=1778223721"></script>
 </body>
 </html>
