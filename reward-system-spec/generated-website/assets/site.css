@@ -226,7 +226,193 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .nav-dd-meta{display:block;font:400 11px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:rgba(255,255,255,.35);margin-top:3px}
 
 /* Bar 2: three-column navigation */
-.nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:stretch;padding:0;overflow-x:auto;white-space:nowrap}
+.nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:stretch;padding:0 24px;overflow-x:auto;white-space:nowrap;position:relative;gap:38px}
+/* Single reading-direction rail across the navbar — replaces the per-gap
+   arrows. Dashed hairline that runs from Welcome (destination) on the
+   left to Design Support (origin) on the right. Anchored by JS so the
+   right edge sits flush with the rightmost button rather than running
+   into the empty space past it. The arrowhead stays on the LEFT end
+   (Welcome) — that's the reading-direction destination. */
+.nav-flow-rail{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+               height:11px;display:flex;align-items:center;
+               pointer-events:none;z-index:0;
+               /* Very subtle dark drop-shadow only — gives the dashes
+                  just enough definition against the gradient without
+                  feeling glowy or heavy. */
+               filter:drop-shadow(0 1px 1px rgba(0,0,0,0.12))}
+.nav-flow-rail-line{flex:1;display:block;height:1px;
+                     margin-left:6px;margin-right:0;order:2;
+                     border:0;
+                     background:repeating-linear-gradient(to right,
+                       currentColor 0 4px,
+                       transparent 4px 8px);
+                     color:rgba(255,255,255,0.7)}
+/* Arrowhead suppressed — the chevron-shaped buttons themselves convey
+   the right→left reading direction; an extra arrowhead at the rail
+   start is redundant. Also fixes a brief flash on page load before the
+   JS rail positioner runs. */
+.nav-flow-rail-head{display:none}
+/* Two-stop colour transition — left half white-ish, right half dark-ish.
+   Implemented as an overlay so the dashes themselves blend smoothly. */
+.nav-flow-rail-line::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;
+                            transform:translateY(-50%);pointer-events:none}
+[data-theme=dark] .nav-flow-rail-line{color:rgba(255,255,255,0.55)}
+[data-theme=dark] .nav-flow-rail-head{color:rgba(255,255,255,0.7)}
+/* Lift every nav child above the rail so the buttons render on top. */
+.nav-pages > .nav-zone,
+.nav-pages > .nav-tab-implementation,
+.nav-pages > .nav-tab-roadmap{position:relative;z-index:1}
+
+/* ── Chevron-shaped buttons ─────────────────────────────────────────────
+   Each button gets a V-notch on its right edge, so the silhouette itself
+   points left — the reading-direction is encoded in the shape, no extra
+   arrow needed. Apply via clip-path so the button's existing background
+   / border / colour rules keep working unchanged. */
+:root{--nav-chev-cut:8px}
+/* Unified typography across every chevron button — same Inter weight,
+   tracking, case, and line-height. Stops the per-class differences
+   (some had .4 letter-spacing, some .2, some uppercase) from making
+   the row look inconsistent. */
+.nav-tab-implementation,
+.nav-tab-roadmap,
+.nav-tab-problems-big,
+.nav-tab-spec-big,
+.nav-dd-btn-light,
+.nav-dd-btn-solution{
+  font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;
+  letter-spacing:.2px !important;
+  text-transform:none !important;
+}
+
+/* All chevron buttons get an SVG background that draws the silhouette +
+   a stroke along every edge (including the V-points). clip-path-based
+   chevrons couldn't do this — clip-path just hides pixels, it doesn't
+   stroke the polygon outline. Vector strokes (vector-effect:
+   non-scaling-stroke) keep the dash pattern / line weight uniform
+   regardless of button width.
+   The drop-shadow filter follows the visible alpha (the SVG fill), so
+   the shadow now wraps the chevron outline rather than a rectangle. */
+.nav-tab-implementation,
+.nav-tab-roadmap,
+.nav-tab-problems-big,
+.nav-tab-spec-big,
+.nav-dd-btn-light{
+  clip-path:none !important;
+  background-color:transparent !important;
+  background-repeat:no-repeat !important;
+  background-size:100% 100% !important;
+  background-position:center !important;
+  border:0 !important;
+  padding:18px calc(22px + var(--nav-chev-cut)) !important;
+  justify-content:center !important;
+  text-align:center !important;
+  /* Two-layer shadow that adapts to the gradient navbar background:
+     - white glow shows up against the deep-blue left zone (otherwise
+       a dark shadow vanishes there);
+     - dark shadow shows up against the white right zone.
+     Each layer is effectively invisible against its own background
+     colour, so only the relevant one reads at any given button. */
+  filter:drop-shadow(0 0 5px rgba(255,255,255,0.28))
+         drop-shadow(0 2px 4px rgba(0,0,0,0.13))
+         drop-shadow(0 1px 1px rgba(0,0,0,0.08));
+}
+/* White-plate dropdown chevrons (the right-side buttons + Existing CIPs
+   trigger). Light-grey 1px stroke around the full silhouette. */
+.nav-dd-btn-light,
+.nav-tab-problems-big{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L93 20 L99 39 L7 39 L1 20 Z' fill='%23ffffff' stroke='%23cfcfcf' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
+  color:var(--text-secondary) !important;
+}
+.nav-dd-btn-light:hover,
+.nav-tab-problems-big:hover{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L93 20 L99 39 L7 39 L1 20 Z' fill='%23fafafa' stroke='%23999999' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
+  color:var(--text-primary) !important;
+}
+.nav-dd-wrap-light.open > .nav-dd-btn-light{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L93 20 L99 39 L7 39 L1 20 Z' fill='%23fff5f5' stroke='%23E52321' stroke-width='1.2' vector-effect='non-scaling-stroke'/></svg>") !important;
+  color:var(--infared) !important;
+}
+/* Existing CIPs trigger — same white-plate recipe but with the original
+   text colour (var(--text-primary)) + cardano-blue active state. */
+.nav-dd-btn-solution{color:var(--text-primary) !important}
+.nav-dd-wrap-light.open > .nav-dd-btn-solution{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L93 20 L99 39 L7 39 L1 20 Z' fill='%23eaf0fc' stroke='%230033ad' stroke-width='1.2' vector-effect='non-scaling-stroke'/></svg>") !important;
+  color:var(--cardano-blue) !important;
+}
+/* Welcome + V2 Roadmap — white-plate chevrons matching the rest of the
+   nav. They sit on the deep-blue zone so the white glow in the shared
+   filter does the heavy lifting visually. */
+.nav-tab-implementation,
+.nav-tab-roadmap{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L93 20 L99 39 L7 39 L1 20 Z' fill='%23ffffff' stroke='%23cfcfcf' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
+  color:var(--text-primary) !important;
+  /* Slightly stronger white glow because the deep-blue background is
+     the darkest part of the gradient — these buttons need a bit more
+     lift than the right-side ones. */
+  filter:drop-shadow(0 0 7px rgba(255,255,255,0.38))
+         drop-shadow(0 2px 4px rgba(0,0,0,0.12)) !important;
+}
+/* V2 Spec — solid Cardano-blue chevron with a SOLID white border. */
+.nav-tab-spec-big{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L93 20 L99 39 L7 39 L1 20 Z' fill='%230033ad' stroke='%23ffffff' stroke-width='1.4' vector-effect='non-scaling-stroke'/></svg>") !important;
+  color:#fff !important;
+  filter:drop-shadow(0 3px 8px rgba(0,51,173,0.50))
+         drop-shadow(0 1px 1px rgba(0,0,0,0.18)) !important;
+}
+/* Move the eyebrow badges OUT of the clipped button onto the wrap
+   parent so they are not subject to the chevron clip-path. The
+   wraps already have position:relative. The .nav-zone parent is
+   used for the standalone tabs (no wrap div). */
+.nav-dd-wrap-light:has(.nav-dd-ref-new),
+.nav-zone-output,        /* spec / roadmap zones */
+.nav-zone-problems,      /* induced problems */
+.nav-zone-implementation /* welcome */
+{position:relative;overflow:visible}
+.nav-dd-wrap-light:has(.nav-dd-ref-new)::before,
+.nav-dd-wrap-light:has(.nav-dd-btn-solution)::before,    /* Existing CIPs trigger */
+.nav-zone-output:has(.nav-tab-roadmap)::before,           /* V2 Roadmap */
+.nav-zone:has(.nav-tab-spec-big)::before,
+.nav-zone:has(.nav-tab-problems-big)::before{
+  content:"NEW";position:absolute;top:-12px;left:8px;z-index:5;
+  font:700 8.5px/1 'Inter',-apple-system,sans-serif;letter-spacing:.14em;
+  background:#fff;color:#0a8a80;padding:3px 6px;border-radius:3px;
+  border:1px solid rgba(22,233,216,.55);
+  box-shadow:0 1px 2px rgba(22,233,216,.18);pointer-events:none}
+[data-theme=dark] .nav-dd-wrap-light:has(.nav-dd-ref-new)::before,
+[data-theme=dark] .nav-dd-wrap-light:has(.nav-dd-btn-solution)::before,
+[data-theme=dark] .nav-zone-output:has(.nav-tab-roadmap)::before,
+[data-theme=dark] .nav-zone:has(.nav-tab-spec-big)::before,
+[data-theme=dark] .nav-zone:has(.nav-tab-problems-big)::before{
+  background:#1a1a1a;color:#16E9D8;border-color:rgba(22,233,216,.45)}
+/* Right-side eyebrows (EVALUATION / IDEATION / PROPOSAL) — same trick
+   on the wrap or zone, anchored top-right. */
+.nav-dd-wrap-light:has(.nav-dd-btn-solution)::after{content:"EVALUATION";
+  position:absolute;top:-12px;right:8px;z-index:5;
+  font:700 8.5px/1 'Inter',-apple-system,sans-serif;letter-spacing:.14em;
+  background:#fff;color:var(--cardano-blue);padding:3px 6px;border-radius:3px;
+  border:1px solid var(--cardano-blue);pointer-events:none}
+.nav-zone-output:has(.nav-tab-roadmap)::after{content:"IDEATION";
+  position:absolute;top:-12px;right:8px;z-index:5;
+  font:700 8.5px/1 'Inter',-apple-system,sans-serif;letter-spacing:.14em;
+  background:#fff;color:var(--cardano-blue);padding:3px 6px;border-radius:3px;
+  border:1px solid var(--cardano-blue);pointer-events:none}
+.nav-zone-output:has(.nav-tab-roadmap){position:relative}
+.nav-zone:has(.nav-tab-spec-big)::after{content:"PROPOSAL";
+  position:absolute;top:-12px;right:8px;z-index:5;
+  font:700 8.5px/1 'Inter',-apple-system,sans-serif;letter-spacing:.14em;
+  background:#fff;color:var(--cardano-blue);padding:3px 6px;border-radius:3px;
+  border:1px solid var(--cardano-blue);pointer-events:none}
+/* Hide the original (button-attached) eyebrow pills — they are
+   replaced by the wrap-attached versions above. */
+.nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light::before,
+.nav-tab-spec-big::before,
+.nav-dd-btn-solution::before,
+.nav-tab-problems-big::before,
+.nav-dd-btn-solution::after,
+.nav-tab-roadmap::after,
+.nav-tab-spec-big::after{display:none !important}
+/* Keep the rail too — it threads through the chevron buttons,
+   reinforcing the right→left flow as one continuous gesture. */
 .nav-pages a{text-decoration:none;transition:color .15s,background .15s}
 
 /* Columns */
@@ -1043,13 +1229,20 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
 
 /* ── OUTPUT ← INPUT nav (mirrors §1 Foundations diagram) ── */
 /* Flow (reading L→R): [V2 SPECIFICATION] ← Documents (Design / Diagnostic / Research) */
-.nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%),var(--bg);border-bottom:0;display:flex;align-items:center;padding:10px 20px;overflow:visible;white-space:nowrap;gap:14px;position:relative;z-index:50}
+.nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%),var(--bg);border-bottom:0;display:flex;align-items:center;padding:10px 28px;overflow:visible;white-space:nowrap;gap:38px;position:relative;z-index:50}
 [data-theme=dark] .nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 20%,rgba(0,51,173,.75) 30%,rgba(0,51,173,.40) 50%,rgba(0,51,173,.12) 70%,var(--bg) 92%),var(--bg)}
 .nav-zone{display:flex;align-items:center;gap:10px;flex-shrink:0}
 
-/* "OUTPUT ← INPUT" flow arrow — subtle, matches IOG's I/O directionality */
-.nav-flow-arrow{color:var(--cardano-blue);opacity:.7;font-size:18px;flex-shrink:0;padding:0 4px;user-select:none;font-weight:600;text-shadow:0 0 4px rgba(255,255,255,.6)}
-.nav-flow-arrow-light{color:#fff;opacity:1;text-shadow:0 1px 2px rgba(0,0,0,.25),0 0 6px rgba(0,51,173,.35);font-weight:700}
+/* Reading-direction flow arrow — thin SVG arrow, hairline stroke,
+   calm colour. The shape carries the meaning ("read right→left, this
+   is built FROM that"); it doesn't have to shout. */
+.nav-flow-arrow{display:inline-flex;align-items:center;flex-shrink:0;
+                padding:0 8px;color:var(--cardano-blue);opacity:.55;
+                user-select:none;transition:opacity .15s}
+.nav-flow-arrow:hover{opacity:.85}
+.nav-flow-arrow svg{width:26px;height:11px;display:block}
+.nav-flow-arrow-light{color:rgba(255,255,255,.7);opacity:1}
+.nav-flow-arrow-light:hover{color:#fff}
 
 /* Small zone label above (inline with) each zone's content */
 .nav-zone-label{font:700 9px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);flex-shrink:0}
@@ -1157,18 +1350,35 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
 .nav-breadcrumb-desc-sep{color:var(--text-muted);opacity:.4;font-size:12px;padding:0 2px 0 6px}
 .nav-breadcrumb-desc{color:var(--text-muted);font-weight:400;font-style:italic;opacity:.88;letter-spacing:.15px}
 .nav-dd-wrap-light{position:relative}
-.nav-dd-btn-light{background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.2px;color:var(--text-secondary);padding:9px 14px;transition:all .15s;white-space:nowrap;position:relative}
-/* The CIPs button text needs the lowercase 's' to read as the
-   initialism. The shared .nav-dd-btn-light has text-transform:
-   uppercase; override here. */
+/* Dropdown button — keep the bordered white plate (it's the main
+   affordance signal), refine only the details: hairline 1px border,
+   slightly more padding rhythm, SVG chevron in place of ▾. */
+.nav-dd-btn-light{background:transparent;border:1px solid var(--border);
+                  border-radius:6px;cursor:pointer;
+                  font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+                  letter-spacing:.2px;color:var(--text-secondary);
+                  padding:9px 14px 9px 14px;transition:all .15s;
+                  white-space:nowrap;position:relative;
+                  display:inline-flex;align-items:center;gap:7px}
+.nav-dd-chev{width:9px;height:6px;opacity:.55;transition:transform .18s,opacity .15s;
+             display:inline-block;flex-shrink:0;color:currentColor}
+.nav-dd-btn-light:hover .nav-dd-chev{opacity:.9}
+.nav-dd-wrap-light.open .nav-dd-chev{transform:rotate(180deg);opacity:1}
 .nav-dd-btn-solution{text-transform:none;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.2px;padding:10px 26px;min-width:130px;color:var(--text-primary)}
 .nav-dd-wrap-light.open .nav-dd-btn-solution{color:var(--cardano-blue);border-color:var(--cardano-blue);background:rgba(0,51,173,.06)}
 
-/* "EVALUATION" eyebrow tag — same white-on-Cardano-blue recipe as
-   FUTURE / PROPOSAL on the neighbouring tabs so the three stamps
-   read as one visual family across the navbar. Anchored top-right
-   of the CIPs button. */
-.nav-dd-btn-solution::after{content:"evaluation";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:var(--cardano-blue);padding:3px 5px;border-radius:3px;border:1px solid var(--cardano-blue);pointer-events:none;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+/* Eyebrow tags — restore the white-plate pill that anchored the badge
+   visually (you confirmed this read better than typographic-only).
+   Keep my refinements: Inter typeface, slightly tighter tracking
+   (was .6px ≈ wide), 8.5px size. */
+.nav-dd-btn-solution::after{content:"EVALUATION";position:absolute;top:-7px;right:-6px;
+                             font:700 8.5px/1 'Inter',-apple-system,sans-serif;
+                             letter-spacing:.14em;
+                             background:#fff;color:var(--cardano-blue);
+                             padding:3px 6px;border-radius:3px;
+                             border:1px solid var(--cardano-blue);
+                             pointer-events:none;
+                             box-shadow:0 1px 2px rgba(0,0,0,.06)}
 [data-theme=dark] .nav-dd-btn-solution::after{background:#1a1a1a;color:#7B91FF;border-color:#7B91FF}
 .nav-dd-btn-light:hover{color:var(--text-primary);border-color:var(--text-muted);background:rgba(0,0,0,.02)}
 [data-theme=dark] .nav-dd-btn-light:hover{background:rgba(255,255,255,.04)}
@@ -1218,18 +1428,20 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
 .nav-tab-spec-big,
 .nav-dd-btn-solution{
   position:relative}
+/* NEW eyebrow — restore the white-plate pill (more readable than
+   typographic-only). Keep my refinements: Inter, tighter tracking,
+   slightly larger size. */
 .nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light::before,
 .nav-tab-spec-big::before,
 .nav-dd-btn-solution::before{
-  content:"new";
+  content:"NEW";
   position:absolute;
   top:-7px;left:-6px;
-  font:700 8px/1 -apple-system,sans-serif;
-  letter-spacing:.6px;
-  text-transform:uppercase;
+  font:700 8.5px/1 'Inter',-apple-system,sans-serif;
+  letter-spacing:.14em;
   background:#fff;
   color:#0a8a80;
-  padding:3px 5px;
+  padding:3px 6px;
   border-radius:3px;
   border:1px solid rgba(22,233,216,.55);
   box-shadow:0 1px 2px rgba(22,233,216,.18);
@@ -1301,7 +1513,11 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
    instead of PROPOSAL. The pair (V2 Spec | V2 Roadmap) reads as
    'historical reference → active working document' at a glance. */
 .nav-tab-roadmap{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px dashed rgba(255,255,255,.65);border-radius:6px;text-decoration:none;transition:all .15s;white-space:nowrap;box-shadow:0 2px 6px var(--cardano-blue-soft);position:relative}
-.nav-tab-roadmap::after{content:"ideation";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:var(--cardano-blue);padding:3px 5px;border-radius:3px;border:1px solid var(--cardano-blue)}
+/* IDEATION eyebrow — white-plate pill (restored for readability). */
+.nav-tab-roadmap::after{content:"IDEATION";position:absolute;top:-7px;right:-6px;
+                        font:700 8.5px/1 'Inter',-apple-system,sans-serif;
+                        letter-spacing:.14em;background:#fff;color:var(--cardano-blue);
+                        padding:3px 6px;border-radius:3px;border:1px solid var(--cardano-blue)}
 [data-theme=dark] .nav-tab-roadmap::after{background:#1a1a1a;color:#7B91FF;border-color:#7B91FF}
 .nav-tab-roadmap:hover{background:#0028a0;border-color:rgba(255,255,255,.85);box-shadow:0 4px 14px var(--cardano-blue-glow)}
 .nav-tab-roadmap.active{background:#001f80;border-color:rgba(255,255,255,.95);box-shadow:0 3px 12px var(--cardano-blue-glow)}
@@ -1328,13 +1544,22 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
 /* "NEW" eyebrow stamp — same recipe as the other light
    dropdowns that contain fresh content, so the page reads as
    one signal family. */
-.nav-tab-problems-big::before{content:"new";position:absolute;top:-7px;left:-6px;font:700 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:#0a8a80;padding:3px 5px;border-radius:3px;border:1px solid rgba(22,233,216,.55);box-shadow:0 1px 2px rgba(22,233,216,.18);pointer-events:none}
+.nav-tab-problems-big::before{content:"NEW";position:absolute;top:-7px;left:-6px;
+                              font:700 8.5px/1 'Inter',-apple-system,sans-serif;
+                              letter-spacing:.14em;background:#fff;color:#0a8a80;
+                              padding:3px 6px;border-radius:3px;
+                              border:1px solid rgba(22,233,216,.55);
+                              box-shadow:0 1px 2px rgba(22,233,216,.18);
+                              pointer-events:none}
 [data-theme=dark] .nav-tab-problems-big::before{background:#1a1a1a;color:#16E9D8;border-color:rgba(22,233,216,.45)}
 /* "PROPOSAL" eyebrow tag — same shape language as the "FUTURE"
    stamp on .nav-tab-implementation, anchored to the top-right of
    the V2 Specification tab so the spec reads as 'this is a
    proposal' at a glance. */
-.nav-tab-spec-big::after{content:"proposal";position:absolute;top:-7px;right:-6px;font:600 8px/1 -apple-system,sans-serif;letter-spacing:.6px;text-transform:uppercase;background:#fff;color:var(--cardano-blue);padding:3px 5px;border-radius:3px;border:1px solid var(--cardano-blue)}
+.nav-tab-spec-big::after{content:"PROPOSAL";position:absolute;top:-7px;right:-6px;
+                          font:700 8.5px/1 'Inter',-apple-system,sans-serif;
+                          letter-spacing:.14em;background:#fff;color:var(--cardano-blue);
+                          padding:3px 6px;border-radius:3px;border:1px solid var(--cardano-blue)}
 [data-theme=dark] .nav-tab-spec-big::after{background:#1a1a1a;color:#7B91FF;border-color:#7B91FF}
 .nav-tab-spec-big:hover{background:#0028a0;border-color:#0028a0;box-shadow:0 4px 14px var(--cardano-blue-glow)}
 .nav-tab-spec-big.active{background:#001f80;border-color:#001f80;box-shadow:0 3px 12px var(--cardano-blue-glow)}
