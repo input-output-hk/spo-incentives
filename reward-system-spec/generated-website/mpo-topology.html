@@ -23,6 +23,28 @@ window.closeAllDd=function(except){
   });
 };
 document.addEventListener('click',function(){ window.closeAllDd(null); });
+/* Position the single navbar reading-direction rail so its right edge
+   sits flush with the rightmost button (Design Support), not at the
+   navbar's empty right edge. Re-runs on resize. */
+(function(){
+  function fitRail(){
+    var pages = document.querySelector('.nav-pages');
+    if(!pages) return;
+    var rail = pages.querySelector('.nav-flow-rail');
+    if(!rail) return;
+    var zones = pages.querySelectorAll(':scope > .nav-zone, :scope > .nav-tab-implementation, :scope > .nav-tab-roadmap');
+    if(!zones.length) return;
+    var first = zones[0].getBoundingClientRect();
+    var last  = zones[zones.length-1].getBoundingClientRect();
+    var pageRect = pages.getBoundingClientRect();
+    rail.style.left  = (first.left  - pageRect.left + first.width  / 2) + 'px';
+    rail.style.right = (pageRect.right - last.right + last.width / 2) + 'px';
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fitRail);
+  else fitRail();
+  window.addEventListener('resize', fitRail);
+  setTimeout(fitRail, 250);
+})();
 </script>
 <script>
 window.MathJax = {
@@ -37,7 +59,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778570871">
+<link rel="stylesheet" href="assets/site.css?v=1778574534">
 
 
 </head>
@@ -64,12 +86,23 @@ window.MathJax = {
 </div>
 <div class="nav-pages">
 
+<!-- Single reading-direction rail spanning the navbar. Buttons sit on top
+     with their own backgrounds, so they read as nodes / stops along the
+     line. Arrowhead anchored at the leftmost end (Welcome destination)
+     to make the right→left "this is built FROM that" narrative explicit
+     without repeating an arrow between every pair of buttons. -->
+<div class="nav-flow-rail" aria-hidden="true">
+  <span class="nav-flow-rail-line"></span>
+  <svg class="nav-flow-rail-head" viewBox="0 0 12 10" aria-hidden="true">
+    <path d="M11 5 L1 5 M1 5 L5 1 M1 5 L5 9" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</div>
+
 <!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
 <div class="nav-zone nav-zone-implementation">
 <a href="index.html" class="nav-tab-implementation" title="V2 working website — analysis, evidence, and directions in ideation">Welcome</a>
 </div>
 
-<span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true"><svg viewBox="0 0 28 12"><path d="M27 6 L4 6 M4 6 L9 2.5 M4 6 L9 9.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
 <!-- Zone 1 (left anchor) — Solution Evaluation: CIP candidates evaluated against V2 -->
 <div class="nav-zone nav-zone-solution">
@@ -116,14 +149,12 @@ window.MathJax = {
 </div>
 </div>
 
-<span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true"><svg viewBox="0 0 28 12"><path d="M27 6 L4 6 M4 6 L9 2.5 M4 6 L9 9.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
 <!-- Zone 2 — V2 Roadmap: the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
 <div class="nav-zone nav-zone-output">
 <a href="v2-roadmap.html" class="nav-tab-roadmap" title="V2 Roadmap — directions of exploration and concrete milestones">V2 Roadmap</a>
 </div>
 
-<span class="nav-flow-arrow" aria-hidden="true"><svg viewBox="0 0 28 12"><path d="M27 6 L4 6 M4 6 L9 2.5 M4 6 L9 9.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
 <!-- Zone 2.5 — Cardano Constitution (the governance ceiling V2 must respect) -->
 <div class="nav-zone nav-zone-constitution">
@@ -157,14 +188,12 @@ window.MathJax = {
 </div>
 </div>
 
-<span class="nav-flow-arrow" aria-hidden="true"><svg viewBox="0 0 28 12"><path d="M27 6 L4 6 M4 6 L9 2.5 M4 6 L9 9.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
 <!-- Zone 2.7 — Induced Problems (proto-CPS bridge between diagnostic and V2 spec) -->
 <div class="nav-zone nav-zone-problems">
 <a href="problem-statements.html" class="nav-tab-problems-big" title="The structural problems the diagnostic induces from on-chain evidence">Induced Problems</a>
 </div>
 
-<span class="nav-flow-arrow" aria-hidden="true"><svg viewBox="0 0 28 12"><path d="M27 6 L4 6 M4 6 L9 2.5 M4 6 L9 9.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
 <!-- Zone 3 — Mainnet Diagnostic (observed reality) -->
 <div class="nav-zone nav-zone-diag">
@@ -213,7 +242,6 @@ window.MathJax = {
 </div>
 </div>
 
-<span class="nav-flow-arrow" aria-hidden="true"><svg viewBox="0 0 28 12"><path d="M27 6 L4 6 M4 6 L9 2.5 M4 6 L9 9.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
 <!-- Zone 4 — Design Support (intended mechanism + research foundations) -->
 <div class="nav-zone nav-zone-design">
@@ -358,6 +386,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778570871"></script>
+<script src="assets/site.js?v=1778574534"></script>
 </body>
 </html>

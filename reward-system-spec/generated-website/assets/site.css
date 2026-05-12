@@ -226,7 +226,39 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .nav-dd-meta{display:block;font:400 11px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:rgba(255,255,255,.35);margin-top:3px}
 
 /* Bar 2: three-column navigation */
-.nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:stretch;padding:0;overflow-x:auto;white-space:nowrap}
+.nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:stretch;padding:0 24px;overflow-x:auto;white-space:nowrap;position:relative;gap:38px}
+/* Single reading-direction rail across the navbar — replaces the per-gap
+   arrows. Dashed hairline that runs from Welcome (destination) on the
+   left to Design Support (origin) on the right. Anchored by JS so the
+   right edge sits flush with the rightmost button rather than running
+   into the empty space past it. The arrowhead stays on the LEFT end
+   (Welcome) — that's the reading-direction destination. */
+.nav-flow-rail{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+               height:11px;display:flex;align-items:center;
+               pointer-events:none;z-index:0;
+               /* Very subtle dark drop-shadow only — gives the dashes
+                  just enough definition against the gradient without
+                  feeling glowy or heavy. */
+               filter:drop-shadow(0 1px 1px rgba(0,0,0,0.12))}
+.nav-flow-rail-line{flex:1;display:block;height:1px;
+                     margin-left:6px;margin-right:0;order:2;
+                     border:0;
+                     background:repeating-linear-gradient(to right,
+                       currentColor 0 4px,
+                       transparent 4px 8px);
+                     color:rgba(255,255,255,0.7)}
+.nav-flow-rail-head{width:14px;height:11px;flex-shrink:0;color:rgba(255,255,255,0.9);
+                     order:1;margin-left:8px}
+/* Two-stop colour transition — left half white-ish, right half dark-ish.
+   Implemented as an overlay so the dashes themselves blend smoothly. */
+.nav-flow-rail-line::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;
+                            transform:translateY(-50%);pointer-events:none}
+[data-theme=dark] .nav-flow-rail-line{color:rgba(255,255,255,0.55)}
+[data-theme=dark] .nav-flow-rail-head{color:rgba(255,255,255,0.7)}
+/* Lift every nav child above the rail so the buttons render on top. */
+.nav-pages > .nav-zone,
+.nav-pages > .nav-tab-implementation,
+.nav-pages > .nav-tab-roadmap{position:relative;z-index:1}
 .nav-pages a{text-decoration:none;transition:color .15s,background .15s}
 
 /* Columns */
@@ -1043,7 +1075,7 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
 
 /* ── OUTPUT ← INPUT nav (mirrors §1 Foundations diagram) ── */
 /* Flow (reading L→R): [V2 SPECIFICATION] ← Documents (Design / Diagnostic / Research) */
-.nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%),var(--bg);border-bottom:0;display:flex;align-items:center;padding:10px 20px;overflow:visible;white-space:nowrap;gap:14px;position:relative;z-index:50}
+.nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%),var(--bg);border-bottom:0;display:flex;align-items:center;padding:10px 28px;overflow:visible;white-space:nowrap;gap:38px;position:relative;z-index:50}
 [data-theme=dark] .nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 20%,rgba(0,51,173,.75) 30%,rgba(0,51,173,.40) 50%,rgba(0,51,173,.12) 70%,var(--bg) 92%),var(--bg)}
 .nav-zone{display:flex;align-items:center;gap:10px;flex-shrink:0}
 
