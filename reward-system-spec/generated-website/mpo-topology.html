@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Document Viewer — SPO Incentives</title>
+<title>SPO Topology — Interactive Map</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Cardano-aligned typographic stack: Chivo for display / headings
@@ -37,7 +37,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778568548">
+<link rel="stylesheet" href="assets/site.css?v=1778569793">
 
 
 </head>
@@ -169,18 +169,18 @@ window.MathJax = {
 <!-- Zone 3 — Mainnet Diagnostic (observed reality) -->
 <div class="nav-zone nav-zone-diag">
 <div class="nav-dd-wrap nav-dd-wrap-light">
-<button class="nav-dd-btn-light nav-dd-btn-diag" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Mainnet Diagnostic ▾</button>
+<button class="nav-dd-btn-light nav-dd-btn-diag active" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Mainnet Diagnostic ▾</button>
 <div class="nav-dd-panel-light nav-dd-panel-diag">
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-diagnostic">Mainnet Diagnostic</span>
       <span class="nav-dd-stratum-meta">What mainnet is actually doing — Reward-Flow evidence, the staking census, and the prior report</span>
     </div>
-    <a href="diagnostic.html" class="nav-dd-ref nav-dd-ref-hero">
+    <a href="diagnostic.html" class="nav-dd-ref nav-dd-ref-hero parent-active">
       <span class="nav-dd-ref-title">The Diagnostic</span>
       <span class="nav-dd-ref-cite">Full narrative — observations, problem induction, and sub-report links</span>
     </a>
-    <a href="census.html" class="nav-dd-ref nav-dd-ref-sub">
+    <a href="census.html" class="nav-dd-ref nav-dd-ref-sub parent-active">
       <span class="nav-dd-ref-title">The Staking Census<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">The four game player populations of Cardano's reward pipeline<span class="nav-dd-ref-stage">Evidence</span></span>
     </a>
@@ -198,7 +198,7 @@ window.MathJax = {
       <span class="nav-dd-ref-cite">The operator's cut versus the delegator share<span class="nav-dd-ref-stage">Stage 3</span></span>
     </a>
     <div class="nav-dd-ref-group-label">Sandbox</div>
-    <a href="mpo-topology.html" class="nav-dd-ref nav-dd-ref-sub">
+    <a href="mpo-topology.html" class="nav-dd-ref nav-dd-ref-sub active">
       <span class="nav-dd-ref-title">SPO Topology<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">Interactive map — every active pool's hosting provider, region, ASN, saturation tier<span class="nav-dd-ref-stage">Play</span></span>
     </a>
@@ -261,52 +261,38 @@ window.MathJax = {
 </div>
 
 </div>
-<div class="nav-breadcrumb"></div>
+<div class="nav-breadcrumb"><span class="nav-breadcrumb-item">Mainnet Diagnostic</span><span class="nav-breadcrumb-sep" aria-hidden="true">›</span><span class="nav-breadcrumb-item">The Staking Census</span><span class="nav-breadcrumb-sep" aria-hidden="true">›</span><span class="nav-breadcrumb-item nav-breadcrumb-current">SPO Topology</span></div>
 </nav>
 <style>
-.pdf-toolbar{display:flex;align-items:center;gap:16px;padding:10px 28px;background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0}
-.pdf-title{flex:1;font:600 13px/1 var(--font-display);letter-spacing:.6px;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pdf-toolbar a{font-size:12px;color:var(--text-secondary);text-decoration:none;border:1px solid var(--border);border-radius:4px;padding:5px 12px;transition:color .15s,border-color .15s;white-space:nowrap}
-.pdf-toolbar a:hover{color:var(--cardano-blue);border-color:var(--cardano-blue)}
-.pdf-frame{flex:1;width:100%;border:0;background:var(--bg-warm);min-height:calc(100vh - 240px)}
-.pdf-error{padding:40px;color:var(--text-secondary);text-align:center;font:400 14px/1.5 var(--font-body)}
-.pdf-error a{color:var(--cardano-blue);text-decoration:underline}
-[data-theme=dark] .pdf-toolbar{background:var(--bg);border-bottom-color:var(--border)}
-[data-theme=dark] .pdf-toolbar a{color:var(--text-body)}
+/* Page-scoped overrides — these only apply on mpo-topology.html because
+   the rules sit in this page's <body> only. Lock the viewport so the map
+   iframe never scrolls under the site header / breadcrumb: the chrome
+   stays put and the map fills exactly the remaining space. */
+html, body { height: 100vh; overflow: hidden; }
+.site-footer, footer.site-footer { display: none !important; }
+.back-top { display: none !important; }
+.topology-frame { display: block; width: 100%; border: 0; background: #fafafa;
+                  height: calc(100vh - var(--topology-chrome, 130px)); }
 </style>
-<div class="pdf-toolbar" id="toolbar">
-  <span class="pdf-title" id="pdf-title">Loading document…</span>
-  <a id="pdf-download" href="#" download title="Download PDF">Download ↓</a>
-  <a id="pdf-newtab" href="#" target="_blank" title="Open in new tab">New tab ↗</a>
-</div>
-<iframe class="pdf-frame" id="pdf-frame"></iframe>
+<iframe class="topology-frame" src="mpo_topology_map.html"
+        title="SPO Topology — Interactive Map" loading="lazy"></iframe>
 <script>
 (function(){
-  var titles={};
-  titles["delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf"]="Delegation & Incentives Design Spec";
-  titles["reward-sharing-schemes_brunjes-kiayias-et-al_2020.pdf"]="Reward Sharing Schemes for Stake Pools";
-  titles["incentives-against-power-grabs_kiayias-et-al_2021.pdf"]="Stake Pool Incentives Against Power Grabs";
-  titles["balancing-participation-decentralization_kiayias-et-al_2024.pdf"]="Balancing Participation & Decentralization";
-  titles["spo-incentives-analysis_lopez-de-lara_2025.pdf"]="SPO Incentives Analysis";
-  titles["cardano-constitution-2.pdf"]="Cardano Constitution V2";
-  var params=new URLSearchParams(window.location.search);
-  var file=params.get('file')||'';
-  if(file){
-    document.getElementById('pdf-frame').src=file;
-    document.getElementById('pdf-download').href=file;
-    document.getElementById('pdf-newtab').href=file;
-    var basename=file.split('/').pop();
-    var title=titles[basename]||basename.replace(/\.pdf$/i,'').replace(/[-_]/g,' ');
-    document.getElementById('pdf-title').textContent=title;
-    document.title=title+' — SPO Incentives';
-  } else {
-    document.getElementById('toolbar').style.display='none';
-    document.getElementById('pdf-frame').style.display='none';
-    var err=document.createElement('div');
-    err.className='pdf-error';
-    err.innerHTML='<div>No document specified.</div><a href="index.html">← Back to report</a>';
-    document.body.insertBefore(err,document.querySelector('.site-footer'));
+  // Compute the actual chrome height (header + breadcrumb) and feed it to
+  // the iframe sizer — keeps the map flush with the viewport bottom even
+  // if the nav wraps to two rows on a narrow window.
+  function fit(){
+    var crumb = document.querySelector('.nav-breadcrumb');
+    var nav   = document.querySelector('header, .site-nav, nav');
+    var top   = (crumb ? crumb.getBoundingClientRect().bottom : 0);
+    if(!top && nav) top = nav.getBoundingClientRect().bottom;
+    document.documentElement.style.setProperty('--topology-chrome', top + 'px');
   }
+  fit();
+  window.addEventListener('resize', fit);
+  // Re-fit shortly after load to catch any late layout shifts (web fonts,
+  // dropdown reflow, etc.).
+  setTimeout(fit, 200);
 })();
 </script>
 
@@ -372,6 +358,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778568548"></script>
+<script src="assets/site.js?v=1778569793"></script>
 </body>
 </html>

@@ -1,0 +1,5 @@
+dimension,n_distinct_labels,HHI,effective_n_domains,concentration_grade,top1_share_pct
+provider,30,1267.4,10.97,low concentration,22.71
+region,160,448.8,38.16,low concentration,12.73
+physical_country,66,1074.1,13.89,low concentration,20.43
+tier,6,2999.5,3.79,high concentration,40.11

@@ -1,0 +1,7 @@
+tier,pools_exposed,stake_split_ada,stake_split_pct,entities
+hyperscaler,731,8482445982,40.106,469
+commodity-vps,1059,6607734461,31.242,868
+other-or-onprem,863,4021944279,19.016,816
+unresolved,497,1418522718,6.707,419
+residential/satellite,21,613084576,2.899,14
+edge/cdn,6,6482026,0.031,6
