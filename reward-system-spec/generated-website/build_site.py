@@ -1661,6 +1661,11 @@ window.MathJax = {{
       <span class="nav-dd-ref-title">Operators/Delegators<span class="nav-dd-ref-new">New</span></span>
       <span class="nav-dd-ref-cite">The operator's cut versus the delegator share<span class="nav-dd-ref-stage">Stage 3</span></span>
     </a>
+    <div class="nav-dd-ref-group-label">Sandbox</div>
+    <a href="mpo-topology.html" class="nav-dd-ref nav-dd-ref-sub{cls_mpo_topology}">
+      <span class="nav-dd-ref-title">SPO Topology<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Interactive map — every active pool's hosting provider, region, ASN, saturation tier<span class="nav-dd-ref-stage">Play</span></span>
+    </a>
     <div class="nav-dd-ref-group-label">Past Analysis</div>
     <a href="pdf-viewer.html?file=references/previous-analasys/spo-incentives-analysis_lopez-de-lara_2025.pdf" class="nav-dd-ref">
       <span class="nav-dd-ref-title">Nov 2025 — Analysis of Cardano's Incentive Mechanism</span>
@@ -1781,6 +1786,7 @@ HERO_BLOCK = """<div class="hero" data-banner="{hero_banner}">
 # Which active-nav slugs fall under which top-level dropdown
 DIAG_ACTIVE = {"diagnostic", "census", "reserves", "pools", "operator",
                "single-spo", "entity-lifecycle", "mpo-entity-profiles",
+               "mpo-topology",
                "nakamoto-coefficient", "edi-replication"}
 SOLUTION_ACTIVE = {
     "solution-evaluation",
@@ -1801,6 +1807,7 @@ BANNER_VARIANTS = {
     "problem-statements":            "overlap",     # synthesis of multiple findings
     "diagnostic":         "dots",        # the diagnostic — matches cardano.org research page
     "census":              "dots",        # Mainnet census evidence
+    "mpo-topology":        "dots",        # Infrastructure topology — sub-page of census
     "reserves":            "braid",       # Treasury & pool-pots
     "pools":               "braid",       # Pools-distribution layer
     "operator":            "braid",       # Operator-delegator split
@@ -1824,6 +1831,7 @@ BREADCRUMBS = {
     "solution-evaluation": [],
     # Sub-pages (inside a dropdown / sub-flow) — keep the trail.
     "census": ["Mainnet Diagnostic", "The Staking Census"],
+    "mpo-topology": ["Mainnet Diagnostic", "The Staking Census", "SPO Topology"],
     "reserves": ["Mainnet Diagnostic", "Reward Flow", "Reserves"],
     "pools": ["Mainnet Diagnostic", "Reward Flow", "Pools"],
     "operator": ["Mainnet Diagnostic", "Reward Flow", "Operators/Delegators"],
@@ -1893,6 +1901,7 @@ def render_shell(page: dict, content_html: str) -> str:
         "problem-statements": "cls_findings",
         "diagnostic": "cls_diagnostic_title",
         "census": "cls_census",
+        "mpo-topology": "cls_mpo_topology",
         "reserves": "cls_treasury",
         "pools": "cls_pools",
         "operator": "cls_operator",
@@ -1909,8 +1918,10 @@ def render_shell(page: dict, content_html: str) -> str:
         classes[nav_map[active]] = " active"
     # Sub-report pages light up the Diagnostic item as "parent-active" so the
     # hierarchy (Diagnostic → sub-report) stays legible in the dropdown panel.
-    if active in {"census", "reserves", "pools", "operator"}:
+    if active in {"census", "reserves", "pools", "operator", "mpo-topology"}:
         classes["cls_diagnostic_title"] = " parent-active"
+    if active == "mpo-topology":
+        classes["cls_census"] = " parent-active"
     # Sub-eval pages light up the Solution Evaluation landing as parent-active.
     if active in {"stake-cap", "cip-0050", "cip-0037",
                   "fee-layer", "cip-0023", "cip-0082"}:
@@ -7812,6 +7823,66 @@ PDF_VIEWER_BODY = """<style>
 </script>"""
 
 
+# --- SPO Topology page ----------------------------------------------------
+# Same shell pattern as pdf-viewer: head + nav + breadcrumb + footer come
+# from the standard render_shell, but body_main is just a full-viewport
+# iframe of the standalone IOG-branded map. No hero block, no markdown
+# content — the map's own header carries the page identity.
+
+TOPOLOGY_BODY = """<style>
+/* Page-scoped overrides — these only apply on mpo-topology.html because
+   the rules sit in this page's <body> only. Lock the viewport so the map
+   iframe never scrolls under the site header / breadcrumb: the chrome
+   stays put and the map fills exactly the remaining space. */
+html, body { height: 100vh; overflow: hidden; }
+.site-footer, footer.site-footer { display: none !important; }
+.back-top { display: none !important; }
+.topology-frame { display: block; width: 100%; border: 0; background: #fafafa;
+                  height: calc(100vh - var(--topology-chrome, 130px)); }
+</style>
+<iframe class="topology-frame" src="mpo_topology_map.html"
+        title="SPO Topology — Interactive Map" loading="lazy"></iframe>
+<script>
+(function(){
+  // Compute the actual chrome height (header + breadcrumb) and feed it to
+  // the iframe sizer — keeps the map flush with the viewport bottom even
+  // if the nav wraps to two rows on a narrow window.
+  function fit(){
+    var crumb = document.querySelector('.nav-breadcrumb');
+    var nav   = document.querySelector('header, .site-nav, nav');
+    var top   = (crumb ? crumb.getBoundingClientRect().bottom : 0);
+    if(!top && nav) top = nav.getBoundingClientRect().bottom;
+    document.documentElement.style.setProperty('--topology-chrome', top + 'px');
+  }
+  fit();
+  window.addEventListener('resize', fit);
+  // Re-fit shortly after load to catch any late layout shifts (web fonts,
+  // dropdown reflow, etc.).
+  setTimeout(fit, 200);
+})();
+</script>"""
+
+
+def build_topology_page() -> Path:
+    """Build mpo-topology.html as a shell wrapper around the standalone
+    IOG-branded interactive map. Site nav + breadcrumb stay; the rest of
+    the viewport is the map. Same body_main override pattern as
+    pdf-viewer.html so head/nav/footer never drift."""
+    page = {
+        "slug": "mpo-topology",
+        "html": "mpo-topology.html",
+        "title": "SPO Topology — Interactive Map",
+        "active_nav": "mpo-topology",
+        "hero_h1": "",
+        "hero_sub": "",
+        "body_main": TOPOLOGY_BODY,
+    }
+    full = render_shell(page, content_html="")
+    out = SITE_DIR / "mpo-topology.html"
+    out.write_text(full)
+    return out
+
+
 def build_pdf_viewer_page() -> Path:
     """Build pdf-viewer.html as a regular shell page so head/nav/footer
     stay in sync with the rest of the site automatically. Body is the
@@ -7837,7 +7908,7 @@ def build_pdf_viewer_page() -> Path:
 
 def main(argv: list[str]) -> int:
     slugs = [a for a in argv[1:] if not a.startswith("-")]
-    valid_slugs = {p["slug"] for p in PAGES} | {"problem-statements", "my-bookmarks", "pdf-viewer"}
+    valid_slugs = {p["slug"] for p in PAGES} | {"problem-statements", "my-bookmarks", "pdf-viewer", "mpo-topology"}
     wanted = PAGES if not slugs else [p for p in PAGES if p["slug"] in slugs]
     if slugs:
         missing = set(slugs) - valid_slugs
@@ -7884,6 +7955,13 @@ def main(argv: list[str]) -> int:
         print(f"  {'pdf-viewer':16s} ← (shared shell + iframe)")
         pdf_out = build_pdf_viewer_page()
         print(f"  {' ':16s}  → {pdf_out.relative_to(SITE_DIR)}")
+
+    # SPO Topology — same pattern: site shell wrapping the IOG-branded
+    # standalone map at full viewport height.
+    if not slugs or "mpo-topology" in slugs:
+        print(f"  {'mpo-topology':16s} ← (shared shell + iframe over mpo_topology_map.html)")
+        topo_out = build_topology_page()
+        print(f"  {' ':16s}  → {topo_out.relative_to(SITE_DIR)}")
     print("Done.")
     return 0
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Cardano Infrastructure Topology &mdash; Interactive Map</title>
+<title>Cardano SPO Topology &mdash; Interactive Map</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
@@ -10,38 +10,129 @@
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
 <style>
-  :root { --infared: #E52321; --dawn: #EC641D; --ink: #1a1a1a; --grey: #888; --line: #ddd; }
+  :root { --infared: #E52321; --dawn: #EC641D; --ink: #1a1a1a; --grey: #888; --line: #e5e5e5;
+          --bg-soft: #f7f7f8; --hover: #f0f0f2; }
   html, body { margin: 0; padding: 0; height: 100%; overflow: hidden;
                font-family: -apple-system, system-ui, sans-serif; color: var(--ink); }
-  #topbar { position: absolute; left: 0; right: 0; top: 0; height: 56px; padding: 8px 14px;
-            background: #000; color: #fff; box-sizing: border-box; display: flex;
-            align-items: center; gap: 18px; border-bottom: 3px solid var(--infared); z-index: 1000; }
-  #topbar h1 { font-size: 14px; margin: 0; color: #fff; letter-spacing: 0.02em; }
+  #topbar { position: absolute; left: 0; right: 0; top: 0; height: 56px;
+            padding: 0 14px 0 0; background: #fff; color: var(--ink);
+            box-sizing: border-box; display: flex; align-items: stretch; gap: 16px;
+            border-bottom: 1px solid var(--line); z-index: 1000;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.03); }
+  /* Brand strip — IOG / Research, working for the Cardano community */
+  #topbar .iog-strip { background: var(--infared); color: #fff;
+                       display: flex; align-items: center; gap: 12px;
+                       padding: 0 22px 0 14px; height: 100%;
+                       clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 0 100%); }
+  #topbar .iog-strip .butterfly { width: 26px; height: 26px; flex-shrink: 0; }
+  #topbar .iog-strip .iog-mark { display: flex; flex-direction: column;
+                                 line-height: 1.0; font-weight: 700;
+                                 letter-spacing: 0.02em; }
+  #topbar .iog-strip .iog-mark .name { font-size: 13.5px; letter-spacing: 0.04em; }
+  #topbar .iog-strip .iog-mark .for {
+       font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.16em;
+       color: rgba(255,255,255,0.85); font-weight: 600; margin-top: 4px;
+       display: inline-flex; align-items: center; gap: 5px; }
+  #topbar .iog-strip .iog-mark .for .ada {
+       width: 10px; height: 10px; background: #fff; border-radius: 50%;
+       display: inline-block; position: relative; }
+  #topbar .iog-strip .iog-mark .for .ada::after {
+       content: ''; position: absolute; top: 50%; left: 50%;
+       width: 4px; height: 4px; background: var(--infared); border-radius: 50%;
+       transform: translate(-50%, -50%); }
+  #topbar .brand { display: flex; flex-direction: column; justify-content: center;
+                   gap: 2px; padding-left: 4px; }
+  #topbar h1 { font-size: 14px; margin: 0; font-weight: 700; letter-spacing: 0;
+               line-height: 1.1; }
+  #topbar h1 .accent { color: var(--infared); }
   #topbar .sub { color: #888; font-size: 11px; }
-  #topbar .ctrl { display: flex; gap: 4px; align-items: center; }
-  #topbar label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: #888; }
-  .seg { display: inline-flex; background: #222; border-radius: 4px; overflow: hidden; }
-  .seg button { background: none; border: 0; color: #aaa; padding: 5px 10px; font-size: 11px;
-                cursor: pointer; font-family: inherit; }
-  .seg button.on { background: var(--infared); color: #fff; }
-  .seg button:hover:not(.on) { background: #333; color: #fff; }
-  #panel { position: absolute; left: 0; top: 56px; bottom: 0; width: 280px; padding: 12px 14px;
-           background: #fafafa; border-right: 1px solid var(--line); overflow-y: auto;
-           font-size: 12px; box-sizing: border-box; }
-  #map { position: absolute; left: 280px; right: 0; top: 56px; bottom: 0; }
-  #panel h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
-              margin: 12px 0 6px; color: #555; }
-  #panel .kpi { font-size: 22px; font-weight: 700; line-height: 1.1; color: var(--infared); }
-  #panel .sub { font-size: 11px; color: #666; }
-  #panel ul { list-style: none; padding: 0; margin: 4px 0; }
-  #panel li { display: flex; align-items: center; padding: 3px 0; gap: 6px;
-              cursor: pointer; user-select: none; border-radius: 3px; }
-  #panel li.off { opacity: 0.35; }
-  #panel li .sw { width: 12px; height: 12px; border-radius: 50%; border: 1px solid #00000022;
-                  flex-shrink: 0; }
-  #panel li .pct { margin-left: auto; font-variant-numeric: tabular-nums; color: #666;
-                   font-size: 11px; }
-  #panel li:hover { background: #eee; }
+  #topbar .spacer { flex: 1; }
+  #topbar .ctrl { display: flex; gap: 6px; align-items: center; }
+  #topbar label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em;
+                  color: #888; font-weight: 600; }
+  #topbar select { background: var(--bg-soft); border: 1px solid var(--line);
+                   color: var(--ink); padding: 5px 22px 5px 8px; font-size: 12px;
+                   font-family: inherit; border-radius: 4px; cursor: pointer;
+                   appearance: none; -webkit-appearance: none;
+                   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23888'/></svg>");
+                   background-repeat: no-repeat; background-position: right 7px center; }
+  #topbar select:hover { border-color: #bbb; }
+  #topbar .chk { display: inline-flex; align-items: center; gap: 5px; font-size: 12px;
+                 cursor: pointer; user-select: none; padding: 4px 8px; border-radius: 4px;
+                 border: 1px solid var(--line); background: var(--bg-soft); }
+  #topbar .chk:hover { border-color: #bbb; }
+  #topbar .chk.on { background: var(--infared); color: #fff; border-color: var(--infared); }
+  #topbar .chk input { display: none; }
+  /* Primary segmented pill — used for Browse mode */
+  .seg-pill { display: inline-flex; background: var(--bg-soft); border-radius: 6px;
+              border: 1px solid var(--line); overflow: hidden; }
+  .seg-pill button { background: none; border: 0; color: var(--ink); padding: 6px 14px;
+                     font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit;
+                     letter-spacing: 0.02em; }
+  .seg-pill button.on { background: var(--infared); color: #fff; }
+  .seg-pill button:hover:not(.on) { background: var(--hover); }
+  #panel { position: absolute; left: 0; top: 56px; bottom: 0; width: 290px;
+           background: var(--bg-soft); border-right: 1px solid var(--line);
+           overflow-y: auto; font-size: 12px; box-sizing: border-box;
+           display: flex; flex-direction: column; }
+  #panel.collapsed { width: 0; overflow: hidden; }
+  #panelToggle { position: absolute; left: 290px; top: 64px; width: 22px; height: 36px;
+                 background: #fff; border: 1px solid var(--line); border-left: 0;
+                 border-radius: 0 4px 4px 0; cursor: pointer; z-index: 999;
+                 display: flex; align-items: center; justify-content: center;
+                 color: #888; font-size: 14px; transition: left 0.15s; }
+  #panelToggle:hover { color: var(--infared); }
+  #panel.collapsed ~ #panelToggle { left: 0; }
+  #map { position: absolute; left: 290px; right: 0; top: 56px; bottom: 0; transition: left 0.15s; }
+  #panel.collapsed ~ #map { left: 0; }
+  /* KPI block — visually prominent at top of side panel */
+  #kpi { padding: 14px 16px 12px; border-bottom: 1px solid var(--line); background: #fff; }
+  #kpi .label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+                color: #888; font-weight: 600; }
+  #kpi .big { font-size: 26px; font-weight: 700; color: var(--infared); line-height: 1.0;
+              margin-top: 2px; }
+  #kpi .stake { font-size: 13px; color: var(--ink); margin-top: 4px; font-variant-numeric: tabular-nums; }
+  #kpi .stake .pct { color: #888; }
+  #kpi .top { font-size: 11px; color: #555; margin-top: 6px; }
+  #kpi .top b { color: var(--ink); }
+  /* Section bodies */
+  .section { padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .section h2 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+                margin: 0 0 8px; color: #888; font-weight: 600;
+                display: flex; align-items: center; }
+  .section h2 .sublabel { margin-left: auto; font-size: 10px; color: #aaa;
+                          text-transform: none; letter-spacing: 0; font-weight: 400; }
+  /* Search box */
+  #searchBox { width: 100%; padding: 6px 10px; box-sizing: border-box;
+               border: 1px solid var(--line); border-radius: 4px;
+               font-family: inherit; font-size: 12px; background: #fff; }
+  #searchBox:focus { outline: 0; border-color: var(--infared); }
+  /* Filter list */
+  #filterList { list-style: none; padding: 0; margin: 0; }
+  #filterList li { display: flex; align-items: center; padding: 4px 6px; gap: 8px;
+                   cursor: pointer; user-select: none; border-radius: 3px; font-size: 11.5px; }
+  #filterList li.off { opacity: 0.4; }
+  #filterList li .sw { width: 11px; height: 11px; border-radius: 50%;
+                       border: 1px solid #00000022; flex-shrink: 0; }
+  #filterList li .pct { margin-left: auto; font-variant-numeric: tabular-nums;
+                        color: #666; font-size: 10.5px; }
+  #filterList li:hover { background: var(--hover); }
+  /* Fleet-graph banner — appears when an entity is selected */
+  #fleetBanner { position: absolute; top: 60px; left: 50%; transform: translateX(-50%);
+                 background: #fff; border: 1px solid var(--line); border-radius: 4px;
+                 box-shadow: 0 2px 8px rgba(0,0,0,0.12); padding: 6px 8px 6px 14px;
+                 z-index: 998; display: none; align-items: center; gap: 12px;
+                 font-size: 12px; }
+  #fleetBanner.on { display: flex; }
+  #fleetBanner .ent { font-weight: 700; color: var(--infared); }
+  #fleetBanner .meta { color: #666; }
+  #fleetBanner button { background: var(--bg-soft); border: 1px solid var(--line);
+                        color: var(--ink); padding: 3px 8px; border-radius: 3px;
+                        font-size: 11px; cursor: pointer; font-family: inherit; }
+  #fleetBanner button:hover { background: var(--hover); border-color: #bbb; }
+  /* Fleet pool marker — small dot, subtle */
+  .fleet-pool { stroke: #fff; stroke-width: 1; }
+  .fleet-line { stroke-opacity: 0.55; }
   #entityPanel { margin-top: 8px; }
   #entityPanel .group { margin-bottom: 10px; }
   #entityPanel .grpHead { display: flex; align-items: center; gap: 6px;
@@ -73,91 +164,74 @@
 </head>
 <body>
 <div id="topbar">
-  <div>
-    <h1>Cardano Infrastructure Topology</h1>
-    <div class="sub">Stake-weighted relay footprint &mdash; <span id="snapshot"></span></div>
+  <a class="iog-strip" href="https://iohk.io/" target="_blank" rel="noopener" style="text-decoration:none">
+    <svg class="butterfly" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- IOG butterfly mark, simplified — two opposed triangles -->
+      <path d="M32 8 L8 32 L32 32 Z" fill="#fff"/>
+      <path d="M32 56 L56 32 L32 32 Z" fill="#fff"/>
+      <path d="M32 8 L56 32 L32 32 Z" fill="#fff" opacity="0.55"/>
+      <path d="M32 56 L8 32 L32 32 Z" fill="#fff" opacity="0.55"/>
+    </svg>
+    <span class="iog-mark">
+      <span class="name">Input | Output &middot; Cardano Business Unit</span>
+      <span class="for"><span aria-hidden="true">↳</span> for the <span class="ada" aria-hidden="true"></span> Cardano community</span>
+    </span>
+  </a>
+  <div class="brand">
+    <h1>Mainnet Diagnostic <span class="accent">·</span> SPO Topology</h1>
+    <div class="sub" id="snapshot"></div>
+  </div>
+  <div class="spacer"></div>
+  <div class="ctrl seg-pill" id="browseSeg">
+    <button data-v="entity">Entities</button>
+    <button data-v="pool" class="on">Pools</button>
   </div>
   <div class="ctrl">
     <label>Cohort</label>
-    <div class="seg" id="cohortSeg">
-      <button data-v="all" class="on">All</button>
-      <button data-v="mpo">MPO only</button>
-      <button data-v="spo">Single-pool</button>
-    </div>
-  </div>
-  <div class="ctrl">
-    <label>Population</label>
-    <div class="seg" id="popSeg">
-      <button data-v="all" class="on">All</button>
-      <button data-v="productive">Productive (≥3M)</button>
-    </div>
-  </div>
-  <div class="ctrl">
-    <label>Aggregation</label>
-    <div class="seg" id="aggSeg">
-      <button data-v="pool" class="on">Per pool</button>
-      <button data-v="entity">Per entity</button>
-    </div>
+    <select id="cohortSelect">
+      <option value="all">All</option>
+      <option value="mpo">MPO only</option>
+      <option value="spo">Single-pool only</option>
+    </select>
   </div>
   <div class="ctrl">
     <label>Colour by</label>
-    <div class="seg" id="colorSeg">
-      <button data-v="provider" class="on">Provider</button>
-      <button data-v="tier">Tier</button>
-      <button data-v="cohort">Cohort</button>
-      <button data-v="saturation">Saturation</button>
-    </div>
+    <select id="colorSelect">
+      <option value="provider">Provider</option>
+      <option value="tier">Infrastructure tier</option>
+      <option value="saturation">Saturation tier</option>
+      <option value="cohort">Cohort (MPO / SPO)</option>
+    </select>
   </div>
-  <div class="ctrl">
-    <label>Size / heat by</label>
-    <div class="seg" id="metricSeg">
-      <button data-v="stake" class="on">Stake</button>
-      <button data-v="saturation">Saturation %</button>
-      <button data-v="blocks">Blocks/epoch</button>
-    </div>
-  </div>
-  <div class="ctrl">
-    <label>Layer</label>
-    <div class="seg" id="layerSeg">
-      <button data-v="pins" class="on">Pins</button>
-      <button data-v="heat">Heatmap</button>
-      <button data-v="both">Both</button>
-    </div>
-  </div>
+  <label class="chk" id="prodChk"><input type="checkbox" id="prodInput"/>Productive (≥3M only)</label>
+  <label class="chk" id="heatChk"><input type="checkbox" id="heatInput"/>Heatmap</label>
 </div>
 <div id="panel">
-  <h2>Current view</h2>
-  <div class="kpi" id="kpiCount">&mdash;</div>
-  <div class="sub" id="kpiStake">&mdash;</div>
-  <div class="sub" id="kpiTop">&mdash;</div>
-  <h2 id="filterHeading">Filter by provider</h2>
-  <div class="sub" style="margin-bottom:4px">Click a row to toggle</div>
-  <ul id="filterList"></ul>
-  <h2>Entities in view</h2>
-  <div class="sub" style="margin-bottom:4px">Click a row to fly to it on the map</div>
-  <div id="entityPanel"></div>
-  <h2>Reading the map</h2>
-  <div class="sub">
-    Pin <b>size</b> scales with the chosen metric (stake, saturation %, or
-    expected blocks per epoch). Pin <b>colour</b> shows the chosen dimension.
-    Click any pin for full entity / pool details.
-    <br/><br/>
-    <b>Population</b>: <i>All</i> shows every active registered pool.
-    <i>Productive (≥3M)</i> filters to the diagnostic's productive segment
-    (POL.O4.F2: 27% of pools, 96.6% of stake) &mdash; the consensus-carrying
-    population that any reform of <i>k</i>, the pledge curve, or the
-    saturation cap actually moves.
-    <br/><br/>
-    <b>Colour by &rarr; Saturation</b> uses the diagnostic's canonical
-    9-tier taxonomy with z<sub>0</sub> = supply / k. Tiers ordered from
-    Zero-stake / Dormant / Sub-block / Sub-reliable through Healthy / Large
-    healthy / Near-saturation / Saturated / Oversaturated.
-    <br/><br/>
-    <b>Aggregation &rarr; Per entity</b> collapses each operator to its
-    largest single relay cluster (Coinbase &rarr; Frankfurt, Upbit &rarr;
-    Seoul, Cardano Foundation &rarr; Zurich, ...). The entity tier is the
-    <i>average per-pool</i> tier, which is the meaningful operator-level read.
+  <div id="kpi">
+    <div class="label">Current view</div>
+    <div class="big" id="kpiCount">&mdash;</div>
+    <div class="stake" id="kpiStake">&mdash;</div>
+    <div class="top" id="kpiTop">&mdash;</div>
   </div>
+  <div class="section">
+    <h2 id="filterHeading">Filter by provider <span class="sublabel">click to toggle</span></h2>
+    <ul id="filterList"></ul>
+  </div>
+  <div class="section" style="flex:1; min-height: 200px;">
+    <h2>Entities in view <span class="sublabel">click to fly to</span></h2>
+    <input id="searchBox" type="text" placeholder="Search entity / ticker..." autocomplete="off"/>
+    <div id="entityPanel" style="margin-top:8px"></div>
+  </div>
+  <div class="section" style="font-size:10.5px; color:#888;">
+    z<sub>0</sub> = <span id="z0Label"></span>M ADA  &middot;  k=<span id="kLabel"></span>  &middot;  supply <span id="supplyLabel"></span>B
+    <br/>Tiers per <a href="https://github.com/input-output-hk/spo-incentives/blob/main/reward-system-spec/diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#413-tier-definitions" target="_blank" style="color:#888;text-decoration:underline">diagnostic 4.1.3</a>.
+  </div>
+</div>
+<button id="panelToggle" title="Toggle side panel">‹</button>
+<div id="fleetBanner">
+  <span>Fleet: <span class="ent" id="fleetEnt"></span></span>
+  <span class="meta" id="fleetMeta"></span>
+  <button id="fleetClear">Clear (Esc)</button>
 </div>
 <div id="map"></div>
 <script>
@@ -168,48 +242,87 @@ const COHORT_COLORS = {"MPO entity": "#E52321", "Single-pool operator": "#A700FF
 const SAT_COLORS = {"Zero-stake": "#222222", "Dormant": "#555555", "Sub-block": "#EC641D", "Sub-reliable": "#E52321", "Healthy": "#00B35F", "Large healthy": "#00897B", "Near-saturation": "#FFBA36", "Saturated": "#2C4FFA", "Oversaturated": "#A700FF"};
 const SAT_POINT_M = 77.2;   // z0 in M ADA
 const SUPPLY_B = 38.62;         // total supply in B ADA
+const TOTAL_STAKE_B = 21.15;  // total active stake in B ADA (fixed network total)
 const EPOCH = 630;
 const K_PARAM = 500;
 const PRODUCTIVE_THRESHOLD_M = 3.0;
-const SNAPSHOT = "2026/05/11";
+const SNAPSHOT = "2026/05/12";
 const SAT_TIER_ORDER = ["Zero-stake", "Dormant", "Sub-block", "Sub-reliable", "Healthy", "Large healthy", "Near-saturation", "Saturated", "Oversaturated"];
 
 const POOL_DATA = RAW.filter(r => r.kind === 'pool');
 const ENTITY_DATA = RAW.filter(r => r.kind === 'entity');
 
 document.getElementById('snapshot').textContent = SNAPSHOT;
+document.getElementById('z0Label').textContent = SAT_POINT_M.toFixed(1);
+document.getElementById('kLabel').textContent = K_PARAM;
+document.getElementById('supplyLabel').textContent = SUPPLY_B;
 
 const state = {
-  cohort: 'all',       // all | mpo | spo
-  pop: 'all',          // all | productive
-  agg: 'pool',         // pool | entity
-  color: 'provider',   // provider | tier | cohort | saturation
-  metric: 'stake',     // stake | saturation | blocks
-  layer: 'pins',       // pins | heat | both
+  cohort: 'all',     // all | mpo | spo (filter — who to include)
+  pop: 'all',        // all | productive (filter — size cutoff)
+  agg: 'pool',       // pool | entity (browse mode — what to count)
+  color: 'provider', // provider | tier | cohort | saturation
+  // metric is auto-derived from color: stake by default,
+  // saturation% when color=saturation
+  layer: 'pins',     // pins | both (when heatmap is enabled)
+  search: '',
   enabledKeys: new Set(),
 };
+// Derive metric from color choice — keeps the API simple
+function currentMetric() {
+  return state.color === 'saturation' ? 'saturation' : 'stake';
+}
 
 const map = L.map('map', {worldCopyJump: true, preferCanvas: true}).setView([35, 10], 3);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap', maxZoom: 18
 }).addTo(map);
 
-// hook segment buttons
-['cohortSeg','popSeg','aggSeg','colorSeg','metricSeg','layerSeg'].forEach(id => {
-  const root = document.getElementById(id);
-  root.querySelectorAll('button').forEach(b => {
-    b.onclick = () => {
-      root.querySelectorAll('button').forEach(x => x.classList.remove('on'));
-      b.classList.add('on');
-      const key = {cohortSeg:'cohort', popSeg:'pop', aggSeg:'agg',
-                   colorSeg:'color', metricSeg:'metric', layerSeg:'layer'}[id];
-      state[key] = b.dataset.v;
-      // reset filter only when colour dimension, cohort, or population changes
-      if (['cohortSeg','popSeg','colorSeg'].includes(id)) state.enabledKeys = new Set();
-      rebuild();
-    };
-  });
+// Wire the new orthogonal controls
+// Browse: Entities | Pools — primary axis (what each map pin represents)
+document.querySelectorAll('#browseSeg button').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('#browseSeg button').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    state.agg = b.dataset.v;
+    rebuild();
+  };
 });
+// Cohort: who to include in the view
+document.getElementById('cohortSelect').onchange = (e) => {
+  state.cohort = e.target.value;
+  state.enabledKeys = new Set();
+  rebuild();
+};
+// Colour: visual encoding only
+document.getElementById('colorSelect').onchange = (e) => {
+  state.color = e.target.value;
+  state.enabledKeys = new Set();
+  rebuild();
+};
+document.getElementById('prodInput').onchange = (e) => {
+  state.pop = e.target.checked ? 'productive' : 'all';
+  document.getElementById('prodChk').classList.toggle('on', e.target.checked);
+  state.enabledKeys = new Set();
+  rebuild();
+};
+document.getElementById('heatInput').onchange = (e) => {
+  state.layer = e.target.checked ? 'both' : 'pins';
+  document.getElementById('heatChk').classList.toggle('on', e.target.checked);
+  rebuild();
+};
+document.getElementById('searchBox').oninput = (e) => {
+  state.search = e.target.value.trim().toLowerCase();
+  renderEntityPanel(activeData().filter(r => state.enabledKeys.has(colorKey(r))),
+                    activeData().reduce((a, r) => a + r.stake_ada, 0));
+};
+document.getElementById('panelToggle').onclick = () => {
+  const p = document.getElementById('panel');
+  p.classList.toggle('collapsed');
+  const tgl = document.getElementById('panelToggle');
+  tgl.textContent = p.classList.contains('collapsed') ? '›' : '‹';
+  setTimeout(() => map.invalidateSize(), 200);
+};
 
 function activeData() {
   const src = state.agg === 'entity' ? ENTITY_DATA : POOL_DATA;
@@ -237,14 +350,14 @@ function colorFor(key) {
 
 // Metric value used for size, KPI, and heat weight.
 function metricValue(r) {
-  if (state.metric === 'saturation') return r.saturation_pct;
-  if (state.metric === 'blocks') return r.expected_blocks_per_epoch;
+  if (currentMetric() === 'saturation') return r.saturation_pct;
+  if (currentMetric() === 'blocks') return r.expected_blocks_per_epoch;
   return r.stake_ada;
 }
 
 function metricLabel(v) {
-  if (state.metric === 'saturation') return v.toFixed(1) + '%';
-  if (state.metric === 'blocks') return v.toFixed(2) + ' blk/epoch';
+  if (currentMetric() === 'saturation') return v.toFixed(1) + '%';
+  if (currentMetric() === 'blocks') return v.toFixed(2) + ' blk/epoch';
   return (v / 1e6).toFixed(1) + 'M ADA';
 }
 
@@ -253,10 +366,10 @@ function radiusFor(r, agg) {
   if (!m) return 4;
   const base = agg === 'entity' ? 6 : 4;
   // mapping is logarithmic but the scale depends on metric
-  if (state.metric === 'saturation') {
+  if (currentMetric() === 'saturation') {
     return Math.max(base, Math.min(34, base + Math.log10(1 + m) * 6.0));
   }
-  if (state.metric === 'blocks') {
+  if (currentMetric() === 'blocks') {
     return Math.max(base, Math.min(34, base + Math.log10(1 + m * 100) * 4.0));
   }
   return Math.max(base, Math.min(30, base + Math.log10(m) * 2.0));
@@ -264,8 +377,8 @@ function radiusFor(r, agg) {
 
 function heatWeight(r) {
   const m = metricValue(r);
-  if (state.metric === 'saturation') return Math.min(20, Math.sqrt(m));
-  if (state.metric === 'blocks') return Math.min(20, Math.sqrt(m * 100));
+  if (currentMetric() === 'saturation') return Math.min(20, Math.sqrt(m));
+  if (currentMetric() === 'blocks') return Math.min(20, Math.sqrt(m * 100));
   return Math.sqrt(m);
 }
 
@@ -314,8 +427,15 @@ function entitiesFromCurrentView(filtered) {
 function renderEntityPanel(filtered, totalAda) {
   const panel = document.getElementById('entityPanel');
   panel.innerHTML = '';
-  const ents = entitiesFromCurrentView(filtered)
+  let ents = entitiesFromCurrentView(filtered)
     .sort((a, b) => b.stake_ada - a.stake_ada);
+  if (state.search) {
+    const q = state.search;
+    ents = ents.filter(e =>
+      (e.entity || '').toLowerCase().includes(q)
+      || (e.entity_id || '').toLowerCase().includes(q)
+    );
+  }
   const groups = [
     { key: 'mpo', label: 'MPO entities',
       items: ents.filter(e => e.cohort === 'mpo') },
@@ -377,11 +497,90 @@ function renderEntityPanel(filtered, totalAda) {
 }
 
 let _activeEntityMarker = null;
+let _fleetLayer = null;
+let _selectedEntityId = null;
+
+// Fleet-graph layer — for a given entity, draw every one of its pools as a
+// small node and a polyline from each pool to the entity's centroid. The
+// star layout makes the operator's geographic spread legible at a glance.
+function showFleetGraph(eid) {
+  clearFleet();
+  _selectedEntityId = eid;
+  const ent = ENTITY_INDEX[eid];
+  if (!ent || ent.lat === '' || ent.lat === null) return;
+  // pick all pools belonging to this entity that have a resolvable location
+  const pools = POOL_DATA.filter(p => p.entity_id === eid
+    && p.lat !== '' && p.lat !== null);
+  if (!pools.length) return;
+  const entColor = colorFor(colorKey(ent));
+  const layers = [];
+  // Draw lines first so pool dots sit on top
+  pools.forEach(p => {
+    if (p.lat === ent.lat && p.lon === ent.lon) return;  // skip self-loop
+    layers.push(L.polyline(
+      [[ent.lat, ent.lon], [p.lat, p.lon]],
+      {color: entColor, weight: 1.2, opacity: 0.55, className: 'fleet-line',
+       dashArray: '3,4'}
+    ));
+  });
+  // Pool nodes — small fixed-radius dots, coloured by the same scheme as the map
+  pools.forEach(p => {
+    const m = L.circleMarker([p.lat, p.lon], {
+      radius: 5, fillColor: colorFor(colorKey(p)),
+      color: '#222', weight: 1, fillOpacity: 0.95, className: 'fleet-pool',
+    });
+    const tier = p.saturation_tier || p.tier || '?';
+    m.bindPopup(
+      '<span class="ticker">' + (p.ticker || p.id.slice(0, 12)) + '</span>'
+      + ' <span style="color:#888;font-size:11px">' + p.entity + '</span>'
+      + '<br/><span class="stk">' + (p.stake_ada/1e6).toFixed(1) + 'M ADA</span>'
+      + ' &middot; ' + tier
+      + '<br/><span style="color:#666">' + p.loc + ' &middot; ' + p.provider + '</span>'
+      + '<br/><span style="color:#888;font-size:11px">Region: ' + p.region + '</span>'
+    );
+    layers.push(m);
+  });
+  // Centroid pin — large ring on top
+  const centroid = L.circleMarker([ent.lat, ent.lon], {
+    radius: 18, fillColor: entColor, color: '#000', weight: 2.5, fillOpacity: 0.45,
+    className: 'pin',
+  });
+  centroid.bindPopup(
+    '<span class="ticker">' + ent.entity + '</span>'
+    + '  <span style="color:#888;font-size:11px">[' + pools.length + ' pools]</span>'
+    + '<br/><span class="stk">' + (ent.stake_ada/1e6).toFixed(1) + 'M ADA</span>'
+    + ' &middot; centroid: ' + ent.loc
+    + '<br/><span style="color:#666">Click any pool dot for its details.</span>'
+  );
+  layers.push(centroid);
+  _fleetLayer = L.layerGroup(layers).addTo(map);
+  // Frame map on the fleet bounds
+  const all = pools.concat([ent]).map(x => [x.lat, x.lon]);
+  map.flyToBounds(L.latLngBounds(all), {padding: [60, 60], maxZoom: 6, duration: 0.6});
+  // Banner
+  const banner = document.getElementById('fleetBanner');
+  document.getElementById('fleetEnt').textContent = ent.entity;
+  document.getElementById('fleetMeta').textContent =
+    pools.length + ' pools · ' + (ent.stake_ada/1e6).toFixed(1) + 'M ADA · ' +
+    'centroid ' + ent.loc;
+  banner.classList.add('on');
+}
+
+function clearFleet() {
+  if (_fleetLayer) { map.removeLayer(_fleetLayer); _fleetLayer = null; }
+  _selectedEntityId = null;
+  document.getElementById('fleetBanner').classList.remove('on');
+}
+
 function flyToEntity(ent) {
   if (ent.lat === '' || ent.lat === null) return;
+  // For multi-pool entities, render the fleet graph automatically.
+  if (ent.pool_count && ent.pool_count > 1) {
+    showFleetGraph(ent.entity_id);
+    return;
+  }
+  // Single-pool case: just fly + pop the marker
   map.flyTo([ent.lat, ent.lon], Math.max(map.getZoom(), 5), {duration: 0.6});
-  // pop a transient marker with the entity info, since the matching cluster
-  // pin may be inside an unexpanded cluster
   if (_activeEntityMarker) map.removeLayer(_activeEntityMarker);
   const m = L.circleMarker([ent.lat, ent.lon], {
     radius: 16, fillColor: colorFor(colorKey(ent)),
@@ -389,13 +588,18 @@ function flyToEntity(ent) {
   });
   m.bindPopup(
     '<span class="ticker">' + ent.entity + '</span>'
-    + (ent.pool_count > 1 ? '  <span style="color:#888;font-size:11px">[' + ent.pool_count + ' pool' + (ent.pool_count > 1 ? 's' : '') + ']</span>' : '')
     + '<br/><span class="stk">' + (ent.stake_ada/1e6).toFixed(1) + 'M ADA</span>'
     + ' &middot; ' + (ent.saturation_tier || ent.tier || '?')
     + '<br/><span style="color:#666">' + ent.loc + ' &middot; provider: ' + ent.provider + '</span>'
   ).addTo(map).openPopup();
   _activeEntityMarker = m;
 }
+
+// Fleet clear handlers
+document.getElementById('fleetClear').onclick = clearFleet;
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') clearFleet();
+});
 
 function rebuild() {
   // tally by colour key over the active cohort+agg
@@ -422,12 +626,18 @@ function rebuild() {
   const label = state.agg === 'entity' ? 'entities' : 'pools';
   document.getElementById('kpiCount').textContent =
     filtered.length.toLocaleString() + ' ' + label;
-  document.getElementById('kpiStake').textContent =
-    (filteredAda / 1e9).toFixed(2) + 'B ADA  ('
-    + (100 * filteredAda / totalAda).toFixed(1) + '% of view)';
+  // Show stake-in-view + share of TOTAL NETWORK staked (fixed denominator,
+  // not "% of view" which is trivially 100% before any filter narrows the
+  // colour dimension).
+  const totalStakeAda = TOTAL_STAKE_B * 1e9;
+  const networkShare = (100 * filteredAda / totalStakeAda).toFixed(1);
+  document.getElementById('kpiStake').innerHTML =
+    (filteredAda / 1e9).toFixed(2) + 'B ADA &nbsp;'
+    + '<span class="pct">' + networkShare + '% of network ('
+    + TOTAL_STAKE_B.toFixed(2) + 'B staked)</span>';
   // KPI line 3 changes meaning with the metric
   let kpi3 = '';
-  if (state.metric === 'saturation' || state.color === 'saturation') {
+  if (currentMetric() === 'saturation' || state.color === 'saturation') {
     const isPool = state.agg !== 'entity';
     const tierFn = (r) => r.saturation_tier;
     const sat = filtered.filter(r => tierFn(r) === 'Saturated' || tierFn(r) === 'Oversaturated').length;
@@ -435,7 +645,7 @@ function rebuild() {
     const sub = filtered.filter(r => ['Sub-block','Sub-reliable','Dormant','Zero-stake'].includes(tierFn(r))).length;
     kpi3 = 'z<sub>0</sub> = ' + SAT_POINT_M.toFixed(1) + 'M ADA  (supply ' + SUPPLY_B + 'B / k=' + K_PARAM + ')<br/>'
          + '<b>' + sat + '</b> at/over &middot; <b>' + hlth + '</b> healthy &middot; <b>' + sub + '</b> sub-viable';
-  } else if (state.metric === 'blocks') {
+  } else if (currentMetric() === 'blocks') {
     const total_blocks = filtered.reduce((a,r) => a + r.expected_blocks_per_epoch, 0);
     const n_active = filtered.filter(r => r.expected_blocks_per_epoch >= 1).length;
     kpi3 = '~' + total_blocks.toFixed(0) + ' blocks / epoch expected<br/>'
