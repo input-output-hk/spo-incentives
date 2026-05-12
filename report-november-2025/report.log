@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.3.30)  16 APR 2026 11:57
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2026.3.30)  12 MAY 2026 11:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -759,7 +759,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [11]
-<img/ada-usd.png, id=304, 791.95876pt x 551.05875pt>
+<img/ada-usd.png, id=299, 791.95876pt x 551.05875pt>
 File: img/ada-usd.png Graphic file (type png)
 <use img/ada-usd.png>
 Package pdftex.def Info: img/ada-usd.png  used on input line 474.
@@ -785,7 +785,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [13]
-<img/pool_size_distribution.png, id=323, 1011.78pt x 578.16pt>
+<img/pool_size_distribution.png, id=317, 1011.78pt x 578.16pt>
 File: img/pool_size_distribution.png Graphic file (type png)
 <use img/pool_size_distribution.png>
 Package pdftex.def Info: img/pool_size_distribution.png  used on input line 561
@@ -801,7 +801,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [14 <./img/pool_size_distribution.png>]
-<img/stake_control_by_size.png, id=332, 1011.78pt x 578.16pt>
+<img/stake_control_by_size.png, id=327, 1011.78pt x 578.16pt>
 File: img/stake_control_by_size.png Graphic file (type png)
 <use img/stake_control_by_size.png>
 Package pdftex.def Info: img/stake_control_by_size.png  used on input line 584.
@@ -817,7 +817,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [15 <./img/stake_control_by_size.png>]
-<img/wallet_distribution_combined_corrected.png, id=339, 867.24pt x 578.16pt>
+<img/wallet_distribution_combined_corrected.png, id=334, 867.24pt x 578.16pt>
 File: img/wallet_distribution_combined_corrected.png Graphic file (type png)
 <use img/wallet_distribution_combined_corrected.png>
 Package pdftex.def Info: img/wallet_distribution_combined_corrected.png  used o
@@ -842,13 +842,13 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [17]
-<img/active_stake_participation.png, id=353, 749.6808pt x 463.9734pt>
+<img/active_stake_participation.png, id=348, 749.6808pt x 463.9734pt>
 File: img/active_stake_participation.png Graphic file (type png)
 <use img/active_stake_participation.png>
 Package pdftex.def Info: img/active_stake_participation.png  used on input line
  720.
 (pdftex.def)             Requested size: 225.4804pt x 139.54707pt.
-<img/block_production_health.png, id=354, 756.426pt x 463.9734pt>
+<img/block_production_health.png, id=349, 756.426pt x 463.9734pt>
 File: img/block_production_health.png Graphic file (type png)
 <use img/block_production_health.png>
 Package pdftex.def Info: img/block_production_health.png  used on input line 72
@@ -864,18 +864,18 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [18 <./img/active_stake_participation.png> <./img/block_production_health.png>]
-<img/pool_count_epoch.png, id=365, 745.1037pt x 463.9734pt>
+<img/pool_count_epoch.png, id=360, 745.1037pt x 463.9734pt>
 File: img/pool_count_epoch.png Graphic file (type png)
 <use img/pool_count_epoch.png>
 Package pdftex.def Info: img/pool_count_epoch.png  used on input line 746.
 (pdftex.def)             Requested size: 225.4804pt x 140.4037pt.
-<img/stake_percentage_epoch.png, id=366, 756.426pt x 463.9734pt>
+<img/stake_percentage_epoch.png, id=361, 756.426pt x 463.9734pt>
 File: img/stake_percentage_epoch.png Graphic file (type png)
 <use img/stake_percentage_epoch.png>
 Package pdftex.def Info: img/stake_percentage_epoch.png  used on input line 752
 .
 (pdftex.def)             Requested size: 225.4804pt x 138.30106pt.
-<img/cumulative_stake_distribution_epoch_583_annotated.png, id=368, 1300.86pt x
+<img/cumulative_stake_distribution_epoch_583_annotated.png, id=363, 1300.86pt x
  867.24pt>
 File: img/cumulative_stake_distribution_epoch_583_annotated.png Graphic file (t
 ype png)
@@ -901,32 +901,32 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [20 <./img/cumulative_stake_distribution_epoch_583_annotated.png>]
-<img/cardano.png, id=383, 579.66562pt x 325.96782pt>
+<img/cardano.png, id=378, 579.66562pt x 325.96782pt>
 File: img/cardano.png Graphic file (type png)
 <use img/cardano.png>
 Package pdftex.def Info: img/cardano.png  used on input line 833.
 (pdftex.def)             Requested size: 126.83427pt x 71.32019pt.
-<img/solana.png, id=385, 579.66562pt x 325.96782pt>
+<img/solana.png, id=380, 579.66562pt x 325.96782pt>
 File: img/solana.png Graphic file (type png)
 <use img/solana.png>
 Package pdftex.def Info: img/solana.png  used on input line 839.
 (pdftex.def)             Requested size: 126.83427pt x 71.32019pt.
-<img/ethereum.png, id=387, 579.66562pt x 325.96782pt>
+<img/ethereum.png, id=382, 579.66562pt x 325.96782pt>
 File: img/ethereum.png Graphic file (type png)
 <use img/ethereum.png>
 Package pdftex.def Info: img/ethereum.png  used on input line 845.
 (pdftex.def)             Requested size: 126.83427pt x 71.32019pt.
-<img/polkadot.png, id=389, 579.66562pt x 325.96782pt>
+<img/polkadot.png, id=384, 579.66562pt x 325.96782pt>
 File: img/polkadot.png Graphic file (type png)
 <use img/polkadot.png>
 Package pdftex.def Info: img/polkadot.png  used on input line 855.
 (pdftex.def)             Requested size: 126.83427pt x 71.32019pt.
-<img/cosmos.png, id=391, 579.66562pt x 325.96782pt>
+<img/cosmos.png, id=386, 579.66562pt x 325.96782pt>
 File: img/cosmos.png Graphic file (type png)
 <use img/cosmos.png>
 Package pdftex.def Info: img/cosmos.png  used on input line 861.
 (pdftex.def)             Requested size: 126.83427pt x 71.32019pt.
-<img/avalanche.png, id=393, 579.66562pt x 325.96782pt>
+<img/avalanche.png, id=388, 579.66562pt x 325.96782pt>
 File: img/avalanche.png Graphic file (type png)
 <use img/avalanche.png>
 Package pdftex.def Info: img/avalanche.png  used on input line 867.
@@ -942,7 +942,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 [21 <./img/cardano.png> <./img/solana.png> <./img/ethereum.png> <./img/polkadot
 .png> <./img/cosmos.png> <./img/avalanche.png>]
-<img/pool_registrations_vs_retirements_log_phases.png, id=411, 975.645pt x 585.
+<img/pool_registrations_vs_retirements_log_phases.png, id=406, 975.645pt x 585.
 387pt>
 File: img/pool_registrations_vs_retirements_log_phases.png Graphic file (type p
 ng)
@@ -960,7 +960,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [22 <./img/pool_registrations_vs_retirements_log_phases.png>]
-<img/pool-cost-distr.png, id=418, 787.44188pt x 548.0475pt>
+<img/pool-cost-distr.png, id=413, 787.44188pt x 548.0475pt>
 File: img/pool-cost-distr.png Graphic file (type png)
 <use img/pool-cost-distr.png>
 Package pdftex.def Info: img/pool-cost-distr.png  used on input line 940.
@@ -975,7 +975,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [23 <./img/pool-cost-distr.png>]
-<img/pool_margin_vs_size.png, id=427, 1589.94pt x 867.24pt>
+<img/pool_margin_vs_size.png, id=422, 1589.94pt x 867.24pt>
 File: img/pool_margin_vs_size.png Graphic file (type png)
 <use img/pool_margin_vs_size.png>
 Package pdftex.def Info: img/pool_margin_vs_size.png  used on input line 972.
@@ -990,7 +990,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [24 <./img/pool_margin_vs_size.png>]
-<img/pool_cost_vs_margin.png, id=435, 1300.86pt x 867.24pt>
+<img/pool_cost_vs_margin.png, id=430, 1300.86pt x 867.24pt>
 File: img/pool_cost_vs_margin.png Graphic file (type png)
 <use img/pool_cost_vs_margin.png>
 Package pdftex.def Info: img/pool_cost_vs_margin.png  used on input line 1011.
@@ -1005,7 +1005,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [25 <./img/pool_cost_vs_margin.png>]
-<img/2blocks-e581.png, id=444, 680.5425pt x 228.10219pt>
+<img/2blocks-e581.png, id=439, 680.5425pt x 228.10219pt>
 File: img/2blocks-e581.png Graphic file (type png)
 <use img/2blocks-e581.png>
 Package pdftex.def Info: img/2blocks-e581.png  used on input line 1111.
@@ -1020,12 +1020,12 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [26]
-<img/13blocks-e561.png, id=450, 682.04813pt x 226.59656pt>
+<img/13blocks-e561.png, id=445, 682.04813pt x 226.59656pt>
 File: img/13blocks-e561.png Graphic file (type png)
 <use img/13blocks-e561.png>
 Package pdftex.def Info: img/13blocks-e561.png  used on input line 1124.
 (pdftex.def)             Requested size: 469.75502pt x 156.06825pt.
-<img/20blocks-e574.png, id=451, 698.61pt x 115.93312pt>
+<img/20blocks-e574.png, id=446, 698.61pt x 115.93312pt>
 File: img/20blocks-e574.png Graphic file (type png)
 <use img/20blocks-e574.png>
 Package pdftex.def Info: img/20blocks-e574.png  used on input line 1138.
@@ -1040,12 +1040,12 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [27 <./img/2blocks-e581.png> <./img/13blocks-e561.png>]
-<img/20blocks-e575.png, id=460, 668.4975pt x 131.74219pt>
+<img/20blocks-e575.png, id=455, 668.4975pt x 131.74219pt>
 File: img/20blocks-e575.png Graphic file (type png)
 <use img/20blocks-e575.png>
 Package pdftex.def Info: img/20blocks-e575.png  used on input line 1145.
 (pdftex.def)             Requested size: 469.75502pt x 92.57872pt.
-<img/87blocks-e584.png, id=461, 670.00313pt x 99.37125pt>
+<img/87blocks-e584.png, id=456, 670.00313pt x 99.37125pt>
 File: img/87blocks-e584.png Graphic file (type png)
 <use img/87blocks-e584.png>
 Package pdftex.def Info: img/87blocks-e584.png  used on input line 1161.
@@ -1070,7 +1070,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [29]
-<img/mpo_evolution_pct_circulating.png, id=477, 1191.0096pt x 790.6338pt>
+<img/mpo_evolution_pct_circulating.png, id=472, 1191.0096pt x 790.6338pt>
 File: img/mpo_evolution_pct_circulating.png Graphic file (type png)
 <use img/mpo_evolution_pct_circulating.png>
 Package pdftex.def Info: img/mpo_evolution_pct_circulating.png  used on input l
@@ -1086,13 +1086,13 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [30 <./img/mpo_evolution_pct_circulating.png>]
-<img/consensus-nakamoto_coefficient-chart.png, id=486, 3854.4pt x 2168.1pt>
+<img/consensus-nakamoto_coefficient-chart.png, id=481, 3854.4pt x 2168.1pt>
 File: img/consensus-nakamoto_coefficient-chart.png Graphic file (type png)
 <use img/consensus-nakamoto_coefficient-chart.png>
 Package pdftex.def Info: img/consensus-nakamoto_coefficient-chart.png  used on 
 input line 1256.
 (pdftex.def)             Requested size: 469.75502pt x 264.22992pt.
-<img/consensus-concentration_ratio=1-chart.png, id=487, 3854.4pt x 2168.1pt>
+<img/consensus-concentration_ratio=1-chart.png, id=482, 3854.4pt x 2168.1pt>
 File: img/consensus-concentration_ratio=1-chart.png Graphic file (type png)
 <use img/consensus-concentration_ratio=1-chart.png>
 Package pdftex.def Info: img/consensus-concentration_ratio=1-chart.png  used on
@@ -1108,7 +1108,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [31 <./img/consensus-nakamoto_coefficient-chart.png>]
-<img/sustainability_trends_with_projection_208-583.png, id=494, 1445.4pt x 1084
+<img/sustainability_trends_with_projection_208-583.png, id=489, 1445.4pt x 1084
 .05pt>
 File: img/sustainability_trends_with_projection_208-583.png Graphic file (type 
 png)
@@ -1126,7 +1126,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [32 <./img/consensus-concentration_ratio=1-chart.png>]
-<img/rewards_fees_tx_count_last_73_epochs.png, id=501, 1300.86pt x 1156.32pt>
+<img/rewards_fees_tx_count_last_73_epochs.png, id=496, 1300.86pt x 1156.32pt>
 File: img/rewards_fees_tx_count_last_73_epochs.png Graphic file (type png)
 <use img/rewards_fees_tx_count_last_73_epochs.png>
 Package pdftex.def Info: img/rewards_fees_tx_count_last_73_epochs.png  used on 
@@ -1209,10 +1209,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [40]
-Underfull \hbox (badness 10000) in alignment at lines 1657--1657
-[][][][][][][] 
- []
-
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -1230,82 +1226,40 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[42]
-Underfull \hbox (badness 10000) in alignment at lines 1779--1779
-[][][][] 
- []
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[43]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[44]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[45]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[46
+[42
 
 ] (./report.aux)
 Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: 82DFF203C474CB6A13EA97DCE6C1BA8F;9601.
+(rerunfilecheck)             Checksum: DAE91E1D76F477819FB6C8FD9C74F46B;9218.
  ) 
 Here is how much of TeX's memory you used:
- 15942 strings out of 480247
- 262722 string characters out of 5896151
- 605667 words of memory out of 5000000
- 33201 multiletter control sequences out of 15000+600000
- 548338 words of font info for 205 fonts, out of 8000000 for 9000
+ 15918 strings out of 480247
+ 262409 string characters out of 5896151
+ 605387 words of memory out of 5000000
+ 33195 multiletter control sequences out of 15000+600000
+ 544941 words of font info for 199 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  60i,15n,63p,1195b,591s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/en
-c/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rmtt.enc}{/usr/sha
-re/texmf/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-
-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}</usr/share/texmf
+{/usr/share/texmf/fonts/enc/dvips/lm/lm-rmtt.enc}{/usr/share/texmf/fonts/enc/
+dvips/lm/lm-ts1.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/sh
+are/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm
+/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}</usr/share/texmf
 /fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx1
-2.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx9.pfb></usr/share/texmf/fonts
-/type1/public/lm/lmbxi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmex10.pfb
-></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texmf/fonts/typ
-e1/public/lm/lmmi8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/
-share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/publi
-c/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texm
-f/fonts/type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10
-.pfb></usr/share/texmf/fonts/type1/public/lm/lmri9.pfb></usr/share/texmf/fonts/
-type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy6.pfb></
-usr/share/texmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texmf/fonts/type1/p
-ublic/lm/lmsy9.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/sha
-re/texmf/fonts/type1/public/lm/lmtt12.pfb></usr/share/texmf/fonts/type1/public/
-lm/lmtt8.pfb>
-Output written on report.pdf (47 pages, 8031361 bytes).
+2.pfb></usr/share/texmf/fonts/type1/public/lm/lmbxi10.pfb></usr/share/texmf/fon
+ts/type1/public/lm/lmex10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pf
+b></usr/share/texmf/fonts/type1/public/lm/lmmi8.pfb></usr/share/texmf/fonts/typ
+e1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/
+share/texmf/fonts/type1/public/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public
+/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr9.pfb></usr/share/texmf
+/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmri9
+.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts
+/type1/public/lm/lmsy6.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy8.pfb></
+usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/
+public/lm/lmtt12.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt8.pfb>
+Output written on report.pdf (43 pages, 7973902 bytes).
 PDF statistics:
- 725 PDF objects out of 1000 (max. 8388607)
- 568 compressed objects within 6 object streams
- 150 named destinations out of 1000 (max. 500000)
- 45042 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 687 PDF objects out of 1000 (max. 8388607)
+ 538 compressed objects within 6 object streams
+ 143 named destinations out of 1000 (max. 500000)
+ 42986 words of extra memory for PDF output out of 42996 (max. 10000000)
 

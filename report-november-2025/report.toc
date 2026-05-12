@@ -51,5 +51,4 @@
 \contentsline {subsection}{\numberline {4.2}Determining the need for protocol changes}{38}{subsection.4.2}%
 \contentsline {section}{\numberline {5}Conclusions and recommendations}{39}{section.5}%
 \contentsline {subsection}{\numberline {5.1}Recommendations}{39}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}The yield in context---cross-chain and cross-asset comparison}{41}{subsection.5.2}%
-\contentsline {section}{References}{46}{table.caption.27}%
+\contentsline {section}{References}{42}{Item.24}%
