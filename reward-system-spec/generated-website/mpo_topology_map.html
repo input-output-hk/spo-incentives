@@ -160,6 +160,22 @@
   .leaflet-popup-content { font-size: 12px; line-height: 1.4; max-width: 260px; }
   .leaflet-popup-content .ticker { font-weight: 700; color: var(--infared); }
   .leaflet-popup-content .stk { font-weight: 700; font-size: 13px; }
+  /* Cluster-stats hover tooltip — clean white card. */
+  .leaflet-tooltip.cluster-stats { background: #fff; border: 1px solid #ddd;
+                                   box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+                                   border-radius: 6px; padding: 8px 10px;
+                                   color: #1a1a1a; min-width: 160px; }
+  .leaflet-tooltip.cluster-stats::before { display: none; }
+  /* Isolate mode — when an entity is selected via the side list or a
+     pin click, dim everything else on the map so only the entity's
+     fleet (the star graph) is visually prominent. */
+  .leaflet-container.isolated .leaflet-marker-cluster,
+  .leaflet-container.isolated .pin:not(.fleet-pool),
+  .leaflet-container.isolated .leaflet-heatmap-layer {
+    opacity: 0.08 !important;
+    pointer-events: none !important;
+    transition: opacity 0.2s ease;
+  }
 </style>
 </head>
 <body>
@@ -217,10 +233,13 @@
     <h2 id="filterHeading">Filter by provider <span class="sublabel">click to toggle</span></h2>
     <ul id="filterList"></ul>
   </div>
-  <div class="section" style="flex:1; min-height: 200px;">
-    <h2>Entities in view <span class="sublabel">click to fly to</span></h2>
-    <input id="searchBox" type="text" placeholder="Search entity / ticker..." autocomplete="off"/>
-    <div id="entityPanel" style="margin-top:8px"></div>
+  <div class="section" style="flex:1; min-height:0; overflow-y:auto;
+                                display:flex; flex-direction:column;">
+    <h2 style="flex-shrink:0">Entities in view <span class="sublabel">click to fly to</span></h2>
+    <input id="searchBox" type="text" placeholder="Search entity / ticker..."
+            autocomplete="off" style="flex-shrink:0"/>
+    <div id="entityPanel" style="margin-top:8px; flex:1; overflow-y:auto;
+                                  min-height:0;"></div>
   </div>
   <div class="section" style="font-size:10.5px; color:#888;">
     z<sub>0</sub> = <span id="z0Label"></span>M ADA  &middot;  k=<span id="kLabel"></span>  &middot;  supply <span id="supplyLabel"></span>B
@@ -499,6 +518,8 @@ function renderEntityPanel(filtered, totalAda) {
 let _activeEntityMarker = null;
 let _fleetLayer = null;
 let _selectedEntityId = null;
+let _hiddenPinLayer = null;
+let _hiddenHeatLayer = null;
 
 // Fleet-graph layer — for a given entity, draw every one of its pools as a
 // small node and a polyline from each pool to the entity's centroid. The
@@ -554,6 +575,12 @@ function showFleetGraph(eid) {
   );
   layers.push(centroid);
   _fleetLayer = L.layerGroup(layers).addTo(map);
+  // Isolate mode — remove the main pin/heat layers so only this fleet
+  // shows on the map. We keep references on the closure so clearFleet
+  // can put them back without rebuilding from scratch.
+  if (pinLayer) { map.removeLayer(pinLayer); _hiddenPinLayer = pinLayer; pinLayer = null; }
+  if (heatLayer) { map.removeLayer(heatLayer); _hiddenHeatLayer = heatLayer; heatLayer = null; }
+  map.getContainer().classList.add('isolated');
   // Frame map on the fleet bounds
   const all = pools.concat([ent]).map(x => [x.lat, x.lon]);
   map.flyToBounds(L.latLngBounds(all), {padding: [60, 60], maxZoom: 6, duration: 0.6});
@@ -568,7 +595,11 @@ function showFleetGraph(eid) {
 
 function clearFleet() {
   if (_fleetLayer) { map.removeLayer(_fleetLayer); _fleetLayer = null; }
+  // Restore the main layers
+  if (_hiddenPinLayer) { map.addLayer(_hiddenPinLayer); pinLayer = _hiddenPinLayer; _hiddenPinLayer = null; }
+  if (_hiddenHeatLayer) { map.addLayer(_hiddenHeatLayer); heatLayer = _hiddenHeatLayer; _hiddenHeatLayer = null; }
   _selectedEntityId = null;
+  map.getContainer().classList.remove('isolated');
   document.getElementById('fleetBanner').classList.remove('on');
 }
 
@@ -688,6 +719,78 @@ function rebuild() {
   if (drawPins) {
     const cluster = L.markerClusterGroup({maxClusterRadius: state.agg === 'entity' ? 25 : 35,
                                            chunkedLoading: true});
+    // Hover-tooltip on cluster bubbles — summarises what's hidden
+    // inside (pool / entity count, total stake, top providers / locations).
+    cluster.on('clustermouseover', function(e) {
+      const records = e.layer.getAllChildMarkers()
+        .map(m => m._record).filter(Boolean);
+      if (!records.length) return;
+      // Stats are contextual to the current view — Browse mode (entity vs
+      // pool), Cohort, Productive filter, AND the colour dimension. The
+      // breakdown follows whatever Colour-by mode is active so it always
+      // tells the user "what is this cluster made of, IN THE DIMENSION
+      // I am looking at right now".
+      const totalStake = records.reduce((a, r) => a + r.stake_ada, 0);
+      const networkPct = 100 * totalStake / (TOTAL_STAKE_B * 1e9);
+      const unitLabel = state.agg === 'entity' ? 'entities' : 'pools';
+      // Tally by current colour dimension
+      const dimTally = {};
+      records.forEach(r => {
+        const k = colorKey(r);
+        dimTally[k] = (dimTally[k] || 0) + r.stake_ada;
+      });
+      const topDim = Object.entries(dimTally)
+        .sort((a, b) => b[1] - a[1]).slice(0, 4);
+      const dimLabel = {provider:'By provider', tier:'By tier',
+                        cohort:'By cohort', saturation:'By saturation tier'}[state.color];
+      const dimHtml = topDim.map(([k, s]) =>
+        `<div style="display:flex;align-items:center;gap:6px;padding:1px 0">` +
+          `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${colorFor(k)};flex-shrink:0"></span>` +
+          `<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1">${k}</span>` +
+          `<span style="color:#888;font-variant-numeric:tabular-nums">${(100*s/totalStake).toFixed(0)}%</span>` +
+        `</div>`
+      ).join('');
+      // Top locations independent of colour mode
+      const locTally = {};
+      records.forEach(r => { locTally[r.loc] = (locTally[r.loc] || 0) + r.stake_ada; });
+      const topLocs = Object.entries(locTally)
+        .sort((a, b) => b[1] - a[1]).slice(0, 2)
+        .map(([l]) => l);
+      // Cohort split — only meaningful when Cohort filter is "All"
+      let cohortLine = '';
+      if (state.cohort === 'all') {
+        const mpo = records.filter(r => r.cohort === 'mpo')
+                           .reduce((a, r) => a + r.stake_ada, 0);
+        const spo = totalStake - mpo;
+        if (mpo && spo) {
+          cohortLine = `<div style="font:400 10.5px/1.4 -apple-system,sans-serif;color:#888;margin-top:4px">` +
+            `MPO ${(100*mpo/totalStake).toFixed(0)}%  &middot;  SPO ${(100*spo/totalStake).toFixed(0)}%` +
+            `</div>`;
+        }
+      }
+      const html =
+        `<div style="font:600 11px/1.2 -apple-system,sans-serif;color:#E52321;text-transform:uppercase;letter-spacing:.06em">` +
+          `${records.length} ${unitLabel} in cluster` +
+        `</div>` +
+        `<div style="font:700 16px/1.1 -apple-system,sans-serif;margin-top:3px">` +
+          `${(totalStake/1e9).toFixed(2)}B ADA` +
+          `<span style="font-weight:400;color:#888;font-size:11px;margin-left:6px">${networkPct.toFixed(1)}% of network</span>` +
+        `</div>` +
+        cohortLine +
+        `<div style="font:600 9.5px/1 -apple-system,sans-serif;color:#888;text-transform:uppercase;letter-spacing:.08em;margin:8px 0 4px;border-top:1px solid #eee;padding-top:6px">` +
+          dimLabel +
+        `</div>` +
+        `<div style="font:400 11.5px/1.3 -apple-system,sans-serif;color:#333">${dimHtml}</div>` +
+        `<div style="font:400 10.5px/1.4 -apple-system,sans-serif;color:#888;margin-top:6px;border-top:1px solid #eee;padding-top:5px">` +
+          topLocs.join(' &middot; ') +
+        `</div>`;
+      e.layer.bindTooltip(html, {sticky:true, direction:'top', offset:[0,-8],
+                                  opacity:1, className:'cluster-stats'})
+             .openTooltip();
+    });
+    cluster.on('clustermouseout', function(e) {
+      e.layer.unbindTooltip();
+    });
     filtered.forEach(r => {
       const c = L.circleMarker([r.lat, r.lon], {
         radius: radiusFor(r, state.agg),
@@ -695,6 +798,37 @@ function rebuild() {
         color: '#222', weight: 0.6, fillOpacity: 0.85,
         className: 'pin',
       });
+      c._record = r;  // attach for cluster-stats lookup
+      // Hover tooltip on the individual pin — same card style as the
+      // cluster-stats tooltip but with the single record's details.
+      const isEnt = r.kind === 'entity';
+      const tierBadgeBg = SAT_COLORS[r.saturation_tier] || '#888';
+      const tipHead = isEnt
+        ? `<div style="font:600 11px/1.2 -apple-system,sans-serif;color:#E52321;text-transform:uppercase;letter-spacing:.06em">${r.entity}</div>`
+        : `<div style="font:600 11px/1.2 -apple-system,sans-serif;color:#E52321;text-transform:uppercase;letter-spacing:.06em">${r.ticker || r.id.slice(0,12)}</div>` +
+          `<div style="font:400 10.5px/1.3 -apple-system,sans-serif;color:#888;margin-top:1px">${r.entity}</div>`;
+      const tipSub = isEnt
+        ? `<span style="color:#888;font-size:10.5px;margin-left:4px">[${r.pool_count} pool${r.pool_count>1?'s':''}]</span>`
+        : '';
+      const tip =
+        tipHead +
+        `<div style="font:700 16px/1.1 -apple-system,sans-serif;margin-top:4px">` +
+          `${(r.stake_ada/1e6).toFixed(1)}M ADA${tipSub}` +
+        `</div>` +
+        `<div style="font:400 10.5px/1.4 -apple-system,sans-serif;margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">` +
+          `<span style="background:${tierBadgeBg};color:#fff;padding:2px 6px;border-radius:3px;font-weight:600;font-size:10px">${r.saturation_tier}</span>` +
+          `<span style="color:#666">~${r.expected_blocks_per_epoch.toFixed(2)} blk/epoch</span>` +
+        `</div>` +
+        `<div style="font:400 11px/1.4 -apple-system,sans-serif;color:#666;margin-top:6px;border-top:1px solid #eee;padding-top:5px">` +
+          `<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${colorFor(r.provider)};margin-right:5px;vertical-align:-1px"></span>` +
+          `${r.provider}  &middot;  ${r.tier}` +
+        `</div>` +
+        `<div style="font:400 10.5px/1.4 -apple-system,sans-serif;color:#888;margin-top:3px">${r.loc}</div>` +
+        (isEnt
+          ? `<div style="font:400 10.5px/1.4 -apple-system,sans-serif;color:#999;margin-top:5px;border-top:1px solid #eee;padding-top:4px;max-width:240px">${r.providers}</div>`
+          : `<div style="font:400 10px/1.4 -apple-system,sans-serif;color:#aaa;margin-top:5px;border-top:1px solid #eee;padding-top:4px;max-width:240px">Region: ${r.regions}</div>`);
+      c.bindTooltip(tip, {sticky:true, direction:'top', offset:[0,-4],
+                           opacity:1, className:'cluster-stats'});
       const head = r.kind === 'entity'
         ? `<span class="ticker">${r.entity}</span>  <span style="color:#888;font-size:11px">[${r.pool_count} pool${r.pool_count>1?'s':''}]</span>`
         : `<span class="ticker">${r.ticker || r.id.slice(0,12)}</span>  <span style="color:#888">${r.entity}</span>`;
