@@ -1533,7 +1533,7 @@ window.MathJax = {{
 <a href="index.html" class="nav-tab-implementation{cls_implementation}" title="V2 working website — analysis, evidence, and directions in ideation">Welcome</a>
 </div>
 
-<span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true"><svg viewBox="0 0 32 8"><circle cx="27" cy="4" r="0.9"/><circle cx="17" cy="4" r="1.4"/><circle cx="6" cy="4" r="2.2"/></svg></span>
+<span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true"><svg viewBox="0 0 28 12"><path d="M27 6 L4 6 M4 6 L9 2.5 M4 6 L9 9.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
 <!-- Zone 1 (left anchor) — Solution Evaluation: CIP candidates evaluated against V2 -->
 <div class="nav-zone nav-zone-solution">
@@ -1580,14 +1580,14 @@ window.MathJax = {{
 </div>
 </div>
 
-<span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true"><svg viewBox="0 0 32 8"><circle cx="27" cy="4" r="0.9"/><circle cx="17" cy="4" r="1.4"/><circle cx="6" cy="4" r="2.2"/></svg></span>
+<span class="nav-flow-arrow nav-flow-arrow-light" aria-hidden="true"><svg viewBox="0 0 28 12"><path d="M27 6 L4 6 M4 6 L9 2.5 M4 6 L9 9.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
 <!-- Zone 2 — V2 Roadmap: the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
 <div class="nav-zone nav-zone-output">
 <a href="v2-roadmap.html" class="nav-tab-roadmap{cls_roadmap}" title="V2 Roadmap — directions of exploration and concrete milestones">V2 Roadmap</a>
 </div>
 
-<span class="nav-flow-arrow" aria-hidden="true"><svg viewBox="0 0 32 8"><circle cx="27" cy="4" r="0.9"/><circle cx="17" cy="4" r="1.4"/><circle cx="6" cy="4" r="2.2"/></svg></span>
+<span class="nav-flow-arrow" aria-hidden="true"><svg viewBox="0 0 28 12"><path d="M27 6 L4 6 M4 6 L9 2.5 M4 6 L9 9.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
 <!-- Zone 2.5 — Cardano Constitution (the governance ceiling V2 must respect) -->
 <div class="nav-zone nav-zone-constitution">
@@ -1621,14 +1621,14 @@ window.MathJax = {{
 </div>
 </div>
 
-<span class="nav-flow-arrow" aria-hidden="true"><svg viewBox="0 0 32 8"><circle cx="27" cy="4" r="0.9"/><circle cx="17" cy="4" r="1.4"/><circle cx="6" cy="4" r="2.2"/></svg></span>
+<span class="nav-flow-arrow" aria-hidden="true"><svg viewBox="0 0 28 12"><path d="M27 6 L4 6 M4 6 L9 2.5 M4 6 L9 9.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
 <!-- Zone 2.7 — Induced Problems (proto-CPS bridge between diagnostic and V2 spec) -->
 <div class="nav-zone nav-zone-problems">
 <a href="problem-statements.html" class="nav-tab-problems-big{cls_findings}" title="The structural problems the diagnostic induces from on-chain evidence">Induced Problems</a>
 </div>
 
-<span class="nav-flow-arrow" aria-hidden="true"><svg viewBox="0 0 32 8"><circle cx="27" cy="4" r="0.9"/><circle cx="17" cy="4" r="1.4"/><circle cx="6" cy="4" r="2.2"/></svg></span>
+<span class="nav-flow-arrow" aria-hidden="true"><svg viewBox="0 0 28 12"><path d="M27 6 L4 6 M4 6 L9 2.5 M4 6 L9 9.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
 <!-- Zone 3 — Mainnet Diagnostic (observed reality) -->
 <div class="nav-zone nav-zone-diag">
@@ -1677,7 +1677,7 @@ window.MathJax = {{
 </div>
 </div>
 
-<span class="nav-flow-arrow" aria-hidden="true"><svg viewBox="0 0 32 8"><circle cx="27" cy="4" r="0.9"/><circle cx="17" cy="4" r="1.4"/><circle cx="6" cy="4" r="2.2"/></svg></span>
+<span class="nav-flow-arrow" aria-hidden="true"><svg viewBox="0 0 28 12"><path d="M27 6 L4 6 M4 6 L9 2.5 M4 6 L9 9.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
 
 <!-- Zone 4 — Design Support (intended mechanism + research foundations) -->
 <div class="nav-zone nav-zone-design">

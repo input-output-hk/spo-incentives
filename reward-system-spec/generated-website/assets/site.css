@@ -1047,41 +1047,16 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
 [data-theme=dark] .nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 20%,rgba(0,51,173,.75) 30%,rgba(0,51,173,.40) 50%,rgba(0,51,173,.12) 70%,var(--bg) 92%),var(--bg)}
 .nav-zone{display:flex;align-items:center;gap:10px;flex-shrink:0}
 
-/* Reading-direction marker — conceptual, not literal. Three dots
-   increasing in size + opacity toward the destination (left) side.
-   No arrowhead, no line: the trajectory is implied by the gradient.
-   The destination dot (largest) reads as "arrived"; the trailing
-   dots are the path it came from. Reads as a typographic gesture
-   rather than an icon. */
+/* Reading-direction flow arrow — thin SVG arrow, hairline stroke,
+   calm colour. The shape carries the meaning ("read right→left, this
+   is built FROM that"); it doesn't have to shout. */
 .nav-flow-arrow{display:inline-flex;align-items:center;flex-shrink:0;
-                padding:0 10px;color:var(--cardano-blue);
-                user-select:none;transition:opacity .25s}
-.nav-flow-arrow svg{width:30px;height:8px;display:block}
-.nav-flow-arrow svg circle{fill:currentColor}
-/* Trailing dots fade — a typographic dot-leader, not an arrowhead. */
-.nav-flow-arrow svg circle:nth-child(1){opacity:.28}
-.nav-flow-arrow svg circle:nth-child(2){opacity:.55}
-.nav-flow-arrow svg circle:nth-child(3){opacity:.95}
-.nav-flow-arrow:hover svg circle:nth-child(1){opacity:.55}
-.nav-flow-arrow:hover svg circle:nth-child(2){opacity:.8}
-.nav-flow-arrow:hover svg circle:nth-child(3){opacity:1}
-.nav-flow-arrow-light{color:#fff}
-.nav-flow-arrow-light svg circle:nth-child(1){opacity:.4}
-.nav-flow-arrow-light svg circle:nth-child(2){opacity:.7}
-.nav-flow-arrow-light svg circle:nth-child(3){opacity:1}
-/* Subtle drift animation — the dot-trail breathes gently, suggesting
-   motion in the destination direction without being distracting. */
-@keyframes nav-flow-drift{
-  0%,100%{opacity:var(--o,1)}
-  50%    {opacity:calc(var(--o,1) * .55)}
-}
-.nav-flow-arrow svg circle:nth-child(1){--o:.28; animation:nav-flow-drift 2.4s ease-in-out infinite; animation-delay:0s}
-.nav-flow-arrow svg circle:nth-child(2){--o:.55; animation:nav-flow-drift 2.4s ease-in-out infinite; animation-delay:.4s}
-.nav-flow-arrow svg circle:nth-child(3){--o:.95; animation:nav-flow-drift 2.4s ease-in-out infinite; animation-delay:.8s}
-.nav-flow-arrow-light svg circle:nth-child(1){--o:.4}
-.nav-flow-arrow-light svg circle:nth-child(2){--o:.7}
-.nav-flow-arrow-light svg circle:nth-child(3){--o:1}
-@media (prefers-reduced-motion:reduce){.nav-flow-arrow svg circle{animation:none}}
+                padding:0 8px;color:var(--cardano-blue);opacity:.55;
+                user-select:none;transition:opacity .15s}
+.nav-flow-arrow:hover{opacity:.85}
+.nav-flow-arrow svg{width:26px;height:11px;display:block}
+.nav-flow-arrow-light{color:rgba(255,255,255,.7);opacity:1}
+.nav-flow-arrow-light:hover{color:#fff}
 
 /* Small zone label above (inline with) each zone's content */
 .nav-zone-label{font:700 9px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:1.8px;text-transform:uppercase;color:var(--text-muted);flex-shrink:0}
