@@ -236,6 +236,11 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .nav-flow-rail{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
                height:11px;display:flex;align-items:center;
                pointer-events:none;z-index:0;
+               /* Hidden until the JS positioner runs — otherwise the
+                  unpositioned rail flashes across the full navbar width
+                  on initial paint, leaving stray dashes left of Welcome. */
+               opacity:0;transition:opacity .15s ease}
+.nav-flow-rail.positioned{opacity:1;
                /* Very subtle dark drop-shadow only — gives the dashes
                   just enough definition against the gradient without
                   feeling glowy or heavy. */
@@ -339,18 +344,31 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L93 20 L99 39 L7 39 L1 20 Z' fill='%23eaf0fc' stroke='%230033ad' stroke-width='1.2' vector-effect='non-scaling-stroke'/></svg>") !important;
   color:var(--cardano-blue) !important;
 }
-/* Welcome + V2 Roadmap — white-plate chevrons matching the rest of the
-   nav. They sit on the deep-blue zone so the white glow in the shared
-   filter does the heavy lifting visually. */
-.nav-tab-implementation,
+/* V2 Roadmap — middle chevron, both V's. */
 .nav-tab-roadmap{
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L93 20 L99 39 L7 39 L1 20 Z' fill='%23ffffff' stroke='%23cfcfcf' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
   color:var(--text-primary) !important;
-  /* Slightly stronger white glow because the deep-blue background is
-     the darkest part of the gradient — these buttons need a bit more
-     lift than the right-side ones. */
   filter:drop-shadow(0 0 7px rgba(255,255,255,0.38))
          drop-shadow(0 2px 4px rgba(0,0,0,0.12)) !important;
+}
+
+/* Welcome — leftmost extremity: FLAT left, V-cut right.
+   Reads as the destination flag of the chain. */
+.nav-tab-implementation{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M1 1 L99 1 L93 20 L99 39 L1 39 Z' fill='%23ffffff' stroke='%23cfcfcf' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
+  color:var(--text-primary) !important;
+  /* No chevron padding on the flat left edge. */
+  padding-left:22px !important;
+  filter:drop-shadow(0 0 7px rgba(255,255,255,0.38))
+         drop-shadow(0 2px 4px rgba(0,0,0,0.12)) !important;
+}
+
+/* Design Support — rightmost extremity: V-point left, FLAT right.
+   Reads as the origin flag of the chain. */
+.nav-dd-btn-design{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L99 39 L7 39 L1 20 Z' fill='%23ffffff' stroke='%23cfcfcf' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
+  /* No chevron padding on the flat right edge. */
+  padding-right:22px !important;
 }
 /* V2 Spec — solid Cardano-blue chevron with a SOLID white border. */
 .nav-tab-spec-big{

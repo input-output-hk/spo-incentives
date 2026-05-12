@@ -39,6 +39,7 @@ document.addEventListener('click',function(){ window.closeAllDd(null); });
     var pageRect = pages.getBoundingClientRect();
     rail.style.left  = (first.left  - pageRect.left + first.width  / 2) + 'px';
     rail.style.right = (pageRect.right - last.right + last.width / 2) + 'px';
+    rail.classList.add('positioned');
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fitRail);
   else fitRail();
@@ -59,7 +60,7 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778576317">
+<link rel="stylesheet" href="assets/site.css?v=1778583886">
 
 
 </head>
@@ -828,6 +829,6 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778576317"></script>
+<script src="assets/site.js?v=1778583886"></script>
 </body>
 </html>
