@@ -1503,6 +1503,7 @@ document.addEventListener('click',function(){{ window.closeAllDd(null); }});
     var pageRect = pages.getBoundingClientRect();
     rail.style.left  = (first.left  - pageRect.left + first.width  / 2) + 'px';
     rail.style.right = (pageRect.right - last.right + last.width / 2) + 'px';
+    rail.classList.add('positioned');
   }}
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fitRail);
   else fitRail();
