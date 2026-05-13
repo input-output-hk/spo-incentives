@@ -1,0 +1,344 @@
+/* ──────────────────────────────────────────────────────────────
+   Mobile stylesheet — additive overlay for screens ≤ 768 px.
+
+   IMPORTANT:
+   - Every layout rule lives inside `@media (max-width: 768px)`.
+     Above 768 px this file is inert and the desktop CSS in
+     `site.css` is unaffected.
+   - The handful of rules *outside* the media query are scoped to
+     brand-new mobile-only classes (`.mobile-hamburger`,
+     `.mobile-drawer*`) injected by `site-mobile.js`. They do not
+     exist anywhere in the desktop DOM, so hiding them on desktop
+     has no visual side-effect — it just keeps the drawer chrome
+     dormant until the viewport drops below the breakpoint.
+   - Companion JS: `assets/site-mobile.js`.
+
+   Last synced with site.css structure: 2026/05/13.
+   ────────────────────────────────────────────────────────────── */
+
+/* ── Mobile-only chrome, hidden on desktop ───────────────────── */
+.mobile-hamburger{display:none}
+.mobile-drawer{display:none}
+.mobile-drawer-scrim{display:none}
+
+@media (max-width: 768px){
+
+  /* ── Body / scroll lock when drawer is open ──────────────── */
+  body.mobile-drawer-open{overflow:hidden;touch-action:none}
+
+  /* ── Sticky top bar — keep brand row, hide desktop nav rail ─ */
+  .site-nav{flex-direction:column}
+  .nav-brand{padding:8px 12px;flex-wrap:nowrap;gap:8px;min-width:0}
+  .nav-brand-home{min-width:0;flex:1 1 auto;gap:6px}
+  .cardano-mark{width:22px;height:22px;flex:0 0 auto}
+  .nav-brand-title-cardano{font-size:13px;letter-spacing:.02em}
+  .nav-brand-title{font-size:13px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-brand-sep,
+  .nav-brand-sep-vr,
+  .nav-brand-attribution,
+  .nav-brand-subtitle{display:none}
+  .nav-brand-right{gap:4px;flex:0 0 auto}
+  .nav-brand-right .pdf-export,
+  .nav-brand-right .theme-toggle{
+    padding:4px 8px;
+    font-size:12px;
+    min-width:0;
+  }
+
+  /* Hide the horizontal nav row entirely on mobile. The drawer
+     replicates every link. The decorative SVG flow rail is hidden
+     too so the JS `fitRail()` measurements that fail silently here
+     have nothing to position. */
+  .nav-pages,
+  .nav-flow-rail{display:none !important}
+
+  /* Reveal the hamburger button (injected by site-mobile.js). */
+  .mobile-hamburger{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:36px;height:36px;
+    padding:0;
+    background:transparent;
+    border:1px solid var(--border);
+    border-radius:6px;
+    color:var(--text-primary);
+    cursor:pointer;
+    font-size:18px;
+    line-height:1;
+  }
+  .mobile-hamburger:hover{background:var(--bg-panel)}
+  .mobile-hamburger:focus-visible{outline:2px solid var(--infared);outline-offset:2px}
+
+  /* ── Drawer (fullscreen, slide-in from right) ────────────── */
+  .mobile-drawer{
+    display:flex;
+    flex-direction:column;
+    position:fixed;
+    top:0;right:0;bottom:0;
+    width:min(92vw, 420px);
+    z-index:1100;
+    background:var(--bg);
+    border-left:1px solid var(--border);
+    box-shadow:-12px 0 32px rgba(0,0,0,.18);
+    transform:translateX(100%);
+    transition:transform .28s cubic-bezier(.2,.7,.2,1);
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  .mobile-drawer.open{transform:translateX(0)}
+
+  .mobile-drawer-scrim{
+    display:block;
+    position:fixed;inset:0;
+    z-index:1090;
+    background:rgba(0,0,0,.45);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .22s ease;
+  }
+  .mobile-drawer-scrim.open{opacity:1;pointer-events:auto}
+
+  .mobile-drawer-head{
+    position:sticky;top:0;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 14px;
+    background:var(--bg);
+    border-bottom:1px solid var(--border);
+    z-index:1;
+  }
+  .mobile-drawer-title{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:14px;
+    letter-spacing:-.01em;
+    color:var(--text-primary);
+  }
+  .mobile-drawer-close{
+    width:32px;height:32px;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:transparent;
+    border:1px solid var(--border);
+    border-radius:6px;
+    color:var(--text-primary);
+    font-size:18px;line-height:1;
+    cursor:pointer;
+  }
+  .mobile-drawer-close:hover{background:var(--bg-panel)}
+
+  .mobile-drawer-body{padding:8px 0 32px}
+
+  .mobile-drawer-section{
+    border-bottom:1px solid var(--border-light);
+    padding:6px 0;
+  }
+  .mobile-drawer-section:last-child{border-bottom:none}
+
+  .mobile-drawer-section-head{
+    display:flex;align-items:center;justify-content:space-between;
+    width:100%;
+    padding:12px 16px;
+    background:transparent;
+    border:none;
+    cursor:pointer;
+    text-align:left;
+  }
+  .mobile-drawer-section-title{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:14px;
+    color:var(--text-primary);
+    letter-spacing:-.005em;
+  }
+  .mobile-drawer-section-chev{
+    width:14px;height:9px;
+    color:var(--text-secondary);
+    transition:transform .2s ease;
+  }
+  .mobile-drawer-section.open .mobile-drawer-section-chev{transform:rotate(180deg)}
+
+  .mobile-drawer-section-body{
+    display:none;
+    padding:2px 8px 10px;
+  }
+  .mobile-drawer-section.open .mobile-drawer-section-body{display:block}
+
+  /* Single-link sections (Welcome, V2 Roadmap, Induced Problems)
+     render their label inline as a tappable link instead of a
+     dropdown — the JS just doesn't add a chevron for those. */
+  .mobile-drawer-link{
+    display:block;
+    padding:10px 14px;
+    border-radius:6px;
+    color:var(--text-primary);
+    text-decoration:none;
+    font-size:14px;
+    line-height:1.35;
+  }
+  .mobile-drawer-link:hover{background:var(--bg-panel)}
+  .mobile-drawer-link.active{
+    background:rgba(229,35,33,.08);
+    color:var(--infared);
+    font-weight:600;
+  }
+  .mobile-drawer-link-cite{
+    display:block;
+    margin-top:2px;
+    font-size:12px;
+    color:var(--text-secondary);
+    font-weight:400;
+  }
+  .mobile-drawer-stratum-meta{
+    display:block;
+    padding:0 16px 8px;
+    font-size:12px;
+    color:var(--text-secondary);
+    line-height:1.4;
+  }
+  .mobile-drawer-group-label{
+    padding:8px 16px 2px;
+    font-size:11px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--text-secondary);
+  }
+
+  /* ── Hero — calmer on mobile ─────────────────────────────── */
+  .hero{padding:32px 16px 40px;max-width:100%}
+  .hero h1{
+    font-size:clamp(22px, 6.2vw, 30px) !important;
+    line-height:1.15 !important;
+    max-width:100% !important;
+    letter-spacing:-.015em;
+  }
+  .hero .sub{
+    font-size:14px !important;
+    max-width:100% !important;
+    line-height:1.5;
+  }
+  .hero .meta{font-size:11px}
+
+  /* ── Content column — tighter padding ────────────────────── */
+  .content{
+    padding:20px 14px 32px !important;
+    max-width:100% !important;
+  }
+  .content h1{font-size:24px;line-height:1.2}
+  .content h2{font-size:20px;line-height:1.25;margin-top:28px}
+  .content h3{font-size:17px;line-height:1.3;margin-top:22px}
+  .content h4{font-size:15px}
+  .content p,.content li{font-size:14.5px;line-height:1.6}
+  .content blockquote{padding:10px 12px;font-size:14px}
+  .content pre{font-size:12px;padding:10px}
+  .content code{font-size:13px;word-break:break-word}
+
+  /* ── Tables — make them horizontally scrollable wrappers ─── */
+  .table-wrap{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    max-width:100%;
+    border-radius:4px;
+  }
+  .content table{
+    min-width:max-content;
+    font-size:12.5px;
+  }
+  .content table th,
+  .content table td{padding:6px 8px}
+
+  /* Bare tables not wrapped in .table-wrap (older content) */
+  .content > table,
+  .content section > table{
+    display:block;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    max-width:100%;
+    white-space:nowrap;
+  }
+
+  /* ── Generic 2-column grids → stack on mobile ────────────── */
+  .findings-toc,
+  .synth-grid,
+  .ev-grid,
+  .obs-grid,
+  .sro-grid,
+  .col-2,
+  .grid-2,
+  .two-col,
+  .twocol{grid-template-columns:1fr !important}
+
+  /* Cards — let them breathe at full width */
+  .ev-card,
+  .synth-card,
+  .obs-card,
+  .sro-card{
+    grid-template-columns:1fr !important;
+    gap:6px !important;
+  }
+  .ev-label,
+  .synth-label{padding-top:0 !important}
+
+  /* ── TOC sidebar → inline collapsible at top ─────────────── */
+  .toc-nav{
+    position:static !important;
+    width:100% !important;
+    max-width:100% !important;
+    margin:0 0 16px !important;
+    padding:10px 12px !important;
+    font-size:13px;
+  }
+  .toc-fab,
+  .toc-panel{display:none !important}
+
+  /* ── Figures / images — full bleed ───────────────────────── */
+  .content figure,
+  .content img{
+    max-width:100% !important;
+    height:auto;
+  }
+  .content figcaption{font-size:12px;padding:6px 4px}
+
+  /* ── Mermaid / SVG diagrams — horizontal scroll if needed ── */
+  .mermaid,
+  .content svg{
+    max-width:100%;
+    overflow-x:auto;
+  }
+
+  /* ── MathJax — never let display math break layout ───────── */
+  mjx-container[display="true"]{
+    overflow-x:auto;
+    overflow-y:hidden;
+    max-width:100%;
+  }
+
+  /* ── Back-to-top button — smaller, less obstructive ──────── */
+  .back-top{
+    right:12px;bottom:12px;
+    width:38px;height:38px;
+    font-size:14px;
+  }
+
+  /* ── Lightbox — full screen on mobile ────────────────────── */
+  .lightbox-overlay .lb-img,
+  #lb-img{
+    max-width:96vw !important;
+    max-height:88vh !important;
+  }
+
+  /* ── Progress bar — slimmer on mobile ────────────────────── */
+  .progress-bar{height:2px}
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Larger phones (≥ 481 px and ≤ 768 px) — slight loosening.
+   Kept narrow so we don't compete with desktop rules.
+   ────────────────────────────────────────────────────────────── */
+@media (min-width: 481px) and (max-width: 768px){
+  .content{padding:24px 22px 40px !important}
+  .hero{padding:40px 22px 48px}
+  .hero h1{font-size:clamp(26px, 5vw, 34px) !important}
+  .mobile-drawer{width:min(88vw, 460px)}
+}

@@ -1525,6 +1525,7 @@ window.MathJax = {{
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="assets/site.css?v={asset_ver}">
+<link rel="stylesheet" href="assets/site-mobile.css?v={asset_ver}">
 {plausible_head}
 {hypothesis_head}
 </head>
@@ -1774,6 +1775,7 @@ if (window.mermaid) {{
 }}
 </script>
 <script src="assets/site.js?v={asset_ver}"></script>
+<script src="assets/site-mobile.js?v={asset_ver}"></script>
 </body>
 </html>
 """
