@@ -48,9 +48,9 @@ PAGES = [
         "slug": "whats-next",
         "md": "whats-next/README.md",
         "html": "index.html",
-        "title": "Welcome — Cardano Reward System V2",
+        "title": "Cardano Reward System / The Holistic Reading",
         "hero_h1": "Welcome",
-        "hero_sub": "The Cardano Reward System V2 working website — analysis, evidence, and directions in ideation",
+        "hero_sub": "A holistic reading of today's reward mechanism, the directions of exploration for a successor, and an evaluation of the existing reward CIPs through the same prism",
         "active_nav": "implementation",
     },
     # V2 Roadmap — the canonical V2 working document. Directions of
@@ -61,8 +61,8 @@ PAGES = [
         "slug": "v2-roadmap",
         "md": "README.md",
         "html": "v2-roadmap.html",
-        "title": "Cardano Reward System — V2 Roadmap (ideation in progress)",
-        "hero_h1": "V2 Roadmap",
+        "title": "Roadmap — Cardano Reward System / The Holistic Reading",
+        "hero_h1": "Roadmap",
         "hero_sub": "Ideation in progress — directions of exploration and milestones offered for community shaping, anchored on the 9 induced problems",
         "active_nav": "roadmap",
     },
@@ -70,7 +70,7 @@ PAGES = [
         "slug": "intended-game",
         "md": "the-intended-game/README.md",
         "html": "intended-game.html",
-        "title": "The Intended Game — Cardano Reward System V2",
+        "title": "The Intended Game — Cardano Reward System / The Holistic Reading",
         "hero_h1": "The Intended Game",
         "hero_sub": "Plain-prose companion to the formal SL-D1 design spec — what V1 was meant to produce",
         "active_nav": "intended-game",
@@ -79,7 +79,7 @@ PAGES = [
         "slug": "diagnostic",
         "md": "diagnostic/README.md",
         "html": "diagnostic.html",
-        "title": "The Mainnet Diagnostic — Cardano Reward System V2",
+        "title": "The Mainnet Diagnostic — Cardano Reward System / The Holistic Reading",
         "hero_h1": "The Mainnet Diagnostic",
         "hero_sub": "Observations, problem induction, and links to the sub-reports",
         "active_nav": "diagnostic",
@@ -623,9 +623,9 @@ def _render_footer() -> str:
     return f"""<footer class="site-footer">
   <div class="footer-grid">
     <div class="footer-col footer-col-brand">
-      <a href="index.html" class="footer-cardano-mark" title="Cardano Reward System V2 — home">
+      <a href="index.html" class="footer-cardano-mark" title="Cardano Reward System / The Holistic Reading — home">
         {cardano_mark_svg}
-        <span class="footer-cardano-label">Cardano Reward System V2</span>
+        <span class="footer-cardano-label">Cardano Reward System / The Holistic Reading</span>
       </a>
       <p class="footer-tagline">{FOOTER_TAGLINE}</p>
       <a href="https://cardano.org" class="footer-network-link" rel="noopener" target="_blank">
@@ -635,7 +635,7 @@ def _render_footer() -> str:
     <div class="footer-col">
       <h4 class="footer-heading">Specification</h4>
       <ul class="footer-links">
-        <li><a href="v2-roadmap.html">V2 Roadmap</a></li>
+        <li><a href="v2-roadmap.html">Roadmap</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
         <li><a href="problem-statements.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
@@ -1534,9 +1534,9 @@ window.MathJax = {{
 <nav class="site-nav"><div class="nav-brand">
 <a href="index.html" class="nav-brand-home">
 <img src="assets/cardano/cardano-logomark-white.svg" alt="Cardano" class="cardano-mark">
-<span class="nav-brand-title-cardano">Cardano</span>
+<span class="nav-brand-title-cardano">Cardano Reward System</span>
 <span class="nav-brand-sep" aria-hidden="true">/</span>
-<span class="nav-brand-title">Reward System V2</span>
+<span class="nav-brand-title">The Holistic Reading</span>
 <span class="nav-brand-sep-vr" aria-hidden="true"></span>
 <span class="nav-brand-attribution">
   <span class="nav-brand-attribution-prefix">by</span>
@@ -1618,40 +1618,7 @@ window.MathJax = {{
 
 <!-- Zone 2 — V2 Roadmap: the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
 <div class="nav-zone nav-zone-output">
-<a href="v2-roadmap.html" class="nav-tab-roadmap{cls_roadmap}" title="V2 Roadmap — directions of exploration and concrete milestones">V2 Roadmap</a>
-</div>
-
-
-<!-- Zone 2.5 — Cardano Constitution (the governance ceiling V2 must respect) -->
-<div class="nav-zone nav-zone-constitution">
-<div class="nav-dd-wrap nav-dd-wrap-light">
-<button class="nav-dd-btn-light nav-dd-btn-constitution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Constitution<svg class="nav-dd-chev" viewBox="0 0 12 8" aria-hidden="true"><path d="M2 2.5 L6 6 L10 2.5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-<div class="nav-dd-panel-light nav-dd-panel-constitution">
-  <div class="nav-dd-stratum">
-    <div class="nav-dd-stratum-head">
-      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-constitution">Cardano Constitution v2</span>
-      <span class="nav-dd-stratum-meta">The governance document the protocol operates under (ratified at epoch 609) — every milestone in the V2 spec must comply with it</span>
-    </div>
-    <a href="pdf-viewer.html?file=references/governance/cardano-constitution-2.pdf" class="nav-dd-ref">
-      <span class="nav-dd-ref-title">Cardano Blockchain Ecosystem Constitution</span>
-      <span class="nav-dd-ref-cite">IntersectMBO — ratified at epoch 609 (v2)<span class="nav-dd-ref-tag">CONST-2</span></span>
-      <span class="nav-dd-ref-pdf">PDF</span>
-    </a>
-    <a href="references/governance/cardano-constitution-2.pdf" class="nav-dd-ref nav-dd-ref-sub" download>
-      <span class="nav-dd-ref-title">Download the PDF</span>
-      <span class="nav-dd-ref-cite">Local copy on this site<span class="nav-dd-ref-stage">Download</span></span>
-    </a>
-    <a href="https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2" class="nav-dd-ref nav-dd-ref-sub" rel="noopener" target="_blank">
-      <span class="nav-dd-ref-title">Source on GitHub</span>
-      <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
-    </a>
-    <a href="v2-roadmap.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
-      <span class="nav-dd-ref-title">Constitutional framework in the V2 Roadmap</span>
-      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 Roadmap</span></span>
-    </a>
-  </div>
-</div>
-</div>
+<a href="v2-roadmap.html" class="nav-tab-roadmap{cls_roadmap}" title="Roadmap — directions of exploration and concrete milestones">Roadmap</a>
 </div>
 
 
@@ -1709,19 +1676,19 @@ window.MathJax = {{
 </div>
 
 
-<!-- Zone 4 — Design Support (intended mechanism + research foundations) -->
+<!-- Zone 4 — The Intended Game (formerly "Design Support" — intended mechanism + research foundations) -->
 <div class="nav-zone nav-zone-design">
 <div class="nav-dd-wrap nav-dd-wrap-light">
-<button class="nav-dd-btn-light nav-dd-btn-design{cls_design_trigger}" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Design Support<svg class="nav-dd-chev" viewBox="0 0 12 8" aria-hidden="true"><path d="M2 2.5 L6 6 L10 2.5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<button class="nav-dd-btn-light nav-dd-btn-design{cls_design_trigger}" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">The Intended Game<svg class="nav-dd-chev" viewBox="0 0 12 8" aria-hidden="true"><path d="M2 2.5 L6 6 L10 2.5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 <div class="nav-dd-panel-light nav-dd-panel-design">
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
-      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-design">Design Support</span>
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-design">The Intended Game</span>
       <span class="nav-dd-stratum-meta">The intended mechanism — formal spec, narrative companion, and the academic antecedents the design rests on</span>
     </div>
     <a href="intended-game.html" class="nav-dd-ref{cls_intended_game}">
-      <span class="nav-dd-ref-title">The Intended Game<span class="nav-dd-ref-new">New</span></span>
-      <span class="nav-dd-ref-cite">Plain-prose companion to SL-D1 — fills the narrative gap the formal spec left open</span>
+      <span class="nav-dd-ref-title">Plain-prose narrative<span class="nav-dd-ref-new">New</span></span>
+      <span class="nav-dd-ref-cite">Companion to SL-D1 — fills the narrative gap the formal spec left open</span>
     </a>
     <a href="pdf-viewer.html?file=references/design-specs/delegation-incentives-design-spec_kant-brunjes-coutts_2019.pdf" class="nav-dd-ref">
       <span class="nav-dd-ref-title">Delegation Incentives Design Specification</span>
@@ -1748,6 +1715,39 @@ window.MathJax = {{
       <span class="nav-dd-ref-title">Reward Sharing in PoS with No-Pool-Choice Delegators</span>
       <span class="nav-dd-ref-cite">Kiayias et al. — AFT 2025<span class="nav-dd-ref-tag">AFT-2025</span></span>
       <span class="nav-dd-ref-pdf">arXiv</span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+
+
+<!-- Zone 5 (far-right anchor) — Cardano Constitution (the governance ceiling V2 must respect) -->
+<div class="nav-zone nav-zone-constitution">
+<div class="nav-dd-wrap nav-dd-wrap-light">
+<button class="nav-dd-btn-light nav-dd-btn-constitution" onclick="event.stopPropagation();closeAllDd(this);this.parentElement.classList.toggle('open')" aria-expanded="false">Constitution<svg class="nav-dd-chev" viewBox="0 0 12 8" aria-hidden="true"><path d="M2 2.5 L6 6 L10 2.5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<div class="nav-dd-panel-light nav-dd-panel-constitution">
+  <div class="nav-dd-stratum">
+    <div class="nav-dd-stratum-head">
+      <span class="nav-dd-stratum-badge nav-dd-stratum-badge-constitution">Cardano Constitution v2</span>
+      <span class="nav-dd-stratum-meta">The governance document the protocol operates under (ratified at epoch 609) — every milestone in the V2 spec must comply with it</span>
+    </div>
+    <a href="pdf-viewer.html?file=references/governance/cardano-constitution-2.pdf" class="nav-dd-ref">
+      <span class="nav-dd-ref-title">Cardano Blockchain Ecosystem Constitution</span>
+      <span class="nav-dd-ref-cite">IntersectMBO — ratified at epoch 609 (v2)<span class="nav-dd-ref-tag">CONST-2</span></span>
+      <span class="nav-dd-ref-pdf">PDF</span>
+    </a>
+    <a href="references/governance/cardano-constitution-2.pdf" class="nav-dd-ref nav-dd-ref-sub" download>
+      <span class="nav-dd-ref-title">Download the PDF</span>
+      <span class="nav-dd-ref-cite">Local copy on this site<span class="nav-dd-ref-stage">Download</span></span>
+    </a>
+    <a href="https://github.com/IntersectMBO/cardano-constitution/tree/main/cardano-constitution-2" class="nav-dd-ref nav-dd-ref-sub" rel="noopener" target="_blank">
+      <span class="nav-dd-ref-title">Source on GitHub</span>
+      <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
+    </a>
+    <a href="v2-roadmap.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the Roadmap</span>
+      <span class="nav-dd-ref-cite">How the Roadmap milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In Roadmap</span></span>
     </a>
   </div>
 </div>
@@ -5505,31 +5505,38 @@ def _render_findings_content(
         'target="_blank">IntersectMBO/CIPs governance process</a>.'
         '</p>'
         '<div class="cps-lifecycle" aria-label="CPS lifecycle">'
+        '<a class="cps-stage cps-stage-done" href="the-intended-game.html" '
+        'title="The Intended Game — plain-prose design baseline">'
+        '<span class="cps-stage-num">Stage 01</span>'
+        '<span class="cps-stage-label">The Intended Game</span>'
+        '<span class="cps-stage-meta">Design intent &middot; baseline</span>'
+        '</a>'
+        '<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>'
         '<a class="cps-stage cps-stage-done" href="diagnostic.html" '
         'title="The Mainnet Diagnostic — observations & findings">'
-        '<span class="cps-stage-num">Stage 01</span>'
+        '<span class="cps-stage-num">Stage 02</span>'
         '<span class="cps-stage-label">Mainnet evidence</span>'
         '<span class="cps-stage-meta">Observations &amp; Findings</span>'
         '</a>'
         '<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>'
         '<div class="cps-stage cps-stage-current" '
         'title="You are here — induced problems, scoped against the diagnostic">'
-        '<span class="cps-stage-num">Stage 02</span>'
+        '<span class="cps-stage-num">Stage 03</span>'
         '<span class="cps-stage-label">Induced problem</span>'
         '<span class="cps-stage-meta">proto-CPS &middot; this page</span>'
         '</div>'
         '<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>'
         '<a class="cps-stage cps-stage-future" href="v2-roadmap.html" '
-        'title="V2 Roadmap — directions of exploration and concrete milestones">'
-        '<span class="cps-stage-num">Stage 03</span>'
-        '<span class="cps-stage-label">V2 Roadmap</span>'
+        'title="Roadmap — directions of exploration and concrete milestones">'
+        '<span class="cps-stage-num">Stage 04</span>'
+        '<span class="cps-stage-label">Roadmap</span>'
         '<span class="cps-stage-meta">Directions &amp; milestones</span>'
         '</a>'
         '<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>'
         '<a class="cps-stage cps-stage-future" '
         'href="solution-evaluation.html" '
         'title="Evaluation of the four reward-related CIPs against V2 milestones">'
-        '<span class="cps-stage-num">Stage 04</span>'
+        '<span class="cps-stage-num">Stage 05</span>'
         '<span class="cps-stage-label">CIPs (Evaluation)</span>'
         '<span class="cps-stage-meta">IntersectMBO governance</span>'
         '</a>'
