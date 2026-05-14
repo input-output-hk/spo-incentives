@@ -11,114 +11,93 @@ To begin, a **sample of seven insights** — a glimpse, across the reward system
 <div class="diag-teaser-grid">
 
 <article class="diag-teaser-box">
-<header class="diag-teaser-box-head">
-<span class="diag-teaser-box-kicker">TREASURY · TRE.O1</span>
-<span class="diag-teaser-box-badge">M01</span>
-</header>
-<div class="diag-teaser-box-title">Reserve reward stock</div>
+<div class="diag-teaser-box-title">Reserve &amp; reward pot</div>
 <div class="diag-teaser-box-kpi">13.29B → 6.45B ADA</div>
-<div class="diag-teaser-box-axis">Reserve · 5.5 yr · down 51.43% from Shelley inception</div>
+<div class="diag-teaser-box-axis">Reserve · −51.43% in 5.7 yr · draws ρ = 0.3% every epoch</div>
+<div class="diag-teaser-box-section-label">Epoch pot · epoch 623</div>
 <div class="diag-teaser-box-table">
-<div class="diag-teaser-box-tr"><span>Observed paid rewards</span><span>6.78M ADA per epoch</span></div>
-<div class="diag-teaser-box-tr"><span>Funded by Tx fees</span><span class="red">0.17%</span></div>
+<div class="diag-teaser-box-tr"><span>Gross pot assembled</span><span>~19.23M ADA</span></div>
+<div class="diag-teaser-box-tr diag-teaser-box-tr-sub"><span>funded by Tx fees</span><span class="red">0.17%</span></div>
+<div class="diag-teaser-box-tr diag-teaser-box-tr-sub"><span>funded by the reserve</span><span class="red">99.83%</span></div>
+<div class="diag-teaser-box-tr"><span>Pools pot (τ = 80%)</span><span class="muted">15.39M ADA</span></div>
+<div class="diag-teaser-box-tr diag-teaser-box-tr-sub"><span>paid to participants</span><span>6.78M · 44%</span></div>
+<div class="diag-teaser-box-tr diag-teaser-box-tr-sub"><span>returns to reserve</span><span class="red">8.61M · 56%</span></div>
 </div>
-<p class="diag-teaser-box-punch">The chain still funds itself out of its own savings.</p>
+<p class="diag-teaser-box-punch">Reserve-funded by design — fees would need to grow <strong>~100× in revenue terms</strong> to retire the reserve draw. Half-distributed by side-effect: incomplete payouts have already piled up ~71% of today's reserve stock.</p>
 </article>
 
 <article class="diag-teaser-box">
-<header class="diag-teaser-box-head">
-<span class="diag-teaser-box-kicker">POOLS · POL.O3</span>
-<span class="diag-teaser-box-badge">μ04</span>
-</header>
 <div class="diag-teaser-box-title">Pledge paradox</div>
 <div class="diag-teaser-box-kpi">0.07%</div>
-<div class="diag-teaser-box-axis">Stake-weighted median pledge · 78% of pools at ratio &lt; 1%</div>
-<div class="diag-teaser-box-callout">
-<div class="diag-teaser-box-callout-label">EPOCH POT LEAK</div>
-<div class="diag-teaser-box-callout-row"><span>Bonus budget unused</span><span>−3.43M ADA · 22.1%</span></div>
-<div class="diag-teaser-box-callout-note">95.6% of pledge-incentive budget returned to reserve</div>
+<div class="diag-teaser-box-axis">Stake-weighted median pledge — 78% of pools sit below 1%</div>
+<div class="diag-teaser-box-section-label">Why the budget leaks</div>
+<div class="diag-teaser-box-table">
+<div class="diag-teaser-box-tr"><span>Yield at full pledge (saturated)</span><span class="red">0.68% / yr</span></div>
+<div class="diag-teaser-box-tr"><span>Yield from passive delegation</span><span>2.3% / yr</span></div>
+<div class="diag-teaser-box-tr"><span>Bonus budget per epoch</span><span>3.43M ADA · 22% of pot</span></div>
+<div class="diag-teaser-box-tr diag-teaser-box-tr-sub"><span>returns unclaimed</span><span class="red">95.6%</span></div>
 </div>
-<p class="diag-teaser-box-punch">The formula offers a commitment bonus almost nobody collects.</p>
+<p class="diag-teaser-box-punch">Pledging pays ~3× worse than doing nothing — the strongest commitment signal has priced itself out.</p>
 </article>
 
 <article class="diag-teaser-box">
-<header class="diag-teaser-box-head">
-<span class="diag-teaser-box-kicker">OPERATOR-DELEGATOR · OPE.O8</span>
-<span class="diag-teaser-box-badge">M02</span>
-</header>
 <div class="diag-teaser-box-title">Yield collapse</div>
 <div class="diag-teaser-box-kpi">5.3% → 2.0%</div>
-<div class="diag-teaser-box-axis">Average Yield Index · 5.5 yr · tracks the reserve</div>
+<div class="diag-teaser-box-axis">Average Yield Index — tracks reserve depletion (R² = 0.99) over 413 epochs</div>
+<div class="diag-teaser-box-section-label">Below the alternatives, today</div>
+<div class="diag-teaser-box-table">
+<div class="diag-teaser-box-tr"><span>USD risk-free rate</span><span class="muted">4.3% / yr</span></div>
+<div class="diag-teaser-box-tr"><span>Cardano AYI (epoch 623)</span><span class="red">2.0% / yr</span></div>
+</div>
+<div class="diag-teaser-box-section-label">Projected descent</div>
 <div class="diag-teaser-box-table">
 <div class="diag-teaser-box-tr"><span>+12mo · Q2 2027</span><span>~1.7%</span></div>
 <div class="diag-teaser-box-tr"><span>+20mo · Q4 2027</span><span>&lt; 1.5%</span></div>
-<div class="diag-teaser-box-tr"><span>+42mo · Q3 2029</span><span>&lt; 1.0%</span></div>
+<div class="diag-teaser-box-tr"><span>+42mo · Q3 2029</span><span class="red">&lt; 1.0%</span></div>
 </div>
-<p class="diag-teaser-box-punch">Delegators earn less every epoch. The slope is straight.</p>
+<p class="diag-teaser-box-punch">Already below the alternatives — and the slope is straight. The whole yield surface descends as a unit; no pool-level strategy can offset it.</p>
 </article>
 
 <article class="diag-teaser-box">
-<header class="diag-teaser-box-head">
-<span class="diag-teaser-box-kicker">POOLS · POL.O7</span>
-<span class="diag-teaser-box-badge">M03</span>
-</header>
-<div class="diag-teaser-box-title">Small SPO viability</div>
-<div class="diag-teaser-box-kpi">~75%</div>
-<div class="diag-teaser-box-axis">Pools below the production threshold</div>
-<p class="diag-teaser-box-body">Three quarters of pools sit below threshold · together less than 3% of staked ADA.</p>
-<div class="diag-teaser-box-dawn">ADA price volatility further erodes what is left of their margin.</div>
-<p class="diag-teaser-box-punch">A small pool pays for the hardware. Not for the work.</p>
+<div class="diag-teaser-box-title">Single SPO viability</div>
+<div class="diag-teaser-box-kpi">291 · 24.4%</div>
+<div class="diag-teaser-box-axis">Independent single-pool operators <strong>on the productive set</strong> · 5-year decline · the designed entry-to-established path is effectively closed</div>
+<div class="diag-teaser-box-section-label">Losing ground (epoch 300 → 623)</div>
+<div class="diag-teaser-box-table">
+<div class="diag-teaser-box-tr"><span>Productive single-pool count</span><span class="red">555 → 291</span></div>
+<div class="diag-teaser-box-tr"><span>Share of productive stake</span><span class="red">39.1% → 24.4%</span></div>
+</div>
+<p class="diag-teaser-box-punch">The independents the design was supposed to grow are losing ground on the productive set every epoch.</p>
 </article>
 
 <article class="diag-teaser-box">
-<header class="diag-teaser-box-head">
-<span class="diag-teaser-box-kicker">POOLS · CEN.O2</span>
-<span class="diag-teaser-box-badge">μ02</span>
-</header>
 <div class="diag-teaser-box-title">MPO concentration</div>
-<div class="diag-teaser-box-kpi">83 entities · 76.7%</div>
-<div class="diag-teaser-box-axis">Multi-pool operators control share of productive stake</div>
-<div class="diag-teaser-box-dawn">555 → 291 single-pool operators · −38% in 5 years</div>
-<div class="diag-teaser-box-callout">
-<div class="diag-teaser-box-callout-label">SHARE OF EPOCH POT — PER EPOCH</div>
-<div class="diag-teaser-box-callout-row"><span>Flow to 83 entities</span><span>~5.2M ADA</span></div>
-<div class="diag-teaser-box-callout-note">76.7% of the 6.78M ADA epoch reward · captured by MPO clusters</div>
+<div class="diag-teaser-box-kpi">83 · 76.7%</div>
+<div class="diag-teaser-box-axis">Multi-pool operators <strong>on the productive set</strong> · 5-year ascent · capture rising share since Shelley launch</div>
+<div class="diag-teaser-box-section-label">Gaining ground (Shelley launch → epoch 623)</div>
+<div class="diag-teaser-box-table">
+<div class="diag-teaser-box-tr"><span>Multi-pool entity count</span><span class="red">23 → 85</span></div>
+<div class="diag-teaser-box-tr"><span>Productive pools controlled</span><span class="red">135 → 660</span></div>
+<div class="diag-teaser-box-tr"><span>Share of productive stake</span><span class="red">65% → 75.6%</span></div>
 </div>
-<p class="diag-teaser-box-punch">Three quarters of the network runs on 83 entities.</p>
+<p class="diag-teaser-box-punch">Three quarters of the network runs on 83 entities — and the count keeps growing.</p>
 </article>
 
 <article class="diag-teaser-box">
-<header class="diag-teaser-box-head">
-<span class="diag-teaser-box-kicker">DELEGATORS · CEN.O4</span>
-<span class="diag-teaser-box-badge">μ05</span>
-</header>
 <div class="diag-teaser-box-title">Delegator concentration</div>
-<div class="diag-teaser-box-kpi">0.07% control 57%</div>
-<div class="diag-teaser-box-axis">Share of staked supply held by the top wallets</div>
-<div class="diag-teaser-box-dawn">Crystallised at epoch 300 · 9× delegator growth has not shifted the top</div>
-<div class="diag-teaser-box-callout">
-<div class="diag-teaser-box-callout-label">SHARE OF EPOCH POT — PER EPOCH</div>
-<div class="diag-teaser-box-callout-row"><span>Flow to top wallets</span><span>~3.9M ADA</span></div>
-<div class="diag-teaser-box-callout-note">57% of the 6.78M ADA epoch reward · captured by &lt; 1 000 addresses</div>
+<div class="diag-teaser-box-kpi">1 000 · 57%</div>
+<div class="diag-teaser-box-axis">Top staking addresses on the productive set · Gini 0.976 — more concentrated than US wealth</div>
+<div class="diag-teaser-box-section-label">Where the wealth sits (epoch 623)</div>
+<div class="diag-teaser-box-table">
+<div class="diag-teaser-box-tr"><span>Top 100 wallets</span><span>23.7%</span></div>
+<div class="diag-teaser-box-tr"><span>Top 1 000 (0.07%)</span><span class="red">57.0%</span></div>
+<div class="diag-teaser-box-tr"><span>Top 10 000 (0.74%)</span><span>79.2%</span></div>
 </div>
-<p class="diag-teaser-box-punch">A thousand wallets decide where the rewards land.</p>
-</article>
-
-<article class="diag-teaser-box">
-<header class="diag-teaser-box-head">
-<span class="diag-teaser-box-kicker">NON-PARTICIPANTS · CEN.O1</span>
-<span class="diag-teaser-box-badge">μ01</span>
-</header>
-<div class="diag-teaser-box-title">Unstaked supply</div>
-<div class="diag-teaser-box-kpi">39.8% unstaked</div>
-<div class="diag-teaser-box-axis">Share of ADA supply never delegated</div>
-<div class="diag-teaser-box-dawn">Staking rate declining · 71% → 59% as supply growth outpaces inflows</div>
-<div class="diag-teaser-box-callout">
-<div class="diag-teaser-box-callout-label">FORGONE REWARD SHARE — PER EPOCH</div>
-<div class="diag-teaser-box-callout-row"><span>Share if they staked</span><span>~2.7M ADA</span></div>
-<div class="diag-teaser-box-callout-note">14.36B ADA × 39.8% of the 6.78M ADA epoch reward · at current 2.0% AYI</div>
+<div class="diag-teaser-box-section-label">Locked since epoch 280</div>
+<div class="diag-teaser-box-table">
+<div class="diag-teaser-box-tr"><span>Delegator population</span><span class="red">150K → 1.36M</span></div>
 </div>
-<p class="diag-teaser-box-punch">Most unstaked ADA is not even reachable by the reward curve.</p>
+<p class="diag-teaser-box-punch">A thousand wallets decide where the rewards land — and 9× delegator growth did not shift them.</p>
 </article>
 
 </div>
