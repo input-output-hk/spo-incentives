@@ -48,9 +48,9 @@ PAGES = [
         "slug": "whats-next",
         "md": "whats-next/README.md",
         "html": "index.html",
-        "title": "A Cardano Reward System — State of the Art",
+        "title": "Cardano Reward System / The Holistic Reading",
         "hero_h1": "Welcome",
-        "hero_sub": "A holistic reading of today's reward mechanism, the Roadmap Directions for a successor, and an evaluation of the existing reward CIPs through the same prism",
+        "hero_sub": "A holistic reading of today's reward mechanism, the directions of exploration for a successor, and an evaluation of the existing reward CIPs through the same prism",
         "active_nav": "implementation",
     },
     # V2 Roadmap — the canonical V2 working document. Directions of
@@ -61,8 +61,8 @@ PAGES = [
         "slug": "v2-roadmap",
         "md": "README.md",
         "html": "v2-roadmap.html",
-        "title": "Cardano Reward System — V2 Roadmap (ideation in progress)",
-        "hero_h1": "V2 Roadmap",
+        "title": "Roadmap — Cardano Reward System / The Holistic Reading",
+        "hero_h1": "Roadmap",
         "hero_sub": "Ideation in progress — directions of exploration and milestones offered for community shaping, anchored on the 9 induced problems",
         "active_nav": "roadmap",
     },
@@ -70,7 +70,7 @@ PAGES = [
         "slug": "intended-game",
         "md": "the-intended-game/README.md",
         "html": "intended-game.html",
-        "title": "The Intended Game — Cardano Reward System V2",
+        "title": "The Intended Game — Cardano Reward System / The Holistic Reading",
         "hero_h1": "The Intended Game",
         "hero_sub": "Plain-prose companion to the formal SL-D1 design spec — what V1 was meant to produce",
         "active_nav": "intended-game",
@@ -79,7 +79,7 @@ PAGES = [
         "slug": "diagnostic",
         "md": "diagnostic/README.md",
         "html": "diagnostic.html",
-        "title": "The Mainnet Diagnostic — Cardano Reward System V2",
+        "title": "The Mainnet Diagnostic — Cardano Reward System / The Holistic Reading",
         "hero_h1": "The Mainnet Diagnostic",
         "hero_sub": "Observations, problem induction, and links to the sub-reports",
         "active_nav": "diagnostic",
@@ -623,9 +623,9 @@ def _render_footer() -> str:
     return f"""<footer class="site-footer">
   <div class="footer-grid">
     <div class="footer-col footer-col-brand">
-      <a href="index.html" class="footer-cardano-mark" title="Cardano Reward System V2 — home">
+      <a href="index.html" class="footer-cardano-mark" title="Cardano Reward System / The Holistic Reading — home">
         {cardano_mark_svg}
-        <span class="footer-cardano-label">Cardano Reward System V2</span>
+        <span class="footer-cardano-label">Cardano Reward System / The Holistic Reading</span>
       </a>
       <p class="footer-tagline">{FOOTER_TAGLINE}</p>
       <a href="https://cardano.org" class="footer-network-link" rel="noopener" target="_blank">
@@ -635,7 +635,7 @@ def _render_footer() -> str:
     <div class="footer-col">
       <h4 class="footer-heading">Specification</h4>
       <ul class="footer-links">
-        <li><a href="v2-roadmap.html">V2 Roadmap</a></li>
+        <li><a href="v2-roadmap.html">Roadmap</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
         <li><a href="problem-statements.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
@@ -1534,9 +1534,9 @@ window.MathJax = {{
 <nav class="site-nav"><div class="nav-brand">
 <a href="index.html" class="nav-brand-home">
 <img src="assets/cardano/cardano-logomark-white.svg" alt="Cardano" class="cardano-mark">
-<span class="nav-brand-title-cardano">Cardano</span>
+<span class="nav-brand-title-cardano">Cardano Reward System</span>
 <span class="nav-brand-sep" aria-hidden="true">/</span>
-<span class="nav-brand-title">Reward System V2</span>
+<span class="nav-brand-title">The Holistic Reading</span>
 <span class="nav-brand-sep-vr" aria-hidden="true"></span>
 <span class="nav-brand-attribution">
   <span class="nav-brand-attribution-prefix">by</span>
@@ -1618,7 +1618,7 @@ window.MathJax = {{
 
 <!-- Zone 2 — V2 Roadmap: the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
 <div class="nav-zone nav-zone-output">
-<a href="v2-roadmap.html" class="nav-tab-roadmap{cls_roadmap}" title="V2 Roadmap — directions of exploration and concrete milestones">V2 Roadmap</a>
+<a href="v2-roadmap.html" class="nav-tab-roadmap{cls_roadmap}" title="Roadmap — directions of exploration and concrete milestones">Roadmap</a>
 </div>
 
 
@@ -1746,8 +1746,8 @@ window.MathJax = {{
       <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
     </a>
     <a href="v2-roadmap.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
-      <span class="nav-dd-ref-title">Constitutional framework in the V2 Roadmap</span>
-      <span class="nav-dd-ref-cite">How V2 milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In V2 Roadmap</span></span>
+      <span class="nav-dd-ref-title">Constitutional framework in the Roadmap</span>
+      <span class="nav-dd-ref-cite">How the Roadmap milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In Roadmap</span></span>
     </a>
   </div>
 </div>
@@ -5527,9 +5527,9 @@ def _render_findings_content(
         '</div>'
         '<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>'
         '<a class="cps-stage cps-stage-future" href="v2-roadmap.html" '
-        'title="V2 Roadmap — directions of exploration and concrete milestones">'
+        'title="Roadmap — directions of exploration and concrete milestones">'
         '<span class="cps-stage-num">Stage 04</span>'
-        '<span class="cps-stage-label">V2 Roadmap</span>'
+        '<span class="cps-stage-label">Roadmap</span>'
         '<span class="cps-stage-meta">Directions &amp; milestones</span>'
         '</a>'
         '<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>'

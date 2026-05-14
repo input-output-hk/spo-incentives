@@ -25,9 +25,9 @@ The bet of this page is that **a clear priority order makes solutions emerge**. 
 <span class="cps-stage-meta">proto-CPS</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<div class="cps-stage cps-stage-current" title="You are here — V2 Roadmap in progress">
+<div class="cps-stage cps-stage-current" title="You are here — Roadmap in progress">
 <span class="cps-stage-num">Stage 04</span>
-<span class="cps-stage-label">V2 Roadmap</span>
+<span class="cps-stage-label">Roadmap</span>
 <span class="cps-stage-meta">Directions &amp; milestones &middot; this page</span>
 </div>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>

@@ -21,9 +21,9 @@ The formal game-theoretic properties of the Cardano reward curve were establishe
 <span class="cps-stage-meta">proto-CPS</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage cps-stage-future" href="../generated-website/v2-roadmap.html" title="V2 Roadmap — directions of exploration and concrete milestones">
+<a class="cps-stage cps-stage-future" href="../generated-website/v2-roadmap.html" title="Roadmap — directions of exploration and concrete milestones">
 <span class="cps-stage-num">Stage 04</span>
-<span class="cps-stage-label">V2 Roadmap</span>
+<span class="cps-stage-label">Roadmap</span>
 <span class="cps-stage-meta">Directions &amp; milestones</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>

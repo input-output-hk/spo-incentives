@@ -1,8 +1,8 @@
-# Welcome — A Cardano Reward System · State of the Art
+# Welcome — Cardano Reward System / The Holistic Reading
 
-This is the work-in-progress website on <img class="cardano-logo-inline" src="assets/cardano/cardano-logomark-white.svg" alt="Cardano" /> **A Cardano Reward System — State of the Art**: a holistic reading of today's reward mechanism, the **Roadmap Directions** that reading suggests for a successor, and an evaluation of the existing reward CIPs through the same holistic prism. The work is being conducted by the **Cardano Business Unit (CBU)** within <img class="iog-logo-inline" src="assets/iog-full-logo-white.png" alt="Input | Output Group" />. The aim: give the Cardano community a shared empirical and analytical foundation against which any proposal can be evaluated on common ground.
+This is the work-in-progress website on <img class="cardano-logo-inline" src="assets/cardano/cardano-logomark-white.svg" alt="Cardano" /> **Cardano Reward System / The Holistic Reading** — a holistic reading of today's reward mechanism, the **directions of exploration** that reading suggests for a successor, and an evaluation of the existing reward CIPs through the same holistic prism. The work is being conducted by the **Cardano Business Unit (CBU)** within <img class="iog-logo-inline" src="assets/iog-full-logo-white.png" alt="Input | Output Group" />. The aim: give the Cardano community a shared empirical and analytical foundation against which any proposal can be evaluated on common ground.
 
-Nothing here is yet a deployed mechanism nor a finalised proposal — the analysis, the Roadmap Directions, and the CIP evaluation are all open to community challenge and refinement.
+Nothing here is yet a deployed mechanism nor a finalised proposal — the analysis, the directions of exploration, and the CIP evaluation are all open to community challenge and refinement.
 
 To begin, a **sample of seven insights** — a glimpse, across the reward system, of the drifts the diagnostic surfaces. Some have already been spotted, intuitively, by one or more of the existing reward CIPs that set out to address them; others appear here for the first time. A teaser, in the hope it will draw you deeper:
 
@@ -155,9 +155,9 @@ What no document held in a single frame was *all four at once* — design intent
 <span class="cps-stage-meta">9 proto-CPSs</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage" href="../README.md" title="Stage 04 — V2 Roadmap: directions of exploration and milestones">
+<a class="cps-stage" href="../README.md" title="Stage 04 — Roadmap: directions of exploration and milestones">
 <span class="cps-stage-num">Stage 04</span>
-<span class="cps-stage-label">V2 Roadmap</span>
+<span class="cps-stage-label">Roadmap</span>
 <span class="cps-stage-meta">Directions &amp; milestones</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
@@ -182,6 +182,6 @@ A diagnostic alone is not actionable. Each divergence has to be turned into a pr
 
 With both the diagnostic and the problem statements in hand, the four pre-existing reward CIPs can be read against the same prism. **[Existing reward CIPs — Evaluation](../solution-evaluation/README.md)** reads [CIP-0023](../solution-evaluation/operator-delegator/cip-0023.md), [CIP-0037](../solution-evaluation/pools-distribution/cip-0037.md), [CIP-0050](../solution-evaluation/pools-distribution/cip-0050.md), and [CIP-0082](../solution-evaluation/operator-delegator/cip-0082.md) against the same nine induced problems. The CIPs each spot real issues, intuitively — but they were drafted independently, before this diagnostic existed and without a system-wide framework, and a fix that looks right for one stage can be undone by a distortion at another. The evaluation asks whether the proposed fixes carry the weight the diagnostic asks of them.
 
-Where they leave gaps, the work has to carry on. **[V2 Roadmap](../README.md)** organises directions of exploration around the nine induced problems, with one priority rule: *root causes before scale-up*.
+Where they leave gaps, the work has to carry on. **[Roadmap](../README.md)** organises directions of exploration around the nine induced problems, with one priority rule: *root causes before scale-up*.
 
-> **Status:** Active 2026/05/13. Landing page of *A Cardano Reward System — State of the Art*.
+> **Status:** Active 2026/05/13. Landing page of *Cardano Reward System / The Holistic Reading*.
