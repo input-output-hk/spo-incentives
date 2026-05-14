@@ -257,8 +257,9 @@ observations:
 The reward pipeline's long-term viability rests on a single assumption: that
 transaction fees will eventually replace monetary expansion as the dominant
 source of the epoch pot. Today, fees contribute approximately 0.19% of the
-pot; reaching self-sufficiency would require a 12–16× increase in fee
-revenue at current transaction volumes.
+pot; reaching self-sufficiency would require fee revenue to grow by
+roughly **~100× (two orders of magnitude)** — combining higher throughput
+(Leios), structurally higher transaction demand, and tiered per-tx pricing.
 
 **The submitter population is moving in the opposite direction** (O8).
 Distinct fee-paying addresses per epoch have fallen from ~512,000 (epoch 300)

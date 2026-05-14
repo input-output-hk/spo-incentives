@@ -187,7 +187,7 @@ SPOs produce **~97%** of assigned blocks on average, so the pot assembles reliab
 
 - **The reserve has crossed its half-life.** From **13.29B to 6.53B ADA** in 5.5 years. The nominal expansion draw has halved from **~39.9M to ~19.5M ADA/epoch**. Significant reward pressure is projected around epochs 1000–1200 (~2028–2029).
 
-- **Fee revenue is orders of magnitude below self-sufficiency.** Even at full realistic capacity (**~3.1 TPS**), fees would cover only **~1.3%** of the reserve expansion term. Reaching fee self-sufficiency requires **12–16×** today's realistic throughput — both a capacity upgrade and a structural increase in demand.
+- **Fee revenue is orders of magnitude below self-sufficiency.** Even at full realistic capacity (**~3.1 TPS**), fees would cover only **~1.3%** of the reserve expansion term. Reaching fee self-sufficiency requires fee revenue to grow by **~100× (two orders of magnitude)** — combining a capacity upgrade (Leios), structurally higher transaction demand, and higher per-tx pricing (no single lever suffices).
 
 - **Only ~44% of the pools pot is distributed.** Of the **~15.5M ADA** entering the pool-distribution stage at epoch 616, only **~6.8M** reaches operators and delegators. The rest returns to the reserve — primarily because **43.5%** of circulating ADA does not participate in delegation.
 
