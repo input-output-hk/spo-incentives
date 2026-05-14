@@ -9,38 +9,42 @@ The goal is to make them **explicit and structural** — to read each one not as
 Every divergence is then named as a *structural problem* the next reward mechanism must address. The substantive output — the **9 induced problems** the diagnostic surfaces — lives on the dedicated [**Induced Problems**](../generated-website/problem-statements.html) page; what follows here is the evidence-and-induction record behind it.
 
 <div class="cps-lifecycle" aria-label="CPS lifecycle">
-<div class="cps-stage cps-stage-current" title="You are here — the Mainnet Diagnostic, observations &amp; findings">
+<a class="cps-stage cps-stage-done" href="../the-intended-game/README.md" title="The Intended Game — plain-prose design baseline">
 <span class="cps-stage-num">Stage 01</span>
+<span class="cps-stage-label">The Intended Game</span>
+<span class="cps-stage-meta">Design intent &middot; baseline</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<div class="cps-stage cps-stage-current" title="You are here — the Mainnet Diagnostic, observations &amp; findings">
+<span class="cps-stage-num">Stage 02</span>
 <span class="cps-stage-label">Mainnet evidence</span>
 <span class="cps-stage-meta">Observations &amp; Findings &middot; this page</span>
 </div>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
 <a class="cps-stage cps-stage-future" href="../generated-website/problem-statements.html" title="Induced Problems — proto-CPS scoped against the diagnostic">
-<span class="cps-stage-num">Stage 02</span>
+<span class="cps-stage-num">Stage 03</span>
 <span class="cps-stage-label">Induced problem</span>
 <span class="cps-stage-meta">proto-CPS</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
 <a class="cps-stage cps-stage-future" href="../generated-website/v2-roadmap.html" title="V2 Roadmap — directions of exploration and concrete milestones">
-<span class="cps-stage-num">Stage 03</span>
+<span class="cps-stage-num">Stage 04</span>
 <span class="cps-stage-label">V2 Roadmap</span>
 <span class="cps-stage-meta">Directions &amp; milestones</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
 <a class="cps-stage cps-stage-future" href="../generated-website/solution-evaluation.html" title="Evaluation of the four reward-related CIPs against V2 milestones">
-<span class="cps-stage-num">Stage 04</span>
+<span class="cps-stage-num">Stage 05</span>
 <span class="cps-stage-label">CIPs (Evaluation)</span>
 <span class="cps-stage-meta">IntersectMBO governance</span>
 </a>
 </div>
 
-The widget above places this document at **Stage 01** of the V2 work — the empirical foundation.
+The widget above places this document at **Stage 02** of the V2 work — the empirical foundation. **Stage 01** is the companion [*The Intended Game*](../the-intended-game/README.md), the normative baseline of what V1 was supposed to produce — the diagnostic measures every divergence against it and inducts the structural problems that:
 
-The companion [*The Intended Game*](../the-intended-game/README.md) supplies the normative baseline of what V1 was supposed to produce. The diagnostic measures every divergence against that baseline and inducts the structural problems that:
-
-- [**Induced Problems** (Stage 02)](../generated-website/problem-statements.html) carries forward as proto-CPSs,
-- the [**V2 Roadmap** (Stage 03)](../README.md) organises into milestones,
-- and the [**CIPs Evaluation** (Stage 04)](../solution-evaluation/README.md) reads the four pre-existing reward CIPs against.
+- [**Induced Problems** (Stage 03)](../generated-website/problem-statements.html) carries forward as proto-CPSs,
+- the [**V2 Roadmap** (Stage 04)](../README.md) organises into milestones,
+- and the [**CIPs Evaluation** (Stage 05)](../solution-evaluation/README.md) reads the four pre-existing reward CIPs against.
 
 **The approach** is to walk the SL-D1 reward pipeline stage by stage, applying the same analytical arc at each:
 

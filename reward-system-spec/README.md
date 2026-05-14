@@ -7,26 +7,32 @@ The bet of this page is that **a clear priority order makes solutions emerge**. 
 **The page is offered as an ideation document**, not as a closed proposal. The directions and milestones below are starting points for community shaping — to be refined, challenged, sequenced, or replaced through the conversation that builds V2.
 
 <div class="cps-lifecycle" aria-label="CPS lifecycle">
-<a class="cps-stage cps-stage-done" href="diagnostic.html" title="The Mainnet Diagnostic — observations &amp; findings">
+<a class="cps-stage cps-stage-done" href="the-intended-game.html" title="The Intended Game — plain-prose design baseline">
 <span class="cps-stage-num">Stage 01</span>
+<span class="cps-stage-label">The Intended Game</span>
+<span class="cps-stage-meta">Design intent &middot; baseline</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="diagnostic.html" title="The Mainnet Diagnostic — observations &amp; findings">
+<span class="cps-stage-num">Stage 02</span>
 <span class="cps-stage-label">Mainnet evidence</span>
 <span class="cps-stage-meta">Observations &amp; Findings</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
 <a class="cps-stage cps-stage-done" href="problem-statements.html" title="Induced Problems — proto-CPS scoped against the diagnostic">
-<span class="cps-stage-num">Stage 02</span>
+<span class="cps-stage-num">Stage 03</span>
 <span class="cps-stage-label">Induced problem</span>
 <span class="cps-stage-meta">proto-CPS</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
 <div class="cps-stage cps-stage-current" title="You are here — V2 Roadmap in progress">
-<span class="cps-stage-num">Stage 03</span>
+<span class="cps-stage-num">Stage 04</span>
 <span class="cps-stage-label">V2 Roadmap</span>
 <span class="cps-stage-meta">Directions &amp; milestones &middot; this page</span>
 </div>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
 <a class="cps-stage cps-stage-future" href="solution-evaluation.html" title="Evaluation of the four reward-related CIPs against V2 milestones">
-<span class="cps-stage-num">Stage 04</span>
+<span class="cps-stage-num">Stage 05</span>
 <span class="cps-stage-label">CIPs (Evaluation)</span>
 <span class="cps-stage-meta">IntersectMBO governance</span>
 </a>

@@ -2,6 +2,38 @@
 
 The formal game-theoretic properties of the Cardano reward curve were established in *Reward Sharing Schemes for Stake Pools* (Brünjes, Kiayias et al., 2020, EuroS&P), which proves that $k$ pools is a Nash equilibrium under specific assumptions. The engineering specification *SL-D1* (Kant, Brünjes & Coutts, 2019) translates those results into protocol-level formulas. **Neither document tells the story of the game as it should play out** — who plays, why they enter, how they progress, and what equilibrium the mechanism is supposed to converge toward. This document is an attempt to supply that missing baseline. It is the normative reference the [mainnet diagnostic](../diagnostic/README.md) measures every divergence against, and the design objective the [V2 specification](../README.md) reasons toward.
 
+<div class="cps-lifecycle" aria-label="CPS lifecycle">
+<div class="cps-stage cps-stage-current" title="You are here — The Intended Game, plain-prose design baseline">
+<span class="cps-stage-num">Stage 01</span>
+<span class="cps-stage-label">The Intended Game</span>
+<span class="cps-stage-meta">Design intent &middot; baseline &middot; this page</span>
+</div>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="../diagnostic/README.md" title="The Mainnet Diagnostic — observations &amp; findings">
+<span class="cps-stage-num">Stage 02</span>
+<span class="cps-stage-label">Mainnet evidence</span>
+<span class="cps-stage-meta">Observations &amp; Findings</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="../generated-website/problem-statements.html" title="Induced Problems — proto-CPS scoped against the diagnostic">
+<span class="cps-stage-num">Stage 03</span>
+<span class="cps-stage-label">Induced problem</span>
+<span class="cps-stage-meta">proto-CPS</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="../generated-website/v2-roadmap.html" title="V2 Roadmap — directions of exploration and concrete milestones">
+<span class="cps-stage-num">Stage 04</span>
+<span class="cps-stage-label">V2 Roadmap</span>
+<span class="cps-stage-meta">Directions &amp; milestones</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="../generated-website/solution-evaluation.html" title="Evaluation of the four reward-related CIPs against V2 milestones">
+<span class="cps-stage-num">Stage 05</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance</span>
+</a>
+</div>
+
 **Three player classes are locked in a strict dependency chain.** Transaction submitters generate the economic value that funds the epoch pot. Operators commit capital and infrastructure to secure the network. Delegators allocate stake and police the operator population. Each enters with a different motivation, holds a different strategic instrument, and follows a different trajectory. The reward curve's task is to make every link individually rational and incentive-compatible, so the chain holds without trust between participants.
 
 **Pledge and liquid delegation are the two pillars of the security model.** Pledge is the operator's commitment bond — visible, declared, tied to a verifiable economic cost. Liquid delegation is the community's continuous approval signal — non-consensual, revocable at every epoch, and the protocol's substitute for the governance layer it does not have at the consensus level. Pledge without delegation is accountability with no enforcer; delegation without pledge is a vote with no consequence. The four security properties — accountability, delegation as counter-power, Sybil resistance, decentralisation — emerge only when both pillars are simultaneously load-bearing within each pool.
