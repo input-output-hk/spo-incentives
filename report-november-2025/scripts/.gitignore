@@ -1,0 +1,55 @@
+# Generated outputs from re-running the scripts.
+# The committed published versions live in the parent directory
+# (../appendixA.txt, ../appendixB.csv, ../appendixC.txt).
+appendixA-pinned.txt
+appendixA_548-583.txt
+appendixB.csv
+appendixB-pinned.csv
+appendixC-pinned.txt
+analysis_results_filtered.csv
+
+# Side-effect of appendixc-original.py
+stake_vs_blocks.png
+
+# Chart outputs from the chart-reproduction scripts
+pool_size_distribution-pinned.png
+pool_size_distribution_abandoned_filtered_full.png
+stake_control_by_size-pinned.png
+stake_control_by_size_parallel_filter.png
+wallet_distribution_combined_corrected-pinned.png
+wallet_distribution_combined_corrected.png
+stake_distribution_pie_chart.png
+pool_count_epoch-pinned.png
+stake_percentage_epoch-pinned.png
+stake_distribution_epoch-pinned.png
+block_production_health-pinned.png
+active_stake_participation-pinned.png
+cumulative_stake_distribution_epoch_583_annotated.png
+pool_registrations_vs_retirements_log-pinned.png
+pool_registrations_vs_retirements_linear_broken_fixed.png
+pool-cost-distr-pinned.png
+pool_cost_grouped_bar_chart_with_labels.png
+pool_margin_vs_size-pinned.png
+pool_margin_vs_size_broken_axis.png
+pool_cost_vs_margin-pinned.png
+pool_cost_vs_margin_filtered_scatter.png
+mpo_evolution_pct_circulating-pinned.png
+mpo_evolution_pct_circulating.png
+mpo_evolution_pct_delegated-pinned.png
+mpo_evolution_pct_delegated.png
+mpo_evolution_report.csv
+rewards_fees_tx_count_last_73_epochs-pinned.png
+rewards_fees_tx_count_last_73_epochs.png
+rewards_fees_tx_count_epoch_*.csv
+sustainability_trends_with_projection_208-583.png
+
+# Intermediate per-epoch CSVs from table2.py (regeneratable from db-sync)
+results/
+
+# Detailed reproducibility writeup; kept locally for follow-up audit
+# questions but not committed to keep the public README lean.
+full-readme.md
+
+# Python
+__pycache__/
+*.pyc
