@@ -37,3 +37,8 @@ reward-system-spec/diagnostic/sub-flows/nakamoto-revaluation/edi-replication/inp
 
 # OS generated files
 .DS_Store
+
+report-november-2025/questions.md
+CLAUDE.md
+reward-system-spec/plan.md
+reward-system-spec/feedback.md
