@@ -7,7 +7,7 @@ The bet of this page is that **a clear priority order makes solutions emerge**. 
 **The page is offered as an ideation document**, not as a closed proposal. The directions and milestones below are starting points for community shaping — to be refined, challenged, sequenced, or replaced through the conversation that builds V2.
 
 <div class="cps-lifecycle" aria-label="CPS lifecycle">
-<a class="cps-stage cps-stage-done" href="the-intended-game.html" title="The Intended Game — plain-prose design baseline">
+<a class="cps-stage cps-stage-done" href="intended-game.html" title="The Intended Game — plain-prose design baseline">
 <span class="cps-stage-num">Stage 01</span>
 <span class="cps-stage-label">The Intended Game</span>
 <span class="cps-stage-meta">Design intent &middot; baseline</span>
@@ -25,16 +25,22 @@ The bet of this page is that **a clear priority order makes solutions emerge**. 
 <span class="cps-stage-meta">proto-CPS</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<div class="cps-stage cps-stage-current" title="You are here — Roadmap in progress">
+<a class="cps-stage cps-stage-done" href="solution-evaluation.html" title="Evaluation of the four reward-related CIPs against the nine induced problems">
 <span class="cps-stage-num">Stage 04</span>
-<span class="cps-stage-label">Roadmap</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<div class="cps-stage cps-stage-current" title="You are here — Solution Design">
+<span class="cps-stage-num">Stage 05</span>
+<span class="cps-stage-label">Solution Design</span>
 <span class="cps-stage-meta">Directions &amp; milestones &middot; this page</span>
 </div>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage cps-stage-future" href="solution-evaluation.html" title="Evaluation of the four reward-related CIPs against V2 milestones">
-<span class="cps-stage-num">Stage 05</span>
-<span class="cps-stage-label">CIPs (Evaluation)</span>
-<span class="cps-stage-meta">IntersectMBO governance</span>
+<a class="cps-stage cps-stage-future" href="build-scoping.html" title="Build Estimation / Scoping — sizing the build for the V2 stage-1 reform">
+<span class="cps-stage-num">Stage 06</span>
+<span class="cps-stage-label">Build Estimation / Scoping</span>
+<span class="cps-stage-meta">Build sizing</span>
 </a>
 </div>
 
@@ -242,9 +248,9 @@ This milestone bundles two of the 9 induced problems whose repairs share a singl
 
 Both problems sit on the same layer (the reward-distribution layer, *upstream* of the operator/member fee split), and both call for the same kind of fix — a coordinated repair of the reward envelope that simultaneously rebalances the pledge axis and opens a viability sub-budget. **Splitting the fix across separate milestones produces partial repairs that mutually undermine each other.** Raising `k` without addressing the flat-fee drag deepens the viability gap; raising `a_0` without repairing `A(ν, π)` amplifies the existing non-monotonicity; bolting viability into pricing tools (CIP-0023 / CIP-0082 stage 2 style) regresses delegator yield ([fee-layer synthesis](fee-layer.html)). The bundle is mechanical, not editorial.
 
-The **non-participant** dimension of μ01 (bringing reachable but inert ADA back into staking) and the **strengthening of the productive threshold** are addressed in their own milestones below — Milestone 3 (Pool Alliance) and Milestone 4 (non-participant scale-up) — not folded into this one. **The order is load-bearing: before scaling up, the root causes have to be fixed.** Pulling more participants into the staking system, or making it easier for new operators to clear the productive threshold, *while the pledge signal is still broken and the small-SPO viability gap is still open*, does not dilute the existing concentration — it amplifies it: the new capital and the new entrants both flow toward the dominant fleets and the visibility-driven defaults that today's distortions reward. Milestone 1 fixes the structural ground; Milestones 3 and 4 grow on it. Reversing the sequence is a recipe for enlarging the very pathologies the diagnostic surfaces.
+The **non-participant** dimension of μ01 (bringing reachable but inert ADA back into staking) and the **strengthening of the productive threshold** are addressed in their own milestones below — Milestone 3 (Pool Alliance) and Milestone 4 (non-participant scale-up) — not folded into this one. **The order is critical: before scaling up, the root causes have to be fixed.** Pulling more participants into the staking system, or making it easier for new operators to clear the productive threshold, *while the pledge signal is still broken and the small-SPO viability gap is still open*, does not dilute the existing concentration — it amplifies it: the new capital and the new entrants both flow toward the dominant fleets and the visibility-driven defaults that today's distortions reward. Milestone 1 fixes the structural ground; Milestones 3 and 4 grow on it. Reversing the sequence is a recipe for enlarging the very pathologies the diagnostic surfaces.
 
-**Constitutional alignment.** Tenet 9 (fair treatment) is the load-bearing anchor: the current $1/\sigma$ flat-fee structure imposes a 48 % effective cost on sub-reliable operators while charging 1.5 % near saturation ([OPE.O1](diagnostic.html#132-mainnet-observations)) — a textbook *unjustifiable discrimination* against small operators. Tenet 4 (fair compensation) compounds this: under-compensated single-pool operators (median ~25 K ADA/yr, ~$6.25 K at $0.25/ADA) violate the Constitution's own standard of fair compensation. The relevant governance parameters — `minPoolCost` (MPC-01 to MPC-03), `a_0` (PPI-01 to PPI-04), and `k` (SPTN-01 to SPTN-04) — are all modifiable through Parameter Update actions inside their ratified guardrails, making the directions below **actionable within the existing governance framework**.
+**Constitutional alignment.** Tenet 9 (fair treatment) is the central anchor: the current $1/\sigma$ flat-fee structure imposes a 48 % effective cost on sub-reliable operators while charging 1.5 % near saturation ([OPE.O1](diagnostic.html#132-mainnet-observations)) — a textbook *unjustifiable discrimination* against small operators. Tenet 4 (fair compensation) compounds this: under-compensated single-pool operators (median ~25 K ADA/yr, ~$6.25 K at $0.25/ADA) violate the Constitution's own standard of fair compensation. The relevant governance parameters — `minPoolCost` (MPC-01 to MPC-03), `a_0` (PPI-01 to PPI-04), and `k` (SPTN-01 to SPTN-04) — are all modifiable through Parameter Update actions inside their ratified guardrails, making the directions below **actionable within the existing governance framework**.
 
 ### 2.1.2. The proposed direction — a coordinated four-move repair on the reward-distribution layer
 
@@ -329,7 +335,7 @@ The two steps reinforce each other. Enforcing `σ_min` cleans the marketplace; t
 >
 > Each option above is a real design question; together they map the technical layer this milestone has to resolve. They are flagged here as the next layer of work, not as blockers.
 
-**Constitutional alignment.** Tenet 9 (fair treatment) is the load-bearing anchor: today's implicit capital threshold acts as a *de facto* barrier that excludes operators with skill but not capital, while custodial entities holding 21 % of productive stake clear it by virtue of their mandate ([OPE.O3](diagnostic.html#132-mainnet-observations)). Making the threshold explicit and pairing it with a structural sub-threshold path opens consensus participation along the inclusivity arc the intended-game describes, while removing the noise the residual sub-block tail injects into the security signal.
+**Constitutional alignment.** Tenet 9 (fair treatment) is the central anchor: today's implicit capital threshold acts as a *de facto* barrier that excludes operators with skill but not capital, while custodial entities holding 21 % of productive stake clear it by virtue of their mandate ([OPE.O3](diagnostic.html#132-mainnet-observations)). Making the threshold explicit and pairing it with a structural sub-threshold path opens consensus participation along the inclusivity arc the intended-game describes, while removing the noise the residual sub-block tail injects into the security signal.
 
 This milestone sequences after Milestone 1 because the alliance economics depend on the reward-distribution layer being repaired first — a Rocket-Pool-like collective layered on top of today's flat-fee corridor would mutualise the regressive cost rather than remove it. With the corridor closed by M1, the alliance becomes a structurally healthy entry path rather than a workaround for a corridor still in place.
 
@@ -358,7 +364,7 @@ The diagnostic documents concentration on **two fronts**:
 
 Both concentrations are *structural*, both *crystallised early*, and *neither responds* to the current incentive design. Milestones 1–4 set up the conditions in which a deconcentration intervention becomes coherent — but they do not, in themselves, deliver it. That is the work this research axis names.
 
-The **constitutional question** is part of why this is staged as a research axis rather than a milestone. As §1.3 of this roadmap notes, the Constitution operates at the **pool level** — its guardrails govern pool parameters (`k`, `a_0`, `minPoolCost`), not entity-level or delegator-tier constructs. Reducing concentration can in principle be reached along three paths:
+The **constitutional question** is part of why this is staged as a research axis rather than a milestone. As §1.3 of this analysis notes, the Constitution operates at the **pool level** — its guardrails govern pool parameters (`k`, `a_0`, `minPoolCost`), not entity-level or delegator-tier constructs. Reducing concentration can in principle be reached along three paths:
 
 - **Within the existing perimeter** — a calibrated reward curve that makes pledge dilution across multiple pools carry real economic cost, working through the parameters the Constitution already approves.
 - **Through constitutional evolution** — introducing entity-level primitives directly via Article IV amendment, recognising entities as first-class participants alongside pools.
@@ -411,11 +417,11 @@ The four player populations the diagnostic surfaces — operators (Supply-side),
 - **[IntersectMBO's Cardano Governance Health Dashboard](https://gov-health.intersectmbo.org/)** — developed by the Governance Health Working Group (GHWG) under CIP-1694, it already operationalises a structured KPI framework across *Ada Holder Participation*, *DRep Activity*, and *SPO Participation*, with trend lines, drill-downs, and a system-status header. This is the closest existing analog to what the milestone proposes.
 - **[SanchoNet's GovTool](https://gov.tools/)** — the testbed and operational interface for Conway-era governance actions, where DReps, committees, and ada holders coordinate.
 - **Community-built pool and reward analytics** — [PoolTool](https://pooltool.io/), [AdaStat](https://adastat.net/), [Cexplorer](https://cexplorer.io/), the [Cardano reward calculator](https://github.com/cardano-foundation/cardano-reward-calculator) — that surface live pool-level metrics, performance trends, and reward projections, and form the de-facto observability layer SPOs and delegators already use.
-- **The diagnostic this roadmap is anchored on** is itself one such piece, run on demand from on-chain data with off-chain processing — a snapshot-style instrument rather than a continuous one.
+- **The diagnostic this analysis is anchored on** is itself one such piece, run on demand from on-chain data with off-chain processing — a snapshot-style instrument rather than a continuous one.
 
 What the milestone proposes is to **extend and consolidate that foundation along three complementary axes**: *(a)* extend the surveillance from the three governance-health dimensions to the **four player populations** the staking pipeline depends on (adding the demand-side / submitters and the non-participants explicitly); *(b)* tie each KPI to **named trigger conditions** that route to a defined community process when crossed, rather than leaving the signal as observation-only; and *(c)* align the surveillance with the V2 microeconomic milestones, so that what the dashboard watches is precisely what those milestones move. The work is consolidation and structured extension, not duplication.
 
-**Constitutional alignment.** Tenet 10 (monetary stability) is the load-bearing anchor. *"The protocol shall not dilute or inflate ada in a manner that is inconsistent with the long-term sustainability and integrity of the ecosystem"* presupposes that the protocol can *observe* whether dilution is consistent with the standard. Without instrumentation, that observation is impossible — the standard is unenforceable in practice. The dashboard is the surface on which Tenet 10 becomes operational. The Conway-era governance pipeline, in turn, provides the legitimate path through which the dashboard's trigger conditions translate into action.
+**Constitutional alignment.** Tenet 10 (monetary stability) is the central anchor. *"The protocol shall not dilute or inflate ada in a manner that is inconsistent with the long-term sustainability and integrity of the ecosystem"* presupposes that the protocol can *observe* whether dilution is consistent with the standard. Without instrumentation, that observation is impossible — the standard is unenforceable in practice. The dashboard is the surface on which Tenet 10 becomes operational. The Conway-era governance pipeline, in turn, provides the legitimate path through which the dashboard's trigger conditions translate into action.
 
 ### 3.1.1. The four surveillance lines, and what each one watches
 
@@ -426,7 +432,7 @@ Each line corresponds to one of the four player populations and tracks the struc
 - **Demand-side surveillance — fee economy and submitter base.** Tracks fee revenue as a share of the epoch pot (today ~0.19 %, the [induced-problem M02 / Tx Submitter line](problem-statements.html#problem-2-2-3) addresses growth), distinct fee-paying addresses per epoch, the script-vs-key submitter split, and the gap between current fee throughput and self-sufficiency.
 - **Non-participant surveillance — outside-the-game dynamics.** Tracks the staking rate (today 60 %, falling), the addressable-vs-structural split inside the non-participant pool, and the rate at which protocol-level interventions from the [non-participant scale-up milestone (§2.4)](#24-milestone-4-scale-up-with-the-non-participant-population) actually re-engage capital.
 
-Each line's KPIs feed two consumers: the **community process** (when a trigger fires, the relevant constituency is alerted to consider a recalibration), and **the diagnostic itself** (the dashboard becomes the running record of how the mechanism evolves epoch by epoch, replacing the snapshot-style diagnostics like the one this roadmap is anchored on with a continuous instrument).
+Each line's KPIs feed two consumers: the **community process** (when a trigger fires, the relevant constituency is alerted to consider a recalibration), and **the diagnostic itself** (the dashboard becomes the running record of how the mechanism evolves epoch by epoch, replacing the snapshot-style diagnostics like the one this analysis is anchored on with a continuous instrument).
 
 ### 3.1.2. From governed interventionism to gradual auto-regulation
 
@@ -438,7 +444,7 @@ The dashboard is explicitly designed as a **transitional instrument**. The traje
 
 **Cardano is a mature blockchain, but the reward mechanism is not yet auto-regulating.** This milestone names the transition path explicitly — and the dashboard is what makes Phase 2 (and eventually Phase 3) reachable. Started without instruments, the recalibration work either does not happen (the V1 inertia we have today) or happens reactively after damage. With the dashboard, the work happens preventively, on the structural thresholds the diagnostic has identified.
 
-This milestone sits **somewhat in parallel** to the microeconomic milestones rather than after them — the surveillance plumbing can be built while the participant-level work is in progress, and the diagnostic instruments themselves are largely already prototyped (this roadmap is anchored on them). The full *value* of the milestone, however, depends on the microeconomic milestones landing: a dashboard that surveils a static, unchanging mechanism is a less useful instrument than one that surveils a mechanism that has just been recalibrated and needs to be observed under its new behaviour.
+This milestone sits **somewhat in parallel** to the microeconomic milestones rather than after them — the surveillance plumbing can be built while the participant-level work is in progress, and the diagnostic instruments themselves are largely already prototyped (this analysis is anchored on them). The full *value* of the milestone, however, depends on the microeconomic milestones landing: a dashboard that surveils a static, unchanging mechanism is a less useful instrument than one that surveils a mechanism that has just been recalibrated and needs to be observed under its new behaviour.
 
 ## 3.2. Research axis — deflationist ADA and its volatility
 

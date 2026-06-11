@@ -23,9 +23,9 @@ window.closeAllDd=function(except){
   });
 };
 document.addEventListener('click',function(){ window.closeAllDd(null); });
-/* Position the single navbar reading-direction rail so its right edge
-   sits flush with the rightmost button (Design Support), not at the
-   navbar's empty right edge. Re-runs on resize. */
+/* Position the single navbar reading-direction rail so each end sits
+   flush with the outermost zone (Welcome on the left, Implementation on
+   the right), not at the navbar's empty edges. Re-runs on resize. */
 (function(){
   function fitRail(){
     var pages = document.querySelector('.nav-pages');
@@ -60,8 +60,8 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778763985">
-<link rel="stylesheet" href="assets/site-mobile.css?v=1778763985">
+<link rel="stylesheet" href="assets/site.css?v=1781160876">
+<link rel="stylesheet" href="assets/site-mobile.css?v=1781160876">
 
 
 </head>
@@ -90,9 +90,9 @@ window.MathJax = {
 
 <!-- Single reading-direction rail spanning the navbar. Buttons sit on top
      with their own backgrounds, so they read as nodes / stops along the
-     line. Arrowhead anchored at the leftmost end (Welcome destination)
-     to make the right→left "this is built FROM that" narrative explicit
-     without repeating an arrow between every pair of buttons. -->
+     line. The line runs left→right toward the Implementation destination
+     on the right, mirroring the in-page Stage 01→06 stepper, without
+     repeating an arrow between every pair of buttons. -->
 <div class="nav-flow-rail" aria-hidden="true">
   <span class="nav-flow-rail-line"></span>
   <svg class="nav-flow-rail-head" viewBox="0 0 12 10" aria-hidden="true">
@@ -100,9 +100,12 @@ window.MathJax = {
   </svg>
 </div>
 
-<!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
-<div class="nav-zone nav-zone-implementation">
-<a href="index.html" class="nav-tab-implementation" title="V2 working website — analysis, evidence, and directions in ideation">Welcome</a>
+<!-- Zone 1 (far-left, home anchor) — Welcome: start of the holistic reading.
+     Visual order is set by flex `order` in site.css (.nav-zone-* rules);
+     DOM order is kept stable so the rail-positioning JS still anchors on
+     the DOM-first (Welcome) and DOM-last (Implementation) zones. -->
+<div class="nav-zone nav-zone-welcome">
+<a href="index.html" class="nav-tab-welcome" title="Welcome — start here: the holistic reading landing page">Welcome</a>
 </div>
 
 
@@ -152,9 +155,9 @@ window.MathJax = {
 </div>
 
 
-<!-- Zone 2 — V2 Roadmap: the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
+<!-- Zone 2 — Solution Design (solution-design.html): the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
 <div class="nav-zone nav-zone-output">
-<a href="v2-roadmap.html" class="nav-tab-roadmap" title="Roadmap — directions of exploration and concrete milestones">Roadmap</a>
+<a href="solution-design.html" class="nav-tab-roadmap" title="Solution Design — prioritising the nine problems into directions and milestones">Solution Design</a>
 </div>
 
 
@@ -281,13 +284,21 @@ window.MathJax = {
       <span class="nav-dd-ref-title">Source on GitHub</span>
       <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
     </a>
-    <a href="v2-roadmap.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
-      <span class="nav-dd-ref-title">Constitutional framework in the Roadmap</span>
-      <span class="nav-dd-ref-cite">How the Roadmap milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In Roadmap</span></span>
+    <a href="solution-design.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the Solution Design</span>
+      <span class="nav-dd-ref-cite">How the Solution Design milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In Solution Design</span></span>
     </a>
   </div>
 </div>
 </div>
+</div>
+
+
+<!-- Zone 8 (far-right destination flag) — Build Estimation / Scoping: the build
+     target this whole pipeline aims at. Kept DOM-last so the rail JS anchors
+     the right end here; placed visually rightmost via flex `order` in CSS. -->
+<div class="nav-zone nav-zone-implementation">
+<a href="build-scoping.html" class="nav-tab-implementation" title="Build Estimation / Scoping — sizing the build for the recommended V2 reform">Build Estimation / Scoping</a>
 </div>
 
 </div>
@@ -316,14 +327,14 @@ window.MathJax = {
     <div class="hero-eyebrow">Solution Evaluation</div>
     <h1>CIP Evaluation Synthesis</h1>
     <div class="sub">Two stake-cap shapes, same intent — CIP-0050 + CIP-0037</div>
-    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/05/14</span></span></span></div>
+    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/06/11</span></span></span></div>
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
 <div class="content"><p>This folder evaluates the CIPs that act on the <strong>stake-cap layer</strong> of the Cardano reward pipeline — the reward-eligible pool stake $\sigma'$ that enters the SL-D1 reward formula, <em>upstream</em> of the operator/member split that the <a href="fee-layer.html">fee layer</a> reshapes.</p>
 <p>Two CIPs are in scope: <a href="cip-0050.html">CIP-0050</a> and <a href="cip-0037.html">CIP-0037</a>. Both target a real broken signal that the <a href="diagnostic.html">mainnet diagnostic</a> confirms — pledge is priced as irrelevant by the operator population. <strong>78 % of staked ADA sits in pools with pledge ratio under 1 %</strong>; <strong>42 of the 48 largest multi-pool operators forfeit the pledge bonus</strong>; pledged ADA yields 0.68 %/yr while the same ADA placed as passive delegation yields 2.3 %/yr. Both CIPs respond by making pledge <strong>binding</strong> on the reward formula — without sufficient pledge, the pool's reward-eligible stake is clipped.</p>
 <p><strong>Verdict on both CIPs: no-go, for two stacked reasons.</strong></p>
-<p><strong>The load-bearing piece is <code>A(ν, π)</code>, and neither CIP touches it.</strong> V1 already exposes a pledge-incentive knob — <code>a₀</code>, the weight of the pledge bonus inside the reward envelope (current mainnet value <code>0.3</code>; full walkthrough in <a href="#appendix-a-why-v1s-pledge-incentive-doesnt-work">Appendix A — Why V1's pledge incentive doesn't work</a>). Raising <code>a₀</code> rebalances the formula but does not make pledge "matter more" — every low-pledge pool earns less <em>before</em> the bonus can recover. CIP-0050 and CIP-0037 add a third lever (clip σ′ before the formula runs) on top of <code>a₀</code> and <code>k</code>, but they accept <code>A(ν, π)</code> as given. That function carries three structural pathologies:</p>
+<p><strong>The central piece is <code>A(ν, π)</code>, and neither CIP touches it.</strong> V1 already exposes a pledge-incentive knob — <code>a₀</code>, the weight of the pledge bonus inside the reward envelope (current mainnet value <code>0.3</code>; full walkthrough in <a href="#appendix-a-why-v1s-pledge-incentive-doesnt-work">Appendix A — Why V1's pledge incentive doesn't work</a>). Raising <code>a₀</code> rebalances the formula but does not make pledge "matter more" — every low-pledge pool earns less <em>before</em> the bonus can recover. CIP-0050 and CIP-0037 add a third lever (clip σ′ before the formula runs) on top of <code>a₀</code> and <code>k</code>, but they accept <code>A(ν, π)</code> as given. That function carries three structural pathologies:</p>
 <ul>
 <li>a permanent quadratic <code>ν²</code> size penalty applies at <em>every</em> pledge ratio — small pools are crushed regardless of how committed the operator is;</li>
 <li>a non-monotonicity in π for sub-half-saturated pools — a 2 M operator (ν ≈ 0.03) earns <strong>8.7×</strong> <em>more</em> bonus by pledging 51 % than by fully self-pledging. The formula explicitly incentivises small operators to <em>under-commit</em>;</li>
@@ -337,7 +348,7 @@ window.MathJax = {
 <li><strong>Multi-pool entities</strong> — clipped on the per-pool axis: splitting pledge across many pools shrinks each pool's reward envelope, and even large fleets do not have the pledge to comply at scale across all their pools.</li>
 <li><strong>Custodial-by-extraction operators</strong> (CEX / IVaaS, ~21 % of productive stake) — clipped to zero because they cannot self-pledge custodied retail funds by construction.</li>
 </ul>
-<p>The blast radius covers the bulk of the productive population, and the resulting reward collapse <strong>risks destabilising consensus itself</strong>. If most operators see their net income fall sharply at the same time, some will reduce or shut down their infrastructure — and Cardano's block-production reliability degrades. A reform meant to <em>strengthen</em> the network's commitment signal ends up <em>weakening</em> the network's basic operation. The direction of effect runs <em>opposite</em> to <a href="problem-statements.html#problem-1-3-3-1">μ02 — Guarantee operator viability</a> and to the foundational work <a href="v2-roadmap.html#21-milestone-1-repair-pledge-sustain-the-small-spo-base">V2 Roadmap Milestone 1</a> is set up to do.</p>
+<p>The blast radius covers the bulk of the productive population, and the resulting reward collapse <strong>risks destabilising consensus itself</strong>. If most operators see their net income fall sharply at the same time, some will reduce or shut down their infrastructure — and Cardano's block-production reliability degrades. A reform meant to <em>strengthen</em> the network's commitment signal ends up <em>weakening</em> the network's basic operation. The direction of effect runs <em>opposite</em> to <a href="problem-statements.html#problem-1-3-3-1">μ02 — Guarantee operator viability</a> and to the foundational work <a href="solution-design.html#21-milestone-1-repair-pledge-sustain-the-small-spo-base">Solution Design Milestone 1</a> is set up to do.</p>
 <p><strong>A more gradual path makes more sense.</strong> A genuine V2 stake-cap reform should reinforce the pledge signal <strong>at its source</strong> rather than gating it, by combining four moves on the reward-distribution layer:</p>
 <ul>
 <li><strong>Repair <code>A(ν, π)</code></strong> so pledge is not a dominated strategy at any operator size:</li>
@@ -446,7 +457,7 @@ window.MathJax = {
 <ol>
 <li><a href="cip-0050.html"><code>cip-0050.md</code></a> — the primitive in its cleanest one-scalar form ($L$). Start here: every structural finding on the slope carries into CIP-0037.</li>
 <li><a href="cip-0037.html"><code>cip-0037.md</code></a> — the same primitive with an added floor and two effective governance parameters $(e, \ell)$. Read as "CIP-0050 plus floor" — the formula walkthrough in its Appendix A makes the kinship explicit.</li>
-<li><a href="#appendix-a-why-v1s-pledge-incentive-doesnt-work">Appendix A — Why V1's pledge incentive doesn't work</a> — the structural critique of <code>A(ν, π)</code> itself, which neither CIP modifies. Optional for casual readers; load-bearing for anyone designing a successor proposal.</li>
+<li><a href="#appendix-a-why-v1s-pledge-incentive-doesnt-work">Appendix A — Why V1's pledge incentive doesn't work</a> — the structural critique of <code>A(ν, π)</code> itself, which neither CIP modifies. Optional for casual readers; essential for anyone designing a successor proposal.</li>
 </ol>
 <h2 id="3-references">3. References</h2>
 <ul>
@@ -508,7 +519,7 @@ window.MathJax = {
 <p>A admits a clean multiplicative decomposition:</p>
 <p>$$A(\nu, \pi) \;=\; \underbrace{\nu^2}_{\text{size factor}} \;\cdot\; \underbrace{\pi \cdot \bigl[1 - \pi(1-\nu)\bigr]}_{\text{pledge-intensity factor}}$$</p>
 <p>The two effects are independent and multiplicative. The <strong>outer factor $\nu^2$</strong> is a quadratic dependence on pool size — independent of pledge, applying at <em>every</em> commitment level. A pool earns bonus proportional to $\nu^2$ before any consideration of how much its operator pledges. The <strong>inner factor</strong> $\pi[1 - \pi(1-\nu)]$ controls how the pledge ratio modulates the bonus, with a weak coupling to $\nu$ via the $(1-\nu)$ term.</p>
-<p>This is the load-bearing observation: <em>pool size enters the bonus quadratically as a pure penalty against small pools, regardless of how committed the operator is</em>. Even at the OPTIMAL pledge ratio for a given pool size, the bonus is still scaled by $\nu^2$.</p>
+<p>This is the central observation: <em>pool size enters the bonus quadratically as a pure penalty against small pools, regardless of how committed the operator is</em>. Even at the OPTIMAL pledge ratio for a given pool size, the bonus is still scaled by $\nu^2$.</p>
 <p><strong>(ii) Tour of the corners and edges.</strong></p>
 <table>
 <thead>
@@ -547,7 +558,7 @@ window.MathJax = {
 </tbody>
 </table>
 <p><em>Table A.2 — A(ν, π) at the four corners and edges of the unit square. The third row (full self-pledge) is where the elaborate quadratic construction collapses to a cubic.</em></p>
-<p>The third row is where the elaborate quadratic construction collapses. At full self-pledge, the inner factor $\pi[1 - \pi(1-\nu)]$ degenerates to $\nu$, and combined with the outer $\nu^2$ produces $\nu^3$ — cubing sub-unit numbers. That cube is the load-bearing pathology, but as (i) made explicit, the underlying $\nu^2$ size penalty is permanent regardless of pledge.</p>
+<p>The third row is where the elaborate quadratic construction collapses. At full self-pledge, the inner factor $\pi[1 - \pi(1-\nu)]$ degenerates to $\nu$, and combined with the outer $\nu^2$ produces $\nu^3$ — cubing sub-unit numbers. That cube is the critical pathology, but as (i) made explicit, the underlying $\nu^2$ size penalty is permanent regardless of pledge.</p>
 <p><strong>(iii) The pledge-intensity factor and what it was meant to do.</strong></p>
 <p>The inner factor $\pi[1 - \pi(1-\nu)] = \pi - \pi^2(1-\nu)$ has two pieces with distinct intents. The linear $\pi$ part is the bilinear "more pledge → more bonus" signal. The quadratic $-\pi^2(1-\nu)$ part is a <strong>splitting penalty</strong> the SL-D1 design adds on purpose: an MPO who splits a fixed total pledge across $N$ pools shrinks the per-pool $\pi$, and the quadratic term penalises high-$\pi$/low-$\nu$ configurations the protocol associates with potential gaming.</p>
 <p>The construction <em>does</em> achieve that intent in some regions. But it pays a heavy price elsewhere — pathology (iv) below.</p>
@@ -765,7 +776,7 @@ window.MathJax = {
 <li><strong>At maximum commitment (Scenario C).</strong> The disparity becomes catastrophic — 37 595× — and the cubic $\nu^3$ at the corner $\pi = 1$ is the algebraic reason.</li>
 </ol>
 <p>CIP-0050 and CIP-0037 modify the <em>enforcement</em> of pledge (clip $\sigma'$ if pledge is too low) but not the <em>pricing</em> of pledge inside A. After their reform, the relative bonus disparity across operator sizes remains identical; the non-monotone regime for $\nu < 0.5$ remains identical; the cubic collapse at full self-pledge remains identical. They patch around A without touching it.</p>
-<p>A reform that touched A directly — replacing the kernel with one that doesn't impose the quadratic size penalty $\nu^2$ at every pledge ratio, or that doesn't cube small pools at full commitment — would be the most structural way to repair the pledge signal at its source. <strong>No CIP currently in scope proposes this.</strong> This is the deepest critique of both candidates in this folder: they accept A as given and patch around it, when A is the load-bearing piece of the pledge incentive.</p>
+<p>A reform that touched A directly — replacing the kernel with one that doesn't impose the quadratic size penalty $\nu^2$ at every pledge ratio, or that doesn't cube small pools at full commitment — would be the most structural way to repair the pledge signal at its source. <strong>No CIP currently in scope proposes this.</strong> This is the deepest critique of both candidates in this folder: they accept A as given and patch around it, when A is the central piece of the pledge incentive.</p>
 <p>This reading extends the formal critique at <a href="pools.html#235-reader-friendly-reward-function">diagnostic / pools-distribution §2.3.5</a>: <em>"the bonus term $\lambda_{\text{pledge}}A(\nu, \pi)$ is non-linear and asymmetric in its two inputs. The outer factor $\nu^2$ imposes a quadratic size penalty that holds at every pledge ratio; at full self-pledge ($\pi = 1$) the inner factor degenerates and the bonus collapses to $\lambda_{\text{pledge}}\nu^3$ — the cubic that suppresses the bonus structurally for any pool below saturation."</em></p>
 <h3 id="a3-what-this-implies-for-the-cip-candidates">A.3. What this implies for the CIP candidates</h3>
 <p>The two CIPs in this folder accept the V1 reward formula as given and patch around it via $\sigma'$ clipping. Three honest readings follow from §A.1 and §A.2:</p>
@@ -794,7 +805,7 @@ window.MathJax = {
     <div class="footer-col">
       <h4 class="footer-heading">Specification</h4>
       <ul class="footer-links">
-        <li><a href="v2-roadmap.html">Roadmap</a></li>
+        <li><a href="solution-design.html">Solution Design</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
         <li><a href="problem-statements.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
@@ -815,7 +826,7 @@ window.MathJax = {
         <span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit
       </div>
       <div class="footer-meta">
-        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/05/14</span></div>
+        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/06/11</span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Author</span><span class="footer-meta-val"><a href="https://www.linkedin.com/in/nhenin/" rel="noopener" target="_blank">Nicolas Henin<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Source</span><span class="footer-meta-val"><a href="https://github.com/input-output-hk/spo-incentives" rel="noopener" target="_blank">input-output-hk/spo-incentives<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
       </div>
@@ -841,7 +852,7 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778763985"></script>
-<script src="assets/site-mobile.js?v=1778763985"></script>
+<script src="assets/site.js?v=1781160876"></script>
+<script src="assets/site-mobile.js?v=1781160876"></script>
 </body>
 </html>

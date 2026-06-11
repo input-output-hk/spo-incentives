@@ -113,37 +113,43 @@ Four pieces of work surround Cardano's reward mechanism today:
 - **Four reward-related CIPs** advanced through Intersect governance since launch: [CIP-0023](../solution-evaluation/operator-delegator/cip-0023.md), [CIP-0037](../solution-evaluation/pools-distribution/cip-0037.md), [CIP-0050](../solution-evaluation/pools-distribution/cip-0050.md), [CIP-0082](../solution-evaluation/operator-delegator/cip-0082.md) — each tackling a specific facet of the mechanism.
 - **Five-and-a-half years of mainnet** — an empirical record large enough to confront design intent and to revisit any prior analysis on updated data.
 
-What no document held in a single frame was *all four at once* — design intent, prior diagnostic, proposed fixes, and the current mainnet record — read against each other rather than in isolation. Cardano's reward mechanism was designed as a **single coherent equilibrium**, not a stack of separable parameters: pledge, delegation, the reward curve, the fee structure, the reserve schedule — all interact. A fix to one parameter without seeing the system as a whole risks moving the bottleneck rather than removing it. The drifts the diagnostic surfaces — only a small sample of which is previewed above — are not independent bugs; they are softer links in the same chain. Reading the four pieces against each other is what the work assembled on this site sets out to do, one document at a time. **Five documents, in sequence:**
+What no document held in a single frame was *all four at once* — design intent, prior diagnostic, proposed fixes, and the current mainnet record — read against each other rather than in isolation. Cardano's reward mechanism was designed as a **single coherent equilibrium**, not a stack of separable parameters: pledge, delegation, the reward curve, the fee structure, the reserve schedule — all interact. A fix to one parameter without seeing the system as a whole risks moving the bottleneck rather than removing it. The drifts the diagnostic surfaces — only a small sample of which is previewed above — are not independent bugs; they are softer links in the same chain. Reading the four pieces against each other is what the work assembled on this site sets out to do, one document at a time. **Six documents, in sequence:**
 
-<div class="cps-lifecycle" aria-label="The five documents of this site, in reading order">
-<a class="cps-stage" href="../the-intended-game/README.md" title="Stage 01 — The Intended Game: plain-prose design baseline">
+<div class="cps-lifecycle" aria-label="The six documents of this site, in reading order">
+<a class="cps-stage cps-stage-done" href="../the-intended-game/README.md" title="Stage 01 — The Intended Game: plain-prose design baseline">
 <span class="cps-stage-num">Stage 01</span>
 <span class="cps-stage-label">The Intended Game</span>
 <span class="cps-stage-meta">Design intent &middot; baseline</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage" href="../diagnostic/README.md" title="Stage 02 — Mainnet evidence: observations and findings, by sub-flow">
+<a class="cps-stage cps-stage-done" href="../diagnostic/README.md" title="Stage 02 — Mainnet evidence: observations and findings, by sub-flow">
 <span class="cps-stage-num">Stage 02</span>
 <span class="cps-stage-label">Mainnet evidence</span>
 <span class="cps-stage-meta">Observations &amp; Findings</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage" href="../generated-website/problem-statements.html" title="Stage 03 — Induced Problems: 9 proto-CPSs surfaced by the diagnostic">
+<a class="cps-stage cps-stage-done" href="../generated-website/problem-statements.html" title="Stage 03 — Induced Problems: 9 proto-CPSs surfaced by the diagnostic">
 <span class="cps-stage-num">Stage 03</span>
 <span class="cps-stage-label">Induced problem</span>
 <span class="cps-stage-meta">9 proto-CPSs</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage" href="../README.md" title="Stage 04 — Roadmap: directions of exploration and milestones">
+<a class="cps-stage cps-stage-done" href="../solution-evaluation/README.md" title="Stage 04 — Evaluation of the four pre-existing reward CIPs against the nine induced problems">
 <span class="cps-stage-num">Stage 04</span>
-<span class="cps-stage-label">Roadmap</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="../README.md" title="Stage 05 — Solution Design: prioritising the nine problems into directions and milestones">
+<span class="cps-stage-num">Stage 05</span>
+<span class="cps-stage-label">Solution Design</span>
 <span class="cps-stage-meta">Directions &amp; milestones</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage" href="../solution-evaluation/README.md" title="Stage 05 — Evaluation of the four pre-existing reward CIPs against the diagnostic">
-<span class="cps-stage-num">Stage 05</span>
-<span class="cps-stage-label">CIPs (Evaluation)</span>
-<span class="cps-stage-meta">IntersectMBO governance</span>
+<a class="cps-stage cps-stage-done" href="../implementation-scope/README.md" title="Stage 06 — Build Estimation / Scoping: sizing the build for the V2 stage-1 reform">
+<span class="cps-stage-num">Stage 06</span>
+<span class="cps-stage-label">Build Estimation / Scoping</span>
+<span class="cps-stage-meta">Build sizing</span>
 </a>
 </div>
 
@@ -161,6 +167,8 @@ A diagnostic alone is not actionable. Each divergence has to be turned into a pr
 
 With both the diagnostic and the problem statements in hand, the four pre-existing reward CIPs can be read against the same prism. **[Existing reward CIPs — Evaluation](../solution-evaluation/README.md)** reads [CIP-0023](../solution-evaluation/operator-delegator/cip-0023.md), [CIP-0037](../solution-evaluation/pools-distribution/cip-0037.md), [CIP-0050](../solution-evaluation/pools-distribution/cip-0050.md), and [CIP-0082](../solution-evaluation/operator-delegator/cip-0082.md) against the same nine induced problems. The CIPs each spot real issues, intuitively — but they were drafted independently, before this diagnostic existed and without a system-wide framework, and a fix that looks right for one stage can be undone by a distortion at another. The evaluation asks whether the proposed fixes carry the weight the diagnostic asks of them.
 
-Where they leave gaps, the work has to carry on. **[Roadmap](../README.md)** organises directions of exploration around the nine induced problems, with one priority rule: *root causes before scale-up*.
+Where they leave gaps, the work has to carry on. **[Solution Design](../README.md)** organises directions of exploration around the nine induced problems, with one priority rule: *root causes before scale-up*.
+
+Finally, a direction is only a proposal until someone can say what it costs to build. **[Build Estimation / Scoping](../implementation-scope/README.md)** sizes the V2 stage-1 reform — naming every ledger, CDDL, Constitution-guardrail, node, and assurance work item the recommended design requires, and the hard-fork-then-parameter-update path that ships it.
 
 > **Status:** Active 2026/05/13. Landing page of *Cardano Reward System / The Holistic Reading*.

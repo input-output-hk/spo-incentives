@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Roadmap — Cardano Reward System / The Holistic Reading</title>
+<title>Solution Design — Cardano Reward System / The Holistic Reading</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Cardano-aligned typographic stack: Chivo for display / headings
@@ -23,9 +23,9 @@ window.closeAllDd=function(except){
   });
 };
 document.addEventListener('click',function(){ window.closeAllDd(null); });
-/* Position the single navbar reading-direction rail so its right edge
-   sits flush with the rightmost button (Design Support), not at the
-   navbar's empty right edge. Re-runs on resize. */
+/* Position the single navbar reading-direction rail so each end sits
+   flush with the outermost zone (Welcome on the left, Implementation on
+   the right), not at the navbar's empty edges. Re-runs on resize. */
 (function(){
   function fitRail(){
     var pages = document.querySelector('.nav-pages');
@@ -60,8 +60,8 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778763985">
-<link rel="stylesheet" href="assets/site-mobile.css?v=1778763985">
+<link rel="stylesheet" href="assets/site.css?v=1781160876">
+<link rel="stylesheet" href="assets/site-mobile.css?v=1781160876">
 
 
 </head>
@@ -90,9 +90,9 @@ window.MathJax = {
 
 <!-- Single reading-direction rail spanning the navbar. Buttons sit on top
      with their own backgrounds, so they read as nodes / stops along the
-     line. Arrowhead anchored at the leftmost end (Welcome destination)
-     to make the right→left "this is built FROM that" narrative explicit
-     without repeating an arrow between every pair of buttons. -->
+     line. The line runs left→right toward the Implementation destination
+     on the right, mirroring the in-page Stage 01→06 stepper, without
+     repeating an arrow between every pair of buttons. -->
 <div class="nav-flow-rail" aria-hidden="true">
   <span class="nav-flow-rail-line"></span>
   <svg class="nav-flow-rail-head" viewBox="0 0 12 10" aria-hidden="true">
@@ -100,9 +100,12 @@ window.MathJax = {
   </svg>
 </div>
 
-<!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
-<div class="nav-zone nav-zone-implementation">
-<a href="index.html" class="nav-tab-implementation" title="V2 working website — analysis, evidence, and directions in ideation">Welcome</a>
+<!-- Zone 1 (far-left, home anchor) — Welcome: start of the holistic reading.
+     Visual order is set by flex `order` in site.css (.nav-zone-* rules);
+     DOM order is kept stable so the rail-positioning JS still anchors on
+     the DOM-first (Welcome) and DOM-last (Implementation) zones. -->
+<div class="nav-zone nav-zone-welcome">
+<a href="index.html" class="nav-tab-welcome" title="Welcome — start here: the holistic reading landing page">Welcome</a>
 </div>
 
 
@@ -152,9 +155,9 @@ window.MathJax = {
 </div>
 
 
-<!-- Zone 2 — V2 Roadmap: the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
+<!-- Zone 2 — Solution Design (solution-design.html): the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
 <div class="nav-zone nav-zone-output">
-<a href="v2-roadmap.html" class="nav-tab-roadmap active" title="Roadmap — directions of exploration and concrete milestones">Roadmap</a>
+<a href="solution-design.html" class="nav-tab-roadmap active" title="Solution Design — prioritising the nine problems into directions and milestones">Solution Design</a>
 </div>
 
 
@@ -281,13 +284,21 @@ window.MathJax = {
       <span class="nav-dd-ref-title">Source on GitHub</span>
       <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
     </a>
-    <a href="v2-roadmap.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
-      <span class="nav-dd-ref-title">Constitutional framework in the Roadmap</span>
-      <span class="nav-dd-ref-cite">How the Roadmap milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In Roadmap</span></span>
+    <a href="solution-design.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the Solution Design</span>
+      <span class="nav-dd-ref-cite">How the Solution Design milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In Solution Design</span></span>
     </a>
   </div>
 </div>
 </div>
+</div>
+
+
+<!-- Zone 8 (far-right destination flag) — Build Estimation / Scoping: the build
+     target this whole pipeline aims at. Kept DOM-last so the rail JS anchors
+     the right end here; placed visually rightmost via flex `order` in CSS. -->
+<div class="nav-zone nav-zone-implementation">
+<a href="build-scoping.html" class="nav-tab-implementation" title="Build Estimation / Scoping — sizing the build for the recommended V2 reform">Build Estimation / Scoping</a>
 </div>
 
 </div>
@@ -313,10 +324,10 @@ window.MathJax = {
     </g>
   </svg>
   <div class="hero-inner">
-    <div class="hero-eyebrow">Cardano Reward System &middot; Roadmap in progress</div>
-    <h1>Roadmap</h1>
-    <div class="sub">Ideation in progress — directions of exploration and milestones offered for community shaping, anchored on the 9 induced problems</div>
-    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/05/14</span></span></span></div>
+    <div class="hero-eyebrow">Cardano Reward System &middot; Solution Design</div>
+    <h1>Solution Design</h1>
+    <div class="sub">Prioritising the nine induced problems into directions and milestones — and the order to take them on</div>
+    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/06/11</span></span></span></div>
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
@@ -325,7 +336,7 @@ window.MathJax = {
 <p>The bet of this page is that <strong>a clear priority order makes solutions emerge</strong>. Once the 9 problems are mapped — by abstraction level, by hierarchical dependence, by the lens-of-view relationships that bind some of them together — candidate designs cluster around the high-priority items naturally, and the V2 work stops looking like a flat list of fixes and starts looking like a <em>sequenced roadmap</em> that the system can actually evolve along.</p>
 <p><strong>The page is offered as an ideation document</strong>, not as a closed proposal. The directions and milestones below are starting points for community shaping — to be refined, challenged, sequenced, or replaced through the conversation that builds V2.</p>
 <div class="cps-lifecycle" aria-label="CPS lifecycle">
-<a class="cps-stage cps-stage-done" href="the-intended-game.html" title="The Intended Game — plain-prose design baseline">
+<a class="cps-stage cps-stage-done" href="intended-game.html" title="The Intended Game — plain-prose design baseline">
 <span class="cps-stage-num">Stage 01</span>
 <span class="cps-stage-label">The Intended Game</span>
 <span class="cps-stage-meta">Design intent &middot; baseline</span>
@@ -343,16 +354,22 @@ window.MathJax = {
 <span class="cps-stage-meta">proto-CPS</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<div class="cps-stage cps-stage-current" title="You are here — Roadmap in progress">
+<a class="cps-stage cps-stage-done" href="solution-evaluation.html" title="Evaluation of the four reward-related CIPs against the nine induced problems">
 <span class="cps-stage-num">Stage 04</span>
-<span class="cps-stage-label">Roadmap</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<div class="cps-stage cps-stage-current" title="You are here — Solution Design">
+<span class="cps-stage-num">Stage 05</span>
+<span class="cps-stage-label">Solution Design</span>
 <span class="cps-stage-meta">Directions &amp; milestones &middot; this page</span>
 </div>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage cps-stage-future" href="solution-evaluation.html" title="Evaluation of the four reward-related CIPs against V2 milestones">
-<span class="cps-stage-num">Stage 05</span>
-<span class="cps-stage-label">CIPs (Evaluation)</span>
-<span class="cps-stage-meta">IntersectMBO governance</span>
+<a class="cps-stage cps-stage-future" href="build-scoping.html" title="Build Estimation / Scoping — sizing the build for the V2 stage-1 reform">
+<span class="cps-stage-num">Stage 06</span>
+<span class="cps-stage-label">Build Estimation / Scoping</span>
+<span class="cps-stage-meta">Build sizing</span>
 </a>
 </div>
 
@@ -593,8 +610,8 @@ window.MathJax = {
 </ul>
 <h3 id="211-why-this-bundle-and-why-it-comes-first">2.1.1. Why this bundle, and why it comes first</h3>
 <p>Both problems sit on the same layer (the reward-distribution layer, <em>upstream</em> of the operator/member fee split), and both call for the same kind of fix — a coordinated repair of the reward envelope that simultaneously rebalances the pledge axis and opens a viability sub-budget. <strong>Splitting the fix across separate milestones produces partial repairs that mutually undermine each other.</strong> Raising <code>k</code> without addressing the flat-fee drag deepens the viability gap; raising <code>a_0</code> without repairing <code>A(ν, π)</code> amplifies the existing non-monotonicity; bolting viability into pricing tools (CIP-0023 / CIP-0082 stage 2 style) regresses delegator yield (<a href="fee-layer.html">fee-layer synthesis</a>). The bundle is mechanical, not editorial.</p>
-<p>The <strong>non-participant</strong> dimension of μ01 (bringing reachable but inert ADA back into staking) and the <strong>strengthening of the productive threshold</strong> are addressed in their own milestones below — Milestone 3 (Pool Alliance) and Milestone 4 (non-participant scale-up) — not folded into this one. <strong>The order is load-bearing: before scaling up, the root causes have to be fixed.</strong> Pulling more participants into the staking system, or making it easier for new operators to clear the productive threshold, <em>while the pledge signal is still broken and the small-SPO viability gap is still open</em>, does not dilute the existing concentration — it amplifies it: the new capital and the new entrants both flow toward the dominant fleets and the visibility-driven defaults that today's distortions reward. Milestone 1 fixes the structural ground; Milestones 3 and 4 grow on it. Reversing the sequence is a recipe for enlarging the very pathologies the diagnostic surfaces.</p>
-<p><strong>Constitutional alignment.</strong> Tenet 9 (fair treatment) is the load-bearing anchor: the current $1/\sigma$ flat-fee structure imposes a 48 % effective cost on sub-reliable operators while charging 1.5 % near saturation (<a class="obs-ref obs-ref-src" href="operator.html#1-mainnet-observations" data-obs-src="OPE.O1" data-obs-page="operator.html" data-obs-href="operator.html#1-mainnet-observations" title="OPE.O1 · hover for summary, click for detail">OPE.O1</a>) — a textbook <em>unjustifiable discrimination</em> against small operators. Tenet 4 (fair compensation) compounds this: under-compensated single-pool operators (median ~25 K ADA/yr, ~&#92;$6.25 K at &#92;$0.25/ADA) violate the Constitution's own standard of fair compensation. The relevant governance parameters — <code>minPoolCost</code> (MPC-01 to MPC-03), <code>a_0</code> (PPI-01 to PPI-04), and <code>k</code> (SPTN-01 to SPTN-04) — are all modifiable through Parameter Update actions inside their ratified guardrails, making the directions below <strong>actionable within the existing governance framework</strong>.</p>
+<p>The <strong>non-participant</strong> dimension of μ01 (bringing reachable but inert ADA back into staking) and the <strong>strengthening of the productive threshold</strong> are addressed in their own milestones below — Milestone 3 (Pool Alliance) and Milestone 4 (non-participant scale-up) — not folded into this one. <strong>The order is critical: before scaling up, the root causes have to be fixed.</strong> Pulling more participants into the staking system, or making it easier for new operators to clear the productive threshold, <em>while the pledge signal is still broken and the small-SPO viability gap is still open</em>, does not dilute the existing concentration — it amplifies it: the new capital and the new entrants both flow toward the dominant fleets and the visibility-driven defaults that today's distortions reward. Milestone 1 fixes the structural ground; Milestones 3 and 4 grow on it. Reversing the sequence is a recipe for enlarging the very pathologies the diagnostic surfaces.</p>
+<p><strong>Constitutional alignment.</strong> Tenet 9 (fair treatment) is the central anchor: the current $1/\sigma$ flat-fee structure imposes a 48 % effective cost on sub-reliable operators while charging 1.5 % near saturation (<a class="obs-ref obs-ref-src" href="operator.html#1-mainnet-observations" data-obs-src="OPE.O1" data-obs-page="operator.html" data-obs-href="operator.html#1-mainnet-observations" title="OPE.O1 · hover for summary, click for detail">OPE.O1</a>) — a textbook <em>unjustifiable discrimination</em> against small operators. Tenet 4 (fair compensation) compounds this: under-compensated single-pool operators (median ~25 K ADA/yr, ~&#92;$6.25 K at &#92;$0.25/ADA) violate the Constitution's own standard of fair compensation. The relevant governance parameters — <code>minPoolCost</code> (MPC-01 to MPC-03), <code>a_0</code> (PPI-01 to PPI-04), and <code>k</code> (SPTN-01 to SPTN-04) — are all modifiable through Parameter Update actions inside their ratified guardrails, making the directions below <strong>actionable within the existing governance framework</strong>.</p>
 <h3 id="212-the-proposed-direction-a-coordinated-four-move-repair-on-the-reward-distribution-layer">2.1.2. The proposed direction — a coordinated four-move repair on the reward-distribution layer</h3>
 <p>The candidate solution this milestone reprises is the <strong>four-move gradual path</strong> developed in the <a href="solution-evaluation.html#4-recommendations-on-adjustments-to-the-current-mechanism">Solution Evaluation §4 — Recommendations on adjustments to the current mechanism</a>. The four moves act on the reward-distribution layer (pre-split), at the source of the broken signals, without touching the fee-pricing layer that should remain a free competitive lever:</p>
 <ol>
@@ -660,7 +677,7 @@ window.MathJax = {
 <p>Read this way, <strong>cellular division is more than a candidate primitive — it is a <em>pressure instrument</em> that reintroduces the notion of entity into the protocol</strong>, incentive-compatible and without requiring either a constitutional amendment for new entity primitives or off-chain clustering. The MPO chooses to declare the entity link because the alternative (stop expanding, or commit a fresh <code>σ_min</code> of pledge per pool) is more costly. The mechanism's entity surface emerges incrementally from each legitimate growth act, declaration by declaration. The <a href="#251-entity-level-awareness-the-supply-side-question">entity-level research axis (§2.5.1)</a> develops this further as a concrete protocol-level mechanism for entity awareness.</p>
 <p>Each option above is a real design question; together they map the technical layer this milestone has to resolve. They are flagged here as the next layer of work, not as blockers.</p>
 </blockquote>
-<p><strong>Constitutional alignment.</strong> Tenet 9 (fair treatment) is the load-bearing anchor: today's implicit capital threshold acts as a <em>de facto</em> barrier that excludes operators with skill but not capital, while custodial entities holding 21 % of productive stake clear it by virtue of their mandate (<a class="obs-ref obs-ref-src" href="operator.html#1-mainnet-observations" data-obs-src="OPE.O3" data-obs-page="operator.html" data-obs-href="operator.html#1-mainnet-observations" title="OPE.O3 · hover for summary, click for detail">OPE.O3</a>). Making the threshold explicit and pairing it with a structural sub-threshold path opens consensus participation along the inclusivity arc the intended-game describes, while removing the noise the residual sub-block tail injects into the security signal.</p>
+<p><strong>Constitutional alignment.</strong> Tenet 9 (fair treatment) is the central anchor: today's implicit capital threshold acts as a <em>de facto</em> barrier that excludes operators with skill but not capital, while custodial entities holding 21 % of productive stake clear it by virtue of their mandate (<a class="obs-ref obs-ref-src" href="operator.html#1-mainnet-observations" data-obs-src="OPE.O3" data-obs-page="operator.html" data-obs-href="operator.html#1-mainnet-observations" title="OPE.O3 · hover for summary, click for detail">OPE.O3</a>). Making the threshold explicit and pairing it with a structural sub-threshold path opens consensus participation along the inclusivity arc the intended-game describes, while removing the noise the residual sub-block tail injects into the security signal.</p>
 <p>This milestone sequences after Milestone 1 because the alliance economics depend on the reward-distribution layer being repaired first — a Rocket-Pool-like collective layered on top of today's flat-fee corridor would mutualise the regressive cost rather than remove it. With the corridor closed by M1, the alliance becomes a structurally healthy entry path rather than a workaround for a corridor still in place.</p>
 <h2 id="24-milestone-4-scale-up-with-the-non-participant-population">2.4. Milestone 4 — Scale up with the non-participant population</h2>
 <p>This milestone takes up the <strong>second face of <a href="problem-statements.html#problem-1-2-3">μ01</a></strong> — the non-participant population that Milestone 1 deliberately leaves untouched: the 39.8 % of circulating supply outside delegation, of which only 0.37 % is reachable by reward-design changes alone (<a class="obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs-src="CEN.O7" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O7 · hover for summary, click for detail">CEN.O7</a>). The remaining 39.4 % sits in addresses that <strong>cannot delegate without a protocol-level change</strong> — exchange hot wallets, institutional cold storage, pre-staking-era legacy wallets, DeFi script addresses without staking parts.</p>
@@ -680,7 +697,7 @@ window.MathJax = {
 <li><strong>Demand side.</strong> <strong>1,000 delegators (0.07 % of the base) control 57 % of staked ADA</strong>; the Gini coefficient is <strong>0.976</strong> (<a class="obs-ref obs-ref-src" href="census.html#1-mainnet-observations" data-obs-src="CEN.O3" data-obs-page="census.html" data-obs-href="census.html#1-mainnet-observations" title="CEN.O3 · hover for summary, click for detail">CEN.O3</a>). Concentration crystallised by epoch 300 and 9× population growth has not budged the top-1 % share.</li>
 </ul>
 <p>Both concentrations are <em>structural</em>, both <em>crystallised early</em>, and <em>neither responds</em> to the current incentive design. Milestones 1–4 set up the conditions in which a deconcentration intervention becomes coherent — but they do not, in themselves, deliver it. That is the work this research axis names.</p>
-<p>The <strong>constitutional question</strong> is part of why this is staged as a research axis rather than a milestone. As §1.3 of this roadmap notes, the Constitution operates at the <strong>pool level</strong> — its guardrails govern pool parameters (<code>k</code>, <code>a_0</code>, <code>minPoolCost</code>), not entity-level or delegator-tier constructs. Reducing concentration can in principle be reached along three paths:</p>
+<p>The <strong>constitutional question</strong> is part of why this is staged as a research axis rather than a milestone. As §1.3 of this analysis notes, the Constitution operates at the <strong>pool level</strong> — its guardrails govern pool parameters (<code>k</code>, <code>a_0</code>, <code>minPoolCost</code>), not entity-level or delegator-tier constructs. Reducing concentration can in principle be reached along three paths:</p>
 <ul>
 <li><strong>Within the existing perimeter</strong> — a calibrated reward curve that makes pledge dilution across multiple pools carry real economic cost, working through the parameters the Constitution already approves.</li>
 <li><strong>Through constitutional evolution</strong> — introducing entity-level primitives directly via Article IV amendment, recognising entities as first-class participants alongside pools.</li>
@@ -718,10 +735,10 @@ window.MathJax = {
 <li><strong><a href="https://gov-health.intersectmbo.org/">IntersectMBO's Cardano Governance Health Dashboard</a></strong> — developed by the Governance Health Working Group (GHWG) under CIP-1694, it already operationalises a structured KPI framework across <em>Ada Holder Participation</em>, <em>DRep Activity</em>, and <em>SPO Participation</em>, with trend lines, drill-downs, and a system-status header. This is the closest existing analog to what the milestone proposes.</li>
 <li><strong><a href="https://gov.tools/">SanchoNet's GovTool</a></strong> — the testbed and operational interface for Conway-era governance actions, where DReps, committees, and ada holders coordinate.</li>
 <li><strong>Community-built pool and reward analytics</strong> — <a href="https://pooltool.io/">PoolTool</a>, <a href="https://adastat.net/">AdaStat</a>, <a href="https://cexplorer.io/">Cexplorer</a>, the <a href="https://github.com/cardano-foundation/cardano-reward-calculator">Cardano reward calculator</a> — that surface live pool-level metrics, performance trends, and reward projections, and form the de-facto observability layer SPOs and delegators already use.</li>
-<li><strong>The diagnostic this roadmap is anchored on</strong> is itself one such piece, run on demand from on-chain data with off-chain processing — a snapshot-style instrument rather than a continuous one.</li>
+<li><strong>The diagnostic this analysis is anchored on</strong> is itself one such piece, run on demand from on-chain data with off-chain processing — a snapshot-style instrument rather than a continuous one.</li>
 </ul>
 <p>What the milestone proposes is to <strong>extend and consolidate that foundation along three complementary axes</strong>: <em>(a)</em> extend the surveillance from the three governance-health dimensions to the <strong>four player populations</strong> the staking pipeline depends on (adding the demand-side / submitters and the non-participants explicitly); <em>(b)</em> tie each KPI to <strong>named trigger conditions</strong> that route to a defined community process when crossed, rather than leaving the signal as observation-only; and <em>(c)</em> align the surveillance with the V2 microeconomic milestones, so that what the dashboard watches is precisely what those milestones move. The work is consolidation and structured extension, not duplication.</p>
-<p><strong>Constitutional alignment.</strong> Tenet 10 (monetary stability) is the load-bearing anchor. <em>"The protocol shall not dilute or inflate ada in a manner that is inconsistent with the long-term sustainability and integrity of the ecosystem"</em> presupposes that the protocol can <em>observe</em> whether dilution is consistent with the standard. Without instrumentation, that observation is impossible — the standard is unenforceable in practice. The dashboard is the surface on which Tenet 10 becomes operational. The Conway-era governance pipeline, in turn, provides the legitimate path through which the dashboard's trigger conditions translate into action.</p>
+<p><strong>Constitutional alignment.</strong> Tenet 10 (monetary stability) is the central anchor. <em>"The protocol shall not dilute or inflate ada in a manner that is inconsistent with the long-term sustainability and integrity of the ecosystem"</em> presupposes that the protocol can <em>observe</em> whether dilution is consistent with the standard. Without instrumentation, that observation is impossible — the standard is unenforceable in practice. The dashboard is the surface on which Tenet 10 becomes operational. The Conway-era governance pipeline, in turn, provides the legitimate path through which the dashboard's trigger conditions translate into action.</p>
 <h3 id="311-the-four-surveillance-lines-and-what-each-one-watches">3.1.1. The four surveillance lines, and what each one watches</h3>
 <p>Each line corresponds to one of the four player populations and tracks the structural KPIs the diagnostic uses to evaluate the equilibrium the mechanism is producing. Where the <a href="#2-microeconomics-participant-incentives-and-market-structure">microeconomic milestones</a> act on those equilibria, this milestone watches them.</p>
 <ul>
@@ -730,7 +747,7 @@ window.MathJax = {
 <li><strong>Demand-side surveillance — fee economy and submitter base.</strong> Tracks fee revenue as a share of the epoch pot (today ~0.19 %, the <a href="problem-statements.html#problem-2-2-3">induced-problem M02 / Tx Submitter line</a> addresses growth), distinct fee-paying addresses per epoch, the script-vs-key submitter split, and the gap between current fee throughput and self-sufficiency.</li>
 <li><strong>Non-participant surveillance — outside-the-game dynamics.</strong> Tracks the staking rate (today 60 %, falling), the addressable-vs-structural split inside the non-participant pool, and the rate at which protocol-level interventions from the <a href="#24-milestone-4-scale-up-with-the-non-participant-population">non-participant scale-up milestone (§2.4)</a> actually re-engage capital.</li>
 </ul>
-<p>Each line's KPIs feed two consumers: the <strong>community process</strong> (when a trigger fires, the relevant constituency is alerted to consider a recalibration), and <strong>the diagnostic itself</strong> (the dashboard becomes the running record of how the mechanism evolves epoch by epoch, replacing the snapshot-style diagnostics like the one this roadmap is anchored on with a continuous instrument).</p>
+<p>Each line's KPIs feed two consumers: the <strong>community process</strong> (when a trigger fires, the relevant constituency is alerted to consider a recalibration), and <strong>the diagnostic itself</strong> (the dashboard becomes the running record of how the mechanism evolves epoch by epoch, replacing the snapshot-style diagnostics like the one this analysis is anchored on with a continuous instrument).</p>
 <h3 id="312-from-governed-interventionism-to-gradual-auto-regulation">3.1.2. From governed interventionism to gradual auto-regulation</h3>
 <p>The dashboard is explicitly designed as a <strong>transitional instrument</strong>. The trajectory it serves has three phases:</p>
 <ul>
@@ -739,7 +756,7 @@ window.MathJax = {
 <li><strong>Phase 3 — gradual auto-regulation (as Leios, tier-pricing, and the fee economy mature).</strong> As new protocol features absorb load — Leios increases throughput and therefore the fee base, tier-pricing differentiates the fee economy, the microeconomic milestones reduce the dependency on monetary expansion — the manual layer can lighten. Some trigger conditions become <em>automatic recalibrations</em> within pre-agreed envelopes; others remain manual because they touch constitutional concerns. The dashboard remains the surveillance layer; the <em>intervention</em> layer increasingly retires.</li>
 </ul>
 <p><strong>Cardano is a mature blockchain, but the reward mechanism is not yet auto-regulating.</strong> This milestone names the transition path explicitly — and the dashboard is what makes Phase 2 (and eventually Phase 3) reachable. Started without instruments, the recalibration work either does not happen (the V1 inertia we have today) or happens reactively after damage. With the dashboard, the work happens preventively, on the structural thresholds the diagnostic has identified.</p>
-<p>This milestone sits <strong>somewhat in parallel</strong> to the microeconomic milestones rather than after them — the surveillance plumbing can be built while the participant-level work is in progress, and the diagnostic instruments themselves are largely already prototyped (this roadmap is anchored on them). The full <em>value</em> of the milestone, however, depends on the microeconomic milestones landing: a dashboard that surveils a static, unchanging mechanism is a less useful instrument than one that surveils a mechanism that has just been recalibrated and needs to be observed under its new behaviour.</p>
+<p>This milestone sits <strong>somewhat in parallel</strong> to the microeconomic milestones rather than after them — the surveillance plumbing can be built while the participant-level work is in progress, and the diagnostic instruments themselves are largely already prototyped (this analysis is anchored on them). The full <em>value</em> of the milestone, however, depends on the microeconomic milestones landing: a dashboard that surveils a static, unchanging mechanism is a less useful instrument than one that surveils a mechanism that has just been recalibrated and needs to be observed under its new behaviour.</p>
 <h2 id="32-research-axis-deflationist-ada-and-its-volatility">3.2. Research axis — deflationist ADA and its volatility</h2>
 <p>This section bundles two macro induced problems whose candidate solutions are still in the design-question stage. Both bear directly on <strong>Tenet 10 (monetary stability)</strong>, and both share the same constraint: the valid design space is narrower than it first appears, because every candidate instrument has to remain consistent with long-term sustainability and <em>must not</em> be a stealth-inflationary lever in disguise. That is part of why the work belongs in the research-axis register rather than in a committed milestone.</p>
 <p>The diagnostic frames both as open questions, not as failures the mechanism must repair. <em>"Pre-Conway, scarcity-as-only-lever was a forced choice — there was no on-chain governance pipeline to add complementary properties. Post-Conway, it is a design gap."</em> Closing the gap is what the design work this research axis names is for.</p>
@@ -789,7 +806,7 @@ window.MathJax = {
     <div class="footer-col">
       <h4 class="footer-heading">Specification</h4>
       <ul class="footer-links">
-        <li><a href="v2-roadmap.html">Roadmap</a></li>
+        <li><a href="solution-design.html">Solution Design</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
         <li><a href="problem-statements.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
@@ -810,7 +827,7 @@ window.MathJax = {
         <span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit
       </div>
       <div class="footer-meta">
-        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/05/14</span></div>
+        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/06/11</span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Author</span><span class="footer-meta-val"><a href="https://www.linkedin.com/in/nhenin/" rel="noopener" target="_blank">Nicolas Henin<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Source</span><span class="footer-meta-val"><a href="https://github.com/input-output-hk/spo-incentives" rel="noopener" target="_blank">input-output-hk/spo-incentives<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
       </div>
@@ -836,7 +853,7 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778763985"></script>
-<script src="assets/site-mobile.js?v=1778763985"></script>
+<script src="assets/site.js?v=1781160876"></script>
+<script src="assets/site-mobile.js?v=1781160876"></script>
 </body>
 </html>

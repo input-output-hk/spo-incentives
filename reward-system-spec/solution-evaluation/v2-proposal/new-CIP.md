@@ -660,6 +660,8 @@ The whiteboard is the source draft for a forthcoming CIP submission, scoped as *
 - **Iteration 2 — Quantitative evaluation against the 9-tier × n-MPO grid.** Apply the per-CIP evaluation template ([Exec summary / Evaluation findings / §1 Intro / §2 Mechanism / §3 Limits](../solution-evaluation/operator-delegator/cip-0023.md)) to this proposal, mirroring CIP-0023/0082/0050/0037 evaluations. Admissibility = improvement on every cell where the four CIPs regress.
 - **Iteration 3 — CIP draft.** Transform the whiteboard into a CIP-formatted document per [CIP-0001 §Document Structure](../../../Context/CIPs-repo/CIP-0001/README.md): Preamble (YAML frontmatter), Abstract, Motivation, Specification, Rationale, Path to Active, Copyright. The whiteboard sections map as: §1 → Motivation, §2 + §3 → Rationale (constraints + alternatives), §4 → Specification, §5 + §6 → Path to Active.
 
+The **build surface** these iterations feed into — the ledger, CDDL, Constitution-guardrail, node, and assurance work items required to ship this stage-1 design, and the hard-fork-then-parameter-update rollout sequence — is inventoried in [Build Estimation / Scoping](../../implementation-scope/README.md).
+
 ## References
 
 - Current Shelley reward formula: [diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md §2.3](../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md)

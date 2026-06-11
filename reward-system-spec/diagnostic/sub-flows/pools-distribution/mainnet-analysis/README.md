@@ -315,7 +315,7 @@ $$
 A(\nu, \pi) \;:=\; \nu^2 \cdot \pi \cdot \bigl[1 - \pi(1-\nu)\bigr]
 $$
 
-which we call the **pledge-bonus activation function**. Its factorisation into an outer **size factor** $\nu^2$ and an inner **pledge-intensity factor** $\pi\bigl[1 - \pi(1-\nu)\bigr]$ is the load-bearing observation for the rest of the analysis: pool size and commitment intensity contribute to the bonus *multiplicatively*, with the size factor dominating at low $\nu$.
+which we call the **pledge-bonus activation function**. Its factorisation into an outer **size factor** $\nu^2$ and an inner **pledge-intensity factor** $\pi\bigl[1 - \pi(1-\nu)\bigr]$ is the central observation for the rest of the analysis: pool size and commitment intensity contribute to the bonus *multiplicatively*, with the size factor dominating at low $\nu$.
 
 ### 2.3.5. Reader-friendly reward function
 
@@ -582,7 +582,7 @@ $$E(\nu, \pi) = \underbrace{\lambda_{\text{size}} \cdot \nu}_{\text{base}} + \un
 
 $$A(\nu, \pi) \;=\; \underbrace{\nu^2}_{\text{size factor}} \;\cdot\; \underbrace{\pi \cdot \bigl[1 - \pi(1-\nu)\bigr]}_{\text{pledge-intensity factor}}$$
 
-The two factors are independent and multiplicative. This factorisation is load-bearing — three structural defects follow from it directly. They are *pre-empirical*: properties of the algebra that hold regardless of $a_0$, regardless of mainnet data, regardless of any CIP that operates around (rather than on) A.
+The two factors are independent and multiplicative. This factorisation is decisive — three structural defects follow from it directly. They are *pre-empirical*: properties of the algebra that hold regardless of $a_0$, regardless of mainnet data, regardless of any CIP that operates around (rather than on) A.
 
 **Defect 1 — Quadratic size penalty applies at every pledge ratio.**
 
