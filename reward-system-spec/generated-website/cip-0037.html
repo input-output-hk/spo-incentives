@@ -23,9 +23,9 @@ window.closeAllDd=function(except){
   });
 };
 document.addEventListener('click',function(){ window.closeAllDd(null); });
-/* Position the single navbar reading-direction rail so its right edge
-   sits flush with the rightmost button (Design Support), not at the
-   navbar's empty right edge. Re-runs on resize. */
+/* Position the single navbar reading-direction rail so each end sits
+   flush with the outermost zone (Welcome on the left, Implementation on
+   the right), not at the navbar's empty edges. Re-runs on resize. */
 (function(){
   function fitRail(){
     var pages = document.querySelector('.nav-pages');
@@ -60,8 +60,8 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778763985">
-<link rel="stylesheet" href="assets/site-mobile.css?v=1778763985">
+<link rel="stylesheet" href="assets/site.css?v=1781160876">
+<link rel="stylesheet" href="assets/site-mobile.css?v=1781160876">
 
 
 </head>
@@ -90,9 +90,9 @@ window.MathJax = {
 
 <!-- Single reading-direction rail spanning the navbar. Buttons sit on top
      with their own backgrounds, so they read as nodes / stops along the
-     line. Arrowhead anchored at the leftmost end (Welcome destination)
-     to make the right→left "this is built FROM that" narrative explicit
-     without repeating an arrow between every pair of buttons. -->
+     line. The line runs left→right toward the Implementation destination
+     on the right, mirroring the in-page Stage 01→06 stepper, without
+     repeating an arrow between every pair of buttons. -->
 <div class="nav-flow-rail" aria-hidden="true">
   <span class="nav-flow-rail-line"></span>
   <svg class="nav-flow-rail-head" viewBox="0 0 12 10" aria-hidden="true">
@@ -100,9 +100,12 @@ window.MathJax = {
   </svg>
 </div>
 
-<!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
-<div class="nav-zone nav-zone-implementation">
-<a href="index.html" class="nav-tab-implementation" title="V2 working website — analysis, evidence, and directions in ideation">Welcome</a>
+<!-- Zone 1 (far-left, home anchor) — Welcome: start of the holistic reading.
+     Visual order is set by flex `order` in site.css (.nav-zone-* rules);
+     DOM order is kept stable so the rail-positioning JS still anchors on
+     the DOM-first (Welcome) and DOM-last (Implementation) zones. -->
+<div class="nav-zone nav-zone-welcome">
+<a href="index.html" class="nav-tab-welcome" title="Welcome — start here: the holistic reading landing page">Welcome</a>
 </div>
 
 
@@ -152,9 +155,9 @@ window.MathJax = {
 </div>
 
 
-<!-- Zone 2 — V2 Roadmap: the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
+<!-- Zone 2 — Solution Design (solution-design.html): the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
 <div class="nav-zone nav-zone-output">
-<a href="v2-roadmap.html" class="nav-tab-roadmap" title="Roadmap — directions of exploration and concrete milestones">Roadmap</a>
+<a href="solution-design.html" class="nav-tab-roadmap" title="Solution Design — prioritising the nine problems into directions and milestones">Solution Design</a>
 </div>
 
 
@@ -281,13 +284,21 @@ window.MathJax = {
       <span class="nav-dd-ref-title">Source on GitHub</span>
       <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
     </a>
-    <a href="v2-roadmap.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
-      <span class="nav-dd-ref-title">Constitutional framework in the Roadmap</span>
-      <span class="nav-dd-ref-cite">How the Roadmap milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In Roadmap</span></span>
+    <a href="solution-design.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the Solution Design</span>
+      <span class="nav-dd-ref-cite">How the Solution Design milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In Solution Design</span></span>
     </a>
   </div>
 </div>
 </div>
+</div>
+
+
+<!-- Zone 8 (far-right destination flag) — Build Estimation / Scoping: the build
+     target this whole pipeline aims at. Kept DOM-last so the rail JS anchors
+     the right end here; placed visually rightmost via flex `order` in CSS. -->
+<div class="nav-zone nav-zone-implementation">
+<a href="build-scoping.html" class="nav-tab-implementation" title="Build Estimation / Scoping — sizing the build for the recommended V2 reform">Build Estimation / Scoping</a>
 </div>
 
 </div>
@@ -316,7 +327,7 @@ window.MathJax = {
     <div class="hero-eyebrow">Solution Evaluation &middot; Stake-Cap Layer</div>
     <h1>CIP-0037 — Dynamic Saturation</h1>
     <div class="sub">Same as CIP-0050 plus a 20 % floor — A(ν, π) still unfixed</div>
-    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/05/14</span></span></span></div>
+    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/06/11</span></span></span></div>
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
@@ -388,7 +399,7 @@ window.MathJax = {
 <p>CIP-0037 makes per-pool reward capacity grow with pledge. Splitting a fixed pledge across many pools shrinks each pool's envelope — the incentive to expand a multi-pool fleet becomes self-defeating.</p>
 <h2 id="3-verdict-three-reasons-it-fails-as-a-standalone">3. Verdict — three reasons it fails as a standalone</h2>
 <h4 id="1-the-20-floor-delivers-the-pledge-signal-with-a-soft-landing-but-only-below-1349-m-ada">1. The 20 % floor delivers the pledge signal with a soft landing — but only below 13.49 M ADA.</h4>
-<p>Pledge becomes a load-bearing input to the saturation cap, monotone on the slope regime, and the <strong>20 % floor protects every pool below 13.49 M ADA</strong> (Dormant, Sub-block, Sub-reliable, and the lower half of the Healthy tier) regardless of pledge level. Zero-pledge pools keep one fifth of V1 capacity instead of dropping to zero.</p>
+<p>Pledge becomes a decisive input to the saturation cap, monotone on the slope regime, and the <strong>20 % floor protects every pool below 13.49 M ADA</strong> (Dormant, Sub-block, Sub-reliable, and the lower half of the Healthy tier) regardless of pledge level. Zero-pledge pools keep one fifth of V1 capacity instead of dropping to zero.</p>
 <p><em>That is a genuine advantage over CIP-0050's hard break — but it ends at the Healthy-tier midpoint.</em> → <a href="#b1-s1-mechanical-sharpness-softened-by-the-20-floor">The curve as pledge-as-signal — full mechanism</a></p>
 <h4 id="2-above-the-floor-capital-capability-discriminates-harder-as-the-pool-grows">2. Above the floor, capital capability discriminates harder as the pool grows.</h4>
 <p>The pledge needed to leave the floor is <strong>108 k ADA absolute</strong> — the same hurdle for a 2 M pool and a 50 M pool. The fraction of stake an operator must self-pledge to escape the floor therefore <em>falls</em> as the pool grows: ~5.4 % for a 2 M pool, ~0.22 % for a 50 M pool. Larger operators clear the floor on a smaller pledge ratio than smaller operators do — exactly inverse to V2 §3.4's concentration-reduction goal at the operator level.</p>
@@ -841,29 +852,20 @@ final_sat = max(new_sat, orig_sat);</code></p>
 <div class="sro-titles"><span class="sro-eyebrow">Synthesis 01 · 3 findings · the design-strength row</span><h3 class="sro-title">Mechanical sharpness, softened by the 20 % floor</h3></div>
 <span class="sro-count">3 findings</span>
 </header>
-<p class="sro-abstract"><strong>What the curve actually delivers: pledge becomes a load-bearing input, the smallest pools stay protected, and fleet-splitting incurs a penalty on the slope regime.</strong> All three properties follow directly from the formula.</p>
+<p class="sro-abstract"><strong>What the curve actually delivers: pledge becomes a decisive input, the smallest pools stay protected, and fleet-splitting incurs a penalty on the slope regime.</strong> All three properties follow directly from the formula.</p>
 <div class="sro-findings-label">Findings</div>
 <ol class="sro-findings">
 <li class="sro-finding" data-group="1" id="s1-f1">
 <a class="sro-fid sro-fid-stack sro-group-1" href="#s1-f1" title="S1.F1 — Delivers"><span class="sro-fid-label sro-fid-label-delivers"><span class="sro-verdict sro-verdict-delivers">delivers</span><span class="sro-fid-num">#1</span></span><span class="sro-fid-ref">S1.F1</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>Monotonicity in pledge.</strong> On the slope regime ($p_{\text{floor-exit}} \leq p < p_{100\%}$), $\partial \text{sat} / \partial p > 0$ — higher pledge strictly widens the saturation envelope. Direct delivery on V2 §3.2 pledge-as-signal: pledge becomes a load-bearing input to the reward calculation rather than a cosmetic yield nudge.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>Monotonicity in pledge.</strong> On the slope regime ($p_{\text{floor-exit}} \leq p < p_{100\%}$), $\partial \text{sat} / \partial p > 0$ — higher pledge strictly widens the saturation envelope. Direct delivery on V2 §3.2 pledge-as-signal: pledge becomes a decisive input to the reward calculation rather than a cosmetic yield nudge.</div></div>
 </li>
 <li class="sro-finding" data-group="1" id="s1-f2">
 <a class="sro-fid sro-fid-stack sro-group-1" href="#s1-f2" title="S1.F2 — Delivers"><span class="sro-fid-label sro-fid-label-delivers"><span class="sro-verdict sro-verdict-delivers">delivers</span><span class="sro-fid-num">#2</span></span><span class="sro-fid-ref">S1.F2</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>20 % floor protects the smallest pools.</strong> $\text{sat}(0) = 0.2 \cdot \text{orig\_sat} \approx 13.49$ M ₳. Any pool with total stake ≤ 13.49 M is unaffected under zero pledge — covering Dormant, Sub-block, Sub-reliable, and the lower half of the Healthy tier. Unlike CIP-0050, the instrument does not zero out hollow pools; it caps them at 20 % of the V1 saturation.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>20 % floor protects the smallest pools.</strong> $\text{sat}(0) = 0.2 \cdot \text{orig\_sat} \approx 13.49$ M ₳. Any pool with total stake ≤ 13.49 M is unaffected under zero pledge — covering Dormant, Sub-block, Sub-reliable, and the lower half of the Healthy tier. Unlike CIP-0050, the instrument does not zero out hollow pools; it caps them at 20 % of the V1 saturation.</div></div>
 </li>
 <li class="sro-finding" data-group="1" id="s1-f3">
 <a class="sro-fid sro-fid-stack sro-group-1" href="#s1-f3" title="S1.F3 — Delivers"><span class="sro-fid-label sro-fid-label-delivers"><span class="sro-verdict sro-verdict-delivers">delivers</span><span class="sro-fid-num">#3</span></span><span class="sro-fid-ref">S1.F3</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>MPO fleet-split penalty on the slope regime.</strong> Splitting a fixed pledge budget $P$ across $N$ equal pools places each pool at pledge $P/N$. On the slope regime (below $p_{100\%}$), per-pool saturation shrinks as $N$ grows — fleet splitting is no longer reward-free. Pool-level §3.4 concentration pressure.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>MPO fleet-split penalty on the slope regime.</strong> Splitting a fixed pledge budget $P$ across $N$ equal pools places each pool at pledge $P/N$. On the slope regime (below $p_{100\%}$), per-pool saturation shrinks as $N$ grows — fleet splitting is no longer reward-free. Pool-level §3.4 concentration pressure.</div></div>
 </li>
 </ol>
 </article>
@@ -881,31 +883,19 @@ final_sat = max(new_sat, orig_sat);</code></p>
 <ol class="sro-findings">
 <li class="sro-finding" data-group="2" id="s2-f1">
 <a class="sro-fid sro-fid-stack sro-group-2" href="#s2-f1" title="S2.F1 — Regresses"><span class="sro-fid-label sro-fid-label-regresses"><span class="sro-verdict sro-verdict-regresses">regresses</span><span class="sro-fid-num">#1</span></span><span class="sro-fid-ref">S2.F1</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>Median retail pledge is in the floor regime; Healthy-tier and above are clipped.</strong> At reference parameters, a pool needs <strong>108 k ₳ of absolute pledge</strong> to leave the floor regime. POL.O2.F1: stake-weighted median retail pledge ratio is 0.07 %; for a 15 M pool this is 10.5 k ₳ — an order of magnitude below the floor-exit threshold. Healthy-tier retail pools (σ &gt; 13.49 M) with this pledge level are clipped to 13.49 M — a 10 % cut at the low end of the tier, growing to a 65 % cut at the top (σ = 38.5 M). Large-healthy, Near-saturation, and Saturated tiers lose 73 % or more of V1 reward.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>Median retail pledge is in the floor regime; Healthy-tier and above are clipped.</strong> At reference parameters, a pool needs <strong>108 k ₳ of absolute pledge</strong> to leave the floor regime. POL.O2.F1: stake-weighted median retail pledge ratio is 0.07 %; for a 15 M pool this is 10.5 k ₳ — an order of magnitude below the floor-exit threshold. Healthy-tier retail pools (σ &gt; 13.49 M) with this pledge level are clipped to 13.49 M — a 10 % cut at the low end of the tier, growing to a 65 % cut at the top (σ = 38.5 M). Large-healthy, Near-saturation, and Saturated tiers lose 73 % or more of V1 reward.</div></div>
 </li>
 <li class="sro-finding" data-group="2" id="s2-f2">
 <a class="sro-fid sro-fid-stack sro-group-2" href="#s2-f2" title="S2.F2 — Regresses"><span class="sro-fid-label sro-fid-label-regresses"><span class="sro-verdict sro-verdict-regresses">regresses</span><span class="sro-fid-num">#2</span></span><span class="sro-fid-ref">S2.F2</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>Custodial-by-extraction (21 % of productive stake) cannot respond.</strong> Custodial-by-extraction entities (57 entities, 2.04 B ADA) hold custodied retail funds they legally cannot self-pledge. Their pools operate at $p \approx 0$; under CIP-0037 they sit on the floor with σ' capped at 13.49 M. The affected population cannot adjust; the reform's response channel is closed for this segment.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>Custodial-by-extraction (21 % of productive stake) cannot respond.</strong> Custodial-by-extraction entities (57 entities, 2.04 B ADA) hold custodied retail funds they legally cannot self-pledge. Their pools operate at $p \approx 0$; under CIP-0037 they sit on the floor with σ' capped at 13.49 M. The affected population cannot adjust; the reform's response channel is closed for this segment.</div></div>
 </li>
 <li class="sro-finding" data-group="2" id="s2-f3">
 <a class="sro-fid sro-fid-stack sro-group-2" href="#s2-f3" title="S2.F3 — Regresses"><span class="sro-fid-label sro-fid-label-regresses"><span class="sro-verdict sro-verdict-regresses">regresses</span><span class="sro-fid-num">#3</span></span><span class="sro-fid-ref">S2.F3</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>The floor-exit threshold is pool-size-independent — mechanically regressive.</strong> The ~108 k ADA to exit the floor is the same absolute pledge for a 2 M pool and a 50 M pool. The fraction of σ that must be self-pledged to escape the floor <em>falls</em> as the pool grows: for a 2 M pool, ~5.4 %; for a 15 M pool, ~0.72 %; for a 50 M pool, ~0.22 %. Larger operators can satisfy the reform at a smaller pledge ratio — the capital hurdle is easier at scale, exactly inverse to the V2 §3.4 concentration-reduction goal at the operator level.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>The floor-exit threshold is pool-size-independent — mechanically regressive.</strong> The ~108 k ADA to exit the floor is the same absolute pledge for a 2 M pool and a 50 M pool. The fraction of σ that must be self-pledged to escape the floor <em>falls</em> as the pool grows: for a 2 M pool, ~5.4 %; for a 15 M pool, ~0.72 %; for a 50 M pool, ~0.22 %. Larger operators can satisfy the reform at a smaller pledge ratio — the capital hurdle is easier at scale, exactly inverse to the V2 §3.4 concentration-reduction goal at the operator level.</div></div>
 </li>
 <li class="sro-finding" data-group="2" id="s2-f4">
 <a class="sro-fid sro-fid-stack sro-group-2" href="#s2-f4" title="S2.F4 — Blind spot"><span class="sro-fid-label sro-fid-label-blind"><span class="sro-verdict sro-verdict-blind">blind spot</span><span class="sro-fid-num">#4</span></span><span class="sro-fid-ref">S2.F4</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>The "operators will pledge more" bet is contradicted by POL.O2.F2 + POL.O5.F3.</strong> Same as for CIP-0050: pledge yield 0.68 %/yr is structurally dominated by passive-delegation yield 2.3 %/yr; 42 of 48 saturation-scale MPOs already forfeit the bonus today. CIP-0037 changes the saturation curve but not the opportunity-cost comparison that produces the current non-pledge equilibrium.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>The "operators will pledge more" bet is contradicted by POL.O2.F2 + POL.O5.F3.</strong> Same as for CIP-0050: pledge yield 0.68 %/yr is structurally dominated by passive-delegation yield 2.3 %/yr; 42 of 48 saturation-scale MPOs already forfeit the bonus today. CIP-0037 changes the saturation curve but not the opportunity-cost comparison that produces the current non-pledge equilibrium.</div></div>
 </li>
 </ol>
 </article>
@@ -924,31 +914,19 @@ final_sat = max(new_sat, orig_sat);</code></p>
 <ol class="sro-findings">
 <li class="sro-finding" data-group="3" id="s3-f1">
 <a class="sro-fid sro-fid-stack sro-group-3" href="#s3-f1" title="S3.F1 — Regresses"><span class="sro-fid-label sro-fid-label-regresses"><span class="sro-verdict sro-verdict-regresses">regresses</span><span class="sro-fid-num">#1</span></span><span class="sro-fid-ref">S3.F1</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>Governance surface 3× CIP-0050.</strong> Three parameters $(e, \ell, p_{100\%})$ to calibrate, each with interlocking effects. Any <code>k</code> change reshapes the curve (via $\text{orig\_sat} = \text{Supply}/k$) and requires joint re-calibration of all three. V2 §4.4 governability cost is material.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>Governance surface 3× CIP-0050.</strong> Three parameters $(e, \ell, p_{100\%})$ to calibrate, each with interlocking effects. Any <code>k</code> change reshapes the curve (via $\text{orig\_sat} = \text{Supply}/k$) and requires joint re-calibration of all three. V2 §4.4 governability cost is material.</div></div>
 </li>
 <li class="sro-finding" data-group="3" id="s3-f2">
 <a class="sro-fid sro-fid-stack sro-group-3" href="#s3-f2" title="S3.F2 — Regresses"><span class="sro-fid-label sro-fid-label-regresses"><span class="sro-verdict sro-verdict-regresses">regresses</span><span class="sro-fid-num">#2</span></span><span class="sro-fid-ref">S3.F2</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>Price-dependence breaks V2 §4.3 price-robustness.</strong> $p_{100\%} = 500\,000$ ADA is <strong>absolute</strong>, not a ratio. The fiat cost of reaching full pledge shifts directly with the ADA/USD rate: at \$0.10 it costs \$50 k; at \$1.00 it costs \$500 k; at \$5.00 it costs \$2.5 M. Operator behaviour responds to fiat cost; the calibration needs to be re-pegged on material price moves. CIP-0050's dimensionless $L$ is structurally price-invariant by construction.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>Price-dependence breaks V2 §4.3 price-robustness.</strong> $p_{100\%} = 500\,000$ ADA is <strong>absolute</strong>, not a ratio. The fiat cost of reaching full pledge shifts directly with the ADA/USD rate: at \$0.10 it costs \$50 k; at \$1.00 it costs \$500 k; at \$5.00 it costs \$2.5 M. Operator behaviour responds to fiat cost; the calibration needs to be re-pegged on material price moves. CIP-0050's dimensionless $L$ is structurally price-invariant by construction.</div></div>
 </li>
 <li class="sro-finding" data-group="3" id="s3-f3">
 <a class="sro-fid sro-fid-stack sro-group-3" href="#s3-f3" title="S3.F3 — Regresses"><span class="sro-fid-label sro-fid-label-regresses"><span class="sro-verdict sro-verdict-regresses">regresses</span><span class="sro-fid-num">#3</span></span><span class="sro-fid-ref">S3.F3</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>Entity-level §3.4 concentration gap.</strong> Custodial-by-pledge entities with native pledge above $p_{100\%}$ operate on the ceiling regime — σ' = orig_sat regardless of pledge size. The 10 entities / 1.59 B ADA segment that dominates entity-level concentration today is entirely unaffected by CIP-0037, same as under CIP-0050.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>Entity-level §3.4 concentration gap.</strong> Custodial-by-pledge entities with native pledge above $p_{100\%}$ operate on the ceiling regime — σ' = orig_sat regardless of pledge size. The 10 entities / 1.59 B ADA segment that dominates entity-level concentration today is entirely unaffected by CIP-0037, same as under CIP-0050.</div></div>
 </li>
 <li class="sro-finding" data-group="3" id="s3-f4">
 <a class="sro-fid sro-fid-stack sro-group-3" href="#s3-f4" title="S3.F4 — Blind spot"><span class="sro-fid-label sro-fid-label-blind"><span class="sro-verdict sro-verdict-blind">blind spot</span><span class="sro-fid-num">#4</span></span><span class="sro-fid-ref">S3.F4</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>§3.1 small-pool viability risk — softer than CIP-0050 but present.</strong> Healthy-tier retail single-pool operators (214 entities, 2.44 B ₳ per operator-delegator §4.3.3) with sub-compliant pledge see 10–64 % of pool reward clipped at reference parameters. Because the fee-layer split is unchanged, both operator take and delegator ROS drop proportionally. Without a companion §3.1 fee-layer instrument, CIP-0037 risks accelerating attrition in the Healthy-tier single-pool population V2 §3.1 names as the priority.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>§3.1 small-pool viability risk — softer than CIP-0050 but present.</strong> Healthy-tier retail single-pool operators (214 entities, 2.44 B ₳ per operator-delegator §4.3.3) with sub-compliant pledge see 10–64 % of pool reward clipped at reference parameters. Because the fee-layer split is unchanged, both operator take and delegator ROS drop proportionally. Without a companion §3.1 fee-layer instrument, CIP-0037 risks accelerating attrition in the Healthy-tier single-pool population V2 §3.1 names as the priority.</div></div>
 </li>
 </ol>
 </article>
@@ -1028,7 +1006,7 @@ final_sat = max(new_sat, orig_sat);</code></p>
 <h3 id="c3-references">C.3. References</h3>
 <ul>
 <li><strong>Induced problems addressed (and not):</strong> <a href="problem-statements.html#problem-1-2-3">μ01 — Closing the Consensus Incentive Gap (pledge paradox)</a> — partially, via the dynamic-saturation curve ; <a href="problem-statements.html#problem-1-3-3-1">μ02 — Guarantee operator viability</a> — <em>regressed</em> (same as CIP-0050: σ′ clip on top of broken <code>A(ν, π)</code>) ; <a href="problem-statements.html#problem-2-1-3-1">μ04 — SPO supply side</a> — partially.</li>
-<li><strong>V2 Roadmap milestones potentially affected:</strong> <a href="v2-roadmap.html#21-milestone-1-repair-pledge-sustain-the-small-spo-base">V2 Roadmap M1 — Repair pledge, sustain the small SPO base</a> (the four-move repair) ; <a href="v2-roadmap.html#25-research-axis-reduce-the-concentration-effects-that-distort-both-populations">V2 Roadmap §2.5 — Research axis on concentration</a>.</li>
+<li><strong>Solution Design milestones potentially affected:</strong> <a href="solution-design.html#21-milestone-1-repair-pledge-sustain-the-small-spo-base">Solution Design M1 — Repair pledge, sustain the small SPO base</a> (the four-move repair) ; <a href="solution-design.html#25-research-axis-reduce-the-concentration-effects-that-distort-both-populations">Solution Design §2.5 — Research axis on concentration</a>.</li>
 <li><strong>Numerical baselines:</strong> <a href="#a5-quantification-at-current-mainnet-parameters">Appendix A.5</a> of this file (pledge-to-threshold mapping, nine-tier effect, MPO fleet-split example); <a href="pools.html#413-tier-definitions">pools-distribution §4.1.3</a> (nine-tier taxonomy); <a href="operator.html">operator-delegator §4.3.3</a> (custodial / retail decomposition).</li>
 <li><strong>Diagnostic findings cited in this file:</strong> POL.O2.F1, POL.O2.F2, POL.O5.F1, POL.O5.F2, POL.O5.F3, POL.O6.F2 (pools-distribution); OPE.O6.F4, OPE.O7.F1 (operator-delegator).</li>
 <li><strong>Companion CIP:</strong> <a href="cip-0050.html"><code>cip-0050.md</code></a> — alternative stake-cap primitive (hard cap vs smooth curve). Same-layer pairing is not canonical; a coherent V2 package picks one.</li>
@@ -1055,7 +1033,7 @@ final_sat = max(new_sat, orig_sat);</code></p>
     <div class="footer-col">
       <h4 class="footer-heading">Specification</h4>
       <ul class="footer-links">
-        <li><a href="v2-roadmap.html">Roadmap</a></li>
+        <li><a href="solution-design.html">Solution Design</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
         <li><a href="problem-statements.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
@@ -1076,7 +1054,7 @@ final_sat = max(new_sat, orig_sat);</code></p>
         <span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit
       </div>
       <div class="footer-meta">
-        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/05/14</span></div>
+        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/06/11</span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Author</span><span class="footer-meta-val"><a href="https://www.linkedin.com/in/nhenin/" rel="noopener" target="_blank">Nicolas Henin<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Source</span><span class="footer-meta-val"><a href="https://github.com/input-output-hk/spo-incentives" rel="noopener" target="_blank">input-output-hk/spo-incentives<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
       </div>
@@ -1102,7 +1080,7 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778763985"></script>
-<script src="assets/site-mobile.js?v=1778763985"></script>
+<script src="assets/site.js?v=1781160876"></script>
+<script src="assets/site-mobile.js?v=1781160876"></script>
 </body>
 </html>

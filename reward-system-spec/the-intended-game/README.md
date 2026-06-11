@@ -21,22 +21,28 @@ The formal game-theoretic properties of the Cardano reward curve were establishe
 <span class="cps-stage-meta">proto-CPS</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage cps-stage-future" href="../generated-website/v2-roadmap.html" title="Roadmap — directions of exploration and concrete milestones">
+<a class="cps-stage cps-stage-future" href="../generated-website/solution-evaluation.html" title="Evaluation of the four reward-related CIPs against the nine induced problems">
 <span class="cps-stage-num">Stage 04</span>
-<span class="cps-stage-label">Roadmap</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="../generated-website/solution-design.html" title="Solution Design — prioritising the nine problems into directions and milestones">
+<span class="cps-stage-num">Stage 05</span>
+<span class="cps-stage-label">Solution Design</span>
 <span class="cps-stage-meta">Directions &amp; milestones</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage cps-stage-future" href="../generated-website/solution-evaluation.html" title="Evaluation of the four reward-related CIPs against V2 milestones">
-<span class="cps-stage-num">Stage 05</span>
-<span class="cps-stage-label">CIPs (Evaluation)</span>
-<span class="cps-stage-meta">IntersectMBO governance</span>
+<a class="cps-stage cps-stage-future" href="../generated-website/build-scoping.html" title="Build Estimation / Scoping — sizing the build for the V2 stage-1 reform">
+<span class="cps-stage-num">Stage 06</span>
+<span class="cps-stage-label">Build Estimation / Scoping</span>
+<span class="cps-stage-meta">Build sizing</span>
 </a>
 </div>
 
 **Three player classes are locked in a strict dependency chain.** Transaction submitters generate the economic value that funds the epoch pot. Operators commit capital and infrastructure to secure the network. Delegators allocate stake and police the operator population. Each enters with a different motivation, holds a different strategic instrument, and follows a different trajectory. The reward curve's task is to make every link individually rational and incentive-compatible, so the chain holds without trust between participants.
 
-**Pledge and liquid delegation are the two pillars of the security model.** Pledge is the operator's commitment bond — visible, declared, tied to a verifiable economic cost. Liquid delegation is the community's continuous approval signal — non-consensual, revocable at every epoch, and the protocol's substitute for the governance layer it does not have at the consensus level. Pledge without delegation is accountability with no enforcer; delegation without pledge is a vote with no consequence. The four security properties — accountability, delegation as counter-power, Sybil resistance, decentralisation — emerge only when both pillars are simultaneously load-bearing within each pool.
+**Pledge and liquid delegation are the two pillars of the security model.** Pledge is the operator's commitment bond — visible, declared, tied to a verifiable economic cost. Liquid delegation is the community's continuous approval signal — non-consensual, revocable at every epoch, and the protocol's substitute for the governance layer it does not have at the consensus level. Pledge without delegation is accountability with no enforcer; delegation without pledge is a vote with no consequence. The four security properties — accountability, delegation as counter-power, Sybil resistance, decentralisation — emerge only when both pillars bear weight simultaneously within each pool.
 
 **When all three trajectories function as intended, they form a self-reinforcing cycle.** Demand funds rewards. Rewards make participation rational. Operators compete on pledge because the curve prices commitment. Delegators back the most committed operators because commitment is observable. The resulting network — decentralised, accountable, Sybil-resistant — is more valuable, attracts more demand, and sustains the cycle. The reward curve's success or failure is measured against this target.
 
@@ -203,7 +209,7 @@ The three trajectories are developed in detail below. Read across the matrix to 
 
 The three trajectories above describe individual paths. But the protocol does not care which path any single operator or delegator takes — it cares whether the *equilibrium* that emerges from the aggregate of all rational choices preserves the security invariants from [the design objective](#1-the-design-objective).
 
-The formal literature defines these invariants implicitly through the constraints the reward function must satisfy: the equilibrium must exhibit *k* independent block producers, each bearing a non-trivial personal cost, subject to continuous community oversight, with no single entity able to capture a dominant share of consensus power. Four properties encode these invariants. They are not a menu of desirable features — they are load-bearing elements of the security argument. Losing any one degrades the model; losing two or more can break it.
+The formal literature defines these invariants implicitly through the constraints the reward function must satisfy: the equilibrium must exhibit *k* independent block producers, each bearing a non-trivial personal cost, subject to continuous community oversight, with no single entity able to capture a dominant share of consensus power. Four properties encode these invariants. They are not a menu of desirable features — they are essential elements of the security argument. Losing any one degrades the model; losing two or more can break it.
 
 | Property | What it secures | Mechanism |
 |---|---|---|

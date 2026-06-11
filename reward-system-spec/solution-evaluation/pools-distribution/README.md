@@ -6,7 +6,7 @@ Two CIPs are in scope: [CIP-0050](cip-0050.md) and [CIP-0037](cip-0037.md). Both
 
 **Verdict on both CIPs: no-go, for two stacked reasons.**
 
-**The load-bearing piece is `A(ν, π)`, and neither CIP touches it.** V1 already exposes a pledge-incentive knob — `a₀`, the weight of the pledge bonus inside the reward envelope (current mainnet value `0.3`; full walkthrough in [Appendix A — Why V1's pledge incentive doesn't work](#appendix-a-why-v1s-pledge-incentive-doesnt-work)). Raising `a₀` rebalances the formula but does not make pledge "matter more" — every low-pledge pool earns less *before* the bonus can recover. CIP-0050 and CIP-0037 add a third lever (clip σ′ before the formula runs) on top of `a₀` and `k`, but they accept `A(ν, π)` as given. That function carries three structural pathologies:
+**The central piece is `A(ν, π)`, and neither CIP touches it.** V1 already exposes a pledge-incentive knob — `a₀`, the weight of the pledge bonus inside the reward envelope (current mainnet value `0.3`; full walkthrough in [Appendix A — Why V1's pledge incentive doesn't work](#appendix-a-why-v1s-pledge-incentive-doesnt-work)). Raising `a₀` rebalances the formula but does not make pledge "matter more" — every low-pledge pool earns less *before* the bonus can recover. CIP-0050 and CIP-0037 add a third lever (clip σ′ before the formula runs) on top of `a₀` and `k`, but they accept `A(ν, π)` as given. That function carries three structural pathologies:
 
 - a permanent quadratic `ν²` size penalty applies at *every* pledge ratio — small pools are crushed regardless of how committed the operator is;
 - a non-monotonicity in π for sub-half-saturated pools — a 2 M operator (ν ≈ 0.03) earns **8.7×** *more* bonus by pledging 51 % than by fully self-pledging. The formula explicitly incentivises small operators to *under-commit*;
@@ -22,7 +22,7 @@ Under that condition, the cap hits **every** segment of the operator population 
 - **Multi-pool entities** — clipped on the per-pool axis: splitting pledge across many pools shrinks each pool's reward envelope, and even large fleets do not have the pledge to comply at scale across all their pools.
 - **Custodial-by-extraction operators** (CEX / IVaaS, ~21 % of productive stake) — clipped to zero because they cannot self-pledge custodied retail funds by construction.
 
-The blast radius covers the bulk of the productive population, and the resulting reward collapse **risks destabilising consensus itself**. If most operators see their net income fall sharply at the same time, some will reduce or shut down their infrastructure — and Cardano's block-production reliability degrades. A reform meant to *strengthen* the network's commitment signal ends up *weakening* the network's basic operation. The direction of effect runs *opposite* to [μ02 — Guarantee operator viability](../../generated-website/problem-statements.html#problem-1-3-3-1) and to the foundational work [V2 Roadmap Milestone 1](../../README.md#21-milestone-1-repair-pledge-sustain-the-small-spo-base) is set up to do.
+The blast radius covers the bulk of the productive population, and the resulting reward collapse **risks destabilising consensus itself**. If most operators see their net income fall sharply at the same time, some will reduce or shut down their infrastructure — and Cardano's block-production reliability degrades. A reform meant to *strengthen* the network's commitment signal ends up *weakening* the network's basic operation. The direction of effect runs *opposite* to [μ02 — Guarantee operator viability](../../generated-website/problem-statements.html#problem-1-3-3-1) and to the foundational work [Solution Design Milestone 1](../../README.md#21-milestone-1-repair-pledge-sustain-the-small-spo-base) is set up to do.
 
 **A more gradual path makes more sense.** A genuine V2 stake-cap reform should reinforce the pledge signal **at its source** rather than gating it, by combining four moves on the reward-distribution layer:
 
@@ -92,7 +92,7 @@ Panel (b) matches leverage at $\ell = L = 125$ to isolate the floor as the sole 
 
 1. [`cip-0050.md`](cip-0050.md) — the primitive in its cleanest one-scalar form ($L$). Start here: every structural finding on the slope carries into CIP-0037.
 2. [`cip-0037.md`](cip-0037.md) — the same primitive with an added floor and two effective governance parameters $(e, \ell)$. Read as "CIP-0050 plus floor" — the formula walkthrough in its Appendix A makes the kinship explicit.
-3. [Appendix A — Why V1's pledge incentive doesn't work](#appendix-a-why-v1s-pledge-incentive-doesnt-work) — the structural critique of `A(ν, π)` itself, which neither CIP modifies. Optional for casual readers; load-bearing for anyone designing a successor proposal.
+3. [Appendix A — Why V1's pledge incentive doesn't work](#appendix-a-why-v1s-pledge-incentive-doesnt-work) — the structural critique of `A(ν, π)` itself, which neither CIP modifies. Optional for casual readers; essential for anyone designing a successor proposal.
 
 ## 3. References
 
@@ -158,7 +158,7 @@ $$A(\nu, \pi) \;=\; \underbrace{\nu^2}_{\text{size factor}} \;\cdot\; \underbrac
 
 The two effects are independent and multiplicative. The **outer factor $\nu^2$** is a quadratic dependence on pool size — independent of pledge, applying at *every* commitment level. A pool earns bonus proportional to $\nu^2$ before any consideration of how much its operator pledges. The **inner factor** $\pi[1 - \pi(1-\nu)]$ controls how the pledge ratio modulates the bonus, with a weak coupling to $\nu$ via the $(1-\nu)$ term.
 
-This is the load-bearing observation: *pool size enters the bonus quadratically as a pure penalty against small pools, regardless of how committed the operator is*. Even at the OPTIMAL pledge ratio for a given pool size, the bonus is still scaled by $\nu^2$.
+This is the central observation: *pool size enters the bonus quadratically as a pure penalty against small pools, regardless of how committed the operator is*. Even at the OPTIMAL pledge ratio for a given pool size, the bonus is still scaled by $\nu^2$.
 
 **(ii) Tour of the corners and edges.**
 
@@ -171,7 +171,7 @@ This is the load-bearing observation: *pool size enters the bonus quadratically 
 
 *Table A.2 — A(ν, π) at the four corners and edges of the unit square. The third row (full self-pledge) is where the elaborate quadratic construction collapses to a cubic.*
 
-The third row is where the elaborate quadratic construction collapses. At full self-pledge, the inner factor $\pi[1 - \pi(1-\nu)]$ degenerates to $\nu$, and combined with the outer $\nu^2$ produces $\nu^3$ — cubing sub-unit numbers. That cube is the load-bearing pathology, but as (i) made explicit, the underlying $\nu^2$ size penalty is permanent regardless of pledge.
+The third row is where the elaborate quadratic construction collapses. At full self-pledge, the inner factor $\pi[1 - \pi(1-\nu)]$ degenerates to $\nu$, and combined with the outer $\nu^2$ produces $\nu^3$ — cubing sub-unit numbers. That cube is the critical pathology, but as (i) made explicit, the underlying $\nu^2$ size penalty is permanent regardless of pledge.
 
 **(iii) The pledge-intensity factor and what it was meant to do.**
 
@@ -306,7 +306,7 @@ Walking through the structural anatomy and the three scenarios reveals one cumul
 
 CIP-0050 and CIP-0037 modify the *enforcement* of pledge (clip $\sigma'$ if pledge is too low) but not the *pricing* of pledge inside A. After their reform, the relative bonus disparity across operator sizes remains identical; the non-monotone regime for $\nu < 0.5$ remains identical; the cubic collapse at full self-pledge remains identical. They patch around A without touching it.
 
-A reform that touched A directly — replacing the kernel with one that doesn't impose the quadratic size penalty $\nu^2$ at every pledge ratio, or that doesn't cube small pools at full commitment — would be the most structural way to repair the pledge signal at its source. **No CIP currently in scope proposes this.** This is the deepest critique of both candidates in this folder: they accept A as given and patch around it, when A is the load-bearing piece of the pledge incentive.
+A reform that touched A directly — replacing the kernel with one that doesn't impose the quadratic size penalty $\nu^2$ at every pledge ratio, or that doesn't cube small pools at full commitment — would be the most structural way to repair the pledge signal at its source. **No CIP currently in scope proposes this.** This is the deepest critique of both candidates in this folder: they accept A as given and patch around it, when A is the central piece of the pledge incentive.
 
 This reading extends the formal critique at [diagnostic / pools-distribution §2.3.5](../../diagnostic/sub-flows/pools-distribution/mainnet-analysis/README.md#235-reader-friendly-reward-function): *"the bonus term $\lambda_{\text{pledge}}A(\nu, \pi)$ is non-linear and asymmetric in its two inputs. The outer factor $\nu^2$ imposes a quadratic size penalty that holds at every pledge ratio; at full self-pledge ($\pi = 1$) the inner factor degenerates and the bonus collapses to $\lambda_{\text{pledge}}\nu^3$ — the cubic that suppresses the bonus structurally for any pool below saturation."*
 

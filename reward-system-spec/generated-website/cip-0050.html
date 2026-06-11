@@ -23,9 +23,9 @@ window.closeAllDd=function(except){
   });
 };
 document.addEventListener('click',function(){ window.closeAllDd(null); });
-/* Position the single navbar reading-direction rail so its right edge
-   sits flush with the rightmost button (Design Support), not at the
-   navbar's empty right edge. Re-runs on resize. */
+/* Position the single navbar reading-direction rail so each end sits
+   flush with the outermost zone (Welcome on the left, Implementation on
+   the right), not at the navbar's empty edges. Re-runs on resize. */
 (function(){
   function fitRail(){
     var pages = document.querySelector('.nav-pages');
@@ -60,8 +60,8 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1778763985">
-<link rel="stylesheet" href="assets/site-mobile.css?v=1778763985">
+<link rel="stylesheet" href="assets/site.css?v=1781160876">
+<link rel="stylesheet" href="assets/site-mobile.css?v=1781160876">
 
 
 </head>
@@ -90,9 +90,9 @@ window.MathJax = {
 
 <!-- Single reading-direction rail spanning the navbar. Buttons sit on top
      with their own backgrounds, so they read as nodes / stops along the
-     line. Arrowhead anchored at the leftmost end (Welcome destination)
-     to make the right→left "this is built FROM that" narrative explicit
-     without repeating an arrow between every pair of buttons. -->
+     line. The line runs left→right toward the Implementation destination
+     on the right, mirroring the in-page Stage 01→06 stepper, without
+     repeating an arrow between every pair of buttons. -->
 <div class="nav-flow-rail" aria-hidden="true">
   <span class="nav-flow-rail-line"></span>
   <svg class="nav-flow-rail-head" viewBox="0 0 12 10" aria-hidden="true">
@@ -100,9 +100,12 @@ window.MathJax = {
   </svg>
 </div>
 
-<!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
-<div class="nav-zone nav-zone-implementation">
-<a href="index.html" class="nav-tab-implementation" title="V2 working website — analysis, evidence, and directions in ideation">Welcome</a>
+<!-- Zone 1 (far-left, home anchor) — Welcome: start of the holistic reading.
+     Visual order is set by flex `order` in site.css (.nav-zone-* rules);
+     DOM order is kept stable so the rail-positioning JS still anchors on
+     the DOM-first (Welcome) and DOM-last (Implementation) zones. -->
+<div class="nav-zone nav-zone-welcome">
+<a href="index.html" class="nav-tab-welcome" title="Welcome — start here: the holistic reading landing page">Welcome</a>
 </div>
 
 
@@ -152,9 +155,9 @@ window.MathJax = {
 </div>
 
 
-<!-- Zone 2 — V2 Roadmap: the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
+<!-- Zone 2 — Solution Design (solution-design.html): the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
 <div class="nav-zone nav-zone-output">
-<a href="v2-roadmap.html" class="nav-tab-roadmap" title="Roadmap — directions of exploration and concrete milestones">Roadmap</a>
+<a href="solution-design.html" class="nav-tab-roadmap" title="Solution Design — prioritising the nine problems into directions and milestones">Solution Design</a>
 </div>
 
 
@@ -281,13 +284,21 @@ window.MathJax = {
       <span class="nav-dd-ref-title">Source on GitHub</span>
       <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
     </a>
-    <a href="v2-roadmap.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
-      <span class="nav-dd-ref-title">Constitutional framework in the Roadmap</span>
-      <span class="nav-dd-ref-cite">How the Roadmap milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In Roadmap</span></span>
+    <a href="solution-design.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the Solution Design</span>
+      <span class="nav-dd-ref-cite">How the Solution Design milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In Solution Design</span></span>
     </a>
   </div>
 </div>
 </div>
+</div>
+
+
+<!-- Zone 8 (far-right destination flag) — Build Estimation / Scoping: the build
+     target this whole pipeline aims at. Kept DOM-last so the rail JS anchors
+     the right end here; placed visually rightmost via flex `order` in CSS. -->
+<div class="nav-zone nav-zone-implementation">
+<a href="build-scoping.html" class="nav-tab-implementation" title="Build Estimation / Scoping — sizing the build for the recommended V2 reform">Build Estimation / Scoping</a>
 </div>
 
 </div>
@@ -316,7 +327,7 @@ window.MathJax = {
     <div class="hero-eyebrow">Solution Evaluation &middot; Stake-Cap Layer</div>
     <h1>CIP-0050 — Pledge Leverage</h1>
     <div class="sub">σ′ clip leaves A(ν, π) bottleneck unfixed</div>
-    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/05/14</span></span></span></div>
+    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/06/11</span></span></span></div>
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
@@ -1153,17 +1164,11 @@ window.MathJax = {
 <ol class="sro-findings">
 <li class="sro-finding" data-group="1" id="s1-f1">
 <a class="sro-fid sro-fid-stack sro-group-1" href="#s1-f1" title="S1.F1 — Delivers"><span class="sro-fid-label sro-fid-label-delivers"><span class="sro-verdict sro-verdict-delivers">delivers</span><span class="sro-fid-num">#1</span></span><span class="sro-fid-ref">S1.F1</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>Zero-pledge hard break.</strong> For any pool with $\pi = 0$, the cap $L \cdot p$ evaluates to zero and clips the entire stake. A zero-pledge pool earns zero reward under CIP-0050. This is the sharpest possible expression of "pledge is a binding signal" — it converts a cosmetic yield nudge (~22 % gap at $a_0 = 0.3$) into a total reward cut-off. Direct delivery on V2 §3.2.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>Zero-pledge hard break.</strong> For any pool with $\pi = 0$, the cap $L \cdot p$ evaluates to zero and clips the entire stake. A zero-pledge pool earns zero reward under CIP-0050. This is the sharpest possible expression of "pledge is a binding signal" — it converts a cosmetic yield nudge (~22 % gap at $a_0 = 0.3$) into a total reward cut-off. Direct delivery on V2 §3.2.</div></div>
 </li>
 <li class="sro-finding" data-group="1" id="s1-f2">
 <a class="sro-fid sro-fid-stack sro-group-1" href="#s1-f2" title="S1.F2 — Delivers"><span class="sro-fid-label sro-fid-label-delivers"><span class="sro-verdict sro-verdict-delivers">delivers</span><span class="sro-fid-num">#2</span></span><span class="sro-fid-ref">S1.F2</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>Pool-splitting is revenue-neutral.</strong> For an entity with pledge budget $P$ split across $N$ pools of equal pledge $p = P/N$, the total reward cap across the fleet is $N \cdot (L \cdot P/N) = L \cdot P$ — identical to what a single pool with the entire pledge would capture. The MPO fleet-expansion incentive disappears at the pool level under CIP-0050. Direct delivery on V2 §3.4 <em>pool-level</em> concentration.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>Pool-splitting is revenue-neutral.</strong> For an entity with pledge budget $P$ split across $N$ pools of equal pledge $p = P/N$, the total reward cap across the fleet is $N \cdot (L \cdot P/N) = L \cdot P$ — identical to what a single pool with the entire pledge would capture. The MPO fleet-expansion incentive disappears at the pool level under CIP-0050. Direct delivery on V2 §3.4 <em>pool-level</em> concentration.</div></div>
 </li>
 </ol>
 </article>
@@ -1179,30 +1184,21 @@ window.MathJax = {
 <ol class="sro-findings">
 <li class="sro-finding" data-group="2" id="s2-f1">
 <a class="sro-fid sro-fid-stack sro-group-2" href="#s2-f1" title="S2.F1 — Regresses"><span class="sro-fid-label sro-fid-label-regresses"><span class="sro-verdict sro-verdict-regresses">regresses</span><span class="sro-fid-num">#1</span></span><span class="sro-fid-ref">S2.F1</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>A radical clip — ~84 % of productive stake at L = 100, including reliable producers.</strong> The median retail pool — pledge ratio <strong>0.07 %</strong> (POL.O2.F1) — sees pool reward drop to <strong>~7 %</strong> of its V1 baseline at L = 100 (<a href="#a3-how-much-pledge-does-an-operator-need">Appendix A.3</a>). <strong>78 %</strong> of staked ADA sits in pools below the 1 % compliance threshold; <strong>~84 %</strong> of productive stake is clipped or collapsed at the CIP's recommended endpoint (see <a href="#4-what-it-does-to-mainnet-today">the mainnet snapshot in §4</a>). A pool can produce blocks reliably, serve delegators well, and operate with integrity — and still see a material cut, because the cap acts on a property of the operator, not on the pool's contribution to the network.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>A radical clip — ~84 % of productive stake at L = 100, including reliable producers.</strong> The median retail pool — pledge ratio <strong>0.07 %</strong> (POL.O2.F1) — sees pool reward drop to <strong>~7 %</strong> of its V1 baseline at L = 100 (<a href="#a3-how-much-pledge-does-an-operator-need">Appendix A.3</a>). <strong>78 %</strong> of staked ADA sits in pools below the 1 % compliance threshold; <strong>~84 %</strong> of productive stake is clipped or collapsed at the CIP's recommended endpoint (see <a href="#4-what-it-does-to-mainnet-today">the mainnet snapshot in §4</a>). A pool can produce blocks reliably, serve delegators well, and operate with integrity — and still see a material cut, because the cap acts on a property of the operator, not on the pool's contribution to the network.</div></div>
 </li>
 <li class="sro-finding" data-group="2" id="s2-f2">
 <a class="sro-fid sro-fid-stack sro-group-2" href="#s2-f2" title="S2.F2 — Regresses"><span class="sro-fid-label sro-fid-label-regresses"><span class="sro-verdict sro-verdict-regresses">regresses</span><span class="sro-fid-num">#2</span></span><span class="sro-fid-ref">S2.F2</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>The custodial segment (~21 % of productive stake) cannot respond.</strong> Custodial-by-extraction entities (57 entities, 2.04 B ADA — see <a href="operator.html">operator-delegator §4.3.3</a>) hold <em>custodied</em> retail funds they legally cannot self-pledge. CIP-0050 clips their stake to zero; their reward collapses with no available adjustment. The affected population is exactly the one that cannot change its behaviour in response to the reform — so for this slice, the cap is not a signal, it is just a removal.</div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>The custodial segment (~21 % of productive stake) cannot respond.</strong> Custodial-by-extraction entities (57 entities, 2.04 B ADA — see <a href="operator.html">operator-delegator §4.3.3</a>) hold <em>custodied</em> retail funds they legally cannot self-pledge. CIP-0050 clips their stake to zero; their reward collapses with no available adjustment. The affected population is exactly the one that cannot change its behaviour in response to the reform — so for this slice, the cap is not a signal, it is just a removal.</div></div>
 </li>
 <li class="sro-finding" data-group="2" id="s2-f3">
 <a class="sro-fid sro-fid-stack sro-group-2" href="#s2-f3" title="S2.F3 — Blind spot"><span class="sro-fid-label sro-fid-label-blind"><span class="sro-verdict sro-verdict-blind">blind spot</span><span class="sro-fid-num">#3</span></span><span class="sro-fid-ref">S2.F3</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>The root cause is <code>A(ν, π)</code>, and CIP-0050 does not touch it.</strong> Pledge is cosmetic on mainnet today because the bonus function inside the SL-D1 reward envelope makes pledging a dominated strategy. Three structural pathologies in <code>A</code> produce that result — full anatomy in the <a href="stake-cap.html">stake-cap layer synthesis</a>:
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>The root cause is <code>A(ν, π)</code>, and CIP-0050 does not touch it.</strong> Pledge is cosmetic on mainnet today because the bonus function inside the SL-D1 reward envelope makes pledging a dominated strategy. Three structural pathologies in <code>A</code> produce that result — full anatomy in the <a href="stake-cap.html">stake-cap layer synthesis</a>:
 
 - a <strong>quadratic <code>ν²</code> size penalty</strong> that applies at <em>every</em> pledge ratio — small pools are crushed regardless of how committed the operator is;
 - a <strong>non-monotonicity in π for sub-half-saturated pools</strong> — at ν ≈ 0.03 a 2 M operator earns <strong>8.7×</strong> more bonus by pledging 51 % than by pledging 100 %; the formula explicitly <em>incentivises small operators to under-commit</em>;
 - a <strong>cubic <code>ν³</code> collapse at full self-pledge</strong> — at maximum commitment, a saturated operator earns 37 595× more bonus than a 2 M operator at the same pledge ratio.
 
-Adding a σ′ clip <em>before</em> the formula runs changes who qualifies to earn the V1 reward; it does not repair what <code>A</code> does to the pledge signal once a pool is past the gate. The opportunity-cost data confirms the dominance relation persists: pledge yield is <strong>0.68 %/yr</strong> at best vs <strong>~2.3 %/yr</strong> passive (POL.O2.F2); 42 of 48 saturation-scale MPOs forfeit the bonus today (POL.O5.F3) and have no new mechanical reason to flip under CIP-0050.</div>
-</div>
+Adding a σ′ clip <em>before</em> the formula runs changes who qualifies to earn the V1 reward; it does not repair what <code>A</code> does to the pledge signal once a pool is past the gate. The opportunity-cost data confirms the dominance relation persists: pledge yield is <strong>0.68 %/yr</strong> at best vs <strong>~2.3 %/yr</strong> passive (POL.O2.F2); 42 of 48 saturation-scale MPOs forfeit the bonus today (POL.O5.F3) and have no new mechanical reason to flip under CIP-0050.</div></div>
 </li>
 </ol>
 </article>
@@ -1221,93 +1217,38 @@ Adding a σ′ clip <em>before</em> the formula runs changes who qualifies to ea
 <ol class="sro-findings">
 <li class="sro-finding" data-group="3" id="s3-f1">
 <a class="sro-fid sro-fid-stack sro-group-3" href="#s3-f1" title="S3.F1 — Blind spot"><span class="sro-fid-label sro-fid-label-blind"><span class="sro-verdict sro-verdict-blind">blind spot</span><span class="sro-fid-num">#1</span></span><span class="sro-fid-ref">S3.F1</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>The bet that the SPO landscape will pledge up cannot be verified — and the mainnet evidence points the other way.</strong> CIP-0050 only stops being a pure clip if operators raise pledge to clear the L = 100 compliance line (1 % of pool stake). Today: <strong>78 %</strong> of staked ADA sits in pools at pledge ratio below 1 % (POL.O2.F1); <strong>42 of the 48</strong> saturation-scale multi-pool operators forfeit the pledge bonus today (POL.O5.F3); pledge yield is <strong>0.68 %/yr</strong> at best vs <strong>~2.3 %/yr</strong> passive (POL.O2.F2). The dominance relation that produced today's non-pledging equilibrium is unchanged by CIP-0050 — the cap is a <em>new gate</em> before the reward formula, not a <em>new gradient</em> inside it. <strong>There is no mainnet signal predicting compliance at scale.</strong></div>
-</div>
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>The bet that the SPO landscape will pledge up cannot be verified — and the mainnet evidence points the other way.</strong> CIP-0050 only stops being a pure clip if operators raise pledge to clear the L = 100 compliance line (1 % of pool stake). Today: <strong>78 %</strong> of staked ADA sits in pools at pledge ratio below 1 % (POL.O2.F1); <strong>42 of the 48</strong> saturation-scale multi-pool operators forfeit the pledge bonus today (POL.O5.F3); pledge yield is <strong>0.68 %/yr</strong> at best vs <strong>~2.3 %/yr</strong> passive (POL.O2.F2). The dominance relation that produced today's non-pledging equilibrium is unchanged by CIP-0050 — the cap is a <em>new gate</em> before the reward formula, not a <em>new gradient</em> inside it. <strong>There is no mainnet signal predicting compliance at scale.</strong></div></div>
 </li>
 <li class="sro-finding" data-group="3" id="s3-f2">
 <a class="sro-fid sro-fid-stack sro-group-3" href="#s3-f2" title="S3.F2 — Regresses"><span class="sro-fid-label sro-fid-label-regresses"><span class="sro-verdict sro-verdict-regresses">regresses</span><span class="sro-fid-num">#2</span></span><span class="sro-fid-ref">S3.F2</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>Most of the pool pot would return to reserve unused.</strong> Today, <strong>~56 %</strong> of the 15.53 M ADA/epoch pool pot already returns to reserve unused (POL.O1.F1) — the participation gap (31.6 %) plus the unclaimed pledge-bonus budget (22.1 %, POL.O1.F3) plus minor causes. This is the <em>single largest addressable inefficiency in the system</em>. Applying L = 100 to today's pledge distribution stacks a new clip <em>on top</em> of that:
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>Most of the pool pot would return to reserve unused.</strong> Today, <strong>~56 %</strong> of the 15.53 M ADA/epoch pool pot already returns to reserve unused (POL.O1.F1) — the participation gap (31.6 %) plus the unclaimed pledge-bonus budget (22.1 %, POL.O1.F3) plus minor causes. This is the <em>single largest addressable inefficiency in the system</em>. Applying L = 100 to today's pledge distribution stacks a new clip <em>on top</em> of that:
 
 <table class="sro-evidence-table">
-<thead>
-<tr>
-<th>Segment</th>
-<th>Share of productive stake</th>
-<th>Effect on σ′ at L = 100</th>
-</tr>
-</thead>
+<thead><tr><th>Segment</th><th>Share of productive stake</th><th>Effect on σ′ at L = 100</th></tr></thead>
 <tbody>
-<tr>
-<td>Compliant retail (π &ge; 1 %) + custodial-by-pledge</td>
-<td>~12 %</td>
-<td>Unchanged — full V1 reward</td>
-</tr>
-<tr>
-<td>Custodial-by-extraction (CEX / IVaaS)</td>
-<td>~9.5 %</td>
-<td><strong>σ′ → 0</strong> — operators legally cannot self-pledge</td>
-</tr>
-<tr>
-<td>Retail at low pledge (median π = 0.07 %)</td>
-<td>~74 %</td>
-<td><strong>σ′ → ~7 % of σ</strong> — pool reward drops to ~7 % of V1 baseline</td>
-</tr>
-<tr>
-<td>Custodial-by-delegation</td>
-<td>~4 %</td>
-<td>Mixed — roughly half-clipped on average</td>
-</tr>
+<tr><td>Compliant retail (π &ge; 1 %) + custodial-by-pledge</td><td>~12 %</td><td>Unchanged — full V1 reward</td></tr>
+<tr><td>Custodial-by-extraction (CEX / IVaaS)</td><td>~9.5 %</td><td><strong>σ′ → 0</strong> — operators legally cannot self-pledge</td></tr>
+<tr><td>Retail at low pledge (median π = 0.07 %)</td><td>~74 %</td><td><strong>σ′ → ~7 % of σ</strong> — pool reward drops to ~7 % of V1 baseline</td></tr>
+<tr><td>Custodial-by-delegation</td><td>~4 %</td><td>Mixed — roughly half-clipped on average</td></tr>
 </tbody>
 </table>
 
-
-Stake-weighted, the <strong>eligible σ′ falls to ~19 %</strong> of original. Pool rewards distributed drop from <strong>~6.79 M to ~1.29 M ADA/epoch</strong> — a <strong>75 % drop</strong> in absolute distribution. Distribution efficiency: <strong>44 % → ~8 %</strong>. Return-to-reserve: <strong>~56 % → ~92 %</strong>. Annual extra ADA returning to reserve: <strong>~400 M ADA/yr</strong> on top of today's already-large leak. The pathology POL.O1 names does not get fixed; it gets significantly worse.</div>
-</div>
+Stake-weighted, the <strong>eligible σ′ falls to ~19 %</strong> of original. Pool rewards distributed drop from <strong>~6.79 M to ~1.29 M ADA/epoch</strong> — a <strong>75 % drop</strong> in absolute distribution. Distribution efficiency: <strong>44 % → ~8 %</strong>. Return-to-reserve: <strong>~56 % → ~92 %</strong>. Annual extra ADA returning to reserve: <strong>~400 M ADA/yr</strong> on top of today's already-large leak. The pathology POL.O1 names does not get fixed; it gets significantly worse.</div></div>
 </li>
 <li class="sro-finding" data-group="3" id="s3-f3">
 <a class="sro-fid sro-fid-stack sro-group-3" href="#s3-f3" title="S3.F3 — Regresses"><span class="sro-fid-label sro-fid-label-regresses"><span class="sro-verdict sro-verdict-regresses">regresses</span><span class="sro-fid-num">#3</span></span><span class="sro-fid-ref">S3.F3</span></a>
-
-<div class="sro-body">
-<div class="sro-evidence"><strong>Network-wide delegator yield collapses by ~5×.</strong> Today's net delegator ROS is ~<strong>2.27 %/yr</strong> on a compliant pool. Under CIP-0050 at L = 100 with today's pledge distribution:
+<div class="sro-body"><div class="sro-evidence" markdown="1"><strong>Network-wide delegator yield collapses by ~5×.</strong> Today's net delegator ROS is ~<strong>2.27 %/yr</strong> on a compliant pool. Under CIP-0050 at L = 100 with today's pledge distribution:
 
 <table class="sro-evidence-table">
-<thead>
-<tr>
-<th>Where the delegator sits</th>
-<th>Today (V1)</th>
-<th>Under CIP-0050</th>
-<th>Effect</th>
-</tr>
-</thead>
+<thead><tr><th>Where the delegator sits</th><th>Today (V1)</th><th>Under CIP-0050</th><th>Effect</th></tr></thead>
 <tbody>
-<tr>
-<td>Compliant pool (~12 % of stake)</td>
-<td>~2.27 %</td>
-<td>~2.27 %</td>
-<td>Unchanged</td>
-</tr>
-<tr>
-<td>Custodial-by-extraction pool (~10 %)</td>
-<td>~2.27 %</td>
-<td><strong>~0 %</strong></td>
-<td>Total cut</td>
-</tr>
-<tr>
-<td>Median retail pool, π = 0.07 % (~74 %)</td>
-<td>~2.27 %</td>
-<td><strong>~0.16 %</strong></td>
-<td>14× cut, 93 % drop</td>
-</tr>
+<tr><td>Compliant pool (~12 % of stake)</td><td>~2.27 %</td><td>~2.27 %</td><td>Unchanged</td></tr>
+<tr><td>Custodial-by-extraction pool (~10 %)</td><td>~2.27 %</td><td><strong>~0 %</strong></td><td>Total cut</td></tr>
+<tr><td>Median retail pool, π = 0.07 % (~74 %)</td><td>~2.27 %</td><td><strong>~0.16 %</strong></td><td>14× cut, 93 % drop</td></tr>
 </tbody>
 </table>
 
-
-Stake-weighted <strong>network-wide ROS drops from ~2.27 % to ~0.44 %</strong> — an <strong>80 % collapse</strong> in the headline yield delegators see across the network. Concrete: a <strong>10 K ADA delegation</strong> at the median retail pool earns ~<strong>227 ADA/yr</strong> today and would earn <strong>~16 ADA/yr</strong> under CIP-0050 — a 211 ADA/yr loss per 10 K stake. ADA staking becomes structurally uncompetitive against passive holding (no risk, no fees) and against any external benchmark.</div>
-</div>
+Stake-weighted <strong>network-wide ROS drops from ~2.27 % to ~0.44 %</strong> — an <strong>80 % collapse</strong> in the headline yield delegators see across the network. Concrete: a <strong>10 K ADA delegation</strong> at the median retail pool earns ~<strong>227 ADA/yr</strong> today and would earn <strong>~16 ADA/yr</strong> under CIP-0050 — a 211 ADA/yr loss per 10 K stake. ADA staking becomes structurally uncompetitive against passive holding (no risk, no fees) and against any external benchmark.</div></div>
 </li>
 </ol>
 </article>
@@ -1368,7 +1309,7 @@ Stake-weighted <strong>network-wide ROS drops from ~2.27 % to ~0.44 %</strong> �
 </tbody>
 </table>
 <h3 id="c2-origin-and-context">C.2. Origin and context</h3>
-<p><strong>Authorship and moment.</strong> Written in April 2022 by Michael Liesenfelt and co-authors, updated in May 2025. The authors' central observation: under $a_0 = 0.3$, the yield gap between zero-pledge and fully-pledged pools is ~22 % — "statistically unnoticed" by delegators and dominated by epoch-to-epoch variance. The CIP converts pledge from a <em>nudge</em> (a small yield advantage that delegators could notice) into a <em>constraint</em> (a hard cap on reward-eligible stake that makes pledge load-bearing).</p>
+<p><strong>Authorship and moment.</strong> Written in April 2022 by Michael Liesenfelt and co-authors, updated in May 2025. The authors' central observation: under $a_0 = 0.3$, the yield gap between zero-pledge and fully-pledged pools is ~22 % — "statistically unnoticed" by delegators and dominated by epoch-to-epoch variance. The CIP converts pledge from a <em>nudge</em> (a small yield advantage that delegators could notice) into a <em>constraint</em> (a hard cap on reward-eligible stake that makes pledge decisive).</p>
 <p><strong>Scope.</strong> CIP-0050 modifies <strong>the reward-distribution formula itself</strong> (the σ' clipping rule), not the fee-layer split. It is therefore a pools-distribution-layer instrument, not a fee-layer instrument. A pool with clipped σ' produces less reward in total; the split between operator and delegators remains whatever the fee-layer parameters (<code>minPoolCost</code>, <code>poolRate</code>) dictate.</p>
 <p><strong>Relation to other CIPs in the evaluation bundle.</strong>
 - <strong>Fee-layer CIPs (CIP-0023, CIP-0082)</strong> act on a different layer (post-per-pool-allocation split). CIP-0050 composes cleanly with either on the mechanical axis — they act on sequential stages of the reward pipeline — but the two sets target different V2 milestones.
@@ -1377,7 +1318,7 @@ Stake-weighted <strong>network-wide ROS drops from ~2.27 % to ~0.44 %</strong> �
 <h3 id="c3-references">C.3. References</h3>
 <ul>
 <li><strong>Induced problems addressed (and not):</strong> <a href="problem-statements.html#problem-1-2-3">μ01 — Closing the Consensus Incentive Gap (pledge paradox)</a> — partially, via the σ′ clip ; <a href="problem-statements.html#problem-1-3-3-1">μ02 — Guarantee operator viability</a> — <em>regressed</em> (the cap deepens the viability gap, see §A.10) ; <a href="problem-statements.html#problem-2-1-3-1">μ04 — SPO supply side</a> — partially, via fragmentation cost.</li>
-<li><strong>V2 Roadmap milestones potentially affected:</strong> <a href="v2-roadmap.html#21-milestone-1-repair-pledge-sustain-the-small-spo-base">V2 Roadmap M1 — Repair pledge, sustain the small SPO base</a> (the four-move repair this CIP would interact with) ; <a href="v2-roadmap.html#25-research-axis-reduce-the-concentration-effects-that-distort-both-populations">V2 Roadmap §2.5 — Research axis on concentration</a> (the entity-level work CIP-0050's pledge-leverage cap engages indirectly).</li>
+<li><strong>Solution Design milestones potentially affected:</strong> <a href="solution-design.html#21-milestone-1-repair-pledge-sustain-the-small-spo-base">Solution Design M1 — Repair pledge, sustain the small SPO base</a> (the four-move repair this CIP would interact with) ; <a href="solution-design.html#25-research-axis-reduce-the-concentration-effects-that-distort-both-populations">Solution Design §2.5 — Research axis on concentration</a> (the entity-level work CIP-0050's pledge-leverage cap engages indirectly).</li>
 <li><strong>Numerical baselines:</strong> <a href="#a3-how-much-pledge-does-an-operator-need">Appendix A.3</a> of this file (pledge-ratio-to-clip mapping at L=100); <a href="pools.html#413-tier-definitions">pools-distribution §4.1.3</a> (nine-tier taxonomy); <a href="operator.html">operator-delegator §4.3.3</a> (custodial / retail decomposition).</li>
 <li><strong>Diagnostic findings cited in this file:</strong> POL.O2.F1, POL.O2.F2, POL.O5.F1, POL.O5.F2, POL.O5.F3, POL.O6.F2 (pools-distribution); OPE.O6.F4, OPE.O7.F1 (operator-delegator).</li>
 <li><strong>Companion CIP:</strong> <a href="cip-0037.html"><code>cip-0037.md</code></a> — alternative stake-cap primitive (smooth curve vs hard cap). Same-layer pairing is not canonical.</li>
@@ -1401,7 +1342,7 @@ Stake-weighted <strong>network-wide ROS drops from ~2.27 % to ~0.44 %</strong> �
     <div class="footer-col">
       <h4 class="footer-heading">Specification</h4>
       <ul class="footer-links">
-        <li><a href="v2-roadmap.html">Roadmap</a></li>
+        <li><a href="solution-design.html">Solution Design</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
         <li><a href="problem-statements.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
@@ -1422,7 +1363,7 @@ Stake-weighted <strong>network-wide ROS drops from ~2.27 % to ~0.44 %</strong> �
         <span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit
       </div>
       <div class="footer-meta">
-        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/05/14</span></div>
+        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/06/11</span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Author</span><span class="footer-meta-val"><a href="https://www.linkedin.com/in/nhenin/" rel="noopener" target="_blank">Nicolas Henin<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Source</span><span class="footer-meta-val"><a href="https://github.com/input-output-hk/spo-incentives" rel="noopener" target="_blank">input-output-hk/spo-incentives<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
       </div>
@@ -1448,7 +1389,7 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1778763985"></script>
-<script src="assets/site-mobile.js?v=1778763985"></script>
+<script src="assets/site.js?v=1781160876"></script>
+<script src="assets/site-mobile.js?v=1781160876"></script>
 </body>
 </html>

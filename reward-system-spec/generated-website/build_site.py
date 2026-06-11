@@ -51,19 +51,20 @@ PAGES = [
         "title": "Cardano Reward System / The Holistic Reading",
         "hero_h1": "Welcome",
         "hero_sub": "A holistic reading of today's reward mechanism, the directions of exploration for a successor, and an evaluation of the existing reward CIPs through the same prism",
-        "active_nav": "implementation",
+        "active_nav": "welcome",
     },
-    # V2 Roadmap — the canonical V2 working document. Directions of
-    # exploration and concrete milestones, anchored on the 9 induced
-    # problems. Replaced an earlier "specification draft" page that has
-    # been retired now that the Roadmap supersedes it.
+    # Solution Design — the canonical V2 working document (slug
+    # "solution-design", output solution-design.html). Prioritises the
+    # 9 induced problems into
+    # directions of exploration and concrete milestones. Replaced an
+    # earlier "specification draft" page, retired now that this supersedes it.
     {
-        "slug": "v2-roadmap",
+        "slug": "solution-design",
         "md": "README.md",
-        "html": "v2-roadmap.html",
-        "title": "Roadmap — Cardano Reward System / The Holistic Reading",
-        "hero_h1": "Roadmap",
-        "hero_sub": "Ideation in progress — directions of exploration and milestones offered for community shaping, anchored on the 9 induced problems",
+        "html": "solution-design.html",
+        "title": "Solution Design — Cardano Reward System / The Holistic Reading",
+        "hero_h1": "Solution Design",
+        "hero_sub": "Prioritising the nine induced problems into directions and milestones — and the order to take them on",
         "active_nav": "roadmap",
     },
     {
@@ -235,6 +236,19 @@ PAGES = [
         "hero_h1": "CIP-0082 — Improved Rewards Scheme",
         "hero_sub": "Margin swap + k-raises — inverts viability, regenerates 2020",
         "active_nav": "cip-0082",
+    },
+    # --- Implementation Scope — Stage 06 destination ------------------------
+    # Sizes the build for the recommended V2 stage-1 reform (the four-move
+    # package). The far-right "Implementation" nav destination — supersedes
+    # the parked new-CIP "ViabilityPackage" whiteboard as the build target.
+    {
+        "slug": "build-scoping",
+        "md": "implementation-scope/README.md",
+        "html": "build-scoping.html",
+        "title": "Build Estimation / Scoping — What it would take to build the V2 reward reform",
+        "hero_h1": "Build Estimation / Scoping",
+        "hero_sub": "Scoping what it would take to implement the solutions this report recommends",
+        "active_nav": "implementation",
     },
 ]
 
@@ -635,7 +649,7 @@ def _render_footer() -> str:
     <div class="footer-col">
       <h4 class="footer-heading">Specification</h4>
       <ul class="footer-links">
-        <li><a href="v2-roadmap.html">Roadmap</a></li>
+        <li><a href="solution-design.html">Solution Design</a></li>
         <li><a href="intended-game.html">The Intended Game</a></li>
         <li><a href="problem-statements.html">Induced Problems</a></li>
         <li><a href="solution-evaluation.html">Solution Evaluation</a></li>
@@ -1487,9 +1501,9 @@ window.closeAllDd=function(except){{
   }});
 }};
 document.addEventListener('click',function(){{ window.closeAllDd(null); }});
-/* Position the single navbar reading-direction rail so its right edge
-   sits flush with the rightmost button (Design Support), not at the
-   navbar's empty right edge. Re-runs on resize. */
+/* Position the single navbar reading-direction rail so each end sits
+   flush with the outermost zone (Welcome on the left, Implementation on
+   the right), not at the navbar's empty edges. Re-runs on resize. */
 (function(){{
   function fitRail(){{
     var pages = document.querySelector('.nav-pages');
@@ -1554,9 +1568,9 @@ window.MathJax = {{
 
 <!-- Single reading-direction rail spanning the navbar. Buttons sit on top
      with their own backgrounds, so they read as nodes / stops along the
-     line. Arrowhead anchored at the leftmost end (Welcome destination)
-     to make the right→left "this is built FROM that" narrative explicit
-     without repeating an arrow between every pair of buttons. -->
+     line. The line runs left→right toward the Implementation destination
+     on the right, mirroring the in-page Stage 01→06 stepper, without
+     repeating an arrow between every pair of buttons. -->
 <div class="nav-flow-rail" aria-hidden="true">
   <span class="nav-flow-rail-line"></span>
   <svg class="nav-flow-rail-head" viewBox="0 0 12 10" aria-hidden="true">
@@ -1564,9 +1578,12 @@ window.MathJax = {{
   </svg>
 </div>
 
-<!-- Zone 0 (far-left destination) — Implementation: where this work is heading -->
-<div class="nav-zone nav-zone-implementation">
-<a href="index.html" class="nav-tab-implementation{cls_implementation}" title="V2 working website — analysis, evidence, and directions in ideation">Welcome</a>
+<!-- Zone 1 (far-left, home anchor) — Welcome: start of the holistic reading.
+     Visual order is set by flex `order` in site.css (.nav-zone-* rules);
+     DOM order is kept stable so the rail-positioning JS still anchors on
+     the DOM-first (Welcome) and DOM-last (Implementation) zones. -->
+<div class="nav-zone nav-zone-welcome">
+<a href="index.html" class="nav-tab-welcome{cls_welcome}" title="Welcome — start here: the holistic reading landing page">Welcome</a>
 </div>
 
 
@@ -1616,9 +1633,9 @@ window.MathJax = {{
 </div>
 
 
-<!-- Zone 2 — V2 Roadmap: the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
+<!-- Zone 2 — Solution Design (solution-design.html): the canonical V2 working document. Replaced an earlier V2 Specification page that has been retired. -->
 <div class="nav-zone nav-zone-output">
-<a href="v2-roadmap.html" class="nav-tab-roadmap{cls_roadmap}" title="Roadmap — directions of exploration and concrete milestones">Roadmap</a>
+<a href="solution-design.html" class="nav-tab-roadmap{cls_roadmap}" title="Solution Design — prioritising the nine problems into directions and milestones">Solution Design</a>
 </div>
 
 
@@ -1745,13 +1762,21 @@ window.MathJax = {{
       <span class="nav-dd-ref-title">Source on GitHub</span>
       <span class="nav-dd-ref-cite">Canonical markdown — IntersectMBO/cardano-constitution<span class="nav-dd-ref-stage">Source</span></span>
     </a>
-    <a href="v2-roadmap.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
-      <span class="nav-dd-ref-title">Constitutional framework in the Roadmap</span>
-      <span class="nav-dd-ref-cite">How the Roadmap milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In Roadmap</span></span>
+    <a href="solution-design.html#1-constitutional-framework" class="nav-dd-ref nav-dd-ref-sub">
+      <span class="nav-dd-ref-title">Constitutional framework in the Solution Design</span>
+      <span class="nav-dd-ref-cite">How the Solution Design milestones cite the Constitution — three tenets + guardrails<span class="nav-dd-ref-stage">In Solution Design</span></span>
     </a>
   </div>
 </div>
 </div>
+</div>
+
+
+<!-- Zone 8 (far-right destination flag) — Build Estimation / Scoping: the build
+     target this whole pipeline aims at. Kept DOM-last so the rail JS anchors
+     the right end here; placed visually rightmost via flex `order` in CSS. -->
+<div class="nav-zone nav-zone-implementation">
+<a href="build-scoping.html" class="nav-tab-implementation{cls_implementation}" title="Build Estimation / Scoping — sizing the build for the recommended V2 reform">Build Estimation / Scoping</a>
 </div>
 
 </div>
@@ -1833,7 +1858,7 @@ DESIGN_ACTIVE = {"intended-game"}
 # (matching the data-banner CSS selector). Default is "fluid" if absent.
 BANNER_VARIANTS = {
     "implementation":      "starburst",   # What's next? — landing page
-    "roadmap":             "fluid",       # V2 Roadmap — directions & milestones
+    "roadmap":             "fluid",       # Analysis — directions & milestones (internal key kept)
     "intended-game":       "starburst",   # narrative / conceptual
     "problem-statements":            "overlap",     # synthesis of multiple findings
     "diagnostic":         "dots",        # the diagnostic — matches cardano.org research page
@@ -1902,7 +1927,7 @@ _HERO_EYEBROW = {
     # Landing — What's next? page.
     "implementation": "Cardano Reward System",
     # V2 Spec.
-    "roadmap": "Cardano Reward System &middot; Roadmap in progress",
+    "roadmap": "Cardano Reward System &middot; Solution Design",
     # Sub-flow + cross-flow pages: parent zone only.
     "intended-game": "Design Support",
     "problem-statements": "Mainnet Diagnostic",
@@ -1926,6 +1951,7 @@ _HERO_EYEBROW = {
 def render_shell(page: dict, content_html: str) -> str:
     active = page["active_nav"]
     nav_map = {
+        "welcome": "cls_welcome",
         "implementation": "cls_implementation",
         "roadmap": "cls_roadmap",
         "intended-game": "cls_intended_game",
@@ -5505,7 +5531,7 @@ def _render_findings_content(
         'target="_blank">IntersectMBO/CIPs governance process</a>.'
         '</p>'
         '<div class="cps-lifecycle" aria-label="CPS lifecycle">'
-        '<a class="cps-stage cps-stage-done" href="the-intended-game.html" '
+        '<a class="cps-stage cps-stage-done" href="intended-game.html" '
         'title="The Intended Game — plain-prose design baseline">'
         '<span class="cps-stage-num">Stage 01</span>'
         '<span class="cps-stage-label">The Intended Game</span>'
@@ -5526,19 +5552,26 @@ def _render_findings_content(
         '<span class="cps-stage-meta">proto-CPS &middot; this page</span>'
         '</div>'
         '<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>'
-        '<a class="cps-stage cps-stage-future" href="v2-roadmap.html" '
-        'title="Roadmap — directions of exploration and concrete milestones">'
+        '<a class="cps-stage cps-stage-future" '
+        'href="solution-evaluation.html" '
+        'title="Evaluation of the four reward-related CIPs against the nine induced problems">'
         '<span class="cps-stage-num">Stage 04</span>'
-        '<span class="cps-stage-label">Roadmap</span>'
+        '<span class="cps-stage-label">CIPs (Evaluation)</span>'
+        '<span class="cps-stage-meta">IntersectMBO governance</span>'
+        '</a>'
+        '<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>'
+        '<a class="cps-stage cps-stage-future" href="solution-design.html" '
+        'title="Solution Design — prioritising the nine problems into directions and milestones">'
+        '<span class="cps-stage-num">Stage 05</span>'
+        '<span class="cps-stage-label">Solution Design</span>'
         '<span class="cps-stage-meta">Directions &amp; milestones</span>'
         '</a>'
         '<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>'
-        '<a class="cps-stage cps-stage-future" '
-        'href="solution-evaluation.html" '
-        'title="Evaluation of the four reward-related CIPs against V2 milestones">'
-        '<span class="cps-stage-num">Stage 05</span>'
-        '<span class="cps-stage-label">CIPs (Evaluation)</span>'
-        '<span class="cps-stage-meta">IntersectMBO governance</span>'
+        '<a class="cps-stage cps-stage-future" href="build-scoping.html" '
+        'title="Build Estimation / Scoping — sizing the build for the V2 stage-1 reform">'
+        '<span class="cps-stage-num">Stage 06</span>'
+        '<span class="cps-stage-label">Build Estimation / Scoping</span>'
+        '<span class="cps-stage-meta">Build sizing</span>'
         '</a>'
         '</div>'
         '<p>'

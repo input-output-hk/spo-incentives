@@ -228,11 +228,11 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 /* Bar 2: three-column navigation */
 .nav-pages{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:stretch;padding:0 24px;overflow-x:auto;white-space:nowrap;position:relative;gap:38px}
 /* Single reading-direction rail across the navbar — replaces the per-gap
-   arrows. Dashed hairline that runs from Welcome (destination) on the
-   left to Design Support (origin) on the right. Anchored by JS so the
-   right edge sits flush with the rightmost button rather than running
-   into the empty space past it. The arrowhead stays on the LEFT end
-   (Welcome) — that's the reading-direction destination. */
+   arrows. Dashed hairline that runs left→right, from the Welcome/home
+   anchor on the left to the Implementation destination on the right.
+   Anchored by JS so each end sits flush with the outermost button rather
+   than running into the empty space past it. The chevron buttons point
+   right, toward the destination — no separate arrowhead needed. */
 .nav-flow-rail{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
                height:11px;display:flex;align-items:center;
                pointer-events:none;z-index:0;
@@ -253,8 +253,8 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
                        transparent 4px 8px);
                      color:rgba(255,255,255,0.7)}
 /* Arrowhead suppressed — the chevron-shaped buttons themselves convey
-   the right→left reading direction; an extra arrowhead at the rail
-   start is redundant. Also fixes a brief flash on page load before the
+   the left→right reading direction; an extra arrowhead at the rail
+   end is redundant. Also fixes a brief flash on page load before the
    JS rail positioner runs. */
 .nav-flow-rail-head{display:none}
 /* Two-stop colour transition — left half white-ish, right half dark-ish.
@@ -268,6 +268,23 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .nav-pages > .nav-tab-implementation,
 .nav-pages > .nav-tab-roadmap{position:relative;z-index:1}
 
+/* ── Reading direction: left→right ──────────────────────────────────────
+   Home/origin on the left, the Implementation destination on the right —
+   matching the in-page Stage 01→06 stepper. The visual order is set with
+   flex `order`; the DOM order is left intact (Welcome stays DOM-first,
+   Implementation DOM-last) so the rail-positioning JS keeps anchoring the
+   line on the two extremities. The flow tabs between the two end-caps run
+   in stepper order: Constitution (governance ceiling) → Intended Game →
+   Mainnet Diagnostic → Induced Problems → Existing CIPs → Problem Analysis. */
+.nav-zone-welcome{order:1}
+.nav-zone-constitution{order:2}
+.nav-zone-design{order:3}
+.nav-zone-diag{order:4}
+.nav-zone-problems{order:5}
+.nav-zone-solution{order:6}
+.nav-zone-output{order:7}
+.nav-zone-implementation{order:8}
+
 /* ── Chevron-shaped buttons ─────────────────────────────────────────────
    Each button gets a V-notch on its right edge, so the silhouette itself
    points left — the reading-direction is encoded in the shape, no extra
@@ -278,6 +295,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
    tracking, case, and line-height. Stops the per-class differences
    (some had .4 letter-spacing, some .2, some uppercase) from making
    the row look inconsistent. */
+.nav-tab-welcome,
 .nav-tab-implementation,
 .nav-tab-roadmap,
 .nav-tab-problems-big,
@@ -297,6 +315,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
    regardless of button width.
    The drop-shadow filter follows the visible alpha (the SVG fill), so
    the shadow now wraps the chevron outline rather than a rectangle. */
+.nav-tab-welcome,
 .nav-tab-implementation,
 .nav-tab-roadmap,
 .nav-tab-problems-big,
@@ -336,37 +355,37 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
    trigger). Light-grey 1px stroke around the full silhouette. */
 .nav-dd-btn-light,
 .nav-tab-problems-big{
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L93 20 L99 39 L7 39 L1 20 Z' fill='%23ffffff' stroke='%23cfcfcf' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M93 1 L1 1 L7 20 L1 39 L93 39 L99 20 Z' fill='%23ffffff' stroke='%23cfcfcf' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
   color:var(--text-secondary) !important;
 }
 .nav-dd-btn-light:hover,
 .nav-tab-problems-big:hover{
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L93 20 L99 39 L7 39 L1 20 Z' fill='%23fafafa' stroke='%23999999' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M93 1 L1 1 L7 20 L1 39 L93 39 L99 20 Z' fill='%23fafafa' stroke='%23999999' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
   color:var(--text-primary) !important;
 }
 .nav-dd-wrap-light.open > .nav-dd-btn-light{
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L93 20 L99 39 L7 39 L1 20 Z' fill='%23fff5f5' stroke='%23E52321' stroke-width='1.2' vector-effect='non-scaling-stroke'/></svg>") !important;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M93 1 L1 1 L7 20 L1 39 L93 39 L99 20 Z' fill='%23fff5f5' stroke='%23E52321' stroke-width='1.2' vector-effect='non-scaling-stroke'/></svg>") !important;
   color:var(--infared) !important;
 }
 /* Existing CIPs trigger — same white-plate recipe but with the original
    text colour (var(--text-primary)) + cardano-blue active state. */
 .nav-dd-btn-solution{color:var(--text-primary) !important}
 .nav-dd-wrap-light.open > .nav-dd-btn-solution{
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L93 20 L99 39 L7 39 L1 20 Z' fill='%23eaf0fc' stroke='%230033ad' stroke-width='1.2' vector-effect='non-scaling-stroke'/></svg>") !important;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M93 1 L1 1 L7 20 L1 39 L93 39 L99 20 Z' fill='%23eaf0fc' stroke='%230033ad' stroke-width='1.2' vector-effect='non-scaling-stroke'/></svg>") !important;
   color:var(--cardano-blue) !important;
 }
 /* V2 Roadmap — middle chevron, both V's. */
 .nav-tab-roadmap{
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L93 20 L99 39 L7 39 L1 20 Z' fill='%23ffffff' stroke='%23cfcfcf' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M93 1 L1 1 L7 20 L1 39 L93 39 L99 20 Z' fill='%23ffffff' stroke='%23cfcfcf' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
   color:var(--text-primary) !important;
   filter:drop-shadow(0 0 7px rgba(255,255,255,0.38))
          drop-shadow(0 2px 4px rgba(0,0,0,0.12)) !important;
 }
 
-/* Welcome — leftmost extremity: FLAT left, V-cut right.
-   Reads as the destination flag of the chain. */
-.nav-tab-implementation{
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M1 1 L99 1 L93 20 L99 39 L1 39 Z' fill='%23ffffff' stroke='%23cfcfcf' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
+/* Welcome — leftmost extremity: FLAT left, V-point right.
+   Reads as the start flag of the chain (home / entry point). */
+.nav-tab-welcome{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M1 1 L93 1 L99 20 L93 39 L1 39 Z' fill='%23ffffff' stroke='%23cfcfcf' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
   color:var(--text-primary) !important;
   /* No chevron padding on the flat left edge. */
   padding-left:22px !important;
@@ -374,22 +393,24 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
          drop-shadow(0 2px 4px rgba(0,0,0,0.12)) !important;
 }
 
-/* Constitution — rightmost extremity: V-point left, FLAT right.
-   Reads as the origin flag of the chain (the governance ceiling). */
-.nav-dd-btn-constitution{
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L99 39 L7 39 L1 20 Z' fill='%23ffffff' stroke='%23cfcfcf' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
+/* Implementation — rightmost extremity: notch left, FLAT right.
+   Reads as the destination flag of the chain (where the work is heading). */
+.nav-tab-implementation{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M99 1 L1 1 L7 20 L1 39 L99 39 Z' fill='%23ffffff' stroke='%23cfcfcf' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
+  color:var(--text-primary) !important;
   /* No chevron padding on the flat right edge. */
   padding-right:22px !important;
+  filter:drop-shadow(0 0 7px rgba(255,255,255,0.38))
+         drop-shadow(0 2px 4px rgba(0,0,0,0.12)) !important;
 }
-.nav-dd-btn-constitution:hover{
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L99 39 L7 39 L1 20 Z' fill='%23fafafa' stroke='%23999999' stroke-width='1' vector-effect='non-scaling-stroke'/></svg>") !important;
-}
-.nav-dd-wrap-light.open > .nav-dd-btn-constitution{
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L99 39 L7 39 L1 20 Z' fill='%23fff5f5' stroke='%23E52321' stroke-width='1.2' vector-effect='non-scaling-stroke'/></svg>") !important;
-}
+
+/* Constitution is no longer an extremity in the left→right layout — it sits
+   second-from-left as the governance ceiling that opens the flow. It now
+   inherits the default right-pointing middle chevron from .nav-dd-btn-light
+   (resting / hover / open), so no shape override is needed here. */
 /* V2 Spec — solid Cardano-blue chevron with a SOLID white border. */
 .nav-tab-spec-big{
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M7 1 L99 1 L93 20 L99 39 L7 39 L1 20 Z' fill='%230033ad' stroke='%23ffffff' stroke-width='1.4' vector-effect='non-scaling-stroke'/></svg>") !important;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M93 1 L1 1 L7 20 L1 39 L93 39 L99 20 Z' fill='%230033ad' stroke='%23ffffff' stroke-width='1.4' vector-effect='non-scaling-stroke'/></svg>") !important;
   color:#fff !important;
   filter:drop-shadow(0 3px 8px rgba(0,51,173,0.50))
          drop-shadow(0 1px 1px rgba(0,0,0,0.18)) !important;
@@ -403,22 +424,7 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .nav-zone-problems,      /* induced problems */
 .nav-zone-implementation /* welcome */
 {position:relative;overflow:visible}
-.nav-dd-wrap-light:has(.nav-dd-ref-new)::before,
-.nav-dd-wrap-light:has(.nav-dd-btn-solution)::before,    /* Existing CIPs trigger */
-.nav-zone-output:has(.nav-tab-roadmap)::before,           /* V2 Roadmap */
-.nav-zone:has(.nav-tab-spec-big)::before,
-.nav-zone:has(.nav-tab-problems-big)::before{
-  content:"NEW";position:absolute;top:-12px;left:8px;z-index:5;
-  font:700 8.5px/1 'Inter',-apple-system,sans-serif;letter-spacing:.14em;
-  background:#fff;color:#0a8a80;padding:3px 6px;border-radius:3px;
-  border:1px solid rgba(22,233,216,.55);
-  box-shadow:0 1px 2px rgba(22,233,216,.18);pointer-events:none}
-[data-theme=dark] .nav-dd-wrap-light:has(.nav-dd-ref-new)::before,
-[data-theme=dark] .nav-dd-wrap-light:has(.nav-dd-btn-solution)::before,
-[data-theme=dark] .nav-zone-output:has(.nav-tab-roadmap)::before,
-[data-theme=dark] .nav-zone:has(.nav-tab-spec-big)::before,
-[data-theme=dark] .nav-zone:has(.nav-tab-problems-big)::before{
-  background:#1a1a1a;color:#16E9D8;border-color:rgba(22,233,216,.45)}
+/* "NEW" eyebrow stamps removed per request. */
 /* Right-side eyebrows (EVALUATION / IDEATION / PROPOSAL) — same trick
    on the wrap or zone, anchored top-right. */
 .nav-dd-wrap-light:has(.nav-dd-btn-solution)::after{content:"EVALUATION";
@@ -1264,8 +1270,8 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
 
 /* ── OUTPUT ← INPUT nav (mirrors §1 Foundations diagram) ── */
 /* Flow (reading L→R): [V2 SPECIFICATION] ← Documents (Design / Diagnostic / Research) */
-.nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%),var(--bg);border-bottom:0;display:flex;align-items:center;padding:10px 28px;overflow:visible;white-space:nowrap;gap:38px;position:relative;z-index:50}
-[data-theme=dark] .nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 20%,rgba(0,51,173,.75) 30%,rgba(0,51,173,.40) 50%,rgba(0,51,173,.12) 70%,var(--bg) 92%),var(--bg)}
+.nav-pages{background:linear-gradient(270deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%),var(--bg);border-bottom:0;display:flex;align-items:center;padding:10px 28px;overflow:visible;white-space:nowrap;gap:38px;position:relative;z-index:50}
+[data-theme=dark] .nav-pages{background:linear-gradient(270deg,var(--cardano-blue) 0%,var(--cardano-blue) 20%,rgba(0,51,173,.75) 30%,rgba(0,51,173,.40) 50%,rgba(0,51,173,.12) 70%,var(--bg) 92%),var(--bg)}
 .nav-zone{display:flex;align-items:center;gap:10px;flex-shrink:0}
 
 /* Reading-direction flow arrow — thin SVG arrow, hairline stroke,
@@ -1463,30 +1469,7 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
 .nav-tab-spec-big,
 .nav-dd-btn-solution{
   position:relative}
-/* NEW eyebrow — restore the white-plate pill (more readable than
-   typographic-only). Keep my refinements: Inter, tighter tracking,
-   slightly larger size. */
-.nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light::before,
-.nav-tab-spec-big::before,
-.nav-dd-btn-solution::before{
-  content:"NEW";
-  position:absolute;
-  top:-7px;left:-6px;
-  font:700 8.5px/1 'Inter',-apple-system,sans-serif;
-  letter-spacing:.14em;
-  background:#fff;
-  color:#0a8a80;
-  padding:3px 6px;
-  border-radius:3px;
-  border:1px solid rgba(22,233,216,.55);
-  box-shadow:0 1px 2px rgba(22,233,216,.18);
-  pointer-events:none}
-[data-theme=dark] .nav-dd-wrap-light:has(.nav-dd-ref-new) > .nav-dd-btn-light::before,
-[data-theme=dark] .nav-tab-spec-big::before,
-[data-theme=dark] .nav-dd-btn-solution::before{
-  background:#1a1a1a;
-  color:#16E9D8;
-  border-color:rgba(22,233,216,.45)}
+/* "NEW" eyebrow stamps removed per request. */
 .nav-dd-ref-pdf{grid-column:2;grid-row:1 / span 2;align-self:center;font:700 9.5px/1 -apple-system,sans-serif;letter-spacing:.6px;color:var(--infared);background:rgba(229,35,33,.08);padding:6px 9px;border-radius:4px;text-transform:uppercase}
 .nav-dd-ref:hover .nav-dd-ref-pdf{background:var(--infared);color:#fff}
 
@@ -1576,16 +1559,7 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
    Support). */
 .nav-tab-problems-big.active{color:var(--text-secondary);background:#fff;border-color:var(--border);box-shadow:0 1px 3px rgba(0,0,0,.06)}
 [data-theme=dark] .nav-tab-problems-big{color:#FFB07A;border-color:rgba(255,176,122,.55);background:rgba(20,20,24,.85);box-shadow:inset 0 0 0 999px rgba(236,100,29,.10)}
-/* "NEW" eyebrow stamp — same recipe as the other light
-   dropdowns that contain fresh content, so the page reads as
-   one signal family. */
-.nav-tab-problems-big::before{content:"NEW";position:absolute;top:-7px;left:-6px;
-                              font:700 8.5px/1 'Inter',-apple-system,sans-serif;
-                              letter-spacing:.14em;background:#fff;color:#0a8a80;
-                              padding:3px 6px;border-radius:3px;
-                              border:1px solid rgba(22,233,216,.55);
-                              box-shadow:0 1px 2px rgba(22,233,216,.18);
-                              pointer-events:none}
+/* "NEW" eyebrow stamp removed per request. */
 [data-theme=dark] .nav-tab-problems-big::before{background:#1a1a1a;color:#16E9D8;border-color:rgba(22,233,216,.45)}
 /* "PROPOSAL" eyebrow tag — same shape language as the "FUTURE"
    stamp on .nav-tab-implementation, anchored to the top-right of
@@ -1602,13 +1576,17 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
 [data-theme=dark] .nav-tab-spec-big:hover{background:#1d49c4;border-color:#1d49c4}
 [data-theme=dark] .nav-tab-spec-big.active{background:#0040d3;border-color:#0040d3}
 
-/* Implementation — far-left teaser of the destination this whole
-   pipeline aims at. Cardano blue with a dashed border to signal it is
-   the future state, not a clickable target yet. */
+/* Welcome — far-left home anchor / start of the holistic reading. White-plate
+   chevron flag (flat left edge); the shared chevron group neutralises the
+   base background. */
+.nav-zone-welcome{flex:0 0 auto}
+.nav-tab-welcome{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:var(--text-primary);border-radius:6px;cursor:pointer;transition:all .15s;white-space:nowrap;position:relative}
+
+/* Implementation — far-right destination this whole pipeline aims at.
+   White-plate chevron flag (flat right edge); now a real clickable target
+   (the Implementation Scope page), so cursor is a pointer. */
 .nav-zone-implementation{flex:0 0 auto}
-.nav-tab-implementation{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;background:var(--cardano-blue);border:1px dashed rgba(255,255,255,.55);border-radius:6px;cursor:default;transition:all .15s;box-shadow:0 2px 6px var(--cardano-blue-soft);white-space:nowrap;position:relative}
-/* No eyebrow badge — Welcome is the entry point, no extra label needed. */
-.nav-tab-implementation:hover{background:#0028a0;box-shadow:0 4px 12px var(--cardano-blue-glow)}
+.nav-tab-implementation{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:var(--text-primary);border-radius:6px;cursor:pointer;transition:all .15s;white-space:nowrap;position:relative}
 
 /* Resting-state hue tint for each dropdown button — opaque white-base + colored border + tint overlay so they stay readable on the Cardano-blue gradient */
 /* All zone dropdown buttons share the same neutral chrome. The

@@ -27,24 +27,30 @@ Every divergence is then named as a *structural problem* the next reward mechani
 <span class="cps-stage-meta">proto-CPS</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage cps-stage-future" href="../generated-website/v2-roadmap.html" title="Roadmap — directions of exploration and concrete milestones">
+<a class="cps-stage cps-stage-future" href="../generated-website/solution-evaluation.html" title="Evaluation of the four reward-related CIPs against the nine induced problems">
 <span class="cps-stage-num">Stage 04</span>
-<span class="cps-stage-label">Roadmap</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="../generated-website/solution-design.html" title="Solution Design — prioritising the nine problems into directions and milestones">
+<span class="cps-stage-num">Stage 05</span>
+<span class="cps-stage-label">Solution Design</span>
 <span class="cps-stage-meta">Directions &amp; milestones</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage cps-stage-future" href="../generated-website/solution-evaluation.html" title="Evaluation of the four reward-related CIPs against V2 milestones">
-<span class="cps-stage-num">Stage 05</span>
-<span class="cps-stage-label">CIPs (Evaluation)</span>
-<span class="cps-stage-meta">IntersectMBO governance</span>
+<a class="cps-stage cps-stage-future" href="../generated-website/build-scoping.html" title="Build Estimation / Scoping — sizing the build for the V2 stage-1 reform">
+<span class="cps-stage-num">Stage 06</span>
+<span class="cps-stage-label">Build Estimation / Scoping</span>
+<span class="cps-stage-meta">Build sizing</span>
 </a>
 </div>
 
 The widget above places this document at **Stage 02** of the V2 work — the empirical foundation. **Stage 01** is the companion [*The Intended Game*](../the-intended-game/README.md), the normative baseline of what V1 was supposed to produce — the diagnostic measures every divergence against it and inducts the structural problems that:
 
 - [**Induced Problems** (Stage 03)](../generated-website/problem-statements.html) carries forward as proto-CPSs,
-- the [**Roadmap** (Stage 04)](../README.md) organises into milestones,
-- and the [**CIPs Evaluation** (Stage 05)](../solution-evaluation/README.md) reads the four pre-existing reward CIPs against.
+- the [**CIPs Evaluation** (Stage 04)](../solution-evaluation/README.md) reads the four pre-existing reward CIPs against,
+- and [**Solution Design** (Stage 05)](../README.md) organises into directions and milestones.
 
 **The approach** is to walk the SL-D1 reward pipeline stage by stage, applying the same analytical arc at each:
 
