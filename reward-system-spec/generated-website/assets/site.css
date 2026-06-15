@@ -424,7 +424,26 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
 .nav-zone-problems,      /* induced problems */
 .nav-zone-implementation /* welcome */
 {position:relative;overflow:visible}
-/* "NEW" eyebrow stamps removed per request. */
+/* "NEW" eyebrow stamp — teal white-plate pill, top-LEFT. Restored at
+   request. Coexists with the right-side EVALUATION/IDEATION ::after
+   pills below (those are top-RIGHT, so they never collide). Build
+   Estimation (.nav-zone-implementation) is flagged NEW as well. */
+.nav-dd-wrap-light:has(.nav-dd-ref-new)::before,
+.nav-dd-wrap-light:has(.nav-dd-btn-solution)::before,
+.nav-zone-output:has(.nav-tab-roadmap)::before,
+.nav-zone-problems:has(.nav-tab-problems-big)::before,
+.nav-zone-implementation:has(.nav-tab-implementation)::before{
+  content:"NEW";position:absolute;top:-12px;left:8px;z-index:5;
+  font:700 8.5px/1 'Inter',-apple-system,sans-serif;letter-spacing:.14em;
+  background:#fff;color:#0a8a80;padding:3px 6px;border-radius:3px;
+  border:1px solid rgba(22,233,216,.55);
+  box-shadow:0 1px 2px rgba(22,233,216,.18);pointer-events:none}
+[data-theme=dark] .nav-dd-wrap-light:has(.nav-dd-ref-new)::before,
+[data-theme=dark] .nav-dd-wrap-light:has(.nav-dd-btn-solution)::before,
+[data-theme=dark] .nav-zone-output:has(.nav-tab-roadmap)::before,
+[data-theme=dark] .nav-zone-problems:has(.nav-tab-problems-big)::before,
+[data-theme=dark] .nav-zone-implementation:has(.nav-tab-implementation)::before{
+  background:#1a1a1a;color:#16E9D8;border-color:rgba(22,233,216,.45)}
 /* Right-side eyebrows (EVALUATION / IDEATION / PROPOSAL) — same trick
    on the wrap or zone, anchored top-right. */
 .nav-dd-wrap-light:has(.nav-dd-btn-solution)::after{content:"EVALUATION";
@@ -1270,8 +1289,8 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
 
 /* ── OUTPUT ← INPUT nav (mirrors §1 Foundations diagram) ── */
 /* Flow (reading L→R): [V2 SPECIFICATION] ← Documents (Design / Diagnostic / Research) */
-.nav-pages{background:linear-gradient(270deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%),var(--bg);border-bottom:0;display:flex;align-items:center;padding:10px 28px;overflow:visible;white-space:nowrap;gap:38px;position:relative;z-index:50}
-[data-theme=dark] .nav-pages{background:linear-gradient(270deg,var(--cardano-blue) 0%,var(--cardano-blue) 20%,rgba(0,51,173,.75) 30%,rgba(0,51,173,.40) 50%,rgba(0,51,173,.12) 70%,var(--bg) 92%),var(--bg)}
+.nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 18%,rgba(0,51,173,.85) 26%,rgba(0,51,173,.55) 38%,rgba(0,51,173,.22) 55%,rgba(0,51,173,.06) 72%,#fff 92%),var(--bg);border-bottom:0;display:flex;align-items:center;padding:10px 28px;overflow:visible;white-space:nowrap;gap:38px;position:relative;z-index:50}
+[data-theme=dark] .nav-pages{background:linear-gradient(90deg,var(--cardano-blue) 0%,var(--cardano-blue) 20%,rgba(0,51,173,.75) 30%,rgba(0,51,173,.40) 50%,rgba(0,51,173,.12) 70%,var(--bg) 92%),var(--bg)}
 .nav-zone{display:flex;align-items:center;gap:10px;flex-shrink:0}
 
 /* Reading-direction flow arrow — thin SVG arrow, hairline stroke,
@@ -1580,7 +1599,7 @@ h6.section-toggle.collapsed:hover{filter:opacity(1)}
    chevron flag (flat left edge); the shared chevron group neutralises the
    base background. */
 .nav-zone-welcome{flex:0 0 auto}
-.nav-tab-welcome{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:var(--text-primary);border-radius:6px;cursor:pointer;transition:all .15s;white-space:nowrap;position:relative}
+.nav-tab-welcome{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;font:600 13px/1 'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.4px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.18);border-radius:6px;cursor:pointer;transition:all .15s;white-space:nowrap;position:relative}
 
 /* Implementation — far-right destination this whole pipeline aims at.
    White-plate chevron flag (flat right edge); now a real clickable target
