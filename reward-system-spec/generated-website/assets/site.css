@@ -2072,15 +2072,16 @@ a.cps-stage:hover{transform:translateY(-1px)}
   font:600 22px/1 'Inter',-apple-system,sans-serif;
   color:var(--text-muted);opacity:.55;user-select:none;
   padding:0 2px}
-/* Past stages — subtle Cardano blue tint, signalling work done. */
+/* Past stages — neutral white cards (restored at request; the blue
+   "work done" tint is dropped to match the reference look). */
 .cps-stage-done{
-  border-color:var(--cardano-link-line);
-  background:linear-gradient(0deg,var(--cardano-blue-soft),var(--cardano-blue-soft)),var(--bg)}
-.cps-stage-done .cps-stage-num{color:var(--cardano-blue)}
+  border-color:var(--border);
+  background:var(--bg)}
+.cps-stage-done .cps-stage-num{color:var(--text-muted)}
 [data-theme=dark] .cps-stage-done{
-  border-color:rgba(143,177,255,.32);
-  background:linear-gradient(0deg,rgba(143,177,255,.07),rgba(143,177,255,.07)),var(--bg)}
-[data-theme=dark] .cps-stage-done .cps-stage-num{color:#8FB1FF}
+  border-color:var(--border);
+  background:var(--bg)}
+[data-theme=dark] .cps-stage-done .cps-stage-num{color:var(--text-muted)}
 /* Current stage — the page you're on. Infared border + a
    small "you are here" pill in the corner. */
 .cps-stage-current{
