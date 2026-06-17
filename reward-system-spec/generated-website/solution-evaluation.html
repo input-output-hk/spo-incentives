@@ -60,8 +60,8 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1781513516">
-<link rel="stylesheet" href="assets/site-mobile.css?v=1781513516">
+<link rel="stylesheet" href="assets/site.css?v=1781688718">
+<link rel="stylesheet" href="assets/site-mobile.css?v=1781688718">
 
 
 </head>
@@ -117,11 +117,11 @@ window.MathJax = {
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
-      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — bundle no-go; analytical directions discussed in the §4 of the synthesis</span>
+      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — problems validated, root-level fix recommended first; analytical directions discussed in the §4 of the synthesis</span>
     </div>
     <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero active">
       <span class="nav-dd-ref-title">Intro &amp; Conclusion of the 4 CIPs</span>
-      <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, no-go verdict on the bundle</span>
+      <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, root-level-fix-first recommendation on the bundle</span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
     <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
@@ -130,11 +130,11 @@ window.MathJax = {
     </a>
     <a href="cip-0050.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
       <span class="nav-dd-ref-title">CIP-0050 — Pledge Leverage</span>
-      <span class="nav-dd-ref-cite">σ′ clip leaves A(ν, π) bottleneck unfixed<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+      <span class="nav-dd-ref-cite">Validated problem; root-level A(ν, π) repair recommended first<span class="nav-dd-ref-stage">Root-fix first</span></span>
     </a>
     <a href="cip-0037.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
       <span class="nav-dd-ref-title">CIP-0037 — Dynamic Saturation</span>
-      <span class="nav-dd-ref-cite">Same as CIP-0050 plus 20 % floor — A still unfixed<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+      <span class="nav-dd-ref-cite">Validated problem; same target as CIP-0050, root-level fix first<span class="nav-dd-ref-stage">Root-fix first</span></span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Fee Layer — Operator/Member Split</div>
     <a href="fee-layer.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis">
@@ -143,11 +143,11 @@ window.MathJax = {
     </a>
     <a href="cip-0023.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
       <span class="nav-dd-ref-title">CIP-0023 — Fair Min Fees</span>
-      <span class="nav-dd-ref-cite">minPoolMargin floor — subsumed by CIP-0082 stage 2<span class="nav-dd-ref-stage">⊂ Moot</span></span>
+      <span class="nav-dd-ref-cite">Validated problem; folds into CIP-0082 stage 2<span class="nav-dd-ref-stage">Folds in</span></span>
     </a>
     <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep">
       <span class="nav-dd-ref-title">CIP-0082 — Improved Rewards Scheme</span>
-      <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+      <span class="nav-dd-ref-cite">Validated problem; viability at source, k-raise after a stake-cap precondition<span class="nav-dd-ref-stage">Root-fix first</span></span>
     </a>
   </div>
 </div>
@@ -327,7 +327,7 @@ window.MathJax = {
     <div class="hero-eyebrow">Solution Evaluation</div>
     <h1>The four pre-existing CIPs against the 9 induced problems</h1>
     <div class="sub">V2 milestones × the four CIPs — wrong-layer verdict across the bundle, gradual fix in preparation</div>
-    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/06/11</span></span></span></div>
+    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/06/17</span></span></span></div>
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
@@ -341,9 +341,9 @@ window.MathJax = {
 </ul>
 <p>The <a href="solution-design.html">Solution Design</a> carries this work forward, prioritised <em>root-causes-before-scale-up</em> — μ01 / μ02 bundled in Milestone 1 ahead of yield diversification (M2), Pool Alliance (M3), and non-participant scale-up (M4), with a research axis on concentration covering the supply-side (μ04) and demand-side (μ05) questions.</p>
 <p><strong>But the CIP backlog already contained proposals before this diagnostic was performed.</strong> <a href="cip-0023.html">CIP-0023</a> (2021), <a href="cip-0037.html">CIP-0037</a> (2021), <a href="cip-0050.html">CIP-0050</a> (2021), and <a href="cip-0082.html">CIP-0082</a> (2024) were each drafted with their own framing, their own evidence, and their own design choices. Each was designed against a partial reading of the problem space. Most are still on the table for governance ratification today. None was written with the Solution Design in hand, because the Solution Design did not exist yet.</p>
-<p><em>The question this folder asks: do those pre-existing proposals deliver the milestones the Solution Design names? Partially? Not at all? Or do some of them, by side-effect, regress on a milestone they don't claim to address?</em></p>
+<p><em>The question this folder asks: each pre-existing proposal names a real pathology and points in a credible direction — so where does each fit once a root-level solution is on the table? Which milestone does it advance directly, which does it reach at the symptom rather than the source, and how is it best sequenced alongside a fix that works at the cause?</em></p>
 <blockquote>
-<p><strong>Headline finding.</strong> All four CIPs sit <em>outside</em> the central reward-distribution layer where μ01 and μ02 are produced. Two — CIP-0050 and CIP-0037 — are too radical for today's pledge regime and risk <em>destabilising consensus itself</em> if switched on now. Two — CIP-0023 and CIP-0082 — touch the right population (the small-pool tail) but on the fee-pricing layer rather than at the source, so they relieve the symptom while the formula keeps producing it. The four-move <em>gradual</em> path proposed in <a href="#4-recommendations-on-adjustments-to-the-current-mechanism">§4 Recommendations on adjustments to the current mechanism</a> — carried forward into <a href="solution-design.html#21-milestone-1-repair-pledge-sustain-the-small-spo-base">Solution Design Milestone 1 — Repair pledge, sustain the small SPO base</a> — is the constructive alternative.</p>
+<p><strong>Headline finding — the problems are validated, and a root-level solution now exists.</strong> Every one of the four CIPs identifies a genuine pathology the mainnet diagnostic independently confirms: the broken pledge signal (CIP-0050, CIP-0037) and small-operator viability (CIP-0023, CIP-0082). The proposals are directionally right, and the momentum behind them is well-placed. What the diagnostic adds is <em>depth</em>: all four act outside the central reward-distribution layer where μ01 and μ02 are actually produced, so each reaches the problem at the gate rather than at its source. The research has now isolated that source — the bonus function <code>A(ν, π)</code> and the envelope weights around it — and a <strong>four-move root-level package</strong> repairs it directly (see <a href="#4-recommendations-on-adjustments-to-the-current-mechanism">§4 Recommendations</a>, carried into <a href="solution-design.html#21-milestone-1-repair-pledge-sustain-the-small-spo-base">Solution Design Milestone 1 — Repair pledge, sustain the small SPO base</a>). <strong>Recommendation for every CIP in the bundle: deploy the root-level fix first, for efficient and optimal progress, then assess whether each proposal is still needed as a secondary step.</strong> The governance momentum these proposals carry is real — this evaluation channels it toward the root cause rather than spending it at the surface.</p>
 </blockquote>
 <h1 id="table-of-contents">Table of Contents</h1>
 <nav class="toc-nav">
@@ -395,10 +395,9 @@ window.MathJax = {
 </div>
 </div>
 <p>Both CIPs target a real broken signal: pledge no longer functions as a binding signal of operator commitment. <strong>78 % of staked ADA sits in pools with pledge ratio under 1 %</strong>; <strong>42 of the 48 largest multi-pool operators forfeit the pledge bonus</strong>; pledged ADA yields 0.68 %/yr while passive delegation yields ~2.3 %/yr. Both respond with a σ′ clip that makes pledge bind the reward-eligible stake.</p>
-<p><strong>Verdict on both: ▼ no-go</strong>, for two stacked reasons.</p>
-<p>The central piece is the bonus function <code>A(ν, π)</code> inside the SL-D1 reward envelope, and neither CIP touches it. <code>A</code> produces today's equilibrium: it carries a quadratic <code>ν²</code> size penalty at every pledge ratio, a non-monotonicity in π that incentivises small operators to <em>under-commit</em> (a 2 M operator earns 8.7× more bonus by pledging 51 % than 100 %), and a cubic <code>ν³</code> collapse at full self-pledge. The σ′ clip changes <em>who can earn the V1 reward</em>; it does not repair what <code>A</code> does to the pledge signal.</p>
-<p>A second objection compounds: <strong>the approach is too radical for today's regime</strong>. Almost no one pledges at scale — median π = 0.07 %, 78 % of stake below 1 %, 42 of 48 saturation MPOs forfeit. The cap then hits <strong>every</strong> segment of the operator population at the same time: small / single-pool retail (no liquid capital), multi-pool entities (clipped on the per-pool axis, can't comply across all pools), and custodial-by-extraction (~21 % of productive stake — legally cannot self-pledge custodied retail funds). The blast radius covers the bulk of the productive population, and the resulting reward collapse risks <strong>destabilising consensus itself</strong>: if most operators see income fall sharply at once, infrastructure gets reduced or shut down and Cardano's block-production reliability degrades. The direction of effect runs <em>opposite</em> to <a href="problem-statements.html#problem-1-3-3-1">μ02 — Guarantee operator viability</a> and to the work <a href="solution-design.html#21-milestone-1-repair-pledge-sustain-the-small-spo-base">Solution Design Milestone 1</a> is set up to do.</p>
-<p>The fix is <strong>gradual, at the source</strong>, not at the gate: repair <code>A(ν, π)</code>; reduce <code>λ_size</code> so the commitment axis carries more of the signal; add a fee-layer viability package for new operators reaching productive scale; activate the <code>λ_pledge</code> budget that already returns to reserve unused (POL.O1.F3: 95.6 %) — <em>not new ADA, unused ADA already inside the formula's envelope</em>.</p>
+<p><strong>Assessment on both — problem validated · root-level solution researched · recommendation: repair the pledge signal at its source first, then assess whether a σ′ cap is still needed as a secondary step.</strong></p>
+<p>The exciting part comes first: the diagnostic has traced this broken signal to its source — the bonus function <code>A(ν, π)</code> inside the SL-D1 reward envelope — and a <strong>root-level fix repairs <code>A</code> directly</strong>. A redesigned <code>A</code> gives a smoother operator onset at low ν, drops the design preference for fully-private pools, and explicitly rewards balanced commitment; reducing <code>λ_size</code> then lets the commitment axis carry more of the signal; and the same move <strong>reactivates the <code>λ_pledge</code> budget that already returns to reserve unused</strong> (POL.O1.F3: 95.6 %) — <em>not new ADA, unused ADA already inside the formula's envelope</em>. This is the gradual, source-level path the <a href="stake-cap.html">stake-cap layer synthesis</a> develops and <a href="solution-design.html#21-milestone-1-repair-pledge-sustain-the-small-spo-base">Solution Design Milestone 1</a> carries forward.</p>
+<p>Read against that source-level fix, CIP-0050 and CIP-0037 act one step downstream. Both add a σ′ cap <em>before</em> the formula runs but leave <code>A</code> — the mechanism that produced today's non-pledging equilibrium — untouched: the clip changes <em>who can earn the V1 reward</em>; it does not repair what <code>A</code> does to the pledge signal. And applied to today's regime, where almost no one pledges at scale (median π = 0.07 %, 78 % of stake below 1 %, 42 of 48 saturation MPOs forfeit), a hard cap binds on <strong>every</strong> operator segment at once — small / single-pool retail, multi-pool entities, and custodial-by-extraction (~21 % of productive stake, which legally cannot self-pledge custodied retail funds). That is why the cap is most constructive <em>after</em> the pledge signal has been repaired and the population can actually comply — exactly the sequencing <a href="problem-statements.html#problem-1-3-3-1">μ02 — Guarantee operator viability</a> and <a href="solution-design.html#21-milestone-1-repair-pledge-sustain-the-small-spo-base">Solution Design Milestone 1</a> call for.</p>
 <p>→ Full argument, the four-move gradual path, and the Appendix-A walkthrough of <code>A</code>: <a href="stake-cap.html">stake-cap layer synthesis</a>. Per-CIP detail: <a href="cip-0050.html"><code>cip-0050.md</code></a>, <a href="cip-0037.html"><code>cip-0037.md</code></a>.</p>
 <blockquote>
 <p><em>Counter-argument engaged.</em> This evaluation responds directly to the <a href="https://incentives.solutions/cip-50-rebirth/">CIP-50 Rebirth proposal</a>, which advocates the cap (L = 10–100) paired with a <code>k</code>-raise to 2 000 as a Sybil-resistance and decentralisation instrument. The mechanical claims their case rests on are correct (zero pledge → zero reward; pool-splitting revenue-neutral); the diagnostic disagrees on what those claims accomplish in today's regime. The detailed engagement lives in <a href="cip-0050.html"><code>cip-0050.md</code></a>: the Sybil-framing context (§2), the RSS-simulation reality-check (§4), the k-synergy framing (§A.10), and the three findings cards (Appendix B).</p>
@@ -422,50 +421,49 @@ window.MathJax = {
 </div>
 </div>
 <p>Both CIPs target the priority-1 problem the diagnostic identifies: <strong>small-operator viability</strong>. <strong>73 % of productive pools sit below the ~3 M ADA viability line</strong>; no single-pool retail operator earns a competitive wage at current prices (median 12 410 ADA/yr covers infrastructure but not 5–15 hrs/month of skilled labour).</p>
-<p><strong>Verdict on both: ▼ no-go</strong>, for one structural reason.</p>
-<p>The two CIPs correctly identify the target but mechanically address ROS <em>attractiveness</em>, not profitability <em>structure</em>. Fee-layer tightening makes small pools more ROS-attractive to delegators; it does not raise what a small-pool operator earns at constant size. The reforms therefore depend on delegation actually migrating from large pools to small ones — and the diagnostic does not support that migration: observed delegation flow tracks brand, wallet integration, and visibility, not yield.</p>
-<p>If the migration does not happen, the reforms invert their intent: sub-reliable operator revenue <strong>−9×</strong> under the Margin swap (12 410 → 1 365 ADA/yr); the transfer compounds with fleet size, <strong>+200 K ADA/yr per 11+ pool MPO entity vs −11 K ADA/yr per sub-reliable single-pool operator</strong> — exactly the regressive direction <code>minPoolRate</code> was meant to correct.</p>
-<p>The principled separation: <code>minPoolCost</code> and <code>minPoolRate</code> are <strong>pricing tools</strong> that should stay flexible competitive levers; the <strong>viability floor</strong> is a different function and belongs on the reward-distribution layer (pre-split), not bolted into the fee-split. Stake-cap instruments act on the correct layer.</p>
+<p><strong>Assessment on both — problem validated · root-level solution researched · recommendation: place viability at the source first, then assess whether a fee-layer margin floor is still needed as a secondary step.</strong></p>
+<p>The constructive answer leads: small-operator viability is best delivered <strong>on the reward-distribution layer (pre-split)</strong>, through a conditional <code>λ_viability</code> sub-budget that gives a pool a structural path to productive scale when its operator pledges to a defined schedule — funded from the <code>λ_size</code> reduction, <strong>without raising the total pool pot</strong>. That keeps the two functions cleanly separated: <code>minPoolCost</code> and <code>minPoolRate</code> stay <strong>flexible pricing levers</strong> operators compete on, while the viability backstop lives where it belongs. This is the path the <a href="fee-layer.html">fee-layer synthesis</a> develops.</p>
+<p>Read against that, CIP-0023 and CIP-0082 correctly identify the target — they just address ROS <em>attractiveness</em> rather than profitability <em>structure</em>. Fee-layer tightening makes small pools more ROS-attractive to delegators but does not raise what a small-pool operator earns at constant size, so the reforms depend on delegation actually migrating from large pools to small ones — a response the diagnostic does not observe (flow tracks brand, wallet integration, and visibility, not yield). Absent that migration, a flat-rate margin floor can run the other way: sub-reliable operator revenue <strong>−9×</strong> under the Margin swap (12 410 → 1 365 ADA/yr), compounding with fleet size to <strong>+200 K ADA/yr per 11+ pool MPO entity vs −11 K ADA/yr per sub-reliable single-pool operator</strong>. Placing viability at the source first avoids that inversion and lets a margin floor, if still wanted, be assessed as a complementary pricing choice.</p>
 <p>→ Full argument, the principled separation, and the standalone k-lever deep dive for stages 3–4: <a href="fee-layer.html">fee-layer synthesis</a>. Per-CIP detail: <a href="cip-0023.html"><code>cip-0023.md</code></a>, <a href="cip-0082.html"><code>cip-0082.md</code></a>.</p>
 <h1 id="3-conclusion">3. Conclusion</h1>
-<p>None of the candidates closes the V2 milestone gap, and the objections are structural — not parameters to tune. The structural reasons by layer are in <a href="#21-stake-cap-layer-cip-0050-cip-0037">§2.1 — Stake-cap layer — CIP-0050 / CIP-0037</a> and <a href="#22-fee-layer-cip-0023-cip-0082">§2.2 — Fee layer — CIP-0023 / CIP-0082</a>; the synoptic verdict:</p>
+<p>Each candidate names a validated problem and points in a credible direction; what the evaluation adds is that none of them reaches the <em>source</em> where the milestone gap is produced — and a root-level package now does. The recommendation is therefore the same across the bundle: <strong>deploy the root-level fix first, for efficient and optimal progress, then assess whether each CIP is still needed as a secondary step.</strong> The per-layer reasoning is in <a href="#21-stake-cap-layer-cip-0050-cip-0037">§2.1 — Stake-cap layer — CIP-0050 / CIP-0037</a> and <a href="#22-fee-layer-cip-0023-cip-0082">§2.2 — Fee layer — CIP-0023 / CIP-0082</a>; the synoptic view:</p>
 <table>
 <thead>
 <tr>
 <th>Candidate</th>
-<th style="text-align: center;">Verdict</th>
-<th>Why</th>
+<th style="text-align: center;">Assessment</th>
+<th>Where it fits relative to the root-level fix</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><a href="cip-0050.html"><strong>CIP-0050</strong></a></td>
-<td style="text-align: center;">▼ No-go</td>
-<td>Patches around <code>A(ν, π)</code> — pledge pathology unfixed; too radical a clip for a regime where almost no one pledges yet, risks destabilising consensus</td>
+<td style="text-align: center;">Problem validated → root-level fix first</td>
+<td>Names a real pledge-signal pathology; the σ′ cap sits one step downstream of <code>A(ν, π)</code>. Most constructive once the signal is repaired and operators can comply</td>
 </tr>
 <tr>
 <td><a href="cip-0037.html"><strong>CIP-0037</strong></a></td>
-<td style="text-align: center;">▼ No-go</td>
-<td>Same as CIP-0050 — <code>A</code> still unmodified; 20 % floor softens the σ′ clip but not the underlying bottleneck</td>
+<td style="text-align: center;">Problem validated → root-level fix first</td>
+<td>Same target as CIP-0050; the 20 % floor softens the σ′ clip, but <code>A</code> is still the deeper lever to move first</td>
 </tr>
 <tr>
 <td><a href="cip-0023.html"><strong>CIP-0023</strong></a></td>
-<td style="text-align: center;">⊂ Moot</td>
-<td>Subsumed by CIP-0082 stage 2 — same pricing/viability conflation, less mechanism</td>
+<td style="text-align: center;">Problem validated → folds into CIP-0082 stage 2</td>
+<td>Same margin-floor primitive as CIP-0082 stage 2 at a smaller calibration; viability is best placed on the reward-distribution layer</td>
 </tr>
 <tr>
 <td><a href="cip-0082.html"><strong>CIP-0082 stage 2</strong></a></td>
-<td style="text-align: center;">▼ No-go</td>
-<td>Conflates <strong>pricing</strong> with <strong>viability</strong> — <code>minPoolRate</code> bolts viability onto commission (Sub-reliable <strong>−9×</strong>, <strong>+200 k ₳/yr</strong> to MPO entities)</td>
+<td style="text-align: center;">Problem validated → root-level fix first</td>
+<td>Correctly flags <code>minPoolCost</code> as a regressive flat fee; viability sits more cleanly pre-split than bolted onto commission (Sub-reliable <strong>−9×</strong>, <strong>+200 k ₳/yr</strong> to MPO entities if delegation does not migrate)</td>
 </tr>
 <tr>
 <td><a href="cip-0082.html#b3-standalone-k-lever-deep-dive"><strong>CIP-0082 stages 3–4</strong></a></td>
-<td style="text-align: center;">▼ No-go</td>
-<td><code>k</code>-raise on a 3-epoch cadence regenerates the 2020 MPO-fleet absorption pattern</td>
+<td style="text-align: center;">Problem validated → sequence after a stake-cap precondition</td>
+<td>A <code>k</code>-raise deconcentrates once a stake-cap precondition prevents the 2020-style MPO-fleet absorption</td>
 </tr>
 </tbody>
 </table>
-<p>This is not a rejection of the underlying intents. CIP-0050 and CIP-0037 capture a real Pledge milestone goal; CIP-0023 and CIP-0082 stage 2 correctly identify <code>minPoolCost</code> as a regressive flat fee that needs to go. What the evaluation rejects is the <strong>mechanical realisation</strong> each picks. The pattern across the bundle is the same: every candidate puts its instrument <strong>on the wrong layer</strong>.</p>
+<p>This is emphatically not a rejection of the underlying intents. CIP-0050 and CIP-0037 capture a real Pledge milestone goal; CIP-0023 and CIP-0082 stage 2 correctly identify <code>minPoolCost</code> as a regressive flat fee that needs to go. What the evaluation refines is the <strong>sequencing and the layer</strong>: every candidate acts one step away from the source, so the root-level fix should land first and each proposal be reassessed against it. The pattern across the bundle is the same — and it is addressable.</p>
 <ul>
 <li><strong>Fee-layer CIPs (CIP-0023 / CIP-0082 stage 2)</strong> address viability by tightening pricing parameters (<code>minPoolMargin</code>, <code>minPoolRate</code>). The viability function belongs on the reward-distribution layer (pre-split); pricing must remain free for operators to compete in an open market. Conflating the two produces the regressive transfer documented in <a href="#22-fee-layer-cip-0023-cip-0082">§2.2 — Fee layer — CIP-0023 / CIP-0082</a>.</li>
 <li><strong>Stake-cap CIPs (CIP-0050 / CIP-0037)</strong> act on the right layer (pre-split, σ′) but apply a hard cap <em>on top of</em> a broken pledge signal: the bonus function <code>A(ν, π)</code> that produced today's non-pledging equilibrium is left untouched, and the cap then hits every operator segment at once — destabilisation risk for consensus itself. The fix is at the source (<code>A</code> redesign + envelope rebalancing), not at the gate — see <a href="#21-stake-cap-layer-cip-0050-cip-0037">§2.1 — Stake-cap layer — CIP-0050 / CIP-0037</a>.</li>
@@ -584,7 +582,7 @@ window.MathJax = {
         <span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit
       </div>
       <div class="footer-meta">
-        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/06/11</span></div>
+        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/06/17</span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Author</span><span class="footer-meta-val"><a href="https://www.linkedin.com/in/nhenin/" rel="noopener" target="_blank">Nicolas Henin<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Source</span><span class="footer-meta-val"><a href="https://github.com/input-output-hk/spo-incentives" rel="noopener" target="_blank">input-output-hk/spo-incentives<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
       </div>
@@ -610,7 +608,7 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1781513516"></script>
-<script src="assets/site-mobile.js?v=1781513516"></script>
+<script src="assets/site.js?v=1781688718"></script>
+<script src="assets/site-mobile.js?v=1781688718"></script>
 </body>
 </html>

@@ -1595,11 +1595,11 @@ window.MathJax = {{
   <div class="nav-dd-stratum">
     <div class="nav-dd-stratum-head">
       <span class="nav-dd-stratum-badge nav-dd-stratum-badge-solution">Solution Evaluation</span>
-      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — bundle no-go; analytical directions discussed in the §4 of the synthesis</span>
+      <span class="nav-dd-stratum-meta">Four CIPs evaluated against the V2 milestones — problems validated, root-level fix recommended first; analytical directions discussed in the §4 of the synthesis</span>
     </div>
     <a href="solution-evaluation.html" class="nav-dd-ref nav-dd-ref-hero{cls_solution_eval}">
       <span class="nav-dd-ref-title">Intro &amp; Conclusion of the 4 CIPs</span>
-      <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, no-go verdict on the bundle</span>
+      <span class="nav-dd-ref-cite">Coverage matrix, cumulative findings, root-level-fix-first recommendation on the bundle</span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Stake-Cap Layer — Bind Pledge on σ′</div>
     <a href="stake-cap.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis{cls_stake_cap}">
@@ -1608,11 +1608,11 @@ window.MathJax = {{
     </a>
     <a href="cip-0050.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_cip_0050}">
       <span class="nav-dd-ref-title">CIP-0050 — Pledge Leverage</span>
-      <span class="nav-dd-ref-cite">σ′ clip leaves A(ν, π) bottleneck unfixed<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+      <span class="nav-dd-ref-cite">Validated problem; root-level A(ν, π) repair recommended first<span class="nav-dd-ref-stage">Root-fix first</span></span>
     </a>
     <a href="cip-0037.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_cip_0037}">
       <span class="nav-dd-ref-title">CIP-0037 — Dynamic Saturation</span>
-      <span class="nav-dd-ref-cite">Same as CIP-0050 plus 20 % floor — A still unfixed<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+      <span class="nav-dd-ref-cite">Validated problem; same target as CIP-0050, root-level fix first<span class="nav-dd-ref-stage">Root-fix first</span></span>
     </a>
     <div class="nav-dd-ref-group-label nav-dd-ref-group-label-flow">Fee Layer — Operator/Member Split</div>
     <a href="fee-layer.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-flow nav-dd-ref-synthesis{cls_fee_layer}">
@@ -1621,11 +1621,11 @@ window.MathJax = {{
     </a>
     <a href="cip-0023.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_cip_0023}">
       <span class="nav-dd-ref-title">CIP-0023 — Fair Min Fees</span>
-      <span class="nav-dd-ref-cite">minPoolMargin floor — subsumed by CIP-0082 stage 2<span class="nav-dd-ref-stage">⊂ Moot</span></span>
+      <span class="nav-dd-ref-cite">Validated problem; folds into CIP-0082 stage 2<span class="nav-dd-ref-stage">Folds in</span></span>
     </a>
     <a href="cip-0082.html" class="nav-dd-ref nav-dd-ref-sub nav-dd-ref-deep{cls_cip_0082}">
       <span class="nav-dd-ref-title">CIP-0082 — Improved Rewards Scheme</span>
-      <span class="nav-dd-ref-cite">Margin swap + k-raises — inverts viability, regenerates 2020<span class="nav-dd-ref-stage nav-dd-ref-stage-nogo">▼ No-go</span></span>
+      <span class="nav-dd-ref-cite">Validated problem; viability at source, k-raise after a stake-cap precondition<span class="nav-dd-ref-stage">Root-fix first</span></span>
     </a>
   </div>
 </div>
