@@ -4,41 +4,29 @@ This folder evaluates the CIPs that act on the **stake-cap layer** of the Cardan
 
 Two CIPs are in scope: [CIP-0050](cip-0050.md) and [CIP-0037](cip-0037.md). Both target a real broken signal that the [mainnet diagnostic](../../diagnostic/README.md) confirms — pledge is priced as irrelevant by the operator population. **78 % of staked ADA sits in pools with pledge ratio under 1 %**; **42 of the 48 largest multi-pool operators forfeit the pledge bonus**; pledged ADA yields 0.68 %/yr while the same ADA placed as passive delegation yields 2.3 %/yr. Both CIPs respond by making pledge **binding** on the reward formula — without sufficient pledge, the pool's reward-eligible stake is clipped.
 
-**Verdict on both CIPs: no-go, for two stacked reasons.**
+**Assessment on both CIPs — problem validated · root-level solution researched · recommendation: repair the pledge signal at its source first, then assess whether a σ′ cap is still needed as a secondary step.**
 
-**The central piece is `A(ν, π)`, and neither CIP touches it.** V1 already exposes a pledge-incentive knob — `a₀`, the weight of the pledge bonus inside the reward envelope (current mainnet value `0.3`; full walkthrough in [Appendix A — Why V1's pledge incentive doesn't work](#appendix-a-why-v1s-pledge-incentive-doesnt-work)). Raising `a₀` rebalances the formula but does not make pledge "matter more" — every low-pledge pool earns less *before* the bonus can recover. CIP-0050 and CIP-0037 add a third lever (clip σ′ before the formula runs) on top of `a₀` and `k`, but they accept `A(ν, π)` as given. That function carries three structural pathologies:
-
-- a permanent quadratic `ν²` size penalty applies at *every* pledge ratio — small pools are crushed regardless of how committed the operator is;
-- a non-monotonicity in π for sub-half-saturated pools — a 2 M operator (ν ≈ 0.03) earns **8.7×** *more* bonus by pledging 51 % than by fully self-pledging. The formula explicitly incentivises small operators to *under-commit*;
-- a cubic `ν³` collapse at full self-pledge — a saturated operator earns **37 595×** more bonus than a 2 M operator at maximum commitment, because the size factor cubes when the pledge factor saturates.
-
-The σ′ clip changes *who can earn the V1 reward*; it does not repair what `A` does to the pledge signal. The relative bonus disparity, the under-commitment incentive, and the cubic crush all carry through unchanged.
-
-**Why the radical approach backfires.** Today, almost no one pledges at scale: the stake-weighted median pool sits at π = **0.07 %**, **78 %** of staked ADA is in pools below 1 % pledge ratio, and **42 of the 48** saturation-scale multi-pool operators forfeit the pledge bonus entirely. We do not actually know how much of the SPO landscape *could* comply if a hard pledge cap were switched on — and what mainnet shows so far is *almost no one*.
-
-Under that condition, the cap hits **every** segment of the operator population hard at the same time:
-
-- **Small / single-pool retail operators** — the median retail pool is clipped to ~7 % of its V1 reward (median π = 0.07 % × L = 100), without the liquid capital to raise pledge above the cap.
-- **Multi-pool entities** — clipped on the per-pool axis: splitting pledge across many pools shrinks each pool's reward envelope, and even large fleets do not have the pledge to comply at scale across all their pools.
-- **Custodial-by-extraction operators** (CEX / IVaaS, ~21 % of productive stake) — clipped to zero because they cannot self-pledge custodied retail funds by construction.
-
-The blast radius covers the bulk of the productive population, and the resulting reward collapse **risks destabilising consensus itself**. If most operators see their net income fall sharply at the same time, some will reduce or shut down their infrastructure — and Cardano's block-production reliability degrades. A reform meant to *strengthen* the network's commitment signal ends up *weakening* the network's basic operation. The direction of effect runs *opposite* to [μ02 — Guarantee operator viability](../../generated-website/problem-statements.html#problem-1-3-3-1) and to the foundational work [Solution Design Milestone 1](../../README.md#21-milestone-1-repair-pledge-sustain-the-small-spo-base) is set up to do.
-
-**A more gradual path makes more sense.** A genuine V2 stake-cap reform should reinforce the pledge signal **at its source** rather than gating it, by combining four moves on the reward-distribution layer:
+**Start with the solution, because it is the exciting part.** A genuine V2 stake-cap reform reinforces the pledge signal **at its source** rather than gating it, through four moves on the reward-distribution layer:
 
 - **Repair `A(ν, π)`** so pledge is not a dominated strategy at any operator size:
   - a **smoother operator onset at low ν** — no cubic crush of small pools as they grow;
   - a design that **does not privilege fully-private pools (π = 1)** — the V2 target is not "everyone runs a 100 %-pledged pool";
   - explicit reward for the **balanced-commitment regime (π ≈ 0.5)** — pledge serving as a credible signal *and* the pool remaining open to delegation.
 - **Reduce `λ_size`** so the *commitment* axis carries more of the signal and the *size* axis carries less. Today the envelope `E(ν, π) = λ_size·ν + λ_pledge·A(ν, π)` is split `λ_size ≈ 76.9 %` + `λ_pledge ≈ 23.1 %` (set by `a₀ = 0.3`). This rebalancing only makes sense once `A` is repaired — otherwise it amplifies the broken gradient. The size-weight cut **does double duty**: it reduces what low-pledge pools currently extract via the size axis, *and* the freed weight funds the viability slice in the next move.
-
-- **Add a viability package for pools entering the lifecycle — open a new `λ_viability` sub-budget.** Today the envelope is split **two ways** (`λ_size + λ_pledge`); the recommendation is a **three-way split** `λ_size + λ_pledge + λ_viability`, **without raising the total pool pot**. While transaction-fee inflows are still small, the global allocation stays where it is; it grows back naturally as Tx fees mature into a larger share of the pot. The funding source for `λ_viability` is the `λ_size` reduction above — *nothing new is taken from elsewhere; nothing is asked from the reserve*.
-
-  `λ_viability` is **conditional**, not unconditional: a pool benefits from the viability slice **only if its operator pledges according to rules to be specified** (e.g. a minimum pledge ratio or a pledge-growth schedule across lifecycle stages). The viability function therefore lives on the **reward-distribution layer (pre-split)**, not bolted onto pricing — pricing tools (`minPoolCost`, margin, rate) stay free as competitive levers (see the [fee-layer synthesis](../operator-delegator/README.md)).
-
+- **Add a viability package for pools entering the lifecycle — open a new `λ_viability` sub-budget.** Today the envelope is split **two ways** (`λ_size + λ_pledge`); the recommendation is a **three-way split** `λ_size + λ_pledge + λ_viability`, **without raising the total pool pot**. While transaction-fee inflows are still small, the global allocation stays where it is; it grows back naturally as Tx fees mature into a larger share of the pot. The funding source for `λ_viability` is the `λ_size` reduction above — *nothing new is taken from elsewhere; nothing is asked from the reserve*. `λ_viability` is **conditional**: a pool benefits **only if its operator pledges according to rules to be specified** (a minimum pledge ratio or a pledge-growth schedule across lifecycle stages), so the viability function lives on the **reward-distribution layer (pre-split)**, not bolted onto pricing — pricing tools (`minPoolCost`, margin, rate) stay free as competitive levers (see the [fee-layer synthesis](../operator-delegator/README.md)).
 - **Activate the `λ_pledge` budget that has been underused for years.** POL.O1.F3 documents that **95.6 % of the pledge-bonus budget already returns to the reserve unused every epoch** — the single largest addressable inefficiency in the system today. A repaired `A` with a reduced `λ_size` is what activates this budget; it is not new ADA, it is unused ADA already inside the formula's envelope.
 
-This gradual path lets the pledge signal recover **with** the operator population, not against it. A hard cap stacked on top of today's regime, by contrast, sends an even larger share of the pool pot back to the reserve and worsens viability for every SPO segment at once — exactly the pathology V2 needs to eliminate, not amplify.
+This path lets the pledge signal recover **with** the operator population, not against it — and, by the same act, recovers the largest inefficiency the diagnostic flags.
+
+**Where the two CIPs sit relative to that source.** CIP-0050 and CIP-0037 add a third lever — clip σ′ *before* the formula runs — on top of `a₀` and `k`, but they accept `A(ν, π)` as given. That function carries three structural pathologies the σ′ clip does not reach (full walkthrough in [Appendix A — Why V1's pledge incentive doesn't work](#appendix-a-why-v1s-pledge-incentive-doesnt-work)):
+
+- a permanent quadratic `ν²` size penalty applies at *every* pledge ratio — small pools are crushed regardless of how committed the operator is;
+- a non-monotonicity in π for sub-half-saturated pools — a 2 M operator (ν ≈ 0.03) earns **8.7×** *more* bonus by pledging 51 % than by fully self-pledging. The formula explicitly incentivises small operators to *under-commit*;
+- a cubic `ν³` collapse at full self-pledge — a saturated operator earns **37 595×** more bonus than a 2 M operator at maximum commitment, because the size factor cubes when the pledge factor saturates.
+
+The σ′ clip changes *who can earn the V1 reward*; it does not repair what `A` does to the pledge signal — so the relative bonus disparity, the under-commitment incentive, and the cubic crush all carry through unchanged.
+
+**Why sequencing matters in today's regime.** Almost no one pledges at scale yet: the stake-weighted median pool sits at π = **0.07 %**, **78 %** of staked ADA is in pools below 1 % pledge ratio, and **42 of the 48** saturation-scale multi-pool operators forfeit the pledge bonus. Switched on now, a hard cap binds on **every** segment at once — small / single-pool retail (clipped to ~7 % of V1 reward, without liquid capital to raise pledge above the cap), multi-pool entities (clipped on the per-pool axis, splitting pledge across pools shrinks each envelope), and custodial-by-extraction (CEX / IVaaS, ~21 % of productive stake, which cannot self-pledge custodied retail funds by construction). Repairing the signal first lets the population pledge up *before* the cap binds, so a σ′ cap deployed afterward reinforces a working signal instead of clipping a broken one — the sequencing [μ02 — Guarantee operator viability](../../generated-website/problem-statements.html#problem-1-3-3-1) and the foundational work in [Solution Design Milestone 1](../../README.md#21-milestone-1-repair-pledge-sustain-the-small-spo-base) call for.
 
 ## Table of Contents
 
@@ -81,12 +69,12 @@ Panel (b) matches leverage at $\ell = L = 125$ to isolate the floor as the sole 
 
 **The two candidates at a glance.**
 
-| Candidate | Instrument | Verdict | Per-CIP file | Source |
+| Candidate | Instrument | Assessment | Per-CIP file | Source |
 | --- | --- | --- | --- | --- |
-| **CIP-0050** — Pledge Leverage-Based Staking Rewards | Hard cap $L \cdot p$ — one scalar | **No-go as standalone** — coherent only paired with a fee-layer viability fix | [`cip-0050.md`](cip-0050.md) | [CIP-0050](https://cips.cardano.org/cip/CIP-0050) · PR [#242](https://github.com/cardano-foundation/CIPs/pull/242), [#1042](https://github.com/cardano-foundation/CIPs/pull/1042) |
-| **CIP-0037** — Dynamic Saturation Based on Pledge | Pledge-indexed curve with 20 % floor — three scalars | **No-go as standalone** — same coupling, governance surface 3× larger | [`cip-0037.md`](cip-0037.md) | [CIP-0037](https://cips.cardano.org/cip/CIP-0037) · PR [#163](https://github.com/cardano-foundation/CIPs/pull/163) |
+| **CIP-0050** — Pledge Leverage-Based Staking Rewards | Hard cap $L \cdot p$ — one scalar | **Problem validated → root-level fix first** — strongest paired with the source-level `A` repair and a fee-layer viability slice | [`cip-0050.md`](cip-0050.md) | [CIP-0050](https://cips.cardano.org/cip/CIP-0050) · PR [#242](https://github.com/cardano-foundation/CIPs/pull/242), [#1042](https://github.com/cardano-foundation/CIPs/pull/1042) |
+| **CIP-0037** — Dynamic Saturation Based on Pledge | Pledge-indexed curve with 20 % floor — three scalars | **Problem validated → root-level fix first** — same target as CIP-0050; the 20 % floor softens the clip at a 3× governance surface | [`cip-0037.md`](cip-0037.md) | [CIP-0037](https://cips.cardano.org/cip/CIP-0037) · PR [#163](https://github.com/cardano-foundation/CIPs/pull/163) |
 
-*Table 1.2 — The two stake-cap candidates and the verdict carried in their per-CIP files.*
+*Table 1.2 — The two stake-cap candidates and the assessment carried in their per-CIP files.*
 
 ## 2. Reading order
 
