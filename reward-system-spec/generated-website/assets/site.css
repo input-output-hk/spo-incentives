@@ -275,14 +275,16 @@ a.hero-division-author:hover,a.hero-division-author:focus-visible{
    Implementation DOM-last) so the rail-positioning JS keeps anchoring the
    line on the two extremities. The flow tabs between the two end-caps run
    in stepper order: Constitution (governance ceiling) → Intended Game →
-   Mainnet Diagnostic → Induced Problems → Existing CIPs → Problem Analysis. */
+   Mainnet Diagnostic → Induced Problems → Solution Design → Existing CIPs.
+   Solution Design (nav-zone-output) precedes Existing CIPs (nav-zone-solution)
+   so the root-level solution is read before the CIP evaluation. */
 .nav-zone-welcome{order:1}
 .nav-zone-constitution{order:2}
 .nav-zone-design{order:3}
 .nav-zone-diag{order:4}
 .nav-zone-problems{order:5}
-.nav-zone-solution{order:6}
-.nav-zone-output{order:7}
+.nav-zone-output{order:6}
+.nav-zone-solution{order:7}
 .nav-zone-implementation{order:8}
 
 /* ── Chevron-shaped buttons ─────────────────────────────────────────────
