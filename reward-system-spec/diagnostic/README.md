@@ -49,8 +49,8 @@ Every divergence is then named as a *structural problem* the next reward mechani
 The widget above places this document at **Stage 02** of the V2 work — the empirical foundation. **Stage 01** is the companion [*The Intended Game*](../the-intended-game/README.md), the normative baseline of what V1 was supposed to produce — the diagnostic measures every divergence against it and inducts the structural problems that:
 
 - [**Induced Problems** (Stage 03)](../generated-website/problem-statements.html) carries forward as proto-CPSs,
-- the [**CIPs Evaluation** (Stage 04)](../solution-evaluation/README.md) reads the four pre-existing reward CIPs against,
-- and [**Solution Design** (Stage 05)](../README.md) organises into directions and milestones.
+- [**Solution Design** (Stage 04)](../README.md) organises into directions and milestones,
+- and the [**CIPs Evaluation** (Stage 05)](../solution-evaluation/README.md) reads the four pre-existing reward CIPs against.
 
 **The approach** is to walk the SL-D1 reward pipeline stage by stage, applying the same analytical arc at each:
 
