@@ -25,17 +25,17 @@ The bet of this page is that **a clear priority order makes solutions emerge**. 
 <span class="cps-stage-meta">proto-CPS</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage cps-stage-done" href="solution-evaluation.html" title="Evaluation of the four reward-related CIPs against the nine induced problems">
-<span class="cps-stage-num">Stage 04</span>
-<span class="cps-stage-label">CIPs (Evaluation)</span>
-<span class="cps-stage-meta">IntersectMBO governance</span>
-</a>
-<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
 <div class="cps-stage cps-stage-current" title="You are here — Solution Design">
-<span class="cps-stage-num">Stage 05</span>
+<span class="cps-stage-num">Stage 04</span>
 <span class="cps-stage-label">Solution Design</span>
 <span class="cps-stage-meta">Directions &amp; milestones &middot; this page</span>
 </div>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="solution-evaluation.html" title="Evaluation of the four reward-related CIPs against the nine induced problems">
+<span class="cps-stage-num">Stage 05</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance</span>
+</a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
 <a class="cps-stage cps-stage-future" href="build-scoping.html" title="Build Estimation / Scoping — sizing the build for the V2 stage-1 reform">
 <span class="cps-stage-num">Stage 06</span>

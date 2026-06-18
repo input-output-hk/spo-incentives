@@ -60,8 +60,8 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1781688718">
-<link rel="stylesheet" href="assets/site-mobile.css?v=1781688718">
+<link rel="stylesheet" href="assets/site.css?v=1781768285">
+<link rel="stylesheet" href="assets/site-mobile.css?v=1781768285">
 
 
 </head>
@@ -327,11 +327,53 @@ window.MathJax = {
     <div class="hero-eyebrow">Solution Evaluation</div>
     <h1>CIP Evaluation Synthesis</h1>
     <div class="sub">Pricing-as-viability conflation — CIP-0023 + CIP-0082</div>
-    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/06/17</span></span></span></div>
+    <div class="hero-byline" aria-label="Document metadata"><span class="hero-byline-seg" title="Cutoff epoch for the on-chain analysis"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="hero-byline-value">Through epoch 623<span class="hero-byline-sub"> · 2026/04/09</span></span></span><span class="hero-byline-seg"><svg class="hero-meta-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="3.6"/></svg><span class="hero-byline-value"><a href="https://www.linkedin.com/in/nhenin/" target="_blank" rel="noopener noreferrer" title="Author profile (opens in new tab)" class="hero-byline-author">Nicolas Henin</a><span class="hero-byline-sub"> · 2026/06/18</span></span></span></div>
   </div>
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
 <div class="content"><p>This folder evaluates the CIPs that act on the <strong>fee layer</strong> of the Cardano reward pipeline — the operator/member split that runs <em>after</em> the SL-D1 reward formula has already produced a per-pool allocation. The reward envelope itself is left untouched by these candidates; what changes is how the resulting pool reward is divided between the operator's take and the delegators' share.</p>
+<div class="cps-lifecycle" aria-label="CPS lifecycle">
+<a class="cps-stage cps-stage-done" href="intended-game.html" title="The Intended Game — plain-prose design baseline">
+<span class="cps-stage-num">Stage 01</span>
+<span class="cps-stage-label">The Intended Game</span>
+<span class="cps-stage-meta">Design intent &middot; baseline</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="diagnostic.html" title="The Mainnet Diagnostic — observations &amp; findings">
+<span class="cps-stage-num">Stage 02</span>
+<span class="cps-stage-label">Mainnet evidence</span>
+<span class="cps-stage-meta">Observations &amp; Findings</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="problem-statements.html" title="Induced Problems — proto-CPS scoped against the diagnostic">
+<span class="cps-stage-num">Stage 03</span>
+<span class="cps-stage-label">Induced problem</span>
+<span class="cps-stage-meta">proto-CPS</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="solution-design.html" title="Solution Design — prioritising the nine problems into directions and milestones">
+<span class="cps-stage-num">Stage 04</span>
+<span class="cps-stage-label">Solution Design</span>
+<span class="cps-stage-meta">Directions &amp; milestones</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<div class="cps-stage cps-stage-current" title="You are here — CIPs Evaluation, fee layer">
+<span class="cps-stage-num">Stage 05</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance &middot; this section</span>
+</div>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="build-scoping.html" title="Build Estimation / Scoping — sizing the build for the V2 stage-1 reform">
+<span class="cps-stage-num">Stage 06</span>
+<span class="cps-stage-label">Build Estimation / Scoping</span>
+<span class="cps-stage-meta">Build sizing</span>
+</a>
+</div>
+
+<nav class="cps-sublocation" aria-label="Position within the CIPs evaluation">
+<a href="solution-evaluation.html">Existing CIPs</a> <span class="cps-sublocation-sep" aria-hidden="true">&rarr;</span> <span class="cps-sublocation-current">Fee layer</span> <span class="cps-sublocation-sep" aria-hidden="true">&middot;</span> CIP-0023 &amp; CIP-0082
+</nav>
+
 <p>The two CIPs in scope (<a href="cip-0023.html">CIP-0023</a>, <a href="cip-0082.html">CIP-0082</a>) target the priority-1 problem the <a href="diagnostic.html">mainnet diagnostic</a> identifies for any V2 reform: <strong>small-operator viability</strong>. Today, <strong>73 % of productive pools sit below the ~3 M ADA viability line</strong>, and <strong>no single-pool retail operator earns a competitive wage</strong> — the median 12 410 ADA/yr covers infrastructure but not 5–15 hours/month of skilled labour. Both CIPs correctly identify this population as the target. They differ on the instrument used (margin floor vs rate floor) and whether <code>minPoolCost</code> survives the reform.</p>
 <p>CIP-0082's stages 3–4 raise the protocol parameter <code>k</code> (target pool count). <code>k</code> is not itself a CIP — it is a transversal protocol parameter, raised here as part of the four-stage package. The standalone k-lever analysis that supports the verdict on those stages lives in <a href="cip-0082.html#b3-standalone-k-lever-deep-dive">cip-0082.md §B.3</a>. The same analysis applies to any future k-recalibration proposal — not only to CIP-0082.</p>
 <p><strong>Assessment on both CIPs — problem validated · root-level solution researched · recommendation: place viability at the source first, then assess whether a fee-layer margin floor is still needed as a secondary step.</strong></p>
@@ -465,7 +507,7 @@ window.MathJax = {
         <span class="cbu-dot" aria-hidden="true"></span>Cardano Business Unit
       </div>
       <div class="footer-meta">
-        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/06/17</span></div>
+        <div class="footer-meta-row"><span class="footer-meta-key">Edition</span><span class="footer-meta-val">2026/06/18</span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Author</span><span class="footer-meta-val"><a href="https://www.linkedin.com/in/nhenin/" rel="noopener" target="_blank">Nicolas Henin<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
         <div class="footer-meta-row"><span class="footer-meta-key">Source</span><span class="footer-meta-val"><a href="https://github.com/input-output-hk/spo-incentives" rel="noopener" target="_blank">input-output-hk/spo-incentives<span class="footer-ext" aria-hidden="true">↗</span></a></span></div>
       </div>
@@ -491,7 +533,7 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1781688718"></script>
-<script src="assets/site-mobile.js?v=1781688718"></script>
+<script src="assets/site.js?v=1781768285"></script>
+<script src="assets/site-mobile.js?v=1781768285"></script>
 </body>
 </html>
