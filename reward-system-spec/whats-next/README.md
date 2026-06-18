@@ -134,16 +134,16 @@ What no document held in a single frame was *all four at once* — design intent
 <span class="cps-stage-meta">9 proto-CPSs</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage cps-stage-done" href="../solution-evaluation/README.md" title="Stage 04 — Evaluation of the four pre-existing reward CIPs against the nine induced problems">
+<a class="cps-stage cps-stage-done" href="../README.md" title="Stage 04 — Solution Design: prioritising the nine problems into directions and milestones">
 <span class="cps-stage-num">Stage 04</span>
-<span class="cps-stage-label">CIPs (Evaluation)</span>
-<span class="cps-stage-meta">IntersectMBO governance</span>
-</a>
-<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
-<a class="cps-stage cps-stage-done" href="../README.md" title="Stage 05 — Solution Design: prioritising the nine problems into directions and milestones">
-<span class="cps-stage-num">Stage 05</span>
 <span class="cps-stage-label">Solution Design</span>
 <span class="cps-stage-meta">Directions &amp; milestones</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="../solution-evaluation/README.md" title="Stage 05 — Evaluation of the four pre-existing reward CIPs against the nine induced problems">
+<span class="cps-stage-num">Stage 05</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance</span>
 </a>
 <span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
 <a class="cps-stage cps-stage-done" href="../implementation-scope/README.md" title="Stage 06 — Build Estimation / Scoping: sizing the build for the V2 stage-1 reform">
