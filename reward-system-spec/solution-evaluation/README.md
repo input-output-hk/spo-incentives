@@ -2,6 +2,48 @@
 
 The Cardano network has been observed in detail through a multi-stage [mainnet diagnostic](../diagnostic/README.md) — covering the Treasury & Pool-Pots layer, the Pools-Distribution layer, the Operator-Delegator split, and the Staking Census.
 
+<div class="cps-lifecycle" aria-label="CPS lifecycle">
+<a class="cps-stage cps-stage-done" href="intended-game.html" title="The Intended Game — plain-prose design baseline">
+<span class="cps-stage-num">Stage 01</span>
+<span class="cps-stage-label">The Intended Game</span>
+<span class="cps-stage-meta">Design intent &middot; baseline</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="diagnostic.html" title="The Mainnet Diagnostic — observations &amp; findings">
+<span class="cps-stage-num">Stage 02</span>
+<span class="cps-stage-label">Mainnet evidence</span>
+<span class="cps-stage-meta">Observations &amp; Findings</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="problem-statements.html" title="Induced Problems — proto-CPS scoped against the diagnostic">
+<span class="cps-stage-num">Stage 03</span>
+<span class="cps-stage-label">Induced problem</span>
+<span class="cps-stage-meta">proto-CPS</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="solution-design.html" title="Solution Design — prioritising the nine problems into directions and milestones">
+<span class="cps-stage-num">Stage 04</span>
+<span class="cps-stage-label">Solution Design</span>
+<span class="cps-stage-meta">Directions &amp; milestones</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<div class="cps-stage cps-stage-current" title="You are here — CIPs Evaluation">
+<span class="cps-stage-num">Stage 05</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance &middot; this page</span>
+</div>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="build-scoping.html" title="Build Estimation / Scoping — sizing the build for the V2 stage-1 reform">
+<span class="cps-stage-num">Stage 06</span>
+<span class="cps-stage-label">Build Estimation / Scoping</span>
+<span class="cps-stage-meta">Build sizing</span>
+</a>
+</div>
+
+<nav class="cps-sublocation" aria-label="Within the CIPs evaluation">
+<span class="cps-sublocation-current">Existing CIPs</span> <span class="cps-sublocation-sep" aria-hidden="true">&middot;</span> overview across the <a href="stake-cap.html">Stake-Cap</a> and <a href="fee-layer.html">Fee</a> layers
+</nav>
+
 The diagnostic surfaces **9 induced problems** — five micro (μ01–μ05) and four macro (M01–M04) — each grounded in mainnet evidence rather than theory. Four of them are central to the candidate CIPs evaluated in this folder:
 
 - **[μ02 — Operator viability across the productive population](../generated-website/problem-statements.html#problem-1-3-3-1).** 73 % of productive pools sit below the ~3 M ADA viability line; no single-pool retail operator earns a competitive wage at current ADA prices, irrespective of how reliably they produce blocks.

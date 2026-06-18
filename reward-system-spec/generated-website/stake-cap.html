@@ -60,8 +60,8 @@ window.MathJax = {
 };
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="assets/site.css?v=1781767591">
-<link rel="stylesheet" href="assets/site-mobile.css?v=1781767591">
+<link rel="stylesheet" href="assets/site.css?v=1781768285">
+<link rel="stylesheet" href="assets/site-mobile.css?v=1781768285">
 
 
 </head>
@@ -332,6 +332,48 @@ window.MathJax = {
   <div class="hero-bottom-rule" aria-hidden="true"></div>
 </div>
 <div class="content"><p>This folder evaluates the CIPs that act on the <strong>stake-cap layer</strong> of the Cardano reward pipeline — the reward-eligible pool stake $\sigma'$ that enters the SL-D1 reward formula, <em>upstream</em> of the operator/member split that the <a href="fee-layer.html">fee layer</a> reshapes.</p>
+<div class="cps-lifecycle" aria-label="CPS lifecycle">
+<a class="cps-stage cps-stage-done" href="intended-game.html" title="The Intended Game — plain-prose design baseline">
+<span class="cps-stage-num">Stage 01</span>
+<span class="cps-stage-label">The Intended Game</span>
+<span class="cps-stage-meta">Design intent &middot; baseline</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="diagnostic.html" title="The Mainnet Diagnostic — observations &amp; findings">
+<span class="cps-stage-num">Stage 02</span>
+<span class="cps-stage-label">Mainnet evidence</span>
+<span class="cps-stage-meta">Observations &amp; Findings</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="problem-statements.html" title="Induced Problems — proto-CPS scoped against the diagnostic">
+<span class="cps-stage-num">Stage 03</span>
+<span class="cps-stage-label">Induced problem</span>
+<span class="cps-stage-meta">proto-CPS</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="solution-design.html" title="Solution Design — prioritising the nine problems into directions and milestones">
+<span class="cps-stage-num">Stage 04</span>
+<span class="cps-stage-label">Solution Design</span>
+<span class="cps-stage-meta">Directions &amp; milestones</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<div class="cps-stage cps-stage-current" title="You are here — CIPs Evaluation, stake-cap layer">
+<span class="cps-stage-num">Stage 05</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance &middot; this section</span>
+</div>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="build-scoping.html" title="Build Estimation / Scoping — sizing the build for the V2 stage-1 reform">
+<span class="cps-stage-num">Stage 06</span>
+<span class="cps-stage-label">Build Estimation / Scoping</span>
+<span class="cps-stage-meta">Build sizing</span>
+</a>
+</div>
+
+<nav class="cps-sublocation" aria-label="Position within the CIPs evaluation">
+<a href="solution-evaluation.html">Existing CIPs</a> <span class="cps-sublocation-sep" aria-hidden="true">&rarr;</span> <span class="cps-sublocation-current">Stake-Cap layer</span> <span class="cps-sublocation-sep" aria-hidden="true">&middot;</span> CIP-0050 &amp; CIP-0037
+</nav>
+
 <p>Two CIPs are in scope: <a href="cip-0050.html">CIP-0050</a> and <a href="cip-0037.html">CIP-0037</a>. Both target a real broken signal that the <a href="diagnostic.html">mainnet diagnostic</a> confirms — pledge is priced as irrelevant by the operator population. <strong>78 % of staked ADA sits in pools with pledge ratio under 1 %</strong>; <strong>42 of the 48 largest multi-pool operators forfeit the pledge bonus</strong>; pledged ADA yields 0.68 %/yr while the same ADA placed as passive delegation yields 2.3 %/yr. Both CIPs respond by making pledge <strong>binding</strong> on the reward formula — without sufficient pledge, the pool's reward-eligible stake is clipped.</p>
 <p><strong>Assessment on both CIPs — problem validated · root-level solution researched · recommendation: repair the pledge signal at its source first, then assess whether a σ′ cap is still needed as a secondary step.</strong></p>
 <p><strong>Start with the solution, because it is the exciting part.</strong> A genuine V2 stake-cap reform reinforces the pledge signal <strong>at its source</strong> rather than gating it, through four moves on the reward-distribution layer:</p>
@@ -838,7 +880,7 @@ if (window.mermaid) {
   });
 }
 </script>
-<script src="assets/site.js?v=1781767591"></script>
-<script src="assets/site-mobile.js?v=1781767591"></script>
+<script src="assets/site.js?v=1781768285"></script>
+<script src="assets/site-mobile.js?v=1781768285"></script>
 </body>
 </html>

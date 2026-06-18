@@ -2,6 +2,48 @@
 
 This folder evaluates the CIPs that act on the **fee layer** of the Cardano reward pipeline — the operator/member split that runs *after* the SL-D1 reward formula has already produced a per-pool allocation. The reward envelope itself is left untouched by these candidates; what changes is how the resulting pool reward is divided between the operator's take and the delegators' share.
 
+<div class="cps-lifecycle" aria-label="CPS lifecycle">
+<a class="cps-stage cps-stage-done" href="intended-game.html" title="The Intended Game — plain-prose design baseline">
+<span class="cps-stage-num">Stage 01</span>
+<span class="cps-stage-label">The Intended Game</span>
+<span class="cps-stage-meta">Design intent &middot; baseline</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="diagnostic.html" title="The Mainnet Diagnostic — observations &amp; findings">
+<span class="cps-stage-num">Stage 02</span>
+<span class="cps-stage-label">Mainnet evidence</span>
+<span class="cps-stage-meta">Observations &amp; Findings</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="problem-statements.html" title="Induced Problems — proto-CPS scoped against the diagnostic">
+<span class="cps-stage-num">Stage 03</span>
+<span class="cps-stage-label">Induced problem</span>
+<span class="cps-stage-meta">proto-CPS</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="solution-design.html" title="Solution Design — prioritising the nine problems into directions and milestones">
+<span class="cps-stage-num">Stage 04</span>
+<span class="cps-stage-label">Solution Design</span>
+<span class="cps-stage-meta">Directions &amp; milestones</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<div class="cps-stage cps-stage-current" title="You are here — CIPs Evaluation, fee layer">
+<span class="cps-stage-num">Stage 05</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance &middot; this section</span>
+</div>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="build-scoping.html" title="Build Estimation / Scoping — sizing the build for the V2 stage-1 reform">
+<span class="cps-stage-num">Stage 06</span>
+<span class="cps-stage-label">Build Estimation / Scoping</span>
+<span class="cps-stage-meta">Build sizing</span>
+</a>
+</div>
+
+<nav class="cps-sublocation" aria-label="Position within the CIPs evaluation">
+<a href="solution-evaluation.html">Existing CIPs</a> <span class="cps-sublocation-sep" aria-hidden="true">&rarr;</span> <span class="cps-sublocation-current">Fee layer</span> <span class="cps-sublocation-sep" aria-hidden="true">&middot;</span> CIP-0023 &amp; CIP-0082
+</nav>
+
 The two CIPs in scope ([CIP-0023](cip-0023.md), [CIP-0082](cip-0082.md)) target the priority-1 problem the [mainnet diagnostic](../../diagnostic/README.md) identifies for any V2 reform: **small-operator viability**. Today, **73 % of productive pools sit below the ~3 M ADA viability line**, and **no single-pool retail operator earns a competitive wage** — the median 12 410 ADA/yr covers infrastructure but not 5–15 hours/month of skilled labour. Both CIPs correctly identify this population as the target. They differ on the instrument used (margin floor vs rate floor) and whether `minPoolCost` survives the reform.
 
 CIP-0082's stages 3–4 raise the protocol parameter `k` (target pool count). `k` is not itself a CIP — it is a transversal protocol parameter, raised here as part of the four-stage package. The standalone k-lever analysis that supports the verdict on those stages lives in [cip-0082.md §B.3](cip-0082.md#b3-standalone-k-lever-deep-dive). The same analysis applies to any future k-recalibration proposal — not only to CIP-0082.

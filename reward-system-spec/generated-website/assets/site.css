@@ -2052,6 +2052,15 @@ body.obs-panel-open .obs-panel-overlay{opacity:1;pointer-events:auto}
 .cps-lifecycle{
   display:flex;gap:10px;margin:22px 0 26px;align-items:stretch;
   flex-wrap:wrap}
+.cps-sublocation{
+  font:400 12.5px/1.4 'Inter',-apple-system,sans-serif;
+  color:var(--text-muted);margin:-16px 0 26px;
+  display:flex;flex-wrap:wrap;align-items:center;gap:7px;letter-spacing:.2px}
+.cps-sublocation a{color:var(--text-muted);text-decoration:none;
+  border-bottom:1px solid transparent;transition:color .15s,border-color .15s}
+.cps-sublocation a:hover{color:var(--infared);border-color:var(--infared)}
+.cps-sublocation-sep{color:var(--border)}
+.cps-sublocation-current{color:var(--text-primary);font-weight:600}
 .cps-stage{
   flex:1;min-width:175px;display:flex;flex-direction:column;
   gap:6px;padding:14px 16px 13px;background:var(--bg);

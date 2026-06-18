@@ -2,6 +2,48 @@
 
 This folder evaluates the CIPs that act on the **stake-cap layer** of the Cardano reward pipeline — the reward-eligible pool stake $\sigma'$ that enters the SL-D1 reward formula, *upstream* of the operator/member split that the [fee layer](../operator-delegator/README.md) reshapes.
 
+<div class="cps-lifecycle" aria-label="CPS lifecycle">
+<a class="cps-stage cps-stage-done" href="intended-game.html" title="The Intended Game — plain-prose design baseline">
+<span class="cps-stage-num">Stage 01</span>
+<span class="cps-stage-label">The Intended Game</span>
+<span class="cps-stage-meta">Design intent &middot; baseline</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="diagnostic.html" title="The Mainnet Diagnostic — observations &amp; findings">
+<span class="cps-stage-num">Stage 02</span>
+<span class="cps-stage-label">Mainnet evidence</span>
+<span class="cps-stage-meta">Observations &amp; Findings</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="problem-statements.html" title="Induced Problems — proto-CPS scoped against the diagnostic">
+<span class="cps-stage-num">Stage 03</span>
+<span class="cps-stage-label">Induced problem</span>
+<span class="cps-stage-meta">proto-CPS</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-done" href="solution-design.html" title="Solution Design — prioritising the nine problems into directions and milestones">
+<span class="cps-stage-num">Stage 04</span>
+<span class="cps-stage-label">Solution Design</span>
+<span class="cps-stage-meta">Directions &amp; milestones</span>
+</a>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<div class="cps-stage cps-stage-current" title="You are here — CIPs Evaluation, stake-cap layer">
+<span class="cps-stage-num">Stage 05</span>
+<span class="cps-stage-label">CIPs (Evaluation)</span>
+<span class="cps-stage-meta">IntersectMBO governance &middot; this section</span>
+</div>
+<span class="cps-stage-arrow" aria-hidden="true">&rarr;</span>
+<a class="cps-stage cps-stage-future" href="build-scoping.html" title="Build Estimation / Scoping — sizing the build for the V2 stage-1 reform">
+<span class="cps-stage-num">Stage 06</span>
+<span class="cps-stage-label">Build Estimation / Scoping</span>
+<span class="cps-stage-meta">Build sizing</span>
+</a>
+</div>
+
+<nav class="cps-sublocation" aria-label="Position within the CIPs evaluation">
+<a href="solution-evaluation.html">Existing CIPs</a> <span class="cps-sublocation-sep" aria-hidden="true">&rarr;</span> <span class="cps-sublocation-current">Stake-Cap layer</span> <span class="cps-sublocation-sep" aria-hidden="true">&middot;</span> CIP-0050 &amp; CIP-0037
+</nav>
+
 Two CIPs are in scope: [CIP-0050](cip-0050.md) and [CIP-0037](cip-0037.md). Both target a real broken signal that the [mainnet diagnostic](../../diagnostic/README.md) confirms — pledge is priced as irrelevant by the operator population. **78 % of staked ADA sits in pools with pledge ratio under 1 %**; **42 of the 48 largest multi-pool operators forfeit the pledge bonus**; pledged ADA yields 0.68 %/yr while the same ADA placed as passive delegation yields 2.3 %/yr. Both CIPs respond by making pledge **binding** on the reward formula — without sufficient pledge, the pool's reward-eligible stake is clipped.
 
 **Assessment on both CIPs — problem validated · root-level solution researched · recommendation: repair the pledge signal at its source first, then assess whether a σ′ cap is still needed as a secondary step.**
